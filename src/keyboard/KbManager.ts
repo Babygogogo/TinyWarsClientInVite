@@ -1,33 +1,31 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    type KeyCallback as KbTypesKeyCallback,
-    KeyCode,
-    type EventData,
-} from "./KbTypes.ts";
-import { addEventListeners } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { Listener as NotificationsListener } from "../notifications/Types.ts";
+    Notifications_Dispatcher,
+    Keyboard_KbTypes,
+    Notifications_TypeId,
+    type Notifications_Types,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 interface Listener {
-    callback    : KbTypesKeyCallback;
+    callback    : Keyboard_KbTypes.KeyCallback;
     thisObject  : any;
     priority    : number;
     index       : number;
 }
 
-const _allKeys          = new Set<KeyCode>();
-const _newKeys          = new Set<KeyCode>();
+const _allKeys          = new Set<Keyboard_KbTypes.KeyCode>();
+const _newKeys          = new Set<Keyboard_KbTypes.KeyCode>();
 const _listenerArray    : Listener[] = [];
 
-const _NOTIFY_EVENTS    : NotificationsListener[] = [
-    { type: TypeId.GameHidden,   callback: _onNotifyGameHidden },
+const _NOTIFY_EVENTS    : Notifications_Types.Listener[] = [
+    { type: Notifications_TypeId.TypeId.GameHidden,   callback: _onNotifyGameHidden },
 ];
 
 export function init(): void {
     document.addEventListener("keydown",    _onKeyDown);
     document.addEventListener("keyup",      _onKeyUp);
 
-    addEventListeners(_NOTIFY_EVENTS, null);
+    Notifications_Dispatcher.addEventListeners(_NOTIFY_EVENTS, null);
 }
 export function clearKeys(): void {
     _allKeys.clear();
@@ -73,7 +71,7 @@ function _onNotifyGameHidden(): void {
     clearKeys();
 }
 
-export function addListener(callback: KbTypesKeyCallback, thisObject: unknown, priority = 0): void {
+export function addListener(callback: Keyboard_KbTypes.KeyCallback, thisObject: unknown, priority = 0): void {
     deleteListener(callback, thisObject);
 
     _listenerArray.push({
@@ -83,7 +81,7 @@ export function addListener(callback: KbTypesKeyCallback, thisObject: unknown, p
         index       : (_listenerArray[_listenerArray.length - 1]?.index ?? 0) + 1,
     });
 }
-export function deleteListener(callback: KbTypesKeyCallback, thisObject: unknown): void {
+export function deleteListener(callback: Keyboard_KbTypes.KeyCallback, thisObject: unknown): void {
     for (let i = 0; i < _listenerArray.length; ++i) {
         const listener = _listenerArray[i];
         if ((listener.callback === callback) && (listener.thisObject == thisObject)) {
@@ -92,12 +90,12 @@ export function deleteListener(callback: KbTypesKeyCallback, thisObject: unknown
     }
 }
 
-export function checkHasDirectionKeys(keys: Set<KeyCode>): boolean {
-    return (keys.has(KeyCode.A)) || (keys.has(KeyCode.S) || (keys.has(KeyCode.D)) || (keys.has(KeyCode.W)));
+export function checkHasDirectionKeys(keys: Set<Keyboard_KbTypes.KeyCode>): boolean {
+    return (keys.has(Keyboard_KbTypes.KeyCode.A)) || (keys.has(Keyboard_KbTypes.KeyCode.S) || (keys.has(Keyboard_KbTypes.KeyCode.D)) || (keys.has(Keyboard_KbTypes.KeyCode.W)));
 }
 
 function _invokeListeners(): void {
-    const eventData: EventData = {
+    const eventData: Keyboard_KbTypes.EventData = {
         newKeys     : new Set(_newKeys),
         allKeys     : new Set(_allKeys),
         isHandled   : false,
@@ -122,66 +120,66 @@ function _invokeListeners(): void {
 // function _checkIsSameListener(listener: KeyListener, callback: KeyCallback, thisObject: unknown): boolean {
 //     return (listener.callback === callback) && (listener.thisObject == thisObject);
 // }
-function _getKeyCode(key: Undefinable<string>): KeyCode | null {
+function _getKeyCode(key: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): Keyboard_KbTypes.KeyCode | null {
     switch (key?.toUpperCase?.()) {
-        case `A`            : return KeyCode.A;
-        case `B`            : return KeyCode.B;
-        case `C`            : return KeyCode.C;
-        case `D`            : return KeyCode.D;
-        case `E`            : return KeyCode.E;
-        case `F`            : return KeyCode.F;
-        case `G`            : return KeyCode.G;
-        case `H`            : return KeyCode.H;
-        case `I`            : return KeyCode.I;
-        case `J`            : return KeyCode.J;
-        case `K`            : return KeyCode.K;
-        case `L`            : return KeyCode.L;
-        case `M`            : return KeyCode.M;
-        case `N`            : return KeyCode.N;
-        case `O`            : return KeyCode.O;
-        case `P`            : return KeyCode.P;
-        case `Q`            : return KeyCode.Q;
-        case `R`            : return KeyCode.R;
-        case `S`            : return KeyCode.S;
-        case `T`            : return KeyCode.T;
-        case `U`            : return KeyCode.U;
-        case `V`            : return KeyCode.V;
-        case `W`            : return KeyCode.W;
-        case `X`            : return KeyCode.X;
-        case `Y`            : return KeyCode.Y;
-        case `Z`            : return KeyCode.Z;
+        case `A`            : return Keyboard_KbTypes.KeyCode.A;
+        case `B`            : return Keyboard_KbTypes.KeyCode.B;
+        case `C`            : return Keyboard_KbTypes.KeyCode.C;
+        case `D`            : return Keyboard_KbTypes.KeyCode.D;
+        case `E`            : return Keyboard_KbTypes.KeyCode.E;
+        case `F`            : return Keyboard_KbTypes.KeyCode.F;
+        case `G`            : return Keyboard_KbTypes.KeyCode.G;
+        case `H`            : return Keyboard_KbTypes.KeyCode.H;
+        case `I`            : return Keyboard_KbTypes.KeyCode.I;
+        case `J`            : return Keyboard_KbTypes.KeyCode.J;
+        case `K`            : return Keyboard_KbTypes.KeyCode.K;
+        case `L`            : return Keyboard_KbTypes.KeyCode.L;
+        case `M`            : return Keyboard_KbTypes.KeyCode.M;
+        case `N`            : return Keyboard_KbTypes.KeyCode.N;
+        case `O`            : return Keyboard_KbTypes.KeyCode.O;
+        case `P`            : return Keyboard_KbTypes.KeyCode.P;
+        case `Q`            : return Keyboard_KbTypes.KeyCode.Q;
+        case `R`            : return Keyboard_KbTypes.KeyCode.R;
+        case `S`            : return Keyboard_KbTypes.KeyCode.S;
+        case `T`            : return Keyboard_KbTypes.KeyCode.T;
+        case `U`            : return Keyboard_KbTypes.KeyCode.U;
+        case `V`            : return Keyboard_KbTypes.KeyCode.V;
+        case `W`            : return Keyboard_KbTypes.KeyCode.W;
+        case `X`            : return Keyboard_KbTypes.KeyCode.X;
+        case `Y`            : return Keyboard_KbTypes.KeyCode.Y;
+        case `Z`            : return Keyboard_KbTypes.KeyCode.Z;
 
-        case `0`            : return KeyCode.Num0;
-        case `1`            : return KeyCode.Num1;
-        case `2`            : return KeyCode.Num2;
-        case `3`            : return KeyCode.Num3;
-        case `4`            : return KeyCode.Num4;
-        case `5`            : return KeyCode.Num5;
-        case `6`            : return KeyCode.Num6;
-        case `7`            : return KeyCode.Num7;
-        case `8`            : return KeyCode.Num8;
-        case `9`            : return KeyCode.Num9;
-        case `NUMPAD0`      : return KeyCode.Num0;
-        case `NUMPAD1`      : return KeyCode.Num1;
-        case `NUMPAD2`      : return KeyCode.Num2;
-        case `NUMPAD3`      : return KeyCode.Num3;
-        case `NUMPAD4`      : return KeyCode.Num4;
-        case `NUMPAD5`      : return KeyCode.Num5;
-        case `NUMPAD6`      : return KeyCode.Num6;
-        case `NUMPAD7`      : return KeyCode.Num7;
-        case `NUMPAD8`      : return KeyCode.Num8;
-        case `NUMPAD9`      : return KeyCode.Num9;
+        case `0`            : return Keyboard_KbTypes.KeyCode.Num0;
+        case `1`            : return Keyboard_KbTypes.KeyCode.Num1;
+        case `2`            : return Keyboard_KbTypes.KeyCode.Num2;
+        case `3`            : return Keyboard_KbTypes.KeyCode.Num3;
+        case `4`            : return Keyboard_KbTypes.KeyCode.Num4;
+        case `5`            : return Keyboard_KbTypes.KeyCode.Num5;
+        case `6`            : return Keyboard_KbTypes.KeyCode.Num6;
+        case `7`            : return Keyboard_KbTypes.KeyCode.Num7;
+        case `8`            : return Keyboard_KbTypes.KeyCode.Num8;
+        case `9`            : return Keyboard_KbTypes.KeyCode.Num9;
+        case `NUMPAD0`      : return Keyboard_KbTypes.KeyCode.Num0;
+        case `NUMPAD1`      : return Keyboard_KbTypes.KeyCode.Num1;
+        case `NUMPAD2`      : return Keyboard_KbTypes.KeyCode.Num2;
+        case `NUMPAD3`      : return Keyboard_KbTypes.KeyCode.Num3;
+        case `NUMPAD4`      : return Keyboard_KbTypes.KeyCode.Num4;
+        case `NUMPAD5`      : return Keyboard_KbTypes.KeyCode.Num5;
+        case `NUMPAD6`      : return Keyboard_KbTypes.KeyCode.Num6;
+        case `NUMPAD7`      : return Keyboard_KbTypes.KeyCode.Num7;
+        case `NUMPAD8`      : return Keyboard_KbTypes.KeyCode.Num8;
+        case `NUMPAD9`      : return Keyboard_KbTypes.KeyCode.Num9;
 
-        case `+`            : return KeyCode.Add;
-        case `-`            : return KeyCode.Sub;
+        case `+`            : return Keyboard_KbTypes.KeyCode.Add;
+        case `-`            : return Keyboard_KbTypes.KeyCode.Sub;
 
-        case `BACKSPACE`    : return KeyCode.Backspace;
-        case `SHIFT`        : return KeyCode.Shift;
-        case `ALT`          : return KeyCode.Alt;
-        case `CONTROL`      : return KeyCode.Control;
-        case `ENTER`        : return KeyCode.Enter;
-        case `ESCAPE`       : return KeyCode.Escape;
-        case ` `            : return KeyCode.Whitespace;
+        case `BACKSPACE`    : return Keyboard_KbTypes.KeyCode.Backspace;
+        case `SHIFT`        : return Keyboard_KbTypes.KeyCode.Shift;
+        case `ALT`          : return Keyboard_KbTypes.KeyCode.Alt;
+        case `CONTROL`      : return Keyboard_KbTypes.KeyCode.Control;
+        case `ENTER`        : return Keyboard_KbTypes.KeyCode.Enter;
+        case `ESCAPE`       : return Keyboard_KbTypes.KeyCode.Escape;
+        case ` `            : return Keyboard_KbTypes.KeyCode.Whitespace;
 
         default             : return null;
     }

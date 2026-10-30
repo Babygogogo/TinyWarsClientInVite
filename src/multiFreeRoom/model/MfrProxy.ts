@@ -1,18 +1,11 @@
 import {
-    updateOnFailedMsgMfrGetRoomStaticInfo,
-    updateOnMsgMfrGetRoomStaticInfo,
-    updateOnFailedMsgMfrGetRoomPlayerInfo,
-    updateOnMsgMfrGetRoomPlayerInfo,
-    setJoinableRoomIdArray,
-    setJoinedRoomIdArray,
-} from "./MfrModel.ts";
-import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    MultiFreeRoom_Model_MfrModel,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as MfrAddDummyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrAddDummy/S.ts";
 import type { C as MfrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
 import type { S as MfrCreateRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/S.ts";
@@ -30,84 +23,83 @@ import type { S as MfrSetReadyResponse } from "../../proto/schema/CommonProto/Ne
 import type { C as MfrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/C.ts";
 import type { S as MfrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/S.ts";
 import type { S as MfrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrStartWar/S.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgMfrCreateRoom,                callback: _onMsgMfrCreateRoom },
-        { msgCode: MessageCodes.MsgMfrJoinRoom,                  callback: _onMsgMfrJoinRoom },
-        { msgCode: MessageCodes.MsgMfrDeleteRoom,                callback: _onMsgMfrDeleteRoom },
-        { msgCode: MessageCodes.MsgMfrExitRoom,                  callback: _onMsgMfrExitRoom },
-        { msgCode: MessageCodes.MsgMfrDeletePlayer,              callback: _onMsgMfrDeletePlayer },
-        { msgCode: MessageCodes.MsgMfrAddDummy,                  callback: _onMsgMfrAddDummy },
-        { msgCode: MessageCodes.MsgMfrSetDummySettings,          callback: _onMsgMfrSetDummySettings },
-        { msgCode: MessageCodes.MsgMfrInvite,                    callback: _onMsgMfrInvite },
-        { msgCode: MessageCodes.MsgMfrSetReady,                  callback: _onMsgMfrSetReady },
-        { msgCode: MessageCodes.MsgMfrSetSelfSettings,           callback: _onMsgMfrSetSelfSettings },
-        { msgCode: MessageCodes.MsgMfrGetRoomStaticInfo,         callback: _onMsgMfrGetRoomStaticInfo },
-        { msgCode: MessageCodes.MsgMfrGetRoomPlayerInfo,         callback: _onMsgMfrGetRoomPlayerInfo },
-        { msgCode: MessageCodes.MsgMfrGetJoinableRoomIdArray,    callback: _onMsgMfrGetJoinableRoomIdArray },
-        { msgCode: MessageCodes.MsgMfrGetJoinedRoomIdArray,      callback: _onMsgMfrGetJoinedRoomIdArray },
-        { msgCode: MessageCodes.MsgMfrStartWar,                  callback: _onMsgMfrStartWar },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrCreateRoom,                callback: _onMsgMfrCreateRoom },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrJoinRoom,                  callback: _onMsgMfrJoinRoom },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrDeleteRoom,                callback: _onMsgMfrDeleteRoom },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrExitRoom,                  callback: _onMsgMfrExitRoom },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrDeletePlayer,              callback: _onMsgMfrDeletePlayer },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrAddDummy,                  callback: _onMsgMfrAddDummy },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrSetDummySettings,          callback: _onMsgMfrSetDummySettings },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrInvite,                    callback: _onMsgMfrInvite },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrSetReady,                  callback: _onMsgMfrSetReady },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrSetSelfSettings,           callback: _onMsgMfrSetSelfSettings },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrGetRoomStaticInfo,         callback: _onMsgMfrGetRoomStaticInfo },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrGetRoomPlayerInfo,         callback: _onMsgMfrGetRoomPlayerInfo },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrGetJoinableRoomIdArray,    callback: _onMsgMfrGetJoinableRoomIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrGetJoinedRoomIdArray,      callback: _onMsgMfrGetJoinedRoomIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMfrStartWar,                  callback: _onMsgMfrStartWar },
     ], null);
 }
 
 export function reqCreateRoom(param: MfrCreateRoomRequest): void {
-    send({
+    Networks_Manager.send({
         MsgMfrCreateRoom: { c: param.toJson() },
     });
 }
-function _onMsgMfrCreateRoom(e: Event): void {
+function _onMsgMfrCreateRoom(e: Egret_Egret.Event): void {
     const data = e.data as MfrCreateRoomResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrCreateRoom, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrCreateRoom, data);
     }
 }
 
 export function reqMfrJoinRoom(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrJoinRoom: { c: {
             roomId  : roomId,
         } },
     });
 }
-async function _onMsgMfrJoinRoom(e: Event): Promise<void> {
+async function _onMsgMfrJoinRoom(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrJoinRoomResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrJoinRoom, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrJoinRoom, data);
     }
 }
 
 export function reqMfrDeleteRoom(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrDeleteRoom: { c: {
             roomId,
         } },
     });
 }
-function _onMsgMfrDeleteRoom(e: Event): void {
+function _onMsgMfrDeleteRoom(e: Egret_Egret.Event): void {
     const data = e.data as MfrDeleteRoomResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrDeleteRoom, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrDeleteRoom, data);
     }
 }
 
 export function reqMfrExitRoom(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrExitRoom: { c: {
             roomId,
         }, },
     });
 }
-async function _onMsgMfrExitRoom(e: Event): Promise<void> {
+async function _onMsgMfrExitRoom(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrExitRoomResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrExitRoom, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrExitRoom, data);
     }
 }
 
 export function reqMfrDeletePlayer(roomId: number, playerIndex: number, forbidReentrance: boolean): void {
-    send({
+    Networks_Manager.send({
         MsgMfrDeletePlayer: { c: {
             roomId,
             playerIndex,
@@ -115,15 +107,15 @@ export function reqMfrDeletePlayer(roomId: number, playerIndex: number, forbidRe
         }, },
     });
 }
-async function _onMsgMfrDeletePlayer(e: Event): Promise<void> {
+async function _onMsgMfrDeletePlayer(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrDeletePlayerResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrDeletePlayer, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrDeletePlayer, data);
     }
 }
 
 export function reqMfrAddDummy(roomId: number, playerIndex: number, coId: number, unitAndTileSkinId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrAddDummy: { c: {
             roomId              : roomId,
             playerIndex         : playerIndex,
@@ -132,15 +124,15 @@ export function reqMfrAddDummy(roomId: number, playerIndex: number, coId: number
         }, },
     });
 }
-function _onMsgMfrAddDummy(e: Event): void {
+function _onMsgMfrAddDummy(e: Egret_Egret.Event): void {
     const data = e.data as MfrAddDummyResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrAddDummy, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrAddDummy, data);
     }
 }
 
 export function reqMfrSetDummySettings(roomId: number, playerIndex: number, coId: number, unitAndTileSkinId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrSetDummySettings: { c: {
             roomId              : roomId,
             playerIndex         : playerIndex,
@@ -149,127 +141,127 @@ export function reqMfrSetDummySettings(roomId: number, playerIndex: number, coId
         }, },
     });
 }
-function _onMsgMfrSetDummySettings(e: Event): void {
+function _onMsgMfrSetDummySettings(e: Egret_Egret.Event): void {
     const data = e.data as MfrSetDummySettingsResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrSetDummySettings, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrSetDummySettings, data);
     }
 }
 
 export function reqMfrInvite(roomId: number, userIdArray: number[]): void {
-    send({
+    Networks_Manager.send({
         MsgMfrInvite: { c: {
             roomId      : roomId,
             userIdArray : userIdArray,
         }}
     });
 }
-function _onMsgMfrInvite(e: Event): void {
+function _onMsgMfrInvite(e: Egret_Egret.Event): void {
     const data = e.data as MfrInviteResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrInvite, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrInvite, data);
     }
 }
 
 export function reqMfrSetReady(roomId: number, isReady: boolean): void {
-    send({
+    Networks_Manager.send({
         MsgMfrSetReady: { c: {
             roomId,
             isReady,
         }, },
     });
 }
-async function _onMsgMfrSetReady(e: Event): Promise<void> {
+async function _onMsgMfrSetReady(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrSetReadyResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrSetReady, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrSetReady, data);
     }
 }
 
 export function reqMfrSetSelfSettings(data: MfrSetSelfSettingsRequest): void {
-    send({
+    Networks_Manager.send({
         MsgMfrSetSelfSettings: { c: data.toJson() },
     });
 }
-async function _onMsgMfrSetSelfSettings(e: Event): Promise<void> {
+async function _onMsgMfrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrSetSelfSettings, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrSetSelfSettings, data);
     }
 }
 
 export function reqMfrGetRoomStaticInfo(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrGetRoomStaticInfo: { c: {
             roomId,
         }, },
     });
 }
-async function _onMsgMfrGetRoomStaticInfo(e: Event): Promise<void> {
+async function _onMsgMfrGetRoomStaticInfo(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MfrGetRoomStaticInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMsgMfrGetRoomStaticInfo(data);
+        MultiFreeRoom_Model_MfrModel.updateOnFailedMsgMfrGetRoomStaticInfo(data);
     } else {
-        await updateOnMsgMfrGetRoomStaticInfo(data);
-        dispatch(TypeId.MsgMfrGetRoomStaticInfo, data);
+        await MultiFreeRoom_Model_MfrModel.updateOnMsgMfrGetRoomStaticInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo, data);
     }
 }
 
 export function reqMfrGetRoomPlayerInfo(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrGetRoomPlayerInfo: { c: {
             roomId,
         }, },
     });
 }
-function _onMsgMfrGetRoomPlayerInfo(e: Event): void {
+function _onMsgMfrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
     const data = e.data as MfrGetRoomPlayerInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMsgMfrGetRoomPlayerInfo(data);
+        MultiFreeRoom_Model_MfrModel.updateOnFailedMsgMfrGetRoomPlayerInfo(data);
     } else {
-        updateOnMsgMfrGetRoomPlayerInfo(data);
-        dispatch(TypeId.MsgMfrGetRoomPlayerInfo, data);
+        MultiFreeRoom_Model_MfrModel.updateOnMsgMfrGetRoomPlayerInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo, data);
     }
 }
 
 export function reqMfrGetJoinableRoomIdArray(): void {
-    send({
+    Networks_Manager.send({
         MsgMfrGetJoinableRoomIdArray: { c: {
         } }
     });
 }
-function _onMsgMfrGetJoinableRoomIdArray(e: Event): void {
+function _onMsgMfrGetJoinableRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MfrGetJoinableRoomIdArrayResponse;
     if (!data.getErrorCode()) {
-        setJoinableRoomIdArray(data.getRoomIdArray());
-        dispatch(TypeId.MsgMfrGetJoinableRoomIdArray, data);
+        MultiFreeRoom_Model_MfrModel.setJoinableRoomIdArray(data.getRoomIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrGetJoinableRoomIdArray, data);
     }
 }
 
 export function reqMfrGetJoinedRoomIdArray(): void {
-    send({
+    Networks_Manager.send({
         MsgMfrGetJoinedRoomIdArray: { c: {
         } }
     });
 }
-function _onMsgMfrGetJoinedRoomIdArray(e: Event): void {
+function _onMsgMfrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MfrGetJoinedRoomIdArrayResponse;
     if (!data.getErrorCode()) {
-        setJoinedRoomIdArray(data.getRoomIdArray());
-        dispatch(TypeId.MsgMfrGetJoinedRoomIdArray, data);
+        MultiFreeRoom_Model_MfrModel.setJoinedRoomIdArray(data.getRoomIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrGetJoinedRoomIdArray, data);
     }
 }
 
 export function reqMfrStartWar(roomId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMfrStartWar: { c: {
             roomId,
         }, },
     });
 }
-function _onMsgMfrStartWar(e: Event): void {
+function _onMsgMfrStartWar(e: Egret_Egret.Event): void {
     const data = e.data as MfrStartWarResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMfrStartWar, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMfrStartWar, data);
     }
 }

@@ -1,19 +1,21 @@
-import { getNextOperation } from "../bots/Bot.ts";
-import { newError } from "../helpers/Misc.ts";
-import { AliveStateId } from "../players/Constants.ts";
+import {
+    Players_Constants,
+    Users_Utils,
+    WarOperations_Constants,
+    Bots_Bot,
+    Helpers_Misc,
+    Turns_Constants,
+    type SinglePlayerWar_Interface_ISpwWar,
+    type WarOperations_Types,
+} from "../internal.ts";
 import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type { ISpwWar } from "../singlePlayerWar/interface/ISpwWar.ts";
-import { PhaseCode } from "../turns/Constants.ts";
-import { checkIsDummy } from "../users/Utils.ts";
-import { Common } from "./Constants.ts";
-import type { WarOperationAndUserId } from "./Types.ts";
 
 export function checkIsValidWarOperationsLimit(warOperationsLimit: number): boolean {
-    return (warOperationsLimit >= Common.MinLimit)
-        && (warOperationsLimit <= Common.MaxLimit);
+    return (warOperationsLimit >= WarOperations_Constants.Common.MinLimit)
+        && (warOperationsLimit <= WarOperations_Constants.Common.MaxLimit);
 }
 
-export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOperationAndUserId | undefined> {
+export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): Promise<WarOperations_Types.WarOperationAndUserId | undefined> {
     if ((war == null) || (war.getIsEnded())) {
         return undefined;
     }
@@ -35,7 +37,7 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
             };
         }
 
-        if (turnPhaseCode === PhaseCode.WaitBeginTurn) {
+        if (turnPhaseCode === Turns_Constants.PhaseCode.WaitBeginTurn) {
             resultOperation.createIfNotExistsWoSystemBeginTurn();
             return {
                 warOperation    : resultOperation,
@@ -87,21 +89,21 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
     }
 
     // Handle the WaitBeginTurn phase.
-    if (turnPhaseCode === PhaseCode.WaitBeginTurn) {
+    if (turnPhaseCode === Turns_Constants.PhaseCode.WaitBeginTurn) {
         resultOperation.createIfNotExistsWoSystemBeginTurn();
         return {
             warOperation    : resultOperation,
             userId          : undefined,
         };
-    } else if (turnPhaseCode != PhaseCode.Main) {
-        throw newError(`Invalid turn phase code: ${turnPhaseCode}.`);
+    } else if (turnPhaseCode != Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turn phase code: ${turnPhaseCode}.`);
     }
 
     // Handle the dying players (destroy force).
     const playerInTurn      = playerManager.getPlayerInTurn();
     const playerIndexInTurn = playerInTurn.getPlayerIndex();
     for (const playerIndex of playerManager.getPlayerIndexArray(playerIndexInTurn + 1, false)) {
-        if (playerManager.getPlayer(playerIndex).getAliveState() === AliveStateId.Dying) {
+        if (playerManager.getPlayer(playerIndex).getAliveState() === Players_Constants.AliveStateId.Dying) {
             const resultData = resultOperation.createIfNotExistsWoSystemDestroyPlayerForce();
             resultData.setTargetPlayerIndex(playerIndex);
             return {
@@ -149,7 +151,7 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
             if (drawVoteManager.checkCanVote(playerIndex, true)) {
                 const userId = player.getUserId();
                 if ((player.checkIsNeutral())                               ||
-                    (player.getAliveState() === AliveStateId.Dead)    ||
+                    (player.getAliveState() === Players_Constants.AliveStateId.Dead)    ||
                     (userId == null)
                 ) {
                     const resultData = resultOperation.createIfNotExistsWoSystemVoteForDraw();
@@ -160,7 +162,7 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
                         userId          : undefined,
                     };
 
-                } else if (checkIsDummy(userId)) {
+                } else if (Users_Utils.checkIsDummy(userId)) {
                     const resultData = resultOperation.createIfNotExistsWoPlayerVoteForDraw();
                     resultData.setPlayerIndex(playerIndex);
                     resultData.setIsAgree(true);
@@ -175,13 +177,13 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
 
     // Handle system end turn.
     if ((playerInTurn.checkIsNeutral())                             ||
-        (playerInTurn.getAliveState() === AliveStateId.Dead)  ||
+        (playerInTurn.getAliveState() === Players_Constants.AliveStateId.Dead)  ||
         (playerInTurn.getIsSkipTurn())
     ) {
         if (drawVoteManager.checkNeedVoteBeforeEndTurn(playerIndexInTurn)) {
             const resultData = resultOperation.createIfNotExistsWoSystemVoteForDraw();
             resultData.setPlayerIndex(playerIndexInTurn);
-            resultData.setIsAgree((playerInTurn.getUserId() == null) || (playerInTurn.getAliveState() === AliveStateId.Dead));
+            resultData.setIsAgree((playerInTurn.getUserId() == null) || (playerInTurn.getAliveState() === Players_Constants.AliveStateId.Dead));
             return {
                 warOperation    : resultOperation,
                 userId          : undefined,
@@ -201,12 +203,12 @@ export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOper
         const userId = playerInTurn.getUserId();
         if (userId == null) {
             return {
-                warOperation    : await getNextOperation(war),
+                warOperation    : await Bots_Bot.getNextOperation(war),
                 userId          : undefined,
             };
-        } else if (checkIsDummy(userId)) {
+        } else if (Users_Utils.checkIsDummy(userId)) {
             return {
-                warOperation    : await getNextOperation(war),
+                warOperation    : await Bots_Bot.getNextOperation(war),
                 userId          : userId,
             };
         }

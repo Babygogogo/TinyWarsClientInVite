@@ -1,69 +1,61 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getWarTypeName,
-    getText,
-    getTimestampShortText,
-} from "../../lang/Utils.ts";
-import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Helpers_Misc,
+    NormalMap_Model_NormalMapModel,
+    ReplayWar_Model_RwModel,
+    Lang_Utils,
+    Ui_Utils_UiSkinHelpers,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiOpenableComponent,
+    Ui_Types_UiVerticalAlign,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiLabel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
 import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
 import type { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import {
-    getReplaySelfRating,
-    getReplayInfo,
-} from "../model/RwModel.ts";
-import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export type OpenData = {
     replayId: number;
 } | null;
-export class Page extends UiOpenableComponent<OpenData> {
-    private readonly _labelMapNameTitle!            : IUiLabel;
-    private readonly _labelMapName!                 : IUiLabel;
+export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData> {
+    private readonly _labelMapNameTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelWarTypeTitle!            : IUiLabel;
-    private readonly _labelWarType!                 : IUiLabel;
+    private readonly _labelWarTypeTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelWarType!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelGlobalRatingTitle!       : IUiLabel;
-    private readonly _labelGlobalRating!            : IUiLabel;
+    private readonly _labelGlobalRatingTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelGlobalRating!            : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelMyRatingTitle!           : IUiLabel;
-    private readonly _labelMyRating!                : IUiLabel;
+    private readonly _labelMyRatingTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMyRating!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelTurnIndexTitle!          : IUiLabel;
-    private readonly _labelTurnIndex!               : IUiLabel;
+    private readonly _labelTurnIndexTitle!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurnIndex!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelEndTimeTitle!            : IUiLabel;
-    private readonly _labelEndTime!                 : IUiLabel;
+    private readonly _labelEndTimeTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelEndTime!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "replayWar/RwReplayWarInfoPage.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "replayWar/RwReplayWarInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgReplayGetReplayInfo,  callback: this._onNotifyMsgReplayGetBriefInfo },
-            { type: TypeId.MsgReplayGetSelfRating,  callback: this._onNotifyMsgReplayGetSelfRating },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgReplayGetReplayInfo,  callback: this._onNotifyMsgReplayGetBriefInfo },
+            { type: Notifications_TypeId.TypeId.MsgReplayGetSelfRating,  callback: this._onNotifyMsgReplayGetSelfRating },
         ]);
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
+            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -82,7 +74,7 @@ export class Page extends UiOpenableComponent<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgReplayGetBriefInfo(e: Event): void {
+    private _onNotifyMsgReplayGetBriefInfo(e: Egret_Egret.Event): void {
         const data      = e.data as ReplayGetReplayInfoResponse;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
@@ -90,7 +82,7 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
     }
 
-    private _onNotifyMsgReplayGetSelfRating(e: Event): void {
+    private _onNotifyMsgReplayGetSelfRating(e: Egret_Egret.Event): void {
         const data      = e.data as ReplayGetSelfRatingResponse;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
@@ -102,12 +94,12 @@ export class Page extends UiOpenableComponent<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelMapNameTitle.setLangText(TextType.B0225);
-        this._labelWarTypeTitle.setLangText(TextType.B0599);
-        this._labelGlobalRatingTitle.setLangText(TextType.B0364);
-        this._labelMyRatingTitle.setLangText(TextType.B0363);
-        this._labelTurnIndexTitle.setLangText(TextType.B0600);
-        this._labelEndTimeTitle.setLangText(TextType.EndTime);
+        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
+        this._labelWarTypeTitle.setLangText(Lang_Constants.TextType.B0599);
+        this._labelGlobalRatingTitle.setLangText(Lang_Constants.TextType.B0364);
+        this._labelMyRatingTitle.setLangText(Lang_Constants.TextType.B0363);
+        this._labelTurnIndexTitle.setLangText(Lang_Constants.TextType.B0600);
+        this._labelEndTimeTitle.setLangText(Lang_Constants.TextType.EndTime);
     }
 
     private _updateComponentsForReplayBriefInfo(): void {
@@ -120,26 +112,26 @@ export class Page extends UiOpenableComponent<OpenData> {
 
     private async _updateLabelWarType(): Promise<void> {
         const replayBriefInfo = await this._getReplayInfo();
-        this._labelWarType.setText(replayBriefInfo ? getWarTypeName(replayBriefInfo.getWarType()) ?? UndefinedError : `??`);
+        this._labelWarType.setText(replayBriefInfo ? Lang_Utils.getWarTypeName(replayBriefInfo.getWarType()) ?? Lang_Constants.UndefinedError : `??`);
     }
 
     private async _updateLabelGlobalRating(): Promise<void> {
         const replayBriefInfo   = await this._getReplayInfo();
         const raters            = replayBriefInfo ? replayBriefInfo.getTotalRaters() : null;
-        this._labelGlobalRating.setText(raters ? (getExisted(replayBriefInfo?.getTotalRating()) / raters).toFixed(2) : getText(TextType.None));
+        this._labelGlobalRating.setText(raters ? (Helpers_Misc.getExisted(replayBriefInfo?.getTotalRating()) / raters).toFixed(2) : Lang_Utils.getText(Lang_Constants.TextType.None));
     }
 
     private async _updateLabelMyRating(): Promise<void> {
         const replayId  = this.getOpenData()?.replayId;
-        const rating    = replayId == null ? null : await getReplaySelfRating(replayId);
-        this._labelMyRating.setText(rating == null ? getText(TextType.None) : `${rating}`);
+        const rating    = replayId == null ? null : await ReplayWar_Model_RwModel.getReplaySelfRating(replayId);
+        this._labelMyRating.setText(rating == null ? Lang_Utils.getText(Lang_Constants.TextType.None) : `${rating}`);
     }
 
     private async _updateLabelMapName(): Promise<void> {
         const normalMapId = (await this._getReplayInfo())?.getNormalMapId();
         this._labelMapName.setText(normalMapId == null
             ? `----`
-            : (await getMapNameInCurrentLanguage(normalMapId)) ?? UndefinedError
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError
         );
     }
 
@@ -154,15 +146,15 @@ export class Page extends UiOpenableComponent<OpenData> {
     private async _updateLabelEndTime(): Promise<void> {
         const replayBriefInfo   = await this._getReplayInfo();
         this._labelEndTime.setText(replayBriefInfo
-            ? getTimestampShortText(replayBriefInfo.getWarEndTime())
+            ? Lang_Utils.getTimestampShortText(replayBriefInfo.getWarEndTime())
             : `??`
         );
     }
 
-    private async _getReplayInfo(): Promise<Undefinable<ReplayInfo>> {
+    private async _getReplayInfo(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayInfo>> {
         const replayId = this.getOpenData()?.replayId;
         return replayId == null
             ? null
-            : await getReplayInfo(replayId);
+            : await ReplayWar_Model_RwModel.getReplayInfo(replayId);
     }
 }

@@ -1,162 +1,161 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getHrwWarClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { newError } from "../../helpers/Misc.ts";
-import type { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { PhaseCode } from "../../turns/Constants.ts";
-import { ActionStateId } from "../../units/Constants.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Units_Constants,
+    Helpers_Misc,
+    Turns_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    SinglePlayerWar_Model_SpwWar,
+} from "../../internal.ts";
 
-export class Idle implements IState {
+export class Idle implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new Idle();
 
     public static getInstance(): Idle {
         return Idle._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.Idle;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.Idle;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
             const playerIndexInTurn = war.getPlayerInTurn().getPlayerIndex();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (tile.checkIsUnitProducerForPlayer(playerIndexInTurn))) {
-                    return StateId.ChoosingTileProductionTarget;
+                    return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return StateId.PreviewingTileAttackableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                     } else {
-                        return StateId.Idle;
+                        return ActionPlanners_Constants.StateId.Idle;
                     }
                 }
             } else {
                 if (unit.checkHasWeapon()) {
-                    return StateId.PreviewingUnitAttackableArea;
+                    return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                 } else {
-                    return StateId.PreviewingUnitMovableArea;
+                    return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                 }
             }
 
-        } else if (war instanceof getMeWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             const selfPlayerIndex   = actionPlanner.getPlayerIndexLoggedIn();
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (selfPlayerIndex != null) && (tile.checkIsUnitProducerForPlayer(selfPlayerIndex))) {
-                    return StateId.ChoosingTileProductionTarget;
+                    return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return StateId.PreviewingTileAttackableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                     } else {
-                        return StateId.Idle;
+                        return ActionPlanners_Constants.StateId.Idle;
                     }
                 }
             } else {
-                if ((isSelfInTurn) && ((unit.getActionState() === ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
-                    return StateId.ChoosingUnitMovePath;
+                if ((isSelfInTurn) && ((unit.getActionState() === Units_Constants.ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
+                    return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                 } else {
                     if (unit.checkHasWeapon()) {
-                        return StateId.PreviewingUnitAttackableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                     } else {
-                        return StateId.PreviewingUnitMovableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                     }
                 }
             }
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
             const playerIndexInTurn = war.getPlayerInTurn().getPlayerIndex();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (tile.checkIsUnitProducerForPlayer(playerIndexInTurn))) {
-                    return StateId.ChoosingTileProductionTarget;
+                    return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return StateId.PreviewingTileAttackableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                     } else {
-                        return StateId.Idle;
+                        return ActionPlanners_Constants.StateId.Idle;
                     }
                 }
             } else {
                 if (unit.checkHasWeapon()) {
-                    return StateId.PreviewingUnitAttackableArea;
+                    return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                 } else {
-                    return StateId.PreviewingUnitMovableArea;
+                    return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                 }
             }
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const turnManager       = war.getTurnManager();
             const playerIndexInTurn = turnManager.getPlayerIndexInTurn();
 
-            if (((war as SpwWar).getHumanPlayerIndexes().indexOf(playerIndexInTurn) < 0) ||
-                (turnManager.getPhaseCode() !== PhaseCode.Main)
+            if (((war as SinglePlayerWar_Model_SpwWar.SpwWar).getHumanPlayerIndexes().indexOf(playerIndexInTurn) < 0) ||
+                (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
             ) {
-                return StateId.Idle;
+                return ActionPlanners_Constants.StateId.Idle;
             } else {
                 const unit = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
                 if (!unit) {
                     const tile = war.getTileMap().getTile(gridIndex);
                     if (tile.checkIsUnitProducerForPlayer(playerIndexInTurn)) {
-                        return StateId.ChoosingTileProductionTarget;
+                        return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
                     } else {
                         if (tile.checkIsMapWeapon()) {
-                            return StateId.PreviewingTileAttackableArea;
+                            return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                         } else {
-                            return StateId.Idle;
+                            return ActionPlanners_Constants.StateId.Idle;
                         }
                     }
                 } else {
-                    if ((unit.getActionState() === ActionStateId.Idle) && (playerIndexInTurn === unit.getPlayerIndex())) {
-                        return StateId.ChoosingUnitMovePath;
+                    if ((unit.getActionState() === Units_Constants.ActionStateId.Idle) && (playerIndexInTurn === unit.getPlayerIndex())) {
+                        return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                     } else {
                         if (unit.checkHasWeapon()) {
-                            return StateId.PreviewingUnitAttackableArea;
+                            return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                         } else {
-                            return StateId.PreviewingUnitMovableArea;
+                            return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                         }
                     }
                 }
             }
 
-        } else if (war instanceof getTwWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
         } else {
-            throw newError(`Unknown actionPlanner.`);
+            throw Helpers_Misc.newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -166,39 +165,39 @@ export class Idle implements IState {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         this.apply(
             actionPlanner,
-            actionPlanner.getStateId() === StateId.Idle ? ShortSfxCode.CursorMove01 : void 0
+            actionPlanner.getStateId() === ActionPlanners_Constants.StateId.Idle ? Sounds_Constants.ShortSfxCode.CursorMove01 : void 0
         );
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         this.apply(actionPlanner);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`IdleState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`IdleState: Not expected to apply on drag ended!`);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public apply(actionPlanner: IActionPlanner, shortSfxCode?: ShortSfxCode): void {
+    public apply(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, shortSfxCode?: Sounds_Constants.ShortSfxCode): void {
         actionPlanner.clearAllDataForStates();
 
         if (shortSfxCode != null) {
-            playShortSfx(shortSfxCode);
+            Sounds_SoundPlayer.playShortSfx(shortSfxCode);
 
         } else {
             const stateId = actionPlanner.getStateId();
             if ((!actionPlanner.checkIsStateRequesting())   &&
-                (stateId !== StateId.Idle)                  &&
-                (stateId !== StateId.ExecutingAction)
+                (stateId !== ActionPlanners_Constants.StateId.Idle)                  &&
+                (stateId !== ActionPlanners_Constants.StateId.ExecutingAction)
             ) {
-                playShortSfx(ShortSfxCode.ButtonCancel01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             }
         }
 
-        actionPlanner.setStateId(StateId.Idle);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.Idle);
         actionPlanner.updateView();
     }
 }

@@ -1,29 +1,19 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { show } from "../../../FloatText.ts";
 import {
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarBaseClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndWar.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    FloatText,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    Lang_Utils,
+    Lang_Constants,
+} from "../../../internal.ts";
 
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoSystemEndWar } from "../../../proto/schema/CommonProto/WarOperation/WoSystemEndWar.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoSystemEndWar, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemEndWar(war, action);
     } else {
@@ -32,34 +22,29 @@ export async function execute(war: IBwWar, action: WoSystemEndWar, isFast: boole
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fastExeSystemEndWar(war: IBwWar, action: WoSystemEndWar): void {
+function fastExeSystemEndWar(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): void {
     war.setIsEnded(true);
 }
 
-async function normalExeSystemEndWar(war: IBwWar, action: WoSystemEndWar): Promise<void> {
+async function normalExeSystemEndWar(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (show(desc));
+    (desc) && (FloatText.show(desc));
 
     war.setIsEnded(true);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoSystemEndWar): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemEndWar): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
-        return `${getText(TextType.B0087)}`;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0087)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
-        return `${getText(TextType.B0087)}`;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)}`;
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0087)}`;
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

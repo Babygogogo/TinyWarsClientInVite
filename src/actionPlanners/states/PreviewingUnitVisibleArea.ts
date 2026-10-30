@@ -1,44 +1,41 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import { Idle } from "./Idle.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getMeWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { PhaseCode } from "../../turns/Constants.ts";
-import { ActionStateId } from "../../units/Constants.ts";
+    ActionPlanners_States_Idle,
+    MapEditor_Model_MeWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Units_Constants,
+    Helpers_Misc,
+    Turns_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+} from "../../internal.ts";
 
-export class PreviewingUnitVisibleArea implements IState {
+export class PreviewingUnitVisibleArea implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new PreviewingUnitVisibleArea();
 
     public static getInstance(): PreviewingUnitVisibleArea {
         return PreviewingUnitVisibleArea._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.PreviewingUnitVisibleArea;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if ((war instanceof getMeWarClass()) ||
-            (war instanceof getTwWarClass())
+        if ((war instanceof MapEditor_Model_MeWar.MeWar) ||
+            (war instanceof TestWar_Model_TwWar.TwWar)
         ) {
-            return StateId.Idle;
+            return ActionPlanners_Constants.StateId.Idle;
         }
 
         const selfPlayerIndexSet    = actionPlanner.getSelfPlayerIndexSet();
         const turnManager           = war.getTurnManager();
-        const isSelfInTurn          = (selfPlayerIndexSet.has(turnManager.getPlayerIndexInTurn())) && (turnManager.getPhaseCode() === PhaseCode.Main);
+        const isSelfInTurn          = (selfPlayerIndexSet.has(turnManager.getPlayerIndexInTurn())) && (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main);
         const tile                  = war.getTileMap().getTile(gridIndex);
         const unit                  = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
 
@@ -46,50 +43,50 @@ export class PreviewingUnitVisibleArea implements IState {
             if ((isSelfInTurn)                                                              &&
                 ([...selfPlayerIndexSet].some(v => tile.checkIsUnitProducerForPlayer(v)))
             ) {
-                return StateId.ChoosingTileProductionTarget;
+                return ActionPlanners_Constants.StateId.ChoosingTileProductionTarget;
             } else {
                 if (tile.checkIsMapWeapon()) {
-                    return StateId.PreviewingTileAttackableArea;
+                    return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                 } else {
-                    return StateId.Idle;
+                    return ActionPlanners_Constants.StateId.Idle;
                 }
             }
 
         } else {
             if ((isSelfInTurn)                                      &&
-                (unit.getActionState() === ActionStateId.Idle)  &&
+                (unit.getActionState() === Units_Constants.ActionStateId.Idle)  &&
                 (selfPlayerIndexSet.has(unit.getPlayerIndex()))
             ) {
-                return StateId.ChoosingUnitMovePath;
+                return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
             } else {
                 if (actionPlanner.getUnitForPreviewingVisibleArea() !== unit) {
-                    return StateId.PreviewingUnitVisibleArea;
+                    return ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea;
                 } else {
                     if (unit.checkHasWeapon()) {
-                        return StateId.PreviewingUnitAttackableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                     } else {
-                        return StateId.PreviewingUnitMovableArea;
+                        return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                     }
                 }
             }
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
-        Idle.getInstance().apply(actionPlanner, ShortSfxCode.ButtonCancel01);
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
+        ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner, Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         actionPlanner.clearFocusUnitOnMap();
         actionPlanner.clearFocusUnitLoaded();
         actionPlanner.clearChoosingUnitForDrop();
@@ -100,11 +97,11 @@ export class PreviewingUnitVisibleArea implements IState {
         actionPlanner.clearDataForPreviewingAttackableArea();
         actionPlanner.clearDataForPreviewingMovableArea();
 
-        actionPlanner.setUnitForPreviewingVisibleArea(getExisted(actionPlanner.getWar().getUnitMap().getUnitOnMap(gridIndex)));
+        actionPlanner.setUnitForPreviewingVisibleArea(Helpers_Misc.getExisted(actionPlanner.getWar().getUnitMap().getUnitOnMap(gridIndex)));
 
-        actionPlanner.setStateId(StateId.PreviewingUnitVisibleArea);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.CursorConfirm01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
     }
 
     public doApplyOnDrag(): void {
@@ -112,6 +109,6 @@ export class PreviewingUnitVisibleArea implements IState {
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`PreviewingUnitVisibleAreaState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`PreviewingUnitVisibleAreaState: Not expected to apply on drag ended!`);
     }
 }

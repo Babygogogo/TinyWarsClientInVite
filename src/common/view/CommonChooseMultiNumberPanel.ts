@@ -1,30 +1,29 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getFormattedText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    Stages_Constants,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Numbers_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export interface OpenData {
-    currentNumberArray      : Undefinable<number[]>;
+    currentNumberArray      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
     availableNumberArray    : number[];
     showNumber?             : boolean;
     minChooseCount?         : number;
@@ -37,31 +36,31 @@ export interface OpenData {
     callbackOnHelp?         : (num: number) => void;
     callbackOnConfirm       : (numberArray: number[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnHelp!              : IUiButton;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupSelectAll!       : IUiLayout;
-    private readonly _labelSelectAll!       : IUiLabel;
-    private readonly _imgSelectAll!         : IUiImage;
+    private readonly _groupSelectAll!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSelectAll!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgSelectAll!         : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupSelected!        : IUiLayout;
-    private readonly _labelSelectedTitle!   : IUiLabel;
-    private readonly _labelSelected!        : IUiLabel;
+    private readonly _groupSelected!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSelectedTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSelected!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _list!                 : IUiScrollList<DataForItemRenderer>;
-    private readonly _labelNoData!          : IUiLabel;
+    private readonly _list!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForItemRenderer>;
+    private readonly _labelNoData!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConfirm!           : IUiButton;
+    private readonly _btnConfirm!           : Ui_Interfaces_IUiButton.IUiButton;
 
     private readonly _selectedNumberSet     = new Set<number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
@@ -108,13 +107,13 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const func = this.getOpenData()?.getHelpText;
         if (func) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => func(),
             });
         }
     }
     private _onTouchedGroupSelectAll(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const selectedNumberSet = this._selectedNumberSet;
         selectedNumberSet.clear();
@@ -123,7 +122,7 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray = list.getBoundDataArray() ?? [];
         if (!this._imgSelectAll.getIsVisible()) {
             for (const data of dataArray) {
-                selectedNumberSet.add(getExisted(data?.num));
+                selectedNumberSet.add(Helpers_Misc.getExisted(data?.num));
             }
         }
         for (let i = 0; i < dataArray.length; ++i) {
@@ -142,13 +141,13 @@ export class Panel extends UiPanel<OpenData> {
         const arr               = [...this._selectedNumberSet].sort((v1, v2) => v1 - v2);
         const maxChooseCount    = openData.maxChooseCount;
         if ((maxChooseCount != null) && (arr.length > maxChooseCount)) {
-            show(getFormattedText(TextType.A0148, maxChooseCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.A0148, maxChooseCount));
             return;
         }
 
         const minChooseCount = openData.minChooseCount;
         if ((minChooseCount != null) && (arr.length < minChooseCount)) {
-            show(getFormattedText(TextType.A0150, minChooseCount));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.A0150, minChooseCount));
             return;
         }
 
@@ -181,11 +180,11 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelSelected();
     }
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
-        this._labelSelectAll.setLangText(TextType.B0761);
-        this._labelNoData.setLangText(TextType.B0278);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._labelSelectedTitle.setLangText(TextType.B1274);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Constants.UndefinedError);
+        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
+        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._labelSelectedTitle.setLangText(Lang_Constants.TextType.B1274);
 
         this._groupSelectAll.arrangeItems();
         this._groupSelected.arrangeItems();
@@ -217,7 +216,7 @@ export class Panel extends UiPanel<OpenData> {
         this._labelNoData.setIsVisible(!dataCount);
         await this._list.bindData(dataArray);
 
-        const columnsCount  = getValueInRange({
+        const columnsCount  = Numbers_Utils.getValueInRange({
             rawValue    : openData.columnsCount ?? 2,
             minValue    : 2,
             maxValue    : 4,
@@ -225,14 +224,14 @@ export class Panel extends UiPanel<OpenData> {
         const rowsCount     = Math.ceil(dataCount / columnsCount);
         const group         = this._group;
         group.setUnscaledManualWidth(columnsCount * 200 + (columnsCount - 1) * 20 + 40);
-        group.setUnscaledManualHeight(getValueInRange({
+        group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
             rawValue    : rowsCount * 30 + (rowsCount - 1) * 10 + 130,
             minValue    : 210,
-            maxValue    : Dimension.DesignMinHeight,
+            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
     private _updateGroupSelectAll(): void {
-        const numberArray   = this._list.getBoundDataArray()?.map(v => getExisted(v?.num)) ?? [];
+        const numberArray   = this._list.getBoundDataArray()?.map(v => Helpers_Misc.getExisted(v?.num)) ?? [];
         const group         = this._groupSelectAll;
         if (!numberArray.length) {
             group.setIsVisible(false);
@@ -247,7 +246,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForItemRenderer extends UiListItemData {
+interface DataForItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     num                     : number;
     showNumber              : boolean;
     getNumberMainText       : (num: number) => string | Promise<string>;
@@ -255,19 +254,19 @@ interface DataForItemRenderer extends UiListItemData {
     callbackOnHelp          : ((num: number) => void) | null;
     panel                   : Panel;
 }
-class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
-    private readonly _groupSelect!      : IUiContainer;
-    private readonly _imgSelected!      : IUiImage;
+class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForItemRenderer> {
+    private readonly _groupSelect!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupHelp!        : IUiContainer;
+    private readonly _groupHelp!        : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupText!        : IUiLayout;
-    private readonly _labelNumber!      : IUiLabel;
-    private readonly _labelNumberText!  : IUiLabel;
+    private readonly _groupText!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelNumber!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNumberText!  : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupSelect,    callback: this._onTouchedGroupSelect },
@@ -282,7 +281,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
         const data = this.getOpenData();
         data?.panel.updateOnSelectNumber(data.num);
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupHelp(): void {
         const openData = this.getOpenData();
@@ -293,7 +292,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
         const func = openData.callbackOnHelp;
         if (func) {
             func(openData.num);
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
 

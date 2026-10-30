@@ -1,19 +1,21 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWar_Model_SpwWar,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+    type SingleFreeWar_Interface_ISfwWar,
+} from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
-import type { ISfwWar } from "../interface/ISfwWar.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class SfwWar extends SpwWar implements ISfwWar {
+export class SfwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements SingleFreeWar_Interface_ISfwWar.ISfwWar {
     private _settingsForSfw?    : SettingsForSfw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForSfw(getExisted(data.getSettingsForSfw(), ClientErrorCode.SfwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForSfw(Helpers_Misc.getExisted(data.getSettingsForSfw(), Utils_ClientErrorCode.ClientErrorCode.SfwWar_Init_00));
         this.getRetractManager().setCanRetract(true);
 
         this._initView();
@@ -63,13 +65,13 @@ export class SfwWar extends SpwWar implements ISfwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForSfw(settings: SettingsForSfw): void {
         this._settingsForSfw = settings;
     }
     public getSettingsForSfw(): SettingsForSfw {
-        return getExisted(this._settingsForSfw);
+        return Helpers_Misc.getExisted(this._settingsForSfw);
     }
 }

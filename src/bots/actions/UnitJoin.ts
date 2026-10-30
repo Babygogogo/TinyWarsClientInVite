@@ -1,16 +1,18 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+import {
+    Units_Constants,
+    Timer_TimerModel,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type Bots_CommonParams,
+    type AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitJoin(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
     if (gridIndex.checkIsEqual(unitGridIndex)) {
@@ -36,12 +38,12 @@ export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit
     };
 }
 
-async function getScoreForActionUnitJoin(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForActionUnitJoin(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war           = commonParams.getWar();
-    const targetUnit    = getExisted(war.getUnitMap().getUnitOnMap(gridIndex), ClientErrorCode.SpwRobot_GetScoreForActionUnitJoin_00);
-    if (targetUnit.getActionState() === ActionStateId.Idle) {
+    const targetUnit    = Helpers_Misc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitJoin_00);
+    if (targetUnit.getActionState() === Units_Constants.ActionStateId.Idle) {
         return -9999;
     }
 

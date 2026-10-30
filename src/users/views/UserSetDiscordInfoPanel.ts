@@ -1,58 +1,57 @@
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import { Constants } from "../../urls/Constants.ts";
-import { getSelfDiscordInfo } from "../Model.ts";
-import { reqSetDiscordInfo } from "../Proxy.ts";
-import { checkIsDiscordIdValid } from "../Utils.ts";
+    Users_Utils,
+    Urls_Constants,
+    GamePanels_Dict,
+    Lang_Utils,
+    Users_Model,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Users_Proxy,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
-    private readonly _btnHelp!          : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelDiscordId!   : IUiLabel;
-    private readonly _inputDiscordId!   : IUiPromptedInput;
+    private readonly _labelDiscordId!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputDiscordId!   : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnDiscord!       : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDiscord!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupTurn!        : IUiContainer;
-    private readonly _imgTurn!          : IUiImage;
-    private readonly _labelTurn!        : IUiLabel;
+    private readonly _groupTurn!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgTurn!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTurn!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupRankPhase!   : IUiContainer;
-    private readonly _imgRankPhase!     : IUiImage;
-    private readonly _labelRankPhase!   : IUiLabel;
+    private readonly _groupRankPhase!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgRankPhase!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelRankPhase!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupRoom!        : IUiContainer;
-    private readonly _imgRoom!          : IUiImage;
-    private readonly _labelRoom!        : IUiLabel;
+    private readonly _groupRoom!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgRoom!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelRoom!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _isRequesting   = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
-            { type: TypeId.MsgUserSetDiscordInfoFailed,     callback: this._onMsgUserSetDiscordIdFailed },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
+            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfoFailed,     callback: this._onMsgUserSetDiscordIdFailed },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -75,7 +74,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const discordInfo = getSelfDiscordInfo();
+        const discordInfo = Users_Model.getSelfDiscordInfo();
         this._inputDiscordId.setInputText(discordInfo?.getDiscordId() ?? ``);
         this._imgRankPhase.setIsVisible(!discordInfo?.getIgnoreRankPhaseNotification());
         this._imgRoom.setIsVisible(!discordInfo?.getIgnoreRoomNotification());
@@ -83,20 +82,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0067),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0067),
         });
     }
     private _onTouchedBtnConfirm(): void {
         if (this._isRequesting) {
-            show(getText(TextType.A0046));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0046));
         } else {
             const discordId = this._inputDiscordId.getInputText() ?? ``;
-            if (!checkIsDiscordIdValid(discordId)) {
-                show(getText(TextType.A0048));
+            if (!Users_Utils.checkIsDiscordIdValid(discordId)) {
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0048));
             } else {
                 this._isRequesting = true;
-                reqSetDiscordInfo({
+                Users_Proxy.reqSetDiscordInfo({
                     discordId,
                     ignoreRankPhaseNotification : this._imgRankPhase.getIsVisible() ? null : true,
                     ignoreRoomNotification      : this._imgRoom.getIsVisible() ? null : true,
@@ -108,36 +107,36 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnDiscord(): void {
         if ((window) && (window.open)) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getFormattedText(TextType.F0065, `Discord`),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `Discord`),
                 callback: () => {
-                    window.open(Constants.DiscordUrl);
+                    window.open(Urls_Constants.Constants.DiscordUrl);
                 },
             });
         }
     }
 
     private _onTouchedGroupTurn(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgTurn;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupRankPhase(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgRankPhase;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupRoom(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgRoom;
         img.setIsVisible(!img.getIsVisible());
     }
 
     private _onMsgUserSetDiscordId(): void {
-        show(getText(TextType.A0049));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0049));
         this.closePanel();
     }
     private _onMsgUserSetDiscordIdFailed(): void {
@@ -152,12 +151,12 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0150);
-        this._labelDiscordId.setLangText(TextType.B0243);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnDiscord.setLangText(TextType.B1330);
-        this._labelTurn.setLangText(TextType.B0918);
-        this._labelRankPhase.setLangText(TextType.B0919);
-        this._labelRoom.setLangText(TextType.B0920);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0150);
+        this._labelDiscordId.setLangText(Lang_Constants.TextType.B0243);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnDiscord.setLangText(Lang_Constants.TextType.B1330);
+        this._labelTurn.setLangText(Lang_Constants.TextType.B0918);
+        this._labelRankPhase.setLangText(Lang_Constants.TextType.B0919);
+        this._labelRoom.setLangText(Lang_Constants.TextType.B0920);
     }
 }

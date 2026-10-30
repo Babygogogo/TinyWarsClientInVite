@@ -1,41 +1,40 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getBgmSfxName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getAllSfxCodeArray } from "../../sounds/Utils.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    Sounds_Utils,
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export interface OpenData {
-    currentSfxCode  : Undefinable<number>;
-    gameConfig      : GameConfig;
+    currentSfxCode  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     callback        : (sfxCode: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
-    private readonly _listSfx!          : IUiScrollList<DataForSfxRenderer>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _listSfx!          : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSfxRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnClose,                    callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -73,7 +72,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0542);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0542);
     }
 
     private _createDataForListSfx(): DataForSfxRenderer[] {
@@ -85,7 +84,7 @@ export class Panel extends UiPanel<OpenData> {
         const callback      = openData.callback;
         const dataArray     : DataForSfxRenderer[] = [];
         const gameConfig    = openData.gameConfig;
-        for (const sfxCode of getAllSfxCodeArray()) {
+        for (const sfxCode of Sounds_Utils.getAllSfxCodeArray()) {
             dataArray.push({
                 callback    : callback,
                 sfxCode     : sfxCode,
@@ -97,28 +96,28 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForSfxRenderer extends UiListItemData {
+interface DataForSfxRenderer extends Ui_Types_UiListItemData.UiListItemData {
     sfxCode     : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     callback    : (sfxCode: number) => void;
     panel       : Panel;
 }
-class SfxRenderer extends UiListItemRenderer<DataForSfxRenderer> {
-    private readonly _group!        : IUiContainer;
-    private readonly _imgBg!        : IUiImage;
-    private readonly _labelName!    : IUiLabel;
-    private readonly _groupSelect!  : IUiContainer;
-    private readonly _imgSelect!    : IUiImage;
-    private readonly _labelSelect!  : IUiLabel;
+class SfxRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSfxRenderer> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupSelect!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelect!    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelSelect!  : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupSelect,                    callback: this._onTouchedGroupSelect },
         ]);
-        this._applySettingsForWholeTouch(true, true, undefined, ShortSfxCode.None);
+        this._applySettingsForWholeTouch(true, true, undefined, Sounds_Constants.ShortSfxCode.None);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -135,7 +134,7 @@ class SfxRenderer extends UiListItemRenderer<DataForSfxRenderer> {
             return;
         }
 
-        playShortSfx(sfxCode);
+        Sounds_SoundPlayer.playShortSfx(sfxCode);
     }
 
     private _onTouchedGroupSelect(): void {
@@ -156,7 +155,7 @@ class SfxRenderer extends UiListItemRenderer<DataForSfxRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSelect.setLangText(TextType.B0258);
+        this._labelSelect.setLangText(Lang_Constants.TextType.B0258);
         this._updateLabelName();
     }
 
@@ -166,6 +165,6 @@ class SfxRenderer extends UiListItemRenderer<DataForSfxRenderer> {
             return;
         }
 
-        this._labelName.setText(getBgmSfxName(openData.sfxCode, openData.gameConfig) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getBgmSfxName(openData.sfxCode, openData.gameConfig) ?? Lang_Constants.UndefinedError);
     }
 }

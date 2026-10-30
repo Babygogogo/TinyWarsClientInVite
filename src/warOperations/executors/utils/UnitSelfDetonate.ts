@@ -1,24 +1,20 @@
-import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { encodeTeamIndex } from "../../../helpers/Team.ts";
+import {
+    Units_Constants,
+    Destructions_Utils,
+    Helpers_Team,
+    Helpers_Misc,
+    Units_Utils_Common,
+    Visibilities_Utils,
+    WarOperations_Executors_Utils_Common,
+    AuxiliaryTypes_MovePath,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+} from "../../../internal.ts";
 import type { WoUnitSelfDetonate } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import {
-    ActionStateId,
-    Hp,
-} from "../../../units/Constants.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import { getNormalizedHp } from "../../../units/utils/Common.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import {
-    handleCommonExtraData,
-    handlePostOperationPlunder,
-} from "./Common.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitSelfDetonate(war, action);
     } else {
@@ -26,30 +22,30 @@ export async function execute(war: IBwWar, action: WoUnitSelfDetonate, isFast: b
     }
 }
 
-function fastExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate): void {
+function fastExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData()),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData()),
             isFastExecute   : true,
         });
     } else {
-        const revisedPath   = MovePath.create(getExisted(action.getPath()));
+        const revisedPath   = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
-        const focusUnit     = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         const isBlocked = revisedPath.isBlocked;
         if (isBlocked) {
             // nothing to do.
         } else {
             const warStatisticsManager  = war.getWarStatisticsManager();
-            const selfDetonateCfg       = getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
+            const selfDetonateCfg       = Helpers_Misc.getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
             const destination           = pathNodes[pathNodes.length - 1];
             for (const targetGridIndex of destination.getGridsWithinDistance({
                 minDistance : 1,
@@ -59,14 +55,14 @@ function fastExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate): void 
                 const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
                 if ((targetUnit != null) && (targetUnit != focusUnit)) {
                     const currentHp   = targetUnit.getCurrentHp();
-                    const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Hp.Normalizer);
+                    const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Units_Constants.Hp.Normalizer);
                     if (currentHp != newHp) {
                         targetUnit.setCurrentHp(newHp);
 
                         {
-                            const unitLostNormalizedHp2 = getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
+                            const unitLostNormalizedHp2 = Units_Utils_Common.getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
                             if (unitLostNormalizedHp2 != 0) {
-                                const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                         unitType                    : targetUnit.getUnitType(),
@@ -75,7 +71,7 @@ function fastExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate): void 
                                         normalizedHpLoss            : unitLostNormalizedHp2,
                                         unitGain                    : 0,
                                         unitLoss                    : 0,
-                                        groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }
@@ -84,42 +80,42 @@ function fastExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate): void 
                 }
             }
 
-            destroyUnitOnMap(war, destination, false);
+            Destructions_Utils.destroyUnitOnMap(war, destination, false);
         }
 
-        handlePostOperationPlunder(focusUnit, true);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate): Promise<void> {
+async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitSelfDetonate): Promise<void> {
     // const desc = await war.getDescForExeUnitSelfDetonate(action);
     // (desc) && (FloatText.show(desc));
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData());
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
         await war.moveExtraUnit({
             movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
             aiming                  : null,
             deleteViewAfterMoving   : true,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
             commonExtraData : commonExtraData,
             isFastExecute   : false,
         });
 
     } else {
-        const revisedPath   = MovePath.create(getExisted(action.getPath()));
+        const revisedPath   = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
-        const focusUnit     = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         const isBlocked = revisedPath.isBlocked;
         if (isBlocked) {
@@ -133,9 +129,9 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
 
         } else {
             const warStatisticsManager  = war.getWarStatisticsManager();
-            const selfDetonateCfg       = getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
+            const selfDetonateCfg       = Helpers_Misc.getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
             const destination           = pathNodes[pathNodes.length - 1];
-            const targetUnits           : IUnit[] = [];
+            const targetUnits           : Units_IUnit.IUnit[] = [];
             for (const targetGridIndex of destination.getGridsWithinDistance({
                 minDistance : 1,
                 maxDistance : selfDetonateCfg.getRadius(),
@@ -146,14 +142,14 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
                     targetUnits.push(targetUnit);
 
                     const currentHp   = targetUnit.getCurrentHp();
-                    const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Hp.Normalizer);
+                    const newHp       = Math.max(1, currentHp - (selfDetonateCfg.getDamage()) * Units_Constants.Hp.Normalizer);
                     if (currentHp != newHp) {
                         targetUnit.setCurrentHp(newHp);
 
                         {
-                            const unitLostNormalizedHp2 = getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
+                            const unitLostNormalizedHp2 = Units_Utils_Common.getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
                             if (unitLostNormalizedHp2 != 0) {
-                                const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                         unitType                    : targetUnit.getUnitType(),
@@ -162,7 +158,7 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
                                         normalizedHpLoss            : unitLostNormalizedHp2,
                                         unitGain                    : 0,
                                         unitLoss                    : 0,
-                                        groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }
@@ -179,7 +175,7 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
                 updateViewAfterMove : true,
             });
 
-            destroyUnitOnMap(war, destination, true);
+            Destructions_Utils.destroyUnitOnMap(war, destination, true);
 
             const gridVisionEffect = war.getGridVisualEffect();
             for (const unit of targetUnits) {
@@ -188,7 +184,7 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
             }
         }
 
-        handlePostOperationPlunder(focusUnit, false);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);

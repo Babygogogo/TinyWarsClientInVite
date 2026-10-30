@@ -1,91 +1,83 @@
 import {
-    updateOnFailedMsgAtrGetRoomPublicInfo,
-    updateOnMsgAtrGetRoomPublicInfo,
-    setJoinedRoomIdArray,
-    updateOnMsgAtrSetBannedCoIdArray,
-    updateOnMsgAtrSetSelfSettings,
-    updateOnMsgAtrDeleteRoomByServer,
-} from "./Provider.ts";
-import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    AutoTourneys_Rooms_Provider,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as AtrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
 import type { S as AtrGetJoinedRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetJoinedRoomIdArray/S.ts";
 import type { S as AtrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
 import type { S as AtrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
 import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgAtrGetRoomPublicInfo,             callback: _onMsgAtrGetRoomPublicInfo },
-        { msgCode: MessageCodes.MsgAtrGetJoinedRoomIdArray,          callback: _onMsgAtrGetJoinedRoomIdArray },
-        { msgCode: MessageCodes.MsgAtrSetBannedCoIdArray,            callback: _onMsgAtrSetBannedCoIdArray },
-        { msgCode: MessageCodes.MsgAtrSetSelfSettings,               callback: _onMsgAtrSetSelfSettings },
-        { msgCode: MessageCodes.MsgAtrDeleteRoomByServer,            callback: _onMsgAtrDeleteRoomByServer },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrGetRoomPublicInfo,             callback: _onMsgAtrGetRoomPublicInfo },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrGetJoinedRoomIdArray,          callback: _onMsgAtrGetJoinedRoomIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrSetBannedCoIdArray,            callback: _onMsgAtrSetBannedCoIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrSetSelfSettings,               callback: _onMsgAtrSetSelfSettings },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrDeleteRoomByServer,            callback: _onMsgAtrDeleteRoomByServer },
     ]);
 }
 
 export function reqAtrGetRoomPublicInfo(roomId: number): void {
-    send({ MsgAtrGetRoomPublicInfo: { c: {
+    Networks_Manager.send({ MsgAtrGetRoomPublicInfo: { c: {
         roomId,
     } }, });
 }
-async function _onMsgAtrGetRoomPublicInfo(e: Event): Promise<void> {
+async function _onMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrGetRoomPublicInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMsgAtrGetRoomPublicInfo(data);
+        AutoTourneys_Rooms_Provider.updateOnFailedMsgAtrGetRoomPublicInfo(data);
     } else {
-        await updateOnMsgAtrGetRoomPublicInfo(data);
-        dispatch(TypeId.MsgAtrGetRoomPublicInfo, data);
+        await AutoTourneys_Rooms_Provider.updateOnMsgAtrGetRoomPublicInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo, data);
     }
 }
 
 export function reqAtrGetJoinedRoomIdArray(): void {
-    send({ MsgAtrGetJoinedRoomIdArray: { c: {
+    Networks_Manager.send({ MsgAtrGetJoinedRoomIdArray: { c: {
     }, }, });
 }
-function _onMsgAtrGetJoinedRoomIdArray(e: Event): void {
+function _onMsgAtrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as AtrGetJoinedRoomIdArrayResponse;
-    setJoinedRoomIdArray(data.getRoomIdArray());
-    dispatch(TypeId.MsgAtrGetJoinedRoomIdArray, data);
+    AutoTourneys_Rooms_Provider.setJoinedRoomIdArray(data.getRoomIdArray());
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrGetJoinedRoomIdArray, data);
 }
 
 export function reqAtrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
-    send({ MsgAtrSetBannedCoIdArray: { c: {
+    Networks_Manager.send({ MsgAtrSetBannedCoIdArray: { c: {
         roomId          : roomId,
         bannedCoIdArray : bannedCoIdArray,
     } }, });
 }
-async function _onMsgAtrSetBannedCoIdArray(e: Event): Promise<void> {
+async function _onMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrSetBannedCoIdArrayResponse;
     if (!data.getErrorCode()) {
-        await updateOnMsgAtrSetBannedCoIdArray(data);
-        dispatch(TypeId.MsgAtrSetBannedCoIdArray, data);
+        await AutoTourneys_Rooms_Provider.updateOnMsgAtrSetBannedCoIdArray(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrSetBannedCoIdArray, data);
     }
 }
 
 export function reqAtrSetSelfSettings(roomId: number, coId: number, unitAndTileSkinId: number): void {
-    send({ MsgAtrSetSelfSettings: { c: {
+    Networks_Manager.send({ MsgAtrSetSelfSettings: { c: {
         roomId,
         coId,
         unitAndTileSkinId,
     }, }, });
 }
-async function _onMsgAtrSetSelfSettings(e: Event): Promise<void> {
+async function _onMsgAtrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
-        await updateOnMsgAtrSetSelfSettings(data);
-        dispatch(TypeId.MsgAtrSetSelfSettings, data);
+        await AutoTourneys_Rooms_Provider.updateOnMsgAtrSetSelfSettings(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrSetSelfSettings, data);
     }
 }
 
-function _onMsgAtrDeleteRoomByServer(e: Event): void {
+function _onMsgAtrDeleteRoomByServer(e: Egret_Egret.Event): void {
     const data = e.data as AtrDeleteRoomByServerResponse;
-    updateOnMsgAtrDeleteRoomByServer(data);
-    dispatch(TypeId.MsgAtrDeleteRoomByServer, data);
+    AutoTourneys_Rooms_Provider.updateOnMsgAtrDeleteRoomByServer(data);
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgAtrDeleteRoomByServer, data);
 }

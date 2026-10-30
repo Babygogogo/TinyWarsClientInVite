@@ -1,24 +1,20 @@
-
 import {
-    registerVersionController,
-    loadConfig,
-    loadGroup,
-    getResByUrl,
-    type IVersionController,
-} from "./egret/Res.ts";
+    Egret_Res,
+    Logger,
+    FloatText,
+    type Ui_Types_UiSkin,
+    type Ui_Types_UiComponentType,
+    type Ui_Types_UiSkinAttrs,
+} from "./internal.ts";
 
-import type { UiSkin } from "./ui/types/UiSkin.ts";
-import { error } from "./Logger.ts";
-import { show } from "./FloatText.ts";
-
-export type { UiComponentType } from "./ui/types/UiComponentType.ts";
-export type { UiSkin } from "./ui/types/UiSkin.ts";
-export type { UiSkinAttrs } from "./ui/types/UiSkinAttrs.ts";
+export type UiComponentType = Ui_Types_UiComponentType.UiComponentType;
+export type UiSkin = Ui_Types_UiSkin.UiSkin;
+export type UiSkinAttrs = Ui_Types_UiSkinAttrs.UiSkinAttrs;
 
 const ALL_SKINS_FILENAME = "resource/AllSkins.json";
 
 let _isLoadedMainResource   = false;
-const _skinDict             = new Map<string, UiSkin>();
+const _skinDict             = new Map<string, Ui_Types_UiSkin.UiSkin>();
 const _modules              = import.meta.glob(
     "./assets/**/*.*",
     {
@@ -28,9 +24,9 @@ const _modules              = import.meta.glob(
 );
 
 export async function init(): Promise<void> {
-    registerVersionController(new VersionController());
+    Egret_Res.registerVersionController(new VersionController());
 
-    await loadConfig("default.res.json", "resource/");
+    await Egret_Res.loadConfig("default.res.json", "resource/");
     await Promise.all([
         _initAllSkins(),
     ]);
@@ -39,14 +35,14 @@ export async function init(): Promise<void> {
 
 export function loadMainRes(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        loadGroup("main")?.then(
+        Egret_Res.loadGroup("main")?.then(
             () => {
                 _isLoadedMainResource = true;
                 resolve();
             },
             (reason) => {
-                error("ResManager.loadMainRes() error! ", reason);
-                show("Error loading main resource! " + reason);
+                Logger.error("ResManager.loadMainRes() error! ", reason);
+                FloatText.show("Error loading main resource! " + reason);
                 reject();
             }
         );
@@ -58,7 +54,7 @@ export function checkIsLoadedMainResource(): boolean {
 
 async function _initAllSkins(): Promise<void> {
     const skinDict      = _getSkinDict();
-    const rawSkinDict   = await getResByUrl(ALL_SKINS_FILENAME) as Record<string, UiSkin>;
+    const rawSkinDict   = await Egret_Res.getResByUrl(ALL_SKINS_FILENAME) as Record<string, Ui_Types_UiSkin.UiSkin>;
     for (const key in rawSkinDict) {
         const skin = rawSkinDict[key];
         skinDict.set(key, skin);
@@ -69,14 +65,14 @@ async function _initAllSkins(): Promise<void> {
         }
     }
 }
-function _getSkinDict(): Map<string, UiSkin> {
+function _getSkinDict(): Map<string, Ui_Types_UiSkin.UiSkin> {
     return _skinDict;
 }
-export function getSkin(alias: string): UiSkin | undefined {
+export function getSkin(alias: string): Ui_Types_UiSkin.UiSkin | undefined {
     return _getSkinDict().get(alias);
 }
 
-class VersionController implements IVersionController {
+class VersionController implements Egret_Res.IVersionController {
     public async init(): Promise<void> {
         // nothing to do
     }

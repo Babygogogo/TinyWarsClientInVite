@@ -1,35 +1,28 @@
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    GamePanels_Dict,
+    Users_Model,
+    Lang_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Users_Proxy,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Types_UiInputEventType,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiPromptedInput,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { S as UserGetUsersByNicknameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    getFollowingUserIdArray,
-    getUserNickname,
-} from "../../users/Model.ts";
-import { reqUserGetUsersByNickname } from "../../users/Proxy.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export interface OpenData {
     maxChooseCount      : number | null;
@@ -37,30 +30,30 @@ export interface OpenData {
     getTitleText        : (() => string) | null;
     callbackOnConfirm   : (userIdArray: number[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _inputNickname!            : IUiPromptedInput;
-    private readonly _btnClearNickname!         : IUiButton;
+    private readonly _inputNickname!            : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnClearNickname!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelSearchRange!         : IUiLabel;
-    private readonly _btnSearchFollowing!       : IUiButton;
-    private readonly _btnSearchNotFollowing!    : IUiButton;
-    private readonly _btnSearchAll!             : IUiButton;
+    private readonly _labelSearchRange!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSearchFollowing!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearchNotFollowing!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearchAll!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listUser!                 : IUiScrollList<DataForUnitTypeRenderer>;
-    private readonly _btnConfirm!               : IUiButton;
+    private readonly _listUser!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitTypeRenderer>;
+    private readonly _btnConfirm!               : Ui_Interfaces_IUiButton.IUiButton;
 
     private _selectedUserIdSet                  = new Set<number>();
     private _candidateUserIdArray               : number[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -73,7 +66,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnSearchAll,           callback: this._onTouchedBtnSearchAll },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: UiInputEventType.FocusOut },
+            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -85,7 +78,7 @@ export class Panel extends UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
 
-        this._candidateUserIdArray = getFollowingUserIdArray()?.concat() ?? [];
+        this._candidateUserIdArray = Users_Model.getFollowingUserIdArray()?.concat() ?? [];
         this._updateBottomButtons();
         this._updateListNickname();
     }
@@ -125,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
                     }
                     this._addSelectedUserId(userId);
                 } else {
-                    show(getFormattedText(TextType.F0147, maxChooseCount));
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0147, maxChooseCount));
                 }
             }
         }
@@ -161,27 +154,27 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnSearchFollowed(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            this._candidateUserIdArray = getFollowingUserIdArray()?.concat() ?? [];
+            this._candidateUserIdArray = Users_Model.getFollowingUserIdArray()?.concat() ?? [];
             this.getSelectedUserIdSet().clear();
             this._updateListNickname();
         } else {
-            reqUserGetUsersByNickname(nickname, true);
+            Users_Proxy.reqUserGetUsersByNickname(nickname, true);
         }
     }
     private _onTouchedBtnSearchNotFollowing(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            show(getFormattedText(TextType.F0146, getText(TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
         } else {
-            reqUserGetUsersByNickname(nickname, false);
+            Users_Proxy.reqUserGetUsersByNickname(nickname, false);
         }
     }
     private _onTouchedBtnSearchAll(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            show(getFormattedText(TextType.F0146, getText(TextType.B0175)));
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0146, Lang_Utils.getText(Lang_Constants.TextType.B0175)));
         } else {
-            reqUserGetUsersByNickname(nickname, null);
+            Users_Proxy.reqUserGetUsersByNickname(nickname, null);
         }
     }
 
@@ -192,13 +185,13 @@ export class Panel extends UiPanel<OpenData> {
             const currChooseCount       = selectedUserIdArray.length;
             const maxChooseCount        = this.getMaxChooseCount();
             if ((maxChooseCount != null) && (currChooseCount > maxChooseCount)) {
-                show(getFormattedText(TextType.F0147, maxChooseCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0147, maxChooseCount));
                 return;
             }
 
             const minChooseCount = this.getMinChooseCount();
             if ((minChooseCount != null) && (currChooseCount < minChooseCount)) {
-                show(getFormattedText(TextType.F0155, maxChooseCount));
+                FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0155, maxChooseCount));
                 return;
             }
 
@@ -211,7 +204,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserGetUsersByNickname(e: Event): void {
+    private _onNotifyMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
         const data                  = e.data as UserGetUsersByNicknameResponse;
         this._candidateUserIdArray  = data.getUserIdArray();
         this.getSelectedUserIdSet().clear();
@@ -219,12 +212,12 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSearchRange.setLangText(TextType.A0834);
-        this._btnSearchFollowing.setLangText(TextType.B0997);
-        this._btnSearchNotFollowing.setLangText(TextType.B0998);
-        this._btnSearchAll.setLangText(TextType.B0776);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._inputNickname.setPromptText(getText(TextType.B0175));
+        this._labelSearchRange.setLangText(Lang_Constants.TextType.A0834);
+        this._btnSearchFollowing.setLangText(Lang_Constants.TextType.B0997);
+        this._btnSearchNotFollowing.setLangText(Lang_Constants.TextType.B0998);
+        this._btnSearchAll.setLangText(Lang_Constants.TextType.B0776);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._inputNickname.setPromptText(Lang_Utils.getText(Lang_Constants.TextType.B0175));
 
         this._updateLabelTitle();
     }
@@ -236,7 +229,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateLabelTitle(): void {
         const func = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : getText(TextType.Players));
+        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_Constants.TextType.Players));
     }
 
     private async _updateListNickname(): Promise<void> {
@@ -252,18 +245,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitTypeRenderer extends UiListItemData {
+interface DataForUnitTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
     userId  : number;
     panel   : Panel;
 }
-class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
-    private readonly _groupHelp!        : IUiContainer;
-    private readonly _groupSelect!      : IUiContainer;
-    private readonly _imgSelected!      : IUiImage;
+class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitTypeRenderer> {
+    private readonly _groupHelp!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupSelect!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelUserId!      : IUiLabel;
-    private readonly _labelName!        : IUiLabel;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelUserId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -278,11 +271,11 @@ class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
     }
 
     private _onTouchedGroupHelp(): void {
-        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupSelect(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectUser(openData.userId);
     }
@@ -295,7 +288,7 @@ class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
 
         this._labelUserId.setText(`#${userId}`);
 
-        const nickname = await getUserNickname(userId) ?? UndefinedError;
+        const nickname = await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError;
         if (userId === this.getOpenData()?.userId) {
             this._labelName.setText(nickname);
         }

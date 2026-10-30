@@ -1,50 +1,31 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType } from "../../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-} from "../../../lang/Utils.ts";
-import {
-    checkIsValid as checkIsValidMultiplierAndOffset,
-    getResultValue,
-} from "../../../multiplierAndOffsets/Utils.ts";
-import { getValueInRange } from "../../../numbers/Utils.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
-import {
-    getDescForEmbed as getPlayersDescForEmbed,
-    checkIsValid as checkIsValidPlayerFilter,
-    checkIsMeet as checkIsMeetPlayerFilter,
-} from "../../../players/utils/Filter.ts";
+    Players_Utils_Filter,
+    Tiles_Utils_Filter,
+    Units_Utils_Filter,
+    ValueAndComparators_Utils,
+    MultiplierAndOffsets_Utils,
+    Tiles_Utils_Serialization,
+    Lang_Utils,
+    Numbers_Utils,
+    Tiles_Constants_CustomLimits,
+    Lang_Constants,
+    Tiles_Constants_MapWeapon,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Tiles_ITile,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetCustomLaserTurretStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateSimple.ts";
 import { TileCustomLaserTurretData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import { LaserTurret } from "../../../tiles/constants/CustomLimits.ts";
-import { TypeId } from "../../../tiles/constants/MapWeapon.ts";
-import type { ITile } from "../../../tiles/ITile.ts";
-import {
-    getDescForEmbed as getTilesDescForEmbed,
-    checkIsValid as checkIsValidTileFilter,
-    checkIsMeet as checkIsMeetTileFilter,
-} from "../../../tiles/utils/Filter.ts";
-import { create } from "../../../tiles/utils/Serialization.ts";
-import {
-    checkIsValid as checkIsValidUnitFilter,
-    checkIsMeet as checkIsMeetUnitFilter,
-} from "../../../units/utils/Filter.ts";
-import {
-    getDesc,
-    checkIsValid as checkIsValidValueAndComparator,
-    checkIsMeet as checkIsMeetValueAndComparator,
-} from "../../../valueAndComparators/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetCustomLaserTurretStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateSimple>, gameConfig: GameConfigs_GameConfig.GameConfig, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetCustomLaserTurretStateSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -53,87 +34,87 @@ export function getBriefDesc(data: Undefinable<WeaSetCustomLaserTurretStateSimpl
     {
         const act = data.getActRangeForUp();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeUp));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeUp));
         }
     }
     {
         const act = data.getActRangeForDown();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeDown));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeDown));
         }
     }
     {
         const act = data.getActRangeForLeft();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeLeft));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeLeft));
         }
     }
     {
         const act = data.getActRangeForRight();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeRight));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeRight));
         }
     }
     {
         const act = data.getActPriority();
         if (act != null) {
-            actTextArray.push(getText(TextType.Priority));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
         const act = data.getActCanAffectSelf();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectOwner));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectOwner));
         }
     }
     {
         const act = data.getActCanAffectAlly();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectAlly));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectAlly));
         }
     }
     {
         const act = data.getActCanAffectEnemy();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectEnemy));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectEnemy));
         }
     }
     {
         const act = data.getActOffsetHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsHpOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsFuelOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsPriAmmoOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
         const act = data.getActCanBeFatal();
         if (act != null) {
-            actTextArray.push(getText(TextType.CanBeFatal));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0254,
-        getText(TextType.MystLaserTurret),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0254,
+        Lang_Utils.getText(Lang_Constants.TextType.MystLaserTurret),
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: Undefinable<WeaSetCustomLaserTurretStateSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -142,191 +123,191 @@ export function getDetailDesc(data: Undefinable<WeaSetCustomLaserTurretStateSimp
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${getTilesDescForEmbed(filter)}`);
+            conTextArray.push(`- ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1421)}) ${getPlayersDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${getDesc(
+            conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                getText(data.getConUnitFilter() == null ? TextType.B1418 : TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${getText(TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         const act = data.getActRangeForUp();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeUp));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeUp));
         }
     }
     {
         const act = data.getActRangeForDown();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeDown));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeDown));
         }
     }
     {
         const act = data.getActRangeForLeft();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeLeft));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeLeft));
         }
     }
     {
         const act = data.getActRangeForRight();
         if (act != null) {
-            actTextArray.push(getText(TextType.RangeRight));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.RangeRight));
         }
     }
     {
         const act = data.getActPriority();
         if (act != null) {
-            actTextArray.push(getText(TextType.Priority));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
         const act = data.getActCanAffectSelf();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectOwner));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectOwner));
         }
     }
     {
         const act = data.getActCanAffectAlly();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectAlly));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectAlly));
         }
     }
     {
         const act = data.getActCanAffectEnemy();
         if (act != null) {
-            actTextArray.push(getText(TextType.AffectEnemy));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.AffectEnemy));
         }
     }
     {
         const act = data.getActOffsetHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsHpOffset));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsFuelOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if (act != null) {
-            actTextArray.push(getText(TextType.UnitsPriAmmoOffset$));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
         const act = data.getActCanBeFatal();
         if (act != null) {
-            actTextArray.push(getText(TextType.CanBeFatal));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0255,
-        getText(TextType.MystLaserTurret),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0255,
+        Lang_Utils.getText(Lang_Constants.TextType.MystLaserTurret),
         conTextArray.join(`\n`),
-        getText(TextType.MystLaserTurret),
+        Lang_Utils.getText(Lang_Constants.TextType.MystLaserTurret),
         actTextArray.join(`, `),
     );
 }
 
-export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
+export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
+            if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
+            (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!checkIsValidValueAndComparator(comparator))
+            (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
         }
     }
 
     {
         const act = data.getActRangeForUp();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.RangeUp));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeUp));
         }
     }
     {
         const act = data.getActRangeForDown();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.RangeDown));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeDown));
         }
     }
     {
         const act = data.getActRangeForLeft();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.RangeLeft));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeLeft));
         }
     }
     {
         const act = data.getActRangeForRight();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.RangeRight));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.RangeRight));
         }
     }
     {
         const act = data.getActPriority();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Priority));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Priority));
         }
     }
     {
@@ -344,25 +325,25 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: M
     {
         const act = data.getActOffsetHp();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset));
         }
     }
     {
         const act = data.getActOffsetFuelPercentage();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$));
         }
     }
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$));
         }
     }
     {
@@ -384,7 +365,7 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: M
         (data.getActOffsetPrimaryAmmoPercentage() == null)   &&
         (data.getActCanBeFatal() == null)
     ) {
-        return getText(TextType.A0957);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
     }
 
     return null;
@@ -394,21 +375,21 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateSimple, mapSize: M
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
-    const targetTileArray: ITile[] = [];
+export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+    const targetTileArray: Tiles_ITile.ITile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = action.getConTileFilter();
         const conPlayerFilter   = action.getConPlayerFilter();
         const conUnitFilter     = action.getConUnitFilter();
         const conUnitComparator = action.getConUnitComparator();
-        const playerFilterDict  = new Map<IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
-            if (tile.getMapWeaponType() !== TypeId.CustomLaserTurret) {
+            if (tile.getMapWeaponType() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) {
                 continue;
             }
 
-            if ((conTileFilter != null) && (!checkIsMeetTileFilter(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tile))) {
                 continue;
             }
 
@@ -419,11 +400,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (checkIsMeetUnitFilter(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!checkIsMeetValueAndComparator(conUnitComparator, count)) {
+                if (!ValueAndComparators_Utils.checkIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -436,7 +417,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
         }
     }
 
-    const dataDict = new Map<ITile, TileCustomLaserTurretData>();
+    const dataDict = new Map<Tiles_ITile.ITile, TileCustomLaserTurretData>();
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomLaserTurretData.fromJson({
@@ -459,7 +440,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
     {
         for (const [tile, tileCustomLaserTurretData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
-            const newData   = create({
+            const newData   = Tiles_Utils_Serialization.create({
                 gridIndex               : tile.getGridIndex().toProto().toJson(),
                 playerIndex             : tile.getPlayerIndex(),
                 baseType                : tile.getBaseType(),
@@ -494,78 +475,78 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
+        resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
-function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForUp() ?? 0;
     const act           = action.getActRangeForUp();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.RangeForUp.MinValue,
-        maxValue    : LaserTurret.RangeForUp.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForDown() ?? 0;
     const act           = action.getActRangeForDown();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.RangeForDown.MinValue,
-        maxValue    : LaserTurret.RangeForDown.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForLeft() ?? 0;
     const act           = action.getActRangeForLeft();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.RangeForLeft.MinValue,
-        maxValue    : LaserTurret.RangeForLeft.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getRangeForRight() ?? 0;
     const act           = action.getActRangeForRight();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.RangeForRight.MinValue,
-        maxValue    : LaserTurret.RangeForRight.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (act == null) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.Priority.MinValue,
-        maxValue    : LaserTurret.Priority.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.Priority.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.Priority.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (act == null) {
@@ -574,7 +555,7 @@ function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: 
 
     return act;
 }
-function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (act == null) {
@@ -583,7 +564,7 @@ function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateSimple, tile: 
 
     return act;
 }
-function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (act == null) {
@@ -592,46 +573,46 @@ function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateSimple, tile:
 
     return act;
 }
-function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.OffsetHp.MinValue,
-        maxValue    : LaserTurret.OffsetHp.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.OffsetFuelPercentage.MinValue,
-        maxValue    : LaserTurret.OffsetFuelPercentage.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getFinalLaserTurretData()?.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
         return defaultValue;
     }
 
-    return getValueInRange({
-        minValue    : LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
-        maxValue    : LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
-        rawValue    : getResultValue(act, defaultValue),
+    return Numbers_Utils.getValueInRange({
+        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
+        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
+        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
-function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateSimple, tile: ITile): boolean {
+function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
     const defaultValue  = !!tile.getFinalLaserTurretData()?.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (act == null) {

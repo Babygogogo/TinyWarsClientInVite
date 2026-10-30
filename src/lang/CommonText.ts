@@ -1,65 +1,67 @@
-import { TextType } from "./Constants.ts";
+import {
+    Lang_Constants,
+} from "../internal.ts";
 
 export const CommonText: Record<number, string[]> = {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Long strings.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    [TextType.A0000]: [
+    [Lang_Constants.TextType.A0000]: [
         `登陆成功，祝您游戏愉快！`,
         `Logged in successfully!`,
         `Acceso exitoso!`,
     ],
-    [TextType.A0001]: [
+    [Lang_Constants.TextType.A0001]: [
         `账号不符合要求，请检查后重试`,
         `Invalid account.`,
         `Cuenta no válida`,
     ],
-    [TextType.A0002]: [
+    [Lang_Constants.TextType.A0002]: [
         `昵称不符合要求，请检查后重试`,
         `Invalid nickname.`,
         `Apodo no es válido`,
     ],
-    [TextType.A0003]: [
+    [Lang_Constants.TextType.A0003]: [
         `密码不符合要求，请检查后重试`,
         `Invalid password.`,
         `Contraseña no es válida`,
     ],
-    [TextType.A0004]: [
+    [Lang_Constants.TextType.A0004]: [
         `注册成功，正在自动登陆…`,
         `Register successfully! Now logging in...`,
         `Registro exitoso! Ingresando...`,
     ],
-    [TextType.A0005]: [
+    [Lang_Constants.TextType.A0005]: [
         `您已成功退出登陆，欢迎再次进入游戏。`,
         `Logout successfully.`,
         `Cierre de sesión exitoso.`,
     ],
-    [TextType.A0006]: [
+    [Lang_Constants.TextType.A0006]: [
         `您的账号被异地登陆，您已自动下线。`,
         `Someone logged in with your account!`,
         `Alguien se conectó desde tu cuenta`,
     ],
-    [TextType.A0007]: [
+    [Lang_Constants.TextType.A0007]: [
         `已成功连接服务器。`,
         `Connected to server successfully.`,
         `Conexión exitosa al servidor`,
     ],
-    [TextType.A0008]: [
+    [Lang_Constants.TextType.A0008]: [
         `连接服务器失败，正在重新连接…`,
         `Failed to connect to server. Now reconnecting...`,
         `Error en entrar al servidor. Conectando...`,
     ],
-    [TextType.A0009]: [
+    [Lang_Constants.TextType.A0009]: [
         `若不勾选复选框，则相应的属性不会发生变化。`,
         `The attr will not be changed if the corresponding checkbox is not checked.`,
         `El atributo no podrá cambiarse si no se marca el botón dispuesto`,
     ],
-    [TextType.A0010]: [
+    [Lang_Constants.TextType.A0010]: [
         `没有符合条件的地图`,
         `No maps found.`,
         `No se hallaron mapas.`,
     ],
-    [TextType.A0011]: [
+    [Lang_Constants.TextType.A0011]: [
         [
             `特定类型的部队可以在同一势力的特定地形上搭乘CO。`,
             ``,
@@ -82,7 +84,7 @@ export const CommonText: Record<number, string[]> = {
             `- El despliegue del CO en una unidad tiene un coste. El coste es igual a la mitad del valor de la unidad base (aunque algunos CO varían esta fórmula).`,
         ].join(`\n`),
     ],
-    [TextType.A0012]: [
+    [Lang_Constants.TextType.A0012]: [
         [
             `部分地形可以阻挡敌军特定类型部队的移动。`,
         ].join(`\n`),
@@ -93,47 +95,47 @@ export const CommonText: Record<number, string[]> = {
             `Hay terrenos que no permiten el paso de ciertas unidades.`
         ].join(`\n`),
     ],
-    [TextType.A0013]: [
+    [Lang_Constants.TextType.A0013]: [
         `发生网络错误，请重新登陆。`,
         `Connection failed. Please re-login.`,
         `Error de conexión. Por favor, vuelva a ingresar.`,
     ],
-    [TextType.A0014]: [
+    [Lang_Constants.TextType.A0014]: [
         `发生网络错误，请稍后再试。亦可尝试刷新浏览器。`,
         `Connection failed. Please try again later or refresh the browser.`,
         `Error de conexión. Por favor intente luego o refresque la página.`,
     ],
-    [TextType.A0015]: [
+    [Lang_Constants.TextType.A0015]: [
         `已成功创建房间，请等待其他玩家加入`,
         `The room has been created successfully. Please wait for other players to join.`,
         `La sala fue creada con éxito. Por favor, espere a que los demás jugadores se unan.`,
     ],
-    [TextType.A0016]: [
+    [Lang_Constants.TextType.A0016]: [
         `已成功退出房间`,
         `Quit successfully.`,
         `Ha salido con éxito.`,
     ],
-    [TextType.A0017]: [
+    [Lang_Constants.TextType.A0017]: [
         `密码不正确，请检查后重试`,
         `Invalid password.`,
         `Contraseña no válida`,
     ],
-    [TextType.A0018]: [
+    [Lang_Constants.TextType.A0018]: [
         `该地形的视野是归属者私有的吗？`,
         `Is the vision range private to the owner of the terrain?`,
         `¿Es el rango de visión exclusivamente para el dueño del terreno?`,
     ],
-    [TextType.A0019]: [
+    [Lang_Constants.TextType.A0019]: [
         `该房间已被销毁。`,
         `The room has been destroyed.`,
         `La sala ha sido destruida.`,
     ],
-    [TextType.A0020]: [
+    [Lang_Constants.TextType.A0020]: [
         `服务器维护中，请稍后登陆`,
         `The server is under maintenance. Please wait and login later.`,
         `El servidor está en mantención. Por favor, espere e ingrese luego.`,
     ],
-    [TextType.A0021]: [
+    [Lang_Constants.TextType.A0021]: [
         [
             `您可以调整特定的敌人信息，从而获得更准确的伤害预估。实际伤害不会受到任何影响。`,
             `本功能在雾战中最为有用。`,
@@ -177,57 +179,57 @@ export const CommonText: Record<number, string[]> = {
             `- Al estar su valor en 0, no habrá influencia de ese aspecto.`,
         ].join(`\n`),
     ],
-    [TextType.A0022]: [
+    [Lang_Constants.TextType.A0022]: [
         `恭喜您获得本局的胜利！\n即将回到大厅…`,
         `Congratulations!`,
         `Felicitaciones!`,
     ],
-    [TextType.A0023]: [
+    [Lang_Constants.TextType.A0023]: [
         `很遗憾您已战败，请再接再厉！\n即将回到大厅…`,
         `Good luck next war!`,
         `Mejor suerte la próxima!`,
     ],
-    [TextType.A0024]: [
+    [Lang_Constants.TextType.A0024]: [
         `您确定要结束回合吗？`,
         `Are you sure you want to end your turn?`,
         `¿Seguro que quiere finalizar su turno?`,
     ],
-    [TextType.A0025]: [
+    [Lang_Constants.TextType.A0025]: [
         `您确定要返回大厅吗？`,
         `Are you sure you want to go to the lobby?`,
         `¿Seguro que quiere ir al lobby?`,
     ],
-    [TextType.A0026]: [
+    [Lang_Constants.TextType.A0026]: [
         `您确定要投降吗？`,
         `Are you sure you want to resign?`,
         `¿Seguro que quieres rendirte?`,
     ],
-    [TextType.A0027]: [
+    [Lang_Constants.TextType.A0027]: [
         `请先选中您想要删除的部队，再进行此操作`,
         `Please select the unit you want to delete with the cursor before doing this.`,
         `Por favor selecciona con el cursor a la unidad que quieres suprimir, antes de presionar el botón.`,
     ],
-    [TextType.A0028]: [
+    [Lang_Constants.TextType.A0028]: [
         `您只能删除您自己的未行动的部队`,
         `You can delete your own idle units only.`,
         `Solo puedes suprimir a tus unidades inactivas.`,
     ],
-    [TextType.A0029]: [
+    [Lang_Constants.TextType.A0029]: [
         `是否确定要删除此部队？`,
         `Are you sure you want to delete the selected unit?`,
         `¿Seguro que quieres suprimir a la unidad seleccionada?`,
     ],
-    [TextType.A0030]: [
+    [Lang_Constants.TextType.A0030]: [
         `所有玩家都已同意和局，战局结束！\n即将回到大厅...`,
         `The game ends in draw!`,
         `La partida terminó en empate!`,
     ],
-    [TextType.A0031]: [
+    [Lang_Constants.TextType.A0031]: [
         `您确定要求和吗？`,
         `Are you sure you want to request a drawn game?`,
         `¿Seguro que quieres ofrecer un empate?`,
     ],
-    [TextType.A0032]: [
+    [Lang_Constants.TextType.A0032]: [
         [
             `选中"实时自动调整"后，在您绘制特定地形（比如道路，沙滩等等）时，系统会实时自动调整为合适的造型，特定情况下可能会直接删除造型。`,
             ``,
@@ -244,7 +246,7 @@ export const CommonText: Record<number, string[]> = {
             `Sin embargo, los resultados pueden no ajustarse a tus expectativas. Puedes des-marcar esta configuración y luego ajustar las casillas manualmente.`,
         ].join(`\n`),
     ],
-    [TextType.A0033]: [
+    [Lang_Constants.TextType.A0033]: [
         [
             `最终伤害 = ( 基础伤害 * 攻击倍率 + 幸运值 ) * HP倍率 * 防御倍率`,
             ``,
@@ -309,87 +311,87 @@ export const CommonText: Record<number, string[]> = {
             `Nota que en la calculadora de daño, el rango de ataque y la habilidad de lanzar ataques de ambas partes en la batalla son ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0034]: [
+    [Lang_Constants.TextType.A0034]: [
         `已有玩家求和，请先决定是否同意（通过菜单选项操作）`,
         `There is a request for a drawn game. Please decide whether to agree it before ending your turn.`,
         `Hay una propuesta de empate. Por favor, decida si desea o no aceptarla antes de finalizar su turno.`,
     ],
-    [TextType.A0035]: [
+    [Lang_Constants.TextType.A0035]: [
         `战局已结束，即将回到大厅…`,
         `The war is ended. Going back to the lobby...`,
         `La partida terminó. Volviendo al lobby...`,
     ],
-    [TextType.A0036]: [
+    [Lang_Constants.TextType.A0036]: [
         `检测到战局数据错误，已自动与服务器成功同步`,
         `The war is synchronized successfully.`,
         `La partida se sincronizó con éxito.`,
     ],
-    [TextType.A0037]: [
+    [Lang_Constants.TextType.A0037]: [
         `发生未知错误，正在返回大厅...`,
         `Something wrong happened! Going back to the lobby...`,
         `Ocurrió un error! Regresando al lobby...`,
     ],
-    [TextType.A0038]: [
+    [Lang_Constants.TextType.A0038]: [
         `战局数据已同步`,
         `The war is synchronized successfully.`,
         `La partida se sincronizó con éxito.`,
     ],
-    [TextType.A0039]: [
+    [Lang_Constants.TextType.A0039]: [
         `启用SetPath模式后，在指定部队移动路线时，您需要连续点击两次目标格子才能呼出操作菜单。\n这会增加操作量，但同时也便于指定移动路线，这在雾战中尤其有用。`,
         `While the Set Path mode is enabled, you have to double click (or touch) a tile in order to make the unit action panel appear when you are moving units.\nThis mode can be useful especially in FoW.`,
         `Mientras el modo de Establecer camino esté activado, debes hacer doble click (o tocar) en una casilla con tal de hacer aparecer el panel de acción de unidades al mover unidades.\nEste modo puede ser especialmente útil en partidas con Niebla de guerra`,
     ],
-    [TextType.A0040]: [
+    [Lang_Constants.TextType.A0040]: [
         `数据加载中，请稍候...`,
         `Now loading, please wait...`,
         `Cargando, por favor espere...`,
     ],
-    [TextType.A0041]: [
+    [Lang_Constants.TextType.A0041]: [
         `回放已播放完毕`,
         `The replay is completed.`,
         `La repetición terminó.`,
     ],
-    [TextType.A0042]: [
+    [Lang_Constants.TextType.A0042]: [
         `已处于战局初始状态，无法切换到上一回合`,
         `Can't rewind because it is the beginning of the replay.`,
         `No se puede retroceder por ser el comienzo de la partida.`,
     ],
-    [TextType.A0043]: [
+    [Lang_Constants.TextType.A0043]: [
         `已处于战局结束状态，无法切换到下一回合`,
         `Can't forward because it is the end of the replay.`,
         `No se puede adelantar por ser el final de la partida.`,
     ],
-    [TextType.A0044]: [
+    [Lang_Constants.TextType.A0044]: [
         `当前正在回放玩家动作，请待其结束后重试`,
         `Now replaying an action. Please wait until it ends.`,
         `Repitiendo una acción. Por favor, espera hasta que termine.`,
     ],
-    [TextType.A0045]: [
+    [Lang_Constants.TextType.A0045]: [
         `已成功切换回合`,
         `Turn switched.`,
         `Turno cambiado.`,
     ],
-    [TextType.A0046]: [
+    [Lang_Constants.TextType.A0046]: [
         `请求中，请稍候`,
         `Now requesting, please wait...`,
         `Solicitando, por favor espere...`,
     ],
-    [TextType.A0047]: [
+    [Lang_Constants.TextType.A0047]: [
         `昵称已更改`,
         `Your nickname is changed successfully`,
         `Tu apodo se cambió con éxito`,
     ],
-    [TextType.A0048]: [
+    [Lang_Constants.TextType.A0048]: [
         `Discord ID 不正确，请检查后重试`,
         `Invalid discord ID.`,
         `ID de discord no válida`,
     ],
-    [TextType.A0049]: [
+    [Lang_Constants.TextType.A0049]: [
         `Discord相关设置已更改`,
         `Your discord settings are changed successfully.`,
         `Sus configuraciones de discord cambiaron con éxito.`,
     ],
-    [TextType.A0050]: [
+    [Lang_Constants.TextType.A0050]: [
         [
             `所有地形都可能被设置为高亮。`,
             ``,
@@ -409,7 +411,7 @@ export const CommonText: Record<number, string[]> = {
             `- Esto por lo general solo sirve de recordatorio, y no afecta a la lógica del juego.`,
         ].join(`\n`),
     ],
-    [TextType.A0051]: [
+    [Lang_Constants.TextType.A0051]: [
         [
             `部分地形有建造点数，意味着特定部队可以在这些地形上执行建造指令，从而改变地形的类型和归属。`,
             ``,
@@ -432,7 +434,7 @@ export const CommonText: Record<number, string[]> = {
             `- Si la unidad abandona el terreno antes de completar la construcción, los puntos de construcción volverán automáticamente al valor máximo.`,
         ].join(`\n`),
     ],
-    [TextType.A0052]: [
+    [Lang_Constants.TextType.A0052]: [
         [
             `部分地形有占领点数，意味着它们可以被部队占领。`,
             ``,
@@ -458,37 +460,37 @@ export const CommonText: Record<number, string[]> = {
             `- Si la unidad abandona el terreno antes de completar la captura, los puntos de captura volverán automáticamente al valor máximo.`,
         ].join(`\n`),
     ],
-    [TextType.A0053]: [
+    [Lang_Constants.TextType.A0053]: [
         `由于地图设计存在问题，所以此地图暂时不能提交`,
         `This map can't be submitted because of the listed problem.`,
         `Este mapa no puede ser postulado por los problemas listados.`,
     ],
-    [TextType.A0054]: [
+    [Lang_Constants.TextType.A0054]: [
         `您确定要发动CO POWER吗？`,
         `Are you sure you want to activate the CO POWER?`,
         `¿Seguro que quiere activar el PODER CO?`,
     ],
-    [TextType.A0055]: [
+    [Lang_Constants.TextType.A0055]: [
         `当前有其他操作可选。您确定要继续执行当前操作吗？`,
         `Another action is available. Are you sure you want to continue?`,
         `Otra acción está disponible. ¿Seguro que quiere continuar?`,
     ],
-    [TextType.A0056]: [
+    [Lang_Constants.TextType.A0056]: [
         `发生未知错误`,
         `Internal Error`,
         `Error interno`,
     ],
-    [TextType.A0057]: [
+    [Lang_Constants.TextType.A0057]: [
         `禁用此项会清空您当前选择的CO（您可以重新选择一个）。确定要禁用吗？`,
         `You have chosen a CO that is banned by your current selection. Are you sure you want to continue the ban?`,
         `Has escogido un CO que está baneado por tu selección actual. ¿Seguro que quieres mantener el ban?`,
     ],
-    [TextType.A0058]: [
+    [Lang_Constants.TextType.A0058]: [
         `您确定要发动SUPER POWER吗？`,
         `Are you sure you want to activate the SUPER POWER?`,
         `¿Seguro que quieres activar el SUPER PODER?`,
     ],
-    [TextType.A0059]: [
+    [Lang_Constants.TextType.A0059]: [
         [
             `部分地形有HP属性，意味着它们可以被部队攻击和摧毁。`,
             ``,
@@ -517,12 +519,12 @@ export const CommonText: Record<number, string[]> = {
             `- Terreno no puede ser atacado por su propietario ni sus aliados.`,
         ].join(`\n`),
     ],
-    [TextType.A0060]: [
+    [Lang_Constants.TextType.A0060]: [
         `已发出观战请求，对方同意后即可观战。`,
         `Requested. You can watch the game when accepted.`,
         `Solicitado. Puede mirar la partida cuando lo acepten.`,
     ],
-    [TextType.A0061]: [
+    [Lang_Constants.TextType.A0061]: [
         [
             `表达式是一个强大的工具，可以用于获取战局中的各种信息，以及进行各种数学和逻辑运算，从而获得您想要的数据。`,
             ``,
@@ -584,22 +586,22 @@ export const CommonText: Record<number, string[]> = {
             `2. Durante la evaluación de la expresión, si hay un valor que no sea un número real "válido" (más allá del campo numérico de doble precisión flotante) o una operación ilegal (como tratar de calcular 0/0), la evaluación y las tareas serán interrumpidas y canceladas.`,
         ].join(`\n`),
     ],
-    [TextType.A0062]: [
+    [Lang_Constants.TextType.A0062]: [
         `已删除指定观战者`,
         `The selected watcher is removed.`,
         `El espectador seleccionado fue removido.`,
     ],
-    [TextType.A0063]: [
+    [Lang_Constants.TextType.A0063]: [
         `任意条件均可留空，等同于忽略该查找条件。`,
         `You can leave any of the filters blank. Those filters will be ignored.`,
         `Puede dejar cualquiera de los filtros en blanco. Esos filtros serán ignorados.`,
     ],
-    [TextType.A0064]: [
+    [Lang_Constants.TextType.A0064]: [
         `双击玩家名称，可以查看其详细信息`,
         `Touch a name to see the player's profile.`,
         `Presione el nombre para ver el perfil del jugador.`,
     ],
-    [TextType.A0065]: [
+    [Lang_Constants.TextType.A0065]: [
         [
             `部分地形可以维修停留于其上的指定部队。`,
             ``,
@@ -640,12 +642,12 @@ export const CommonText: Record<number, string[]> = {
             `- El terreno puede reparar unidades del propietario y de sus aliados. Los costos de reparación son pagados por el dueño de la unidad reparada.`,
         ].join(`\n`),
     ],
-    [TextType.A0066]: [
+    [Lang_Constants.TextType.A0066]: [
         `昵称可使用任意字符，长度不小于4位`,
         `You can use any character for the nickname, and the nickname should consist of at least 4 characters.`,
         `Puedes usar cualquier caracter para el apodo, y el apodo debe consistir de al menos 4 caracteres.`,
     ],
-    [TextType.A0067]: [
+    [Lang_Constants.TextType.A0067]: [
         [
             `输入正确的Discord ID，并加入以下游戏频道即可实时收到游戏相关消息，如回合轮转等。`,
             ``,
@@ -668,7 +670,7 @@ export const CommonText: Record<number, string[]> = {
             `Tu ID de discord ID es pública para cualquier usuario con el modo desarrollador activado sin importar si tu activas o no esa función. Por tanto, no se vulneran aspectos de seguridad ni privacidad de tu cuenta con ese dato.`
         ].join(`\n`),
     ],
-    [TextType.A0068]: [
+    [Lang_Constants.TextType.A0068]: [
         [
             `部分地形可为拥有者的所有部队提供攻防加成。`,
             ``,
@@ -691,17 +693,17 @@ export const CommonText: Record<number, string[]> = {
             `- En Niebla de guerra, si tu oponente controla este terreno que no está en tu línea de visión, los bonus de ataque y defensa no serán incluidos en la pre-visualización de daños en partida. Por favor, tenga cuidado.`,
         ].join(`\n`),
     ],
-    [TextType.A0069]: [
+    [Lang_Constants.TextType.A0069]: [
         `请为参赛玩家设置至少两个队伍`,
         `Please set at least two teams for players.`,
         `Por favor, establezca al menos dos equipos para jugadores`,
     ],
-    [TextType.A0070]: [
+    [Lang_Constants.TextType.A0070]: [
         `您选择的存档位置非空，其内容将被覆盖。确定要继续吗？`,
         `The save slot is not empty and will be overwritten. Are you sure you want to continue?`,
         `El espacio de guardado no está vacío y será sobreescrito. ¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0071]: [
+    [Lang_Constants.TextType.A0071]: [
         [
             `您的存档将被覆盖。`,
             ``,
@@ -718,7 +720,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0072]: [
+    [Lang_Constants.TextType.A0072]: [
         [
             `您当前的进度将会丢失。`,
             ``,
@@ -735,12 +737,12 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0073]: [
+    [Lang_Constants.TextType.A0073]: [
         `已成功存档`,
         `Game saved successfully.`,
         `Partida guardada con éxito.`,
     ],
-    [TextType.A0074]: [
+    [Lang_Constants.TextType.A0074]: [
         [
             `部分地形可用于生产指定部队。`,
             ``,
@@ -769,17 +771,17 @@ export const CommonText: Record<number, string[]> = {
             `- Las unidades al ser producidas esperarán, y solo en el siguiente turno podrán efectuar acciones.`,
         ].join(`\n`),
     ],
-    [TextType.A0075]: [
+    [Lang_Constants.TextType.A0075]: [
         `地图重载成功`,
         `Successfully reloaded all maps.`,
         `Todos los mapas recargados con éxito.`,
     ],
-    [TextType.A0076]: [
+    [Lang_Constants.TextType.A0076]: [
         `您无法删除最后一个部队`,
         `You can't delete your last unit.`,
         `No puedes suprimir a tu última unidad.`,
     ],
-    [TextType.A0077]: [
+    [Lang_Constants.TextType.A0077]: [
         [
             `特定地形被敌人占领时，地形原本的拥有者会被判负。`,
             ``,
@@ -799,12 +801,12 @@ export const CommonText: Record<number, string[]> = {
             `- Si un jugador posee varios de estos terrenos cruciales al mismo tiempo, cualquiera de ellos que sea capturado llevará a su derrota.`,
         ].join(`\n`),
     ],
-    [TextType.A0078]: [
+    [Lang_Constants.TextType.A0078]: [
         `加载中，请稍候`,
         `Now loading`,
         `Cargando`,
     ],
-    [TextType.A0079]: [
+    [Lang_Constants.TextType.A0079]: [
         [
             `部分地形可以为停留于其上的指定部队提供隐蔽。`,
             ``,
@@ -845,7 +847,7 @@ export const CommonText: Record<number, string[]> = {
             `    - Usar habilidades de ciertos CO específicos que aporten visión`,
         ].join(`\n`),
     ],
-    [TextType.A0080]: [
+    [Lang_Constants.TextType.A0080]: [
         [
             `确定要删除此地图吗？`,
             `删除后，此地图将不再可用，但相关战局/回放仍可正常运作。`,
@@ -861,12 +863,12 @@ export const CommonText: Record<number, string[]> = {
             `删除后，此地图将不再可用，但相关战局/回放仍可正常运作。`,
         ].join(`\n`),
     ],
-    [TextType.A0081]: [
+    [Lang_Constants.TextType.A0081]: [
         `已成功删除地图`,
         `The map has been deleted successfully.`,
         `El mapa fue eliminado exitosamente.`,
     ],
-    [TextType.A0082]: [
+    [Lang_Constants.TextType.A0082]: [
         [
             `所有地形都可为其拥有者及盟友提供视野以及“反隐身”效果。`,
             ``,
@@ -892,22 +894,22 @@ export const CommonText: Record<number, string[]> = {
             `- El efecto "anti-sigilo" se refiere a que el propietario del terreno y sus aliados pueden observar a todas las unidades que se posen o circulen a través de dicho terreno, incluso si esas unidades están en estado "sumergido" o "invisible".`,
         ].join(`\n`),
     ],
-    [TextType.A0083]: [
+    [Lang_Constants.TextType.A0083]: [
         `此地图存在以下问题，暂不能提审，但可以正常保存以备后续编辑。`,
         `This map is not playable (see below), but you can save it and edit it later.`,
         `Este mapa no es jugable (por las razones detalladas abajo), pero puedes guardarlo y seguir editándolo luego.`,
     ],
-    [TextType.A0084]: [
+    [Lang_Constants.TextType.A0084]: [
         `您已提审过其他地图。若提审此地图，则其他地图将被自动撤销提审。确定要继续吗？`,
         `You have submitted some other maps for review. If you submit this map, the submitted maps will not be reviewed. Are you sure you want to continue?`,
         `Has postulado otros mapas para revisión. Si postulas este mapa, los demás mapas postulados no serán revisados. ¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0085]: [
+    [Lang_Constants.TextType.A0085]: [
         `已成功保存地图`,
         `The map has been saved.`,
         `Se guardó el mapa.`,
     ],
-    [TextType.A0086]: [
+    [Lang_Constants.TextType.A0086]: [
         [
             `部分地形可为所属势力带来资金收入。`,
             ``,
@@ -930,12 +932,12 @@ export const CommonText: Record<number, string[]> = {
             `- Luego de la asignación de dinero, el sistema realizará el mantenimiento de unidades apostadas en terrenos con esa capacidad. Se aplica un cobro al presupuesto por ese proceso`,
         ].join(`\n`),
     ],
-    [TextType.A0087]: [
+    [Lang_Constants.TextType.A0087]: [
         `您输入的宽高不合法，请检查`,
         `The W/H is not valid.`,
         `La tasa ancho/largo no es válida.`,
     ],
-    [TextType.A0088]: [
+    [Lang_Constants.TextType.A0088]: [
         [
             `部分地形可为停留于其上的特定部队提供防御力加成。`,
             ``,
@@ -961,7 +963,7 @@ export const CommonText: Record<number, string[]> = {
             `- La bonificación no aplica a daño externo al combate, tales como armas del escenario o habilidades de daño directo del CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0089]: [
+    [Lang_Constants.TextType.A0089]: [
         [
             `已有的所有地形数据都将被覆盖。`,
             ``,
@@ -978,77 +980,77 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres rellenar el mapa?`,
         ].join(`\n`),
     ],
-    [TextType.A0090]: [
+    [Lang_Constants.TextType.A0090]: [
         `没有符合条件的格子`,
         `No eligible grids.`,
         `Sin grillas elegibles.`,
     ],
-    [TextType.A0091]: [
+    [Lang_Constants.TextType.A0091]: [
         `任意子条件或子节点*不*成立时，此节点成立。`,
         `The condition node is true if ANY of the sub conditions and/or sub nodes is FALSE.`,
         `El nodo de condición es verdadero si CUALQUIERA de las sub-condiciones y/o sub-nodos es FALSO.`,
     ],
-    [TextType.A0092]: [
+    [Lang_Constants.TextType.A0092]: [
         `您已成功过审该地图。`,
         `You have accepted the map successfully.`,
         `Has aceptado el mapa.`,
     ],
-    [TextType.A0093]: [
+    [Lang_Constants.TextType.A0093]: [
         `您已成功拒审该地图。`,
         `You have rejected the map successfully.`,
         `Has rechazado el mapa.`,
     ],
-    [TextType.A0094]: [
+    [Lang_Constants.TextType.A0094]: [
         `请输入拒审理由`,
         `Please write down the reason for the rejection`,
         `Por favor, escriba el motivo del rechazo`,
     ],
-    [TextType.A0095]: [
+    [Lang_Constants.TextType.A0095]: [
         `您确定要导入此地图吗？`,
         `Are you sure you want to import this map?`,
         `¿Seguro que quiere importar este mapa?`,
     ],
-    [TextType.A0096]: [
+    [Lang_Constants.TextType.A0096]: [
         `至少需要保留一个预设规则`,
         `There must be at least one preset rule.`,
         `Debe haber al menos una regla preliminar.`,
     ],
-    [TextType.A0097]: [
+    [Lang_Constants.TextType.A0097]: [
         `确定要删除这个预设规则吗？`,
         `Are you sure you want to delete this preset rule?`,
         `¿Seguro que quieres eliminar esta regla preliminar?`,
     ],
-    [TextType.A0098]: [
+    [Lang_Constants.TextType.A0098]: [
         `输入的值无效，请重试`,
         `Invalid value. Please retry.`,
         `Valor no válido. Por favor, retroceda.`,
     ],
-    [TextType.A0099]: [
+    [Lang_Constants.TextType.A0099]: [
         `无法创建更多的预设规则`,
         `You can't create more rules. `,
         `Usted no puede crear más reglas.`,
     ],
-    [TextType.A0100]: [
+    [Lang_Constants.TextType.A0100]: [
         `此地图没有预设规则`,
         `This map has no preset rules.`,
         `Este mapa no tiene reglas preliminares.`,
     ],
-    [TextType.A0101]: [
+    [Lang_Constants.TextType.A0101]: [
         `在本游戏模式中，系统会随机选择地图。您可以通过禁用地图功能来使得相应地图不被系统选中。`,
         `The banned maps will not be chosen for your matches.`,
         `Los mapas baneados no serán escogidos para sus partidas.`,
     ],
-    [TextType.A0102]: [
+    [Lang_Constants.TextType.A0102]: [
         `你没有执行此操作所需的权限。`,
         `You do not have permissions to perform this operation.`,
         `Usted no tiene permiso para hacer esta operación.`,
     ],
-    [TextType.A0103]: [
+    [Lang_Constants.TextType.A0103]: [
         `有玩家正在进行操作，请等待该操作结束后重试`,
         `A player is taking a move. Please retry when the move ends`,
         `Un jugador está efectuando un movimiento. Por favor, reintente cuando éste termine.`,
     ],
-    [TextType.A0104]: [
+    [Lang_Constants.TextType.A0104]: [
         [
             `此操作只影响您的地图编辑器中的地图数据，不影响战役地图池。`,
             `若您希望修改战役地图池中的地图数据，请点击“提交”按钮。`,
@@ -1068,22 +1070,22 @@ export const CommonText: Record<number, string[]> = {
             `Puedes guardar el mapa apretando ctrl+s.`,
         ].join(`\n`),
     ],
-    [TextType.A0105]: [
+    [Lang_Constants.TextType.A0105]: [
         `请输入您对此地图的评价以及改进建议，可留空`,
         `Please leave your comment here if any.`,
         `Por favor, deje aquí su comentario si tiene alguno.`,
     ],
-    [TextType.A0106]: [
+    [Lang_Constants.TextType.A0106]: [
         `已成功评分`,
         `Rated successfully.`,
         `Evaluado exitosamente.`,
     ],
-    [TextType.A0107]: [
+    [Lang_Constants.TextType.A0107]: [
         `已成功创建战局。您想现在就开始游玩吗？`,
         `The war has been created successfully. Do you want to play it now?`,
         `La partida fue creada con éxito. ¿Desea jugarla ahora?`,
     ],
-    [TextType.A0108]: [
+    [Lang_Constants.TextType.A0108]: [
         [
             `此操作将影响战役地图池。`,
             ``,
@@ -1112,7 +1114,7 @@ export const CommonText: Record<number, string[]> = {
             `A diferencia de postular / publicar mapas normales, el postular / publicar mapas de campaña no requiere de revisión de mapas. Por favor, actúe con cuidado.`,
         ].join(`\n`),
     ],
-    [TextType.A0109]: [
+    [Lang_Constants.TextType.A0109]: [
         [
             `您希望一并修改已发布的战役地图的描述吗？`,
             ``,
@@ -1129,7 +1131,7 @@ export const CommonText: Record<number, string[]> = {
             `El estado de publicación de los mapas de campaña, los registros de jugadores y la tabla de posiciones no se verán alterados.`,
         ].join(`\n`),
     ],
-    [TextType.A0110]: [
+    [Lang_Constants.TextType.A0110]: [
         [
             `您确定要让AI来控制这个势力吗？`,
             ``,
@@ -1152,12 +1154,12 @@ export const CommonText: Record<number, string[]> = {
             `Por tanto, puedes detener la partida en el momento que quieras abriendo el panel de información de la partida y tomando el control de cualquiera de las fuerzas.`,
         ].join(`\n`),
     ],
-    [TextType.A0111]: [
+    [Lang_Constants.TextType.A0111]: [
         `您确定要自行控制这个势力吗？`,
         `Are you sure you want to take control of the force?`,
         `¿Seguro que quiere tomar el control de la fuerza?`,
     ],
-    [TextType.A0112]: [
+    [Lang_Constants.TextType.A0112]: [
         [
             `您希望一并修改已发布的战役地图的名称吗？`,
             ``,
@@ -1174,32 +1176,32 @@ export const CommonText: Record<number, string[]> = {
             `El estado de publicación del mapa de la campaña, los registros de jugadores y la tabla de posiciones no se verán alterados.`,
         ].join(`\n`),
     ],
-    [TextType.A0113]: [
+    [Lang_Constants.TextType.A0113]: [
         `您确定要切换该部队的行动状态吗？`,
         `Are you sure you want to switch the unit's action state?`,
         `¿Seguro que quieres cambiar el estado de acción de la unidad?`,
     ],
-    [TextType.A0114]: [
+    [Lang_Constants.TextType.A0114]: [
         `您确定要切换该部队的下潜状态吗？`,
         `Are you sure you want to switch the unit's dived state?`,
         `¿Seguro que quiere cambiar el estado de inmersión de la unidad?`,
     ],
-    [TextType.A0115]: [
+    [Lang_Constants.TextType.A0115]: [
         `请联系babygogogo以解决问题`,
         `Please refer to babygogogo.`,
         `Por favor, informe a babygogogo.`,
     ],
-    [TextType.A0116]: [
+    [Lang_Constants.TextType.A0116]: [
         `此操作将完全覆盖掉当前地图的战局事件，请谨慎操作。`,
         `The current war events will be overridden. Please be careful to operate.`,
         `Los eventos de guerra actuales serán anulados. Por favor actúe con cuidado.`,
     ],
-    [TextType.A0117]: [
+    [Lang_Constants.TextType.A0117]: [
         `注：清空后，所有地形都会被设置为平原，所有部队都会被删除！`,
         `Caution: All tiles will be set as plain and all units will be deleted!`,
         `Advertencia: Todas las casillas se establecerán como llano y todas las unidades serán suprimidas!`,
     ],
-    [TextType.A0118]: [
+    [Lang_Constants.TextType.A0118]: [
         [
             `您可以在文本中插入特定字串，系统会在显示时将其替换为相应的值。`,
             `可用的字串如下：`,
@@ -1219,7 +1221,7 @@ export const CommonText: Record<number, string[]> = {
             `{CCx}  se reemplazarán con el contra-valor establecido por el usuario. El rango de x es [1-30]. Ejemplos {CC1},{CC2},{CC30}.`,
         ].join(`\n`),
     ],
-    [TextType.A0119]: [
+    [Lang_Constants.TextType.A0119]: [
         [
             `使用方法：`,
             `floor(x)`,
@@ -1263,7 +1265,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0120]: [
+    [Lang_Constants.TextType.A0120]: [
         [
             `使用方法：`,
             `random()`,
@@ -1304,7 +1306,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0121]: [
+    [Lang_Constants.TextType.A0121]: [
         [
             `使用方法：`,
             `customCounter(id)`,
@@ -1348,7 +1350,7 @@ export const CommonText: Record<number, string[]> = {
             `- id no es un integral.`,
         ].join(`\n`),
     ],
-    [TextType.A0122]: [
+    [Lang_Constants.TextType.A0122]: [
         [
             `使用方法：`,
             `hasUnit(x, y)`,
@@ -1395,7 +1397,7 @@ export const CommonText: Record<number, string[]> = {
             `- las coordenadas están fuera del mapa.`,
         ].join(`\n`),
     ],
-    [TextType.A0123]: [
+    [Lang_Constants.TextType.A0123]: [
         [
             `返回值：(整数)`,
             `当前的自定义计数器的ID。`,
@@ -1409,7 +1411,7 @@ export const CommonText: Record<number, string[]> = {
             `La ID del contrario personalizado actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0124]: [
+    [Lang_Constants.TextType.A0124]: [
         [
             `返回值：(实数)`,
             `当前的自定义计数器的值。`,
@@ -1423,32 +1425,32 @@ export const CommonText: Record<number, string[]> = {
             `El valor del contrario personalizado actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0125]: [
+    [Lang_Constants.TextType.A0125]: [
         `要现在就进入战局吗？`,
         `Do you want to play it now?`,
         `¿Desea jugarla ahora?`,
     ],
-    [TextType.A0126]: [
+    [Lang_Constants.TextType.A0126]: [
         `您确定要退出此房间吗？`,
         `Are you sure you want to exit the room?`,
         `¿Seguro que quiere salir de la sala?`,
     ],
-    [TextType.A0127]: [
+    [Lang_Constants.TextType.A0127]: [
         `您已被请出此房间。`,
         `You have been removed from the room.`,
         `Has sido removido de la sala.`,
     ],
-    [TextType.A0128]: [
+    [Lang_Constants.TextType.A0128]: [
         `请先取消您的准备状态`,
         `Please cancel the "ready" state first.`,
         `Por favor, cancele el estado de "listo" primero.`,
     ],
-    [TextType.A0129]: [
+    [Lang_Constants.TextType.A0129]: [
         `您确定要使用自定义规则吗？`,
         `Are you sure you want to use a custom rule?`,
         `¿Seguro que quiere usar una regla personalizada?`,
     ],
-    [TextType.A0130]: [
+    [Lang_Constants.TextType.A0130]: [
         [
             `使用方法：`,
             `isAmong(x, ...values)`,
@@ -1495,7 +1497,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0131]: [
+    [Lang_Constants.TextType.A0131]: [
         [
             `返回值：(整数)`,
             `当前地形的X坐标值`,
@@ -1509,7 +1511,7 @@ export const CommonText: Record<number, string[]> = {
             `El valor de la coordenada X de la casilla actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0132]: [
+    [Lang_Constants.TextType.A0132]: [
         [
             `请设定您愿意同时进行的排位赛的数量上限（设置为0等同于您不参加对应模式的排位赛）。`,
             ``,
@@ -1539,17 +1541,17 @@ export const CommonText: Record<number, string[]> = {
             `Nota: Si te unes al servidor de Discord y luego enlazas tu ID de Discord con TinyWars puedes recibir notificaciones en Discord cuando las salas sean creadas y cuando sea tu turno de jugar. Cliquea en tu perfil en TinyWars, luego en la caja amarill en "Cambiar ID de Discord" para enlazar tu ID de Discord.`,
         ].join('\n'),
     ],
-    [TextType.A0133]: [
+    [Lang_Constants.TextType.A0133]: [
         `正在等待对战各方禁用CO。`,
         `Waiting for the COs to be banned from all sides.`,
         `Esperando que los COs sean baneados por todas las partes.`,
     ],
-    [TextType.A0134]: [
+    [Lang_Constants.TextType.A0134]: [
         `正在等待对战各方选择CO和势力颜色并进入准备状态。`,
         `Waiting for all the players to be ready for the game.`,
         `Esperando que todos los jugadores estén listos para la partida.`,
     ],
-    [TextType.A0135]: [
+    [Lang_Constants.TextType.A0135]: [
         [
             `返回值：(整数)`,
             `当前地形的Y坐标值`,
@@ -1563,7 +1565,7 @@ export const CommonText: Record<number, string[]> = {
             `El valor de la coordenada Y de la casilla actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0136]: [
+    [Lang_Constants.TextType.A0136]: [
         [
             `使用方法：`,
             `distanceToGrid(x, y)`,
@@ -1607,7 +1609,7 @@ export const CommonText: Record<number, string[]> = {
             `- x y/o y no es un integral`
         ].join(`\n`),
     ],
-    [TextType.A0137]: [
+    [Lang_Constants.TextType.A0137]: [
         [
             `使用方法：`,
             `distanceToLocation(locationId)`,
@@ -1651,7 +1653,7 @@ export const CommonText: Record<number, string[]> = {
             `- locationId no es un integral`
         ].join(`\n`),
     ],
-    [TextType.A0138]: [
+    [Lang_Constants.TextType.A0138]: [
         [
             `返回值：(整数)`,
             `处于回合内的玩家的序号`,
@@ -1665,12 +1667,12 @@ export const CommonText: Record<number, string[]> = {
             `El índice de jugador del jugador en ese turno.`,
         ].join(`\n`),
     ],
-    [TextType.A0139]: [
+    [Lang_Constants.TextType.A0139]: [
         `确定要不禁用任何CO吗？`,
         `Are you sure you want to ban no CO?`,
         `¿Seguro que no quieres banear a ningún CO?`,
     ],
-    [TextType.A0140]: [
+    [Lang_Constants.TextType.A0140]: [
         [
             `此操作无法撤销！`,
             ``,
@@ -1687,12 +1689,12 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres limpiar el espacio de guardado actual?`,
         ].join(`\n`),
     ],
-    [TextType.A0141]: [
+    [Lang_Constants.TextType.A0141]: [
         `已成功删除存档。`,
         `The save slot has been cleared.`,
         `El espacio de guardado se ha limpiado.`,
     ],
-    [TextType.A0142]: [
+    [Lang_Constants.TextType.A0142]: [
         [
             `使用方法：`,
             `teamIndex(playerIndex)`,
@@ -1736,22 +1738,22 @@ export const CommonText: Record<number, string[]> = {
             `- playerIndex no existe en la partida.`
         ].join(`\n`),
     ],
-    [TextType.A0143]: [
+    [Lang_Constants.TextType.A0143]: [
         `此地图已被修改，确定不保存直接退出吗？`,
         `The map has been modified. Are you sure you want to exit anyway?`,
         `El mapa ha sido modificado. ¿Seguro que quiere salir de todos modos?`,
     ],
-    [TextType.A0144]: [
+    [Lang_Constants.TextType.A0144]: [
         `(可选)请输入存档备注以便于区分。`,
         `(Optional) Please input a comment for the save slot.`,
         `(Opcional) Añada un comentario para el espacio de guardado`,
     ],
-    [TextType.A0145]: [
+    [Lang_Constants.TextType.A0145]: [
         `房间已满员`,
         `The room is full of players.`,
         `La sala está llena de jugadores.`,
     ],
-    [TextType.A0146]: [
+    [Lang_Constants.TextType.A0146]: [
         [
             `返回值：(整数)`,
             `当前地形的归属者的玩家序号。`,
@@ -1765,32 +1767,32 @@ export const CommonText: Record<number, string[]> = {
             `El índice de jugador del propietario de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0147]: [
+    [Lang_Constants.TextType.A0147]: [
         `新密码与确认密码不相同，请检查后重试`,
         `The new password is different from the confirm password.`,
         `La nueva contraseña es diferente de la contraseña de confirmación.`,
     ],
-    [TextType.A0148]: [
+    [Lang_Constants.TextType.A0148]: [
         `已成功修改密码。`,
         `Your password has been changed successfully.`,
         `Su contraseña fue cambiada exitosamente.`,
     ],
-    [TextType.A0149]: [
+    [Lang_Constants.TextType.A0149]: [
         `您确定要删除此房间吗？`,
         `Are you sure you want to delete this room?`,
         `¿Seguro que quiere eliminar esta sala?`,
     ],
-    [TextType.A0150]: [
+    [Lang_Constants.TextType.A0150]: [
         `正在加载图片\n请耐心等候`,
         `Now loading\nPlease wait...`,
         `Cargando\nPor favor, espere...`,
     ],
-    [TextType.A0151]: [
+    [Lang_Constants.TextType.A0151]: [
         `已成功修改地图标签`,
         `The map tag has been updated successfully.`,
         `La marca del mapa se ha actualizado con éxito.`,
     ],
-    [TextType.A0152]: [
+    [Lang_Constants.TextType.A0152]: [
         [
             `返回值：(整数)`,
             `当前地形的归属者的队伍序号。`,
@@ -1804,62 +1806,62 @@ export const CommonText: Record<number, string[]> = {
             `El índice de equipo del propietario de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0153]: [
+    [Lang_Constants.TextType.A0153]: [
         `请把错误码告知开发组`,
         `Please notify the developing group.`,
         `Por favor, notifique al equipo desarrollador.`,
     ],
-    [TextType.A0154]: [
+    [Lang_Constants.TextType.A0154]: [
         `已成功提交更新日志。`,
         `The change log has been updated successfully.`,
         `El cambio de cuenta se actualizó con éxito.`,
     ],
-    [TextType.A0155]: [
+    [Lang_Constants.TextType.A0155]: [
         `输入内容太短，请检查`,
         `The texts are too short.`,
         `Los textos son muy cortos.`,
     ],
-    [TextType.A0156]: [
+    [Lang_Constants.TextType.A0156]: [
         `请填写至少一种语言的内容。`,
         `Please fill text in at least one of the box.`,
         `Por favor, llene con texto alguna de las cajas.`,
     ],
-    [TextType.A0157]: [
+    [Lang_Constants.TextType.A0157]: [
         `已成功修改用户权限`,
         `The user privilege has been updated successfully.`,
         `El privilegio de usuario se actualizó exitosamente.`,
     ],
-    [TextType.A0158]: [
+    [Lang_Constants.TextType.A0158]: [
         `事件数据不存在，请删除本事件`,
         `The event data doesn't exist. Please delete it.`,
         `La información del evento no existe. Por favor, elimínelo`,
     ],
-    [TextType.A0159]: [
+    [Lang_Constants.TextType.A0159]: [
         `此事件尚未设定条件节点`,
         `The event contains no condition node.`,
         `El evento no contiene ningún nodo de condición.`,
     ],
-    [TextType.A0160]: [
+    [Lang_Constants.TextType.A0160]: [
         `条件节点的数据不存在。请删除此条件节点。`,
         `The condition node data doesn't exist. Please delete it.`,
         `La información del nodo de condición no existe. Por favor, elimínelo.`,
     ],
-    [TextType.A0161]: [
+    [Lang_Constants.TextType.A0161]: [
         `此条件节点不包含任何子条件和子条件节点。`,
         `The condition node contains no condition nor sub node.`,
         `El nodo de condición no contiene ninguna condición o sub-nodo.`,
     ],
-    [TextType.A0162]: [
+    [Lang_Constants.TextType.A0162]: [
         `所有子条件和子节点都成立时，此节点成立。`,
         `The condition node is true if ALL of the sub conditions and/or sub nodes are TRUE.`,
         `El nodo de condición es verdadero si TODAS las sub-condiciones y/o sub-nodos son VERDADEROS.`,
     ],
-    [TextType.A0163]: [
+    [Lang_Constants.TextType.A0163]: [
         `任意子条件或子节点成立时，此节点成立。`,
         `The condition node is true if ANY of the sub conditions and/or sub nodes is TRUE.`,
         `El nodo de condición es verdadero si CUALQUIERA de las sub-condiciones y/o sub-nodos es VERDADERO.`,
     ],
-    [TextType.A0164]: [
+    [Lang_Constants.TextType.A0164]: [
         [
             `返回值：(整数)`,
             `当前地形的类型编号。`,
@@ -1873,7 +1875,7 @@ export const CommonText: Record<number, string[]> = {
             `El número-tipo de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0165]: [
+    [Lang_Constants.TextType.A0165]: [
         [
             `使用方法：`,
             `hp(arg)`,
@@ -1929,27 +1931,27 @@ export const CommonText: Record<number, string[]> = {
             `- maxHp es 0 mientras arg es 3 o 4`,
         ].join(`\n`),
     ],
-    [TextType.A0166]: [
+    [Lang_Constants.TextType.A0166]: [
         `数据出错，请删除本项`,
         `Error. Please delete this line.`,
         `Error. Por favor, elimine esta línea.`,
     ],
-    [TextType.A0167]: [
+    [Lang_Constants.TextType.A0167]: [
         `此事件尚未设定动作。请至少设定一个动作。`,
         `The event contains no action. Please add at least one action.`,
         `El evento no contiene ninguna acción. Por favor, añada al menos una.`,
     ],
-    [TextType.A0168]: [
+    [Lang_Constants.TextType.A0168]: [
         `动作数据不存在，请删除本动作`,
         `The action data doesn't exist. Please delete this action.`,
         `La información de la acción no existe. Por favor, elimine esta acción.`,
     ],
-    [TextType.A0169]: [
+    [Lang_Constants.TextType.A0169]: [
         `动作中部分部队的数据不合法`,
         `Some of the unit data in the action is not valid.`,
         `Alguna de la información de la unidad en la acción no es válida.`,
     ],
-    [TextType.A0170]: [
+    [Lang_Constants.TextType.A0170]: [
         [
             `使用方法：`,
             `capturePoint(arg)`,
@@ -2005,17 +2007,17 @@ export const CommonText: Record<number, string[]> = {
             `- maxCp es 0 mientras arg es 3 o 4`,
         ].join(`\n`),
     ],
-    [TextType.A0171]: [
+    [Lang_Constants.TextType.A0171]: [
         `您确定要删除事件吗？`,
         `Are you sure you want to delete this event?`,
         `¿Seguro que quieres eliminar este evento?`,
     ],
-    [TextType.A0172]: [
+    [Lang_Constants.TextType.A0172]: [
         `您确定要删除该条件节点吗？`,
         `Are you sure you want to delete the condition node?`,
         `¿Seguro que quieres eliminar el nodo de condición?`,
     ],
-    [TextType.A0173]: [
+    [Lang_Constants.TextType.A0173]: [
         [
             `使用方法：`,
             `buildPoint(arg)`,
@@ -2071,7 +2073,7 @@ export const CommonText: Record<number, string[]> = {
             `- maxBp es 0 mientras arg es 3 o 4`,
         ].join(`\n`),
     ],
-    [TextType.A0174]: [
+    [Lang_Constants.TextType.A0174]: [
         [
             `返回值：(整数)`,
             `若当前地形已被高亮，则返回1，否则返回0。`,
@@ -2085,22 +2087,22 @@ export const CommonText: Record<number, string[]> = {
             `1 si la casilla está destacada, 0 de lo contrario.`,
         ].join(`\n`),
     ],
-    [TextType.A0175]: [
+    [Lang_Constants.TextType.A0175]: [
         `您确定要删除该条件吗？`,
         `Are you sure you want to delete the condition?`,
         `¿Seguro que quiere eliminar la condición?`,
     ],
-    [TextType.A0176]: [
+    [Lang_Constants.TextType.A0176]: [
         `您确定要删除该动作吗？`,
         `Are you sure you want to delete the action?`,
         `¿Seguro que quiere eliminar la acción?`,
     ],
-    [TextType.A0177]: [
+    [Lang_Constants.TextType.A0177]: [
         `此动作数据出错，请删除`,
         `There is something wrong with the action. Please delete it.`,
         `Hay algo erróneo con la acción. Por favor, elimínerla.`,
     ],
-    [TextType.A0178]: [
+    [Lang_Constants.TextType.A0178]: [
         [
             `使用方法：`,
             `inLocation(locationId)`,
@@ -2141,42 +2143,42 @@ export const CommonText: Record<number, string[]> = {
             `- locationId no es un integral.`,
         ].join(`\n`),
     ],
-    [TextType.A0179]: [
+    [Lang_Constants.TextType.A0179]: [
         `无法替换节点，因为这样做会造成循环引用`,
         `Can't replace the node because of circular reference.`,
         `No se puede reemplazar el nodo por una referencia circular.`,
     ],
-    [TextType.A0180]: [
+    [Lang_Constants.TextType.A0180]: [
         `事件包含的动作太多，请删除一些动作。`,
         `There are too many actions in this event. Please delete some of them.`,
         `Hay muchas acciones en este evento. Por favor, elimine algunas de ellas.`,
     ],
-    [TextType.A0181]: [
+    [Lang_Constants.TextType.A0181]: [
         `数值不合法，请修改。`,
         `The value is illegal. Please modify it.`,
         `El valor es ilegal. Por favor, modifíquelo.`,
     ],
-    [TextType.A0182]: [
+    [Lang_Constants.TextType.A0182]: [
         `此地图已包含太多事件，请删除一些。`,
         `The map contains too many events. Please delete some of them.`,
         `El mapa contiene demasiados eventos. Por favor, elimine algunos de ellos.`,
     ],
-    [TextType.A0183]: [
+    [Lang_Constants.TextType.A0183]: [
         `此地图已包含太多条件节点，请删除一些。`,
         `The map contains too many condition nodes. Please delete some of them.`,
         `El mapa contiene demasiados nodos de condición. Por favor, elimine algunos de ellos.`,
     ],
-    [TextType.A0184]: [
+    [Lang_Constants.TextType.A0184]: [
         `此地图已包含太多事件动作，请删除一些。`,
         `The map contains too many actions. Please delete some of them.`,
         `El mapa contiene demasiadas acciones. Por favor, elimine algunas de ellas.`,
     ],
-    [TextType.A0185]: [
+    [Lang_Constants.TextType.A0185]: [
         `此地图已包含太多条件，请删除一些。`,
         `The map contains too many conditions. Please delete some of them.`,
         `El mapa contiene demasiadas condiciones. Por favor, elimine algunas de ellas.`,
     ],
-    [TextType.A0186]: [
+    [Lang_Constants.TextType.A0186]: [
         [
             `返回值：(整数)`,
             `当前部队的X坐标值`,
@@ -2193,12 +2195,12 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0187]: [
+    [Lang_Constants.TextType.A0187]: [
         `此条件数据出错，请删除`,
         `There is something wrong with the condition. Please delete it.`,
         `Hay algo erróneo con la condición. Por favor, elimínela`,
     ],
-    [TextType.A0188]: [
+    [Lang_Constants.TextType.A0188]: [
         [
             `未被引用的条件节点、条件、动作都将被删除。`,
             `不过，未被规则引用的事件将被保留。`,
@@ -2218,62 +2220,62 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0189]: [
+    [Lang_Constants.TextType.A0189]: [
         `此动作已包含太多部队`,
         `There are too many units in this action.`,
         `Hay demasiadas unidades en esta acción.`,
     ],
-    [TextType.A0190]: [
+    [Lang_Constants.TextType.A0190]: [
         `您确定要清空所有部队吗？`,
         `Are you sure you want to delete all the units?`,
         `¿Seguro que quieres eliminar todas las unidades?`,
     ],
-    [TextType.A0191]: [
+    [Lang_Constants.TextType.A0191]: [
         `此动作包含的部队的数量不合法`,
         `The total number of the units is invalid.`,
         `El número total de unidades no es válido.`,
     ],
-    [TextType.A0192]: [
+    [Lang_Constants.TextType.A0192]: [
         `未设置是否会被其他部队阻挡`,
         `'Blockable By Unit' has not been set.`,
         `No se ha establecido "Bloqueable por Unidad".`,
     ],
-    [TextType.A0193]: [
+    [Lang_Constants.TextType.A0193]: [
         `未设置是否自动寻找有效地形`,
         `'NeedMovableTile' has not been set.`,
         `No se ha establecido 'RequiereCasillaMóvil'.`,
     ],
-    [TextType.A0194]: [
+    [Lang_Constants.TextType.A0194]: [
         `再次点击返回将退出游戏`,
         `Click the go back button again to exit the game.`,
         `Cliquea el botón retroceder de nuevo para salir del juego.`,
     ],
-    [TextType.A0195]: [
+    [Lang_Constants.TextType.A0195]: [
         `感谢您游玩Tiny Wars!`,
         `Thank you for playing Tiny Wars!`,
         `Gracias por jugar Tiny Wars!`,
     ],
-    [TextType.A0196]: [
+    [Lang_Constants.TextType.A0196]: [
         `您的浏览器不支持播放背景音乐`,
         `BGM is not supported by your browser.`,
         `La música de fondo no está admitida por tu navegador.`,
     ],
-    [TextType.A0197]: [
+    [Lang_Constants.TextType.A0197]: [
         `地图已保存，但数据不合法，因而无法提审`,
         `The map has been saved, however the data is invalid for review.`,
         `El mapa ha sido guardado, sin embargo la información no es válida para revisión.`,
     ],
-    [TextType.A0198]: [
+    [Lang_Constants.TextType.A0198]: [
         `您可以通过地图编辑器和模拟战来创建自由模式房间。`,
         `You can create rooms via the map editor or the simulation wars.`,
         `Puedes crear salas a través del editor de mapas o desde la sala de simulación.`,
     ],
-    [TextType.A0199]: [
+    [Lang_Constants.TextType.A0199]: [
         `请确保地图上至少有两个存活的势力`,
         `Please ensure that there're at least 2 alive forces.`,
         `Por favor, verifique que haya al menos 2 fuerzas remanentes.`,
     ],
-    [TextType.A0200]: [
+    [Lang_Constants.TextType.A0200]: [
         [
             `返回值：(整数)`,
             `当前部队的Y坐标值`,
@@ -2290,7 +2292,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0201]: [
+    [Lang_Constants.TextType.A0201]: [
         [
             `您将离开当前场景、前往创建多人自由模式房间的页面，并以当前局面来创建房间。`,
             `您可以稍后重新回到此场景。`,
@@ -2310,7 +2312,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0202]: [
+    [Lang_Constants.TextType.A0202]: [
         [
             `返回值：(整数)`,
             `当前部队的归属者的玩家序号。`,
@@ -2327,7 +2329,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0203]: [
+    [Lang_Constants.TextType.A0203]: [
         [
             `返回值：(整数)`,
             `当前部队的归属者的队伍序号。`,
@@ -2344,7 +2346,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0204]: [
+    [Lang_Constants.TextType.A0204]: [
         [
             `返回值：(整数)`,
             `当前部队的类型编号。`,
@@ -2361,12 +2363,12 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0205]: [
+    [Lang_Constants.TextType.A0205]: [
         `无法撤销准备状态`,
         `You can't cancel when in the 'ready' state.`,
         `No puedes cancelar cuando estás en el estado de 'listo'`,
     ],
-    [TextType.A0206]: [
+    [Lang_Constants.TextType.A0206]: [
         [
             `一旦进入准备状态，您将无法反悔，也无法修改您的CO和颜色设定。`,
             `确定要继续吗？`,
@@ -2386,37 +2388,37 @@ export const CommonText: Record<number, string[]> = {
             `Tip: Tu(s) oponente(s) no sabrá(n) cuál CO escogiste hasta que inicie la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0207]: [
+    [Lang_Constants.TextType.A0207]: [
         `您已准备就绪，无法再修改各项设定`,
         `You're in the ready state and can no longer change the settings.`,
         `Estás en el estado de 'listo' y ya no puedes cambiar las configuraciones.`,
     ],
-    [TextType.A0208]: [
+    [Lang_Constants.TextType.A0208]: [
         `您确定要不使用任何CO吗？`,
         `Are you sure you want to use no CO?`,
         `¿Seguro que no quieres usar ningún CO?`,
     ],
-    [TextType.A0209]: [
+    [Lang_Constants.TextType.A0209]: [
         `本模式下无法修改势力`,
         `It's not allowed to change your force in this game mode.`,
         `No se permite cambiar tu bando en este modo de juego.`,
     ],
-    [TextType.A0210]: [
+    [Lang_Constants.TextType.A0210]: [
         `请选择您想要禁用的CO`,
         `Please choose the COs you want to ban for the match.`,
         `Por favor escoge los COs que quieres banear de la partida.`,
     ],
-    [TextType.A0211]: [
+    [Lang_Constants.TextType.A0211]: [
         `请选择您的CO和颜色，并进入准备就绪状态`,
         `Please choose your CO and color, and then set ready for the match.`,
         `Por favor escoge tu CO y tu color, y luego presiona 'listo' para la partida.`,
     ],
-    [TextType.A0212]: [
+    [Lang_Constants.TextType.A0212]: [
         `玩家序号不合法`,
         `The index of the player is invalid.`,
         `El índice del jugador no es válido.`,
     ],
-    [TextType.A0213]: [
+    [Lang_Constants.TextType.A0213]: [
         [
             `返回值：(整数)`,
             `当前部队的唯一ID。`,
@@ -2436,7 +2438,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0214]: [
+    [Lang_Constants.TextType.A0214]: [
         [
             `返回值：(整数)`,
             `装载了当前部队的容器部队（比如运输船等）的部队ID。`,
@@ -2456,7 +2458,7 @@ export const CommonText: Record<number, string[]> = {
             `-1 es devuelto si la unidad actual no está siendo transportada por ninguna unidad.`,
         ].join(`\n`),
     ],
-    [TextType.A0215]: [
+    [Lang_Constants.TextType.A0215]: [
         [
             `使用方法：`,
             `hp(arg)`,
@@ -2536,7 +2538,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0216]: [
+    [Lang_Constants.TextType.A0216]: [
         [
             `使用方法：`,
             `fuel(arg)`,
@@ -2592,17 +2594,17 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0217]: [
+    [Lang_Constants.TextType.A0217]: [
         `所有部队和地形数值设定与《高级战争：毁灭之日》保持一致，另添加了一些新CO。`,
         `All data of units and tiles is the same as Advance Wars: Days of Ruin. Some COs have been added or rebalanced for more possibilities.`,
         `Toda la data de las unidades y las casillas es la misma que en Advance Wars: Dark Conflict. Algunos COs han sido añadidos o rebalanceados para más posibilidades.`,
     ],
-    [TextType.A0218]: [
+    [Lang_Constants.TextType.A0218]: [
         `此版本引入了高战1/2/DS的CO（比如Andy）。CO及兵种由3Au、NGC6240、赵天同进行了重新设计。`,
         `The COs from AW 1/2/DS (Andy for example) are introduced. The COs and units are redesigned by 3Au, NGC6240 and Zhaotiantong.`,
         `Los COs de AW 1/2/DS (Andy, por ejemplo) son introducidos. Los COs y unidades fueron rediseñados por 3Au, NGC6240 y Zhaotiantong.`,
     ],
-    [TextType.A0219]: [
+    [Lang_Constants.TextType.A0219]: [
         [
             `Tiny Wars有多个分支版本，不同版本的数值设定略有不同。`,
             `您可以随意游玩其中的一个或多个版本。`,
@@ -2625,22 +2627,22 @@ export const CommonText: Record<number, string[]> = {
             `Puede que requieras registrarte de nuevo, luego de intercambiar.`,
         ].join(`\n`),
     ],
-    [TextType.A0220]: [
+    [Lang_Constants.TextType.A0220]: [
         `您已选择由自己控制此势力，无法修改为AI控制。`,
         `You have chosen to use this force.`,
         `Has escogido usar a este bando.`,
     ],
-    [TextType.A0221]: [
+    [Lang_Constants.TextType.A0221]: [
         `此规则已被设定为不可用于合作模式，因此无法修改此选项。`,
         `The war rule is not available for the Coop mode. Please change that first.`,
         `La regla de guerra no está disponible para el modo Cooperativo. Por favor, cambie eso primero.`,
     ],
-    [TextType.A0222]: [
+    [Lang_Constants.TextType.A0222]: [
         `无法切换控制权，因为其他势力都由AI控制。`,
         `All other forces are controlled by the A.I. already.`,
         `Todas las otras fuerzas ya son controladas por la I.A.`,
     ],
-    [TextType.A0223]: [
+    [Lang_Constants.TextType.A0223]: [
         [
             `使用方法：`,
             `promotion(arg)`,
@@ -2702,32 +2704,32 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0224]: [
+    [Lang_Constants.TextType.A0224]: [
         `这是《高级战争》1、2、DS版的网络对战版，独立于Tiny Wars。主要开发维护者：Amarriner、Walker、Matsuzen。`,
         `This is a web version of Advance Wars 1/2/Dual Strike, and is independent of Tiny Wars. Mainly developed/maintained by Amarriner, Walker and Matsuzen.`,
         `Esta es una versión online de Advance Wars 1/2/Dual Strike, y es independiente de Tiny Wars. Principalmente desarrollado/mantenido por Amarriner, Walker y Matsuzen.`,
     ],
-    [TextType.A0225]: [
+    [Lang_Constants.TextType.A0225]: [
         `您确定要继续吗？`,
         `Are you sure you want to continue?`,
         `¿Seguro que quiere continuar?`,
     ],
-    [TextType.A0226]: [
+    [Lang_Constants.TextType.A0226]: [
         `您确定要跳过剧情吗？`,
         `Are you sure you want to skip the story?`,
         `¿Seguro que quiere saltar la historia?`,
     ],
-    [TextType.A0227]: [
+    [Lang_Constants.TextType.A0227]: [
         `此动作包含的对话数量不合法`,
         `The number of the dialogues is invalid.`,
         `El número de diálogos no es válido.`,
     ],
-    [TextType.A0228]: [
+    [Lang_Constants.TextType.A0228]: [
         `此动作已包含太多对话`,
         `There are too many dialogues in this action.`,
         `Hay demasiados diálogos en esta acción.`,
     ],
-    [TextType.A0229]: [
+    [Lang_Constants.TextType.A0229]: [
         [
             `返回值：(整数)`,
             `当前部队的行动状态。`,
@@ -2750,27 +2752,27 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0230]: [
+    [Lang_Constants.TextType.A0230]: [
         `此对白的类型不合法`,
         `The type of this dialogue is invalid.`,
         `La forma de este diálogo no es válida.`,
     ],
-    [TextType.A0231]: [
+    [Lang_Constants.TextType.A0231]: [
         `此CO对白的数据不合法`,
         `The data of the CO dialogue is invalid.`,
         `La información del diálogo del Comandante no es válida.`,
     ],
-    [TextType.A0232]: [
+    [Lang_Constants.TextType.A0232]: [
         `此旁白的数据不合法`,
         `The data of the aside is invalid.`,
         `La data de esta narración no es válida.`,
     ],
-    [TextType.A0233]: [
+    [Lang_Constants.TextType.A0233]: [
         `已有的地形装饰物会被覆盖。您确定要自动填充吗？`,
         `The current tile decorations will be overwritten. Are you sure you want to auto fill?`,
         `Las decoraciones de la casilla serán sobreescritas. ¿Seguro que quieres auto-rellenar?`,
     ],
-    [TextType.A0234]: [
+    [Lang_Constants.TextType.A0234]: [
         [
             `返回值：(整数)`,
             `若当前部队已搭乘CO，则返回1，否则返回0。`,
@@ -2787,12 +2789,12 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0235]: [
+    [Lang_Constants.TextType.A0235]: [
         `导出成功`,
         `Exported successfully.`,
         `Exportado correctamente.`,
     ],
-    [TextType.A0236]: [
+    [Lang_Constants.TextType.A0236]: [
         [
             `返回值：(整数)`,
             `若当前部队正在占领建筑，则返回1，否则返回0。`,
@@ -2809,12 +2811,12 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0237]: [
+    [Lang_Constants.TextType.A0237]: [
         `当前的地图数据将被覆盖（但存档不受影响）。您确定要继续导入吗？`,
         `The current map data will be overwritten, but the saved data will not be affected. Are you sure you want to import?`,
         `La información del mapa actual será sobreescrita, si bien la data guardada no se verá afectada. ¿Seguro que quieres importarlo?`,
     ],
-    [TextType.A0238]: [
+    [Lang_Constants.TextType.A0238]: [
         [
             `请根据您对地图的喜爱程度对地图进行评分，分数越高代表您越喜欢它。`,
             ``,
@@ -2831,87 +2833,87 @@ export const CommonText: Record<number, string[]> = {
             `La evaluación de mapa no afectará su experiencia de juego. Sin embargo, es de ayuda para ti y otros jugadores con tal de buscar mapas. También ayuda a mejorar la calidad de los mapas nuevos.`,
         ].join(`\n`),
     ],
-    [TextType.A0239]: [
+    [Lang_Constants.TextType.A0239]: [
         `请等待电脑回合结束后再进行此操作`,
         `Please wait until the A.I.'s turn ends.`,
         `Por favor, espere a que el turno de la I.A. termine.`,
     ],
-    [TextType.A0240]: [
+    [Lang_Constants.TextType.A0240]: [
         `您在本回合内已处理过求和信息`,
         `You have already set draw in this turn.`,
         `Ya has establecido empate en este turno.`,
     ],
-    [TextType.A0241]: [
+    [Lang_Constants.TextType.A0241]: [
         `已有其他玩家发起了和局请求。您是否同意该请求？`,
         `Another player has requested a drawn game. Do you want to accept the request?`,
         `Otro jugador ha propuesto un empate. ¿Deseas aceptarlo y firmar la paz?`,
     ],
-    [TextType.A0242]: [
+    [Lang_Constants.TextType.A0242]: [
         `请等到您的回合再进行此操作`,
         `Please wait until your turn begins.`,
         `Por favor espere a que su turno comienze.`,
     ],
-    [TextType.A0243]: [
+    [Lang_Constants.TextType.A0243]: [
         `您确定要切换CO搭乘状态吗？`,
         `Are you sure you want to switch the CO onboard state?`,
         `¿Seguro que quiere cambiar el estado de CO a bordo?`,
     ],
-    [TextType.A0244]: [
+    [Lang_Constants.TextType.A0244]: [
         `已成功保存并提审地图`,
         `The map has been submitted for review successfully.`,
         `El mapa ha sido postulado para revisión con éxito.`,
     ],
-    [TextType.A0245]: [
+    [Lang_Constants.TextType.A0245]: [
         `您已提审此地图的上一个版本。\n若继续保存此地图（不论是否提审），则上一个版本会被自动撤销提审。\n\n确定要继续吗？`,
         `You have submitted the previous version of this map for review.\nIf you continue saving this map, the submitted version will not be reviewed.\n\nAre you sure you want to continue?`,
         `Has postulado la versión previa de este mapa para revisión.\nSi continuas guardando este mapa, la versión postulada no será revisada.\n\n¿Seguro que quiere continuar?`,
     ],
-    [TextType.A0246]: [
+    [Lang_Constants.TextType.A0246]: [
         `请填写自动保存的时间间隔，单位为秒。\n若当前地图已被提审，则自动保存功能将失效。\n您可以不填写时间间隔，以此禁用自动保存功能。`,
         `Please input the time interval (in seconds) for auto save.\nThe auto save function will be disabled if the current map is being reviewed.\nYou can clear the input to cancel the auto save function.`,
         `Por favor, ingrese el intervalo de tiempo (en segundos) para autoguardado.\nLa función del autoguardado se desactivará si el mapa actual está en revisión.\nPuedes limpiar lo ingresado y cancelar la función de autoguardado.`,
     ],
-    [TextType.A0247]: [
+    [Lang_Constants.TextType.A0247]: [
         `已启用自动保存`,
         `The auto save function is enabled successfully.`,
         `La función de autoguardado se implementó con éxito.`,
     ],
-    [TextType.A0248]: [
+    [Lang_Constants.TextType.A0248]: [
         `已禁用自动保存`,
         `The auto save function is disabled successfully.`,
         `La función de autoguardado se desactivó con éxito.`,
     ],
-    [TextType.A0249]: [
+    [Lang_Constants.TextType.A0249]: [
         `您将离开战局模式并进入回放（您可以随时返回）。\n确定要继续吗？`,
         `You have to leave the war scene (you can enter it again later).\nAre you sure you want to continue?`,
         `Debes salir de la escena de guerra (puedes volver a entrar luego).\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0250]: [
+    [Lang_Constants.TextType.A0250]: [
         `指定坐标不合法`,
         `The coordinate is not valid.`,
         `La coordenada no es válida.`,
     ],
-    [TextType.A0251]: [
+    [Lang_Constants.TextType.A0251]: [
         `指定坐标超出了地图大小`,
         `The coordinate is outside the map.`,
         `La coordenada está afuera del mapa.`,
     ],
-    [TextType.A0252]: [
+    [Lang_Constants.TextType.A0252]: [
         `指定天气不合法`,
         `The weather type is not valid.`,
         `El tipo de clima no es válido.`,
     ],
-    [TextType.A0253]: [
+    [Lang_Constants.TextType.A0253]: [
         `指定持续时间不合法`,
         `The duration is not valid.`,
         `La duración no es válida.`,
     ],
-    [TextType.A0254]: [
+    [Lang_Constants.TextType.A0254]: [
         `设置为0回合可使指定状态永久持续`,
         `Set 0 turns to make the state last forever.`,
         `Establece 0 turnos para hacer que el estado se mantenga indefinidamente.`,
     ],
-    [TextType.A0255]: [
+    [Lang_Constants.TextType.A0255]: [
         [
             `返回值：(整数)`,
             `若当前部队正在建造建筑，则返回1，否则返回0。`,
@@ -2928,7 +2930,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0256]: [
+    [Lang_Constants.TextType.A0256]: [
         [
             `返回值：(整数)`,
             `若当前部队已下潜，则返回1，否则返回0。`,
@@ -2945,7 +2947,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0257]: [
+    [Lang_Constants.TextType.A0257]: [
         [
             `使用方法：`,
             `primaryAmmo(arg)`,
@@ -3004,17 +3006,17 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0258]: [
+    [Lang_Constants.TextType.A0258]: [
         `此动作指定的对话背景不合法`,
         `The background of the dialogues is invalid.`,
         `El fondo de los diálogos no es válido.`,
     ],
-    [TextType.A0259]: [
+    [Lang_Constants.TextType.A0259]: [
         `调整结果可能不会完全符合您的预期，建议您先保存地图再进行此操作。\n确定要调整吗？`,
         `The results may not meet your expectations completely. It is recommended that you save this map before continuing.\nAre you sure you want to adjust them?`,
         `Los resultados puede que no satisfagan sus expectativas por completo. Se recomienda que guardes el mapa antes de continuar.\n¿Seguro que quieres ajustarlos?`,
     ],
-    [TextType.A0260]: [
+    [Lang_Constants.TextType.A0260]: [
         [
             `使用方法：`,
             `flareAmmo(arg)`,
@@ -3073,7 +3075,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0261]: [
+    [Lang_Constants.TextType.A0261]: [
         [
             `使用方法：`,
             `buildMaterial(arg)`,
@@ -3132,57 +3134,57 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0262]: [
+    [Lang_Constants.TextType.A0262]: [
         `播放当前回合中的CO专属BGM`,
         `Play the theme of the CO who is in turn.`,
         `Escuchar la canción del CO de quien sea su turno.`,
     ],
-    [TextType.A0263]: [
+    [Lang_Constants.TextType.A0263]: [
         `选择的BGM无效`,
         `The chosen BGM is invalid.`,
         `La música de fondo escogida no es válida.`,
     ],
-    [TextType.A0264]: [
+    [Lang_Constants.TextType.A0264]: [
         `参数未设置`,
         `The parameters are not specified.`,
         `Los parámetros no han sido especificados.`,
     ],
-    [TextType.A0265]: [
+    [Lang_Constants.TextType.A0265]: [
         `参数不合法`,
         `The parameters are invalid.`,
         `Lo parámetros no son válidos.`,
     ],
-    [TextType.A0266]: [
+    [Lang_Constants.TextType.A0266]: [
         `请最少选择一个区域`,
         `Please select at least one location.`,
         `Por favor, elija al menos una posición.`,
     ],
-    [TextType.A0267]: [
+    [Lang_Constants.TextType.A0267]: [
         `正在编辑该区域，无法将其隐藏`,
         `The location is being edited thus can't be hidden.`,
         `La posición está siendo editada, por lo que no puede ocultarse.`,
     ],
-    [TextType.A0268]: [
+    [Lang_Constants.TextType.A0268]: [
         `指定坐标已存在`,
         `The coordinate exists already.`,
         `La coordenada ya existe.`,
     ],
-    [TextType.A0269]: [
+    [Lang_Constants.TextType.A0269]: [
         `该地块已有部队占据，不能绘制可攻击的地形`,
         `Can't draw an attackable terrain on a tile that occupied by a unit.`,
         `No se puede dibujar un terreno atacable en una casilla ocupada por una unidad.`,
     ],
-    [TextType.A0270]: [
+    [Lang_Constants.TextType.A0270]: [
         `已搭乘CO`,
         `the CO is onboard`,
         `El Comandante está a bordo.`,
     ],
-    [TextType.A0271]: [
+    [Lang_Constants.TextType.A0271]: [
         `未搭乘CO`,
         `the CO is Not onboard`,
         `El Comandante NO está a bordo`,
     ],
-    [TextType.A0272]: [
+    [Lang_Constants.TextType.A0272]: [
         [
             `"存活"状态下，玩家可以正常行动。可以从其他状态切换到本状态（死而复生）。`,
             ``,
@@ -3205,27 +3207,27 @@ export const CommonText: Record<number, string[]> = {
             `Derrotado: jugadores no pueden hacer nada. Si su estado anterior era En Juego, sus unidades permanecerán.`,
         ].join(`\n`),
     ],
-    [TextType.A0273]: [
+    [Lang_Constants.TextType.A0273]: [
         `当前无法进行此操作，请稍后再试`,
         `This operation is currently unavailable, please retry it later.`,
         `Esta operación no se encuentra disponible, por favor intente luego.`,
     ],
-    [TextType.A0274]: [
+    [Lang_Constants.TextType.A0274]: [
         `此部队已满载`,
         `The unit is fully loaded.`,
         `La unidad está completamente cargada.`,
     ],
-    [TextType.A0275]: [
+    [Lang_Constants.TextType.A0275]: [
         `无法访问系统剪贴板`,
         `Failed to access the system clipboard.`,
         `No se puede acceder al portapapeles del sistema.`,
     ],
-    [TextType.A0276]: [
+    [Lang_Constants.TextType.A0276]: [
         `此规则已被设定为不可用于挑战模式，因此无法修改此选项。`,
         `The war rule is not available for the War Room mode. Please change that first.`,
         `La regla de guerra no está disponible para el modo Sala de Guerra. Por favor, cambie eso primero.`,
     ],
-    [TextType.A0277]: [
+    [Lang_Constants.TextType.A0277]: [
         [
             `恭喜通关！您是否希望以此战局数据参与全服排行？`,
             `\n`,
@@ -3248,27 +3250,27 @@ export const CommonText: Record<number, string[]> = {
             `2. Si hay un registro mejor suyo, ese record será mantenido, y este nuevo record será ignorado.`,
         ].join(`\n`),
     ],
-    [TextType.A0278]: [
+    [Lang_Constants.TextType.A0278]: [
         `数据版本太旧，无法参与排行`,
         `The data is deprecated.`,
         `La data está obsoleta`,
     ],
-    [TextType.A0279]: [
+    [Lang_Constants.TextType.A0279]: [
         `已有分数更高的通关数据`,
         `There is an existing and better replay data.`,
         `Ya existe una repetición previa mejor`,
     ],
-    [TextType.A0280]: [
+    [Lang_Constants.TextType.A0280]: [
         `已成功提交回放数据，请耐心等候`,
         `The data is successfully submitted for validation.`,
         `La data fue postulada con éxito para su validación.`,
     ],
-    [TextType.A0281]: [
+    [Lang_Constants.TextType.A0281]: [
         `分数太低，无法参与排行`,
         `The score is too low.`,
         `El puntaje es muy bajo.`,
     ],
-    [TextType.A0282]: [
+    [Lang_Constants.TextType.A0282]: [
         [
             `您确定要提交此规则、作为本地图的全新规则吗？`,
             ``,
@@ -3294,17 +3296,17 @@ export const CommonText: Record<number, string[]> = {
             `3. Antes de la operación, es sugerido que contacte al autor original del mapa con tal de proponérselo y acordar añadir esta nueva regla.`,
         ].join(`\n`),
     ],
-    [TextType.A0283]: [
+    [Lang_Constants.TextType.A0283]: [
         `已成功新增规则`,
         `The rule is added successfully.`,
         `La regla fue añadida con éxito.`,
     ],
-    [TextType.A0284]: [
+    [Lang_Constants.TextType.A0284]: [
         `摧毁地块上的部队。`,
         `Destroy units on the tiles.`,
         `Destruir las unidades en las casillas.`,
     ],
-    [TextType.A0285]: [
+    [Lang_Constants.TextType.A0285]: [
         [
             `若您希望地图进入游戏正式图池以供其他玩家游玩，您必须提审地图，并等待地图审核委员会审核通过。`,
             `但是，本游戏对地图质量有一定要求。在对游戏机制有足够深入的理解之前，您的地图可能无法过审。`,
@@ -3336,12 +3338,12 @@ export const CommonText: Record<number, string[]> = {
             `Si tu mapa no ha sido revisado por largo tiempo, puedes iniciar consultas con el comité a través del canal de revisión de mapas en el sistema de chat, pero por favor sea cortés.`,
         ].join(`\n`),
     ],
-    [TextType.A0286]: [
+    [Lang_Constants.TextType.A0286]: [
         `此操作无法撤销。您确定要继续吗？`,
         `This operation cannot be undone. Are you sure you want to continue?`,
         `Esta operación no puede deshacerse. ¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0287]: [
+    [Lang_Constants.TextType.A0287]: [
         [
             `使用方法：`,
             `produceMaterial(arg)`,
@@ -3400,27 +3402,27 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0288]: [
+    [Lang_Constants.TextType.A0288]: [
         `已保存当前状态`,
         `The current state is saved successfully.`,
         `El estado actual se guardó con éxito.`,
     ],
-    [TextType.A0289]: [
+    [Lang_Constants.TextType.A0289]: [
         `尚未保存任何状态`,
         `There is no saved state.`,
         `No hay un estado guardado.`,
     ],
-    [TextType.A0290]: [
+    [Lang_Constants.TextType.A0290]: [
         `值越大，则自动回放时每个动作之间的停顿时间越长。`,
         `The higher the value, the longer the pause time between each action during automatic playback.`,
         `A mayor valor, mayor el espacio de tiempo entre cada acción durante la repetición automática.`,
     ],
-    [TextType.A0291]: [
+    [Lang_Constants.TextType.A0291]: [
         `必须保留最少一个规则`,
         `There must be at least one rule.`,
         `Debe haber al menos una regla.`,
     ],
-    [TextType.A0292]: [
+    [Lang_Constants.TextType.A0292]: [
         [
             `您确定要删除此规则吗？`,
             ``,
@@ -3443,22 +3445,22 @@ export const CommonText: Record<number, string[]> = {
             `2. La información relativa al modo multijugador no se cambiará, y las repeticiones seguirán existiendo.`,
         ].join(`\n`),
     ],
-    [TextType.A0293]: [
+    [Lang_Constants.TextType.A0293]: [
         `已成功删除规则`,
         `The rule is deleted successfully.`,
         `La regla fue eliminada con éxito.`,
     ],
-    [TextType.A0294]: [
+    [Lang_Constants.TextType.A0294]: [
         `添加区域和删除区域所指定的ID有重合`,
         `Some ID specified by the "Add to Locations" and the "Del from Locations" coincide.`,
         `Algún ID especificado por el "Añadir a Posiciones" y por el "Elim desde Posiciones" coinciden.`,
     ],
-    [TextType.A0295]: [
+    [Lang_Constants.TextType.A0295]: [
         `地图长宽必须相同才能使用此功能`,
         `The width and height of the map is not the same.`,
         `El ancho y el largo del mapa no son iguales.`,
     ],
-    [TextType.A0296]: [
+    [Lang_Constants.TextType.A0296]: [
         [
             `此地图包含可用于多人排位赛的规则。请仔细检查各项设定，确保没有质量问题。`,
             ``,
@@ -3475,57 +3477,57 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres aceptar este mapa?`,
         ].join(`\n`),
     ],
-    [TextType.A0297]: [
+    [Lang_Constants.TextType.A0297]: [
         `无法获取观战信息`,
         `Failed to load the spectating data.`,
         `Error en cargar la data de espectador.`,
     ],
-    [TextType.A0298]: [
+    [Lang_Constants.TextType.A0298]: [
         `尚未设置预设规则的游戏模式`,
         `The game modes of the preset rules have not been set.`,
         `Los modos de juegos de las reglas preliminares no se han establecido.`,
     ],
-    [TextType.A0299]: [
+    [Lang_Constants.TextType.A0299]: [
         `您已向所有玩家发送过观战请求`,
         `You have already made requests to all players.`,
         `Ya has hecho peticiones a todos los jugadores.`,
     ],
-    [TextType.A0300]: [
+    [Lang_Constants.TextType.A0300]: [
         `暂未收到观战请求`,
         `There is no incoming request.`,
         `No han llegado peticiones.`,
     ],
-    [TextType.A0301]: [
+    [Lang_Constants.TextType.A0301]: [
         `目前无人观战`,
         `There is no spectator.`,
         `No hay ningún espectador.`,
     ],
-    [TextType.A0302]: [
+    [Lang_Constants.TextType.A0302]: [
         `没有可用的统计数据`,
         `No statistics available.`,
         `No hay estadísticas disponibles.`,
     ],
-    [TextType.A0303]: [
+    [Lang_Constants.TextType.A0303]: [
         `存档不存在，无法读取`,
         `The game data doesn't exist and can not be loaded.`,
         `La información de la partida no existe, y no puede ser cargada.`,
     ],
-    [TextType.A0304]: [
+    [Lang_Constants.TextType.A0304]: [
         `自动保存失败`,
         `Auto save failed.`,
         `Falló el auto-guardado.`,
     ],
-    [TextType.A0305]: [
+    [Lang_Constants.TextType.A0305]: [
         `未指定事件动作ID`,
         `No event action ID is specified.`,
         `Ninguna ID de acción de eventos se ha especificado.`,
     ],
-    [TextType.A0306]: [
+    [Lang_Constants.TextType.A0306]: [
         `存在重复的事件动作ID`,
         `There are duplicated event action IDs.`,
         `Hay IDs de acciones de eventos duplicadas.`,
     ],
-    [TextType.A0307]: [
+    [Lang_Constants.TextType.A0307]: [
         [
             `返回值：(整数)`,
             `当前部队的AI模式。`,
@@ -3551,17 +3553,17 @@ export const CommonText: Record<number, string[]> = {
             `-2 es devuelto si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0308]: [
+    [Lang_Constants.TextType.A0308]: [
         `指定的文本不合法`,
         `The specified text is not valid.`,
         `El texto especificado no es válido.`,
     ],
-    [TextType.A0309]: [
+    [Lang_Constants.TextType.A0309]: [
         `禁止使用CO主动技。`,
         `Cannot Use CO Power.`,
         `No puede usar Poder del CO`,
     ],
-    [TextType.A0310]: [
+    [Lang_Constants.TextType.A0310]: [
         [
             `使用方法：`,
             `loadedUnitsCount(isRecursive)`,
@@ -3608,12 +3610,12 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0311]: [
+    [Lang_Constants.TextType.A0311]: [
         `请先命名此地图标签`,
         `Please name the map tag first.`,
         `Por favor, nombre a la marca de mapa primero.`,
     ],
-    [TextType.A0312]: [
+    [Lang_Constants.TextType.A0312]: [
         [
             `部分条件可以留空，等同于忽略该查找条件。`,
             ``,
@@ -3633,7 +3635,7 @@ export const CommonText: Record<number, string[]> = {
             `El problema se aminorará con el tiempo.`,
         ].join(`\n`),
     ],
-    [TextType.A0313]: [
+    [Lang_Constants.TextType.A0313]: [
         [
             `此操作会影响所有已包含此标签的地图。`,
             ``,
@@ -3650,7 +3652,7 @@ export const CommonText: Record<number, string[]> = {
             `Por tanto, si esta marca ya está en uso, por favor tenga cuidado de no cambiar drásticamente el significado del nombre de marca de modo tal de no confundir a los jugadores.`,
         ].join(`\n`),
     ],
-    [TextType.A0314]: [
+    [Lang_Constants.TextType.A0314]: [
         [
             `此操作无法撤销！`,
             ``,
@@ -3673,107 +3675,107 @@ export const CommonText: Record<number, string[]> = {
             `Nota que el mapa publicado (si lo hay) no se verá afectado.`,
         ].join(`\n`),
     ],
-    [TextType.A0315]: [
+    [Lang_Constants.TextType.A0315]: [
         `此地图正在审核中，暂时无法删除`,
         `The map is being reviewed, therefore you can't delete it right now.`,
         `Ela mapa se encuentra en revisión, por lo que no puedes eliminarlo en estos momentos.`,
     ],
-    [TextType.A0316]: [
+    [Lang_Constants.TextType.A0316]: [
         `由于地图设计存在问题，所以此地图暂时不能提审`,
         `This map can't be submitted for review because of the listed problem.`,
         `Este mapa no puede ser postulado a revisión por los problemas listados.`,
     ],
-    [TextType.A0317]: [
+    [Lang_Constants.TextType.A0317]: [
         `此地图尚未保存。您确定要跳过保存吗？`,
         `This map has not been saved. Are you sure you want to skip the save?`,
         `Este mapa no ha sido guardado. ¿Seguro que quieres omitir su guardado?`,
     ],
-    [TextType.A0318]: [
+    [Lang_Constants.TextType.A0318]: [
         `无法进一步撤销`,
         `Unable to undo further.`,
         `No es posible deshacer aún más.`,
     ],
-    [TextType.A0319]: [
+    [Lang_Constants.TextType.A0319]: [
         `无法进一步重做`,
         `Unable to redo further.`,
         `No es posible rehacer más.`,
     ],
-    [TextType.A0320]: [
+    [Lang_Constants.TextType.A0320]: [
         `所有事件、条件、条件节点、动作都会被删除。\n您确定要继续吗？`,
         `All the events / conditions / condition nodes / actions will be deleted.\nAre you sure you want to continue?`,
         `Todos los eventos / condiciones / nodos de condición / acciones serán eliminados.\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0321]: [
+    [Lang_Constants.TextType.A0321]: [
         `您可以通过双指缩放或滚动鼠标滚轮来缩放地图。`,
         `You can zoom the map with "pinch-to-zoom" gesture and/or with mouse wheel.`,
         `Puedes hacer zoom en el mapa con el gesto táctil de "arrastrar dos dedos en direcciones opuestas" y/o con la rueda del mouse.`,
     ],
-    [TextType.A0322]: [
+    [Lang_Constants.TextType.A0322]: [
         `要移动您的部队，请点击该部队，并选择一个目标地点。您可以通过滑动来指定移动路线。之后，您可以在弹出的菜单中选择想要的操作。`,
         `Select the unit you want to deploy, then where you want it to go. Options sometimes appear after a unit moves.`,
         `Selecciona las unidades que quieres desplegar, luego dónde quiered que vayan. Las opciones a veces aparecen luego de que una unidad se mueve.`,
     ],
-    [TextType.A0323]: [
+    [Lang_Constants.TextType.A0323]: [
         `部队的最大HP是10。如果部队的HP小于10，则该数字会显示在部队图标上。如果HP降为0，则该部队会被摧毁。`,
         `Units have a maximum of 10 standard HP. If a unit's HP is less than 10, this number is displayed below the unit. If its HP falls to 0, the unit is destroyed.`,
         `Las unidades tienen un máximo de 10 HP (Puntos de vida) estándar. Si el HP de una unidad es menor a 10, el número es mostrado debajo de la unidad. Si su HP cae por debajo de 0, la unidad es destruida.`,
     ],
-    [TextType.A0324]: [
+    [Lang_Constants.TextType.A0324]: [
         `您和您的对手以回合的形式来移动部队。当您的部队完成行动后，可以在菜单中选择结束回合。`,
         `You and your enemy will take turns moving your units. Select End Turn from the menu to finish your forces' moves for the day.`,
         `Tú y tu oponente tomarán turnos en mover sus unidades. Selecciona Finalizar Turno, en el menú  para finalizar el movimiento de tus fuerzas por el turno (día en el juego).`,
     ],
-    [TextType.A0325]: [
+    [Lang_Constants.TextType.A0325]: [
         `要发起一次近战攻击，请移动您的部队到敌方部队的相邻格子中，并选择攻击。`,
         `To perform a direct attack, move your unit next to an enemy unit and choose Attack.`,
         `Para efectuar un ataque directo, mueve tu unidad a una casilla adyacente a la unidad enemiga y escoje Atacar.`,
     ],
-    [TextType.A0326]: [
+    [Lang_Constants.TextType.A0326]: [
         `每当您击败一个敌人部队，您的部队会升级一次，同时提升其攻防属性。每个部队最多可以升级三次。`,
         `If you defeat an enemy unit, the winning unit's level will rise, increasing its attack and defense. A single unit can rise 3 levels.`,
         `Si derrotas a una unidad enemiga, el nivel de la unidad vencedora subirá, incrementando su ataque y defensa. Una unidad particular puede subir hasta 3 niveles.`,
     ],
-    [TextType.A0327]: [
+    [Lang_Constants.TextType.A0327]: [
         `您可以点击画面左下方的地形小窗来打开该地形的详细属性面板。`,
         `You can view a terrain's detailed info by touching the brief info box at the left bottom corner.`,
         `Puedes ver la información detallada de un terreno al cliquear la caja de información asociada, en la esquina inferior izquierda.`,
     ],
-    [TextType.A0328]: [
+    [Lang_Constants.TextType.A0328]: [
         `您可以点击画面左下方的部队小窗来打开该部队的详细属性面板。`,
         `You can view a unit's detailed info by touching the brief info box at the left bottom corner.`,
         `Puedes ver la información detallada de una unidad al cliquear la caja de información asociada, en la esquina inferior izquierda.`,
     ],
-    [TextType.A0329]: [
+    [Lang_Constants.TextType.A0329]: [
         `大多数部队都有主武器，主武器的弹药数量是有限的。弹药耗尽时，将无法以主武器进行攻击。`,
         `Most units have main weapons that can run out of ammo. Keep an eye on the ammo indicator.`,
         `Muchas unidades tienen un arma principal que puede quedarse sin munición. Ten en cuenta el indicador de munición.`,
     ],
-    [TextType.A0330]: [
+    [Lang_Constants.TextType.A0330]: [
         `所有部队都有燃料，而且有可能会耗尽。部队可以在友方特定的建筑上获得燃料和弹药补给。`,
         `Though rare, it is possible for a unit to run out of fuel. Units can refuel at any friendly city or bases.`,
         `Si bien es raro, una unidad puede llegar a quedarse sin combustible. Las unidades pueden repostar en cualquier ciudad o base de su equipo`,
     ],
-    [TextType.A0331]: [
+    [Lang_Constants.TextType.A0331]: [
         `远程部队可以在远处对敌方发起攻击，且不受反击。但大多数远程部队无法在同一回合同时移动和攻击。`,
         `Indirect-attack units can fire over long distances without facing a counter-attack, but they usually cannot move and attack in the same turn.`,
         `Las unidades de ataque indirecto pueden atacar a distancia sin enfrentar un contraataque, pero por lo general no pueden moverse y atacar en el mismo turno.`,
     ],
-    [TextType.A0332]: [
+    [Lang_Constants.TextType.A0332]: [
         `您可以点击一个部队来查看它的攻击/移动/视野范围。`,
         `To see a waited unit's attack range, simply touch it. You can also view enemy attack ranges.`,
         `Para ver el rango de ataque de una unidad ya movilizada, simplemente haz click en ella (aura roja). También puedes ver el rango de ataque de unidades enemigas.`,
     ],
-    [TextType.A0333]: [
+    [Lang_Constants.TextType.A0333]: [
         `您可以通过地形小窗和详细信息面板来查看地形给部队提供的防御力加成。`,
         `Use terrain info to see features and defenses offered by different terrain.`,
         `Usa la información del terreno para ver cualidades y defensas que aportan diferentes terrenos.`,
     ],
-    [TextType.A0334]: [
+    [Lang_Constants.TextType.A0334]: [
         `您可以在菜单中点击部队列表按钮来查看对战各方的部队表。这可能有助于您制定战略战术。`,
         `Select Units from the menu to display all of units of yours or your enemies'. Use this chart to help plan your strategy.`,
         `Selecciona unidades desde el menú para mostrar todas tus unidades o de tus enemigos. Usa esa tabla para ayudarte a planear tu estrategia.`,
     ],
-    [TextType.A0335]: [
+    [Lang_Constants.TextType.A0335]: [
         [
             `使用方法：`,
             `hasTag(tagId)`,
@@ -3817,157 +3819,157 @@ export const CommonText: Record<number, string[]> = {
             `- tagId no es un integral.`,
         ].join(`\n`),
     ],
-    [TextType.A0336]: [
+    [Lang_Constants.TextType.A0336]: [
         `您可以对两个负伤的同类型部队进行合流操作，从而获得一个HP更多的部队。如果两个部队等级不同，则较高的等级会被保留。`,
         `By combining 2 damaged units, you can create a single unit with more HP. If 2 units with different levels join, the highest level will be kept.`,
         `Al combinar 2 unidades dañadas, puedes crear una única unidad con más HP. Si 2 unidades de distinto nivel se combinan, el nivel más alto se mantendrá.`,
     ],
-    [TextType.A0337]: [
+    [Lang_Constants.TextType.A0337]: [
         `战争迷雾会阻止您看到远方的敌人部队。某些地形可以隐蔽部队，您必须从其邻近的格子来看清这些地形。`,
         `Thick, black dust makes it impossible to see enemies from a distance. Units hiding in woods or rubble can only be seen from an adjacent square.`,
         `La niebla hace imposible ver unidades enemigas a distancia. Unidades escondiéndose en bosques o ruinas sólo pueden ser vistas desde casillas adyacentes.`,
     ],
-    [TextType.A0338]: [
+    [Lang_Constants.TextType.A0338]: [
         `高山可以给步兵和反坦克兵提供额外3格视野范围。`,
         `Mountains add 3 to the vision of infantry and mech units.`,
         `Las montañas otorgan +3 de visión a unidades de Infantería e Infantería mecanizada.`,
     ],
-    [TextType.A0339]: [
+    [Lang_Constants.TextType.A0339]: [
         `在雾战中，如果您的部队在行动中撞上了隐藏的地方部队，则该部队的行动会被强行打断。`,
         `During Fog of War, units will be forced to end their turn prematurely if they encounter a hidden enemy.`,
         `En Niebla de Guerra, las unidades pueden ser emboscadas si se cruzan con una unidad enemiga oculta, finalizando su acción prematuramente.`,
     ],
-    [TextType.A0340]: [
+    [Lang_Constants.TextType.A0340]: [
         `照明车在雾战中特别有用。它们的照明弹可以暂时清除远处的迷雾。`,
         `Flares are designed for Fog of War conditions. Their rockets clear the fog and helps your forces see.`,
         `Las Unidades de exploración son muy útiles en condiciones de Niebla de Guerra. Disparan bengalas que aclaran la Niebla y permiten a tus fuerzas ver.`,
     ],
-    [TextType.A0341]: [
+    [Lang_Constants.TextType.A0341]: [
         `步兵、反坦克兵、摩托兵可以占领建筑。每次执行占领操作，则建筑的占领点数会减去该部队当前的HP值，减到0即可完成占领。如果部队中途离开，则必须重新开始占领。`,
         `Infantry, mechs, and bikes can capture by subtracting their HP to the property total until it reaches 0. If a unit leaves, the capture must begin anew.`,
         `Las unidades de Infantería, Inf. mecanizada e Inf. motorizada pueden capturar propiedades restándoles puntos de captura según su propio HP, hasta que esa quede en 0. Si la unidad se mueve de allí, la captura deberá 'comenzar desde cero'.`,
     ],
-    [TextType.A0342]: [
+    [Lang_Constants.TextType.A0342]: [
         `您所占有的建筑数量越多，则资金收入也越多。资金可以用于生产和维修部队。`,
         `Your funds are boosted when you capture cities. Funds can be used to build new units and repair damaged ones.`,
         `Tu presupuesto crecerá cuando capturas ciudades. Los fondos pueden usarse en comprar nuevas unidades y reparar las que estén dañadas.`,
     ],
-    [TextType.A0343]: [
+    [Lang_Constants.TextType.A0343]: [
         `您可以在工厂中生产陆军，在机场中生产空军，在港口中生产海军。`,
         `You can use funds to build new land, naval, and air units at factories, ports, and airports.`,
         `Puedes usar tu presupuesto en crear nuevas unidades terrestres, navales y aéreas desde fábricas, puertos y aeropuertos.`,
     ],
-    [TextType.A0344]: [
+    [Lang_Constants.TextType.A0344]: [
         `您可以选中您的多余的部队，并在菜单中点击删除部队按钮，从而将该部队删除。`,
         `You can delete surplus units by selecting the target unit and going to the Delete Unit option in the menu.`,
         `Puedes suprimir tus unidades (rendirlas) seleccionando la unidad objetivo y llendo a la opción de Suprimir Unidad en el menú.`,
     ],
-    [TextType.A0345]: [
+    [Lang_Constants.TextType.A0345]: [
         `在友方指定建筑上停留的部队可以自动补充弹药、燃料，以及恢复HP（每回合2HP）。恢复HP需要消耗资金。`,
         `If you station a unit on a friendly base or city, it will recover all ammo and fuel, plus 2 HP per day. HP recovery will drain some of your funds.`,
         `Si estacionas una unidad en una base o ciudad de tu bando, recuperará toda su munición y combustible, así como +2 de HP por día. La recuperación de HP se pagará de tu presupuesto.`,
     ],
-    [TextType.A0346]: [
+    [Lang_Constants.TextType.A0346]: [
         `在雾战中，友方建筑可以提供视野。占领建筑总是多多益善。`,
         `During Fog of War, visibility increases around your bases. The more bases you capture, the farther you can see.`,
         `En Niebla de Guerra, tus bases aportan visibilidad a su alrededor. Mientras más captures, más visión tendrás.`,
     ],
-    [TextType.A0347]: [
+    [Lang_Constants.TextType.A0347]: [
         `您可以把部队装载到运输部队中。不同类型的运输部队可以装载的部队的类型和数量也不同。`,
         `You can load units onto transport vehicles. Some carry a single infantry or mech unit, but others transport 2 units of any type.`,
         `Puedes cargar unidades en vehículos de transporte. Según el tipo, pueden desplazar una unidad de Infantería a pie, o 2 unidades terrestres cualquiera.`,
     ],
-    [TextType.A0348]: [
+    [Lang_Constants.TextType.A0348]: [
         `利用运输部队，可以更快地把部队运输到更远的地方。`,
         `Use transport vehicles to carry slower units over long distances in a short period of time.`,
         `Use vehículos de transporte para trasladar unidades lentas a través de grandes distancias en poco tiempo.`,
     ],
-    [TextType.A0349]: [
+    [Lang_Constants.TextType.A0349]: [
         `运输直升机、工程车、炮艇、登陆舰、巡洋舰、航母都可以用来运输部队。这些部队被摧毁时，装载于其上的部队也会自动被摧毁。`,
         `T copters, rigs, gunboats, landers, cruisers, and carriers all can transport units. If a transport unit is destroyed, the unit it is carrying will also be lost.`,
         `Helicopteros de transporte, Camiones militares, Buques misileros, Cargueros, Patrulleros y Portaaviones son todas unidades de transporte. Si la unidad de transporte es destruida, la unidad transportada también lo será.`,
     ],
-    [TextType.A0350]: [
+    [Lang_Constants.TextType.A0350]: [
         `工程车可以给邻近部队提供弹药和燃料的补给，可以运输部队，可以建造临时机场和临时港口。`,
         `Rigs can resupply units in adjacent squares, transport units, and build a single temporary port or airport.`,
         `Los Camiones militares pueden abastecer unidades en casillas adyacentes, transportar unidades, y construir (1) Dársenas o Hangares.`,
     ],
-    [TextType.A0351]: [
+    [Lang_Constants.TextType.A0351]: [
         `工程车可以在平原上建造临时机场，也可以在沙滩上建造临时海港。与占领建筑类似，需要把建造点数降到0才能完成建造。`,
         `Rigs can build temporary airports on plains and temporary ports on beaches. As with capturing, construction requires 20 HP.`,
         `Los Camiones militares pueden construir Hangares en llanos y Dársenas en costas. Como al capturar, la construcción requiere completar 20 HP.`,
     ],
-    [TextType.A0352]: [
+    [Lang_Constants.TextType.A0352]: [
         `工程车最多可以同时补给邻近的4个部队，但无法恢复HP。`,
         `Rigs can resupply ammo and fuel to a maximum of 4 neighboring units at a time. However, they can't restore HP.`,
         `Los Camiones militares pueden abastecer munición y combustible a un máximo de 4 unidades adyacentes por vez. No pueden restituirles HP.`,
     ],
-    [TextType.A0353]: [
+    [Lang_Constants.TextType.A0353]: [
         `一些部队可以建造临时建筑，还有一些部队可以生产新的部队。`,
         `Certain units can use construction material to build temporary bases on beaches and plains. Some units can even use it to build other units!`,
         `Ciertas unidades pueden usar Material de construcción para construir bases temporales en costas y llanuras. Algunas unidades pueden usarlos para construir otras unidades.`,
     ],
-    [TextType.A0354]: [
+    [Lang_Constants.TextType.A0354]: [
         `潜艇可以执行下潜操作。下潜后，潜艇只会被临近的地方部队发现，且只会受到敌方潜艇和巡洋舰的攻击，但会消耗大量燃料。`,
         `Only subs can dive. Diving conceals subs from the enemy but uses a lot of fuel. Subs can be hit by other subs and cruisers while submerged.`,
         `Solo los Submarinos pueden sumergirse. Esto les oculta de la visión enemiga, pero usa mucho combustible. Los submarinos sumergidos pueden ser atacados por otros Submarinos y por Patrulleros.`,
     ],
-    [TextType.A0355]: [
+    [Lang_Constants.TextType.A0355]: [
         `航母可以消耗15000资金来生产舰载机。从生产后的第二回合开始，舰载机可以直接从航母中弹射出来。`,
         `Carriers can build seaplanes at a fund cost of 15000. Seaplanes can be launched the day after they are built.`,
         `Los Portaaviones pueden construir Aviones navales con un costo de 15000. Los Aviones navales pueden ser desplegados el día después de construirse`,
     ],
-    [TextType.A0356]: [
+    [Lang_Constants.TextType.A0356]: [
         `雨天会强制进入雾战，且建筑的视野降为0，部队的视野降为1。`,
         `Visibility decreases in heavy rain, leading to enforced Fog of War conditions. Unit visibility is 1, while visibility near bases is zero.`,
         `Al llover la visibilidad disminuye, dando lugar a condiciones de Niebla de Guerra. La visión de las unidades es de 1, mientras que la visibilidad desde las bases es 0.`,
     ],
-    [TextType.A0357]: [
+    [Lang_Constants.TextType.A0357]: [
         `雪天时，所有部队的移动力减1。`,
         `During a snowfall, the mobility of all units will drop by 1.`,
         `En nieve, la mobilidad de todas las unidades disminuye en 1.`,
     ],
-    [TextType.A0358]: [
+    [Lang_Constants.TextType.A0358]: [
         `沙尘暴时，所有部队的攻击力减30%。`,
         `Sandstorms reduce the attack power of all units by 30%.`,
         `Las tormentas de arena reducen el poder de ataque de todas las unidades en 30%.`,
     ],
-    [TextType.A0359]: [
+    [Lang_Constants.TextType.A0359]: [
         `CO Zone是指CO部队附近的范围。在这个范围内，部队的攻防获得加成，具体数值由CO决定。`,
         `The area surrounding a CO's unit is known as a Command Zone. In this area, the attack and defense of nearby units is boosted.`,
         `El área alrededor de la unidad del Comandante se conoce como Zona de Refuerzo. En esta área, el ataque y la defensa de unidades cercanas son potenciados.`,
     ],
-    [TextType.A0360]: [
+    [Lang_Constants.TextType.A0360]: [
         `我方部队在CO Zone里对敌方部队造成伤害时，CO能量会自动增长。随着能量增长，CO Zone的范围也会变大。`,
         `Damage enemies in the Command Zone to increase your CO Power Gauge. The CO Zone will expands as the gauge increases.`,
         `Al dañar unidades enemigas en la Zona de Refuerzo del CO, se incrementa tu Nivel de Energía. La Zona del CO se ampliará a medida que la barra aumente.`,
     ],
-    [TextType.A0361]: [
+    [Lang_Constants.TextType.A0361]: [
         `当CO能量达到指定值时，您可以消耗能量来激活CO主动技。`,
         `When the CO Power Gauge is full, you can use the commander's CO Power. After you use the CO Power, the gauge will decrease.`,
         `Cuando el Nivel de Energía del CO está llena, puedes usar el Poder del CO. Luego de que lo uses, el Nivel disminuirá.`,
     ],
-    [TextType.A0362]: [
+    [Lang_Constants.TextType.A0362]: [
         `您可以在总部以及生产型建筑上，通过消耗一定资金来把CO装载到部队中。该部队会直接升到三级。`,
         `Your CO can board a unit at your HQ or any production bases. The unit's level will rise to Vet, but at the cost of half the unit's value.`,
         `Tu CO puede desplegarse en una unidad desde tu Cuartel General o de tus bases de producción. El nivel de la unidad mejorará a Veterano, pero costará la mitad del precio de la unidad.`,
     ],
-    [TextType.A0363]: [
+    [Lang_Constants.TextType.A0363]: [
         `如果您的CO部队被摧毁，则已积累的能量值会消失。您可以在下回合重新装载CO。`,
         `If the unit carrying your CO is destroyed, the CO Power Gauge will disappear. However, the CO can board a new unit the next day.`,
         `Si la unidad que lleva a tu CO es destruida, el Nivel de Energía del CO desaparecerá. No obstante, el CO puede desplegarse en una nueva unidad en el turno siguiente.`,
     ],
-    [TextType.A0364]: [
+    [Lang_Constants.TextType.A0364]: [
         `在单人游戏中，您可以自由地使用存档和读档功能。但在多人游戏中，您的每一步都讲自动存档，无法悔棋。`,
         `In single player games, if you want to save a game midway through a mission, use the Save option in the menu. To revert to the quick save, use the Load option.\nHowever, you can not save/load the game in multi player games.`,
         `En partidas de un jugador, si quieres guardar la partida entre medio de una misión, usa la opción Guardar en el menú. Para revertir el Guardado rápido, usa la opción Cargar.\nSin embargo, no puedes guardar/cargar la partida en multijugador.`,
     ],
-    [TextType.A0365]: [
+    [Lang_Constants.TextType.A0365]: [
         `在单人游戏中，您可以在菜单中选择离开战局。此时的战局数据不会被保存。`,
         `In single player games, you can choose Quit from the menu and try the fight again from the start. Note that this will cause you to exit without saving.`,
         `En partidas de un jugador, puedes escoger Salir desde el menú e intentar de nuevo desde el principio. Nota que con ésto saldrás sin haber guardado.`,
     ],
-    [TextType.A0366]: [
+    [Lang_Constants.TextType.A0366]: [
         [
             `使用方法：`,
             `hasProhibitedLocation(locationId)`,
@@ -4011,52 +4013,52 @@ export const CommonText: Record<number, string[]> = {
             `- locationId no es un integral.`,
         ].join(`\n`),
     ],
-    [TextType.A0367]: [
+    [Lang_Constants.TextType.A0367]: [
         `该账号已被注册，请修改后再试`,
         `The account has been registered.`,
         `Se ha registrado la cuenta.`,
     ],
-    [TextType.A0368]: [
+    [Lang_Constants.TextType.A0368]: [
         `该昵称已被使用，请修改后再试`,
         `The nickname has been used.`,
         `Se ha usado el apodo.`,
     ],
-    [TextType.A0369]: [
+    [Lang_Constants.TextType.A0369]: [
         `已成功复制地形`,
         `Tile copied successfully.`,
         `Casilla copiada con éxito.`,
     ],
-    [TextType.A0370]: [
+    [Lang_Constants.TextType.A0370]: [
         `已成功复制部队`,
         `Unit copied successfully.`,
         `Unidad copiada con éxito.`,
     ],
-    [TextType.A0371]: [
+    [Lang_Constants.TextType.A0371]: [
         `请先复制您想要粘贴的地形`,
         `Please copy the tile you want to paste first.`,
         `Por favor, antes copie la casilla que quiere pegar.`,
     ],
-    [TextType.A0372]: [
+    [Lang_Constants.TextType.A0372]: [
         `请先复制您想要粘贴的部队`,
         `Please copy the unit you want to paste first.`,
         `Por favor, antes copie la unidad que quiere pegar.`,
     ],
-    [TextType.A0373]: [
+    [Lang_Constants.TextType.A0373]: [
         `请先把光标移动到您想要复制的部队上`,
         `Please move the cursor to the unit that you want to copy first.`,
         `Por favor, mueva el cursor a la unidad que quiere copiar primero.`,
     ],
-    [TextType.A0374]: [
+    [Lang_Constants.TextType.A0374]: [
         `请等待部队动作结束后再进行此操作`,
         `Please wait until the unit action ends.`,
         `Por favor, espere a que la acción de la unidad termine.`,
     ],
-    [TextType.A0375]: [
+    [Lang_Constants.TextType.A0375]: [
         `关注玩家后，该玩家会出现在聊天面板的“已关注”页面中，方便您联系该玩家。`,
         `The players you follow will appear in the "Following" page in the chat panel, therefore you can contact them more easily.`,
         `Los jugadores a los que sigas aparecerán en la página "Siguiendo" del panel del chat, permitiéndote contactarles más fácilmente.`,
     ],
-    [TextType.A0376]: [
+    [Lang_Constants.TextType.A0376]: [
         [
             `屏蔽玩家后：`,
             `- 该玩家无法给您发送私聊信息。`,
@@ -4082,27 +4084,27 @@ export const CommonText: Record<number, string[]> = {
             `Puedes cancelar el bloqueo en cualquier momento.`,
         ].join(`\n`),
     ],
-    [TextType.A0377]: [
+    [Lang_Constants.TextType.A0377]: [
         `已成功设置玩家关系`,
         `The relations has been set successfully.`,
         `Las relaciones se han establecido con éxito.`,
     ],
-    [TextType.A0378]: [
+    [Lang_Constants.TextType.A0378]: [
         `已成功发出邀请`,
         `The invitation has been sent successfully.`,
         `La invitación fue enviada con éxito.`,
     ],
-    [TextType.A0379]: [
+    [Lang_Constants.TextType.A0379]: [
         `拖动文字以阅读更多`,
         `Drag the text to read more...`,
         `Arrastre el texto para leer más...`,
     ],
-    [TextType.A0380]: [
+    [Lang_Constants.TextType.A0380]: [
         `只有地图委员会成员可以修改此选项`,
         `Only map committee can modify this option.`,
         `Solo el Comité de mapas puede modificar esta opción.`,
     ],
-    [TextType.A0381]: [
+    [Lang_Constants.TextType.A0381]: [
         [
             `使用方法：`,
             `distanceToGrid(x, y)`,
@@ -4149,7 +4151,7 @@ export const CommonText: Record<number, string[]> = {
             `- x y/o y no son un integral`
         ].join(`\n`),
     ],
-    [TextType.A0382]: [
+    [Lang_Constants.TextType.A0382]: [
         [
             `使用方法：`,
             `distanceToLocation(locationId)`,
@@ -4196,7 +4198,7 @@ export const CommonText: Record<number, string[]> = {
             `- locationId no es un integral`
         ].join(`\n`),
     ],
-    [TextType.A0383]: [
+    [Lang_Constants.TextType.A0383]: [
         [
             `返回值：(整数)`,
             `处于回合内的玩家的队伍编号`,
@@ -4210,7 +4212,7 @@ export const CommonText: Record<number, string[]> = {
             `El índice de equipo del jugador en turno.`,
         ].join(`\n`),
     ],
-    [TextType.A0384]: [
+    [Lang_Constants.TextType.A0384]: [
         [
             `返回值：（战局）`,
             `当前战局。`,
@@ -4227,7 +4229,7 @@ export const CommonText: Record<number, string[]> = {
             `Puedes obtener la data que quieras llamando a los miembros de la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0385]: [
+    [Lang_Constants.TextType.A0385]: [
         [
             `使用方法：`,
             `player(playerIndex)`,
@@ -4271,7 +4273,7 @@ export const CommonText: Record<number, string[]> = {
             `- playerIndex no existe en la partida`,
         ].join(`\n`),
     ],
-    [TextType.A0386]: [
+    [Lang_Constants.TextType.A0386]: [
         [
             `返回值：(整数)`,
             `玩家序号`,
@@ -4285,7 +4287,7 @@ export const CommonText: Record<number, string[]> = {
             `El índice del jugador.`,
         ].join(`\n`),
     ],
-    [TextType.A0387]: [
+    [Lang_Constants.TextType.A0387]: [
         [
             `返回值：(整数)`,
             `玩家所在的队伍的序号`,
@@ -4299,7 +4301,7 @@ export const CommonText: Record<number, string[]> = {
             `El índice de equipo del jugador.`,
         ].join(`\n`),
     ],
-    [TextType.A0388]: [
+    [Lang_Constants.TextType.A0388]: [
         [
             `返回值：(整数)`,
             `玩家当前的资金量`,
@@ -4313,42 +4315,42 @@ export const CommonText: Record<number, string[]> = {
             `El presupuesto del jugador.`,
         ].join(`\n`),
     ],
-    [TextType.A0389]: [
+    [Lang_Constants.TextType.A0389]: [
         `没有冗余的数据`,
         `There is no redundant data.`,
         `No hay data redundante.`,
     ],
-    [TextType.A0390]: [
+    [Lang_Constants.TextType.A0390]: [
         `操作成功`,
         `Operation succeeded.`,
         `Operación exitosa.`,
     ],
-    [TextType.A0391]: [
+    [Lang_Constants.TextType.A0391]: [
         `此功能需要占用地图编辑器的一个槽位。要现在就前往选择槽位吗？`,
         `A map editor slot is needed for this function. Do you want to select the slot now?`,
         `Se requiere un espacio para esta función en el Editor de mapas. ¿Quieres seleccionar el espacio ahora?`,
     ],
-    [TextType.A0392]: [
+    [Lang_Constants.TextType.A0392]: [
         `此槽位原有的数据将被清空。您确定要继续吗？`,
         `The existing data will be overridden. Are you sure you want to continue?`,
         `La data existente será sobrellevada. ¿Seguro que quieres continuar?`,
     ],
-    [TextType.A0393]: [
+    [Lang_Constants.TextType.A0393]: [
         `数据已更新，请重新打开地图编辑器槽位列表界面以开始编辑地图规则和事件`,
         `The data is updated. Please re-open the map editor slot list and then edit the map rules and events.`,
         `La data está actualizada. Por favor, vuelva a abrir la lista de espacios en el Editor de mapa, y edite las reglas y eventos del mapa.`,
     ],
-    [TextType.A0394]: [
+    [Lang_Constants.TextType.A0394]: [
         `地图存在问题，无法提交战局事件。`,
         `The war events cannot be submitted because of the listed problem.`,
         `Los eventos de guerra no pueden ser postulados por estos problemas.`,
     ],
-    [TextType.A0395]: [
+    [Lang_Constants.TextType.A0395]: [
         `没有新的战局事件可提交`,
         `No new war events to submit.`,
         `No hay eventos de guerra nuevos para postular.`,
     ],
-    [TextType.A0396]: [
+    [Lang_Constants.TextType.A0396]: [
         [
             `此数字表示当前有多少个地形不对称。`,
             `地形数值设定（比如建筑所属势力，陨石的血量等等）不考虑在内。`,
@@ -4362,22 +4364,22 @@ export const CommonText: Record<number, string[]> = {
             `Las configuraciones numéricas (incluyendo dueño de las propiedades, el HP de los meteoritos, etc.) son ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0397]: [
+    [Lang_Constants.TextType.A0397]: [
         `选中后，编辑器会根据您绘制的新地形，自动画出对称的地形。`,
         `When checked, the editor will draw the symmetrical tile automatically every time you draw one.`,
         `Al estar chequeado, el editor automáticamente dibujará la casilla simétrica a la que dibujes.`,
     ],
-    [TextType.A0398]: [
+    [Lang_Constants.TextType.A0398]: [
         `请选择要您希望让道路连接的地形。常见的可连接地形包括道路、桥梁、各种建筑等等。`,
         `Please choose the terrains that you want the roads to connect to. The common ones are roads, bridges and properties.`,
         `Por favor, escoja los terrenos que quieres conectar con carreteras. Las más comunes son carreteras, puentes y propiedades.`,
     ],
-    [TextType.A0399]: [
+    [Lang_Constants.TextType.A0399]: [
         `请选择要您希望让桥梁连接的地形。常见的可连接地形包括道路、桥梁、各种建筑等等。`,
         `Please choose the terrains that you want the bridges to connect to. The common ones are roads, bridges and properties.`,
         `Por favor, escoja los terrenos que quieres conectar con puentes. Los más comunes son carreteras, puentes y propiedades.`,
     ],
-    [TextType.A0400]: [
+    [Lang_Constants.TextType.A0400]: [
         [
             `请设定您愿意同时进行的匹配模式游戏的数量上限（设置为0等同于您不参加对应模式的匹配模式）。`,
             ``,
@@ -4394,12 +4396,12 @@ export const CommonText: Record<number, string[]> = {
             `Nota: Puede tomar algo de tiempo al sistema hallar un oponente adecuado para tí. Por favor, sea paciente.`,
         ].join('\n'),
     ],
-    [TextType.A0401]: [
+    [Lang_Constants.TextType.A0401]: [
         `您尚未获得任何勋章`,
         `You have no medals currently.`,
         `No posees medallas.`,
     ],
-    [TextType.A0402]: [
+    [Lang_Constants.TextType.A0402]: [
         [
             `玩家达成特定目标时会获得勋章。`,
             ``,
@@ -4415,17 +4417,17 @@ export const CommonText: Record<number, string[]> = {
             `Las Medallas pueden ser mostradas al lado del apodo del jugador. No tienen efecto en el juego.`,
         ].join(`\n`),
     ],
-    [TextType.A0403]: [
+    [Lang_Constants.TextType.A0403]: [
         `目前没有可以报名参加的联赛。`,
         `There is no tournament that you can sign up currently.`,
         `No hay un torneo abierto al que inscribirse.`,
     ],
-    [TextType.A0404]: [
+    [Lang_Constants.TextType.A0404]: [
         `请等待倒计时归零。`,
         `Please wait for the countdown to zero.`,
         `Por favor, espere a que el contador baje a cero.`,
     ],
-    [TextType.A0405]: [
+    [Lang_Constants.TextType.A0405]: [
         [
             `您确定要删除最新一届联赛吗？`,
             ``,
@@ -4442,17 +4444,17 @@ export const CommonText: Record<number, string[]> = {
             `Advierte que esta operación no puede deshacerse!`,
         ].join(`\n`),
     ],
-    [TextType.A0406]: [
+    [Lang_Constants.TextType.A0406]: [
         `您确定要开始回放该战局吗？`,
         `Are you sure you want to watch the replay of the game?`,
         `¿Seguro que quieres ver la repetición de la partida?`,
     ],
-    [TextType.A0407]: [
+    [Lang_Constants.TextType.A0407]: [
         `您只能在准备阶段进行此操作。`,
         `You can do this only when it is the preparation phase.`,
         `Solo puedes hacer esto cuando sea la fase de preparación.`,
     ],
-    [TextType.A0408]: [
+    [Lang_Constants.TextType.A0408]: [
         [
             `点击列表中的任意两个玩家槽位即可交换它们。`,
             ``,
@@ -4469,27 +4471,27 @@ export const CommonText: Record<number, string[]> = {
             `Debe haber al menos un jugador en cada fila.`,
         ].join('\n'),
     ],
-    [TextType.A0409]: [
+    [Lang_Constants.TextType.A0409]: [
         `目前无人参赛`,
         `There are no players currently.`,
         `No hay jugadores actualmente.`,
     ],
-    [TextType.A0410]: [
+    [Lang_Constants.TextType.A0410]: [
         `您只能在报名阶段进行此操作。`,
         `You can do this only when it is the registration phase.`,
         `Puedes hacer esto solo en la fase de registro.`,
     ],
-    [TextType.A0411]: [
+    [Lang_Constants.TextType.A0411]: [
         `您只能在报名阶段和准备阶段进行此操作。`,
         `You can do this only when it is the registration phase or the preparation phase.`,
         `Puedes hacer esto solo en la fase de registro o en la de preparación.`,
     ],
-    [TextType.A0412]: [
+    [Lang_Constants.TextType.A0412]: [
         `请先暂停自动回放。`,
         `Please stop the auto replay first.`,
         `Por favor, detenga la auto-repetición primero`,
     ],
-    [TextType.A0413]: [
+    [Lang_Constants.TextType.A0413]: [
         [
             `使用方法：`,
             `tile(x, y)`,
@@ -4536,7 +4538,7 @@ export const CommonText: Record<number, string[]> = {
             `- las coordenadas están fuera del mapa.`
         ].join(`\n`),
     ],
-    [TextType.A0414]: [
+    [Lang_Constants.TextType.A0414]: [
         [
             `此选项仅在增援目标地点已被部队占据的时候产生效果。`,
             `- 若开启此选项，则增援部队将不会出现。`,
@@ -4559,7 +4561,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Deseas habilitar esta opción?`,
         ].join(`\n`),
     ],
-    [TextType.A0415]: [
+    [Lang_Constants.TextType.A0415]: [
         [
             `启用此选项后，如果增援部队不能在目标地点上移动，则增援部队将出现在距离目标地点最近的可以移动的地点上。`,
             ``,
@@ -4576,7 +4578,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Deseas habilitar esta opción?`,
         ].join(`\n`),
     ],
-    [TextType.A0416]: [
+    [Lang_Constants.TextType.A0416]: [
         [
             `使用PC游玩本游戏时，您不能在游戏内设置屏幕旋转方向。`,
             ``,
@@ -4593,7 +4595,7 @@ export const CommonText: Record<number, string[]> = {
             `Puedes cambiar el tamaño a la pantalla, cambiándole el zoom a tu navegador web.`,
         ].join(`\n`),
     ],
-    [TextType.A0417]: [
+    [Lang_Constants.TextType.A0417]: [
         [
             `使用移动设备的浏览器来游玩本游戏时，您不能在游戏内设置屏幕旋转方向。`,
             ``,
@@ -4619,77 +4621,77 @@ export const CommonText: Record<number, string[]> = {
             `Puedes encontrar el enlace de descarga en la página de Cambio de Versión del juego.`,
         ].join(`\n`),
     ],
-    [TextType.A0418]: [
+    [Lang_Constants.TextType.A0418]: [
         `您要保存当前的更改吗？`,
         `Do you want to save the changes?`,
         `¿Quieres guardar los cambios?`,
     ],
-    [TextType.A0419]: [
+    [Lang_Constants.TextType.A0419]: [
         `部队将归属于当前回合的玩家。`,
         `The units will be owned by the player in the turn.`,
         `Las unidades serán poseídas por el jugador en turno.`,
     ],
-    [TextType.A0420]: [
+    [Lang_Constants.TextType.A0420]: [
         `您可以使用此快捷键来保存地图：ctrl+s`,
         `You can save the map by pressing ctrl+s.`,
         `Puedes guardar el mapa presionando ctrl+s.`,
     ],
-    [TextType.A0421]: [
+    [Lang_Constants.TextType.A0421]: [
         `操作太频繁，请稍后再试`,
         `Operation is too frequent.`,
         `La operación es muy frecuente.`,
     ],
-    [TextType.A0422]: [
+    [Lang_Constants.TextType.A0422]: [
         `您已提审此地图的上一个版本，无法使用快捷键覆盖保存。`,
         `Failed because the previous version of this map has been submitted for review.`,
         `Fallo por existir una versión previa de este mapa postulada para revisión.`,
     ],
-    [TextType.A0423]: [
+    [Lang_Constants.TextType.A0423]: [
         `地图上所有位置。`,
         `All positions on the map.`,
         `Todas las posiciones en el mapa.`,
     ],
-    [TextType.A0424]: [
+    [Lang_Constants.TextType.A0424]: [
         `该玩家是您的对手。`,
         `This player is your opponent.`,
         `Este jugador es tu oponente.`,
     ],
-    [TextType.A0425]: [
+    [Lang_Constants.TextType.A0425]: [
         `该玩家正在观战您的对手`,
         `This player is spectating your opponent.`,
         `Este jugador está mirando como espectador a tu oponente.`,
     ],
-    [TextType.A0426]: [
+    [Lang_Constants.TextType.A0426]: [
         `找到所有部队，并摧毁它们。`,
         `Get all units, then destroy them all.`,
         `Obtén todas las unidades, y luego destrúyelas.`,
     ],
-    [TextType.A0427]: [
+    [Lang_Constants.TextType.A0427]: [
         `修改所有部队的属性。`,
         `Get all units, then modify their states.`,
         `Obtén todas las unidades, y luego modifica sus estados.`,
     ],
-    [TextType.A0428]: [
+    [Lang_Constants.TextType.A0428]: [
         `找到所有地块，并修改其类型。`,
         `Get all terrains, then modify their type.`,
         `Obtén todos los terrenos, y luego modifica sus tipos.`,
     ],
-    [TextType.A0429]: [
+    [Lang_Constants.TextType.A0429]: [
         `找到所有地块，并修改其属性。`,
         `Get all terrains, then modify their states.`,
         `Obtén todos los terrenos, y luego modifica sus estados.`,
     ],
-    [TextType.A0430]: [
+    [Lang_Constants.TextType.A0430]: [
         `持续性修改所有部队的属性。`,
         `Get all units, then modify their attributes persistently.`,
         `Obtén todas las unidades, y luego modifica sus atributos persistentemente`,
     ],
-    [TextType.A0431]: [
+    [Lang_Constants.TextType.A0431]: [
         `禁用和解禁部队种类有重复。`,
         `The banned units and the unbanned units overlap.`,
         `Las unidades baneadas y las no-baneadas se sobreponen`,
     ],
-    [TextType.A0432]: [
+    [Lang_Constants.TextType.A0432]: [
         [
             `权重为正数时，AI移动到指定位置的倾向会提高，反之亦然。`,
             `权重的绝对值越大，则倾向越明显。`,
@@ -4709,42 +4711,42 @@ export const CommonText: Record<number, string[]> = {
             `Se recomienda que ajustes el peso entre 100~1000, y probarlo en partidas de Simulación para hallar el valor adecuado.`,
         ].join(`\n`),
     ],
-    [TextType.A0433]: [
+    [Lang_Constants.TextType.A0433]: [
         `此地图存在以下严重问题，无法进行保存。`,
         `There is a severe problem with this map (see below), and you can save the map right now.`,
         `Hay un problema severo con este mapa (ve abajo), y puedes guardar el mapa ahora mismo.`,
     ],
-    [TextType.A0434]: [
+    [Lang_Constants.TextType.A0434]: [
         `此地图只能用于新增战局事件和修改可重复对话。`,
         `You can only add war events / modify repeatable dialogues with this map.`,
         `Solo puedes agregar eventos de guerra / modificar diálogos repetibles con este mapa.`,
     ],
-    [TextType.A0435]: [
+    [Lang_Constants.TextType.A0435]: [
         `您现在无法这样做。`,
         `You cannot do this right now.`,
         `No puedes hacer esto ahora mismo.`,
     ],
-    [TextType.A0436]: [
+    [Lang_Constants.TextType.A0436]: [
         `所有子条件和子节点都*不*成立时，此节点成立。`,
         `The condition node is true if ALL of the sub conditions and/or sub nodes are FALSE.`,
         `El nodo de condición es verdadero si TODAS las sub-condiciones y/o sub-nodos son FALSOS.`,
     ],
-    [TextType.A0437]: [
+    [Lang_Constants.TextType.A0437]: [
         `您确定要使用空值吗？`,
         `Are you sure you want to use an empty value?`,
         `¿Seguro que quieres usar un valor vacío?`,
     ],
-    [TextType.A0438]: [
+    [Lang_Constants.TextType.A0438]: [
         `所有数值设定与《高级战争：毁灭之日》保持一致（除了CO Caulder，为保证平衡性而适当弱化）。`,
         `All data is the same as Advance Wars: Days of Ruin except for CO Caulder who is nerfed reasonably.`,
         `Toda la data es la misma que en Advance Wars: Dark Conflict excepto para el CO Stolos que está razonablemente nerfeado.`,
     ],
-    [TextType.A0439]: [
+    [Lang_Constants.TextType.A0439]: [
         `战局不存在。`,
         `The war doesn't exist.`,
         `La partida no existe.`,
     ],
-    [TextType.A0440]: [
+    [Lang_Constants.TextType.A0440]: [
         [
             `地图数据已成功导出到编辑器中。`,
             `\n`,
@@ -4761,7 +4763,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Deseas empezar a editarlo ahora?`,
         ].join(`\n`),
     ],
-    [TextType.A0441]: [
+    [Lang_Constants.TextType.A0441]: [
         [
             `您可以把地图编辑器中已有的普通地图转换为战役地图。`,
             ``,
@@ -4787,12 +4789,12 @@ export const CommonText: Record<number, string[]> = {
             `Nota que si el mapa objetivo contiene más de una regla preliminar, el sistema mantendrá solo la primera regla.`,
         ].join(`\n`),
     ],
-    [TextType.A0442]: [
+    [Lang_Constants.TextType.A0442]: [
         `请选择有数据的槽位。`,
         `Please select a slot with data.`,
         `Por favor, selecciona un espacio con datos.`,
     ],
-    [TextType.A0443]: [
+    [Lang_Constants.TextType.A0443]: [
         [
             `您可以设置在本模式中，您所期望的玩家回合限时（单位为天）。`,
             ``,
@@ -4824,7 +4826,7 @@ export const CommonText: Record<number, string[]> = {
             `La configuración no afecta a las salas ni a las partidas existentes.`,
         ].join(`\n`),
     ],
-    [TextType.A0444]: [
+    [Lang_Constants.TextType.A0444]: [
         [
             `返回值：(玩家)`,
             `当前回合的玩家`,
@@ -4838,7 +4840,7 @@ export const CommonText: Record<number, string[]> = {
             `El jugador que está en turno.`,
         ].join(`\n`),
     ],
-    [TextType.A0445]: [
+    [Lang_Constants.TextType.A0445]: [
         [
             `返回值：(整数)`,
             `当前回合数`,
@@ -4852,7 +4854,7 @@ export const CommonText: Record<number, string[]> = {
             `El índice del turno actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0446]: [
+    [Lang_Constants.TextType.A0446]: [
         [
             `返回值：(整数)`,
             `当前的回合阶段。`,
@@ -4872,7 +4874,7 @@ export const CommonText: Record<number, string[]> = {
             `1 == Turno`,
         ].join(`\n`),
     ],
-    [TextType.A0447]: [
+    [Lang_Constants.TextType.A0447]: [
         [
             `返回值：(回合数据)`,
             `当前回合数据。`,
@@ -4886,7 +4888,7 @@ export const CommonText: Record<number, string[]> = {
             `La data de turnos de la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0448]: [
+    [Lang_Constants.TextType.A0448]: [
         [
             `返回值：(整数)`,
             `玩家的存活状态。`,
@@ -4909,7 +4911,7 @@ export const CommonText: Record<number, string[]> = {
             `2 == Derrotado`,
         ].join(`\n`),
     ],
-    [TextType.A0449]: [
+    [Lang_Constants.TextType.A0449]: [
         [
             `返回值：(整数)`,
             `玩家CO生效中的技能类别。`,
@@ -4932,7 +4934,7 @@ export const CommonText: Record<number, string[]> = {
             `2 == Super Poder`,
         ].join(`\n`),
     ],
-    [TextType.A0450]: [
+    [Lang_Constants.TextType.A0450]: [
         [
             `返回值：(整数)`,
             `若玩家COU在本回合内被摧毁了至少一次则返回1，否则返回0。`,
@@ -4946,7 +4948,7 @@ export const CommonText: Record<number, string[]> = {
             `1 si la unidad de CO del jugador ha sido destruida al menos una vez en el turno actual, de lo contrario 0.`,
         ].join(`\n`),
     ],
-    [TextType.A0451]: [
+    [Lang_Constants.TextType.A0451]: [
         [
             `返回值：(整数)`,
             `玩家的CO类别。`,
@@ -4960,7 +4962,7 @@ export const CommonText: Record<number, string[]> = {
             `La ID de categoría del CO del jugador.`,
         ].join(`\n`),
     ],
-    [TextType.A0452]: [
+    [Lang_Constants.TextType.A0452]: [
         [
             `使用方法：`,
             `coEnergy(arg)`,
@@ -5013,7 +5015,7 @@ export const CommonText: Record<number, string[]> = {
             `- maxEnergy es 0 mientras arg sea 3 o 4`,
         ].join(`\n`),
     ],
-    [TextType.A0453]: [
+    [Lang_Constants.TextType.A0453]: [
         [
             `返回值：(整数)`,
             `本局内，玩家CO已激活主动技能（含COP和SCOP）的次数。`,
@@ -5027,7 +5029,7 @@ export const CommonText: Record<number, string[]> = {
             `El número de veces que el jugador ha activado PCO y SPCO en esta partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0454]: [
+    [Lang_Constants.TextType.A0454]: [
         [
             `返回值：(整数)`,
             `若玩家已被设置为跳过当前回合或下个回合则返回1，否则返回0。`,
@@ -5041,7 +5043,7 @@ export const CommonText: Record<number, string[]> = {
             `1 si el jugador estableció saltar el turno actual o el próximo turno, de lo contrario 0.`,
         ].join(`\n`),
     ],
-    [TextType.A0455]: [
+    [Lang_Constants.TextType.A0455]: [
         [
             `使用方法：`,
             `abs(x)`,
@@ -5082,7 +5084,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0456]: [
+    [Lang_Constants.TextType.A0456]: [
         [
             `使用方法：`,
             `type(arg)`,
@@ -5147,7 +5149,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0457]: [
+    [Lang_Constants.TextType.A0457]: [
         [
             `使用方法：`,
             `enabled(arg)`,
@@ -5191,7 +5193,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0458]: [
+    [Lang_Constants.TextType.A0458]: [
         [
             `返回值：(战争迷雾数据)`,
             `当前战局的战争迷雾相关数据。`,
@@ -5205,7 +5207,7 @@ export const CommonText: Record<number, string[]> = {
             `La Data de Niebla de guerra de la partida actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0459]: [
+    [Lang_Constants.TextType.A0459]: [
         [
             `返回值：(整数)`,
             `强制更改的天气将在哪个玩家进入回合时结束。`,
@@ -5228,7 +5230,7 @@ export const CommonText: Record<number, string[]> = {
             `Este valor trabaja junto a expiringTurnIndex.`,
         ].join(`\n`),
     ],
-    [TextType.A0460]: [
+    [Lang_Constants.TextType.A0460]: [
         [
             `返回值：(整数)`,
             `强制更改的天气将在哪个回合开始时结束。`,
@@ -5251,7 +5253,7 @@ export const CommonText: Record<number, string[]> = {
             `Este valor trabaja junto con expiringPlayerIndex.`,
         ].join(`\n`),
     ],
-    [TextType.A0461]: [
+    [Lang_Constants.TextType.A0461]: [
         [
             `返回值：(天气数据)`,
             `战局的天气数据。`,
@@ -5265,7 +5267,7 @@ export const CommonText: Record<number, string[]> = {
             `Los datos de clima de la partida.`,
         ].join(`\n`)
     ],
-    [TextType.A0462]: [
+    [Lang_Constants.TextType.A0462]: [
         [
             `返回值：(地形)`,
             `部队所在的地形。`,
@@ -5282,7 +5284,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta petición fallará si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0463]: [
+    [Lang_Constants.TextType.A0463]: [
         [
             `返回值：(整数)`,
             `若部队存在则返回1，否则返回0。`,
@@ -5296,7 +5298,7 @@ export const CommonText: Record<number, string[]> = {
             `1 si la unidad existe, 0 de lo contrario.`,
         ].join(`\n`),
     ],
-    [TextType.A0464]: [
+    [Lang_Constants.TextType.A0464]: [
         [
             `返回值：(玩家)`,
             `当前部队所属的玩家。`,
@@ -5313,7 +5315,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta petición fallará si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0465]: [
+    [Lang_Constants.TextType.A0465]: [
         [
             `返回值：(整数)`,
             `如果当前地形上有部队存在则返回1，否则返回0。`,
@@ -5327,7 +5329,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve 1 si hay al menos una unidad en la casilla, de lo contrario 0.`,
         ].join(`\n`),
     ],
-    [TextType.A0466]: [
+    [Lang_Constants.TextType.A0466]: [
         [
             `返回值：(部队)`,
             `当前地形上的部队。`,
@@ -5344,7 +5346,7 @@ export const CommonText: Record<number, string[]> = {
             `Nota que la unidad puede que no exista. Puedes confirmarlo por la interface de esa unidad.`,
         ].join(`\n`),
     ],
-    [TextType.A0467]: [
+    [Lang_Constants.TextType.A0467]: [
         [
             `使用方法：`,
             `unit(x, y)`,
@@ -5394,7 +5396,7 @@ export const CommonText: Record<number, string[]> = {
             `- las coordenadas están fuera del mapa.`,
         ].join(`\n`),
     ],
-    [TextType.A0468]: [
+    [Lang_Constants.TextType.A0468]: [
         [
             `使用方法：`,
             `min(...values)`,
@@ -5435,7 +5437,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0469]: [
+    [Lang_Constants.TextType.A0469]: [
         [
             `使用方法：`,
             `max(...values)`,
@@ -5476,7 +5478,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0470]: [
+    [Lang_Constants.TextType.A0470]: [
         [
             `返回值：(玩家)`,
             `当前地形所属的玩家。`,
@@ -5490,7 +5492,7 @@ export const CommonText: Record<number, string[]> = {
             `El dueño de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0471]: [
+    [Lang_Constants.TextType.A0471]: [
         [
             `返回值：(部队)`,
             `装载了当前部队的容器部队（比如运输船等）。请注意此容器部队有可能不存在。`,
@@ -5507,7 +5509,7 @@ export const CommonText: Record<number, string[]> = {
             `Este llamado fallará si la unidad actual no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0472]: [
+    [Lang_Constants.TextType.A0472]: [
         [
             `使用方法：`,
             `cost(arg)`,
@@ -5581,7 +5583,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0473]: [
+    [Lang_Constants.TextType.A0473]: [
         [
             `使用方法：`,
             `inLocation(locationId)`,
@@ -5625,7 +5627,7 @@ export const CommonText: Record<number, string[]> = {
             `- locationId no es un integral.`,
         ].join(`\n`),
     ],
-    [TextType.A0474]: [
+    [Lang_Constants.TextType.A0474]: [
         [
             `使用方法：`,
             `ceil(x)`,
@@ -5669,17 +5671,17 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0475]: [
+    [Lang_Constants.TextType.A0475]: [
         `表达式的结果类型不符合预期。`,
         `Unexpected result type of the expression.`,
         `Resultado inesperado del tipo de expresión.`,
     ],
-    [TextType.A0476]: [
+    [Lang_Constants.TextType.A0476]: [
         `表达式太长。`,
         `The expression is too long.`,
         `La expresión es muy larga.`,
     ],
-    [TextType.A0477]: [
+    [Lang_Constants.TextType.A0477]: [
         [
             `统计数据只包含在您的视野内发生的变动。`,
             ``,
@@ -5699,12 +5701,12 @@ export const CommonText: Record<number, string[]> = {
             `El valor es calculado basado en el precio original de las unidades y no está afectado por CO, reglas, eventos de guerra, etc.`,
         ].join(`\n`),
     ],
-    [TextType.A0478]: [
+    [Lang_Constants.TextType.A0478]: [
         `您绘制上面一行的颜色的建筑时，系统会自动绘制下面一行的对应颜色的建筑。`,
         `When you draw buildings with the colors in the upper row, the system will automatically draw buildings with the corresponding colors in the lower row.`,
         `Cuando dibujes edificios con los colores de la fila superior, el sistema dibujará automáticamente edificios con los colores correspondientes de la fila inferior.`,
     ],
-    [TextType.A0479]: [
+    [Lang_Constants.TextType.A0479]: [
         [
             `使用方法：`,
             `allUnits(predicate)`,
@@ -5775,7 +5777,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0480]: [
+    [Lang_Constants.TextType.A0480]: [
         [
             `返回值：(整数)`,
             `数组包含的元素的个数。`,
@@ -5789,7 +5791,7 @@ export const CommonText: Record<number, string[]> = {
             `El número de elementos en el arreglo.`,
         ].join(`\n`),
     ],
-    [TextType.A0481]: [
+    [Lang_Constants.TextType.A0481]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -5839,7 +5841,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0482]: [
+    [Lang_Constants.TextType.A0482]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -5907,7 +5909,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de evaluación del tipo esperado varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0483]: [
+    [Lang_Constants.TextType.A0483]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -5975,7 +5977,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. La expresión de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0484]: [
+    [Lang_Constants.TextType.A0484]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -6025,7 +6027,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0485]: [
+    [Lang_Constants.TextType.A0485]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -6093,7 +6095,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0486]: [
+    [Lang_Constants.TextType.A0486]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -6161,7 +6163,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0487]: [
+    [Lang_Constants.TextType.A0487]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -6211,7 +6213,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0488]: [
+    [Lang_Constants.TextType.A0488]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -6279,7 +6281,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0489]: [
+    [Lang_Constants.TextType.A0489]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -6347,7 +6349,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0490]: [
+    [Lang_Constants.TextType.A0490]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -6397,7 +6399,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0491]: [
+    [Lang_Constants.TextType.A0491]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -6465,7 +6467,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0492]: [
+    [Lang_Constants.TextType.A0492]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -6533,7 +6535,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0493]: [
+    [Lang_Constants.TextType.A0493]: [
         [
             `使用方法：`,
             `allTiles(predicate)`,
@@ -6601,7 +6603,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0494]: [
+    [Lang_Constants.TextType.A0494]: [
         [
             `使用方法：`,
             `allPlayers(predicate)`,
@@ -6669,22 +6671,22 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0495]: [
+    [Lang_Constants.TextType.A0495]: [
         `表达式开头或末尾存在多余空格。`,
         `There are redundant leading and trailing spaces in the expression.`,
         `Hay espacios redundantes anteriores y posteriores en la expresión.`,
     ],
-    [TextType.A0496]: [
+    [Lang_Constants.TextType.A0496]: [
         `杂项动作不合法。`,
         `Invalid misc actions.`,
         `Acciones misceláneas no válidas.`,
     ],
-    [TextType.A0497]: [
+    [Lang_Constants.TextType.A0497]: [
         `选择的音效无效`,
         `The chosen SFX is invalid.`,
         `Los efectos de sonido escogidos no son válidos.`,
     ],
-    [TextType.A0498]: [
+    [Lang_Constants.TextType.A0498]: [
         [
             `使用方法：`,
             `array(value1, ...)`,
@@ -6737,7 +6739,7 @@ export const CommonText: Record<number, string[]> = {
             `array(player(2)), array(3.1, 2, player(1).fund), array(tile(0, 1), tile(3, 9))`,
         ].join(`\n`),
     ],
-    [TextType.A0499]: [
+    [Lang_Constants.TextType.A0499]: [
         [
             `使用方法：`,
             `max(defaultValue)`,
@@ -6781,7 +6783,7 @@ export const CommonText: Record<number, string[]> = {
             `- El arreglo está vacío mientras defaultValue no es provisto.`,
         ].join(`\n`),
     ],
-    [TextType.A0500]: [
+    [Lang_Constants.TextType.A0500]: [
         [
             `使用方法：`,
             `min(defaultValue)`,
@@ -6825,7 +6827,7 @@ export const CommonText: Record<number, string[]> = {
             `- El arreglo está vacío mientras defaultValue no es provisto.`,
         ].join(`\n`),
     ],
-    [TextType.A0501]: [
+    [Lang_Constants.TextType.A0501]: [
         [
             `使用方法：`,
             `mean(defaultValue)`,
@@ -6872,7 +6874,7 @@ export const CommonText: Record<number, string[]> = {
             `- El proceso de cálculo falla.`,
         ].join(`\n`),
     ],
-    [TextType.A0502]: [
+    [Lang_Constants.TextType.A0502]: [
         [
             `使用方法：`,
             `sum(defaultValue)`,
@@ -6919,7 +6921,7 @@ export const CommonText: Record<number, string[]> = {
             `- El proceso de cálculo falla.`,
         ].join(`\n`),
     ],
-    [TextType.A0503]: [
+    [Lang_Constants.TextType.A0503]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -6987,7 +6989,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0504]: [
+    [Lang_Constants.TextType.A0504]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -7055,7 +7057,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0505]: [
+    [Lang_Constants.TextType.A0505]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -7123,7 +7125,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0506]: [
+    [Lang_Constants.TextType.A0506]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -7191,7 +7193,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0507]: [
+    [Lang_Constants.TextType.A0507]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -7259,7 +7261,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0508]: [
+    [Lang_Constants.TextType.A0508]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -7327,7 +7329,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0509]: [
+    [Lang_Constants.TextType.A0509]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -7395,7 +7397,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0510]: [
+    [Lang_Constants.TextType.A0510]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -7463,7 +7465,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0511]: [
+    [Lang_Constants.TextType.A0511]: [
         [
             `使用方法：`,
             `income(arg)`,
@@ -7507,7 +7509,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0512]: [
+    [Lang_Constants.TextType.A0512]: [
         [
             `使用方法：`,
             `allUnitStatistics(predicate)`,
@@ -7578,7 +7580,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0513]: [
+    [Lang_Constants.TextType.A0513]: [
         [
             `返回值：(整数)`,
             `玩家序号。`,
@@ -7604,7 +7606,7 @@ export const CommonText: Record<number, string[]> = {
             `- si el arreglo fuente está vacío, se devolverá -2.`,
         ].join(`\n`),
     ],
-    [TextType.A0514]: [
+    [Lang_Constants.TextType.A0514]: [
         [
             `返回值：(整数)`,
             `部队种类。`,
@@ -7630,7 +7632,7 @@ export const CommonText: Record<number, string[]> = {
             `- si el arreglo fuente está vacío, se devolverá -2.`,
         ].join(`\n`),
     ],
-    [TextType.A0515]: [
+    [Lang_Constants.TextType.A0515]: [
         [
             `返回值：(整数)`,
             `到目前为止已获得的部队数量。`,
@@ -7644,7 +7646,7 @@ export const CommonText: Record<number, string[]> = {
             `El número de unidades obtenidas hasta ahora.`,
         ].join(`\n`),
     ],
-    [TextType.A0516]: [
+    [Lang_Constants.TextType.A0516]: [
         [
             `返回值：(整数)`,
             `到目前为止已损失的部队数量。`,
@@ -7658,7 +7660,7 @@ export const CommonText: Record<number, string[]> = {
             `El número de unidades perdidas hasta ahora.`,
         ].join(`\n`),
     ],
-    [TextType.A0517]: [
+    [Lang_Constants.TextType.A0517]: [
         [
             `返回值：(整数)`,
             `目前剩余的部队数量。`,
@@ -7672,7 +7674,7 @@ export const CommonText: Record<number, string[]> = {
             `El número actual de unidades remanentes.`,
         ].join(`\n`),
     ],
-    [TextType.A0518]: [
+    [Lang_Constants.TextType.A0518]: [
         [
             `返回值：(整数)`,
             `到目前为止已获得的部队标准HP。`,
@@ -7686,7 +7688,7 @@ export const CommonText: Record<number, string[]> = {
             `El HP estándar de unidades obtenido hasta ahora.`,
         ].join(`\n`),
     ],
-    [TextType.A0519]: [
+    [Lang_Constants.TextType.A0519]: [
         [
             `返回值：(整数)`,
             `到目前为止已损失的部队标准HP。`,
@@ -7700,7 +7702,7 @@ export const CommonText: Record<number, string[]> = {
             `El HP estándar de unidades perdido hasta ahora.`,
         ].join(`\n`),
     ],
-    [TextType.A0520]: [
+    [Lang_Constants.TextType.A0520]: [
         [
             `返回值：(整数)`,
             `目前剩余的部队标准HP。`,
@@ -7714,7 +7716,7 @@ export const CommonText: Record<number, string[]> = {
             `El HP estándar de unidades remanente.`,
         ].join(`\n`),
     ],
-    [TextType.A0521]: [
+    [Lang_Constants.TextType.A0521]: [
         [
             `使用方法：`,
             `merge()`,
@@ -7770,7 +7772,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0522]: [
+    [Lang_Constants.TextType.A0522]: [
         [
             `使用方法：`,
             `abs()`,
@@ -7811,7 +7813,7 @@ export const CommonText: Record<number, string[]> = {
             `- El resultado no es un número real válido.`,
         ].join(`\n`),
     ],
-    [TextType.A0523]: [
+    [Lang_Constants.TextType.A0523]: [
         [
             `使用方法：`,
             `floor()`,
@@ -7852,7 +7854,7 @@ export const CommonText: Record<number, string[]> = {
             `- El resultado no es un número real válido.`,
         ].join(`\n`),
     ],
-    [TextType.A0524]: [
+    [Lang_Constants.TextType.A0524]: [
         [
             `使用方法：`,
             `ceil()`,
@@ -7893,7 +7895,7 @@ export const CommonText: Record<number, string[]> = {
             `- El resultado no es un número real válido.`,
         ].join(`\n`),
     ],
-    [TextType.A0525]: [
+    [Lang_Constants.TextType.A0525]: [
         [
             `使用方法：`,
             `randomInt(lowerLimit, upperLimit)`,
@@ -7940,7 +7942,7 @@ export const CommonText: Record<number, string[]> = {
             `- No hay un integral en el rango especificado.`,
         ].join(`\n`),
     ],
-    [TextType.A0526]: [
+    [Lang_Constants.TextType.A0526]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为天气类型。`,
             ``,
@@ -7984,7 +7986,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0527]: [
+    [Lang_Constants.TextType.A0527]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为天气持续回合数。`,
             ``,
@@ -8031,7 +8033,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0528]: [
+    [Lang_Constants.TextType.A0528]: [
         [
             `返回值：(整数)`,
             `队伍序号。`,
@@ -8057,7 +8059,7 @@ export const CommonText: Record<number, string[]> = {
             `- si el arreglo fuente está vacío, se devolverá -2.`,
         ].join(`\n`),
     ],
-    [TextType.A0529]: [
+    [Lang_Constants.TextType.A0529]: [
         [
             `使用方法：`,
             `allCustomCounterIds(predicate)`,
@@ -8128,12 +8130,12 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y su interface. El resultado de la evaluación del tipo esperado de la expresión varía en distintos contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0530]: [
+    [Lang_Constants.TextType.A0530]: [
         `R1和R2是值域为[0, 1)的不同的随机数。`,
         `R1 and R2 are different random numbers in range [0, 1).`,
         `R1 y R2 son dos números aleatorios en el rango [0, 1).`,
     ],
-    [TextType.A0531]: [
+    [Lang_Constants.TextType.A0531]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为将要改写的自定义计数器的ID。`,
             ``,
@@ -8192,7 +8194,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0532]: [
+    [Lang_Constants.TextType.A0532]: [
         [
             `请填写表达式。系统将以该表达式的求值结果（对指定ID的各个自定义计数器分别求值）作为自定义计数器的新的值。`,
             ``,
@@ -8236,7 +8238,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0533]: [
+    [Lang_Constants.TextType.A0533]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定属性修改是否对某玩家生效。`,
             ``,
@@ -8292,7 +8294,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0534]: [
+    [Lang_Constants.TextType.A0534]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为将要禁用的部队的类型ID。`,
             ``,
@@ -8357,7 +8359,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0535]: [
+    [Lang_Constants.TextType.A0535]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为将要解禁的部队的类型ID。`,
             ``,
@@ -8419,7 +8421,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0536]: [
+    [Lang_Constants.TextType.A0536]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果控制是否允许玩家使用CO主动技能。`,
             ``,
@@ -8481,7 +8483,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0537]: [
+    [Lang_Constants.TextType.A0537]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家CO能量积累速度的额外加成百分比。`,
             ``,
@@ -8537,7 +8539,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0538]: [
+    [Lang_Constants.TextType.A0538]: [
         [
             `在多人游戏中，战局中的部分数据不是对所有玩家可见的。如果动作中的某些表达式依赖于不可见的数据，则玩家获得的信息可能会出现偏差。`,
             ``,
@@ -8575,7 +8577,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres que esta acción tome efecto en partidas multijugador?`,
         ].join(`\n`),
     ],
-    [TextType.A0539]: [
+    [Lang_Constants.TextType.A0539]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定属性修改是否对某部队生效。`,
             ``,
@@ -8631,7 +8633,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0540]: [
+    [Lang_Constants.TextType.A0540]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队额外攻击力加成百分比。`,
             ``,
@@ -8693,7 +8695,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0541]: [
+    [Lang_Constants.TextType.A0541]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队额外防御力加成百分比。`,
             ``,
@@ -8749,7 +8751,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0542]: [
+    [Lang_Constants.TextType.A0542]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队额外移动力加成。`,
             ``,
@@ -8811,7 +8813,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0543]: [
+    [Lang_Constants.TextType.A0543]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队攻击范围上限的加成。`,
             ``,
@@ -8876,7 +8878,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0544]: [
+    [Lang_Constants.TextType.A0544]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队幸运下限的加成。`,
             ``,
@@ -8938,7 +8940,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0545]: [
+    [Lang_Constants.TextType.A0545]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队幸运上限的加成。`,
             ``,
@@ -9000,7 +9002,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0546]: [
+    [Lang_Constants.TextType.A0546]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队照明弹额外射程加成。`,
             ``,
@@ -9062,7 +9064,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0547]: [
+    [Lang_Constants.TextType.A0547]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队照明弹额外照明半径加成。`,
             ``,
@@ -9124,7 +9126,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0548]: [
+    [Lang_Constants.TextType.A0548]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否可以移动后发起攻击。`,
             ``,
@@ -9186,7 +9188,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0549]: [
+    [Lang_Constants.TextType.A0549]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定属性修改是否对某玩家生效。`,
             ``,
@@ -9230,7 +9232,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0550]: [
+    [Lang_Constants.TextType.A0550]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的新的资金值。`,
             ``,
@@ -9277,7 +9279,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0551]: [
+    [Lang_Constants.TextType.A0551]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的新的CO能量值。`,
             ``,
@@ -9324,7 +9326,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0552]: [
+    [Lang_Constants.TextType.A0552]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的新的存活状态。`,
             ``,
@@ -9368,7 +9370,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0553]: [
+    [Lang_Constants.TextType.A0553]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来控制是否跳过玩家的回合。`,
             ``,
@@ -9421,7 +9423,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0554]: [
+    [Lang_Constants.TextType.A0554]: [
         [
             `使用方法：`,
             `movement(arg)`,
@@ -9468,7 +9470,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0555]: [
+    [Lang_Constants.TextType.A0555]: [
         [
             `此客户端是安卓版的，安装时需要允许侧载。`,
             `此客户端是强制横屏的。`,
@@ -9488,12 +9490,12 @@ export const CommonText: Record<number, string[]> = {
             `Si la descarga falla, o si quieres descargar sin Landscape, por favor visite el servidor de discord de TinyWars que figura en la pantalla de lobby del juego.`,
         ].join(`\n`),
     ],
-    [TextType.A0556]: [
+    [Lang_Constants.TextType.A0556]: [
         `操作失败。`,
         `Operation failed.`,
         `Operación fallida.`,
     ],
-    [TextType.A0557]: [
+    [Lang_Constants.TextType.A0557]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -9561,7 +9563,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0558]: [
+    [Lang_Constants.TextType.A0558]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -9629,7 +9631,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0559]: [
+    [Lang_Constants.TextType.A0559]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -9697,7 +9699,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0560]: [
+    [Lang_Constants.TextType.A0560]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -9765,7 +9767,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0561]: [
+    [Lang_Constants.TextType.A0561]: [
         [
             `返回值：(整数)`,
             `当前位置的X坐标值`,
@@ -9779,7 +9781,7 @@ export const CommonText: Record<number, string[]> = {
             `El valor de la coordenada X de la posición actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0562]: [
+    [Lang_Constants.TextType.A0562]: [
         [
             `返回值：(整数)`,
             `当前地形的Y坐标值`,
@@ -9793,7 +9795,7 @@ export const CommonText: Record<number, string[]> = {
             `El valor de la coordenada Y de la posición actual.`,
         ].join(`\n`),
     ],
-    [TextType.A0563]: [
+    [Lang_Constants.TextType.A0563]: [
         [
             `返回值：(部队)`,
             `当前位置上的部队。`,
@@ -9819,7 +9821,7 @@ export const CommonText: Record<number, string[]> = {
             `- la posición está fuera del mapa.`,
         ].join(`\n`),
     ],
-    [TextType.A0564]: [
+    [Lang_Constants.TextType.A0564]: [
         [
             `返回值：(地形)`,
             `当前位置上的地形。`,
@@ -9842,7 +9844,7 @@ export const CommonText: Record<number, string[]> = {
             `- la posición está fuera del mapa.`,
         ].join(`\n`),
     ],
-    [TextType.A0565]: [
+    [Lang_Constants.TextType.A0565]: [
         [
             `使用方法：`,
             `add(pos)`,
@@ -9883,7 +9885,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0566]: [
+    [Lang_Constants.TextType.A0566]: [
         [
             `使用方法：`,
             `sub(pos)`,
@@ -9924,7 +9926,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0567]: [
+    [Lang_Constants.TextType.A0567]: [
         [
             `使用方法：`,
             `scale(num)`,
@@ -9968,7 +9970,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0568]: [
+    [Lang_Constants.TextType.A0568]: [
         [
             `使用方法：`,
             `distanceToGrid(x, y)，或`,
@@ -10018,7 +10020,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0569]: [
+    [Lang_Constants.TextType.A0569]: [
         [
             `使用方法：`,
             `distanceToLocation(locationId)`,
@@ -10062,7 +10064,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0570]: [
+    [Lang_Constants.TextType.A0570]: [
         [
             `使用方法：`,
             `inLocation(locationId)`,
@@ -10103,7 +10105,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0571]: [
+    [Lang_Constants.TextType.A0571]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -10151,7 +10153,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0572]: [
+    [Lang_Constants.TextType.A0572]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -10219,7 +10221,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0573]: [
+    [Lang_Constants.TextType.A0573]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -10287,7 +10289,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0574]: [
+    [Lang_Constants.TextType.A0574]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -10355,7 +10357,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0575]: [
+    [Lang_Constants.TextType.A0575]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -10423,7 +10425,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0576]: [
+    [Lang_Constants.TextType.A0576]: [
         [
             `返回值：(位置)`,
             `当前地形所在的位置。`,
@@ -10437,7 +10439,7 @@ export const CommonText: Record<number, string[]> = {
             `La posición de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0577]: [
+    [Lang_Constants.TextType.A0577]: [
         [
             `返回值：(位置)`,
             `当前部队所在的位置。`,
@@ -10454,7 +10456,7 @@ export const CommonText: Record<number, string[]> = {
             `Si la unidad no existe, los valores x e y devueltos serán -2 en ambos.`,
         ].join(`\n`),
     ],
-    [TextType.A0578]: [
+    [Lang_Constants.TextType.A0578]: [
         [
             `使用方法：`,
             `allPositions(predicate)`,
@@ -10522,7 +10524,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0579]: [
+    [Lang_Constants.TextType.A0579]: [
         [
             `使用方法：`,
             `makePos(x, y)`,
@@ -10566,7 +10568,7 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0580]: [
+    [Lang_Constants.TextType.A0580]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为重置视角的目标。`,
             ``,
@@ -10616,7 +10618,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0581]: [
+    [Lang_Constants.TextType.A0581]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定是否需要显示特效。`,
             ``,
@@ -10660,7 +10662,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0582]: [
+    [Lang_Constants.TextType.A0582]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定是否轮流切换视角。`,
             ``,
@@ -10707,7 +10709,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0583]: [
+    [Lang_Constants.TextType.A0583]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为切换视角的停顿时间，单位是毫秒。`,
             ``,
@@ -10751,7 +10753,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0584]: [
+    [Lang_Constants.TextType.A0584]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为强制雾战代码。`,
             ``,
@@ -10807,7 +10809,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0585]: [
+    [Lang_Constants.TextType.A0585]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为强制雾战代码持续的回合数。`,
             ``,
@@ -10854,7 +10856,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0586]: [
+    [Lang_Constants.TextType.A0586]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否在某地形上新增部队。`,
             ``,
@@ -10898,7 +10900,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0587]: [
+    [Lang_Constants.TextType.A0587]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定新增的部队的归属者。`,
             ``,
@@ -10945,7 +10947,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0588]: [
+    [Lang_Constants.TextType.A0588]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为新增的部队的类型ID。`,
             ``,
@@ -10992,7 +10994,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0589]: [
+    [Lang_Constants.TextType.A0589]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的行动状态。`,
             ``,
@@ -11051,7 +11053,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0590]: [
+    [Lang_Constants.TextType.A0590]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的主武器弹药数量。`,
             ``,
@@ -11101,7 +11103,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0591]: [
+    [Lang_Constants.TextType.A0591]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的HP。`,
             ``,
@@ -11151,7 +11153,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0592]: [
+    [Lang_Constants.TextType.A0592]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否正在占领建筑。`,
             ``,
@@ -11198,7 +11200,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0593]: [
+    [Lang_Constants.TextType.A0593]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否已下潜。`,
             ``,
@@ -11242,7 +11244,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0594]: [
+    [Lang_Constants.TextType.A0594]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的照明弹弹药数量。`,
             ``,
@@ -11292,7 +11294,7 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0595]: [
+    [Lang_Constants.TextType.A0595]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的燃料数量。`,
             ``,
@@ -11342,7 +11344,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0596]: [
+    [Lang_Constants.TextType.A0596]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的建筑材料数量。`,
             ``,
@@ -11392,7 +11394,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0597]: [
+    [Lang_Constants.TextType.A0597]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的生产材料数量。`,
             ``,
@@ -11442,7 +11444,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0598]: [
+    [Lang_Constants.TextType.A0598]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的晋升等级。`,
             ``,
@@ -11492,7 +11494,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0599]: [
+    [Lang_Constants.TextType.A0599]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否正在建造建筑。`,
             ``,
@@ -11539,7 +11541,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0600]: [
+    [Lang_Constants.TextType.A0600]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否已搭乘CO。`,
             ``,
@@ -11583,7 +11585,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0601]: [
+    [Lang_Constants.TextType.A0601]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的AI模式类型ID。`,
             ``,
@@ -11645,7 +11647,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0602]: [
+    [Lang_Constants.TextType.A0602]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的标签列表。`,
             ``,
@@ -11689,7 +11691,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0603]: [
+    [Lang_Constants.TextType.A0603]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的禁入区域ID列表。`,
             ``,
@@ -11733,7 +11735,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0604]: [
+    [Lang_Constants.TextType.A0604]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的AI移动目的地。`,
             ``,
@@ -11786,7 +11788,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0605]: [
+    [Lang_Constants.TextType.A0605]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否在某部队中装载新部队。`,
             ``,
@@ -11830,7 +11832,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0606]: [
+    [Lang_Constants.TextType.A0606]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为新增的部队的类型ID。`,
             ``,
@@ -11877,7 +11879,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0607]: [
+    [Lang_Constants.TextType.A0607]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的行动状态。`,
             ``,
@@ -11936,7 +11938,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0608]: [
+    [Lang_Constants.TextType.A0608]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的主武器弹药数量。`,
             ``,
@@ -11986,7 +11988,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0609]: [
+    [Lang_Constants.TextType.A0609]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的HP。`,
             ``,
@@ -12036,7 +12038,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0610]: [
+    [Lang_Constants.TextType.A0610]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否已下潜。`,
             ``,
@@ -12080,7 +12082,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0611]: [
+    [Lang_Constants.TextType.A0611]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的照明弹弹药数量。`,
             ``,
@@ -12130,7 +12132,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0612]: [
+    [Lang_Constants.TextType.A0612]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的燃料数量。`,
             ``,
@@ -12180,7 +12182,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0613]: [
+    [Lang_Constants.TextType.A0613]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的建筑材料数量。`,
             ``,
@@ -12230,7 +12232,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0614]: [
+    [Lang_Constants.TextType.A0614]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的生产材料数量。`,
             ``,
@@ -12280,7 +12282,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0615]: [
+    [Lang_Constants.TextType.A0615]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的晋升等级。`,
             ``,
@@ -12330,7 +12332,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0616]: [
+    [Lang_Constants.TextType.A0616]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定新增的部队是否已搭乘CO。`,
             ``,
@@ -12374,7 +12376,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0617]: [
+    [Lang_Constants.TextType.A0617]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的AI模式类型ID。`,
             ``,
@@ -12436,7 +12438,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0618]: [
+    [Lang_Constants.TextType.A0618]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的标签列表。`,
             ``,
@@ -12480,7 +12482,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0619]: [
+    [Lang_Constants.TextType.A0619]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的禁入区域ID列表。`,
             ``,
@@ -12524,7 +12526,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0620]: [
+    [Lang_Constants.TextType.A0620]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为新增的部队的AI移动目的地。`,
             ``,
@@ -12577,7 +12579,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0621]: [
+    [Lang_Constants.TextType.A0621]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否在摧毁某部队。`,
             ``,
@@ -12624,7 +12626,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0622]: [
+    [Lang_Constants.TextType.A0622]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某部队的类型。`,
             ``,
@@ -12668,7 +12670,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0623]: [
+    [Lang_Constants.TextType.A0623]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为部队的新的类型ID。`,
             ``,
@@ -12733,7 +12735,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0624]: [
+    [Lang_Constants.TextType.A0624]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某部队的归属者。`,
             ``,
@@ -12777,7 +12779,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0625]: [
+    [Lang_Constants.TextType.A0625]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为部队的新的玩家序号。`,
             ``,
@@ -12836,7 +12838,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0626]: [
+    [Lang_Constants.TextType.A0626]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某部队的属性。`,
             ``,
@@ -12880,7 +12882,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0627]: [
+    [Lang_Constants.TextType.A0627]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为行动状态。`,
             ``,
@@ -12939,7 +12941,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0628]: [
+    [Lang_Constants.TextType.A0628]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为主武器弹药数量。`,
             ``,
@@ -12989,7 +12991,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0629]: [
+    [Lang_Constants.TextType.A0629]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为HP。`,
             ``,
@@ -13039,7 +13041,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0630]: [
+    [Lang_Constants.TextType.A0630]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否正在占领建筑。`,
             ``,
@@ -13086,7 +13088,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0631]: [
+    [Lang_Constants.TextType.A0631]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否已下潜。`,
             ``,
@@ -13130,7 +13132,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0632]: [
+    [Lang_Constants.TextType.A0632]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为照明弹弹药数量。`,
             ``,
@@ -13180,7 +13182,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0633]: [
+    [Lang_Constants.TextType.A0633]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为燃料数量。`,
             ``,
@@ -13230,7 +13232,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0634]: [
+    [Lang_Constants.TextType.A0634]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为建筑材料数量。`,
             ``,
@@ -13280,7 +13282,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0635]: [
+    [Lang_Constants.TextType.A0635]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为生产材料数量。`,
             ``,
@@ -13330,7 +13332,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0636]: [
+    [Lang_Constants.TextType.A0636]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为晋升等级。`,
             ``,
@@ -13380,7 +13382,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0637]: [
+    [Lang_Constants.TextType.A0637]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否正在建造建筑。`,
             ``,
@@ -13427,7 +13429,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0638]: [
+    [Lang_Constants.TextType.A0638]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否已搭乘CO。`,
             ``,
@@ -13471,7 +13473,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0639]: [
+    [Lang_Constants.TextType.A0639]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为AI模式类型ID。`,
             ``,
@@ -13533,7 +13535,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0640]: [
+    [Lang_Constants.TextType.A0640]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为标签列表。`,
             ``,
@@ -13580,7 +13582,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0641]: [
+    [Lang_Constants.TextType.A0641]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为禁入区域ID列表。`,
             ``,
@@ -13627,7 +13629,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0642]: [
+    [Lang_Constants.TextType.A0642]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为AI移动目的地。`,
             ``,
@@ -13680,7 +13682,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0643]: [
+    [Lang_Constants.TextType.A0643]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为部队视野范围的加成。`,
             ``,
@@ -13745,7 +13747,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0644]: [
+    [Lang_Constants.TextType.A0644]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定部队是否拥有真实视野（即可以直接看穿隐蔽地点）。`,
             ``,
@@ -13813,7 +13815,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0645]: [
+    [Lang_Constants.TextType.A0645]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某部队的位置。`,
             ``,
@@ -13857,7 +13859,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0646]: [
+    [Lang_Constants.TextType.A0646]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为目的地。`,
             ``,
@@ -13910,7 +13912,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0647]: [
+    [Lang_Constants.TextType.A0647]: [
         [
             `(可选)请填写表达式。系统将以该表达式来决定部队的备选移动目的地。`,
             ``,
@@ -13969,7 +13971,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0648]: [
+    [Lang_Constants.TextType.A0648]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某地形的种类。`,
             ``,
@@ -14013,7 +14015,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0649]: [
+    [Lang_Constants.TextType.A0649]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形基底类型ID。`,
             ``,
@@ -14078,7 +14080,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0650]: [
+    [Lang_Constants.TextType.A0650]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形基底造型ID。`,
             ``,
@@ -14134,7 +14136,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0651]: [
+    [Lang_Constants.TextType.A0651]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形物体类型ID。`,
             ``,
@@ -14307,7 +14309,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0652]: [
+    [Lang_Constants.TextType.A0652]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形物体造型ID。`,
             ``,
@@ -14363,7 +14365,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0653]: [
+    [Lang_Constants.TextType.A0653]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形装饰类型ID。`,
             ``,
@@ -14419,7 +14421,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0654]: [
+    [Lang_Constants.TextType.A0654]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形装饰造型ID。`,
             ``,
@@ -14481,7 +14483,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0655]: [
+    [Lang_Constants.TextType.A0655]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定如何处理地形上已有的部队。`,
             ``,
@@ -14552,7 +14554,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0656]: [
+    [Lang_Constants.TextType.A0656]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定是否要摧毁地形上的部队。`,
             ``,
@@ -14603,7 +14605,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0657]: [
+    [Lang_Constants.TextType.A0657]: [
         [
             `随机化后，地形基底层将被完全改写。`,
             ``,
@@ -14620,7 +14622,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0658]: [
+    [Lang_Constants.TextType.A0658]: [
         [
             `您可以随意命名自定义计数器以便使用。`,
             `命名必须唯一。`,
@@ -14649,17 +14651,17 @@ export const CommonText: Record<number, string[]> = {
             `Los nombres no tendrán impacto en el juego si no te refieres a éstos en expresiones del sistema de Eventos de Guerra.`,
         ].join(`\n`),
     ],
-    [TextType.A0659]: [
+    [Lang_Constants.TextType.A0659]: [
         `名字的第一个字符必须是字母，其余字符可以是字母和数字。`,
         `The first character of a name must be a letter, and the remaining characters can be letters and numbers.`,
         `El primer caracter de un nombre debe ser una letra, y los caracteres remanentes puedes ser letras y números.`,
     ],
-    [TextType.A0660]: [
+    [Lang_Constants.TextType.A0660]: [
         `名字已被使用。`,
         `Name already in use.`,
         `Nombre ya está en uso.`,
     ],
-    [TextType.A0661]: [
+    [Lang_Constants.TextType.A0661]: [
         [
             `使用方法：`,
             `randomPick(source, count, sort)`,
@@ -14706,7 +14708,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0662]: [
+    [Lang_Constants.TextType.A0662]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某地形的属性。`,
             ``,
@@ -14750,7 +14752,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0663]: [
+    [Lang_Constants.TextType.A0663]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为地形的新的玩家序号。`,
             ``,
@@ -14800,7 +14802,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0664]: [
+    [Lang_Constants.TextType.A0664]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为当前HP。`,
             ``,
@@ -14850,7 +14852,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0665]: [
+    [Lang_Constants.TextType.A0665]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为当前建筑点数。`,
             ``,
@@ -14900,7 +14902,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0666]: [
+    [Lang_Constants.TextType.A0666]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为当前占领点数。`,
             ``,
@@ -14950,7 +14952,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0667]: [
+    [Lang_Constants.TextType.A0667]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形是否高亮。`,
             ``,
@@ -14994,7 +14996,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0668]: [
+    [Lang_Constants.TextType.A0668]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为地形的区域ID列表。`,
             ``,
@@ -15047,7 +15049,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0669]: [
+    [Lang_Constants.TextType.A0669]: [
         [
             `使用方法：`,
             `add(value1, ...)`,
@@ -15100,7 +15102,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0670]: [
+    [Lang_Constants.TextType.A0670]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为作用范围半径。`,
             ``,
@@ -15153,7 +15155,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0671]: [
+    [Lang_Constants.TextType.A0671]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为优先级。`,
             ``,
@@ -15212,7 +15214,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0672]: [
+    [Lang_Constants.TextType.A0672]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形是否对拥有者产生效果。`,
             ``,
@@ -15256,7 +15258,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0673]: [
+    [Lang_Constants.TextType.A0673]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形是否对队友产生效果。`,
             ``,
@@ -15300,7 +15302,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0674]: [
+    [Lang_Constants.TextType.A0674]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形是否对敌人产生效果。`,
             ``,
@@ -15344,7 +15346,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0675]: [
+    [Lang_Constants.TextType.A0675]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为目标玩家的资金的增减量。`,
             ``,
@@ -15397,7 +15399,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0676]: [
+    [Lang_Constants.TextType.A0676]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为目标玩家的CO能量的增减百分比。`,
             ``,
@@ -15447,7 +15449,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0677]: [
+    [Lang_Constants.TextType.A0677]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为目标部队的标准HP的增减量。`,
             ``,
@@ -15500,7 +15502,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0678]: [
+    [Lang_Constants.TextType.A0678]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为目标部队的燃料的增减百分比。`,
             ``,
@@ -15550,7 +15552,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0679]: [
+    [Lang_Constants.TextType.A0679]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为目标部队的主武器弹药的增减百分比。`,
             ``,
@@ -15600,7 +15602,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0680]: [
+    [Lang_Constants.TextType.A0680]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为射程（上）。`,
             ``,
@@ -15653,7 +15655,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0681]: [
+    [Lang_Constants.TextType.A0681]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为射程（下）。`,
             ``,
@@ -15706,7 +15708,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0682]: [
+    [Lang_Constants.TextType.A0682]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为射程（左）。`,
             ``,
@@ -15759,7 +15761,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0683]: [
+    [Lang_Constants.TextType.A0683]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为射程（右）。`,
             ``,
@@ -15812,7 +15814,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0684]: [
+    [Lang_Constants.TextType.A0684]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为最大目标数量。`,
             ``,
@@ -15865,7 +15867,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0685]: [
+    [Lang_Constants.TextType.A0685]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为对部队提供的防御加成百分比。`,
             ``,
@@ -15915,7 +15917,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0686]: [
+    [Lang_Constants.TextType.A0686]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为可以享受防御加成的部队的类型ID列表。`,
             ``,
@@ -15959,7 +15961,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0687]: [
+    [Lang_Constants.TextType.A0687]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为最大占领点数。`,
             ``,
@@ -16018,7 +16020,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0688]: [
+    [Lang_Constants.TextType.A0688]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形被敌军占领是否会导致原本的拥有者战败。`,
             ``,
@@ -16062,7 +16064,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0689]: [
+    [Lang_Constants.TextType.A0689]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为该地形对部队的维修量（标准HP）。`,
             ``,
@@ -16121,7 +16123,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0690]: [
+    [Lang_Constants.TextType.A0690]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为可以被维修的部队的类型ID列表。`,
             ``,
@@ -16165,7 +16167,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0691]: [
+    [Lang_Constants.TextType.A0691]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为回合收入。`,
             ``,
@@ -16215,7 +16217,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0692]: [
+    [Lang_Constants.TextType.A0692]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为视野范围。`,
             ``,
@@ -16265,7 +16267,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0693]: [
+    [Lang_Constants.TextType.A0693]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来决定地形的视野是否对所有玩家共享（类似火焰）。`,
             ``,
@@ -16309,7 +16311,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0694]: [
+    [Lang_Constants.TextType.A0694]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为在雾战中可以被隐藏的部队的类型ID列表。`,
             ``,
@@ -16353,7 +16355,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0695]: [
+    [Lang_Constants.TextType.A0695]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为可以生产的部队的类型ID列表。`,
             ``,
@@ -16397,7 +16399,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0696]: [
+    [Lang_Constants.TextType.A0696]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为对拥有者的所有部队的攻击力加成百分比。`,
             ``,
@@ -16447,7 +16449,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0697]: [
+    [Lang_Constants.TextType.A0697]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为对拥有者的所有部队的防御力加成百分比。`,
             ``,
@@ -16497,7 +16499,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0698]: [
+    [Lang_Constants.TextType.A0698]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为可以搭乘CO的部队的类型ID列表。`,
             ``,
@@ -16541,7 +16543,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0699]: [
+    [Lang_Constants.TextType.A0699]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为阻挡敌军移动的部队类型ID列表（类似港口可阻挡敌军大型船只移动）。`,
             ``,
@@ -16585,7 +16587,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0700]: [
+    [Lang_Constants.TextType.A0700]: [
         [
             `使用方法：`,
             `allUnitTypes(predicate)`,
@@ -16656,7 +16658,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0701]: [
+    [Lang_Constants.TextType.A0701]: [
         [
             `使用方法：`,
             `allTileTypes(predicate)`,
@@ -16727,7 +16729,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0702]: [
+    [Lang_Constants.TextType.A0702]: [
         [
             `使用方法：`,
             `warEventTriggeredTimes(warEventId, arg)`,
@@ -16777,7 +16779,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0703]: [
+    [Lang_Constants.TextType.A0703]: [
         [
             `使用方法：`,
             `allPersistentActionIds(arg)`,
@@ -16824,7 +16826,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0704]: [
+    [Lang_Constants.TextType.A0704]: [
         [
             `返回值：(整数)`,
             `战局操作的ID。ID是从0开始的非负整数。`,
@@ -16844,7 +16846,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si la operación de guerra no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0705]: [
+    [Lang_Constants.TextType.A0705]: [
         [
             `返回值：(整数)`,
             `战局操作的类型ID。`,
@@ -16969,7 +16971,7 @@ export const CommonText: Record<number, string[]> = {
             `Para instrucciones detalladas sobre cada operación tipo, por favor acuda al panel de ID Tipo.`,
         ].join(`\n`),
     ],
-    [TextType.A0706]: [
+    [Lang_Constants.TextType.A0706]: [
         [
             `使用方法：`,
             `warOperation(index)`,
@@ -17027,7 +17029,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0707]: [
+    [Lang_Constants.TextType.A0707]: [
         [
             `返回值：(整数数组)`,
             `地形所在的所有区域的ID数组。此数组可能为空。`,
@@ -17041,7 +17043,7 @@ export const CommonText: Record<number, string[]> = {
             `Un arreglo de las IDs de posición de la casilla. El arreglo puede estar vacío.`,
         ].join(`\n`),
     ],
-    [TextType.A0708]: [
+    [Lang_Constants.TextType.A0708]: [
         [
             `1 (系统)开始回合`,
             `此时会结算收入、维修部队、激活地图武器等。`,
@@ -17307,7 +17309,7 @@ export const CommonText: Record<number, string[]> = {
             `Unidades activan el Poder / Super Poder del CO (sin importar si fue emboscado o no).`,
         ].join(`\n`),
     ],
-    [TextType.A0709]: [
+    [Lang_Constants.TextType.A0709]: [
         [
             `返回值：(整数数组)`,
             `部队的所有标签ID数组。此数组可能为空。`,
@@ -17324,7 +17326,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve { -2 } si la unidad no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0710]: [
+    [Lang_Constants.TextType.A0710]: [
         [
             `返回值：(整数)`,
             `一个整数，表示当前部队是否位于CO区域内。`,
@@ -17380,7 +17382,7 @@ export const CommonText: Record<number, string[]> = {
             `- Llamas a esta interfaz en las secciones "Modificar Jugadores persistentemente / atributos de unidades" en una acción de evento de guerra.`,
         ].join(`\n`),
     ],
-    [TextType.A0711]: [
+    [Lang_Constants.TextType.A0711]: [
         [
             `各个战役是相互独立的。它们可能具有不同的世界观，同一个人物的性格和行为在不同的战役中也可能各不相同。`,
             ``,
@@ -17424,12 +17426,12 @@ export const CommonText: Record<number, string[]> = {
             `Siéntete bienvenido de contactar al desarrollador del juego, babygogogo por QQ o Discord, y te dará el permiso para editar campañas desde el juego.`,
         ].join(`\n`),
     ],
-    [TextType.A0712]: [
+    [Lang_Constants.TextType.A0712]: [
         `无法增加更多的作战目标。`,
         `Unable to add more task objectives.`,
         `No fue posible añadir más objetivos.`,
     ],
-    [TextType.A0713]: [
+    [Lang_Constants.TextType.A0713]: [
         [
             `作战目标可用于：`,
             `- 提示玩家在战局中应该做些什么。`,
@@ -17470,17 +17472,17 @@ export const CommonText: Record<number, string[]> = {
             `Los objetivos deben ser incluidos en las reglas pre-establecidas con tal que los jugadores las vean en la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0714]: [
+    [Lang_Constants.TextType.A0714]: [
         `描述将被显示在战局里面的作战目标面板中，可用于提醒玩家该做什么。`,
         `The description will be displayed in the task objective panel in games and can be used to remind players what to do.`,
         `La descripción será mostrada en el panel de objetivos durante partidas, y podrá ser usada para recordar a los jugadores qué hacer.`,
     ],
-    [TextType.A0715]: [
+    [Lang_Constants.TextType.A0715]: [
         `此选项仅控制此作战目标的显示方式，没有其他实际效果。`,
         `This option only controls the display mode of this objective and has no other practical effects.`,
         `Esta opción solo controla el modo de muestra de este objetivo y no tiene otros efectos prácticos.`,
     ],
-    [TextType.A0716]: [
+    [Lang_Constants.TextType.A0716]: [
         [
             `当作战目标的进度值大于等于最大进度时，该目标将被视作已完成。`,
             `此外，单人战局结束时，如果目标已完成，则“完成得分”将会被计入玩家得分。`,
@@ -17500,12 +17502,12 @@ export const CommonText: Record<number, string[]> = {
             `El progreso máximo puede estar vacío. De esta forma, el objetivo nunca ser completado y el 'puntaje de completado' no tendrá efecto.`,
         ].join(`\n`),
     ],
-    [TextType.A0717]: [
+    [Lang_Constants.TextType.A0717]: [
         `当单人战局结束，且作战目标的进度值等于最大进度时，“完成得分”将会被计入玩家得分。`,
         `When the single-player game ends and the progress value of the objective is equal to the maximum progress, the "completion score" will be added to the player's total score.`,
         `Cuando la partida de un jugador termine y el valor de progreso del objetivo sea igual al máximo progreso, el 'puntaje de completado' será añadido al puntaje total del jugador.`,
     ],
-    [TextType.A0718]: [
+    [Lang_Constants.TextType.A0718]: [
         [
             `当单人战局结束时，“每进度得分”将会被计入玩家得分（无论作战目标是否完成）。公式为：`,
             ``,
@@ -17522,7 +17524,7 @@ export const CommonText: Record<number, string[]> = {
             `Puntaje de Progreso Total = Puntaje de Progreso * Progreso`,
         ].join(`\n`),
     ],
-    [TextType.A0719]: [
+    [Lang_Constants.TextType.A0719]: [
         [
             `返回值：(整数)`,
             `作战目标的ID。`,
@@ -17539,7 +17541,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0720]: [
+    [Lang_Constants.TextType.A0720]: [
         [
             `返回值：(整数)`,
             `若作战目标是主要目标1，否则返回0。`,
@@ -17556,7 +17558,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0721]: [
+    [Lang_Constants.TextType.A0721]: [
         [
             `返回值：(整数)`,
             `作战目标的最大进度值。`,
@@ -17576,7 +17578,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -1 si el progreso máximo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0722]: [
+    [Lang_Constants.TextType.A0722]: [
         [
             `返回值：(整数)`,
             `作战目标的完成分数。`,
@@ -17596,7 +17598,7 @@ export const CommonText: Record<number, string[]> = {
             `La evaluación fallará si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0723]: [
+    [Lang_Constants.TextType.A0723]: [
         [
             `返回值：(整数)`,
             `作战目标的每进度分数。`,
@@ -17616,7 +17618,7 @@ export const CommonText: Record<number, string[]> = {
             `La evaluación fallará si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0724]: [
+    [Lang_Constants.TextType.A0724]: [
         [
             `返回值：(整数)`,
             `若作战目标是对玩家隐藏则返回1，否则返回0。`,
@@ -17633,7 +17635,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0725]: [
+    [Lang_Constants.TextType.A0725]: [
         [
             `返回值：(整数)`,
             `作战目标的当前进度。`,
@@ -17653,7 +17655,7 @@ export const CommonText: Record<number, string[]> = {
             `La evaluación fallará si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0726]: [
+    [Lang_Constants.TextType.A0726]: [
         [
             `使用方法：`,
             `taskObjective(id)`,
@@ -17697,7 +17699,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0727]: [
+    [Lang_Constants.TextType.A0727]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定属性修改是否对某作战目标生效。`,
             ``,
@@ -17741,7 +17743,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0728]: [
+    [Lang_Constants.TextType.A0728]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为作战目标的新的进度值。`,
             ``,
@@ -17791,7 +17793,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0729]: [
+    [Lang_Constants.TextType.A0729]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来控制是否隐藏作战目标。`,
             ``,
@@ -17838,7 +17840,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0730]: [
+    [Lang_Constants.TextType.A0730]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为作战目标的进度值。`,
             ``,
@@ -17897,7 +17899,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0731]: [
+    [Lang_Constants.TextType.A0731]: [
         [
             `返回值：(整数)`,
             `若作战目标进度更新器当前已被禁用则返回1，否则返回0。`,
@@ -17920,7 +17922,7 @@ export const CommonText: Record<number, string[]> = {
             `Devuelve -2 si el objetivo no existe.`,
         ].join(`\n`),
     ],
-    [TextType.A0732]: [
+    [Lang_Constants.TextType.A0732]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果来控制是否禁用作战目标的进度更新器。`,
             ``,
@@ -17970,27 +17972,27 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0733]: [
+    [Lang_Constants.TextType.A0733]: [
         `* 注册账号及游玩本游戏，均不需要使用您的任何个人信息。`,
         `* No personal information is required to make an account and/or to play games here.`,
         `* No se requiere información personal para crear una cuenta, ni para jugar partidas aquí.`,
     ],
-    [TextType.A0734]: [
+    [Lang_Constants.TextType.A0734]: [
         `Tiny Wars 是基于《高级战争：毁灭之日》的，由粉丝制作的免费游戏。`,
         `Tiny Wars is a fan-made game that bases on Advance Wars: Days of Ruin, and is absolutely free.`,
         `Tiny Wars es un juego independiente basado en Advance Wars: Dark Conflict, y es completamente gratis.`,
     ],
-    [TextType.A0735]: [
+    [Lang_Constants.TextType.A0735]: [
         `《高级战争》是任天堂和 Intelligent Systems 的商标。`,
         `Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems. All images and sounds are copyright their respective owners.`,
         `Advance Wars es (c) 1990-2001 Nintendo y (c) 2001 Intelligent Systems. Todas las imágenes y sonidos son propiedad de sus respectivos dueños`,
     ],
-    [TextType.A0736]: [
+    [Lang_Constants.TextType.A0736]: [
         `请启用浏览器硬件加速以获得更好的游戏性能！`,
         `Please enable browser hardware acceleration for better gaming performance!`,
         `Por favor habilite la aceleración de hardware de su navegador para un mejor desempeño de juego`,
     ],
-    [TextType.A0737]: [
+    [Lang_Constants.TextType.A0737]: [
         [
             `所有地形都可能被赋予异常状态。`,
             ``,
@@ -18019,7 +18021,7 @@ export const CommonText: Record<number, string[]> = {
             `- Los estados anormales no son necesariamente negativos.`,
         ].join(`\n`),
     ],
-    [TextType.A0738]: [
+    [Lang_Constants.TextType.A0738]: [
         [
             `结束时间包含两个整数，分别是回合序号和玩家序号。`,
             ``,
@@ -18039,7 +18041,7 @@ export const CommonText: Record<number, string[]> = {
             `Si no se establece el final del tiempo, el estado no cesará.`,
         ].join(`\n`),
     ],
-    [TextType.A0739]: [
+    [Lang_Constants.TextType.A0739]: [
         [
             `部分异常状态会带有一些额外参数。`,
             ``,
@@ -18056,22 +18058,22 @@ export const CommonText: Record<number, string[]> = {
             `El número y rol de parámetros adicionales para cada estado anormal pueden variar.`,
         ].join(`\n`),
     ],
-    [TextType.A0740]: [
+    [Lang_Constants.TextType.A0740]: [
         `地形的回合收入归零。`,
         `The Income of the tile becomes 0.`,
         `El presupuesto de la casilla se vuelve 0.`,
     ],
-    [TextType.A0741]: [
+    [Lang_Constants.TextType.A0741]: [
         `您要删掉这个异常状态吗？`,
         `Do you want to delete this abnormal state?`,
         `¿Seguro que quiere eliminar este estado anormal?`,
     ],
-    [TextType.A0742]: [
+    [Lang_Constants.TextType.A0742]: [
         `您可以点击各个参数来查看详细信息及修改它们。`,
         `Click on each parameter to view detailed information and modify them.`,
         `Haz click en cada parámetro para ver información detallada y modificarlo.`,
     ],
-    [TextType.A0743]: [
+    [Lang_Constants.TextType.A0743]: [
         [
             `请输入以空格隔开的两个整数，分别代表异常状态结束的回合序号和玩家序号。`,
             ``,
@@ -18088,7 +18090,7 @@ export const CommonText: Record<number, string[]> = {
             `Déjelo en blanco para hacer que el estado se mantenga indefinidamente.`,
         ].join(`\n`),
     ],
-    [TextType.A0744]: [
+    [Lang_Constants.TextType.A0744]: [
         [
             `已存在相同参数的异常状态。`,
             ``,
@@ -18105,12 +18107,12 @@ export const CommonText: Record<number, string[]> = {
             `Puedes hacer click en cada parámetro del estado anormal existente para modificarlo.`,
         ].join(`\n`),
     ],
-    [TextType.A0745]: [
+    [Lang_Constants.TextType.A0745]: [
         `此异常状态不支持额外参数。`,
         `This abnormal state does not support additional parameters.`,
         `Este estado anormal no permite parámetros adicionales.`,
     ],
-    [TextType.A0746]: [
+    [Lang_Constants.TextType.A0746]: [
         [
             `使用方法：`,
             `has(num)`,
@@ -18151,7 +18153,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0747]: [
+    [Lang_Constants.TextType.A0747]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家CO范围半径的额外加成。`,
             ``,
@@ -18207,7 +18209,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0748]: [
+    [Lang_Constants.TextType.A0748]: [
         [
             `返回值：(整数)`,
             `地形异常状态的类型ID。`,
@@ -18233,7 +18235,7 @@ export const CommonText: Record<number, string[]> = {
             `2 No Ingresos`,
         ].join(`\n`),
     ],
-    [TextType.A0749]: [
+    [Lang_Constants.TextType.A0749]: [
         [
             `返回值：(整数)`,
             `地形异常状态将在哪个玩家进入回合前结束。`,
@@ -18256,7 +18258,7 @@ export const CommonText: Record<number, string[]> = {
             `Este valor trabaja junto con expiringTurnIndex.`,
         ].join(`\n`),
     ],
-    [TextType.A0750]: [
+    [Lang_Constants.TextType.A0750]: [
         [
             `返回值：(整数)`,
             `地形异常状态将在哪个回合开始前结束。`,
@@ -18279,7 +18281,7 @@ export const CommonText: Record<number, string[]> = {
             `Este valor trabaja junto con expiringPlayerIndex.`,
         ].join(`\n`),
     ],
-    [TextType.A0751]: [
+    [Lang_Constants.TextType.A0751]: [
         [
             `返回值：(实数数组)`,
             `地形异常状态的额外参数数组。此数组有可能为空。`,
@@ -18293,7 +18295,7 @@ export const CommonText: Record<number, string[]> = {
             `Un arreglo consistente en parámetros extra del Estado de Casilla Anormal. El arreglo puede estar vacío.`,
         ].join(`\n`),
     ],
-    [TextType.A0752]: [
+    [Lang_Constants.TextType.A0752]: [
         [
             `返回值：(地形)`,
             `地形异常状态的所属的地形。`,
@@ -18307,7 +18309,7 @@ export const CommonText: Record<number, string[]> = {
             `El propietario de la casilla con estado anormal.`,
         ].join(`\n`),
     ],
-    [TextType.A0753]: [
+    [Lang_Constants.TextType.A0753]: [
         [
             `使用方法：`,
             `get(index)`,
@@ -18357,7 +18359,7 @@ export const CommonText: Record<number, string[]> = {
             `- index no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0754]: [
+    [Lang_Constants.TextType.A0754]: [
         [
             `使用方法：`,
             `where(predicate)`,
@@ -18425,7 +18427,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0755]: [
+    [Lang_Constants.TextType.A0755]: [
         [
             `使用方法：`,
             `select(callback)`,
@@ -18493,7 +18495,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0756]: [
+    [Lang_Constants.TextType.A0756]: [
         [
             `使用方法：`,
             `all(predicate)`,
@@ -18561,7 +18563,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0757]: [
+    [Lang_Constants.TextType.A0757]: [
         [
             `使用方法：`,
             `any(predicate)`,
@@ -18629,7 +18631,7 @@ export const CommonText: Record<number, string[]> = {
             `- expression es una expresión en que puedes usar x y sus interfaces. El resultado de la evaluación del tipo esperado varía en diferentes contextos.`
         ].join(`\n`),
     ],
-    [TextType.A0758]: [
+    [Lang_Constants.TextType.A0758]: [
         [
             `使用方法：`,
             `allAbnormalStates()`,
@@ -18670,7 +18672,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0759]: [
+    [Lang_Constants.TextType.A0759]: [
         [
             `1 禁止生产部队`,
             `地形无法用于生产部队。`,
@@ -18693,7 +18695,7 @@ export const CommonText: Record<number, string[]> = {
             `Los ingresos de la casilla se vuelven 0.`,
         ].join(`\n`),
     ],
-    [TextType.A0760]: [
+    [Lang_Constants.TextType.A0760]: [
         [
             `请填写表达式。系统将以该表达式的求值结果决定是否删除某个异常状态。`,
             ``,
@@ -18737,7 +18739,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0761]: [
+    [Lang_Constants.TextType.A0761]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为异常状态的类型ID。`,
             ``,
@@ -18793,7 +18795,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0762]: [
+    [Lang_Constants.TextType.A0762]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为状态结束的回合序号。`,
             ``,
@@ -18849,7 +18851,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0763]: [
+    [Lang_Constants.TextType.A0763]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为状态结束的玩家序号。`,
             ``,
@@ -18908,7 +18910,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0764]: [
+    [Lang_Constants.TextType.A0764]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为异常状态的额外参数列表。`,
             ``,
@@ -18955,7 +18957,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0765]: [
+    [Lang_Constants.TextType.A0765]: [
         [
             `请填写表达式。系统将以该表达式的求值结果决定是否修改某个地形异常状态。`,
             ``,
@@ -18999,7 +19001,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0766]: [
+    [Lang_Constants.TextType.A0766]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为异常状态的类型ID。`,
             ``,
@@ -19061,7 +19063,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0767]: [
+    [Lang_Constants.TextType.A0767]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为状态结束的回合序号。`,
             ``,
@@ -19123,7 +19125,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0768]: [
+    [Lang_Constants.TextType.A0768]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为状态结束的玩家序号。`,
             ``,
@@ -19185,7 +19187,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0769]: [
+    [Lang_Constants.TextType.A0769]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为异常状态的额外参数列表。`,
             ``,
@@ -19235,12 +19237,12 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0770]: [
+    [Lang_Constants.TextType.A0770]: [
         `地形无法用于生产部队。`,
         `The tile cannot be used for unit production.`,
         `La casilla no puede usarse para producir unidades.`,
     ],
-    [TextType.A0771]: [
+    [Lang_Constants.TextType.A0771]: [
         [
             `使用方法：`,
             `distanceToCoUnit()`,
@@ -19296,7 +19298,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0772]: [
+    [Lang_Constants.TextType.A0772]: [
         [
             `返回值：(整数)`,
             `CO区域的实际半径。`,
@@ -19322,7 +19324,7 @@ export const CommonText: Record<number, string[]> = {
             `- Llamas a esta interfaz en la acción de Evento de Guerra "modificar persistentemente jugadores / atributos de unidades".`,
         ].join(`\n`),
     ],
-    [TextType.A0773]: [
+    [Lang_Constants.TextType.A0773]: [
         [
             `返回值：(整数)`,
             `CO区域的原始半径。`,
@@ -19339,7 +19341,7 @@ export const CommonText: Record<number, string[]> = {
             `Todos los bonus relacionados son ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0774]: [
+    [Lang_Constants.TextType.A0774]: [
         [
             `返回值：(整数)`,
             `只计入部分加成的CO区域的半径。`,
@@ -19356,7 +19358,7 @@ export const CommonText: Record<number, string[]> = {
             `Los bonus de expansión de energía son contabilizados, mientras que los de Eventos de Guerra son ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0775]: [
+    [Lang_Constants.TextType.A0775]: [
         [
             `返回值：(整数)`,
             `部队的实际视野范围。`,
@@ -19382,7 +19384,7 @@ export const CommonText: Record<number, string[]> = {
             `- Llamas a esta interfaz en la acción de Evento de Guerra "modificar jugadores persistentemente / atributos de unidades".`,
         ].join(`\n`),
     ],
-    [TextType.A0776]: [
+    [Lang_Constants.TextType.A0776]: [
         [
             `返回值：(整数)`,
             `部队的原始视野范围。`,
@@ -19399,12 +19401,12 @@ export const CommonText: Record<number, string[]> = {
             `Todos los bonus relacionados son ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0777]: [
+    [Lang_Constants.TextType.A0777]: [
         `若错误重复触发，请把触发方法提交到 QQ 或 Discord 以便修复，谢谢！`,
         `If the error repeats, please report the triggering method on Discord or QQ for fix. Thank you!`,
         `Si el error se repite, por favor reporte el método que lo provocó en Discord o QQ para arreglarlo. Gracias!`,
     ],
-    [TextType.A0778]: [
+    [Lang_Constants.TextType.A0778]: [
         [
             `通过批量调整功能，您可以一次性调整所有指定类型的地形的造型。`,
             ``,
@@ -19421,17 +19423,17 @@ export const CommonText: Record<number, string[]> = {
             `Las funciones de ajuste de lote y de ajuste en tiempo real son independientes entre sí.`,
         ].join(`\n`),
     ],
-    [TextType.A0779]: [
+    [Lang_Constants.TextType.A0779]: [
         `选中后，系统在自动画出对称的地形时，会自动使用指定的对称颜色。`,
         `When checked, the system will use the specified symmetrical color when it draws symmetrical tiles.`,
         `Al estar habilitado, el sistema usará el color simétrico especificado cuando dibuje casillas simétricas.`,
     ],
-    [TextType.A0780]: [
+    [Lang_Constants.TextType.A0780]: [
         `地图长宽不相等，因此无法这样做。`,
         `You can't do this right now because the width and the height of the map are not equal.`,
         `No puedes hacer eso ahora, porque el ancho y el largo del mapa no son iguales.`,
     ],
-    [TextType.A0781]: [
+    [Lang_Constants.TextType.A0781]: [
         [
             `区域由任意多个格子组成。不同的区域可以包含相同的格子。`,
             ``,
@@ -19463,37 +19465,37 @@ export const CommonText: Record<number, string[]> = {
             `Las posiciones pueden ser especificadas durante el dibujado del mapa o modificadas en partida usando Eventos de Guerra.`,
         ].join(`\n`),
     ],
-    [TextType.A0782]: [
+    [Lang_Constants.TextType.A0782]: [
         `点击各项属性以进行查看和修改。`,
         `Click on the attributes to view and/or modify them.`,
         `Haz click en los atributos para verlos y/o modificarlos.`,
     ],
-    [TextType.A0783]: [
+    [Lang_Constants.TextType.A0783]: [
         `请选择您要导入的数据。`,
         `Please select the data you want to import.`,
         `Por favor, seleccione la data que desee importar.`,
     ],
-    [TextType.A0784]: [
+    [Lang_Constants.TextType.A0784]: [
         `数据不合法。`,
         `The data is invalid.`,
         `La data no es válida.`,
     ],
-    [TextType.A0785]: [
+    [Lang_Constants.TextType.A0785]: [
         `双击以查看及修改相关信息。`,
         `Double touch to view and/or modify the settings.`,
         `Haga doble click para ver y/o modificar las configuraciones.`,
     ],
-    [TextType.A0786]: [
+    [Lang_Constants.TextType.A0786]: [
         `此地图可以正常游玩。`,
         `The map is playable.`,
         `El mapa es jugable.`,
     ],
-    [TextType.A0787]: [
+    [Lang_Constants.TextType.A0787]: [
         `请输入文本。`,
         `Please input text.`,
         `Por favor ingrese texto.`,
     ],
-    [TextType.A0788]: [
+    [Lang_Constants.TextType.A0788]: [
         [
             `可重复的简易对话类似原版游戏中的战术室。`,
             ``,
@@ -19525,7 +19527,7 @@ export const CommonText: Record<number, string[]> = {
             `Los diálogos deben ser incluidos en las reglas preliminares con tal que los jugadores puedan verlas en sus partidas.`,
         ].join(`\n`),
     ],
-    [TextType.A0789]: [
+    [Lang_Constants.TextType.A0789]: [
         [
             `名称将显示在对话列表中，以便玩家选择想要播放的对话。`,
         ].join(`\n`),
@@ -19536,12 +19538,12 @@ export const CommonText: Record<number, string[]> = {
             `El nombre será mostrado en la lista de diálogos, para que los jugadores escojan el diálogo que desean ver.`,
         ].join(`\n`),
     ],
-    [TextType.A0790]: [
+    [Lang_Constants.TextType.A0790]: [
         `此对话可以正常播放。`,
         `The dialogue is playable.`,
         `El diálogo es reproducible.`,
     ],
-    [TextType.A0791]: [
+    [Lang_Constants.TextType.A0791]: [
         [
             `播放对话时，系统将显示此处指定的名称，而不显示角色原有的名称。`,
             ``,
@@ -19558,7 +19560,7 @@ export const CommonText: Record<number, string[]> = {
             `Para mostrar el nombre original, deje aquí los nombres en blanco.`,
         ].join(`\n`),
     ],
-    [TextType.A0792]: [
+    [Lang_Constants.TextType.A0792]: [
         [
             `选择势力后，在播放对话时，系统会显示该势力的CO。`,
             ``,
@@ -19575,7 +19577,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no puede coexistir con la opción de CO. Cuando selecciones uno de los ítems, el otro se deshabilitará automáticamente.`,
         ].join(`\n`),
     ],
-    [TextType.A0793]: [
+    [Lang_Constants.TextType.A0793]: [
         [
             `战局事件是一个强大的工具，它可以用于：`,
             `- 修改玩家、地形、部队的各种属性，`,
@@ -19628,12 +19630,12 @@ export const CommonText: Record<number, string[]> = {
             `Diferentes reglas preliminares pueden referir a distintos Eventos de Guerra.`,
         ].join(`\n`),
     ],
-    [TextType.A0794]: [
+    [Lang_Constants.TextType.A0794]: [
         `地形贴图主题仅影响地形外观，而不影响游戏玩法。`,
         `The tile theme only affects the appearance of the tiles and does not affect the gameplay.`,
         `El tema de la casilla solo afecta a la apariencia de las casillas y no afecta la jugabilidad.`,
     ],
-    [TextType.A0795]: [
+    [Lang_Constants.TextType.A0795]: [
         [
             `预设规则对地图的玩法有多方面的决定性的影响，包括而不限于：`,
             `- 天气种类。`,
@@ -19668,12 +19670,12 @@ export const CommonText: Record<number, string[]> = {
             `Si hay más de una regla, el jugador debe elegir una de ellas antes de comenzar la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0796]: [
+    [Lang_Constants.TextType.A0796]: [
         `若所有预设规则都不支持某个游戏模式，则地图在该游戏模式下不可用。`,
         `If all preset rules do not support a certain game mode, the map is not available in that game mode.`,
         `Si ninguna de las reglas preliminares admite un cierto modo de juego, el mapa no estará disponible en ese modo de juego.`,
     ],
-    [TextType.A0797]: [
+    [Lang_Constants.TextType.A0797]: [
         [
             `对战模式是一个多人游戏模式。`,
             ``,
@@ -19699,7 +19701,7 @@ export const CommonText: Record<number, string[]> = {
             `Permitir Auto-Selección de Mapas y Reglas: Verdadero`,
         ].join(`\n`),
     ],
-    [TextType.A0798]: [
+    [Lang_Constants.TextType.A0798]: [
         [
             `排位模式是一个多人游戏模式。`,
             `与对战模式不同，排位模式的地图是由系统随机挑选，且游戏结果将对玩家的排位积分造成影响。`,
@@ -19728,7 +19730,7 @@ export const CommonText: Record<number, string[]> = {
             `Permitir Auto-Selección de Mapas y Reglas: Falso`,
         ].join(`\n`),
     ],
-    [TextType.A0799]: [
+    [Lang_Constants.TextType.A0799]: [
         [
             `沙盒模式是一个单人游戏模式。`,
             `此模式中，玩家可以随意修改战局中的各项数据。`,
@@ -19757,7 +19759,7 @@ export const CommonText: Record<number, string[]> = {
             `Permitir Auto-Selección de Mapas y Reglas: Verdadero`,
         ].join(`\n`),
     ],
-    [TextType.A0800]: [
+    [Lang_Constants.TextType.A0800]: [
         [
             `挑战模式是一个单人游戏模式。`,
             `此模式中，玩家获胜后，得分将上传到服务器中，并以此进行全服排名。`,
@@ -19786,7 +19788,7 @@ export const CommonText: Record<number, string[]> = {
             `Permitir Auto-Selección de Mapas y Reglas: Verdadero`,
         ].join(`\n`),
     ],
-    [TextType.A0801]: [
+    [Lang_Constants.TextType.A0801]: [
         [
             `您确定要移除此规则中包含的所有事件吗？`,
             ``,
@@ -19803,7 +19805,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta operación solo remueve la referencia, no los datos del Evento de Guerra.`,
         ].join(`\n`),
     ],
-    [TextType.A0802]: [
+    [Lang_Constants.TextType.A0802]: [
         [
             `您确定要移除此规则中包含的所有作战目标吗？`,
             ``,
@@ -19820,7 +19822,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta operación solo remueve la referencia, no los datos del objetivo.`,
         ].join(`\n`),
     ],
-    [TextType.A0803]: [
+    [Lang_Constants.TextType.A0803]: [
         [
             `您确定要移除此规则中包含的所有可重复建议对话吗？`,
             ``,
@@ -19837,7 +19839,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta operación solo remueve la referencia, no los datos de diálogos.`,
         ].join(`\n`),
     ],
-    [TextType.A0804]: [
+    [Lang_Constants.TextType.A0804]: [
         [
             `在玩家规则中，您可以指定玩家队伍分配，以及各种属性加成。`,
         ].join(`\n`),
@@ -19848,7 +19850,7 @@ export const CommonText: Record<number, string[]> = {
             `En las reglas del jugador, puedes especificar asignaciones de equipos de jugador y varios bonus de atributos.`,
         ].join(`\n`),
     ],
-    [TextType.A0805]: [
+    [Lang_Constants.TextType.A0805]: [
         [
             `如果某种部队被禁用，则玩家不能通过据点、部队来生产该种部队。`,
             ``,
@@ -19868,7 +19870,7 @@ export const CommonText: Record<number, string[]> = {
             `Además, incluso si las unidades son baneadas, los jugadores pueden mover las ya existentes.`,
         ].join(`\n`),
     ],
-    [TextType.A0806]: [
+    [Lang_Constants.TextType.A0806]: [
         [
             `若此选项不为空，则在合作模式中，该势力由A.I.控制。`,
             ``,
@@ -19885,7 +19887,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no es afectada por otras relativas a la disponibilidad de CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0807]: [
+    [Lang_Constants.TextType.A0807]: [
         [
             `若此选项不为空，则在挑战模式中，该势力由A.I.控制。`,
             ``,
@@ -19902,12 +19904,12 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no es afectada por otras relativas a la disponibilidad de CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0808]: [
+    [Lang_Constants.TextType.A0808]: [
         `您希望由A.I.来控制该势力吗？`,
         `Do you want A.I. to control this force?`,
         `¿Deseas que la I.A. controle esta fuerza?`,
     ],
-    [TextType.A0809]: [
+    [Lang_Constants.TextType.A0809]: [
         [
             `此选项用于指定玩家在挑战模式中可选的CO。`,
             ``,
@@ -19927,7 +19929,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no es afectada por otras relativas a la disponibilidad de CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0810]: [
+    [Lang_Constants.TextType.A0810]: [
         [
             `若此选项不为空，则在战役模式中，该势力由A.I.控制。`,
             ``,
@@ -19944,7 +19946,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no es afectada por otras relativas a la disponibilidad de CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0811]: [
+    [Lang_Constants.TextType.A0811]: [
         [
             `此选项用于指定玩家在战役模式中可选的CO。`,
             ``,
@@ -19964,7 +19966,7 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no es afectada por otras relativas a la disponibilidad de CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0812]: [
+    [Lang_Constants.TextType.A0812]: [
         [
             `此选项用于指定势力在战役模式游戏中的颜色。`,
             ``,
@@ -19981,7 +19983,7 @@ export const CommonText: Record<number, string[]> = {
             `Los colores de cada fuerza no pueden duplicarse, y los jugadores no pueden escoger sus propios colores.`,
         ].join(`\n`),
     ],
-    [TextType.A0813]: [
+    [Lang_Constants.TextType.A0813]: [
         [
             `CO搭乘到部队中才能发挥作用，而这个操作需要消耗资金，数量为该部队原价的特定百分比值。`,
             ``,
@@ -20004,7 +20006,7 @@ export const CommonText: Record<number, string[]> = {
             `Además, cuando el CO es desplegado exitosamente, la unidad objetivo será promovida automáticamente al máximo nivel.`,
         ].join(`\n`),
     ],
-    [TextType.A0814]: [
+    [Lang_Constants.TextType.A0814]: [
         [
             `CO区域半径是非常重要的属性，它决定了CO区域的大小，从而直接影响了：`,
             `- 可以享受到CO的属性加成的部队的数量。`,
@@ -20027,7 +20029,7 @@ export const CommonText: Record<number, string[]> = {
             `El radio base es el radio de la zona del CO cuando el nivel de Energía del CO no alcanza el valor requerido para la expansión de la Zona del CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0815]: [
+    [Lang_Constants.TextType.A0815]: [
         [
             `CO区域扩张能量值决定了CO区域半径在何时扩张、能扩张到多大。`,
             `CO能量值每大于等于扩张能量值数组中的一个值，则CO区域半径加成+1。`,
@@ -20056,7 +20058,7 @@ export const CommonText: Record<number, string[]> = {
             `- Cuando el nivel de energía sea mayor o igual a 60, el bonus en el radio será de 2.`,
         ].join(`\n`),
     ],
-    [TextType.A0816]: [
+    [Lang_Constants.TextType.A0816]: [
         [
             `CO能量值达到最大值后，就无法进一步积累。`,
             ``,
@@ -20088,7 +20090,7 @@ export const CommonText: Record<number, string[]> = {
             `Además, si tu unidad de CO es destruida, tu energía de CO quedará en 0, y las habilidades activas del CO (si las hay) se verán suspendidas.`,
         ].join(`\n`),
     ],
-    [TextType.A0817]: [
+    [Lang_Constants.TextType.A0817]: [
         [
             `CO可分为以下类型：`,
             `- 区域型（毁灭之日）`,
@@ -20129,7 +20131,7 @@ export const CommonText: Record<number, string[]> = {
             `Revisa la ayuda de cada atributo para los detalles.`,
         ].join(`\n`),
     ],
-    [TextType.A0818]: [
+    [Lang_Constants.TextType.A0818]: [
         [
             `主动技能的能量需求（这也决定了CO能量最大值）会随着主动技能的发动次数的增多而增长。`,
             `这里的两个系数，分别表示每次发动主动技能后的能量需求增长率，以及最大增长次数。`,
@@ -20167,7 +20169,7 @@ export const CommonText: Record<number, string[]> = {
             `- Cuando el número de veces activadas sea mayor o igual a 5, las demandas de energía son 60000 / 120000.`,
         ].join(`\n`),
     ],
-    [TextType.A0819]: [
+    [Lang_Constants.TextType.A0819]: [
         [
             `不同的技能组不会同时生效。`,
             `比如，COP生效时，D2D和SCOP都不生效，以此类推。`,
@@ -20215,7 +20217,7 @@ export const CommonText: Record<number, string[]> = {
             `- Global: Cuando el nivel de Energía del CO es suficiente, los botones de Poder en la pantalla se encenderán. Haz click en ellos para activar el Poder.`,
         ].join(`\n`),
     ],
-    [TextType.A0820]: [
+    [Lang_Constants.TextType.A0820]: [
         [
             `单击以试听BGM。`,
             `加载资源可能需要一些时间（与网络状况有关），请耐心等候。`,
@@ -20235,7 +20237,7 @@ export const CommonText: Record<number, string[]> = {
             `Presiona dos veces para confirmar tu selección.`,
         ].join(`\n`),
     ],
-    [TextType.A0821]: [
+    [Lang_Constants.TextType.A0821]: [
         [
             `尚未添加任何战局事件。`,
             ``,
@@ -20252,7 +20254,7 @@ export const CommonText: Record<number, string[]> = {
             `Toca el botón + en la parte superior derecha para añadir un Evento.`,
         ].join(`\n`),
     ],
-    [TextType.A0822]: [
+    [Lang_Constants.TextType.A0822]: [
         [
             `启用SetPath模式后，在指定部队移动路线时，您需要连续点击两次目标格子才能呼出操作菜单。`,
             ``,
@@ -20275,7 +20277,7 @@ export const CommonText: Record<number, string[]> = {
             `Además, puedes especificar el camino de desplazamiento arrastrando las unidades, sin importar si Establecer Caminos está habilitado o no.`,
         ].join(`\n`),
     ],
-    [TextType.A0823]: [
+    [Lang_Constants.TextType.A0823]: [
         [
             `启用后，在战局中，当您点击屏幕边缘的地图格子时，地图会自动向屏幕中心滚动。`,
         ].join(`\n`),
@@ -20286,7 +20288,7 @@ export const CommonText: Record<number, string[]> = {
             `Al habilitarse, en la partida cuando hagas click en la grilla del mapa al borde de la pantalla, el mapa automáticamente se desplazará al centro de la pantalla.`,
         ].join(`\n`),
     ],
-    [TextType.A0824]: [
+    [Lang_Constants.TextType.A0824]: [
         [
             `启用后，在浏览多人对战回放的玩家信息时，系统将显示各个玩家的存活状态。`,
             ``,
@@ -20303,7 +20305,7 @@ export const CommonText: Record<number, string[]> = {
             `Deshabilita esta opción para evitar spoilers.`,
         ].join(`\n`),
     ],
-    [TextType.A0825]: [
+    [Lang_Constants.TextType.A0825]: [
         [
             `请选择一个存档位置以保存模拟战数据。`,
             `请注意，该位置原有的数据将被覆盖。`,
@@ -20317,7 +20319,7 @@ export const CommonText: Record<number, string[]> = {
             `Nota que la data existente será sobreescrita.`,
         ].join(`\n`),
     ],
-    [TextType.A0826]: [
+    [Lang_Constants.TextType.A0826]: [
         [
             `请在倒计时结束前结束您的回合。`,
             `无论您是否在线，计时器都不会停止。`,
@@ -20343,12 +20345,12 @@ export const CommonText: Record<number, string[]> = {
             `- Si no has efectuado acciones efectivas, perderás la partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0827]: [
+    [Lang_Constants.TextType.A0827]: [
         `可使用键盘输入（包括Ctrl+C/V）。`,
         `Keyboard is supported (including Ctrl+C/V).`,
         `El uso del teclado es admitido (incluyendo Ctrl+C/V).`,
     ],
-    [TextType.A0828]: [
+    [Lang_Constants.TextType.A0828]: [
         [
             `- 若此势力由A.I.控制，则本选项将不起作用。`,
             `- 若本选项非空，则“禁用CO”选项将不起作用。`,
@@ -20365,37 +20367,37 @@ export const CommonText: Record<number, string[]> = {
             `- Si nada es seleccionado para esta opción (el sistema mostrará TODOS los COs como disponibles), la opción de "COs Baneados" tendrá efecto.`,
         ].join(`\n`),
     ],
-    [TextType.A0829]: [
+    [Lang_Constants.TextType.A0829]: [
         `部队在每回合结束时失去1点HP，可致命。`,
         `Unit lose 1HP at the end of each turn. Can be lethal.`,
         `Unidades pierden 1HP al final de cada turno. Puede ser fatal.`,
     ],
-    [TextType.A0830]: [
+    [Lang_Constants.TextType.A0830]: [
         `指定的表达式的结果值为实数且不等于0。`,
         `The result value of the specified expression is a real number and is not equal to 0.`,
         `El valor resultante de la expresión especificada es un número real distinto a 0`,
     ],
-    [TextType.A0831]: [
+    [Lang_Constants.TextType.A0831]: [
         `当前回合是该玩家的回合。`,
         `The current turn is the player's turn.`,
         `El turno actual es el turno del jugador.`,
     ],
-    [TextType.A0832]: [
+    [Lang_Constants.TextType.A0832]: [
         `当前回合不是该玩家的回合。`,
         `The current turn is NOT the player's turn.`,
         `El turno actual NO es el turno del jugador.`,
     ],
-    [TextType.A0833]: [
+    [Lang_Constants.TextType.A0833]: [
         `请点击右方或左下角按钮以进入各种游戏模式。`,
         `Click on the right or bottom left button to navigate.`,
         `Haz click en los botones de la derecha ó inferior izquierda para navegar.`,
     ],
-    [TextType.A0834]: [
+    [Lang_Constants.TextType.A0834]: [
         `在以下范围内查找…`,
         `Search within one of the ranges...`,
         `Busca dentro de uno de los rangos...`,
     ],
-    [TextType.A0835]: [
+    [Lang_Constants.TextType.A0835]: [
         [
             `您可以通过以下的“修改”流程来编辑战役地图：`,
             `1. 在本界面中，把战役地图池的某张地图导入到地图编辑器槽位。`,
@@ -20442,7 +20444,7 @@ export const CommonText: Record<number, string[]> = {
             `(Si eliges que si, el sistema abrirá una ventana para dejarte escoger en qué espacio en el editor de mapas quieres importar el mapa de campaña. Puedes cerrar la ventana para cancelar la importación.) `,
         ].join(`\n`),
     ],
-    [TextType.A0836]: [
+    [Lang_Constants.TextType.A0836]: [
         [
             `您可以通过以下的“转换”流程来编辑战役地图：`,
             `1. 在本界面中，把某个地图编辑器槽位中的已有地图转换为战役专用地图。`,
@@ -20486,7 +20488,7 @@ export const CommonText: Record<number, string[]> = {
             `(Si eliges que si, una ventana aparecerá, permitiéndote elegir el mapa de qué espacio del editor de mapas deseas convertir a un mapa específico de una campaña. Puedes cerrar la ventana para cancelar la conversión.) `,
         ].join(`\n`),
     ],
-    [TextType.A0837]: [
+    [Lang_Constants.TextType.A0837]: [
         [
             `由于性能原因，回放列表只显示最新的部分回放。`,
             `不过，通过设定回放ID，您可以直接找到更早的回放。`,
@@ -20506,7 +20508,7 @@ export const CommonText: Record<number, string[]> = {
             `Por ejemplo, al establecer la ID de repetición en 1, puedes hallar la repetición correspondiente, que fue generada en 2021.`,
         ].join(`\n`),
     ],
-    [TextType.A0838]: [
+    [Lang_Constants.TextType.A0838]: [
         [
             `由于性能原因，观战列表只显示最新的部分战局。`,
             `不过，通过设定战局ID，您可以直接找到相应的战局。`,
@@ -20520,22 +20522,22 @@ export const CommonText: Record<number, string[]> = {
             `Sin embargo, puedes hallar partidas anteriores estableciendo una ID de Partida.`,
         ].join(`\n`),
     ],
-    [TextType.A0839]: [
+    [Lang_Constants.TextType.A0839]: [
         `已把用户名复制到粘贴板。`,
         `The username has been copied to the clipboard.`,
         `El nombre de usuario ha sido copiado a la papeleta.`,
     ],
-    [TextType.A0840]: [
+    [Lang_Constants.TextType.A0840]: [
         `无法获取屏幕旋转信息`,
         `Unable to get screen orientation information.`,
         `No fue posible obtener información de la orientación de pantalla.`,
     ],
-    [TextType.A0841]: [
+    [Lang_Constants.TextType.A0841]: [
         `无法设置屏幕旋转信息`,
         `Unable to set screen orientation.`,
         `No fue posible establecer la orientación de pantalla.`,
     ],
-    [TextType.A0842]: [
+    [Lang_Constants.TextType.A0842]: [
         [
             `此规则未引用可重复的简易对话（以下简称对话）。`,
             ``,
@@ -20564,27 +20566,27 @@ export const CommonText: Record<number, string[]> = {
             `Luego de eso, puedes retroceder a esta pantalla y hacer click en el símbolo + en la esquina superior derecha para especificar los diálogos que necesitan ser referenciados para esta regla.`,
         ].join(`\n`),
     ],
-    [TextType.A0843]: [
+    [Lang_Constants.TextType.A0843]: [
         `游戏机制经过重新设计，力求带来节奏快、易上手、有深度的游戏体验。`,
         `The game mechanics have been redesigned in an effort to deliver a fast-paced, accessible, and deep gameplay experience.`,
         `Las mecánicas del juego han sido re-diseñadas con tal de entregar una experiencia de juego veloz, accesible y más profunda.`,
     ],
-    [TextType.A0844]: [
+    [Lang_Constants.TextType.A0844]: [
         `已切换为显示名称或简略信息。`,
         `Switched to show the name or brief information.`,
         `Cambiado a mostrar el nombre o información concisa.`,
     ],
-    [TextType.A0845]: [
+    [Lang_Constants.TextType.A0845]: [
         `已切换为显示详细信息。`,
         `Switched to show the detailed information.`,
         `Cambiado a mostrar la información detallada.`,
     ],
-    [TextType.A0846]: [
+    [Lang_Constants.TextType.A0846]: [
         `您确定要立刻举办新一届联赛吗？`,
         `Are you sure you want to host a new tourney immediately?`,
         `¿Seguro que deseas hostear un nuevo torneo inmediatamente?`,
     ],
-    [TextType.A0847]: [
+    [Lang_Constants.TextType.A0847]: [
         [
             `本选项用于控制系统每隔多长时间自动举办新一届联赛。`,
             ``,
@@ -20601,12 +20603,12 @@ export const CommonText: Record<number, string[]> = {
             `Esta opción no funciona si Auto Host no está habilitado.`,
         ].join(`\n`),
     ],
-    [TextType.A0848]: [
+    [Lang_Constants.TextType.A0848]: [
         `已成功标记。若地图上没有显示标记，请点击批量标记按钮并调整相关设置。`,
         `Marked successfully. If not shown on the map, click on the Batch Mark button and change your settings.`,
         `Marcado exitosamente. Si no es mostrado en el mapa, haz click de el botón de Marca de Lote y cambia tus configuraciones.`,
     ],
-    [TextType.A0849]: [
+    [Lang_Constants.TextType.A0849]: [
         [
             `在游戏中，每个参赛的玩家都可以根据各自的需要来标记格子。`,
             ``,
@@ -20626,7 +20628,7 @@ export const CommonText: Record<number, string[]> = {
             `En esta opción, puedes escoger a qué jugadores (además de tus oponentes) mostrarles los marcadores hechos.`,
         ].join(`\n`),
     ],
-    [TextType.A0850]: [
+    [Lang_Constants.TextType.A0850]: [
         [
             `通过本功能，您可以一次性给多个格子加上或去除标记。`,
             ``,
@@ -20646,12 +20648,12 @@ export const CommonText: Record<number, string[]> = {
             `Los filtros que no se establezcan serán ignorados.`,
         ].join(`\n`),
     ],
-    [TextType.A0851]: [
+    [Lang_Constants.TextType.A0851]: [
         `您确定要删除所有数据吗？`,
         `Are you sure you want to delete all the data?`,
         `¿Seguro que quieres borrar toda la información?`,
     ],
-    [TextType.A0852]: [
+    [Lang_Constants.TextType.A0852]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的激活中的CO技能类型。`,
             ``,
@@ -20710,7 +20712,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0853]: [
+    [Lang_Constants.TextType.A0853]: [
         [
             `(可选)请填写表达式。系统将以求值结果作为技能类型，并判断玩家CO的该类型的技能组中是否包含瞬发技能，若有，则系统将发动这些瞬发技能。`,
             ``,
@@ -20775,7 +20777,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0854]: [
+    [Lang_Constants.TextType.A0854]: [
         [
             `使用方法:`,
             `canHideUnitType(unitTypeId)`,
@@ -20831,7 +20833,7 @@ export const CommonText: Record<number, string[]> = {
             `canHideUnitType(1) (En este ejemplo, el valor devuelto indica si la casilla puede ocultar unidades con un ID Tipo de 1.)`,
         ].join(`\n`),
     ],
-    [TextType.A0855]: [
+    [Lang_Constants.TextType.A0855]: [
         [
             `使用方法：`,
             `pow(x, y)`,
@@ -20878,17 +20880,17 @@ export const CommonText: Record<number, string[]> = {
             `- Los resultados están fuera del rango de valores del punto-flotante de doble-precisión.`,
         ].join(`\n`),
     ],
-    [TextType.A0856]: [
+    [Lang_Constants.TextType.A0856]: [
         `请先选中您想要修改的地图标签。`,
         `Please check the map tag you want to modify first.`,
         `Por favor revisa primero la marca del mapa que deseas modificar.`,
     ],
-    [TextType.A0857]: [
+    [Lang_Constants.TextType.A0857]: [
         `没有其他可用的规则。`,
         `No other rules available.`,
         `No hay otras reglas disponibles.`,
     ],
-    [TextType.A0858]: [
+    [Lang_Constants.TextType.A0858]: [
         [
             `请选出您想要删除的观战者。`,
             ``,
@@ -20905,7 +20907,7 @@ export const CommonText: Record<number, string[]> = {
             `Tus oponentes, así como los jugadores que han mirado a tus oponentes, tendrán sus apodos resaltados en amarillo.`,
         ].join(`\n`),
     ],
-    [TextType.A0859]: [
+    [Lang_Constants.TextType.A0859]: [
         [
             `请选出您想要成为您的观战者的玩家。`,
             ``,
@@ -20928,7 +20930,7 @@ export const CommonText: Record<number, string[]> = {
             `Solicitudes de jugadores no seleccionados serán denegadas.`,
         ].join(`\n`),
     ],
-    [TextType.A0860]: [
+    [Lang_Constants.TextType.A0860]: [
         [
             `步骤1：`,
             `请填写您的电子邮箱地址，然后点击“发送”按钮。`,
@@ -20945,7 +20947,7 @@ export const CommonText: Record<number, string[]> = {
             `El sistema le enviará el código de verificación a su dirección de correo electrónico (lo que puede tomar algo de tiempo, o incluso fallar por asuntos de conexión; tenga paciencia).`,
         ].join(`\n`),
     ],
-    [TextType.A0861]: [
+    [Lang_Constants.TextType.A0861]: [
         [
             `步骤2：`,
             `请填写您收到的验证码，然后点击“验证”按钮，即可完成验证。`,
@@ -20962,7 +20964,7 @@ export const CommonText: Record<number, string[]> = {
             `Si no recibes el código de verificación, por favor reintente, verifique su casilla de spam en el correo, o cambie la dirección de correo electrónico.`,
         ].join(`\n`),
     ],
-    [TextType.A0862]: [
+    [Lang_Constants.TextType.A0862]: [
         [
             `电子邮箱验证通过后，您将可以通过它来重置游戏密码。`,
             `此外，您将可以在公共聊天频道发言，以及发送私信给其他玩家。`,
@@ -20988,32 +20990,32 @@ export const CommonText: Record<number, string[]> = {
             `Tu dirección de correo electrónico no será revelada a otros jugadores ni a otras entidades.`,
         ].join(`\n`),
     ],
-    [TextType.A0863]: [
+    [Lang_Constants.TextType.A0863]: [
         `已成功发送验证码。`,
         `The verification code has been sent successfully.`,
         `El código de verificación fue enviado con éxito.`,
     ],
-    [TextType.A0864]: [
+    [Lang_Constants.TextType.A0864]: [
         `此邮箱地址已通过验证。`,
         `The email has been verified.`,
         `El correo electrónico fue verificado.`,
     ],
-    [TextType.A0865]: [
+    [Lang_Constants.TextType.A0865]: [
         `此邮箱地址尚未通过验证。`,
         `The email address has not been verified.`,
         `La dirección de correo electrónico no ha sido verificada.`,
     ],
-    [TextType.A0866]: [
+    [Lang_Constants.TextType.A0866]: [
         `此邮箱地址正在验证中，请查收并输入验证码。`,
         `This email address is being verified, please check and enter the verification code.`,
         `Esta dirección de correo electrónico está siendo verificada, por favor revisa e ingresa el código de verificación.`,
     ],
-    [TextType.A0867]: [
+    [Lang_Constants.TextType.A0867]: [
         `正在尝试发送验证码，请耐心等候。`,
         `The verification code is being sent. Please be patient.`,
         `El código de verificación está siendo enviado. Por favor, sea paciente.`,
     ],
-    [TextType.A0868]: [
+    [Lang_Constants.TextType.A0868]: [
         [
             `步骤1：`,
             `请填写您的游戏账号，然后点击“发送”按钮。`,
@@ -21030,7 +21032,7 @@ export const CommonText: Record<number, string[]> = {
             `El sistema le enviará el código de verificación al correo asociado a la cuenta (lo que puede tomar algo de tiempo, e incluso fallar por asuntos de conexión; tenga paciencia).`,
         ].join(`\n`),
     ],
-    [TextType.A0869]: [
+    [Lang_Constants.TextType.A0869]: [
         [
             `步骤2：`,
             `请填写您收到的验证码以及新的游戏密码，然后点击“重置”按钮，即可完成密码重置。`,
@@ -21047,7 +21049,7 @@ export const CommonText: Record<number, string[]> = {
             `Si no has recibido el código de verificación, por favor re-intente o verifique la casilla de spam de su correo electrónico.`,
         ].join(`\n`),
     ],
-    [TextType.A0870]: [
+    [Lang_Constants.TextType.A0870]: [
         [
             `您需要先完成电子邮箱验证，才能发送公共聊天频道信息以及私聊信息。`,
             ``,
@@ -21076,12 +21078,12 @@ export const CommonText: Record<number, string[]> = {
             `Para verificar tu dirección de correo electrónico, ve a la página de configuraciones del perfil.`,
         ].join(`\n`),
     ],
-    [TextType.A0871]: [
+    [Lang_Constants.TextType.A0871]: [
         `无法编辑此地图。`,
         `Unable to edit this map.`,
         `No fue posible editar este mapa.`,
     ],
-    [TextType.A0872]: [
+    [Lang_Constants.TextType.A0872]: [
         [
             `已成功导入数据到地图编辑器。`,
             ``,
@@ -21098,7 +21100,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Quieres comenzar a editar el mapa ahora?`,
         ].join(`\n`),
     ],
-    [TextType.A0873]: [
+    [Lang_Constants.TextType.A0873]: [
         [
             `您需要先把地图数据导入到地图编辑器中，然后才能编辑地图。`,
             ``,
@@ -21115,7 +21117,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Deseas seleccionar un espacio en el Editor de Mapas ahora?`,
         ].join(`\n`),
     ],
-    [TextType.A0874]: [
+    [Lang_Constants.TextType.A0874]: [
         [
             `主动技能的能量需求（这也影响了CO能量最大值）会随着主动技能的发动次数的增多而增长。`,
             `这里的两个系数，分别表示每次发动主动技能后的能量需求增长率，以及最大增长次数。`,
@@ -21153,7 +21155,7 @@ export const CommonText: Record<number, string[]> = {
             `- Cuando el número de veces de activación sea mayor o igual a 5, la demanda de energía será 60 / 120.`,
         ].join(`\n`),
     ],
-    [TextType.A0875]: [
+    [Lang_Constants.TextType.A0875]: [
         [
             `当前地图的所有数据都将被覆盖。`,
             ``,
@@ -21170,7 +21172,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que deseas continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0876]: [
+    [Lang_Constants.TextType.A0876]: [
         [
             `导入：导入选择的数据，且保留当前已存在的数据。导入的数据可能会被重新编号以避免冲突。`,
             `覆盖: 导入选择的数据，同时删除当前已存在的数据。`,
@@ -21202,7 +21204,7 @@ export const CommonText: Record<number, string[]> = {
             `- Luego de la operación, por favor asegúrese de efectuar un test de simulación para asegurarte que la data opere como es debido.`,
         ].join(`\n`),
     ],
-    [TextType.A0877]: [
+    [Lang_Constants.TextType.A0877]: [
         [
             `自定义计数器名称存在ID或名称冲突，因此无法导入事件。`,
         ].join(`\n`),
@@ -21213,7 +21215,7 @@ export const CommonText: Record<number, string[]> = {
             `Hay una ID o conflicto de nombre con el nombre de contador por defecto, por lo que los eventos de guerra no se pueden importar.`,
         ].join(`\n`),
     ],
-    [TextType.A0878]: [
+    [Lang_Constants.TextType.A0878]: [
         [
             `使用方法：`,
             `set(index, num)`,
@@ -21281,7 +21283,7 @@ export const CommonText: Record<number, string[]> = {
             `- índice no está en el rango [-largo, largo - 1].`,
         ].join(`\n`),
     ],
-    [TextType.A0879]: [
+    [Lang_Constants.TextType.A0879]: [
         [
             `返回值：(整数)`,
             `当前地形的基底类型编号。`,
@@ -21295,7 +21297,7 @@ export const CommonText: Record<number, string[]> = {
             `El número tipo de la casilla base.`,
         ].join(`\n`),
     ],
-    [TextType.A0880]: [
+    [Lang_Constants.TextType.A0880]: [
         [
             `返回值：(整数)`,
             `当前地形的物体类型编号。`,
@@ -21309,7 +21311,7 @@ export const CommonText: Record<number, string[]> = {
             `El número tipo del objeto de la casilla.`,
         ].join(`\n`),
     ],
-    [TextType.A0881]: [
+    [Lang_Constants.TextType.A0881]: [
         [
             `返回值：(整数数组)`,
             `局内各个玩家（含P0）对当前位置的部队移动路径视野的值所组成的数组。`,
@@ -21386,7 +21388,7 @@ export const CommonText: Record<number, string[]> = {
             `- la posición está afuera del mapa.`,
         ].join(`\n`),
     ],
-    [TextType.A0882]: [
+    [Lang_Constants.TextType.A0882]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来决定是否修改某个位置的部队移动路径视野值。`,
             ``,
@@ -21430,7 +21432,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0883]: [
+    [Lang_Constants.TextType.A0883]: [
         [
             `请填写表达式。系统将以该表达式的求值结果作为位置的新的部队移动路径视野。`,
             ``,
@@ -21549,7 +21551,7 @@ export const CommonText: Record<number, string[]> = {
             `Nada.`
         ].join(`\n`),
     ],
-    [TextType.A0884]: [
+    [Lang_Constants.TextType.A0884]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的新的存活状态。`,
             `注意，系统将只处理有至少一个部队在本动作中被摧毁的玩家。`,
@@ -21599,7 +21601,7 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0885]: [
+    [Lang_Constants.TextType.A0885]: [
         [
             `目标部队将变为已行动状态。`,
             ``,
@@ -21616,12 +21618,12 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0886]: [
+    [Lang_Constants.TextType.A0886]: [
         `部队和地形数值设定与《高级战争 双重打击》基本保持一致。`,
         `All data of units and tiles is mostly the same as Advance Wars: Dual Strike.`,
         `Toda la data de unidades y casillas es casi la misma que en Advance Wars: Dual Strike.`,
     ],
-    [TextType.A0887]: [
+    [Lang_Constants.TextType.A0887]: [
         [
             `这两个数值分别表示：`,
             `- 部队受到敌军攻击时，每损失1点HP，该部队的所有者将获得的CO能量值`,
@@ -21644,7 +21646,7 @@ export const CommonText: Record<number, string[]> = {
             `El lado atacante recibe la mitad del valor de energía que el lado atacado.`,
         ].join(`\n`),
     ],
-    [TextType.A0888]: [
+    [Lang_Constants.TextType.A0888]: [
         [
             `禁用此项后，您未关注的玩家将无法向您发送私聊信息。`,
             `此选项不影响私聊之外的聊天信息。`,
@@ -21664,7 +21666,7 @@ export const CommonText: Record<number, string[]> = {
             `Puedes seguir a un jugador llendo a la ventana de perfil del jugador y usando el botón de Seguir en la parte superior derecha.`,
         ].join(`\n`),
     ],
-    [TextType.A0889]: [
+    [Lang_Constants.TextType.A0889]: [
         [
             `部队在本回合内将无法执行其他操作。`,
             ``,
@@ -21681,7 +21683,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0890]: [
+    [Lang_Constants.TextType.A0890]: [
         [
             `使单位移动到指定的位置。`,
             `移动后，单位不会进入已行动状态。您可以稍后再执行这个单位的其他指令。`,
@@ -21695,27 +21697,27 @@ export const CommonText: Record<number, string[]> = {
             `Luego de moverse, la unidad no entrará al estado Desplazado. Podrás ejecutar otros comandos para la unidad luego.`,
         ].join(`\n`),
     ],
-    [TextType.A0891]: [
+    [Lang_Constants.TextType.A0891]: [
         `部队无法使用武器。`,
         `Unit is unable to use weapons.`,
         `La unidad no es capaz de usar armas.`,
     ],
-    [TextType.A0892]: [
+    [Lang_Constants.TextType.A0892]: [
         `停留在此的不具有飞行状态的部队无法使用武器。`,
         `Units staying here which do not have Flying status cannot use their weapons.`,
         `Las unidades que permanezcan acá, que no tengan estatus de Volando, no pueden usar sus armas.`,
     ],
-    [TextType.A0893]: [
+    [Lang_Constants.TextType.A0893]: [
         `杀死进入并停留在此的不具有飞行状态的部队。`,
         `Kill units entering and staying here that do not have Flying status.`,
         `Destruye unidades entrando y permaneciendo acá que no tengan estatus de Volando.`,
     ],
-    [TextType.A0894]: [
+    [Lang_Constants.TextType.A0894]: [
         `给进入并停留在此的部队增加燃烧状态。`,
         `Adds Fire status to units entering and staying here.`,
         `Agrega estatus de Fuego a las unidades entrando y permaneciendo aquí.`,
     ],
-    [TextType.A0895]: [
+    [Lang_Constants.TextType.A0895]: [
         [
             `拥有此buff的部队可以移动到绝大多数地形，且移动消耗为1。`,
             `空军若失去此buff将无法使用武器，但回合结束时会自动获得此buff。`,
@@ -21732,7 +21734,7 @@ export const CommonText: Record<number, string[]> = {
             `Ground unit lose this buff (if any) after moving.`,
         ].join(``),
     ],
-    [TextType.A0896]: [
+    [Lang_Constants.TextType.A0896]: [
         [
             `清除自身的燃烧和破甲状态，并恢复1点HP。`,
             `部队移动后不可用。`,
@@ -21746,7 +21748,7 @@ export const CommonText: Record<number, string[]> = {
             `No disponible luego del desplazamiento de la unidad.`,
         ].join(`\n`),
     ],
-    [TextType.A0897]: [
+    [Lang_Constants.TextType.A0897]: [
         [
             `固有状态是与地形绑定的异常状态，其不因游戏的进程而发生变化。`,
         ].join(`\n`),
@@ -21757,22 +21759,22 @@ export const CommonText: Record<number, string[]> = {
             `Los Estados Fijos son estados anormales asociados a terrenos que no cambian a medida que la partida progresa.`,
         ].join(`\n`),
     ],
-    [TextType.A0898]: [
+    [Lang_Constants.TextType.A0898]: [
         `增强部队的武器、占领、起飞指令的效果。此状态在使用这些指令中的任意一个后消失。`,
         `Enhances the effects of the Weapons, Capture, and Take Off commands for a unit. This status disappears after using one of these commands.`,
         `Mejora los efectos de los comandos de Armas, Captura y Despegue. Este estatus desaparece luego de utilizar uno de esos comandos.`,
     ],
-    [TextType.A0899]: [
+    [Lang_Constants.TextType.A0899]: [
         `部队使用武器造成的伤害-1。`,
         `Reduces weapon damage dealt by the unit by 1.`,
         `Reduce el daño dado por armas por la unidad en 1.`,
     ],
-    [TextType.A0900]: [
+    [Lang_Constants.TextType.A0900]: [
         `部队受到的武器伤害+1。`,
         `Increases weapon damage taken by the unit by 1.`,
         `Aumenta el daño de armas para la unidad en 1.`,
     ],
-    [TextType.A0901]: [
+    [Lang_Constants.TextType.A0901]: [
         [
             `使自身获得强化状态，从而增强武器的效果。强化状态在使用武器后消失。`,
             `部队移动后不可用。`,
@@ -21786,7 +21788,7 @@ export const CommonText: Record<number, string[]> = {
             `No disponible luego del desplazamiento de la unidad.`,
         ].join(`\n`),
     ],
-    [TextType.A0902]: [
+    [Lang_Constants.TextType.A0902]: [
         [
             `您可以调整特定的敌人信息，从而获得更准确的伤害预估。实际伤害不会受到任何影响。`,
             `本功能在雾战中最为有用。`,
@@ -21818,7 +21820,7 @@ export const CommonText: Record<number, string[]> = {
             `- Cuando se establece en 0, nada se verá afectado.`,
         ].join(`\n`),
     ],
-    [TextType.A0903]: [
+    [Lang_Constants.TextType.A0903]: [
         [
             `符合以下所有条件的战局会被统计在内：`,
             `- 有且只有2名玩家参与游戏`,
@@ -21847,7 +21849,7 @@ export const CommonText: Record<number, string[]> = {
             `Toda la otra data (incluyendo elección) son precisas.`,
         ].join(`\n`),
     ],
-    [TextType.A0904]: [
+    [Lang_Constants.TextType.A0904]: [
         [
             `返回值：(整数)`,
             `战局操作的类型ID。`,
@@ -21981,7 +21983,7 @@ export const CommonText: Record<number, string[]> = {
             `Para instrucciones detalladas de cada operación tipo, por favor revisa el panel de ID Tipo.`,
         ].join(`\n`),
     ],
-    [TextType.A0905]: [
+    [Lang_Constants.TextType.A0905]: [
         [
             `返回值：(整数)`,
             `战局操作的类型ID。`,
@@ -22127,7 +22129,7 @@ export const CommonText: Record<number, string[]> = {
             `Para información detallada sobre cada operación tipo, por favor revise el panel de ID Tipo.`,
         ].join(`\n`),
     ],
-    [TextType.A0906]: [
+    [Lang_Constants.TextType.A0906]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22153,7 +22155,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0907]: [
+    [Lang_Constants.TextType.A0907]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22185,7 +22187,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0908]: [
+    [Lang_Constants.TextType.A0908]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22217,7 +22219,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0909]: [
+    [Lang_Constants.TextType.A0909]: [
         [
             `返回值：（位置）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22273,7 +22275,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve (-2, -2) que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0910]: [
+    [Lang_Constants.TextType.A0910]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22299,7 +22301,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0911]: [
+    [Lang_Constants.TextType.A0911]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22325,7 +22327,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0912]: [
+    [Lang_Constants.TextType.A0912]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22357,7 +22359,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0913]: [
+    [Lang_Constants.TextType.A0913]: [
         [
             `返回值：（位置数组）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22395,7 +22397,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un arreglo vacío que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0914]: [
+    [Lang_Constants.TextType.A0914]: [
         [
             `返回值：（位置数组）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22427,7 +22429,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un arreglo vacío que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0915]: [
+    [Lang_Constants.TextType.A0915]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22453,7 +22455,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0916]: [
+    [Lang_Constants.TextType.A0916]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22482,7 +22484,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0917]: [
+    [Lang_Constants.TextType.A0917]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22508,7 +22510,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0918]: [
+    [Lang_Constants.TextType.A0918]: [
         [
             `返回值：（整数数组）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -22537,7 +22539,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un arreglo vacío que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0919]: [
+    [Lang_Constants.TextType.A0919]: [
         [
             `1 (系统)开始回合`,
             `此时会结算收入、维修部队、激活地图武器等。`,
@@ -22830,7 +22832,7 @@ export const CommonText: Record<number, string[]> = {
             `Por ejemplo, Bomba negra se detona a sí misma dañando a unidades cercanas (sin importar si fue emboscada o no).`,
         ].join(`\n`),
     ],
-    [TextType.A0920]: [
+    [Lang_Constants.TextType.A0920]: [
         [
             `1 (系统)开始回合`,
             `此时会结算收入、维修部队、激活地图武器等。`,
@@ -23159,7 +23161,7 @@ export const CommonText: Record<number, string[]> = {
             `Una unidad añade un estatus de mejora en sí misma (sin importar si fue emboscada o no).`,
         ].join(`\n`),
     ],
-    [TextType.A0921]: [
+    [Lang_Constants.TextType.A0921]: [
         [
             `返回值：（位置）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -23221,7 +23223,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve (-2, -2) que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0922]: [
+    [Lang_Constants.TextType.A0922]: [
         [
             `返回值：（整数）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -23247,7 +23249,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve -2 que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0923]: [
+    [Lang_Constants.TextType.A0923]: [
         [
             `返回值：（位置数组）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -23279,7 +23281,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un arreglo vacío que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0924]: [
+    [Lang_Constants.TextType.A0924]: [
         [
             `返回值：（位置）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -23317,7 +23319,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un (-2, -2) que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0925]: [
+    [Lang_Constants.TextType.A0925]: [
         [
             `返回值：（位置数组）`,
             `返回值的含义由本战局操作的类型决定，如下：`,
@@ -23355,7 +23357,7 @@ export const CommonText: Record<number, string[]> = {
             `- Otros: Devuelve un arreglo vacío que no tiene un significado específico.`,
         ].join(`\n`),
     ],
-    [TextType.A0926]: [
+    [Lang_Constants.TextType.A0926]: [
         [
             `CO能量是使用CO主动技能的必需资源。`,
             `CO能量值达到最大值后，就无法进一步积累。`,
@@ -23406,7 +23408,7 @@ export const CommonText: Record<number, string[]> = {
             `- Si el arma hace daño a más de una unidad enemiga, todo el daño es contado.`,
         ].join(`\n`),
     ],
-    [TextType.A0927]: [
+    [Lang_Constants.TextType.A0927]: [
         [
             `返回值：(整数)`,
             `部队的移动类型ID。`,
@@ -23420,7 +23422,7 @@ export const CommonText: Record<number, string[]> = {
             `El ID del tipo de movimiento de la unidad.`,
         ].join(`\n`),
     ],
-    [TextType.A0928]: [
+    [Lang_Constants.TextType.A0928]: [
         [
             `使用方法：`,
             `moveCost(moveTypeId, tileTypeId)`,
@@ -23473,17 +23475,17 @@ export const CommonText: Record<number, string[]> = {
             `- Nada.`,
         ].join(`\n`),
     ],
-    [TextType.A0929]: [
+    [Lang_Constants.TextType.A0929]: [
         `战局数据从未被保存过，因而无法删除。`,
         `Game data has never been saved and thus cannot be deleted.`,
         `La data de juego no ha sido nunca guardada, y por ende no puede ser eliminada.`,
     ],
-    [TextType.A0930]: [
+    [Lang_Constants.TextType.A0930]: [
         `战局数据从未被保存过，因而无法读档。`,
         `Game data has never been saved and thus cannot be loaded.`,
         `La data de juego no ha sido nunca guardada, y por ende no puede ser cargada.`,
     ],
-    [TextType.A0931]: [
+    [Lang_Constants.TextType.A0931]: [
         [
             `系统将把当前战局（或地图）的数据复制到一个新的单人模拟战局中。`,
             `在模拟战中，您可以随意尝试各种部署，也可以随意修改各种数据。`,
@@ -23509,7 +23511,7 @@ export const CommonText: Record<number, string[]> = {
             `Nota: Si estás jugando una partida de un jugador o editando un mapa, por favor no te olvides de primero guardar tu progreso.`,
         ].join(`\n`),
     ],
-    [TextType.A0932]: [
+    [Lang_Constants.TextType.A0932]: [
         [
             `CO搭乘到部队后，可以为该部队带来属性加成（由CO技能决定）。`,
             ``,
@@ -23565,7 +23567,7 @@ export const CommonText: Record<number, string[]> = {
             `Las unidades con el CO a bordo que son aniquiladas, lo hacen sin reducir la Energía del CO o interrumpiendo las habilidades del CO.`,
         ].join(`\n`),
     ],
-    [TextType.A0933]: [
+    [Lang_Constants.TextType.A0933]: [
         [
             `部分地形可为所属势力带来CO能量收入。`,
             ``,
@@ -23585,7 +23587,7 @@ export const CommonText: Record<number, string[]> = {
             `- El sistema automáticamente establece los ingresos al comienzo de cada turno.`,
         ].join(`\n`),
     ],
-    [TextType.A0934]: [
+    [Lang_Constants.TextType.A0934]: [
         [
             `此操作将只删除数据的引用。实际数据仍将保留在地图数据中。`,
             ``,
@@ -23617,7 +23619,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres eliminar la referencia?`,
         ].join(`\n`),
     ],
-    [TextType.A0935]: [
+    [Lang_Constants.TextType.A0935]: [
         [
             `此操作将删除事件数据。不过，此事件所引用的条件节点、条件、动作实际数据仍将保留在地图数据中。`,
             ``,
@@ -23649,27 +23651,27 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres eliminar la data del evento?`,
         ].join(`\n`),
     ],
-    [TextType.A0936]: [
+    [Lang_Constants.TextType.A0936]: [
         `已切换为合作模式。`,
         `It has been switched to Coop Mode.`,
         `Se ha cambiado al modo Cooperativo.`,
     ],
-    [TextType.A0937]: [
+    [Lang_Constants.TextType.A0937]: [
         `已切换为对战模式。`,
         `It has been switched to Versus Mode.`,
         `Se ha cambiado al modo Versus.`,
     ],
-    [TextType.A0938]: [
+    [Lang_Constants.TextType.A0938]: [
         `已切换为挑战模式。`,
         `It has been switched to War Room Mode.`,
         `Se ha cambiado al modo Sala de Guerra.`,
     ],
-    [TextType.A0939]: [
+    [Lang_Constants.TextType.A0939]: [
         `已切换为自定义模式。`,
         `It has been switched to Custom Mode.`,
         `Se ha cambiado al modo Personalizado.`,
     ],
-    [TextType.A0940]: [
+    [Lang_Constants.TextType.A0940]: [
         [
             `开启批处理模式后，您对任意一个玩家规则所作出的调整（所属队伍等特定规则除外），都将被应用到所有玩家之上。`,
             ``,
@@ -23686,7 +23688,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Quieres habilitar el modo lote?`,
         ].join(`\n`),
     ],
-    [TextType.A0941]: [
+    [Lang_Constants.TextType.A0941]: [
         [
             `请填写表达式。系统将以该表达式的求值结果来判定事件条件是否得到满足。`,
             ``,
@@ -23724,52 +23726,52 @@ export const CommonText: Record<number, string[]> = {
             `Haz click en el botón "Identificador" para revisar las funciones disponibles.`,
         ].join(`\n`),
     ],
-    [TextType.A0942]: [
+    [Lang_Constants.TextType.A0942]: [
         `当前回合数和玩家符合以下所有条件。`,
         `The number of turns and the player in the current turn meet all of the following conditions.`,
         `El número de turnos y el jugador en el turno actual cumplen todas las siguientes condiciones.`,
     ],
-    [TextType.A0943]: [
+    [Lang_Constants.TextType.A0943]: [
         `当前回合数和玩家符合所有指定的条件。`,
         `The number of turns and the player in the current turn meet all of the specified conditions.`,
         `El número de turnos y el jugador en el turno actual cumplen todas las condiciones especificadas.`,
     ],
-    [TextType.A0944]: [
+    [Lang_Constants.TextType.A0944]: [
         `未指定任何条件。`,
         `No conditions have been specified.`,
         `No se han especificado las condiciones.`,
     ],
-    [TextType.A0945]: [
+    [Lang_Constants.TextType.A0945]: [
         `玩家已被设定为跳过当前回合或下一个回合。`,
         `The player has been set to skip the current turn or the next turn.`,
         `Al jugador se le ha establecido saltarse su turno actual o el siguiente turno.`,
     ],
-    [TextType.A0946]: [
+    [Lang_Constants.TextType.A0946]: [
         `玩家未被设定为跳过回合。`,
         `The player has NOT been set to skip any turn.`,
         `Al jugador NO se le ha establecido saltarse ningún turno.`,
     ],
-    [TextType.A0947]: [
+    [Lang_Constants.TextType.A0947]: [
         `当前天气和战争迷雾符合所有指定的条件。`,
         `Current weather and fog of war meet all specified conditions.`,
         `El clima actual y la Niebla de Guerra cumplen todas las condiciones especificadas.`,
     ],
-    [TextType.A0948]: [
+    [Lang_Constants.TextType.A0948]: [
         `当前天气和战争迷雾符合以下所有条件。`,
         `Current weather and fog of war meet all of the following conditions.`,
         `El clima actual y la Niebla de Guerra cumplen todas las siguientes condiciones.`,
     ],
-    [TextType.A0949]: [
+    [Lang_Constants.TextType.A0949]: [
         `战争迷雾正在生效中。`,
         `The fog of war is in effect.`,
         `La Niebla de Guerra está en efecto.`,
     ],
-    [TextType.A0950]: [
+    [Lang_Constants.TextType.A0950]: [
         `战争迷雾当前未生效。`,
         `The fog of war is not currently in effect.`,
         `La Niebla de Guerra no está en efecto ahora.`,
     ],
-    [TextType.A0951]: [
+    [Lang_Constants.TextType.A0951]: [
         [
             `此功能将改变您所看到的部队和建筑的颜色，但不会对战局的数据产生实际影响。`,
             ``,
@@ -23786,7 +23788,7 @@ export const CommonText: Record<number, string[]> = {
             `Los demás jugadores no verán los cambios que has hecho.`,
         ].join(`\n`),
     ],
-    [TextType.A0952]: [
+    [Lang_Constants.TextType.A0952]: [
         [
             `系统将关闭当前界面和场景，并打开与本地图相关的游戏回放列表。`,
             ``,
@@ -23803,7 +23805,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0953]: [
+    [Lang_Constants.TextType.A0953]: [
         [
             `系统将关闭当前界面和场景，并打开与本CO相关的游戏回放列表。`,
             ``,
@@ -23820,7 +23822,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.A0954]: [
+    [Lang_Constants.TextType.A0954]: [
         [
             `如果事件可以在任意事件触发后立刻触发，有可能会导致该事件无限连续触发。`,
             `这种现象在刚接触事件系统的玩家中尤为常见。`,
@@ -23855,27 +23857,27 @@ export const CommonText: Record<number, string[]> = {
             `¿Quieres habilitar esta función?`,
         ].join(`\n`),
     ],
-    [TextType.A0955]: [
+    [Lang_Constants.TextType.A0955]: [
         `摧毁符合指定条件的所有部队。`,
         `Destroy all units that meet the specified conditions.`,
         `Destruir todas las unidades que cumplen las condiciones especificadas.`,
     ],
-    [TextType.A0956]: [
+    [Lang_Constants.TextType.A0956]: [
         `把符合指定条件的所有部队移动到符合指定条件的地块上。`,
         `Move all units that meet the specified conditions to certain tiles.`,
         `Mover todas las unidades que cumplen las condiciones especificadas a ciertas casillas.`,
     ],
-    [TextType.A0957]: [
+    [Lang_Constants.TextType.A0957]: [
         `未指定任何修改。`,
         `No modifications have been specified.`,
         `No se han especificado modificaciones.`,
     ],
-    [TextType.A0958]: [
+    [Lang_Constants.TextType.A0958]: [
         `如果此地图武器对部队造成的伤害值超过该部队的HP值，您是否希望直接摧毁该部队？`,
         `Do you wish to destroy a unit if the value of the damage inflicted on the unit by this map weapons exceeds the unit's HP?`,
         `¿Quieres destruir una unidad si el valor del daño infligido sobre la unidad por las armas de este mapa exceden al HP de la unidad?`,
     ],
-    [TextType.A0959]: [
+    [Lang_Constants.TextType.A0959]: [
         [
             `返回值：(整数)`,
             `当前部队的自定义名称ID。`,
@@ -23898,7 +23900,7 @@ export const CommonText: Record<number, string[]> = {
             `-2 is returned if the unit doesn't exist.`,
         ].join(`\n`),
     ],
-    [TextType.A0960]: [
+    [Lang_Constants.TextType.A0960]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为自定义名称ID。`,
             ``,
@@ -23948,7 +23950,7 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0961]: [
+    [Lang_Constants.TextType.A0961]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为自定义名称ID。`,
             ``,
@@ -23998,7 +24000,7 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0962]: [
+    [Lang_Constants.TextType.A0962]: [
         [
             `返回值：(整数)`,
             `当前地块的自定义名称ID。`,
@@ -24015,12 +24017,12 @@ export const CommonText: Record<number, string[]> = {
             `The default ID is 0, which means that the tile has no custom name.`,
         ].join(`\n`),
     ],
-    [TextType.A0963]: [ // TODO
+    [Lang_Constants.TextType.A0963]: [ // TODO
         `部队缺少必要的buff。`,
         `The unit lacks a necessary buff.`,
         `The unit lacks a necessary buff.`,
     ],
-    [TextType.A0964]: [ // TODO
+    [Lang_Constants.TextType.A0964]: [ // TODO
         [
             `模拟战已结束。`,
             ``,
@@ -24043,7 +24045,7 @@ export const CommonText: Record<number, string[]> = {
             `- Stay here to do further adjustments.`,
         ].join(`\n`),
     ],
-    [TextType.A0965]: [ // TODO
+    [Lang_Constants.TextType.A0965]: [ // TODO
         [
             `返回值：（实数）`,
             `与自身数值相同的实数。`,
@@ -24057,7 +24059,7 @@ export const CommonText: Record<number, string[]> = {
             `A real number with the same value as the caller.`,
         ].join(`\n`),
     ],
-    [TextType.A0966]: [ // TODO
+    [Lang_Constants.TextType.A0966]: [ // TODO
         [
             `(可选)请填写表达式。AI生产部队时会计算各个部队的权重，并生产权重最高的部队，该过程会把此表达式的计算结果累加进去。`,
             ``,
@@ -24116,7 +24118,7 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0967]: [
+    [Lang_Constants.TextType.A0967]: [
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果决定该地图武器对部队造成的伤害大于等于部队的HP时，是否可以直接击杀部队。`,
             ``,
@@ -24163,22 +24165,22 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0968]: [ // TODO
+    [Lang_Constants.TextType.A0968]: [ // TODO
         `部队在每回合开始时失去1点HP，可致命。`,
         `Unit lose 1HP at the beginning of each turn. Can be lethal.`,
         `Unit lose 1HP at the beginning of each turn. Can be lethal.`,
     ],
-    [TextType.A0969]: [ // TODO
+    [Lang_Constants.TextType.A0969]: [ // TODO
         `部队在每回合结束时失去1点HP，可致命。此外，部队无法执行合流指令。`,
         `Unit lose 1HP at the beginning of each turn. Can be lethal. In addition, the unit cannot execute the Join command.`,
         `Unit lose 1HP at the beginning of each turn. Can be lethal. In addition, the unit cannot execute the Join command.`,
     ],
-    [TextType.A0970]: [ // TODO
+    [Lang_Constants.TextType.A0970]: [ // TODO
         `此状态的实际效果由地图作者自行定义，请参考地图相关说明。`,
         `The actual effect of this state is defined by the map designer. Please refer to the relevant map documentation.`,
         `The actual effect of this state is defined by the map designer. Please refer to the relevant map documentation.`,
     ],
-    [TextType.A0971]: [ // TODO
+    [Lang_Constants.TextType.A0971]: [ // TODO
         [
             `Tiny Wars于2026年2月初发生了数据丢失的事故。`,
             `在此，TW开发组向您表示最真诚的歉意。`,
@@ -24210,7 +24212,7 @@ export const CommonText: Record<number, string[]> = {
             `Would you like to proceed with the data export now?`,
         ].join(`\n`),
     ],
-    [TextType.A0972]: [ // TODO
+    [Lang_Constants.TextType.A0972]: [ // TODO
         [
             `且慢！请您三思！`,
             ``,
@@ -24230,7 +24232,7 @@ export const CommonText: Record<number, string[]> = {
             `Would you like to proceed with the data export now?`,
         ].join(`\n`),
     ],
-    [TextType.A0973]: [ // TODO
+    [Lang_Constants.TextType.A0973]: [ // TODO
         [
             `无法访问系统剪贴板，因此数据导出失败。`,
             ``,
@@ -24253,7 +24255,7 @@ export const CommonText: Record<number, string[]> = {
             `You can click “Export Map Cache” in the top-right corner of the game title screen to export data.`,
         ].join(`\n`),
     ],
-    [TextType.A0974]: [ // TODO
+    [Lang_Constants.TextType.A0974]: [ // TODO
         [
             `读取缓存失败，请重启游戏后重试。`,
             ``,
@@ -24270,7 +24272,7 @@ export const CommonText: Record<number, string[]> = {
             `You can click “Export Map Cache” in the top-right corner of the game title screen to export data.`,
         ].join(`\n`),
     ],
-    [TextType.A0975]: [ // TODO
+    [Lang_Constants.TextType.A0975]: [ // TODO
         [
             `缓存数据已成功导出到系统剪贴板。`,
             ``,
@@ -24312,27 +24314,27 @@ export const CommonText: Record<number, string[]> = {
             `Discord Server: https://discord.gg/XvKjcG5n`,
         ].join(`\n`),
     ],
-    [TextType.A0976]: [ // TODO
+    [Lang_Constants.TextType.A0976]: [ // TODO
         `缓存中没有相关数据，不需要导出。`,
         `No relevant data found in the cache; no export required.`,
         `No relevant data found in the cache; no export required.`,
     ],
-    [TextType.A0977]: [ // TODO
+    [Lang_Constants.TextType.A0977]: [ // TODO
         `数据已准备就绪，请点击“确定”以进行导出。`,
         `Data is ready. Click “OK” to proceed with export.`,
         `Data is ready. Click “OK” to proceed with export.`,
     ],
-    [TextType.A0978]: [ // TODO
+    [Lang_Constants.TextType.A0978]: [ // TODO
         `该地图只有一个预设规则，无法删除该规则。`,
         `This map has only one preset rule, and that rule cannot be deleted.`,
         `This map has only one preset rule, and that rule cannot be deleted.`,
     ],
-    [TextType.A0979]: [ // TODO
+    [Lang_Constants.TextType.A0979]: [ // TODO
         `双击以开始操作。`,
         `Double-click to start.`,
         `Double-click to start.`,
     ],
-    [TextType.A0980]: [ // TODO
+    [Lang_Constants.TextType.A0980]: [ // TODO
         [
             `忽略地图后，该地图不会再出现在您的待审核列表当中，除非地图设计者再次提审地图。`,
             ``,
@@ -24358,7 +24360,7 @@ export const CommonText: Record<number, string[]> = {
             `Are you sure you want to ignore this map?`,
         ].join(`\n`),
     ],
-    [TextType.A0981]: [
+    [Lang_Constants.TextType.A0981]: [
         [
             `若玩家拥有的部队的数量达到此限制值，则该玩家无法通过使用据点和部队的生产指令来直接生产部队。`,
             ``,
@@ -24375,17 +24377,17 @@ export const CommonText: Record<number, string[]> = {
             `However, other commands such as War Events and CO Skills are unaffected by this restriction.`,
         ].join(`\n`),
     ],
-    [TextType.A0982]: [
+    [Lang_Constants.TextType.A0982]: [
         `绿色和红色数字（如有）分别表示该区域ID已被多少个地块使用，以及被多少个部队标记为不可进入。`,
         `The green and red numbers (if present) indicate how many tiles have used this location ID and how many units mark the ID as No-Entry, respectively.`,
         `The green and red numbers (if present) indicate how many tiles have used this location ID and how many units mark the ID as No-Entry, respectively.`,
     ],
-    [TextType.A0983]: [
+    [Lang_Constants.TextType.A0983]: [
         `绿色（如有）分别表示该标签ID已被多少个部队使用。`,
         `The green number (if present) indicates how many units have used this tag ID.`,
         `The green number (if present) indicates how many units have used this tag ID.`,
     ],
-    [TextType.A0984]: [
+    [Lang_Constants.TextType.A0984]: [
         [
             `当您的部队与敌人部队发生战斗，且造成或受到HP伤害时，您和敌人都会获得CO能量。`,
             `此处的两个数值分别表示造成 / 受到每点“规整化”HP伤害所对应的能量值。`,
@@ -24405,32 +24407,32 @@ export const CommonText: Record<number, string[]> = {
             `This mechanism applies only to global COs.`,
         ].join(`\n`),
     ],
-    [TextType.A0985]: [
+    [Lang_Constants.TextType.A0985]: [
         `无法删除已行动的部队。`,
         `Waited units cannot be deleted.`,
         `Waited units cannot be deleted.`,
     ],
-    [TextType.A0986]: [
+    [Lang_Constants.TextType.A0986]: [
         `无法删除已被搭载的部队。`,
         `Loaded units cannot be deleted.`,
         `Loaded units cannot be deleted.`,
     ],
-    [TextType.A0987]: [
+    [Lang_Constants.TextType.A0987]: [
         `您只能在自己的回合内删除部队。`,
         `You can only delete your units during your turn.`,
         `You can only delete your units during your turn.`,
     ],
-    [TextType.A0988]: [
+    [Lang_Constants.TextType.A0988]: [
         `您只能删除您自己的部队。`,
         `You can only delete your own units.`,
         `You can only delete your own units.`,
     ],
-    [TextType.A0989]: [
+    [Lang_Constants.TextType.A0989]: [
         `您是希望创建一个新的条件节点，还是从已有节点中选择一个？`,
         `Would you like to create a new condition node, or select one from the existing nodes?`,
         `Would you like to create a new condition node, or select one from the existing nodes?`,
     ],
-    [TextType.A0990]: [
+    [Lang_Constants.TextType.A0990]: [
         [
             `您希望进行浅克隆还是深克隆？`,
             `- 浅克隆`,
@@ -24465,7 +24467,7 @@ export const CommonText: Record<number, string[]> = {
             `  For example, if you shallow clone A1 which contains N1, you will get A2 that contains N2, while N2 is deep cloned from N1.`,
         ].join(`\n`),
     ],
-    [TextType.A0991]: [
+    [Lang_Constants.TextType.A0991]: [
         [
             `进行取反操作后，系统在判定该条件/条件节点是否成立时，会采用相反的值。也就是说，原条件成立时，取反的条件就不成立，反之亦然。`,
             `比如，原条件为 P1的资金 > 10000，那么取反的条件就等价于 P1的资金 <= 10000。`,
@@ -24512,12 +24514,12 @@ export const CommonText: Record<number, string[]> = {
             `Are you sure you want to invert this condition / node? (To undo the inversion, simply invert the condition / node again.)`,
         ].join(`\n`),
     ],
-    [TextType.A0992]: [
+    [Lang_Constants.TextType.A0992]: [
         `您是希望创建一个新的条件，还是从已有条件中选择一个？`,
         `Would you like to create a new condition, or select one from the existing conditions?`,
         `Would you like to create a new condition, or select one from the existing conditions?`,
     ],
-    [TextType.A0993]: [
+    [Lang_Constants.TextType.A0993]: [
         [
             `您是希望创建一个新的条件节点，还是从已有节点中选择一个？`,
             ``,
@@ -24537,12 +24539,12 @@ export const CommonText: Record<number, string[]> = {
             `The system will execute the action sequence contained in the first node that evaluates to true and ignore all remaining nodes.`,
         ].join(`\n`),
     ],
-    [TextType.A0994]: [
+    [Lang_Constants.TextType.A0994]: [
         `您是希望创建一个新的动作，还是从已有动作中选择一个？`,
         `Would you like to create a new action, or select one from the existing actions?`,
         `Would you like to create a new action, or select one from the existing actions?`,
     ],
-    [TextType.A0995]: [ // TODO
+    [Lang_Constants.TextType.A0995]: [ // TODO
         [
             `(可选)请填写表达式。系统将以该表达式的求值结果作为玩家的新的CO ID，也就是改变玩家CO。`,
             ``,
@@ -24589,7 +24591,7 @@ export const CommonText: Record<number, string[]> = {
             `Click the "Identifier" button to check out the supported functionalities.`,
         ].join(`\n`),
     ],
-    [TextType.A0996]: [ // TODO
+    [Lang_Constants.TextType.A0996]: [ // TODO
         [
             `返回值：(整数)`,
             `玩家的CO ID。`,
@@ -24603,7 +24605,7 @@ export const CommonText: Record<number, string[]> = {
             `The CO ID of the player.`,
         ].join(`\n`),
     ],
-    [TextType.A0997]: [
+    [Lang_Constants.TextType.A0997]: [
         [
             `关卡得分仅与您通关时所经过的回合数、以及总动作数（包括我方和AI的动作）有关，与其他所有因素（如敌我战损）都无关。`,
             `分数 = 100000 - (回合数 - 1) * 1000 - 动作数`,
@@ -24617,12 +24619,12 @@ export const CommonText: Record<number, string[]> = {
             `puntaje = 100000 - (turnos - 1) * 1000 - acciones`,
         ].join(`\n`),
     ],
-    [TextType.A0998]: [ // TODO
+    [Lang_Constants.TextType.A0998]: [ // TODO
         `您可以通过点击各项属性值来修改它们。`,
         `You can modify the property values by clicking on them.`,
         `You can modify the property values by clicking on them.`,
     ],
-    [TextType.A0999]: [ // TODO
+    [Lang_Constants.TextType.A0999]: [ // TODO
         `外部链接应以 https:// 或 http:// 开头。`,
         `The external link should start with https:// or http:// .`,
         `The external link should start with https:// or http:// .`,
@@ -24631,7382 +24633,7382 @@ export const CommonText: Record<number, string[]> = {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Short strings.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    [TextType.B0000]: [
+    [Lang_Constants.TextType.B0000]: [
         `创建房间`,
         `Create Room`,
         `Crear Sala`,
     ],
-    [TextType.B0001]: [
+    [Lang_Constants.TextType.B0001]: [
         `无`,
         `None`,
         `Nada`,
     ],
-    [TextType.B0002]: [
+    [Lang_Constants.TextType.B0002]: [
         `基本设置`,
         `Basic Settings`,
         `Configuraciones Básicas`,
     ],
-    [TextType.B0003]: [
+    [Lang_Constants.TextType.B0003]: [
         `高级设置`,
         `Advanced Settings`,
         `Configuraciones Avanzadas`,
     ],
-    [TextType.B0004]: [
+    [Lang_Constants.TextType.B0004]: [
         `红`,
         `Red`,
         `Rojo`,
     ],
-    [TextType.B0005]: [
+    [Lang_Constants.TextType.B0005]: [
         `蓝`,
         `Blue`,
         `Azul`,
     ],
-    [TextType.B0006]: [
+    [Lang_Constants.TextType.B0006]: [
         `黄`,
         `Yellow`,
         `Amarillo`,
     ],
-    [TextType.B0007]: [
+    [Lang_Constants.TextType.B0007]: [
         `绿`,
         `Green`,
         `Verde`,
     ],
-    [TextType.B0008]: [
+    [Lang_Constants.TextType.B0008]: [
         `A队`,
         `Team A`,
         `Equipo A`,
     ],
-    [TextType.B0009]: [
+    [Lang_Constants.TextType.B0009]: [
         `B队`,
         `Team B`,
         `Equipo B`,
     ],
-    [TextType.B0010]: [
+    [Lang_Constants.TextType.B0010]: [
         `C队`,
         `Team C`,
         `Equipo C`,
     ],
-    [TextType.B0011]: [
+    [Lang_Constants.TextType.B0011]: [
         `D队`,
         `Team D`,
         `Equipo D`,
     ],
-    [TextType.B0012]: [
+    [Lang_Constants.TextType.B0012]: [
         `是`,
         `Yes`,
         `Si`,
     ],
-    [TextType.B0013]: [
+    [Lang_Constants.TextType.B0013]: [
         `否`,
         `No`,
         `No`,
     ],
-    [TextType.B0014]: [
+    [Lang_Constants.TextType.B0014]: [
         `天`,
         `d`,
         `d`,
     ],
-    [TextType.B0015]: [
+    [Lang_Constants.TextType.B0015]: [
         `时`,
         `h`,
         `h`,
     ],
-    [TextType.B0016]: [
+    [Lang_Constants.TextType.B0016]: [
         `分`,
         `m`,
         `m`,
     ],
-    [TextType.B0017]: [
+    [Lang_Constants.TextType.B0017]: [
         `秒`,
         `s`,
         `s`,
     ],
-    [TextType.B0018]: [
+    [Lang_Constants.TextType.B0018]: [
         `行动次序`,
         `Force`,
         `Fuerza`,
     ],
-    [TextType.B0019]: [
+    [Lang_Constants.TextType.B0019]: [
         `队伍`,
         `Team`,
         `Equipo`,
     ],
-    [TextType.B0020]: [
+    [Lang_Constants.TextType.B0020]: [
         `战争迷雾`,
         `FoW`,
         `Niebla de Guerra`,
     ],
-    [TextType.B0021]: [
+    [Lang_Constants.TextType.B0021]: [
         `回合限时`,
         `Time Limit`,
         `Límite de Tiempo`,
     ],
-    [TextType.B0022]: [
+    [Lang_Constants.TextType.B0022]: [
         `置空`,
         `Empty`,
         `Vacío`,
     ],
-    [TextType.B0023]: [
+    [Lang_Constants.TextType.B0023]: [
         `已参战玩家`,
         `Player In Room`,
         `Jugador En Sala`,
     ],
-    [TextType.B0024]: [
+    [Lang_Constants.TextType.B0024]: [
         `继续战斗`,
         `Continue`,
         `Continuar`,
     ],
-    [TextType.B0025]: [
+    [Lang_Constants.TextType.B0025]: [
         `连接已断开`,
         `Disconnected`,
         `Desconectado`,
     ],
-    [TextType.B0026]: [
+    [Lang_Constants.TextType.B0026]: [
         `确定`,
         `Confirm`,
         `Confirmar`,
     ],
-    [TextType.B0027]: [
+    [Lang_Constants.TextType.B0027]: [
         `未参战玩家`,
         `Player Not In Room`,
         `Jugador No está en Sala`,
     ],
-    [TextType.B0028]: [
+    [Lang_Constants.TextType.B0028]: [
         `已参战CO`,
         `CO In Room`,
         `CO En Sala`,
     ],
-    [TextType.B0029]: [
+    [Lang_Constants.TextType.B0029]: [
         `读取中`,
         `Now loading`,
         `Cargando`,
     ],
-    [TextType.B0030]: [
+    [Lang_Constants.TextType.B0030]: [
         `中立`,
         `Neutral`,
         `Neutral`,
     ],
-    [TextType.B0031]: [
+    [Lang_Constants.TextType.B0031]: [
         `玩家`,
         `Player`,
         `Jugador`,
     ],
-    [TextType.B0032]: [
+    [Lang_Constants.TextType.B0032]: [
         `资金`,
         `Fund`,
         `Presupuesto`,
     ],
-    [TextType.B0033]: [
+    [Lang_Constants.TextType.B0033]: [
         `能量`,
         `Energy`,
         `Energía`,
     ],
-    [TextType.B0034]: [
+    [Lang_Constants.TextType.B0034]: [
         `宽度`,
         `Width`,
         `Ancho`,
     ],
-    [TextType.B0035]: [
+    [Lang_Constants.TextType.B0035]: [
         `高度`,
         `Height`,
         `Alto`,
     ],
-    [TextType.B0036]: [
+    [Lang_Constants.TextType.B0036]: [
         `结束回合`,
         `End Turn`,
         `Finalizar Turno`,
     ],
-    [TextType.B0037]: [
+    [Lang_Constants.TextType.B0037]: [
         `装载`,
         `Load`,
         `Cargar`,
     ],
-    [TextType.B0038]: [
+    [Lang_Constants.TextType.B0038]: [
         `合流`,
         `Join`,
         `Unirse`,
     ],
-    [TextType.B0039]: [
+    [Lang_Constants.TextType.B0039]: [
         `攻击`,
         `Attack`,
         `Atacar`,
     ],
-    [TextType.B0040]: [
+    [Lang_Constants.TextType.B0040]: [
         `占领`,
         `Capture`,
         `Capturar`,
     ],
-    [TextType.B0041]: [
+    [Lang_Constants.TextType.B0041]: [
         `下潜`,
         `Dive`,
         `Sumergirse`,
     ],
-    [TextType.B0042]: [
+    [Lang_Constants.TextType.B0042]: [
         `上浮`,
         `Surface`,
         `Emerger`,
     ],
-    [TextType.B0043]: [
+    [Lang_Constants.TextType.B0043]: [
         `建造`,
         `Build`,
         `Construir`,
     ],
-    [TextType.B0044]: [
+    [Lang_Constants.TextType.B0044]: [
         `补给`,
         `Supply`,
         `Abastecer`,
     ],
-    [TextType.B0045]: [
+    [Lang_Constants.TextType.B0045]: [
         `发射`,
         `Launch`,
         `Lanzar`,
     ],
-    [TextType.B0046]: [
+    [Lang_Constants.TextType.B0046]: [
         `卸载`,
         `Drop`,
         `Descargar`,
     ],
-    [TextType.B0047]: [
+    [Lang_Constants.TextType.B0047]: [
         `照明`,
         `Flare`,
         `Bengala`,
     ],
-    [TextType.B0048]: [
+    [Lang_Constants.TextType.B0048]: [
         `发射导弹`,
         `Silo`,
         `Misil`,
     ],
-    [TextType.B0049]: [
+    [Lang_Constants.TextType.B0049]: [
         `制造`,
         `Produce`,
         `Producir`,
     ],
-    [TextType.B0050]: [
+    [Lang_Constants.TextType.B0050]: [
         `待机`,
         `Wait`,
         `Esperar`,
     ],
-    [TextType.B0051]: [
+    [Lang_Constants.TextType.B0051]: [
         `生产材料已耗尽`,
         `No material`,
         `Sin material`,
     ],
-    [TextType.B0052]: [
+    [Lang_Constants.TextType.B0052]: [
         `没有空闲的装载位置`,
         `No empty load slot`,
         `No hay espacio de cargado vacío`,
     ],
-    [TextType.B0053]: [
+    [Lang_Constants.TextType.B0053]: [
         `资金不足`,
         `Insufficient fund`,
         `Presupuesto insuficiente`,
     ],
-    [TextType.B0054]: [
+    [Lang_Constants.TextType.B0054]: [
         `返回大厅`,
         `Go to Lobby`,
         `Ir al Lobby`,
     ],
-    [TextType.B0055]: [
+    [Lang_Constants.TextType.B0055]: [
         `投降`,
         `Resign`,
         `Rendirse`,
     ],
-    [TextType.B0056]: [
+    [Lang_Constants.TextType.B0056]: [
         `已战败`,
         `Defeat`,
         `Derrota`,
     ],
-    [TextType.B0057]: [
+    [Lang_Constants.TextType.B0057]: [
         `日`,
         `Day`,
         `Día`,
     ],
-    [TextType.B0058]: [
+    [Lang_Constants.TextType.B0058]: [
         `月`,
         `Month`,
         `Mes`,
     ],
-    [TextType.B0059]: [
+    [Lang_Constants.TextType.B0059]: [
         `年`,
         `Year`,
         `Año`,
     ],
-    [TextType.B0060]: [
+    [Lang_Constants.TextType.B0060]: [
         `排位积分`,
         `Rank Score`,
         `Puntaje de Ranking`,
     ],
-    [TextType.B0061]: [
+    [Lang_Constants.TextType.B0061]: [
         `列兵`,
         `Lv.0`,
         `Nivel 0`,
     ],
-    [TextType.B0062]: [
+    [Lang_Constants.TextType.B0062]: [
         `上等兵`,
         `Lv.1`,
         `Nivel 1`,
     ],
-    [TextType.B0063]: [
+    [Lang_Constants.TextType.B0063]: [
         `下士`,
         `Lv.2`,
         `Nivel 2`,
     ],
-    [TextType.B0064]: [
+    [Lang_Constants.TextType.B0064]: [
         `中士`,
         `Lv.3`,
         `Nivel 3`,
     ],
-    [TextType.B0065]: [
+    [Lang_Constants.TextType.B0065]: [
         `上士`,
         `Lv.4`,
         `Nivel 4`,
     ],
-    [TextType.B0066]: [
+    [Lang_Constants.TextType.B0066]: [
         `军士长`,
         `Lv.5`,
         `Nivel 5`,
     ],
-    [TextType.B0067]: [
+    [Lang_Constants.TextType.B0067]: [
         `少尉`,
         `Lv.6`,
         `Nivel 6`,
     ],
-    [TextType.B0068]: [
+    [Lang_Constants.TextType.B0068]: [
         `中尉`,
         `Lv.7`,
         `Nivel 7`,
     ],
-    [TextType.B0069]: [
+    [Lang_Constants.TextType.B0069]: [
         `上尉`,
         `Lv.8`,
         `Nivel 8`,
     ],
-    [TextType.B0070]: [
+    [Lang_Constants.TextType.B0070]: [
         `少校`,
         `Lv.9`,
         `Nivel 9`,
     ],
-    [TextType.B0071]: [
+    [Lang_Constants.TextType.B0071]: [
         `中校`,
         `Lv.10`,
         `Nivel 10`,
     ],
-    [TextType.B0072]: [
+    [Lang_Constants.TextType.B0072]: [
         `上校`,
         `Lv.11`,
         `Nivel 11`,
     ],
-    [TextType.B0073]: [
+    [Lang_Constants.TextType.B0073]: [
         `大校`,
         `Lv.12`,
         `Nivel 12`,
     ],
-    [TextType.B0074]: [
+    [Lang_Constants.TextType.B0074]: [
         `少将`,
         `Lv.13`,
         `Nivel 13`,
     ],
-    [TextType.B0075]: [
+    [Lang_Constants.TextType.B0075]: [
         `中将`,
         `Lv.14`,
         `Nivel 14`,
     ],
-    [TextType.B0076]: [
+    [Lang_Constants.TextType.B0076]: [
         `上将`,
         `Lv.15`,
         `Nivel 15`,
     ],
-    [TextType.B0077]: [
+    [Lang_Constants.TextType.B0077]: [
         `攻`,
         `Deal`,
         `Hacer`,
     ],
-    [TextType.B0078]: [
+    [Lang_Constants.TextType.B0078]: [
         `反`,
         `Take`,
         `Recibir`,
     ],
-    [TextType.B0079]: [
+    [Lang_Constants.TextType.B0079]: [
         `费用`,
         `Cost`,
         `Costo`,
     ],
-    [TextType.B0080]: [
+    [Lang_Constants.TextType.B0080]: [
         `投降 / 杂项`,
         `Resign / Misc`,
         `Rendirse / Misceláneos`,
     ],
-    [TextType.B0081]: [
+    [Lang_Constants.TextType.B0081]: [
         `删除部队`,
         `Delete Unit`,
         `Suprimir Unidad`,
     ],
-    [TextType.B0082]: [
+    [Lang_Constants.TextType.B0082]: [
         `我的回放评分`,
         `My Replay Rating`,
         `Mi Clasificación de Repeticiones`,
     ],
-    [TextType.B0083]: [
+    [Lang_Constants.TextType.B0083]: [
         `全服回放评分`,
         `Global Replay Rating`,
         `Clasificación de Repeticiones global`,
     ],
-    [TextType.B0084]: [
+    [Lang_Constants.TextType.B0084]: [
         `禁用地图`,
         `Ban Maps`,
         `Banear Mapas`,
     ],
-    [TextType.B0085]: [
+    [Lang_Constants.TextType.B0085]: [
         `选择战役`,
         `Choose a Campaign`,
         `Elegir una Campaña`,
     ],
-    [TextType.B0086]: [
+    [Lang_Constants.TextType.B0086]: [
         `回合中`,
         `In Turn`,
         `En Turno`,
     ],
-    [TextType.B0087]: [
+    [Lang_Constants.TextType.B0087]: [
         `战局已结束`,
         `Game Ended`,
         `Juego Finalizado`,
     ],
-    [TextType.B0088]: [
+    [Lang_Constants.TextType.B0088]: [
         `提示`,
         `Message`,
         `Mensaje`,
     ],
-    [TextType.B0089]: [
+    [Lang_Constants.TextType.B0089]: [
         `刷新战局`,
         `Refresh`,
         `Actualizar`,
     ],
-    [TextType.B0090]: [
+    [Lang_Constants.TextType.B0090]: [
         `行动数`,
         `Actions`,
         `Acciones`,
     ],
-    [TextType.B0091]: [
+    [Lang_Constants.TextType.B0091]: [
         `回合数`,
         `Turns`,
         `Turnos`,
     ],
-    [TextType.B0092]: [
+    [Lang_Constants.TextType.B0092]: [
         `观看回放`,
         `Replays`,
         `Repeticiones`,
     ],
-    [TextType.B0093]: [
+    [Lang_Constants.TextType.B0093]: [
         `战役明战`,
         `Campaign STD`,
         `Campaña Estándar`,
     ],
-    [TextType.B0094]: [
+    [Lang_Constants.TextType.B0094]: [
         `开始回合`,
         `Begin turn`,
         `Empezar turno`,
     ],
-    [TextType.B0095]: [
+    [Lang_Constants.TextType.B0095]: [
         `生产`,
         `Produce`,
         `Producir`,
     ],
-    [TextType.B0096]: [
+    [Lang_Constants.TextType.B0096]: [
         `(战役) 玩家可用CO`,
         `(Campaign) COs for Players`,
         `(Campaña) COs para Jugadores`,
     ],
-    [TextType.B0097]: [
+    [Lang_Constants.TextType.B0097]: [
         `发起攻击`,
         `Launch an attack`,
         `Atacar`,
     ],
-    [TextType.B0098]: [
+    [Lang_Constants.TextType.B0098]: [
         `装载部队`,
         `Load a unit`,
         `Cargar unidad`,
     ],
-    [TextType.B0099]: [
+    [Lang_Constants.TextType.B0099]: [
         `建造建筑`,
         `Build a building`,
         `Construir propiedad`,
     ],
-    [TextType.B0100]: [
+    [Lang_Constants.TextType.B0100]: [
         `占领建筑`,
         `Capture a building`,
         `Capturar propiedad `,
     ],
-    [TextType.B0101]: [
+    [Lang_Constants.TextType.B0101]: [
         `部队下潜`,
         `Unit dive`,
         `Sumergir unidad`,
     ],
-    [TextType.B0102]: [
+    [Lang_Constants.TextType.B0102]: [
         `卸载部队`,
         `Drop unit(s)`,
         `Descargar unidad(es)`,
     ],
-    [TextType.B0103]: [
+    [Lang_Constants.TextType.B0103]: [
         `部队合流`,
         `Join units`,
         `Unir unidades`,
     ],
-    [TextType.B0104]: [
+    [Lang_Constants.TextType.B0104]: [
         `发射照明弹`,
         `Launch a flare`,
         `Lanzar bengala`,
     ],
-    [TextType.B0105]: [
+    [Lang_Constants.TextType.B0105]: [
         `发射导弹`,
         `Launch a silo`,
         `Lanzar un misil`,
     ],
-    [TextType.B0106]: [
+    [Lang_Constants.TextType.B0106]: [
         `生产舰载机`,
         `Produce a seaplane`,
         `Producri un Avión naval`,
     ],
-    [TextType.B0107]: [
+    [Lang_Constants.TextType.B0107]: [
         `补给部队`,
         `Supply unit(s)`,
         `Abastecer unidad(es)`,
     ],
-    [TextType.B0108]: [
+    [Lang_Constants.TextType.B0108]: [
         `部队上浮`,
         `Unit surface`,
         `Emerger unidad`,
     ],
-    [TextType.B0109]: [
+    [Lang_Constants.TextType.B0109]: [
         `部队移动`,
         `Unit move`,
         `Mover unidad`,
     ],
-    [TextType.B0110]: [
+    [Lang_Constants.TextType.B0110]: [
         `发生未知错误`,
         `Something errors`,
         `Algo falló`,
     ],
-    [TextType.B0111]: [
+    [Lang_Constants.TextType.B0111]: [
         `中立玩家`,
         `Neutral`,
         `Neutral`,
     ],
-    [TextType.B0112]: [
+    [Lang_Constants.TextType.B0112]: [
         `F队`,
         `Team F`,
         `Equipo F`,
     ],
-    [TextType.B0113]: [
+    [Lang_Constants.TextType.B0113]: [
         `G队`,
         `Team G`,
         `Equipo G`,
     ],
-    [TextType.B0114]: [
+    [Lang_Constants.TextType.B0114]: [
         `H队`,
         `Team H`,
         `Equipo H`,
     ],
-    [TextType.B0115]: [
+    [Lang_Constants.TextType.B0115]: [
         `紫`,
         `Purple`,
         `Púrpura`,
     ],
-    [TextType.B0116]: [
+    [Lang_Constants.TextType.B0116]: [
         `青`,
         `Cyan`,
         `Celeste`,
     ],
-    [TextType.B0117]: [
+    [Lang_Constants.TextType.B0117]: [
         `洋红`,
         `Magenta`,
         `Magenta`,
     ],
-    [TextType.B0118]: [
+    [Lang_Constants.TextType.B0118]: [
         `战役雾战`,
         `Campaign FoW`,
         `Campaña Niebla de Guerra`,
     ],
-    [TextType.B0119]: [
+    [Lang_Constants.TextType.B0119]: [
         `战役模式验证`,
         `Campaign Validation`,
         `Validación de Campaña`,
     ],
-    [TextType.B0120]: [
+    [Lang_Constants.TextType.B0120]: [
         `全部`,
         `All`,
         `Todas`,
     ],
-    [TextType.B0121]: [
+    [Lang_Constants.TextType.B0121]: [
         `得分未验证`,
         `Score Not Verified`,
         `Puntaje No Verificado`,
     ],
-    [TextType.B0122]: [
+    [Lang_Constants.TextType.B0122]: [
         `下限`,
         `Lower Limit`,
         `Límite Inferior`,
     ],
-    [TextType.B0123]: [
+    [Lang_Constants.TextType.B0123]: [
         `上限`,
         `Upper Limit`,
         `Límite Superior`,
     ],
-    [TextType.B0124]: [
+    [Lang_Constants.TextType.B0124]: [
         `每回合限时`,
         `Turn Time Limit`,
         `Límite de Tiempo por turno`,
     ],
-    [TextType.B0125]: [
+    [Lang_Constants.TextType.B0125]: [
         `更新战役`,
         `Update Campaign`,
         `Actualizar Campaña`,
     ],
-    [TextType.B0126]: [
+    [Lang_Constants.TextType.B0126]: [
         `从地图编辑器存档导入`,
         `Import from Map Editor Slot`,
         `Importar desde el Espacio de Editor de Mapas`,
     ],
-    [TextType.B0127]: [
+    [Lang_Constants.TextType.B0127]: [
         `COU死亡时损失能量%`,
         `Energy Loss % on COU Die`,
         `Pérdida de Energía en % si la unidad del CO es aniquilada`,
     ],
-    [TextType.B0128]: [
+    [Lang_Constants.TextType.B0128]: [
         `转换`,
         `Convert`,
         `Convertir`,
     ],
-    [TextType.B0129]: [
+    [Lang_Constants.TextType.B0129]: [
         `表达式`,
         `Expression`,
         `Expresion`,
     ],
-    [TextType.B0130]: [
+    [Lang_Constants.TextType.B0130]: [
         `运算符`,
         `Operator`,
         `Operador`,
     ],
-    [TextType.B0131]: [
+    [Lang_Constants.TextType.B0131]: [
         `标识符`,
         `Identifier`,
         `Identificador`,
     ],
-    [TextType.B0132]: [
+    [Lang_Constants.TextType.B0132]: [
         `筛选器`,
         `Filter`,
         `Filtro`,
     ],
-    [TextType.B0133]: [
+    [Lang_Constants.TextType.B0133]: [
         `实数`,
         `Number`,
         `Número`,
     ],
-    [TextType.B0134]: [
+    [Lang_Constants.TextType.B0134]: [
         `直升机`,
         `Copter`,
         `Helicóptero`,
     ],
-    [TextType.B0135]: [
+    [Lang_Constants.TextType.B0135]: [
         `坦克`,
         `Tank`,
         `Tanque`,
     ],
-    [TextType.B0136]: [
+    [Lang_Constants.TextType.B0136]: [
         `空军除舰载机`,
         `AirExceptSeaplane`,
         `AireExceptoAviónNaval`,
     ],
-    [TextType.B0137]: [
+    [Lang_Constants.TextType.B0137]: [
         `多人模式`,
         `Multi Player`,
         `Multijugador`,
     ],
-    [TextType.B0138]: [
+    [Lang_Constants.TextType.B0138]: [
         `单人模式`,
         `Single Player`,
         `Un jugador`,
     ],
-    [TextType.B0139]: [
+    [Lang_Constants.TextType.B0139]: [
         `CO搭乘`,
         `CO Board`,
         `Desplegar CO`,
     ],
-    [TextType.B0140]: [
+    [Lang_Constants.TextType.B0140]: [
         `CO信息`,
         `CO Info`,
         `Info del CO`,
     ],
-    [TextType.B0141]: [
+    [Lang_Constants.TextType.B0141]: [
         `无限`,
         `Infinity`,
         `Infinito`,
     ],
-    [TextType.B0142]: [
+    [Lang_Constants.TextType.B0142]: [
         `Power`,
         `Power`,
         `Poder`,
     ],
-    [TextType.B0143]: [
+    [Lang_Constants.TextType.B0143]: [
         `帮助`,
         `Help`,
         `Ayuda`,
     ],
-    [TextType.B0144]: [
+    [Lang_Constants.TextType.B0144]: [
         `S-Power`,
         `S-Power`,
         `S-Poder`,
     ],
-    [TextType.B0145]: [
+    [Lang_Constants.TextType.B0145]: [
         `选择CO`,
         `Choose a CO`,
         `Escoge un CO`,
     ],
-    [TextType.B0146]: [
+    [Lang_Constants.TextType.B0146]: [
         `返回`,
         `Back`,
         `Retroceder`,
     ],
-    [TextType.B0147]: [
+    [Lang_Constants.TextType.B0147]: [
         `CO系统规则`,
         `CO Rules`,
         `Reglas de CO`,
     ],
-    [TextType.B0148]: [
+    [Lang_Constants.TextType.B0148]: [
         `切换语言`,
         `Change Language`,
         `Cambiar Lenguaje`,
     ],
-    [TextType.B0149]: [
+    [Lang_Constants.TextType.B0149]: [
         `更改昵称`,
         `Change Nickname`,
         `Cambiar Apodo`,
     ],
-    [TextType.B0150]: [
+    [Lang_Constants.TextType.B0150]: [
         `Discord ID`,
         `Discord ID`,
         `ID de Discord`,
     ],
-    [TextType.B0151]: [
+    [Lang_Constants.TextType.B0151]: [
         `查看在线玩家`,
         `Online Players`,
         `Jugadores En Línea`,
     ],
-    [TextType.B0152]: [
+    [Lang_Constants.TextType.B0152]: [
         `部队列表`,
         `Units`,
         `Unidades`,
     ],
-    [TextType.B0153]: [
+    [Lang_Constants.TextType.B0153]: [
         `游戏模式`,
         `Game Mode`,
         `Modo de Juego`,
     ],
-    [TextType.B0154]: [
+    [Lang_Constants.TextType.B0154]: [
         `取消`,
         `Cancel`,
         `Cancelar`,
     ],
-    [TextType.B0155]: [
+    [Lang_Constants.TextType.B0155]: [
         `菜单`,
         `Menu`,
         `Menú`,
     ],
-    [TextType.B0156]: [
+    [Lang_Constants.TextType.B0156]: [
         `自定义名称`,
         `Custom Name`,
         `Nombre Personalizado`,
     ],
-    [TextType.B0157]: [
+    [Lang_Constants.TextType.B0157]: [
         `收入`,
         `Income`,
         `Ingresos`,
     ],
-    [TextType.B0158]: [
+    [Lang_Constants.TextType.B0158]: [
         `建筑数`,
         `Buildings`,
         `Propiedades`,
     ],
-    [TextType.B0159]: [
+    [Lang_Constants.TextType.B0159]: [
         `屏幕方向`,
         `Screen Orientation`,
         `Orientación de Pantalla`,
     ],
-    [TextType.B0160]: [
+    [Lang_Constants.TextType.B0160]: [
         `部队数`,
         `Units`,
         `Unidades`,
     ],
-    [TextType.B0161]: [
+    [Lang_Constants.TextType.B0161]: [
         `价值`,
         `Value`,
         `Valor`,
     ],
-    [TextType.B0162]: [
+    [Lang_Constants.TextType.B0162]: [
         `名称`,
         `Name`,
         `Nombre`,
     ],
-    [TextType.B0163]: [
+    [Lang_Constants.TextType.B0163]: [
         `设计者`,
         `Designer`,
         `Diseñador`,
     ],
-    [TextType.B0164]: [
+    [Lang_Constants.TextType.B0164]: [
         `搭乘费用`,
         `Boarding Cost`,
         `Costo de Despliegue`,
     ],
-    [TextType.B0165]: [
+    [Lang_Constants.TextType.B0165]: [
         `CO区域初始半径`,
         `CO Zone Base Radius`,
         `Radio Base de la Zona del CO`,
     ],
-    [TextType.B0166]: [
+    [Lang_Constants.TextType.B0166]: [
         `CO区域扩张能量值`,
         `CO Zone Expansion`,
         `Expansión de Zona del CO`,
     ],
-    [TextType.B0167]: [
+    [Lang_Constants.TextType.B0167]: [
         `能量消耗`,
         `Energy Cost`,
         `Costo de Energía`,
     ],
-    [TextType.B0168]: [
+    [Lang_Constants.TextType.B0168]: [
         `势力`,
         `Force`,
         `Fuerza`,
     ],
-    [TextType.B0169]: [
+    [Lang_Constants.TextType.B0169]: [
         `我的履历`,
         `Profile`,
         `Perfil`,
     ],
-    [TextType.B0170]: [
+    [Lang_Constants.TextType.B0170]: [
         `账号`,
         `Account`,
         `Cuenta`,
     ],
-    [TextType.B0171]: [
+    [Lang_Constants.TextType.B0171]: [
         `密码`,
         `Password`,
         `Contraseña`,
     ],
-    [TextType.B0172]: [
+    [Lang_Constants.TextType.B0172]: [
         `记住密码`,
         `Remember Password`,
         `Recordar Contraseña`,
     ],
-    [TextType.B0173]: [
+    [Lang_Constants.TextType.B0173]: [
         `登录`,
         `Login`,
         `Ingresar`,
     ],
-    [TextType.B0174]: [
+    [Lang_Constants.TextType.B0174]: [
         `注册`,
         `Register`,
         `Registrarse`,
     ],
-    [TextType.B0175]: [
+    [Lang_Constants.TextType.B0175]: [
         `昵称`,
         `Nickname`,
         `Apodo`,
     ],
-    [TextType.B0176]: [
+    [Lang_Constants.TextType.B0176]: [
         `打开地形动画`,
         `Tile Animation On`,
         `Animación de Casilla On`,
     ],
-    [TextType.B0177]: [
+    [Lang_Constants.TextType.B0177]: [
         `关闭地形动画`,
         `Tile Animation Off`,
         `Animación de Casilla Off`,
     ],
-    [TextType.B0178]: [
+    [Lang_Constants.TextType.B0178]: [
         `初始资金`,
         `Initial Fund`,
         `Presupuesto Inicial`,
     ],
-    [TextType.B0179]: [
+    [Lang_Constants.TextType.B0179]: [
         `收入倍率%`,
         `Income Multiplier %`,
         `Multiplicador de Ingresos %`,
     ],
-    [TextType.B0180]: [
+    [Lang_Constants.TextType.B0180]: [
         `搭乘CO时获得能量%`,
         `Energy Gain % on CO Board`,
         `Ganancia de Energía en % al Desplegar CO`,
     ],
-    [TextType.B0181]: [
+    [Lang_Constants.TextType.B0181]: [
         `能量增速%`,
         `Energy Growth Multiplier %`,
         `Multiplicador % de Crecimiento de Energía `,
     ],
-    [TextType.B0182]: [
+    [Lang_Constants.TextType.B0182]: [
         `移动力加成`,
         `Movement Bonus`,
         `Bonificación de Movimiento`,
     ],
-    [TextType.B0183]: [
+    [Lang_Constants.TextType.B0183]: [
         `攻击力加成%`,
         `Atk Bonus %`,
         `Bonificación de Ataque %`,
     ],
-    [TextType.B0184]: [
+    [Lang_Constants.TextType.B0184]: [
         `部队视野加成`,
         `Unit Vision Bonus`,
         `Bonificación de Visión de Unidades`,
     ],
-    [TextType.B0185]: [
+    [Lang_Constants.TextType.B0185]: [
         `战局名称`,
         `Game Name`,
         `Nombre de Partida`,
     ],
-    [TextType.B0186]: [
+    [Lang_Constants.TextType.B0186]: [
         `房间密码`,
         `Game Password`,
         `Contraseña de Partida`,
     ],
-    [TextType.B0187]: [
+    [Lang_Constants.TextType.B0187]: [
         `附言`,
         `Comment`,
         `Comentar`,
     ],
-    [TextType.B0188]: [
+    [Lang_Constants.TextType.B0188]: [
         `回合限时`,
         `Boot Timer`,
         `Ajustar Temporizador`,
     ],
-    [TextType.B0189]: [
+    [Lang_Constants.TextType.B0189]: [
         `幸运下限%`,
         `Min Luck %`,
         `Suerte Mínima %`,
     ],
-    [TextType.B0190]: [
+    [Lang_Constants.TextType.B0190]: [
         `幸运上限%`,
         `Max Luck %`,
         `Suerte Máxima %`,
     ],
-    [TextType.B0191]: [
+    [Lang_Constants.TextType.B0191]: [
         `回合`,
         `Turn`,
         `Turno`,
     ],
-    [TextType.B0192]: [
+    [Lang_Constants.TextType.B0192]: [
         `管理地图`,
         `Map Management`,
         `Manejo del Mapa`,
     ],
-    [TextType.B0193]: [
+    [Lang_Constants.TextType.B0193]: [
         `可用性`,
         `Availability`,
         `Disponibilidad`,
     ],
-    [TextType.B0194]: [
+    [Lang_Constants.TextType.B0194]: [
         `注册时间`,
         `Registration`,
         `Registro`,
     ],
-    [TextType.B0195]: [
+    [Lang_Constants.TextType.B0195]: [
         `上次登陆时间`,
         `Last Login`,
         `Última Conexión`,
     ],
-    [TextType.B0196]: [
+    [Lang_Constants.TextType.B0196]: [
         `在线总时长`,
         `Online Time`,
         `Tiempo En Línea`,
     ],
-    [TextType.B0197]: [
+    [Lang_Constants.TextType.B0197]: [
         `登陆次数`,
         `Login Times`,
         `Veces de Conexión`,
     ],
-    [TextType.B0198]: [
+    [Lang_Constants.TextType.B0198]: [
         `明战排位积分`,
         `Std Rating`,
         `Ranking: Estándar`,
     ],
-    [TextType.B0199]: [
+    [Lang_Constants.TextType.B0199]: [
         `雾战排位积分`,
         `FoW Rating`,
         `Ranking: Niebla de Guerra`,
     ],
-    [TextType.B0200]: [
+    [Lang_Constants.TextType.B0200]: [
         `多人自由对战`,
         `MP Custom Games`,
         `Juegos Personalizados Multijugador`,
     ],
-    [TextType.B0201]: [
+    [Lang_Constants.TextType.B0201]: [
         `历史战绩`,
         `History`,
         `Historia`,
     ],
-    [TextType.B0202]: [
+    [Lang_Constants.TextType.B0202]: [
         `3人局`,
         `3P`,
         `3P`,
     ],
-    [TextType.B0203]: [
+    [Lang_Constants.TextType.B0203]: [
         `4人局`,
         `4P`,
         `4P`,
     ],
-    [TextType.B0204]: [
+    [Lang_Constants.TextType.B0204]: [
         `关闭`,
         `Close`,
         `Cerrar`,
     ],
-    [TextType.B0205]: [
+    [Lang_Constants.TextType.B0205]: [
         `多人游戏`,
         `Multi Player`,
         `Multijugador`,
     ],
-    [TextType.B0206]: [
+    [Lang_Constants.TextType.B0206]: [
         `观战`,
         `Spectate Wars`,
         `Espectar Partidas`,
     ],
-    [TextType.B0207]: [
+    [Lang_Constants.TextType.B0207]: [
         `发起请求`,
         `Make Requests`,
         `Hacer solicitudes`,
     ],
-    [TextType.B0208]: [
+    [Lang_Constants.TextType.B0208]: [
         `处理请求`,
         `Handle Requests`,
         `Responder solicitudes`,
     ],
-    [TextType.B0209]: [
+    [Lang_Constants.TextType.B0209]: [
         `暂无请求`,
         `No Requests`,
         `Sin Solicitudes`,
     ],
-    [TextType.B0210]: [
+    [Lang_Constants.TextType.B0210]: [
         `暂无战局`,
         `No Wars`,
         `Sin Partidas`,
     ],
-    [TextType.B0211]: [
+    [Lang_Constants.TextType.B0211]: [
         `无`,
         `No`,
         `No`,
     ],
-    [TextType.B0212]: [
+    [Lang_Constants.TextType.B0212]: [
         `已请求`,
         `Requested`,
         `Solicitado`,
     ],
-    [TextType.B0213]: [
+    [Lang_Constants.TextType.B0213]: [
         `正在观战`,
         `Watching`,
         `Espectando`,
     ],
-    [TextType.B0214]: [
+    [Lang_Constants.TextType.B0214]: [
         `同意`,
         `Accept`,
         `Aceptar`,
     ],
-    [TextType.B0215]: [
+    [Lang_Constants.TextType.B0215]: [
         `拒绝`,
         `Decline`,
         `Rechazar`,
     ],
-    [TextType.B0216]: [
+    [Lang_Constants.TextType.B0216]: [
         `自己`,
         `Self`,
         `Propias`,
     ],
-    [TextType.B0217]: [
+    [Lang_Constants.TextType.B0217]: [
         `对手`,
         `Opponent`,
         `Oponente`,
     ],
-    [TextType.B0218]: [
+    [Lang_Constants.TextType.B0218]: [
         `已观战他人`,
         `Watching Others`,
         `Espectando a Otros`,
     ],
-    [TextType.B0219]: [
+    [Lang_Constants.TextType.B0219]: [
         `删除观战者`,
         `Delete Spectators`,
         `Eliminar Espectadores`,
     ],
-    [TextType.B0220]: [
+    [Lang_Constants.TextType.B0220]: [
         `删除`,
         `Delete`,
         `Eliminar`,
     ],
-    [TextType.B0221]: [
+    [Lang_Constants.TextType.B0221]: [
         `保留`,
         `Keep`,
         `Mantener`,
     ],
-    [TextType.B0222]: [
+    [Lang_Constants.TextType.B0222]: [
         `继续`,
         `Continue`,
         `Continuar`,
     ],
-    [TextType.B0223]: [
+    [Lang_Constants.TextType.B0223]: [
         `战局信息`,
         `War Info`,
         `Info. de Partida`,
     ],
-    [TextType.B0224]: [
+    [Lang_Constants.TextType.B0224]: [
         `玩家信息`,
         `Player Info`,
         `Info. de Jugador`,
     ],
-    [TextType.B0225]: [
+    [Lang_Constants.TextType.B0225]: [
         `地图名称`,
         `Map Name`,
         `Nombre del Mapa`,
     ],
-    [TextType.B0226]: [
+    [Lang_Constants.TextType.B0226]: [
         `战局ID`,
         `War ID`,
         `ID de Partida`,
     ],
-    [TextType.B0227]: [
+    [Lang_Constants.TextType.B0227]: [
         `选择地图`,
         `Select Map`,
         `Seleccionar Mapa`,
     ],
-    [TextType.B0228]: [
+    [Lang_Constants.TextType.B0228]: [
         `查找`,
         `Search`,
         `Buscar`,
     ],
-    [TextType.B0229]: [
+    [Lang_Constants.TextType.B0229]: [
         `玩家数量`,
         `Players`,
         `Jugadores`,
     ],
-    [TextType.B0230]: [
+    [Lang_Constants.TextType.B0230]: [
         `更换CO`,
         `Change CO`,
         `Cambiar CO`,
     ],
-    [TextType.B0231]: [
+    [Lang_Constants.TextType.B0231]: [
         `我的回合`,
         `My Turn`,
         `Mi Turno`,
     ],
-    [TextType.B0232]: [
+    [Lang_Constants.TextType.B0232]: [
         `玩家`,
         `Players`,
         `Jugadores`,
     ],
-    [TextType.B0233]: [
+    [Lang_Constants.TextType.B0233]: [
         `全部显示`,
         `Show All`,
         `Mostrar Todo`,
     ],
-    [TextType.B0234]: [
+    [Lang_Constants.TextType.B0234]: [
         `查找回放`,
         `Search Replay`,
         `Buscar Repetición`,
     ],
-    [TextType.B0235]: [
+    [Lang_Constants.TextType.B0235]: [
         `回放ID`,
         `Replay ID`,
         `ID de Repetición`,
     ],
-    [TextType.B0236]: [
+    [Lang_Constants.TextType.B0236]: [
         `在线玩家`,
         `Online Players`,
         `Jugadores En Línea`,
     ],
-    [TextType.B0237]: [
+    [Lang_Constants.TextType.B0237]: [
         `当前在线人数`,
         `Online Players`,
         `Jugadores En Línea`,
     ],
-    [TextType.B0238]: [
+    [Lang_Constants.TextType.B0238]: [
         `可用CO`,
         `Available COs`,
         `COs disponibles`,
     ],
-    [TextType.B0239]: [
+    [Lang_Constants.TextType.B0239]: [
         `最大`,
         `Max.`,
         `Máx.`,
     ],
-    [TextType.B0240]: [
+    [Lang_Constants.TextType.B0240]: [
         `指挥官信息`,
         `CO Info`,
         `Info. de CO`,
     ],
-    [TextType.B0241]: [
+    [Lang_Constants.TextType.B0241]: [
         `暂无回放`,
         `No Replays`,
         `Sin Repeticiones`,
     ],
-    [TextType.B0242]: [
+    [Lang_Constants.TextType.B0242]: [
         `新昵称`,
         `New nickname`,
         `Nuevo apodo`,
     ],
-    [TextType.B0243]: [
+    [Lang_Constants.TextType.B0243]: [
         `新ID`,
         `New ID`,
         `ID nueva`,
     ],
-    [TextType.B0244]: [
+    [Lang_Constants.TextType.B0244]: [
         `切换玩家`,
         `Next Player`,
         `Siguiente Jugador`,
     ],
-    [TextType.B0245]: [
+    [Lang_Constants.TextType.B0245]: [
         `房间设定总览`,
         `Overview Room Settings`,
         `Configuración de Sala General`,
     ],
-    [TextType.B0246]: [
+    [Lang_Constants.TextType.B0246]: [
         `进入战局`,
         `Enter Game`,
         `Entrar a la Partida`,
     ],
-    [TextType.B0247]: [
+    [Lang_Constants.TextType.B0247]: [
         `上个回合`,
         `Prev. Turn`,
         `Turno Anterior`,
     ],
-    [TextType.B0248]: [
+    [Lang_Constants.TextType.B0248]: [
         `下个回合`,
         `Next Turn`,
         `Siguiente Turno`,
     ],
-    [TextType.B0249]: [
+    [Lang_Constants.TextType.B0249]: [
         `开始`,
         `Start`,
         `Empezar`,
     ],
-    [TextType.B0250]: [
+    [Lang_Constants.TextType.B0250]: [
         `暂停回放`,
         `Pause Replays`,
         `Pausar Repeticiones`,
     ],
-    [TextType.B0251]: [
+    [Lang_Constants.TextType.B0251]: [
         `作者`,
         `Designer`,
         `Diseñador`,
     ],
-    [TextType.B0252]: [
+    [Lang_Constants.TextType.B0252]: [
         `游戏局数`,
         `Games Played`,
         `Partidas Jugadas`,
     ],
-    [TextType.B0253]: [
+    [Lang_Constants.TextType.B0253]: [
         `评分`,
         `Rating`,
         `Ranking`,
     ],
-    [TextType.B0254]: [
+    [Lang_Constants.TextType.B0254]: [
         `单人明战`,
         `Free Battle`,
         `Partida Libre`,
     ],
-    [TextType.B0255]: [
+    [Lang_Constants.TextType.B0255]: [
         `存档编号`,
         `Save Slot`,
         `Espacio de Guardado`,
     ],
-    [TextType.B0256]: [
+    [Lang_Constants.TextType.B0256]: [
         `电脑`,
         `COM`,
         `COM`,
     ],
-    [TextType.B0257]: [
+    [Lang_Constants.TextType.B0257]: [
         `挑战模式明战`,
         `War Room Std`,
         `Sala de Guerra: Estándar`,
     ],
-    [TextType.B0258]: [
+    [Lang_Constants.TextType.B0258]: [
         `选择`,
         `Select`,
         `Seleccionar`,
     ],
-    [TextType.B0259]: [
+    [Lang_Constants.TextType.B0259]: [
         `选择存档位置`,
         `Select a Save Slot`,
         `Elija un Espacio de Guardado`,
     ],
-    [TextType.B0260]: [
+    [Lang_Constants.TextType.B0260]: [
         `存档`,
         `Save Game`,
         `Guardar Partida`,
     ],
-    [TextType.B0261]: [
+    [Lang_Constants.TextType.B0261]: [
         `读档`,
         `Load Game`,
         `Cargar Partida`,
     ],
-    [TextType.B0262]: [
+    [Lang_Constants.TextType.B0262]: [
         `重载所有地图`,
         `Reload Maps`,
         `Recargar Mapas`,
     ],
-    [TextType.B0267]: [
+    [Lang_Constants.TextType.B0267]: [
         `详细信息`,
         `Detailed Info`,
         `Info. Detallada`,
     ],
-    [TextType.B0268]: [
+    [Lang_Constants.TextType.B0268]: [
         `合并地图`,
         `Merge Maps`,
         `Unir Mapas`,
     ],
-    [TextType.B0269]: [
+    [Lang_Constants.TextType.B0269]: [
         `无可合并的地图`,
         `No Maps`,
         `Sin Mapas`,
     ],
-    [TextType.B0270]: [
+    [Lang_Constants.TextType.B0270]: [
         `删除地图`,
         `Delete Map`,
         `Eliminar Mapa`,
     ],
-    [TextType.B0271]: [
+    [Lang_Constants.TextType.B0271]: [
         `地图编辑器`,
         `Map Editor`,
         `Editor de Mapas`,
     ],
-    [TextType.B0272]: [
+    [Lang_Constants.TextType.B0272]: [
         `地图列表`,
         `Map List`,
         `Lista de Mapas`,
     ],
-    [TextType.B0273]: [
+    [Lang_Constants.TextType.B0273]: [
         `未提审`,
         `Not Reviewed`,
         `No Evaluado`,
     ],
-    [TextType.B0274]: [
+    [Lang_Constants.TextType.B0274]: [
         `审核中`,
         `Reviewing`,
         `En evaluación`,
     ],
-    [TextType.B0275]: [
+    [Lang_Constants.TextType.B0275]: [
         `被拒审`,
         `Rejected`,
         `Rechazado`,
     ],
-    [TextType.B0276]: [
+    [Lang_Constants.TextType.B0276]: [
         `已过审`,
         `Accepted`,
         `Aceptado`,
     ],
-    [TextType.B0277]: [
+    [Lang_Constants.TextType.B0277]: [
         `未命名`,
         `Unnamed`,
         `Sin nombre`,
     ],
-    [TextType.B0278]: [
+    [Lang_Constants.TextType.B0278]: [
         `无数据`,
         `No Data`,
         `Sin Registros`,
     ],
-    [TextType.B0279]: [
+    [Lang_Constants.TextType.B0279]: [
         `新地图`,
         `New Map`,
         `Nuevo Mapa`,
     ],
-    [TextType.B0280]: [
+    [Lang_Constants.TextType.B0280]: [
         `模式`,
         `Mode`,
         `Modo`,
     ],
-    [TextType.B0281]: [
+    [Lang_Constants.TextType.B0281]: [
         `绘制部队`,
         `Draw Units`,
         `Dibujar Unidades`,
     ],
-    [TextType.B0282]: [
+    [Lang_Constants.TextType.B0282]: [
         `绘制地形基底`,
         `Draw Tile Bases`,
         `Dibujar Casillas Base`,
     ],
-    [TextType.B0283]: [
+    [Lang_Constants.TextType.B0283]: [
         `绘制地形物体`,
         `Draw Tile Objects`,
         `Dibujar Objetos de Casilla`,
     ],
-    [TextType.B0284]: [
+    [Lang_Constants.TextType.B0284]: [
         `删除部队`,
         `Del Units`,
         `Suprimir Unidades`,
     ],
-    [TextType.B0285]: [
+    [Lang_Constants.TextType.B0285]: [
         `删除地形物体`,
         `Del Tile Objects`,
         `Suprimir Objetos de Casilla`,
     ],
-    [TextType.B0286]: [
+    [Lang_Constants.TextType.B0286]: [
         `预览`,
         `Preview`,
         `Previsualizar`,
     ],
-    [TextType.B0287]: [
+    [Lang_Constants.TextType.B0287]: [
         `保存地图`,
         `Save Map`,
         `Guardar Mapa`,
     ],
-    [TextType.B0288]: [
+    [Lang_Constants.TextType.B0288]: [
         `读取地图`,
         `Load Map`,
         `Cargar Mapa`,
     ],
-    [TextType.B0289]: [
+    [Lang_Constants.TextType.B0289]: [
         `提审`,
         `Submit for review`,
         `Postular para revisión`,
     ],
-    [TextType.B0290]: [
+    [Lang_Constants.TextType.B0290]: [
         `调整大小`,
         `Resize`,
         `Cambiar tamaño`,
     ],
-    [TextType.B0291]: [
+    [Lang_Constants.TextType.B0291]: [
         `当前宽高`,
         `Current W/H`,
         `Dimensiones actuales (anch/larg)`,
     ],
-    [TextType.B0292]: [
+    [Lang_Constants.TextType.B0292]: [
         `新的宽高`,
         `New W/H`,
         `Nuevas Dimensiones`,
     ],
-    [TextType.B0293]: [
+    [Lang_Constants.TextType.B0293]: [
         `地图偏移`,
         `Map Offset`,
         `Trasladar Mapa`,
     ],
-    [TextType.B0294]: [
+    [Lang_Constants.TextType.B0294]: [
         `全图填充`,
         `Fill Map`,
         `Llenar Mapa`,
     ],
-    [TextType.B0295]: [
+    [Lang_Constants.TextType.B0295]: [
         `审核地图`,
         `Review Maps`,
         `Evaluar Mapas`,
     ],
-    [TextType.B0296]: [
+    [Lang_Constants.TextType.B0296]: [
         `过审`,
         `Accept`,
         `Aceptar`,
     ],
-    [TextType.B0297]: [
+    [Lang_Constants.TextType.B0297]: [
         `拒审`,
         `Reject`,
         `Rechazar`,
     ],
-    [TextType.B0298]: [
+    [Lang_Constants.TextType.B0298]: [
         `地图信息`,
         `Map Info`,
         `Info. del Mapa`,
     ],
-    [TextType.B0299]: [
+    [Lang_Constants.TextType.B0299]: [
         `地图英文名称`,
         `Map English Name`,
         `Nombre del Mapa`,
     ],
-    [TextType.B0300]: [
+    [Lang_Constants.TextType.B0300]: [
         `地图尺寸`,
         `Map Size`,
         `Tamaño del Mapa`,
     ],
-    [TextType.B0301]: [
+    [Lang_Constants.TextType.B0301]: [
         `可见性`,
         `Visibility`,
         `Visbilidad`,
     ],
-    [TextType.B0302]: [
+    [Lang_Constants.TextType.B0302]: [
         `地形基底`,
         `Tile Base`,
         `Casilla Base`,
     ],
-    [TextType.B0303]: [
+    [Lang_Constants.TextType.B0303]: [
         `地形物体`,
         `Tile Object`,
         `Objeto de Casilla`,
     ],
-    [TextType.B0304]: [
+    [Lang_Constants.TextType.B0304]: [
         `部队`,
         `Units`,
         `Unidades`,
     ],
-    [TextType.B0305]: [
+    [Lang_Constants.TextType.B0305]: [
         `拒审理由`,
         `Reason for Rejection`,
         `Motivo de Rechazo`,
     ],
-    [TextType.B0306]: [
+    [Lang_Constants.TextType.B0306]: [
         `地形对称性`,
         `Tile Symmetry`,
         `Simetría de Casillas`,
     ],
-    [TextType.B0307]: [
+    [Lang_Constants.TextType.B0307]: [
         `自动绘制`,
         `Auto Draw`,
         `Auto Dibujar`,
     ],
-    [TextType.B0308]: [
+    [Lang_Constants.TextType.B0308]: [
         `上下对称`,
         `U to D`,
         `Arriba a abajo`,
     ],
-    [TextType.B0309]: [
+    [Lang_Constants.TextType.B0309]: [
         `左右对称`,
         `L to R`,
         `Izq. a der.`,
     ],
-    [TextType.B0310]: [
+    [Lang_Constants.TextType.B0310]: [
         `旋转对称`,
         `Rotational`,
         `Rotacional`,
     ],
-    [TextType.B0311]: [
+    [Lang_Constants.TextType.B0311]: [
         `左上右下对称`,
         `UL to DR`,
         `Arriba-izq. respecto a Abajo-der.`,
     ],
-    [TextType.B0312]: [
+    [Lang_Constants.TextType.B0312]: [
         `右上左下对称`,
         `UR to DL`,
         `Arriba-der. respecto a Abajo-izq.`,
     ],
-    [TextType.B0313]: [
+    [Lang_Constants.TextType.B0313]: [
         `从剪贴板导入`,
         `Import from Clipboard`,
         `Importar desde el portapapeles`,
     ],
-    [TextType.B0314]: [
+    [Lang_Constants.TextType.B0314]: [
         `预设规则`,
         `Preset Rules`,
         `Reglas Preliminares`,
     ],
-    [TextType.B0315]: [
+    [Lang_Constants.TextType.B0315]: [
         `规则名称`,
         `Rule Name`,
         `Nombre de la Regla`,
     ],
-    [TextType.B0316]: [
+    [Lang_Constants.TextType.B0316]: [
         `规则英文名`,
         `Rule English Name`,
         `Nombre de la Regla`,
     ],
-    [TextType.B0317]: [
+    [Lang_Constants.TextType.B0317]: [
         `修改`,
         `Modify`,
         `Modificar`,
     ],
-    [TextType.B0318]: [
+    [Lang_Constants.TextType.B0318]: [
         `规则`,
         `Rule`,
         `Regla`,
     ],
-    [TextType.B0319]: [
+    [Lang_Constants.TextType.B0319]: [
         `值域`,
         `Range`,
         `Rango`,
     ],
-    [TextType.B0320]: [
+    [Lang_Constants.TextType.B0320]: [
         `新增`,
         `Add`,
         `Añadir`,
     ],
-    [TextType.B0321]: [
+    [Lang_Constants.TextType.B0321]: [
         `自定义`,
         `Custom`,
         `Personalizado`,
     ],
-    [TextType.B0322]: [
+    [Lang_Constants.TextType.B0322]: [
         `无`,
         `Empty`,
         `Vacío`,
     ],
-    [TextType.B0323]: [
+    [Lang_Constants.TextType.B0323]: [
         `只能使用数字`,
         `Digits only`,
         `Solo Dígitos`,
     ],
-    [TextType.B0324]: [
+    [Lang_Constants.TextType.B0324]: [
         `暂无预览`,
         `No Preview`,
         `Sin Visualización previa`,
     ],
-    [TextType.B0325]: [
+    [Lang_Constants.TextType.B0325]: [
         `模拟战`,
         `Simulation`,
         `Simulación`,
     ],
-    [TextType.B0326]: [
+    [Lang_Constants.TextType.B0326]: [
         `评审意见`,
         `Comments From MC`,
         `Comentarios de MC`,
     ],
-    [TextType.B0327]: [
+    [Lang_Constants.TextType.B0327]: [
         `服务器状态`,
         `Server Status`,
         `Estado del Servidor`,
     ],
-    [TextType.B0328]: [
+    [Lang_Constants.TextType.B0328]: [
         `账号总数`,
         `Accounts`,
         `Cuentas`,
     ],
-    [TextType.B0329]: [
+    [Lang_Constants.TextType.B0329]: [
         `玩家在线总时长`,
         `Users' Online Time`,
         `Tiempo en línea de Usuarios`,
     ],
-    [TextType.B0330]: [
+    [Lang_Constants.TextType.B0330]: [
         `新增账号数`,
         `New Accounts`,
         `Cuentas Nuevas`,
     ],
-    [TextType.B0331]: [
+    [Lang_Constants.TextType.B0331]: [
         `活跃账号数`,
         `Active Accounts`,
         `Cuentas Activas`,
     ],
-    [TextType.B0332]: [
+    [Lang_Constants.TextType.B0332]: [
         `无可用选项`,
         `No available options`,
         `Sin opciones disponibles`,
     ],
-    [TextType.B0333]: [
+    [Lang_Constants.TextType.B0333]: [
         `建筑统计`,
         `Buildings`,
         `Propiedades`,
     ],
-    [TextType.B0334]: [
+    [Lang_Constants.TextType.B0334]: [
         `基础伤害表`,
         `Base Damage Chart`,
         `Tabla de Daños`,
     ],
-    [TextType.B0335]: [
+    [Lang_Constants.TextType.B0335]: [
         `攻击(主)`,
         `ATK(main)`,
         `Ataque(principal)`,
     ],
-    [TextType.B0336]: [
+    [Lang_Constants.TextType.B0336]: [
         `攻击(副)`,
         `ATK(sub)`,
         `Ataque(secundaria)`,
     ],
-    [TextType.B0337]: [
+    [Lang_Constants.TextType.B0337]: [
         `受击(主)`,
         `DEF(main)`,
         `Defensa(principal)`,
     ],
-    [TextType.B0338]: [
+    [Lang_Constants.TextType.B0338]: [
         `受击(副)`,
         `DEF(sub)`,
         `Defensa(secundaria)`,
     ],
-    [TextType.B0339]: [
+    [Lang_Constants.TextType.B0339]: [
         `HP`,
         `HP`,
         `HP`,
     ],
-    [TextType.B0340]: [
+    [Lang_Constants.TextType.B0340]: [
         `移动力`,
         `Movement`,
         `Movimiento`,
     ],
-    [TextType.B0341]: [
+    [Lang_Constants.TextType.B0341]: [
         `造价`,
         `Production Cost`,
         `Costo de Producción`,
     ],
-    [TextType.B0342]: [
+    [Lang_Constants.TextType.B0342]: [
         `燃料`,
         `Fuel`,
         `Combustible`,
     ],
-    [TextType.B0343]: [
+    [Lang_Constants.TextType.B0343]: [
         `燃料消耗量`,
         `Fuel Consumption`,
         `Consumo de Combustible`,
     ],
-    [TextType.B0344]: [
+    [Lang_Constants.TextType.B0344]: [
         `耗尽燃料时自毁`,
         `Explodes without fuel`,
         `Explota sin Combustible`,
     ],
-    [TextType.B0345]: [
+    [Lang_Constants.TextType.B0345]: [
         `攻击距离`,
         `Attack Range`,
         `Rango de Ataque`,
     ],
-    [TextType.B0346]: [
+    [Lang_Constants.TextType.B0346]: [
         `移动后攻击`,
         `Move & Atk`,
         `Se Mueve y Ataca`,
     ],
-    [TextType.B0347]: [
+    [Lang_Constants.TextType.B0347]: [
         `建筑材料`,
         `Build Material`,
         `Material de Construcción`,
     ],
-    [TextType.B0348]: [
+    [Lang_Constants.TextType.B0348]: [
         `生产材料`,
         `Production Material`,
         `Material de Producción`,
     ],
-    [TextType.B0349]: [
+    [Lang_Constants.TextType.B0349]: [
         `照明弹`,
         `Flare Ammo`,
         `N° de Bengalas`,
     ],
-    [TextType.B0350]: [
+    [Lang_Constants.TextType.B0350]: [
         `主武器弹药`,
         `Primary Weapon Ammo`,
         `Munición Arma principal`,
     ],
-    [TextType.B0351]: [
+    [Lang_Constants.TextType.B0351]: [
         `移动基础消耗表`,
         `Base Move Cost`,
         `Costo de Movimiento`,
     ],
-    [TextType.B0352]: [
+    [Lang_Constants.TextType.B0352]: [
         `防御加成`,
         `Defense Bonus`,
         `Bonificación de Defensa`,
     ],
-    [TextType.B0353]: [
+    [Lang_Constants.TextType.B0353]: [
         `资金收入`,
         `Income`,
         `Ingresos`,
     ],
-    [TextType.B0354]: [
+    [Lang_Constants.TextType.B0354]: [
         `视野范围`,
         `Vision Range`,
         `Rango de Visión`,
     ],
-    [TextType.B0355]: [
+    [Lang_Constants.TextType.B0355]: [
         `对全体玩家生效`,
         `For all players`,
         `Para todos los jugadores`,
     ],
-    [TextType.B0356]: [
+    [Lang_Constants.TextType.B0356]: [
         `隐蔽部队`,
         `Hidable Units`,
         `Unidades ocultables`,
     ],
-    [TextType.B0357]: [
+    [Lang_Constants.TextType.B0357]: [
         `被占领即失败`,
         `Defeat if Captured`,
         `Derrota si es Capturado`,
     ],
-    [TextType.B0358]: [
+    [Lang_Constants.TextType.B0358]: [
         `可生产部队`,
         `Producible Units`,
         `Unidades Producibles`,
     ],
-    [TextType.B0359]: [
+    [Lang_Constants.TextType.B0359]: [
         `全局攻防加成`,
         `Global ATK/DEF Bonus`,
         `Bonificación Ataque/Defensa Global`,
     ],
-    [TextType.B0360]: [
+    [Lang_Constants.TextType.B0360]: [
         `可维修的部队`,
         `Repairable Units`,
         `Unidades Reparables`,
     ],
-    [TextType.B0361]: [
+    [Lang_Constants.TextType.B0361]: [
         `占领点数`,
         `Capture Point`,
         `Puntos de Captura`,
     ],
-    [TextType.B0362]: [
+    [Lang_Constants.TextType.B0362]: [
         `建筑点数`,
         `Build Point`,
         `Puntos de Construcción`,
     ],
-    [TextType.B0363]: [
+    [Lang_Constants.TextType.B0363]: [
         `我的评分`,
         `My Rating`,
         `Mi Calificación`,
     ],
-    [TextType.B0364]: [
+    [Lang_Constants.TextType.B0364]: [
         `全服评分`,
         `Global Rating`,
         `Calificación Global`,
     ],
-    [TextType.B0365]: [
+    [Lang_Constants.TextType.B0365]: [
         `评分`,
         `Set Rating`,
         `Asignar Calificación`,
     ],
-    [TextType.B0366]: [
+    [Lang_Constants.TextType.B0366]: [
         `开启作弊模式`,
         `Cheating`,
         `Trampas`,
     ],
-    [TextType.B0367]: [
+    [Lang_Constants.TextType.B0367]: [
         `状态`,
         `Status`,
         `Estado`,
     ],
-    [TextType.B0368]: [
+    [Lang_Constants.TextType.B0368]: [
         `已行动`,
         `Waited`,
         `Desplazado`,
     ],
-    [TextType.B0369]: [
+    [Lang_Constants.TextType.B0369]: [
         `空闲`,
         `Idle`,
         `En espera`,
     ],
-    [TextType.B0370]: [
+    [Lang_Constants.TextType.B0370]: [
         `晋升等级`,
         `Promotion`,
         `Promoción`,
     ],
-    [TextType.B0371]: [
+    [Lang_Constants.TextType.B0371]: [
         `下潜中`,
         `Dived`,
         `Sumergido`,
     ],
-    [TextType.B0372]: [
+    [Lang_Constants.TextType.B0372]: [
         `最近`,
         `Recent`,
         `Reciente`,
     ],
-    [TextType.B0373]: [
+    [Lang_Constants.TextType.B0373]: [
         `公共(英语)`,
         `Public(EN)`,
         `Público(EN)`,
     ],
-    [TextType.B0374]: [
+    [Lang_Constants.TextType.B0374]: [
         `系统频道`,
         `System`,
         `Sistema`,
     ],
-    [TextType.B0375]: [
+    [Lang_Constants.TextType.B0375]: [
         `字数太多`,
         `Too many characters`,
         `Demasiados caracteres`,
     ],
-    [TextType.B0376]: [
+    [Lang_Constants.TextType.B0376]: [
         `频道`,
         `Channel`,
         `Canal`,
     ],
-    [TextType.B0377]: [
+    [Lang_Constants.TextType.B0377]: [
         `可旋转`,
         `Rotatable`,
         `Rotable`,
     ],
-    [TextType.B0378]: [
+    [Lang_Constants.TextType.B0378]: [
         `私聊`,
         `Private`,
         `Privado`,
     ],
-    [TextType.B0379]: [
+    [Lang_Constants.TextType.B0379]: [
         `全局`,
         `Global`,
         `Global`,
     ],
-    [TextType.B0380]: [
+    [Lang_Constants.TextType.B0380]: [
         `聊天列表`,
         `Chat List`,
         `Lista de Chat`,
     ],
-    [TextType.B0381]: [
+    [Lang_Constants.TextType.B0381]: [
         `暂无消息`,
         `No Messages`,
         `Sin Mensajes`,
     ],
-    [TextType.B0382]: [
+    [Lang_Constants.TextType.B0382]: [
         `发送`,
         `Send`,
         `Enviar`,
     ],
-    [TextType.B0383]: [
+    [Lang_Constants.TextType.B0383]: [
         `聊天`,
         `Chat`,
         `Chat`,
     ],
-    [TextType.B0384]: [
+    [Lang_Constants.TextType.B0384]: [
         `公共(中文)`,
         `Public(CN)`,
         `Público(CN)`,
     ],
-    [TextType.B0385]: [
+    [Lang_Constants.TextType.B0385]: [
         `经典版`,
         `Classic`,
         `Clásico`,
     ],
-    [TextType.B0386]: [
+    [Lang_Constants.TextType.B0386]: [
         `新版`,
         `New`,
         `Nuevo`,
     ],
-    [TextType.B0387]: [
+    [Lang_Constants.TextType.B0387]: [
         `常规`,
         `Regular`,
         `Regular`,
     ],
-    [TextType.B0388]: [
+    [Lang_Constants.TextType.B0388]: [
         `增量`,
         `Incremental`,
         `Incremental`,
     ],
-    [TextType.B0389]: [
+    [Lang_Constants.TextType.B0389]: [
         `初始时间`,
         `Initial Time`,
         `Tiempo Inicial`,
     ],
-    [TextType.B0390]: [
+    [Lang_Constants.TextType.B0390]: [
         `部队增量时间`,
         `Incremental Time per Unit`,
         `Tiempo Incremental por Unidad`,
     ],
-    [TextType.B0391]: [
+    [Lang_Constants.TextType.B0391]: [
         `清空`,
         `Clear`,
         `Limpiar`,
     ],
-    [TextType.B0392]: [
+    [Lang_Constants.TextType.B0392]: [
         `游戏已开始`,
         `Game Started`,
         `Partida Comenzada`,
     ],
-    [TextType.B0393]: [
+    [Lang_Constants.TextType.B0393]: [
         `玩家昵称`,
         `Player Nickname`,
         `Apodo del Jugador`,
     ],
-    [TextType.B0394]: [
+    [Lang_Constants.TextType.B0394]: [
         `CO名称`,
         `CO Name`,
         `Nombre del CO`,
     ],
-    [TextType.B0395]: [
+    [Lang_Constants.TextType.B0395]: [
         `玩家列表`,
         `Players List`,
         `Lista de Jugadores`,
     ],
-    [TextType.B0396]: [
+    [Lang_Constants.TextType.B0396]: [
         `超时告负`,
         `Boot`,
         `Lanzar`,
     ],
-    [TextType.B0397]: [
+    [Lang_Constants.TextType.B0397]: [
         `势力颜色`,
         `Color`,
         `Color`,
     ],
-    [TextType.B0398]: [
+    [Lang_Constants.TextType.B0398]: [
         `房间信息`,
         `Room Info`,
         `Info. de Sala`,
     ],
-    [TextType.B0399]: [
+    [Lang_Constants.TextType.B0399]: [
         `修改规则`,
         `Modify Rules`,
         `Modificar Reglas`,
     ],
-    [TextType.B0400]: [
+    [Lang_Constants.TextType.B0400]: [
         `删除房间`,
         `Delete Room`,
         `Eliminar Sala`,
     ],
-    [TextType.B0401]: [
+    [Lang_Constants.TextType.B0401]: [
         `开战`,
         `Start Game`,
         `Empezar Partida`,
     ],
-    [TextType.B0402]: [
+    [Lang_Constants.TextType.B0402]: [
         `准备就绪`,
         `Ready`,
         `Listo`,
     ],
-    [TextType.B0403]: [
+    [Lang_Constants.TextType.B0403]: [
         `已禁用CO`,
         `Banned COs`,
         `COs Baneados`,
     ],
-    [TextType.B0404]: [
+    [Lang_Constants.TextType.B0404]: [
         `排位赛`,
         `Ranked Match`,
         `Partida Rankeada`,
     ],
-    [TextType.B0405]: [
+    [Lang_Constants.TextType.B0405]: [
         `房间`,
         `Room`,
         `Sala`,
     ],
-    [TextType.B0406]: [
+    [Lang_Constants.TextType.B0406]: [
         `规则可用性`,
         `Rule Availability`,
         `Disponibilidad de Reglas`,
     ],
-    [TextType.B0407]: [
+    [Lang_Constants.TextType.B0407]: [
         `玩家规则`,
         `Player Rules`,
         `Reglas de Jugador`,
     ],
-    [TextType.B0408]: [
+    [Lang_Constants.TextType.B0408]: [
         `排位赛(雾战)`,
         `Ranked Match FoW`,
         `Partidas Rankeadas Niebla de Guerra`,
     ],
-    [TextType.B0409]: [
+    [Lang_Constants.TextType.B0409]: [
         `单人自定义游戏`,
         `SP Custom Games`,
         `Partidas Personalizadas un jugador`,
     ],
-    [TextType.B0410]: [
+    [Lang_Constants.TextType.B0410]: [
         `我的房间`,
         `My Rooms`,
         `Mis Salas`,
     ],
-    [TextType.B0411]: [
+    [Lang_Constants.TextType.B0411]: [
         `踢出`,
         `Kick Off`,
         `Expulsar`,
     ],
-    [TextType.B0412]: [
+    [Lang_Constants.TextType.B0412]: [
         `数量`,
         `Number`,
         `Número`,
     ],
-    [TextType.B0413]: [
+    [Lang_Constants.TextType.B0413]: [
         `设定战局数量`,
         `Set Number of Games`,
         `Establecer Número de Partidas`,
     ],
-    [TextType.B0414]: [
+    [Lang_Constants.TextType.B0414]: [
         `房间状态`,
         `Room Status`,
         `Estado de Sala`,
     ],
-    [TextType.B0415]: [
+    [Lang_Constants.TextType.B0415]: [
         `排位明战`,
         `Ranked Std`,
         `Rankeada: Estándar`,
     ],
-    [TextType.B0416]: [
+    [Lang_Constants.TextType.B0416]: [
         `排位雾战`,
         `Ranked FoW`,
         `Rankeada: Niebla de Guerra`,
     ],
-    [TextType.B0417]: [
+    [Lang_Constants.TextType.B0417]: [
         `自定义明战`,
         `Custom Std`,
         `Estándar Personalizado`,
     ],
-    [TextType.B0418]: [
+    [Lang_Constants.TextType.B0418]: [
         `自定义雾战`,
         `Custom FoW`,
         `Niebla de Guerra Personalizado`,
     ],
-    [TextType.B0419]: [
+    [Lang_Constants.TextType.B0419]: [
         `竖屏`,
         `Portrait`,
         `Retrato`,
     ],
-    [TextType.B0420]: [
+    [Lang_Constants.TextType.B0420]: [
         `删除存档`,
         `Clear Save Slot`,
         `Limpiar Espacio de Guardado`,
     ],
-    [TextType.B0421]: [
+    [Lang_Constants.TextType.B0421]: [
         `已搭乘CO`,
         `CO Onboard`,
         `CO a bordo`,
     ],
-    [TextType.B0422]: [
+    [Lang_Constants.TextType.B0422]: [
         `战斗`,
         `Fight`,
         `Combate`,
     ],
-    [TextType.B0423]: [
+    [Lang_Constants.TextType.B0423]: [
         `信息`,
         `Info`,
         `Info`,
     ],
-    [TextType.B0424]: [
+    [Lang_Constants.TextType.B0424]: [
         `控制者`,
         `Controller`,
         `Controlador`,
     ],
-    [TextType.B0425]: [
+    [Lang_Constants.TextType.B0425]: [
         `CO`,
         `CO`,
         `CO`,
     ],
-    [TextType.B0426]: [
+    [Lang_Constants.TextType.B0426]: [
         `修改密码`,
         `Change Password`,
         `Cambiar Contraseña`,
     ],
-    [TextType.B0427]: [
+    [Lang_Constants.TextType.B0427]: [
         `旧密码`,
         `Old Password`,
         `Contraseña anterior`,
     ],
-    [TextType.B0428]: [
+    [Lang_Constants.TextType.B0428]: [
         `新密码`,
         `New Password`,
         `Nueva Contraseña`,
     ],
-    [TextType.B0429]: [
+    [Lang_Constants.TextType.B0429]: [
         `确认密码`,
         `Confirm Password`,
         `Confirmar Contraseña`,
     ],
-    [TextType.B0430]: [
+    [Lang_Constants.TextType.B0430]: [
         `SetPath模式`,
         `Set Path`,
         `Establecer Camino`,
     ],
-    [TextType.B0431]: [
+    [Lang_Constants.TextType.B0431]: [
         `已启用`,
         `Enabled`,
         `Habilitado`,
     ],
-    [TextType.B0432]: [
+    [Lang_Constants.TextType.B0432]: [
         `已禁用`,
         `Disabled`,
         `Deshabilitado`,
     ],
-    [TextType.B0433]: [
+    [Lang_Constants.TextType.B0433]: [
         `启用`,
         `Enable`,
         `Habilitar`,
     ],
-    [TextType.B0434]: [
+    [Lang_Constants.TextType.B0434]: [
         `禁用`,
         `Disable`,
         `Deshabilitar`,
     ],
-    [TextType.B0435]: [
+    [Lang_Constants.TextType.B0435]: [
         `未上榜`,
         `Unlisted`,
         `No listada`,
     ],
-    [TextType.B0436]: [
+    [Lang_Constants.TextType.B0436]: [
         `积分榜`,
         `Leaderboard`,
         `Tabla de posiciones`,
     ],
-    [TextType.B0437]: [
+    [Lang_Constants.TextType.B0437]: [
         `标准`,
         `Standard`,
         `Estándar`,
     ],
-    [TextType.B0438]: [
+    [Lang_Constants.TextType.B0438]: [
         `雾战`,
         `Fog of War`,
         `Niebla de Guerra`,
     ],
-    [TextType.B0439]: [
+    [Lang_Constants.TextType.B0439]: [
         `能否下潜`,
         `Can Dive`,
         `Puede Sumergirse`,
     ],
-    [TextType.B0440]: [
+    [Lang_Constants.TextType.B0440]: [
         `部队属性表`,
         `Units Info`,
         `Info. Unidades`,
     ],
-    [TextType.B0441]: [
+    [Lang_Constants.TextType.B0441]: [
         `标准图池`,
         `Standard Maps`,
         `Mapas: Estándar`,
     ],
-    [TextType.B0442]: [
+    [Lang_Constants.TextType.B0442]: [
         `雾战图池`,
         `Fog Maps`,
         `Mapas Niebla de Guerra`,
     ],
-    [TextType.B0443]: [
+    [Lang_Constants.TextType.B0443]: [
         `多人房间`,
         `MP Room`,
         `Sala Multijugador`,
     ],
-    [TextType.B0444]: [
+    [Lang_Constants.TextType.B0444]: [
         `设置标签`,
         `Set Tags`,
         `Establecer Marcas`,
     ],
-    [TextType.B0445]: [
+    [Lang_Constants.TextType.B0445]: [
         `地图标签`,
         `Map Tags`,
         `Marcas de Mapa`,
     ],
-    [TextType.B0446]: [
+    [Lang_Constants.TextType.B0446]: [
         `忽略`,
         `Ignored`,
         `Ignorado`,
     ],
-    [TextType.B0447]: [
+    [Lang_Constants.TextType.B0447]: [
         `查找地图`,
         `Search Maps`,
         `Buscar Mapas`,
     ],
-    [TextType.B0448]: [
+    [Lang_Constants.TextType.B0448]: [
         `需要密码`,
         `Password required`,
         `Contraseña requerida`,
     ],
-    [TextType.B0449]: [
+    [Lang_Constants.TextType.B0449]: [
         `输入密码`,
         `Input Password`,
         `Ingresar Contraseña`,
     ],
-    [TextType.B0450]: [
+    [Lang_Constants.TextType.B0450]: [
         `势力被摧毁`,
         `'s force is destroyed`,
         ` ha sido derrotado`,
     ],
-    [TextType.B0451]: [
+    [Lang_Constants.TextType.B0451]: [
         `触发事件`,
         `An event is triggered.`,
         `Un evento se activa`,
     ],
-    [TextType.B0452]: [
+    [Lang_Constants.TextType.B0452]: [
         `错误码`,
         `Error`,
         `Error`,
     ],
-    [TextType.B0453]: [
+    [Lang_Constants.TextType.B0453]: [
         `意见反馈`,
         `Complaint`,
         `Queja`,
     ],
-    [TextType.B0454]: [
+    [Lang_Constants.TextType.B0454]: [
         `新增消息`,
         `Add Message`,
         `Añadir Mensaje`,
     ],
-    [TextType.B0455]: [
+    [Lang_Constants.TextType.B0455]: [
         `中文`,
         `In Chinese`,
         `En Chino`,
     ],
-    [TextType.B0456]: [
+    [Lang_Constants.TextType.B0456]: [
         `英文`,
         `In English`,
         `En Inglés`,
     ],
-    [TextType.B0457]: [
+    [Lang_Constants.TextType.B0457]: [
         `更新日志`,
         `Change Log`,
         `Cambiar de Sesión`,
     ],
-    [TextType.B0458]: [
+    [Lang_Constants.TextType.B0458]: [
         `导入到地图编辑器`,
         `Import into Map Editor`,
         `Importar al Editor de Mapas`,
     ],
-    [TextType.B0459]: [
+    [Lang_Constants.TextType.B0459]: [
         `设定规则名称`,
         `Edit Rule Name`,
         `Editar Nombre de la Regla`,
     ],
-    [TextType.B0460]: [
+    [Lang_Constants.TextType.B0460]: [
         `设置权限`,
         `Set Privilege`,
         `Establecer Privilegio`,
     ],
-    [TextType.B0461]: [
+    [Lang_Constants.TextType.B0461]: [
         `战局事件`,
         `War Events`,
         `Eventos de Guerra`,
     ],
-    [TextType.B0462]: [
+    [Lang_Constants.TextType.B0462]: [
         `战局事件ID`,
         `War Event ID`,
         `ID de Eventos de Guerra`,
     ],
-    [TextType.B0463]: [
+    [Lang_Constants.TextType.B0463]: [
         `上移`,
         `Up`,
         `Arriba`,
     ],
-    [TextType.B0464]: [
+    [Lang_Constants.TextType.B0464]: [
         `下移`,
         `Down`,
         `Abajo`,
     ],
-    [TextType.B0465]: [
+    [Lang_Constants.TextType.B0465]: [
         `编辑`,
         `Edit`,
         `Editar`,
     ],
-    [TextType.B0466]: [
+    [Lang_Constants.TextType.B0466]: [
         `已添加`,
         `Added`,
         `Añadido`,
     ],
-    [TextType.B0467]: [
+    [Lang_Constants.TextType.B0467]: [
         `添加`,
         `Add`,
         `Añadir`,
     ],
-    [TextType.B0468]: [
+    [Lang_Constants.TextType.B0468]: [
         `添加事件到规则`,
         `Add War Event To Rule`,
         `Añadir Evento de Guerra a la Regla`,
     ],
-    [TextType.B0469]: [
+    [Lang_Constants.TextType.B0469]: [
         `战局事件`,
         `War Event`,
         `Evento de Guerra`,
     ],
-    [TextType.B0470]: [
+    [Lang_Constants.TextType.B0470]: [
         `事件列表`,
         `Event List`,
         `Lista de Eventos`,
     ],
-    [TextType.B0471]: [
+    [Lang_Constants.TextType.B0471]: [
         `存活`,
         `Alive`,
         `En Partida`,
     ],
-    [TextType.B0472]: [
+    [Lang_Constants.TextType.B0472]: [
         `已战败`,
         `Defeated`,
         `Derrotado`,
     ],
-    [TextType.B0473]: [
+    [Lang_Constants.TextType.B0473]: [
         `即将战败`,
         `Being Defeated`,
         `Siendo Derrotado`,
     ],
-    [TextType.B0474]: [
+    [Lang_Constants.TextType.B0474]: [
         `准备阶段`,
         `Standby Phase`,
         `Fase de Espera`,
     ],
-    [TextType.B0475]: [
+    [Lang_Constants.TextType.B0475]: [
         `主要阶段`,
         `Main Phase`,
         `Fase Principal`,
     ],
-    [TextType.B0476]: [
+    [Lang_Constants.TextType.B0476]: [
         `事件在每个玩家回合的触发次数上限`,
         `Upper limit of trigger times per player's turn`,
         `Límite superior de veces de activación por turno de jugador`,
     ],
-    [TextType.B0477]: [
+    [Lang_Constants.TextType.B0477]: [
         `事件在整局游戏中的触发次数上限`,
         `Upper limit of trigger times per game`,
         `Límite superior de veces de activación por partida`,
     ],
-    [TextType.B0478]: [
+    [Lang_Constants.TextType.B0478]: [
         `修改事件名称`,
         `Edit Event Name`,
         `Editar Nombre de Evento`,
     ],
-    [TextType.B0479]: [
+    [Lang_Constants.TextType.B0479]: [
         `删除事件`,
         `Delete Event`,
         `Suprimir Evento`,
     ],
-    [TextType.B0480]: [
+    [Lang_Constants.TextType.B0480]: [
         `替换`,
         `Replace`,
         `Reemplazar`,
     ],
-    [TextType.B0481]: [
+    [Lang_Constants.TextType.B0481]: [
         `删除条件节点`,
         `Delete Condition Node`,
         `Eliminar Nodo de Condición`,
     ],
-    [TextType.B0482]: [
+    [Lang_Constants.TextType.B0482]: [
         `切换与/或`,
         `ALL/ANY`,
         `Todo/Cualquiera`,
     ],
-    [TextType.B0483]: [
+    [Lang_Constants.TextType.B0483]: [
         `+子条件`,
         `Sub Cond.`,
         `Sub Condición`,
     ],
-    [TextType.B0484]: [
+    [Lang_Constants.TextType.B0484]: [
         `+子节点`,
         `Sub Node`,
         `Sub Nodo`,
     ],
-    [TextType.B0485]: [
+    [Lang_Constants.TextType.B0485]: [
         `删除条件`,
         `Delete Condition`,
         `Eliminar Condición`,
     ],
-    [TextType.B0486]: [
+    [Lang_Constants.TextType.B0486]: [
         `删除动作`,
         `Delete Action`,
         `Eliminar Acción`,
     ],
-    [TextType.B0487]: [
+    [Lang_Constants.TextType.B0487]: [
         `浅克隆`,
         `Shallow Clone`,
         `Clon Somero`,
     ],
-    [TextType.B0488]: [
+    [Lang_Constants.TextType.B0488]: [
         `条件节点`,
         `Condition Node`,
         `Nodo de Condición`,
     ],
-    [TextType.B0489]: [
+    [Lang_Constants.TextType.B0489]: [
         `子节点`,
         `Sub Node`,
         `Sub Nodo`,
     ],
-    [TextType.B0490]: [
+    [Lang_Constants.TextType.B0490]: [
         `子条件`,
         `Sub Condition`,
         `Sub Condición`,
     ],
-    [TextType.B0491]: [
+    [Lang_Constants.TextType.B0491]: [
         `替换条件节点`,
         `Replace Condition Node`,
         `Reemplazar Nodo de Condición`,
     ],
-    [TextType.B0492]: [
+    [Lang_Constants.TextType.B0492]: [
         `引用`,
         `Reference`,
         `Referenciar`,
     ],
-    [TextType.B0493]: [
+    [Lang_Constants.TextType.B0493]: [
         `无错误`,
         `No Error`,
         `Sin Error`,
     ],
-    [TextType.B0494]: [ // TODO
+    [Lang_Constants.TextType.B0494]: [ // TODO
         `增加条件节点`,
         `Add Node`,
         `Add Node`,
     ],
-    [TextType.B0495]: [
+    [Lang_Constants.TextType.B0495]: [
         `修改名称`,
         `Rename`,
         `Renombrar`,
     ],
-    [TextType.B0496]: [
+    [Lang_Constants.TextType.B0496]: [
         `新增动作`,
         `Add Action`,
         `Añadir Acción`,
     ],
-    [TextType.B0497]: [
+    [Lang_Constants.TextType.B0497]: [
         `新增事件`,
         `Add Event`,
         `Añadir Evento`,
     ],
-    [TextType.B0498]: [
+    [Lang_Constants.TextType.B0498]: [
         `删除冗余数据`,
         `Delete Redundancy`,
         `Eliminar Redundancia`,
     ],
-    [TextType.B0499]: [
+    [Lang_Constants.TextType.B0499]: [
         `删除节点`,
         `Delete Node`,
         `Eliminar Nodo`,
     ],
-    [TextType.B0500]: [
+    [Lang_Constants.TextType.B0500]: [
         `替换条件`,
         `Replace Condition`,
         `Reemplazar Condición`,
     ],
-    [TextType.B0501]: [
+    [Lang_Constants.TextType.B0501]: [
         `修改条件`,
         `Modify Condition`,
         `Modificar Condición`,
     ],
-    [TextType.B0502]: [
+    [Lang_Constants.TextType.B0502]: [
         `条件`,
         `Conditions`,
         `Condiciones`,
     ],
-    [TextType.B0503]: [
+    [Lang_Constants.TextType.B0503]: [
         `使用中`,
         `In Use`,
         `En Uso`,
     ],
-    [TextType.B0504]: [
+    [Lang_Constants.TextType.B0504]: [
         `当前回合数`,
         `Number of Turns`,
         `Número de Turnos`,
     ],
-    [TextType.B0505]: [
+    [Lang_Constants.TextType.B0505]: [
         `和`,
         `and`,
         `y`,
     ],
-    [TextType.B0506]: [
+    [Lang_Constants.TextType.B0506]: [
         `或`,
         `or`,
         `o`,
     ],
-    [TextType.B0507]: [
+    [Lang_Constants.TextType.B0507]: [
         `当前回合数的余数等于...`,
         `The current turn's remainder equals to ...`,
         `El recordatorio de turno actual equivale a ...`,
     ],
-    [TextType.B0508]: [
+    [Lang_Constants.TextType.B0508]: [
         `当前的回合阶段是...`,
         `The current turn phase is ...`,
         `La fase de turno actual es ...`,
     ],
-    [TextType.B0509]: [
+    [Lang_Constants.TextType.B0509]: [
         `处于当前回合的玩家序号等于...`,
         `The current player index equals to ...`,
         `El índice de jugador actual equivale a ...`,
     ],
-    [TextType.B0510]: [
+    [Lang_Constants.TextType.B0510]: [
         `处于当前回合的玩家序号大于...`,
         `The current player index is greater than ...`,
         `El índice de jugador actual es mayor que ...`,
     ],
-    [TextType.B0511]: [
+    [Lang_Constants.TextType.B0511]: [
         `处于当前回合的玩家序号小于...`,
         `The current player index is less than ...`,
         `El índice de jugador actual es menor que ...`,
     ],
-    [TextType.B0512]: [
+    [Lang_Constants.TextType.B0512]: [
         `事件的发生次数等于...`,
         `The event occurred times equals to ...`,
         `Las veces que ocurrió el evento equivalen a ...`,
     ],
-    [TextType.B0513]: [
+    [Lang_Constants.TextType.B0513]: [
         `事件的发生次数大于...`,
         `The event occurred times is greater than ...`,
         `Las veces que ocurrió el evento es mayor que ...`,
     ],
-    [TextType.B0514]: [
+    [Lang_Constants.TextType.B0514]: [
         `事件的发生次数小于...`,
         `The event occurred times is less than ...`,
         `Las veces que ocurrió el evento es menor que ...`,
     ],
-    [TextType.B0515]: [
+    [Lang_Constants.TextType.B0515]: [
         `玩家的状态是...`,
         `The player's state is ...`,
         `El estado del jugador es ...`,
     ],
-    [TextType.B0516]: [
+    [Lang_Constants.TextType.B0516]: [
         `切换类型`,
         `Change Type`,
         `Cambiar Tipo`,
     ],
-    [TextType.B0517]: [
+    [Lang_Constants.TextType.B0517]: [
         `取反`,
         `Is Not`,
         `No Es`,
     ],
-    [TextType.B0518]: [
+    [Lang_Constants.TextType.B0518]: [
         `除数`,
         `Divider`,
         `Divididor`,
     ],
-    [TextType.B0519]: [
+    [Lang_Constants.TextType.B0519]: [
         `余数`,
         `Remainder`,
         `Recordatorio`,
     ],
-    [TextType.B0520]: [
+    [Lang_Constants.TextType.B0520]: [
         `切换`,
         `Switch`,
         `Cambiar`,
     ],
-    [TextType.B0521]: [
+    [Lang_Constants.TextType.B0521]: [
         `玩家序号`,
         `Player Index`,
         `Índice de Jugador`,
     ],
-    [TextType.B0522]: [
+    [Lang_Constants.TextType.B0522]: [
         `次数`,
         `Times`,
         `Veces`,
     ],
-    [TextType.B0523]: [
+    [Lang_Constants.TextType.B0523]: [
         `玩家状态`,
         `Player State`,
         `Estado de Jugador`,
     ],
-    [TextType.B0524]: [
+    [Lang_Constants.TextType.B0524]: [
         `部队总数`,
         `Total number of the units`,
         `Número Total de Unidades`,
     ],
-    [TextType.B0525]: [
+    [Lang_Constants.TextType.B0525]: [
         `部队类型`,
         `Unit Type`,
         `Tipo de Unidad`,
     ],
-    [TextType.B0526]: [
+    [Lang_Constants.TextType.B0526]: [
         `行动状态`,
         `Action State`,
         `Estado de Acción`,
     ],
-    [TextType.B0527]: [
+    [Lang_Constants.TextType.B0527]: [
         `部队ID`,
         `Unit ID`,
         `ID de Unidad`,
     ],
-    [TextType.B0528]: [
+    [Lang_Constants.TextType.B0528]: [
         `装载部队ID`,
         `Loader ID`,
         `Cargador ID`,
     ],
-    [TextType.B0529]: [
+    [Lang_Constants.TextType.B0529]: [
         `建筑中`,
         `Building`,
         `Construyendo`,
     ],
-    [TextType.B0530]: [
+    [Lang_Constants.TextType.B0530]: [
         `占领中`,
         `Capturing`,
         `Capturando`,
     ],
-    [TextType.B0531]: [
+    [Lang_Constants.TextType.B0531]: [
         `坐标`,
         `Coordinate`,
         `Coordenada`,
     ],
-    [TextType.B0532]: [
+    [Lang_Constants.TextType.B0532]: [
         `是否会被部队阻挡`,
         `Blockable By Unit`,
         `Bloqueable por Unidad`,
     ],
-    [TextType.B0533]: [
+    [Lang_Constants.TextType.B0533]: [
         `修改动作`,
         `Modify Action`,
         `Modificar Acción`,
     ],
-    [TextType.B0534]: [
+    [Lang_Constants.TextType.B0534]: [
         `寻找合适地形`,
         `Find Suitable Tile`,
         `Hallar Casilla Adecuada`,
     ],
-    [TextType.B0535]: [
+    [Lang_Constants.TextType.B0535]: [
         `新增部队`,
         `Add Unit`,
         `Añadir Unidad`,
     ],
-    [TextType.B0536]: [
+    [Lang_Constants.TextType.B0536]: [
         `单人雾战`,
         `Free Battle`,
         `Partida Libre`,
     ],
-    [TextType.B0537]: [
+    [Lang_Constants.TextType.B0537]: [
         `QQ群`,
         `QQ Group`,
         `Grupo de QQ`,
     ],
-    [TextType.B0538]: [
+    [Lang_Constants.TextType.B0538]: [
         `Discord`,
         `Discord`,
         `Discord`,
     ],
-    [TextType.B0539]: [
+    [Lang_Constants.TextType.B0539]: [
         `GitHub`,
         `GitHub`,
         `GitHub`,
     ],
-    [TextType.B0540]: [
+    [Lang_Constants.TextType.B0540]: [
         `声音设定`,
         `Sound Settings`,
         `Configuraciones de Audio`,
     ],
-    [TextType.B0541]: [
+    [Lang_Constants.TextType.B0541]: [
         `音乐`,
         `BGM`,
         `Música de fondo`,
     ],
-    [TextType.B0542]: [
+    [Lang_Constants.TextType.B0542]: [
         `音效`,
         `SFX`,
         `Efectos de audio`,
     ],
-    [TextType.B0543]: [
+    [Lang_Constants.TextType.B0543]: [
         `默认`,
         `Default`,
         `Por Defecto`,
     ],
-    [TextType.B0544]: [
+    [Lang_Constants.TextType.B0544]: [
         `上一首BGM`,
         `Previous BGM`,
         `Música de fondo Previa`,
     ],
-    [TextType.B0545]: [
+    [Lang_Constants.TextType.B0545]: [
         `下一首BGM`,
         `Next BGM`,
         `Siguiente Música de fondo`,
     ],
-    [TextType.B0546]: [
+    [Lang_Constants.TextType.B0546]: [
         `明战排位`,
         `Std Rank`,
         `Ranking Estándar`,
     ],
-    [TextType.B0547]: [
+    [Lang_Constants.TextType.B0547]: [
         `雾战排位`,
         `FoW Rank`,
         `Ranking Niebla de Guerra`,
     ],
-    [TextType.B0548]: [
+    [Lang_Constants.TextType.B0548]: [
         `明战`,
         `Std`,
         `Estándar`,
     ],
-    [TextType.B0549]: [
+    [Lang_Constants.TextType.B0549]: [
         `雾战`,
         `FoW`,
         `Niebla De Guerra`,
     ],
-    [TextType.B0550]: [
+    [Lang_Constants.TextType.B0550]: [
         `胜`,
         `Win`,
         `Ganadas`,
     ],
-    [TextType.B0551]: [
+    [Lang_Constants.TextType.B0551]: [
         `负`,
         `Lose`,
         `Perdidas`,
     ],
-    [TextType.B0552]: [
+    [Lang_Constants.TextType.B0552]: [
         `平`,
         `Draw`,
         `Empatadas`,
     ],
-    [TextType.B0553]: [
+    [Lang_Constants.TextType.B0553]: [
         `胜率`,
         `Win %`,
         `% Victorias`,
     ],
-    [TextType.B0554]: [
+    [Lang_Constants.TextType.B0554]: [
         `排位`,
         `Ranking`,
         `Ranking`,
     ],
-    [TextType.B0555]: [
+    [Lang_Constants.TextType.B0555]: [
         `无名`,
         `No Name`,
         `Sin Nombre`,
     ],
-    [TextType.B0556]: [
+    [Lang_Constants.TextType.B0556]: [
         `多人自由房间`,
         `MP Free Room`,
         `Sala Libre Multijugador`,
     ],
-    [TextType.B0557]: [
+    [Lang_Constants.TextType.B0557]: [
         `自由模式`,
         `Free Mode`,
         `Modo Libre`,
     ],
-    [TextType.B0558]: [
+    [Lang_Constants.TextType.B0558]: [
         `分辨率设置`,
         `Resolution Settings`,
         `Configuraciones de Resolución`,
     ],
-    [TextType.B0559]: [
+    [Lang_Constants.TextType.B0559]: [
         `UI缩放倍率`,
         `UI Scale`,
         `Escala de UI`,
     ],
-    [TextType.B0560]: [
+    [Lang_Constants.TextType.B0560]: [
         `设置`,
         `Settings`,
         `Configuraciones`,
     ],
-    [TextType.B0561]: [
+    [Lang_Constants.TextType.B0561]: [
         `打开`,
         `On`,
         `On`,
     ],
-    [TextType.B0562]: [
+    [Lang_Constants.TextType.B0562]: [
         `关闭`,
         `Off`,
         `Off`,
     ],
-    [TextType.B0563]: [
+    [Lang_Constants.TextType.B0563]: [
         `使用中文`,
         `Use Chinese`,
         `Usar Chino`,
     ],
-    [TextType.B0564]: [
+    [Lang_Constants.TextType.B0564]: [
         `使用英文`,
         `Use English`,
         `Usar Inglés`,
     ],
-    [TextType.B0565]: [
+    [Lang_Constants.TextType.B0565]: [
         `热度`,
         `Popularity`,
         `Popularidad`,
     ],
-    [TextType.B0566]: [
+    [Lang_Constants.TextType.B0566]: [
         `下一步`,
         `Next`,
         `Siguiente`,
     ],
-    [TextType.B0567]: [
+    [Lang_Constants.TextType.B0567]: [
         `重置`,
         `Reset`,
         `Resetear`,
     ],
-    [TextType.B0568]: [
+    [Lang_Constants.TextType.B0568]: [
         `最小热度`,
         `Min. Popularity`,
         `Popularidad Mínima`,
     ],
-    [TextType.B0569]: [
+    [Lang_Constants.TextType.B0569]: [
         `最低评分`,
         `Min. Rating`,
         `Ranking Mínimo`,
     ],
-    [TextType.B0570]: [
+    [Lang_Constants.TextType.B0570]: [
         `雾战标签`,
         `FoW Tagged`,
         `Marcado Niebla de Guerra`,
     ],
-    [TextType.B0571]: [
+    [Lang_Constants.TextType.B0571]: [
         `房间设置`,
         `Room Settings`,
         `Configuraciones de Sala`,
     ],
-    [TextType.B0572]: [
+    [Lang_Constants.TextType.B0572]: [
         `选择势力`,
         `Choose a Force`,
         `Escoger una Fuerza`,
     ],
-    [TextType.B0573]: [
+    [Lang_Constants.TextType.B0573]: [
         `选择颜色`,
         `Choose a Color`,
         `Escoger un Color`,
     ],
-    [TextType.B0574]: [
+    [Lang_Constants.TextType.B0574]: [
         `计时模式`,
         `Timer Mode`,
         `Modo del Temporizador`,
     ],
-    [TextType.B0575]: [
+    [Lang_Constants.TextType.B0575]: [
         `自定义`,
         `Customize`,
         `Personalizar`,
     ],
-    [TextType.B0576]: [
+    [Lang_Constants.TextType.B0576]: [
         `D2D`,
         `D2D`,
         `Pasivo`,
     ],
-    [TextType.B0577]: [
+    [Lang_Constants.TextType.B0577]: [
         `COP`,
         `COP`,
         `PoderCO`,
     ],
-    [TextType.B0578]: [
+    [Lang_Constants.TextType.B0578]: [
         `SCOP`,
         `SCOP`,
         `S-PoderCO`,
     ],
-    [TextType.B0579]: [
+    [Lang_Constants.TextType.B0579]: [
         `积分`,
         `Score`,
         `Puntaje`,
     ],
-    [TextType.B0580]: [
+    [Lang_Constants.TextType.B0580]: [
         `加入房间`,
         `Join Room`,
         `Unirse a Sala`,
     ],
-    [TextType.B0581]: [
+    [Lang_Constants.TextType.B0581]: [
         `选择房间`,
         `Choose a Room`,
         `Elegir una Sala`,
     ],
-    [TextType.B0582]: [
+    [Lang_Constants.TextType.B0582]: [
         `暂无房间`,
         `No Rooms`,
         `Sin Salas`,
     ],
-    [TextType.B0583]: [
+    [Lang_Constants.TextType.B0583]: [
         `加入`,
         `Join`,
         `Unirse`,
     ],
-    [TextType.B0584]: [
+    [Lang_Constants.TextType.B0584]: [
         `棋盘网格线`,
         `Border Lines`,
         `Líneas de los Bordes`,
     ],
-    [TextType.B0585]: [
+    [Lang_Constants.TextType.B0585]: [
         `显示棋盘格子`,
         `Show Border`,
         `Mostrar Bordes`,
     ],
-    [TextType.B0586]: [
+    [Lang_Constants.TextType.B0586]: [
         `您的势力颜色`,
         `Your Force Color`,
         `El Color de tu Fuerza`,
     ],
-    [TextType.B0587]: [
+    [Lang_Constants.TextType.B0587]: [
         `您的CO`,
         `Your CO`,
         `Tu CO`,
     ],
-    [TextType.B0588]: [
+    [Lang_Constants.TextType.B0588]: [
         `我的战局`,
         `My Wars`,
         `Mis Partidas`,
     ],
-    [TextType.B0589]: [
+    [Lang_Constants.TextType.B0589]: [
         `选择战局`,
         `Choose Game`,
         `Escoger Partida`,
     ],
-    [TextType.B0590]: [
+    [Lang_Constants.TextType.B0590]: [
         `禁用CO`,
         `Ban COs`,
         `Banear COs`,
     ],
-    [TextType.B0591]: [
+    [Lang_Constants.TextType.B0591]: [
         `横屏`,
         `Landscape`,
         `Paisaje`,
     ],
-    [TextType.B0592]: [
+    [Lang_Constants.TextType.B0592]: [
         `禁用CO阶段倒计时`,
         `Ban CO Phase Countdown`,
         `Temporizador Fase de Baneo CO`,
     ],
-    [TextType.B0593]: [
+    [Lang_Constants.TextType.B0593]: [
         `准备阶段倒计时`,
         `Standby Phase Countdown`,
         `Temporizador Fase de Espera`,
     ],
-    [TextType.B0594]: [
+    [Lang_Constants.TextType.B0594]: [
         `预览地图`,
         `Preview Maps`,
         `Previsualizar Mapas`,
     ],
-    [TextType.B0595]: [
+    [Lang_Constants.TextType.B0595]: [
         `标准地图`,
         `Standard Maps`,
         `Mapas Estándar`,
     ],
-    [TextType.B0596]: [
+    [Lang_Constants.TextType.B0596]: [
         `雾战地图`,
         `FoW Maps`,
         `Mapas Niebla de Guerra`,
     ],
-    [TextType.B0597]: [
+    [Lang_Constants.TextType.B0597]: [
         `横屏（反向）`,
         `Landscape (Reverse)`,
         `Paisaje (Reverso)`,
     ],
-    [TextType.B0598]: [
+    [Lang_Constants.TextType.B0598]: [
         `选择回放`,
         `Choose a Replay`,
         `Escoger una Repetición`,
     ],
-    [TextType.B0599]: [
+    [Lang_Constants.TextType.B0599]: [
         `战局类型`,
         `War Type`,
         `Tipo de Partida`,
     ],
-    [TextType.B0600]: [
+    [Lang_Constants.TextType.B0600]: [
         `回合数和行动数`,
         `Turns and Actions`,
         `Turnos y Acciones`,
     ],
-    [TextType.B0601]: [
+    [Lang_Constants.TextType.B0601]: [
         `结束时间`,
         `End Time`,
         `Tiempo al finalizar`,
     ],
-    [TextType.B0602]: [
+    [Lang_Constants.TextType.B0602]: [
         `刷新`,
         `Refresh`,
         `Actualizar`,
     ],
-    [TextType.B0603]: [
+    [Lang_Constants.TextType.B0603]: [
         `自定义模式`,
         `Custom Mode`,
         `Modo Personalizado`,
     ],
-    [TextType.B0604]: [
+    [Lang_Constants.TextType.B0604]: [
         `游戏设置`,
         `Game Settings`,
         `Configuraciones de Partida`,
     ],
-    [TextType.B0605]: [
+    [Lang_Constants.TextType.B0605]: [
         `存档备注`,
         `Save Comment`,
         `Guardar Comentarios`,
     ],
-    [TextType.B0606]: [
+    [Lang_Constants.TextType.B0606]: [
         `禁用`,
         `Ban`,
         `Banear`,
     ],
-    [TextType.B0607]: [
+    [Lang_Constants.TextType.B0607]: [
         `电脑`,
         `A.I.`,
         `I.A.`,
     ],
-    [TextType.B0608]: [
+    [Lang_Constants.TextType.B0608]: [
         `更换控制者`,
         `Controller`,
         `Controlador`,
     ],
-    [TextType.B0609]: [
+    [Lang_Constants.TextType.B0609]: [
         `更换颜色`,
         `Change Color`,
         `Cambiar Color`,
     ],
-    [TextType.B0610]: [
+    [Lang_Constants.TextType.B0610]: [
         `排位局数`,
         `Ranked Games`,
         `Partidas Rankeadas`,
     ],
-    [TextType.B0611]: [
+    [Lang_Constants.TextType.B0611]: [
         `最小回合数`,
         `Min. Turns`,
         `Mínimo de Turnos`,
     ],
-    [TextType.B0612]: [
+    [Lang_Constants.TextType.B0612]: [
         `模拟战明战`,
         `Simulation Std`,
         `Simulación Estándar`,
     ],
-    [TextType.B0613]: [
+    [Lang_Constants.TextType.B0613]: [
         `模拟战雾战`,
         `Simulation FoW`,
         `Simulación Niebla de Guerra`,
     ],
-    [TextType.B0614]: [
+    [Lang_Constants.TextType.B0614]: [
         `挑战模式`,
         `War Room`,
         `Sala de Guerra`,
     ],
-    [TextType.B0615]: [
+    [Lang_Constants.TextType.B0615]: [
         `替换动作`,
         `Replace Action`,
         `Reemplazar Acción`,
     ],
-    [TextType.B0616]: [
+    [Lang_Constants.TextType.B0616]: [
         `操作`,
         `Operation`,
         `Operación`,
     ],
-    [TextType.B0617]: [
+    [Lang_Constants.TextType.B0617]: [
         `增加部队`,
         `Add Unit(s)`,
         `Añadir Unidad(es)`,
     ],
-    [TextType.B0618]: [
+    [Lang_Constants.TextType.B0618]: [
         `修改玩家状态`,
         `Modify Players' State`,
         `Modificar Estado del Jugador`,
     ],
-    [TextType.B0619]: [
+    [Lang_Constants.TextType.B0619]: [
         `多人合作自定义游戏`,
         `Coop Custom Games`,
         `Partidas Personalizadas Cooperativas`,
     ],
-    [TextType.B0620]: [
+    [Lang_Constants.TextType.B0620]: [
         `切换游戏版本`,
         `Switch Game Version`,
         `Cambiar Versión del Juego`,
     ],
-    [TextType.B0621]: [
+    [Lang_Constants.TextType.B0621]: [
         `最大回合数`,
         `Max. Turns`,
         `Máximo de Turnos`,
     ],
-    [TextType.B0622]: [
+    [Lang_Constants.TextType.B0622]: [
         `实验版`,
         `Experimental`,
         `Experimental`,
     ],
-    [TextType.B0623]: [
+    [Lang_Constants.TextType.B0623]: [
         `当前版本`,
         `Current Version`,
         `Versión Actual`,
     ],
-    [TextType.B0624]: [
+    [Lang_Constants.TextType.B0624]: [
         `中文`,
         `Chinese`,
         `Chino`,
     ],
-    [TextType.B0625]: [
+    [Lang_Constants.TextType.B0625]: [
         `英文`,
         `English`,
         `Inglés`,
     ],
-    [TextType.B0626]: [
+    [Lang_Constants.TextType.B0626]: [
         `找回密码`,
         `Forget?`,
         `Olvidé mi contraseña`,
     ],
-    [TextType.B0627]: [
+    [Lang_Constants.TextType.B0627]: [
         `语言`,
         `Language`,
         `Lenguaje`,
     ],
-    [TextType.B0628]: [
+    [Lang_Constants.TextType.B0628]: [
         `贴图`,
         `Texture`,
         `Textura`,
     ],
-    [TextType.B0629]: [
+    [Lang_Constants.TextType.B0629]: [
         `部队动画`,
         `Unit Animation`,
         `Animación de Unidades`,
     ],
-    [TextType.B0630]: [
+    [Lang_Constants.TextType.B0630]: [
         `地形动画`,
         `Tile Animation`,
         `Animación de Casillas`,
     ],
-    [TextType.B0631]: [
+    [Lang_Constants.TextType.B0631]: [
         `切换BGM`,
         `Switch BGM`,
         `Cambiar Música de fondo`,
     ],
-    [TextType.B0632]: [
+    [Lang_Constants.TextType.B0632]: [
         `Wandering Path (Lobby)`,
         `Wandering Path (Lobby)`,
         `Wandering Path (Lobby)`,
     ],
-    [TextType.B0633]: [
+    [Lang_Constants.TextType.B0633]: [
         `Design Time (Map Editor)`,
         `Design Time (Map Editor)`,
         `Design Time (Map Editor)`,
     ],
-    [TextType.B0634]: [
+    [Lang_Constants.TextType.B0634]: [
         `We Will Prevail (Will)`,
         `We Will Prevail (Will)`,
         `We Will Prevail (Ed)`,
     ],
-    [TextType.B0635]: [
+    [Lang_Constants.TextType.B0635]: [
         `Hope Never Dies (Brenner)`,
         `Hope Never Dies (Brenner)`,
         `Hope Never Dies (O'Brien)`,
     ],
-    [TextType.B0636]: [
+    [Lang_Constants.TextType.B0636]: [
         `Lost Memories (Isabella)`,
         `Lost Memories (Isabella)`,
         `Lost Memories (Catleia)`,
     ],
-    [TextType.B0637]: [
+    [Lang_Constants.TextType.B0637]: [
         `Proud Soldier (Gage)`,
         `Proud Soldier (Gage)`,
         `Proud Soldier (Trak)`,
     ],
-    [TextType.B0638]: [
+    [Lang_Constants.TextType.B0638]: [
         `Days of Ruin (No CO)`,
         `Days of Ruin (No CO)`,
         `Days of Ruin (No CO)`,
     ],
-    [TextType.B0639]: [
+    [Lang_Constants.TextType.B0639]: [
         `Rutty (Grat)`,
         `Rutty (Grat)`,
         `Rutty (Grat)`,
     ],
-    [TextType.B0640]: [
+    [Lang_Constants.TextType.B0640]: [
         `用户ID`,
         `User ID`,
         `ID de Usuario`,
     ],
-    [TextType.B0641]: [
+    [Lang_Constants.TextType.B0641]: [
         `由AI控制`,
         `Controlled by A.I.`,
         `Controlado por I.A.`,
     ],
-    [TextType.B0642]: [
+    [Lang_Constants.TextType.B0642]: [
         `(战役) AI使用的CO`,
         `(Campaign) CO for A.I.`,
         `(Campaña) CO para I.A.`,
     ],
-    [TextType.B0643]: [
+    [Lang_Constants.TextType.B0643]: [
         `合作房间`,
         `Coop Room`,
         `Sala Cooperativo`,
     ],
-    [TextType.B0644]: [
+    [Lang_Constants.TextType.B0644]: [
         `合作模式中AI的CO`,
         `CO for A.I. in Coop`,
         `CO para I.A. en Cooperativo`,
     ],
-    [TextType.B0645]: [
+    [Lang_Constants.TextType.B0645]: [
         `合作模式中由AI控制`,
         `Controlled by A.I. in Coop`,
         `Controlado por I.A. en Cooperativo`,
     ],
-    [TextType.B0646]: [
+    [Lang_Constants.TextType.B0646]: [
         `合作模式`,
         `Coop Mode`,
         `Modo Cooperativo`,
     ],
-    [TextType.B0647]: [
+    [Lang_Constants.TextType.B0647]: [
         `我`,
         `Me`,
         `Yo`,
     ],
-    [TextType.B0648]: [
+    [Lang_Constants.TextType.B0648]: [
         `其他玩家`,
         `Others`,
         `Otros`,
     ],
-    [TextType.B0649]: [
+    [Lang_Constants.TextType.B0649]: [
         `Advance Wars by Web`,
         `Advance Wars by Web`,
         `Advance Wars by Web`,
     ],
-    [TextType.B0650]: [
+    [Lang_Constants.TextType.B0650]: [
         `返回地图列表`,
         `Go to Map List`,
         `Ir a Lista de Mapas`,
     ],
-    [TextType.B0651]: [
+    [Lang_Constants.TextType.B0651]: [
         `返回回放列表`,
         `Go to Replay List`,
         `Ir a Lista de Repeticiones`,
     ],
-    [TextType.B0652]: [
+    [Lang_Constants.TextType.B0652]: [
         `返回战局列表`,
         `Go to War List`,
         `Ir a Lista de Partidas`,
     ],
-    [TextType.B0653]: [
+    [Lang_Constants.TextType.B0653]: [
         `Supreme Logician (Lin)`,
         `Supreme Logician (Lin)`,
         `Supreme Logician (Lin)`,
     ],
-    [TextType.B0654]: [
+    [Lang_Constants.TextType.B0654]: [
         `Goddess of Revenge (Tasha)`,
         `Goddess of Revenge (Tasha)`,
         `Goddess of Revenge (Zadia)`,
     ],
-    [TextType.B0655]: [
+    [Lang_Constants.TextType.B0655]: [
         `Hero of Legend (Forsythe)`,
         `Hero of Legend (Forsythe)`,
         `Hero of Legend (Carter)`,
     ],
-    [TextType.B0656]: [
+    [Lang_Constants.TextType.B0656]: [
         `Flight of the Coward (Waylon)`,
         `Flight of the Coward (Waylon)`,
         `Flight of the Coward (Finn)`,
     ],
-    [TextType.B0657]: [
+    [Lang_Constants.TextType.B0657]: [
         `Madman's Reign (Greyfield)`,
         `Madman's Reign (Greyfield)`,
         `Madman's Reign (Sigismundo)`,
     ],
-    [TextType.B0658]: [
+    [Lang_Constants.TextType.B0658]: [
         `Cruel Rose (Tabitha)`,
         `Cruel Rose (Tabitha)`,
         `Cruel Rose (Larissa)`,
     ],
-    [TextType.B0659]: [
+    [Lang_Constants.TextType.B0659]: [
         `Puppet Master (Caulder)`,
         `Puppet Master (Caulder)`,
         `Puppet Master (Stolos)`,
     ],
-    [TextType.B0660]: [
+    [Lang_Constants.TextType.B0660]: [
         `Power Up (DoR)`,
         `Power Up (DoR)`,
         `Power Up (DoR)`,
     ],
-    [TextType.B0661]: [
+    [Lang_Constants.TextType.B0661]: [
         `删除地形装饰物`,
         `Del Tile Decoration`,
         `Eliminar Decoración Casilla`,
     ],
-    [TextType.B0662]: [
+    [Lang_Constants.TextType.B0662]: [
         `绘制地形装饰物`,
         `Draw Tile Decorations`,
         `Dibujar Decoraciones Casilla`,
     ],
-    [TextType.B0663]: [
+    [Lang_Constants.TextType.B0663]: [
         `陆地边角`,
         `Land Corner`,
         `Esquina de Tierra`,
     ],
-    [TextType.B0664]: [
+    [Lang_Constants.TextType.B0664]: [
         `地形装饰物`,
         `Tile Decoration`,
         `Decoración de Casilla`,
     ],
-    [TextType.B0665]: [
+    [Lang_Constants.TextType.B0665]: [
         `跳过`,
         `Skip`,
         `Saltar`,
     ],
-    [TextType.B0666]: [
+    [Lang_Constants.TextType.B0666]: [
         `增加对白`,
         `Add Dialogue`,
         `Añadir Diálogo`,
     ],
-    [TextType.B0667]: [
+    [Lang_Constants.TextType.B0667]: [
         `播放`,
         `Play`,
         `Reproducir`,
     ],
-    [TextType.B0668]: [
+    [Lang_Constants.TextType.B0668]: [
         `切换类型`,
         `Switch Type`,
         `Cambiar Tipo`,
     ],
-    [TextType.B0669]: [
+    [Lang_Constants.TextType.B0669]: [
         `台词类型`,
         `Line Type`,
         `Tipo de Línea`,
     ],
-    [TextType.B0670]: [
+    [Lang_Constants.TextType.B0670]: [
         `旁白`,
         `Aside`,
         `Narración`,
     ],
-    [TextType.B0671]: [
+    [Lang_Constants.TextType.B0671]: [
         `CO对白`,
         `CO Dialogue`,
         `Diálogo del CO`,
     ],
-    [TextType.B0672]: [
+    [Lang_Constants.TextType.B0672]: [
         `未知`,
         `Unknown`,
         `Desconocido`,
     ],
-    [TextType.B0673]: [
+    [Lang_Constants.TextType.B0673]: [
         `显示在左侧`,
         `Show on left`,
         `Mostrar a la izquierda`,
     ],
-    [TextType.B0674]: [
+    [Lang_Constants.TextType.B0674]: [
         `播放剧情对白`,
         `Show Dialogue`,
         `Mostrar Diálogo`,
     ],
-    [TextType.B0675]: [
+    [Lang_Constants.TextType.B0675]: [
         `台词总数`,
         `Total Lines`,
         `Líneas totales`,
     ],
-    [TextType.B0676]: [
+    [Lang_Constants.TextType.B0676]: [
         `在线`,
         `Online`,
         `En línea`,
     ],
-    [TextType.B0677]: [
+    [Lang_Constants.TextType.B0677]: [
         `离线`,
         `Offline`,
         `Desconectado`,
     ],
-    [TextType.B0678]: [
+    [Lang_Constants.TextType.B0678]: [
         `自动填充`,
         `Auto Fill`,
         `Auto Rellenar`,
     ],
-    [TextType.B0679]: [
+    [Lang_Constants.TextType.B0679]: [
         `回合开始！`,
         `Turn Start!`,
         `Comienzo de Turno!`,
     ],
-    [TextType.B0680]: [
+    [Lang_Constants.TextType.B0680]: [
         `导出地图到剪贴板`,
         `Export Map to Clipboard`,
         `Exportar Mapa al portapapeles`,
     ],
-    [TextType.B0681]: [
+    [Lang_Constants.TextType.B0681]: [
         `从公共图池导入`,
         `Import from Public Map Pool`,
         `Importar desde el Pool de Mapas público`,
     ],
-    [TextType.B0682]: [
+    [Lang_Constants.TextType.B0682]: [
         `插入`,
         `Insert`,
         `Insertar`,
     ],
-    [TextType.B0683]: [
+    [Lang_Constants.TextType.B0683]: [
         `中文名称`,
         `Chinese Name`,
         `Nombre chino`,
     ],
-    [TextType.B0684]: [
+    [Lang_Constants.TextType.B0684]: [
         `英文名称`,
         `English Name`,
         `Nombre inglés`,
     ],
-    [TextType.B0685]: [
+    [Lang_Constants.TextType.B0685]: [
         `空闲部队`,
         `Idle Unit`,
         `Unidad inactiva`,
     ],
-    [TextType.B0686]: [
+    [Lang_Constants.TextType.B0686]: [
         `空闲建筑`,
         `Idle Tile`,
         `Casilla inactiva`,
     ],
-    [TextType.B0687]: [
+    [Lang_Constants.TextType.B0687]: [
         `最小排位积分`,
         `Min. Rank Score`,
         `Puntaje Mínimo de Ranking`,
     ],
-    [TextType.B0688]: [
+    [Lang_Constants.TextType.B0688]: [
         `部队数与价值`,
         `Units & Value`,
         `Unidades y Valor`,
     ],
-    [TextType.B0689]: [
+    [Lang_Constants.TextType.B0689]: [
         `建筑数与收入`,
         `Buildings & Income`,
         `Propiedades e Ingresos`,
     ],
-    [TextType.B0690]: [
+    [Lang_Constants.TextType.B0690]: [
         `求和`,
         `Set Draw`,
         `Establecer Empate`,
     ],
-    [TextType.B0691]: [
+    [Lang_Constants.TextType.B0691]: [
         `生产`,
         `Build`,
         `Construir`,
     ],
-    [TextType.B0692]: [
+    [Lang_Constants.TextType.B0692]: [
         `主武器`,
         `Main`,
         `Principal`,
     ],
-    [TextType.B0693]: [
+    [Lang_Constants.TextType.B0693]: [
         `副武器`,
         `Sub`,
         `Secundaria`,
     ],
-    [TextType.B0694]: [
+    [Lang_Constants.TextType.B0694]: [
         `攻击`,
         `ATK`,
         `Ataque`,
     ],
-    [TextType.B0695]: [
+    [Lang_Constants.TextType.B0695]: [
         `防御`,
         `DEF`,
         `Defensa`,
     ],
-    [TextType.B0696]: [
+    [Lang_Constants.TextType.B0696]: [
         `射程`,
         `Range`,
         `Rango`,
     ],
-    [TextType.B0697]: [
+    [Lang_Constants.TextType.B0697]: [
         `可移动后攻击`,
         `Move & Atk`,
         `Moverse y Atacar`,
     ],
-    [TextType.B0698]: [
+    [Lang_Constants.TextType.B0698]: [
         `已装载部队`,
         `Loaded Units`,
         `Unidades cargadas`,
     ],
-    [TextType.B0699]: [
+    [Lang_Constants.TextType.B0699]: [
         `E队`,
         `Team E`,
         `Equipo E`,
     ],
-    [TextType.B0700]: [
+    [Lang_Constants.TextType.B0700]: [
         `黑`,
         `Black`,
         `Negro`,
     ],
-    [TextType.B0701]: [
+    [Lang_Constants.TextType.B0701]: [
         `正常天气`,
         `Normal`,
         `Normal`,
     ],
-    [TextType.B0702]: [
+    [Lang_Constants.TextType.B0702]: [
         `沙尘暴`,
         `Sandstorm`,
         `Tormenta de arena`,
     ],
-    [TextType.B0703]: [
+    [Lang_Constants.TextType.B0703]: [
         `雪天`,
         `Snowy`,
         `Nieve`,
     ],
-    [TextType.B0704]: [
+    [Lang_Constants.TextType.B0704]: [
         `雨天`,
         `Rainy`,
         `Lluvia`,
     ],
-    [TextType.B0705]: [
+    [Lang_Constants.TextType.B0705]: [
         `天气`,
         `Weather`,
         `Clima`,
     ],
-    [TextType.B0706]: [
+    [Lang_Constants.TextType.B0706]: [
         `Mr. Bear (Penny)`,
         `Mr. Bear (Penny)`,
         `Mr. Bear (Penny)`,
     ],
-    [TextType.B0707]: [
+    [Lang_Constants.TextType.B0707]: [
         `头像`,
         `Avatar`,
         `Avatar`,
     ],
-    [TextType.B0708]: [
+    [Lang_Constants.TextType.B0708]: [
         `改名`,
         `Rename`,
         `Renombrar`,
     ],
-    [TextType.B0709]: [
+    [Lang_Constants.TextType.B0709]: [
         `自动保存`,
         `Auto Save`,
         `Auto Guardado`,
     ],
-    [TextType.B0710]: [
+    [Lang_Constants.TextType.B0710]: [
         `回放`,
         `Replay`,
         `Repetición`,
     ],
-    [TextType.B0711]: [
+    [Lang_Constants.TextType.B0711]: [
         `返回战局`,
         `Back to War`,
         `Devolverse a la Partida`,
     ],
-    [TextType.B0712]: [
+    [Lang_Constants.TextType.B0712]: [
         `回放进度`,
         `Replay Progress`,
         `Progreso de la Repetición`,
     ],
-    [TextType.B0713]: [
+    [Lang_Constants.TextType.B0713]: [
         `重置视角`,
         `Reset Viewpoint`,
         `Reestablecer Punto de Vista`,
     ],
-    [TextType.B0714]: [
+    [Lang_Constants.TextType.B0714]: [
         `显示特效`,
         `Show Effect`,
         `Mostrar Efecto`,
     ],
-    [TextType.B0715]: [
+    [Lang_Constants.TextType.B0715]: [
         `改变天气`,
         `Change Weather`,
         `Cambiar Clima`,
     ],
-    [TextType.B0716]: [
+    [Lang_Constants.TextType.B0716]: [
         `指定地块所属的玩家是...`,
         `The tile's owner is ...`,
         `El propietario de la casilla es ...`,
     ],
-    [TextType.B0717]: [
+    [Lang_Constants.TextType.B0717]: [
         `指定地块的类型是...`,
         `The tile's type is ...`,
         `El tipo de la casilla es ...`,
     ],
-    [TextType.B0718]: [
+    [Lang_Constants.TextType.B0718]: [
         `地形类型`,
         `Terrain Type`,
         `Tipo de Terreno`,
     ],
-    [TextType.B0719]: [
+    [Lang_Constants.TextType.B0719]: [
         `战局`,
         `War`,
         `Partida`,
     ],
-    [TextType.B0720]: [
+    [Lang_Constants.TextType.B0720]: [
         `A.I.模式`,
         `A.I. Mode`,
         `Modo I.A.`,
     ],
-    [TextType.B0721]: [
+    [Lang_Constants.TextType.B0721]: [
         `站桩`,
         `No Move`,
         `No Moverse`,
     ],
-    [TextType.B0722]: [
+    [Lang_Constants.TextType.B0722]: [
         `守株待兔`,
         `Standby`,
         `En Espera`,
     ],
-    [TextType.B0723]: [
+    [Lang_Constants.TextType.B0723]: [
         `正常`,
         `Normal`,
         `Normal`,
     ],
-    [TextType.B0724]: [
+    [Lang_Constants.TextType.B0724]: [
         `A.I.模式已切换`,
         `A.I. Mode switched.`,
         `Modo de la I.A. cambiado.`,
     ],
-    [TextType.B0725]: [
+    [Lang_Constants.TextType.B0725]: [
         `多人合作明战`,
         `Coop Std`,
         `Cooperativo Estándar`,
     ],
-    [TextType.B0726]: [
+    [Lang_Constants.TextType.B0726]: [
         `多人合作雾战`,
         `Coop FoW`,
         `Cooperativo Niebla de Guerra`,
     ],
-    [TextType.B0727]: [
+    [Lang_Constants.TextType.B0727]: [
         `背景`,
         `Background`,
         `Fondo`,
     ],
-    [TextType.B0728]: [
+    [Lang_Constants.TextType.B0728]: [
         `播放简易对话`,
         `Show Simple Dialogue`,
         `Mostrar Diálogo Simple`,
     ],
-    [TextType.B0729]: [
+    [Lang_Constants.TextType.B0729]: [
         `显示在下侧`,
         `Show on bottom`,
         `Mostrar en el fondo`,
     ],
-    [TextType.B0730]: [
+    [Lang_Constants.TextType.B0730]: [
         `CO能量变化量%`,
         `CO Energy Offset %`,
         `Cambio de Energía del CO %`,
     ],
-    [TextType.B0731]: [
+    [Lang_Constants.TextType.B0731]: [
         `部队HP变化量`,
         `Unit's HP Offset`,
         `Cambio de HP de la Unidad`,
     ],
-    [TextType.B0732]: [
+    [Lang_Constants.TextType.B0732]: [
         `部队燃料变化量%`,
         `Unit's Fuel Offset %`,
         `Cambio de Combustible de la Unidad %`,
     ],
-    [TextType.B0733]: [
+    [Lang_Constants.TextType.B0733]: [
         `部队主弹药变化量%`,
         `Unit's Pri.Ammo Offset %`,
         `Cambio de Munición Principal de Unidad %`,
     ],
-    [TextType.B0734]: [
+    [Lang_Constants.TextType.B0734]: [
         `生效范围`,
         `Effective Radius`,
         `Radio Efectivo`,
     ],
-    [TextType.B0735]: [
+    [Lang_Constants.TextType.B0735]: [
         `影响拥有者`,
         `Affect Owner`,
         `Afectar al Propietario`,
     ],
-    [TextType.B0736]: [
+    [Lang_Constants.TextType.B0736]: [
         `影响队友`,
         `Affect Ally`,
         `Afectar a Aliado`,
     ],
-    [TextType.B0737]: [
+    [Lang_Constants.TextType.B0737]: [
         `影响敌人`,
         `Affect Enemy`,
         `Afectar a Enemigo`,
     ],
-    [TextType.B0738]: [
+    [Lang_Constants.TextType.B0738]: [
         `资金变化量`,
         `Fund Offset`,
         `Cambio de Presupuesto`,
     ],
-    [TextType.B0739]: [
+    [Lang_Constants.TextType.B0739]: [
         `优先级`,
         `Priority`,
         `Prioridad`,
     ],
-    [TextType.B0740]: [
+    [Lang_Constants.TextType.B0740]: [
         `调整路桥造型`,
         `Adjust Roads & Bridges`,
         `Ajustar Carreteras y Puentes`,
     ],
-    [TextType.B0741]: [
+    [Lang_Constants.TextType.B0741]: [
         `调整等离子`,
         `Adjust Plasmas`,
         `Ajustar Plasmas`,
     ],
-    [TextType.B0742]: [
+    [Lang_Constants.TextType.B0742]: [
         `射程(上)`,
         `Range(Up)`,
         `Rango(Arriba)`,
     ],
-    [TextType.B0743]: [
+    [Lang_Constants.TextType.B0743]: [
         `射程(右)`,
         `Range(Right)`,
         `Rango(Derecha)`,
     ],
-    [TextType.B0744]: [
+    [Lang_Constants.TextType.B0744]: [
         `射程(下)`,
         `Range(Down)`,
         `Rango(Abajo)`,
     ],
-    [TextType.B0745]: [
+    [Lang_Constants.TextType.B0745]: [
         `射程(左)`,
         `Range(Left)`,
         `Rango(Izquierda)`,
     ],
-    [TextType.B0746]: [
+    [Lang_Constants.TextType.B0746]: [
         `最大攻击目标数`,
         `Max. Targets`,
         `Objetivos Máximos`,
     ],
-    [TextType.B0747]: [
+    [Lang_Constants.TextType.B0747]: [
         `部队不透明度`,
         `Unit Opacity`,
         `Opacidad de Unidades`,
     ],
-    [TextType.B0748]: [
+    [Lang_Constants.TextType.B0748]: [
         `深克隆`,
         `Deep Clone`,
         `Clon Profundo`,
     ],
-    [TextType.B0749]: [
+    [Lang_Constants.TextType.B0749]: [
         `已被引用`,
         `Referenced`,
         `Referenciado`,
     ],
-    [TextType.B0750]: [
+    [Lang_Constants.TextType.B0750]: [
         `播放BGM`,
         `Play BGM`,
         `Reproducir Música de fondo`,
     ],
-    [TextType.B0751]: [
+    [Lang_Constants.TextType.B0751]: [
         `指定BGM`,
         `Specific BGM`,
         `Música de fondo específica`,
     ],
-    [TextType.B0752]: [
+    [Lang_Constants.TextType.B0752]: [
         `修改玩家的资金`,
         `Modify Players' Fund`,
         `Modificar Presupuesto de Jugadores`,
     ],
-    [TextType.B0753]: [
+    [Lang_Constants.TextType.B0753]: [
         `最终值`,
         `Final Value`,
         `Valor Final`,
     ],
-    [TextType.B0754]: [
+    [Lang_Constants.TextType.B0754]: [
         `增减值`,
         `Offset`,
         `Cambio`,
     ],
-    [TextType.B0755]: [
+    [Lang_Constants.TextType.B0755]: [
         `倍率`,
         `Multiplier`,
         `Multiplicador`,
     ],
-    [TextType.B0756]: [
+    [Lang_Constants.TextType.B0756]: [
         `修改玩家的CO能量`,
         `Modify Players' CO Energy`,
         `Modificar Energía del CO de Jugadores`,
     ],
-    [TextType.B0757]: [
+    [Lang_Constants.TextType.B0757]: [
         `显示所有区域`,
         `Show All Locations`,
         `Mostrar TODAS las posiciones`,
     ],
-    [TextType.B0758]: [
+    [Lang_Constants.TextType.B0758]: [
         `隐藏所有区域`,
         `Hide All Locations`,
         `Ocultar TODAS las posiciones`,
     ],
-    [TextType.B0759]: [
+    [Lang_Constants.TextType.B0759]: [
         `添加区域地块`,
         `Add To Locations`,
         `Añadir a Posiciones`,
     ],
-    [TextType.B0760]: [
+    [Lang_Constants.TextType.B0760]: [
         `删除区域地块`,
         `Del From Locations`,
         `Eliminar de Posiciones`,
     ],
-    [TextType.B0761]: [
+    [Lang_Constants.TextType.B0761]: [
         `全选`,
         `Select All`,
         `Seleccionar Todo`,
     ],
-    [TextType.B0762]: [
+    [Lang_Constants.TextType.B0762]: [
         `全不选`,
         `Unselect All`,
         `Deseleccionar Todo`,
     ],
-    [TextType.B0763]: [
+    [Lang_Constants.TextType.B0763]: [
         `任意部队`,
         `Any Unit`,
         `Cualquier Unidad`,
     ],
-    [TextType.B0764]: [
+    [Lang_Constants.TextType.B0764]: [
         `区域`,
         `Location`,
         `Posición`,
     ],
-    [TextType.B0765]: [
+    [Lang_Constants.TextType.B0765]: [
         `任意坐标`,
         `Any Coordinate`,
         `Cualquier Coordenada`,
     ],
-    [TextType.B0766]: [
+    [Lang_Constants.TextType.B0766]: [
         `任意玩家`,
         `Any Player`,
         `Cualquier Jugador`,
     ],
-    [TextType.B0767]: [
+    [Lang_Constants.TextType.B0767]: [
         `==`,
         `==`,
         `==`,
     ],
-    [TextType.B0768]: [
+    [Lang_Constants.TextType.B0768]: [
         `!=`,
         `!=`,
         `!=`,
     ],
-    [TextType.B0769]: [
+    [Lang_Constants.TextType.B0769]: [
         `>`,
         `>`,
         `>`,
     ],
-    [TextType.B0770]: [
+    [Lang_Constants.TextType.B0770]: [
         `<=`,
         `<=`,
         `<=`,
     ],
-    [TextType.B0771]: [
+    [Lang_Constants.TextType.B0771]: [
         `<`,
         `<`,
         `<`,
     ],
-    [TextType.B0772]: [
+    [Lang_Constants.TextType.B0772]: [
         `>=`,
         `>=`,
         `>=`,
     ],
-    [TextType.B0773]: [
+    [Lang_Constants.TextType.B0773]: [
         `部队数量`,
         `Units Count`,
         `Conteo de Unidades`,
     ],
-    [TextType.B0774]: [
+    [Lang_Constants.TextType.B0774]: [
         `比较符`,
         `Comparator`,
         `Comparador`,
     ],
-    [TextType.B0775]: [
+    [Lang_Constants.TextType.B0775]: [
         `特定部队数量统计...`,
         `Unit Presence ...`,
         `Presencia de Unidades ...`,
     ],
-    [TextType.B0776]: [
+    [Lang_Constants.TextType.B0776]: [
         `任意`,
         `Any`,
         `Cualquier`,
     ],
-    [TextType.B0777]: [
+    [Lang_Constants.TextType.B0777]: [
         `任意地形`,
         `Any Terrain`,
         `Cualquier Terreno`,
     ],
-    [TextType.B0778]: [
+    [Lang_Constants.TextType.B0778]: [
         `地形数量`,
         `Terrains Count`,
         `Conteo de Terrenos`,
     ],
-    [TextType.B0779]: [
+    [Lang_Constants.TextType.B0779]: [
         `特定地形数量统计...`,
         `Terrain Presence ...`,
         `Presencia de Terrenos ...`,
     ],
-    [TextType.B0780]: [
+    [Lang_Constants.TextType.B0780]: [
         `阶段`,
         `Phase`,
         `Fase`,
     ],
-    [TextType.B0781]: [
+    [Lang_Constants.TextType.B0781]: [
         `当前回合与玩家是...`,
         `The Current Turn and Player ...`,
         `El turno actual y el Jugador ...`,
     ],
-    [TextType.B0782]: [
+    [Lang_Constants.TextType.B0782]: [
         `回合阶段`,
         `Turn Phase`,
         `Fase de Turno`,
     ],
-    [TextType.B0783]: [
+    [Lang_Constants.TextType.B0783]: [
         `、且`,
         `, and `,
         `, y`,
     ],
-    [TextType.B0784]: [
+    [Lang_Constants.TextType.B0784]: [
         `玩家存活状态`,
         `Player Alive State`,
         `Estado en Partida del Jugador`,
     ],
-    [TextType.B0785]: [
+    [Lang_Constants.TextType.B0785]: [
         `激活中的CO技能类型`,
         `Activating CO Skill Type`,
         `Tipo de Habilidad CO activa`,
     ],
-    [TextType.B0786]: [
+    [Lang_Constants.TextType.B0786]: [
         `特定玩家数量统计...`,
         `Player Presence ...`,
         `Presencia de Jugador ...`,
     ],
-    [TextType.B0787]: [
+    [Lang_Constants.TextType.B0787]: [
         `CO能量百分比`,
         `CO Energy %`,
         `Energía del CO %`,
     ],
-    [TextType.B0788]: [
+    [Lang_Constants.TextType.B0788]: [
         `事件数量`,
         `Number of Events`,
         `Número de Eventos`,
     ],
-    [TextType.B0789]: [
+    [Lang_Constants.TextType.B0789]: [
         `事件触发次数...`,
         `War Event Triggered Times ...`,
         `Veces de activación de Evento de Guerra ...`,
     ],
-    [TextType.B0790]: [
+    [Lang_Constants.TextType.B0790]: [
         `当前玩家回合内的触发次数`,
         `Triggered Times in turn`,
         `Veces de activación en el turno`,
     ],
-    [TextType.B0791]: [
+    [Lang_Constants.TextType.B0791]: [
         `合计触发次数`,
         `Total Triggered Times`,
         `Veces totales de activación`,
     ],
-    [TextType.B0792]: [
+    [Lang_Constants.TextType.B0792]: [
         `ID`,
         `ID`,
         `ID`,
     ],
-    [TextType.B0793]: [
+    [Lang_Constants.TextType.B0793]: [
         `地图自动滚动`,
         `Auto Scroll Map`,
         `Auto Deslizar Mapa`,
     ],
-    [TextType.B0794]: [
+    [Lang_Constants.TextType.B0794]: [
         `天气与战争迷雾...`,
         `Weather Condition and Fog of War ...`,
         `Condición de Clima y Niebla de Guerra ...`,
     ],
-    [TextType.B0795]: [
+    [Lang_Constants.TextType.B0795]: [
         `设置战争迷雾`,
         `Set Fog of War`,
         `Establecer Niebla de Guerra`,
     ],
-    [TextType.B0796]: [
+    [Lang_Constants.TextType.B0796]: [
         `强制起雾`,
         `Force FoW`,
         `Forzar Niebla de Guerra`,
     ],
-    [TextType.B0797]: [
+    [Lang_Constants.TextType.B0797]: [
         `强制无雾`,
         `Force No FoW`,
         `Forzar Ausencia de Niebla de Guerra`,
     ],
-    [TextType.B0798]: [
+    [Lang_Constants.TextType.B0798]: [
         `不强制`,
         `No Force`,
         `Sin Fuerza`,
     ],
-    [TextType.B0799]: [
+    [Lang_Constants.TextType.B0799]: [
         `自定义计数器ID`,
         `Custom Counter ID`,
         `ID Contador Personalizado`,
     ],
-    [TextType.B0800]: [
+    [Lang_Constants.TextType.B0800]: [
         `设置自定义计数器`,
         `Set Custom Counters`,
         `Establecer Contadores Personalizados`,
     ],
-    [TextType.B0801]: [
+    [Lang_Constants.TextType.B0801]: [
         `计数器数量`,
         `Number of Counters`,
         `Número de Contadores`,
     ],
-    [TextType.B0802]: [
+    [Lang_Constants.TextType.B0802]: [
         `自定义计数器...`,
         `Custom Counters ...`,
         `Contadores Personalizados ...`,
     ],
-    [TextType.B0803]: [
+    [Lang_Constants.TextType.B0803]: [
         `值`,
         `Value`,
         `Valor`,
     ],
-    [TextType.B0804]: [
+    [Lang_Constants.TextType.B0804]: [
         `地图评分`,
         `Map Rating`,
         `Calificación de Mapa`,
     ],
-    [TextType.B0805]: [
+    [Lang_Constants.TextType.B0805]: [
         `类型`,
         `Type`,
         `Tipo`,
     ],
-    [TextType.B0806]: [
+    [Lang_Constants.TextType.B0806]: [
         `设置部队状态`,
         `Set Units' State`,
         `Establecer Estado de Unidades`,
     ],
-    [TextType.B0807]: [
+    [Lang_Constants.TextType.B0807]: [
         `真实HP`,
         `Real HP`,
         `HP Real`,
     ],
-    [TextType.B0808]: [
+    [Lang_Constants.TextType.B0808]: [
         `摧毁`,
         `Destroy`,
         `Destruir`,
     ],
-    [TextType.B0809]: [
+    [Lang_Constants.TextType.B0809]: [
         `CO能量值`,
         `CO Energy`,
         `Energía del CO`,
     ],
-    [TextType.B0810]: [
+    [Lang_Constants.TextType.B0810]: [
         `修改玩家状态`,
         `Set Players' State`,
         `Establecer Estado de Jugadores`,
     ],
-    [TextType.B0811]: [
+    [Lang_Constants.TextType.B0811]: [
         `装载部队`,
         `Load a Unit`,
         `Cargar una Unidad`,
     ],
-    [TextType.B0812]: [
+    [Lang_Constants.TextType.B0812]: [
         `自由模式明战`,
         `Free Std`,
         `Estándar Partida Libre`,
     ],
-    [TextType.B0813]: [
+    [Lang_Constants.TextType.B0813]: [
         `自由模式雾战`,
         `Free FoW`,
         `Niebla de Guerra Partida Libre`,
     ],
-    [TextType.B0814]: [
+    [Lang_Constants.TextType.B0814]: [
         `房间ID`,
         `Room ID`,
         `ID de Sala`,
     ],
-    [TextType.B0815]: [
+    [Lang_Constants.TextType.B0815]: [
         `挑战模式中AI的CO`,
         `CO for A.I. in War Room`,
         `CO para I.A. en Sala de Guerra`,
     ],
-    [TextType.B0816]: [
+    [Lang_Constants.TextType.B0816]: [
         `挑战模式中由AI控制`,
         `Controlled by A.I. in War Room`,
         `Controlado por I.A. en Sala de Guerra`,
     ],
-    [TextType.B0817]: [
+    [Lang_Constants.TextType.B0817]: [
         `挑战模式雾战`,
         `War Room FoW`,
         `Sala de Guerra Niebla de Guerra`,
     ],
-    [TextType.B0818]: [
+    [Lang_Constants.TextType.B0818]: [
         `挑战`,
         `WR`,
         `Record mundial`,
     ],
-    [TextType.B0819]: [
+    [Lang_Constants.TextType.B0819]: [
         `总积分`,
         `Overall Score`,
         `Puntaje General`,
     ],
-    [TextType.B0820]: [
+    [Lang_Constants.TextType.B0820]: [
         `总排名`,
         `Overall Rank`,
         `Ranking General`,
     ],
-    [TextType.B0821]: [
+    [Lang_Constants.TextType.B0821]: [
         `地图ID`,
         `Map ID`,
         `ID de Mapa`,
     ],
-    [TextType.B0822]: [
+    [Lang_Constants.TextType.B0822]: [
         `我的积分`,
         `My Score`,
         `Mi Puntaje`,
     ],
-    [TextType.B0823]: [
+    [Lang_Constants.TextType.B0823]: [
         `新增规则`,
         `Add Rules`,
         `Añadir Reglas`,
     ],
-    [TextType.B0824]: [
+    [Lang_Constants.TextType.B0824]: [
         `作为新规则提交`,
         `Submit as a New Rule`,
         `Publicar como Nueva Regla`,
     ],
-    [TextType.B0825]: [
+    [Lang_Constants.TextType.B0825]: [
         `设置地形类型`,
         `Set Terrains' Type`,
         `Establecer Tipos de Terrenos`,
     ],
-    [TextType.B0826]: [
+    [Lang_Constants.TextType.B0826]: [
         `摧毁部队`,
         `Destroy Units`,
         `Destruir Unidades`,
     ],
-    [TextType.B0827]: [
+    [Lang_Constants.TextType.B0827]: [
         `不透明度设置`,
         `Opacity Settings`,
         `Configuraciones de Opacidad`,
     ],
-    [TextType.B0828]: [
+    [Lang_Constants.TextType.B0828]: [
         `伤害计算器`,
         `Damage Calculator`,
         `Calculador de Daños`,
     ],
-    [TextType.B0829]: [
+    [Lang_Constants.TextType.B0829]: [
         `无技能`,
         `No Skill`,
         `Sin Habilidades`,
     ],
-    [TextType.B0830]: [
+    [Lang_Constants.TextType.B0830]: [
         `武器`,
         `Weapon`,
         `Arma`,
     ],
-    [TextType.B0831]: [
+    [Lang_Constants.TextType.B0831]: [
         `进攻方`,
         `Attacker`,
         `Atacante`,
     ],
-    [TextType.B0832]: [
+    [Lang_Constants.TextType.B0832]: [
         `防守方`,
         `Defender`,
         `Defensor`,
     ],
-    [TextType.B0833]: [
+    [Lang_Constants.TextType.B0833]: [
         `指挥塔数量`,
         `Towers`,
         `Torres`,
     ],
-    [TextType.B0834]: [
+    [Lang_Constants.TextType.B0834]: [
         `城市数量`,
         `Cities`,
         `Ciudades`,
     ],
-    [TextType.B0835]: [
+    [Lang_Constants.TextType.B0835]: [
         `交换攻防双方`,
         `Switch Attacker & Defender`,
         `Intercambiar Atacante y Defensor`,
     ],
-    [TextType.B0836]: [
+    [Lang_Constants.TextType.B0836]: [
         `无法进攻`,
         `Can't attack.`,
         `No puede atacar.`,
     ],
-    [TextType.B0837]: [
+    [Lang_Constants.TextType.B0837]: [
         `反击`,
         `Counter`,
         `Contraataque`,
     ],
-    [TextType.B0838]: [
+    [Lang_Constants.TextType.B0838]: [
         `删除信息`,
         `Delete Message`,
         `Eliminar Mensaje`,
     ],
-    [TextType.B0839]: [
+    [Lang_Constants.TextType.B0839]: [
         `美术设计`,
         `Art Designer`,
         `Diseñador del Arte`,
     ],
-    [TextType.B0840]: [
+    [Lang_Constants.TextType.B0840]: [
         `数值设定`,
         `Numerical Setup`,
         `Configuración Numérica`,
     ],
-    [TextType.B0841]: [
+    [Lang_Constants.TextType.B0841]: [
         `处理他人求和`,
         `Handle Draw`,
         `Manejar Empate`,
     ],
-    [TextType.B0842]: [
+    [Lang_Constants.TextType.B0842]: [
         `回合数限制`,
         `Turns Limit`,
         `Límite de Turnos`,
     ],
-    [TextType.B0843]: [
+    [Lang_Constants.TextType.B0843]: [
         `修改可用性`,
         `Modify Availability`,
         `Modificar Disponibilidad`,
     ],
-    [TextType.B0844]: [
+    [Lang_Constants.TextType.B0844]: [
         `保存`,
         `Save`,
         `Guardar`,
     ],
-    [TextType.B0845]: [
+    [Lang_Constants.TextType.B0845]: [
         `读取`,
         `Load`,
         `Cargar`,
     ],
-    [TextType.B0846]: [
+    [Lang_Constants.TextType.B0846]: [
         `停顿时间`,
         `Pause Time`,
         `Tiempo de Pausa`,
     ],
-    [TextType.B0847]: [
+    [Lang_Constants.TextType.B0847]: [
         `高亮`,
         `Highlight`,
         `Destacar`,
     ],
-    [TextType.B0848]: [
+    [Lang_Constants.TextType.B0848]: [
         `已高亮`,
         `is Highlighted`,
         `Está Destacado`,
     ],
-    [TextType.B0849]: [
+    [Lang_Constants.TextType.B0849]: [
         `未高亮`,
         `is Not Highlighted`,
         `No está Destacado`,
     ],
-    [TextType.B0850]: [
+    [Lang_Constants.TextType.B0850]: [
         `修改基底`,
         `Modify Base`,
         `Modificar Base`,
     ],
-    [TextType.B0851]: [
+    [Lang_Constants.TextType.B0851]: [
         `修改装饰物`,
         `Modify Decoration`,
         `Modificar Decoración`,
     ],
-    [TextType.B0852]: [
+    [Lang_Constants.TextType.B0852]: [
         `修改物体`,
         `Modify Object`,
         `Modificar Objeto`,
     ],
-    [TextType.B0853]: [
+    [Lang_Constants.TextType.B0853]: [
         `经典版(毁灭之日)`,
         `Classic Version (AW DoR)`,
         `Versión Clásica (AW DC)`,
     ],
-    [TextType.B0854]: [
+    [Lang_Constants.TextType.B0854]: [
         `实验版(老三代平衡版)`,
         `Experimental Version (AW 1/2/DS rebalanced)`,
         `Versión Experimental (AW 1/2/DS rebalanceado)`,
     ],
-    [TextType.B0855]: [
+    [Lang_Constants.TextType.B0855]: [
         `当前宽高及格子数`,
         `Current W/H/Grids`,
         `Ancho/Alto/Casillas actuales`,
     ],
-    [TextType.B0856]: [
+    [Lang_Constants.TextType.B0856]: [
         `新的宽高及格子数`,
         `New W/H/Grids`,
         `Nuevo Ancho/Alto/Casillas`,
     ],
-    [TextType.B0857]: [
+    [Lang_Constants.TextType.B0857]: [
         `顶部增减行数`,
         `Add/Delete Top Rows`,
         `Añadir/Eliminar Filas Superiores`,
     ],
-    [TextType.B0858]: [
+    [Lang_Constants.TextType.B0858]: [
         `底部增减行数`,
         `Add/Delete Bottom Rows`,
         `Añadir/Eliminar Filas Inferiores`,
     ],
-    [TextType.B0859]: [
+    [Lang_Constants.TextType.B0859]: [
         `左方增减列数`,
         `Add/Delete Left Columns`,
         `Añadir/Eliminar Columnas Izquierdas`,
     ],
-    [TextType.B0860]: [
+    [Lang_Constants.TextType.B0860]: [
         `右方增减列数`,
         `Add/Delete Right Columns`,
         `Añadir/Eliminar Columnas Derechas`,
     ],
-    [TextType.B0861]: [
+    [Lang_Constants.TextType.B0861]: [
         `设置地形状态`,
         `Set Terrains' State`,
         `Establecer Estado de Terrenos`,
     ],
-    [TextType.B0862]: [
+    [Lang_Constants.TextType.B0862]: [
         `轴对称`,
         `Mirroring`,
         `Reflejando`,
     ],
-    [TextType.B0863]: [
+    [Lang_Constants.TextType.B0863]: [
         `最大排位积分`,
         `Max. Rank Score`,
         `Puntaje de Ranking máximo`,
     ],
-    [TextType.B0864]: [
+    [Lang_Constants.TextType.B0864]: [
         `从上到下`,
         `From Up To Down`,
         `De Arriba a Abajo`,
     ],
-    [TextType.B0865]: [
+    [Lang_Constants.TextType.B0865]: [
         `从下到上`,
         `From Down To Up`,
         `De Abajo a Arriba`,
     ],
-    [TextType.B0866]: [
+    [Lang_Constants.TextType.B0866]: [
         `从左到右`,
         `From Left To Right`,
         `De Izquierda a Derecha`,
     ],
-    [TextType.B0867]: [
+    [Lang_Constants.TextType.B0867]: [
         `从右到左`,
         `From Right To Left`,
         `De Derecha a Izquierda`,
     ],
-    [TextType.B0868]: [
+    [Lang_Constants.TextType.B0868]: [
         `从左上到右下`,
         `From UL To DR`,
         `De Arriba-izq. a Abajo-der.`,
     ],
-    [TextType.B0869]: [
+    [Lang_Constants.TextType.B0869]: [
         `从右下到左上`,
         `From DR To UL`,
         `De Abajo-der. a Arriba-izq.`,
     ],
-    [TextType.B0870]: [
+    [Lang_Constants.TextType.B0870]: [
         `从右上到左下`,
         `From UR To DL`,
         `De Arriba-der. a Abajo-izq.`,
     ],
-    [TextType.B0871]: [
+    [Lang_Constants.TextType.B0871]: [
         `从左下到右上`,
         `From DL to UR`,
         `De Abajo-izq. a Arriba-der.`,
     ],
-    [TextType.B0872]: [
+    [Lang_Constants.TextType.B0872]: [
         `观战`,
         `Spectate`,
         `Espectar`,
     ],
-    [TextType.B0873]: [
+    [Lang_Constants.TextType.B0873]: [
         `游戏观战者`,
         `Game Spectators`,
         `Espectadores de Partida`,
     ],
-    [TextType.B0874]: [
+    [Lang_Constants.TextType.B0874]: [
         `我的观战者`,
         `My Spectators`,
         `Mis Espectadores`,
     ],
-    [TextType.B0875]: [
+    [Lang_Constants.TextType.B0875]: [
         `我收到的观战请求`,
         `Incoming Requests`,
         `Solicitudes entrantes`,
     ],
-    [TextType.B0876]: [
+    [Lang_Constants.TextType.B0876]: [
         `统计`,
         `Statistics`,
         `Estadísticas`,
     ],
-    [TextType.B0877]: [
+    [Lang_Constants.TextType.B0877]: [
         `总局数`,
         `Total Games`,
         `Partidas Totales`,
     ],
-    [TextType.B0878]: [
+    [Lang_Constants.TextType.B0878]: [
         `游戏管理`,
         `Game Management`,
         `Manejo de juego`,
     ],
-    [TextType.B0879]: [
+    [Lang_Constants.TextType.B0879]: [
         `清除单人模式榜单`,
         `Delete All SP Rank`,
         `Eliminar TODOS los Ranking de un jugador`,
     ],
-    [TextType.B0880]: [
+    [Lang_Constants.TextType.B0880]: [
         `管理广播信息`,
         `Manage Broadcast`,
         `Manejar Transmisión`,
     ],
-    [TextType.B0881]: [
+    [Lang_Constants.TextType.B0881]: [
         `广播信息`,
         `Broadcast`,
         `Transmisión`,
     ],
-    [TextType.B0882]: [
+    [Lang_Constants.TextType.B0882]: [
         `开始时间`,
         `Start Time`,
         `Hora de Comienzo`,
     ],
-    [TextType.B0883]: [
+    [Lang_Constants.TextType.B0883]: [
         `持续时间`,
         `Duration`,
         `Duración`,
     ],
-    [TextType.B0884]: [
+    [Lang_Constants.TextType.B0884]: [
         `时`,
         `Hour`,
         `Hora`,
     ],
-    [TextType.B0885]: [
+    [Lang_Constants.TextType.B0885]: [
         `分`,
         `Minute`,
         `Minuto`,
     ],
-    [TextType.B0886]: [
+    [Lang_Constants.TextType.B0886]: [
         `秒`,
         `Second`,
         `Segundo`,
     ],
-    [TextType.B0887]: [
+    [Lang_Constants.TextType.B0887]: [
         `停止持续性动作`,
         `Stop Persistent Event Actions`,
         `Detener Acciones de Evento Persistentes`,
     ],
-    [TextType.B0888]: [
+    [Lang_Constants.TextType.B0888]: [
         `持续性显示文本`,
         `Persistently Show Text`,
         `Mostrar Texto Persistentemente`,
     ],
-    [TextType.B0889]: [
+    [Lang_Constants.TextType.B0889]: [
         `动作ID`,
         `Action ID`,
         `ID de Acción`,
     ],
-    [TextType.B0890]: [
+    [Lang_Constants.TextType.B0890]: [
         `自动`,
         `Auto`,
         `Auto`,
     ],
-    [TextType.B0891]: [
+    [Lang_Constants.TextType.B0891]: [
         `视野`,
         `POV`,
         `Punto de Vista`,
     ],
-    [TextType.B0892]: [
+    [Lang_Constants.TextType.B0892]: [
         `地图审核`,
         `Map Review`,
         `Revisión del Mapa`,
     ],
-    [TextType.B0893]: [
+    [Lang_Constants.TextType.B0893]: [
         `地图描述`,
         `Map Description`,
         `Descripción del Mapa`,
     ],
-    [TextType.B0894]: [
+    [Lang_Constants.TextType.B0894]: [
         `无描述`,
         `No Description`,
         `Sin Descripción`,
     ],
-    [TextType.B0895]: [
+    [Lang_Constants.TextType.B0895]: [
         `禁用部队`,
         `Banned Units`,
         `Unidades Baneadas`,
     ],
-    [TextType.B0896]: [
+    [Lang_Constants.TextType.B0896]: [
         `无可用部队`,
         `No available units`,
         `Sin unidades disponibles`,
     ],
-    [TextType.B0897]: [
+    [Lang_Constants.TextType.B0897]: [
         `可使用CO主动技`,
         `Can Use CO Power`,
         `Puede Usar Poder del CO`,
     ],
-    [TextType.B0898]: [
+    [Lang_Constants.TextType.B0898]: [
         `选择CO`,
         `Choose COs`,
         `Escoger COs`,
     ],
-    [TextType.B0899]: [
+    [Lang_Constants.TextType.B0899]: [
         `地形`,
         `Terrains`,
         `Terrenos`,
     ],
-    [TextType.B0900]: [
+    [Lang_Constants.TextType.B0900]: [
         `游戏数据`,
         `Game Chart`,
         `Tabla de Juego`,
     ],
-    [TextType.B0901]: [
+    [Lang_Constants.TextType.B0901]: [
         `生效中的持续性动作...`,
         `Ongoing Persistent Actions ...`,
         `Acciones Persistentes actuales ...`,
     ],
-    [TextType.B0902]: [
+    [Lang_Constants.TextType.B0902]: [
         `动作数量`,
         `Number of Actions`,
         `Número de Acciones`,
     ],
-    [TextType.B0903]: [
+    [Lang_Constants.TextType.B0903]: [
         `持续性修改玩家属性`,
         `Persistently Modify Players' Attribute`,
         `Modificar Atributos de Jugador Persistentemente`,
     ],
-    [TextType.B0904]: [
+    [Lang_Constants.TextType.B0904]: [
         `排名`,
         `Rank`,
         `Ranking`,
     ],
-    [TextType.B0905]: [
+    [Lang_Constants.TextType.B0905]: [
         `记录`,
         `Record`,
         `Record`,
     ],
-    [TextType.B0906]: [
+    [Lang_Constants.TextType.B0906]: [
         `我的挑战模式记录`,
         `My War Room Records`,
         `Mis Records de Sala de Guerra`,
     ],
-    [TextType.B0907]: [
+    [Lang_Constants.TextType.B0907]: [
         `历史最高分`,
         `High Score`,
         `Puntaje Alto`,
     ],
-    [TextType.B0908]: [
+    [Lang_Constants.TextType.B0908]: [
         `快速设置`,
         `Quick Settings`,
         `Configuraciones Rápidas`,
     ],
-    [TextType.B0909]: [
+    [Lang_Constants.TextType.B0909]: [
         `难度`,
         `Difficulty`,
         `Dificultad`,
     ],
-    [TextType.B0910]: [
+    [Lang_Constants.TextType.B0910]: [
         `地形属性表`,
         `Tiles Info`,
         `Info. de Casillas`,
     ],
-    [TextType.B0911]: [
+    [Lang_Constants.TextType.B0911]: [
         `历史`,
         `History`,
         `Historia`,
     ],
-    [TextType.B0912]: [
+    [Lang_Constants.TextType.B0912]: [
         `非排位赛`,
         `Unranked`,
         `Sin Ranking`,
     ],
-    [TextType.B0913]: [
+    [Lang_Constants.TextType.B0913]: [
         `选择`,
         `Selection`,
         `Selección`,
     ],
-    [TextType.B0914]: [
+    [Lang_Constants.TextType.B0914]: [
         `标记`,
         `Mark`,
         `Marcar`,
     ],
-    [TextType.B0915]: [
+    [Lang_Constants.TextType.B0915]: [
         `取消标记`,
         `Unmark`,
         `Desmarcar`,
     ],
-    [TextType.B0916]: [
+    [Lang_Constants.TextType.B0916]: [
         `禁止再次进入房间`,
         `No re-entry`,
         `Sin re-entrada`,
     ],
-    [TextType.B0917]: [
+    [Lang_Constants.TextType.B0917]: [
         `上次活动时间`,
         `Last Activity`,
         `Última Actividad`,
     ],
-    [TextType.B0918]: [
+    [Lang_Constants.TextType.B0918]: [
         `回合轮转提醒`,
         `Turn Notifications`,
         `Activar Notificaciones`,
     ],
-    [TextType.B0919]: [
+    [Lang_Constants.TextType.B0919]: [
         `Ban/Pick提醒`,
         `Ban/Pick Notifications`,
         `Notificaciones de Ban/Elección`,
     ],
-    [TextType.B0920]: [
+    [Lang_Constants.TextType.B0920]: [
         `房间满员提醒`,
         `Room Notifications`,
         `Notificaciones de Sala`,
     ],
-    [TextType.B0921]: [
+    [Lang_Constants.TextType.B0921]: [
         `保存并提审`,
         `Save & Submit for Review`,
         `Guardar y Publicar para Revisión`,
     ],
-    [TextType.B0922]: [
+    [Lang_Constants.TextType.B0922]: [
         `玩家数量`,
         `Num of Players`,
         `Número de Jugadores`,
     ],
-    [TextType.B0923]: [
+    [Lang_Constants.TextType.B0923]: [
         `悔棋`,
         `Undo`,
         `Deshacer`,
     ],
-    [TextType.B0924]: [
+    [Lang_Constants.TextType.B0924]: [
         `重做`,
         `Redo`,
         `Rehacer`,
     ],
-    [TextType.B0925]: [
+    [Lang_Constants.TextType.B0925]: [
         `在回合中`,
         `is in turn`,
         `está en turno`,
     ],
-    [TextType.B0926]: [
+    [Lang_Constants.TextType.B0926]: [
         `不在回合中`,
         `is not in turn`,
         `no está en turno`,
     ],
-    [TextType.B0927]: [
+    [Lang_Constants.TextType.B0927]: [
         `已下潜`,
         `is dived`,
         `está sumergido`,
     ],
-    [TextType.B0928]: [
+    [Lang_Constants.TextType.B0928]: [
         `未下潜`,
         `is not dived`,
         `no está sumergido`,
     ],
-    [TextType.B0929]: [
+    [Lang_Constants.TextType.B0929]: [
         `玩家主动操作数...`,
         `Players' Manual Actions Statistics...`,
         `Estadísticas de Acciones manuales de Jugadores ...`,
     ],
-    [TextType.B0930]: [
+    [Lang_Constants.TextType.B0930]: [
         `最近回合数`,
         `Recent Turns`,
         `Turnos Recientes`,
     ],
-    [TextType.B0931]: [
+    [Lang_Constants.TextType.B0931]: [
         `全部删除`,
         `Delete All`,
         `Eliminar Todo`,
     ],
-    [TextType.B0932]: [
+    [Lang_Constants.TextType.B0932]: [
         `地图缩放`,
         `Zooming`,
         `Enfocando`,
     ],
-    [TextType.B0933]: [
+    [Lang_Constants.TextType.B0933]: [
         `部队操作`,
         `Unit Deployment`,
         `Despliegue de Unidades`,
     ],
-    [TextType.B0934]: [
+    [Lang_Constants.TextType.B0934]: [
         `部队HP`,
         `Unit HP`,
         `HP de Unidad`,
     ],
-    [TextType.B0935]: [
+    [Lang_Constants.TextType.B0935]: [
         `结束回合`,
         `Ending a Turn`,
         `Finalizando un Turno`,
     ],
-    [TextType.B0936]: [
+    [Lang_Constants.TextType.B0936]: [
         `近战攻击`,
         `Direct Attacks`,
         `Ataques Directos`,
     ],
-    [TextType.B0937]: [
+    [Lang_Constants.TextType.B0937]: [
         `部队升级`,
         `Leveling up Units`,
         `Promocionando Unidades`,
     ],
-    [TextType.B0938]: [
+    [Lang_Constants.TextType.B0938]: [
         `地形属性`,
         `About Terrain Info`,
         `Sobre Info. de Terreno`,
     ],
-    [TextType.B0939]: [
+    [Lang_Constants.TextType.B0939]: [
         `部队属性`,
         `About Unit Info`,
         `Sobre Info. de Unidades`,
     ],
-    [TextType.B0940]: [
+    [Lang_Constants.TextType.B0940]: [
         `弹药`,
         `Ammunition`,
         `Munición`,
     ],
-    [TextType.B0941]: [
+    [Lang_Constants.TextType.B0941]: [
         `计入同CO内战`,
         `Count Mirror Games`,
         `Contar Partidas Reflejas`,
     ],
-    [TextType.B0942]: [
+    [Lang_Constants.TextType.B0942]: [
         `远程攻击`,
         `Indirect Attacks`,
         `Ataques Indirectos`,
     ],
-    [TextType.B0943]: [
+    [Lang_Constants.TextType.B0943]: [
         `攻击范围`,
         `Attack Range`,
         `Rango de Ataque`,
     ],
-    [TextType.B0944]: [
+    [Lang_Constants.TextType.B0944]: [
         `地形效果`,
         `Terrain Effects`,
         `Efectos de Terreno`,
     ],
-    [TextType.B0945]: [
+    [Lang_Constants.TextType.B0945]: [
         `部队属性表`,
         `Unit Chart`,
         `Tabla de Unidades`,
     ],
-    [TextType.B0946]: [
+    [Lang_Constants.TextType.B0946]: [
         `胜负条件`,
         `Terms`,
         `Términos`,
     ],
-    [TextType.B0947]: [
+    [Lang_Constants.TextType.B0947]: [
         `部队合流`,
         `Joining`,
         `Uniéndose`,
     ],
-    [TextType.B0948]: [
+    [Lang_Constants.TextType.B0948]: [
         `显示排位赛不可用的CO`,
         `Show COs Unavailable for Ranked Games`,
         `Mostrar COs No disponibles para Partidas Rankeadas`,
     ],
-    [TextType.B0949]: [
+    [Lang_Constants.TextType.B0949]: [
         `视野加成`,
         `Mountain Vision`,
         `Visión de Montaña`,
     ],
-    [TextType.B0950]: [
+    [Lang_Constants.TextType.B0950]: [
         `意外遭遇`,
         `Surprise Encounters`,
         `Encuentros Sorpresa`,
     ],
-    [TextType.B0951]: [
+    [Lang_Constants.TextType.B0951]: [
         `照明车`,
         `Flare Rockets`,
         `Bengalas Ud. explor.`,
     ],
-    [TextType.B0952]: [
+    [Lang_Constants.TextType.B0952]: [
         `建筑占领`,
         `Capturing`,
         `Capturando`,
     ],
-    [TextType.B0953]: [
+    [Lang_Constants.TextType.B0953]: [
         `资金`,
         `Funds`,
         `Presupuesto`,
     ],
-    [TextType.B0954]: [
+    [Lang_Constants.TextType.B0954]: [
         `生产部队`,
         `Production`,
         `Producción`,
     ],
-    [TextType.B0955]: [
+    [Lang_Constants.TextType.B0955]: [
         `删除部队`,
         `Deleting Units`,
         `Suprimiendo Unidades`,
     ],
-    [TextType.B0956]: [
+    [Lang_Constants.TextType.B0956]: [
         `部队维修`,
         `Recovery`,
         `Recuperación`,
     ],
-    [TextType.B0957]: [
+    [Lang_Constants.TextType.B0957]: [
         `建筑视野`,
         `Base Vision Range`,
         `Rango de Visión Base`,
     ],
-    [TextType.B0958]: [
+    [Lang_Constants.TextType.B0958]: [
         `装载部队`,
         `Loading Units`,
         `Cargando Unidades`,
     ],
-    [TextType.B0959]: [
+    [Lang_Constants.TextType.B0959]: [
         `运载部队`,
         `Carrying Units`,
         `Cargando Unidades`,
     ],
-    [TextType.B0960]: [
+    [Lang_Constants.TextType.B0960]: [
         `运输部队`,
         `Transport Units`,
         `Unidades de Transporte`,
     ],
-    [TextType.B0961]: [
+    [Lang_Constants.TextType.B0961]: [
         `工程车`,
         `Rigs`,
         `Camiones militares`,
     ],
-    [TextType.B0962]: [
+    [Lang_Constants.TextType.B0962]: [
         `建筑建造`,
         `Constructing`,
         `Construyendo`,
     ],
-    [TextType.B0963]: [
+    [Lang_Constants.TextType.B0963]: [
         `部队补给`,
         `Resupplying`,
         `Reabasteciendo`,
     ],
-    [TextType.B0964]: [
+    [Lang_Constants.TextType.B0964]: [
         `建造材料`,
         `Material`,
         `Material`,
     ],
-    [TextType.B0965]: [
+    [Lang_Constants.TextType.B0965]: [
         `下潜和上浮`,
         `Diving and Surfacing`,
         `Sumergir y Emerger`,
     ],
-    [TextType.B0966]: [
+    [Lang_Constants.TextType.B0966]: [
         `从航母生产部队`,
         `Carrier Unit Production`,
         `Producción de Unidades Portaaviones`,
     ],
-    [TextType.B0967]: [
+    [Lang_Constants.TextType.B0967]: [
         `雨天`,
         `Rain`,
         `Lluvia`,
     ],
-    [TextType.B0968]: [
+    [Lang_Constants.TextType.B0968]: [
         `雪天`,
         `Snow`,
         `Nieve`,
     ],
-    [TextType.B0969]: [
+    [Lang_Constants.TextType.B0969]: [
         `沙尘暴`,
         `SandStorms`,
         `Tormenta de arena`,
     ],
-    [TextType.B0970]: [
+    [Lang_Constants.TextType.B0970]: [
         `CO Zone`,
         `Command Zone`,
         `Zona del CO`,
     ],
-    [TextType.B0971]: [
+    [Lang_Constants.TextType.B0971]: [
         `CO能量`,
         `CO Power Gauge`,
         `Nivel de Energía de CO`,
     ],
-    [TextType.B0972]: [
+    [Lang_Constants.TextType.B0972]: [
         `CO战技`,
         `CO Power`,
         `Poder del CO`,
     ],
-    [TextType.B0973]: [
+    [Lang_Constants.TextType.B0973]: [
         `CO部队`,
         `CO Units`,
         `Unidades del CO`,
     ],
-    [TextType.B0974]: [
+    [Lang_Constants.TextType.B0974]: [
         `摧毁CO部队`,
         `Destruction of COU`,
         `Destrucción de Unidad del CO`,
     ],
-    [TextType.B0975]: [
+    [Lang_Constants.TextType.B0975]: [
         `存档与读档`,
         `Saving and Loading`,
         `Guardando y Cargando`,
     ],
-    [TextType.B0976]: [
+    [Lang_Constants.TextType.B0976]: [
         `退出战局`,
         `Quit`,
         `Salir`,
     ],
-    [TextType.B0977]: [
+    [Lang_Constants.TextType.B0977]: [
         `数据统计`,
         `Status`,
         `Estado`,
     ],
-    [TextType.B0978]: [
+    [Lang_Constants.TextType.B0978]: [
         `教程`,
         `Tutorial`,
         `Tutorial`,
     ],
-    [TextType.B0979]: [
+    [Lang_Constants.TextType.B0979]: [
         `跳过回合`,
         `Skip a Turn`,
         `Saltarse un Turno`,
     ],
-    [TextType.B0980]: [
+    [Lang_Constants.TextType.B0980]: [
         `将跳过一个回合`,
         `is skipping a turn`,
         `se está saltando un turno`,
     ],
-    [TextType.B0981]: [
+    [Lang_Constants.TextType.B0981]: [
         `将不会跳过一个回合`,
         `is not skipping a turn`,
         `no se está saltando un turno`,
     ],
-    [TextType.B0982]: [
+    [Lang_Constants.TextType.B0982]: [
         `游客登陆`,
         `Login as Guest`,
         `Ingresar como Invitado`,
     ],
-    [TextType.B0983]: [
+    [Lang_Constants.TextType.B0983]: [
         `拥有者`,
         `Owner`,
         `Propietario`,
     ],
-    [TextType.B0984]: [
+    [Lang_Constants.TextType.B0984]: [
         `图像设置`,
         `Graphic Settings`,
         `Configuraciones Gráficas`,
     ],
-    [TextType.B0985]: [
+    [Lang_Constants.TextType.B0985]: [
         `天气动画`,
         `Weather Animation`,
         `Animación de Clima`,
     ],
-    [TextType.B0986]: [
+    [Lang_Constants.TextType.B0986]: [
         `动作数限制`,
         `Actions Limit`,
         `Límite de Acciones`,
     ],
-    [TextType.B0987]: [
+    [Lang_Constants.TextType.B0987]: [
         `回合与动作数限制`,
         `Max. Turns & Actions`,
         `Máximo de Turnos y Acciones`,
     ],
-    [TextType.B0988]: [
+    [Lang_Constants.TextType.B0988]: [
         `标准计时器`,
         `Regular Timer`,
         `Temporizador Regular`,
     ],
-    [TextType.B0989]: [
+    [Lang_Constants.TextType.B0989]: [
         `增量计时器`,
         `Incremental Timer`,
         `Temporizador Incremental`,
     ],
-    [TextType.B0990]: [
+    [Lang_Constants.TextType.B0990]: [
         `计时器参数`,
         `Timer Params`,
         `Parámetros del Temporizador`,
     ],
-    [TextType.B0991]: [
+    [Lang_Constants.TextType.B0991]: [
         `回合增量时间`,
         `Incremental Time per Turn`,
         `Tiempo Incremental por Turno`,
     ],
-    [TextType.B0992]: [
+    [Lang_Constants.TextType.B0992]: [
         `CO BGM 设置`,
         `CO BGM Settings`,
         `Opciones de Música de fondo de CO`,
     ],
-    [TextType.B0993]: [
+    [Lang_Constants.TextType.B0993]: [
         `复制地形`,
         `Copy Tile`,
         `Copiar Casilla`,
     ],
-    [TextType.B0994]: [
+    [Lang_Constants.TextType.B0994]: [
         `粘贴地形`,
         `Paste Tile`,
         `Pegar Casilla`,
     ],
-    [TextType.B0995]: [
+    [Lang_Constants.TextType.B0995]: [
         `复制部队`,
         `Copy Unit`,
         `Copiar Unidad`,
     ],
-    [TextType.B0996]: [
+    [Lang_Constants.TextType.B0996]: [
         `粘贴部队`,
         `Paste Unit`,
         `Pegar Unidad`,
     ],
-    [TextType.B0997]: [
+    [Lang_Constants.TextType.B0997]: [
         `已关注`,
         `Following`,
         `Siguiendo`,
     ],
-    [TextType.B0998]: [
+    [Lang_Constants.TextType.B0998]: [
         `未关注`,
         `Not Following`,
         `No Siguiendo`,
     ],
-    [TextType.B0999]: [
+    [Lang_Constants.TextType.B0999]: [
         `关注`,
         `Follow`,
         `Seguir`,
     ],
-    [TextType.B1000]: [
+    [Lang_Constants.TextType.B1000]: [
         `屏蔽`,
         `Block`,
         `Bloquear`,
     ],
-    [TextType.B1001]: [
+    [Lang_Constants.TextType.B1001]: [
         `关系`,
         `Relations`,
         `Relaciones`,
     ],
-    [TextType.B1002]: [
+    [Lang_Constants.TextType.B1002]: [
         `已结束`,
         `Ended`,
         `Finalizado`,
     ],
-    [TextType.B1003]: [
+    [Lang_Constants.TextType.B1003]: [
         `邀请`,
         `Invitation`,
         `Invitación`,
     ],
-    [TextType.B1004]: [
+    [Lang_Constants.TextType.B1004]: [
         `地图已过审`,
         `Map Accepted`,
         `Mapa Aceptado`,
     ],
-    [TextType.B1005]: [
+    [Lang_Constants.TextType.B1005]: [
         `删除多余事件`,
         `Delete Redundant Events`,
         `Eliminar Eventos Redundantes`,
     ],
-    [TextType.B1006]: [
+    [Lang_Constants.TextType.B1006]: [
         `事件编辑器`,
         `Events Editor`,
         `Editor de Eventos`,
     ],
-    [TextType.B1007]: [
+    [Lang_Constants.TextType.B1007]: [
         `提交战局事件`,
         `Submit War Events`,
         `Publicar Eventos de Guerra`,
     ],
-    [TextType.B1008]: [
+    [Lang_Constants.TextType.B1008]: [
         `调整河流`,
         `Adjust Rivers`,
         `Ajustar Ríos`,
     ],
-    [TextType.B1009]: [
+    [Lang_Constants.TextType.B1009]: [
         `调整沙滩`,
         `Adjust Beaches`,
         `Ajustar Playas`,
     ],
-    [TextType.B1010]: [
+    [Lang_Constants.TextType.B1010]: [
         `自动调整`,
         `Auto Adjustment`,
         `Auto Ajuste`,
     ],
-    [TextType.B1011]: [
+    [Lang_Constants.TextType.B1011]: [
         `对战模式`,
         `Versus Mode`,
         `Modo Versus`,
     ],
-    [TextType.B1012]: [
+    [Lang_Constants.TextType.B1012]: [
         `匹配模式`,
         `Unranked Match`,
         `Partida No Rankeada`,
     ],
-    [TextType.B1013]: [
+    [Lang_Constants.TextType.B1013]: [
         `游戏模式`,
         `Game Modes`,
         `Modos de Juego`,
     ],
-    [TextType.B1014]: [
+    [Lang_Constants.TextType.B1014]: [
         `匹配明战`,
         `Match Std`,
         `Partida Estándar`,
     ],
-    [TextType.B1015]: [
+    [Lang_Constants.TextType.B1015]: [
         `匹配雾战`,
         `Match FoW`,
         `Partida Niebla de Guerra`,
     ],
-    [TextType.B1016]: [
+    [Lang_Constants.TextType.B1016]: [
         `移动`,
         `Move`,
         `Moverse`,
     ],
-    [TextType.B1017]: [
+    [Lang_Constants.TextType.B1017]: [
         `相对`,
         `Relative`,
         `Relativo`,
     ],
-    [TextType.B1018]: [
+    [Lang_Constants.TextType.B1018]: [
         `勋章`,
         `Medal`,
         `Medalla`,
     ],
-    [TextType.B1019]: [
+    [Lang_Constants.TextType.B1019]: [
         `展示`,
         `Show`,
         `Mostrar`,
     ],
-    [TextType.B1020]: [
+    [Lang_Constants.TextType.B1020]: [
         `获得`,
         `Acquisition`,
         `Adquisición`,
     ],
-    [TextType.B1021]: [
+    [Lang_Constants.TextType.B1021]: [
         `过期`,
         `Expiration`,
         `Expiración`,
     ],
-    [TextType.B1022]: [
+    [Lang_Constants.TextType.B1022]: [
         `常规联赛`,
         `Regular Tournament`,
         `Torneo Regular`,
     ],
-    [TextType.B1023]: [
+    [Lang_Constants.TextType.B1023]: [
         `联赛明战`,
         `Tournament Std`,
         `Torneo Estándar`,
     ],
-    [TextType.B1024]: [
+    [Lang_Constants.TextType.B1024]: [
         `联赛雾战`,
         `Tournament FoW`,
         `Torneo Niebla de Guerra`,
     ],
-    [TextType.B1025]: [
+    [Lang_Constants.TextType.B1025]: [
         `注册`,
         `Registration`,
         `Registro`,
     ],
-    [TextType.B1026]: [
+    [Lang_Constants.TextType.B1026]: [
         `联赛ID`,
         `Tournament ID`,
         `ID de Torneo`,
     ],
-    [TextType.B1027]: [
+    [Lang_Constants.TextType.B1027]: [
         `已报名人数`,
         `Registered Players`,
         `Jugadores Registrados`,
     ],
-    [TextType.B1028]: [
+    [Lang_Constants.TextType.B1028]: [
         `已报名`,
         `Registered`,
         `Registrado`,
     ],
-    [TextType.B1029]: [
+    [Lang_Constants.TextType.B1029]: [
         `上一个`,
         `Previous`,
         `Previo`,
     ],
-    [TextType.B1030]: [
+    [Lang_Constants.TextType.B1030]: [
         `下一个`,
         `Next`,
         `Siguiente`,
     ],
-    [TextType.B1031]: [
+    [Lang_Constants.TextType.B1031]: [
         `退赛`,
         `Drop Out`,
         `Salirse`,
     ],
-    [TextType.B1032]: [
+    [Lang_Constants.TextType.B1032]: [
         `剩余时间`,
         `Time Remaining`,
         `Tiempo Remanente`,
     ],
-    [TextType.B1033]: [
+    [Lang_Constants.TextType.B1033]: [
         `轮次`,
         `Round`,
         `Ronda`,
     ],
-    [TextType.B1034]: [
+    [Lang_Constants.TextType.B1034]: [
         `自动举办`,
         `Auto Host`,
         `Auto Administrar`,
     ],
-    [TextType.B1035]: [
+    [Lang_Constants.TextType.B1035]: [
         `时间间隔`,
         `Interval`,
         `Intervalo`,
     ],
-    [TextType.B1036]: [
+    [Lang_Constants.TextType.B1036]: [
         `管理常规联赛`,
         `Manage Regular Tourney`,
         `Administrar Torneo Regular`,
     ],
-    [TextType.B1037]: [
+    [Lang_Constants.TextType.B1037]: [
         `举办新联赛`,
         `Host a tournament`,
         `Gestionar un torneo`,
     ],
-    [TextType.B1038]: [
+    [Lang_Constants.TextType.B1038]: [
         `删除最新的联赛`,
         `Delete the latest tournament`,
         `Eliminar el último torneo`,
     ],
-    [TextType.B1039]: [
+    [Lang_Constants.TextType.B1039]: [
         `接受报名`,
         `Open for Registration`,
         `Abierto para Registrarse`,
     ],
-    [TextType.B1040]: [
+    [Lang_Constants.TextType.B1040]: [
         `准备中`,
         `Preparing`,
         `Preparando`,
     ],
-    [TextType.B1041]: [
+    [Lang_Constants.TextType.B1041]: [
         `战斗中`,
         `Battling`,
         `En Batalla`,
     ],
-    [TextType.B1042]: [
+    [Lang_Constants.TextType.B1042]: [
         `无编组数据`,
         `No Bracket Data`,
         `Sin Data de las Llaves`,
     ],
-    [TextType.B1043]: [
+    [Lang_Constants.TextType.B1043]: [
         `报名期时长`,
         `Registration Period`,
         `Periodo de Registro`,
     ],
-    [TextType.B1044]: [
+    [Lang_Constants.TextType.B1044]: [
         `准备期时长`,
         `Preparation Period`,
         `Periodo de Preparación`,
     ],
-    [TextType.B1045]: [
+    [Lang_Constants.TextType.B1045]: [
         `修改地图`,
         `Modify Maps`,
         `Modificar Mapas`,
     ],
-    [TextType.B1046]: [
+    [Lang_Constants.TextType.B1046]: [
         `修改玩家分组`,
         `Modify Matchup`,
         `Modificar Emparejamiento`,
     ],
-    [TextType.B1047]: [
+    [Lang_Constants.TextType.B1047]: [
         `地图`,
         `Map`,
         `Mapa`,
     ],
-    [TextType.B1048]: [
+    [Lang_Constants.TextType.B1048]: [
         `删除玩家`,
         `Delete Players`,
         `Eliminar Jugadores`,
     ],
-    [TextType.B1049]: [
+    [Lang_Constants.TextType.B1049]: [
         `排序`,
         `Sort`,
         `Ordenar`,
     ],
-    [TextType.B1050]: [
+    [Lang_Constants.TextType.B1050]: [
         `名称升序`,
         `Name Ascending`,
         `Nombre Ascendente`,
     ],
-    [TextType.B1051]: [
+    [Lang_Constants.TextType.B1051]: [
         `名称降序`,
         `Name Descending`,
         `Nombre Descendente`,
     ],
-    [TextType.B1052]: [
+    [Lang_Constants.TextType.B1052]: [
         `ID升序`,
         `ID Ascending`,
         `ID Ascendente`,
     ],
-    [TextType.B1053]: [
+    [Lang_Constants.TextType.B1053]: [
         `ID降序`,
         `ID Descending`,
         `ID Descendente`,
     ],
-    [TextType.B1054]: [
+    [Lang_Constants.TextType.B1054]: [
         `已被装载`,
         `is loaded`,
         `está cargado`,
     ],
-    [TextType.B1055]: [
+    [Lang_Constants.TextType.B1055]: [
         `未被装载`,
         `is not loaded`,
         `no está cargado`,
     ],
-    [TextType.B1056]: [
+    [Lang_Constants.TextType.B1056]: [
         `被装载`,
         `Loaded`,
         `Cargado`,
     ],
-    [TextType.B1057]: [
+    [Lang_Constants.TextType.B1057]: [
         `挑战模式中玩家可选CO`,
         `COs for Player in War Room`,
         `COs para Jugadores en Sala de Guerra`,
     ],
-    [TextType.B1058]: [
+    [Lang_Constants.TextType.B1058]: [
         `部队`,
         `Unit`,
         `Unidad`,
     ],
-    [TextType.B1059]: [
+    [Lang_Constants.TextType.B1059]: [
         `填充部队`,
         `Fill with Units`,
         `Llenar con Unidades`,
     ],
-    [TextType.B1060]: [
+    [Lang_Constants.TextType.B1060]: [
         `警告`,
         `Warning`,
         `Advertencia`,
     ],
-    [TextType.B1061]: [
+    [Lang_Constants.TextType.B1061]: [
         `横屏模式`,
         `Landscape`,
         `Paisaje`,
     ],
-    [TextType.B1062]: [
+    [Lang_Constants.TextType.B1062]: [
         `与区域的最小距离`,
         `Min. Distance to Locations`,
         `Distancia Mínima a las Posiciones`,
     ],
-    [TextType.B1063]: [
+    [Lang_Constants.TextType.B1063]: [
         `与坐标的最小距离`,
         `Min. Distance to Coordinates`,
         `Distancia Mínima a las Coordenadas`,
     ],
-    [TextType.B1064]: [
+    [Lang_Constants.TextType.B1064]: [
         `标签`,
         `Tags`,
         `Marcas`,
     ],
-    [TextType.B1065]: [
+    [Lang_Constants.TextType.B1065]: [
         `增加标签`,
         `Add Tags`,
         `Añadir Marcas`,
     ],
-    [TextType.B1066]: [
+    [Lang_Constants.TextType.B1066]: [
         `删除标签`,
         `Delete Tags`,
         `Eliminar Marcas`,
     ],
-    [TextType.B1067]: [
+    [Lang_Constants.TextType.B1067]: [
         `部队筛选器`,
         `Unit Filter`,
         `Filtros de Unidades`,
     ],
-    [TextType.B1068]: [
+    [Lang_Constants.TextType.B1068]: [
         `地形满足指定条件`,
         `the terrain meets the specified conditions`,
         `el terreno cumple con las condiciones especificadas`,
     ],
-    [TextType.B1069]: [
+    [Lang_Constants.TextType.B1069]: [
         `地块筛选器`,
         `Tile Filter`,
         `Filtros de Terreno`,
     ],
-    [TextType.B1070]: [
+    [Lang_Constants.TextType.B1070]: [
         `反潜`,
         `Antisubmarine`,
         `Antisubmarino`,
     ],
-    [TextType.B1071]: [
+    [Lang_Constants.TextType.B1071]: [
         `X坐标`,
         `X-Coordinate`,
         `Coordenada X`,
     ],
-    [TextType.B1072]: [
+    [Lang_Constants.TextType.B1072]: [
         `Y坐标`,
         `Y-Coordinate`,
         `Coordenada Y`,
     ],
-    [TextType.B1073]: [
+    [Lang_Constants.TextType.B1073]: [
         `位置筛选器`,
         `Position Filters`,
         `Filtros de Posición`,
     ],
-    [TextType.B1074]: [
+    [Lang_Constants.TextType.B1074]: [
         `选取`,
         `Pick`,
         `Escoger`,
     ],
-    [TextType.B1075]: [
+    [Lang_Constants.TextType.B1075]: [
         `排位`,
         `Ranked`,
         `Rankeadas`,
     ],
-    [TextType.B1076]: [
+    [Lang_Constants.TextType.B1076]: [
         `CO数据统计`,
         `CO Statistics`,
         `Estadísticas del CO`,
     ],
-    [TextType.B1077]: [
+    [Lang_Constants.TextType.B1077]: [
         `最大射程加成`,
         `Max Attack Range Bonus`,
         `Bonificación de Rango de Ataque Máximo`,
     ],
-    [TextType.B1078]: [
+    [Lang_Constants.TextType.B1078]: [
         `移动力加成`,
         `Move Range Bonus`,
         `Bonificación de Rango de Movimiento`,
     ],
-    [TextType.B1079]: [
+    [Lang_Constants.TextType.B1079]: [
         `防御力加成%`,
         `Def Bonus %`,
         `Bonificación de Defensa %`,
     ],
-    [TextType.B1080]: [
+    [Lang_Constants.TextType.B1080]: [
         `持续性修改部队属性`,
         `Persistently Modify Units' Attribute`,
         `Modificar Atributos de Unidades Persistentemente`,
     ],
-    [TextType.B1081]: [
+    [Lang_Constants.TextType.B1081]: [
         `解禁部队`,
         `Unbanned Units`,
         `Unidades no-baneadas`,
     ],
-    [TextType.B1082]: [
+    [Lang_Constants.TextType.B1082]: [
         `选择地图`,
         `Choose a Map`,
         `Escoger un Mapa`,
     ],
-    [TextType.B1083]: [
+    [Lang_Constants.TextType.B1083]: [
         `持续性播放BGM`,
         `Persistently Play BGM`,
         `Reproducir persistentemente Música de fondo`,
     ],
-    [TextType.B1084]: [
+    [Lang_Constants.TextType.B1084]: [
         `视野范围加成`,
         `Vision Range Bonus`,
         `Bonificación del Rango de Visión`,
     ],
-    [TextType.B1085]: [
+    [Lang_Constants.TextType.B1085]: [
         `幸运下限加成`,
         `Luck Lower Limit Bonus`,
         `Bonificación del límite de Suerte Mínima`,
     ],
-    [TextType.B1086]: [
+    [Lang_Constants.TextType.B1086]: [
         `幸运上限加成`,
         `Luck Upper Limit Bonus`,
         `Bonificación del límite de Suerte Máxima`,
     ],
-    [TextType.B1087]: [
+    [Lang_Constants.TextType.B1087]: [
         `照明弹射程加成`,
         `Flare Range Bonus`,
         `Bonificación de Rango de Bengala`,
     ],
-    [TextType.B1088]: [
+    [Lang_Constants.TextType.B1088]: [
         `照明弹半径加成`,
         `Flare Radius Bonus`,
         `Bonificación de Radio de Bengala`,
     ],
-    [TextType.B1089]: [
+    [Lang_Constants.TextType.B1089]: [
         `能量增长率加成`,
         `Energy Growth Modifier`,
         `Modificador de Aumento de Energía`,
     ],
-    [TextType.B1090]: [
+    [Lang_Constants.TextType.B1090]: [
         `禁入区域`,
         `No-entry Locations`,
         `Posiciones de no-entrada`,
     ],
-    [TextType.B1091]: [
+    [Lang_Constants.TextType.B1091]: [
         `增加禁入区域`,
         `Add No-entry Locations`,
         `Añadir Posiciones de no-entrada`,
     ],
-    [TextType.B1092]: [
+    [Lang_Constants.TextType.B1092]: [
         `删除禁入区域`,
         `Delete No-entry Locations`,
         `Eliminar Posiciones de no-entrada`,
     ],
-    [TextType.B1093]: [
+    [Lang_Constants.TextType.B1093]: [
         `A.I.移动目的地`,
         `A.I. Destination`,
         `Destino de la I.A.`,
     ],
-    [TextType.B1094]: [
+    [Lang_Constants.TextType.B1094]: [
         `权重`,
         `Weight`,
         `Peso`,
     ],
-    [TextType.B1095]: [
+    [Lang_Constants.TextType.B1095]: [
         `可重复的简易对话`,
         `Repeatable Simple Dialogues`,
         `Diálogos Simples Repetibles`,
     ],
-    [TextType.B1096]: [
+    [Lang_Constants.TextType.B1096]: [
         `对话列表`,
         `Dialogue List`,
         `Lista de Diálogos`,
     ],
-    [TextType.B1097]: [
+    [Lang_Constants.TextType.B1097]: [
         `对话`,
         `Dialogue`,
         `Diálogo`,
     ],
-    [TextType.B1098]: [
+    [Lang_Constants.TextType.B1098]: [
         `战术中心`,
         `Tactics Room`,
         `Sala de Consejo`,
     ],
-    [TextType.B1099]: [
+    [Lang_Constants.TextType.B1099]: [
         `新增事件 / 编辑可重复对话`,
         `Add Events / Edit Repeatable Dialogues`,
         `Añadir Eventos / Editar Diálogos Repetibles`,
     ],
-    [TextType.B1100]: [
+    [Lang_Constants.TextType.B1100]: [
         `提交可重复对话`,
         `Submit Repeatable Dialogues`,
         `Publicar Diálogos Repetibles`,
     ],
-    [TextType.B1101]: [
+    [Lang_Constants.TextType.B1101]: [
         `当前多人游戏局数`,
         `Ongoing MP Games`,
         `Partidas Multijugador en progreso`,
     ],
-    [TextType.B1102]: [
+    [Lang_Constants.TextType.B1102]: [
         `排位赛排行榜`,
         `Ranked Leaderboard`,
         `Tabla de Posiciones del Ranking`,
     ],
-    [TextType.B1103]: [
+    [Lang_Constants.TextType.B1103]: [
         `挑战模式排行榜`,
         `War Room Leaderboard`,
         `Tabla de Posiciones de Sala de Guerra`,
     ],
-    [TextType.B1104]: [
+    [Lang_Constants.TextType.B1104]: [
         `数据版本`,
         `Data Version`,
         `Versión de la Data`,
     ],
-    [TextType.B1105]: [
+    [Lang_Constants.TextType.B1105]: [
         `格子数量`,
         `Grids Count`,
         `Conteo de Grillas`,
     ],
-    [TextType.B1106]: [
+    [Lang_Constants.TextType.B1106]: [
         `升序`,
         `Ascending`,
         `Ascendente`,
     ],
-    [TextType.B1107]: [
+    [Lang_Constants.TextType.B1107]: [
         `切换真/假`,
         `TRUE/FALSE`,
         `VERDADERO/FALSO`,
     ],
-    [TextType.B1108]: [
+    [Lang_Constants.TextType.B1108]: [
         `标记格子`,
         `Mark Grids`,
         `Marcar Grillas`,
     ],
-    [TextType.B1109]: [
+    [Lang_Constants.TextType.B1109]: [
         `批量标记`,
         `Batch Mark`,
         `Marcar Lote`,
     ],
-    [TextType.B1110]: [
+    [Lang_Constants.TextType.B1110]: [
         `在视野中`,
         `In Vision`,
         `En Visión`,
     ],
-    [TextType.B1111]: [
+    [Lang_Constants.TextType.B1111]: [
         `伤害公式`,
         `Damage Formula`,
         `Fórmula de Daño`,
     ],
-    [TextType.B1112]: [
+    [Lang_Constants.TextType.B1112]: [
         `鼠标悬停`,
         `Mouse Hovering`,
         `Pasar el Mouse por encima`,
     ],
-    [TextType.B1113]: [
+    [Lang_Constants.TextType.B1113]: [
         `地形贴图主题`,
         `Tile Theme`,
         `Tema de la Casilla`,
     ],
-    [TextType.B1114]: [
+    [Lang_Constants.TextType.B1114]: [
         `得分`,
         `Score`,
         `Puntaje`,
     ],
-    [TextType.B1115]: [
+    [Lang_Constants.TextType.B1115]: [
         `挑战模式回放`,
         `War Room Replay`,
         `Repetición de Sala de Guerra`,
     ],
-    [TextType.B1116]: [
+    [Lang_Constants.TextType.B1116]: [
         `系统管理员`,
         `Administrator`,
         `Administrador`,
     ],
-    [TextType.B1117]: [
+    [Lang_Constants.TextType.B1117]: [
         `聊天管理员`,
         `Chat Moderator`,
         `Moderador de Chat`,
     ],
-    [TextType.B1118]: [
+    [Lang_Constants.TextType.B1118]: [
         `更新日志管理员`,
         `Changelog Manager`,
         `Administrador de Cambio de Cuenta`,
     ],
-    [TextType.B1119]: [
+    [Lang_Constants.TextType.B1119]: [
         `地图委员会`,
         `Map Committee`,
         `Comité de Mapas`,
     ],
-    [TextType.B1120]: [
+    [Lang_Constants.TextType.B1120]: [
         `常规联赛管理员`,
         `Regular Tourney Manager`,
         `Administrador de Torneo Regular`,
     ],
-    [TextType.B1121]: [
+    [Lang_Constants.TextType.B1121]: [
         `实时自动调整`,
         `Real-time Adjustment`,
         `Ajuste en Tiempo Real`,
     ],
-    [TextType.B1122]: [
+    [Lang_Constants.TextType.B1122]: [
         `最大占领点数`,
         `Max. Capture Point`,
         `Puntos de Captura Máximos`,
     ],
-    [TextType.B1123]: [
+    [Lang_Constants.TextType.B1123]: [
         `阻挡敌军移动`,
         `Blockable Enemy Units`,
         `Bloqueable por Unidades Enemigas`,
     ],
-    [TextType.B1124]: [
+    [Lang_Constants.TextType.B1124]: [
         `可搭乘CO的部队`,
         `CO Board-able Units`,
         `Unidades abordables por CO`,
     ],
-    [TextType.B1125]: [
+    [Lang_Constants.TextType.B1125]: [
         `可防御的部队`,
         `Defensible Units`,
         `Unidades Defensibles`,
     ],
-    [TextType.B1126]: [
+    [Lang_Constants.TextType.B1126]: [
         `HP维修量`,
         `Repair HP Amount`,
         `Cantidad de Reparación de HP`,
     ],
-    [TextType.B1127]: [
+    [Lang_Constants.TextType.B1127]: [
         `全局攻击加成`,
         `Global ATK Bonus`,
         `Bonificación de Ataque Global`,
     ],
-    [TextType.B1128]: [
+    [Lang_Constants.TextType.B1128]: [
         `全局防御加成`,
         `Global DEF Bonus`,
         `Bonificación de Defensa Global`,
     ],
-    [TextType.B1129]: [
+    [Lang_Constants.TextType.B1129]: [
         `所有玩家共享视野`,
         `Shared Vision`,
         `Visión Compartida`,
     ],
-    [TextType.B1130]: [
+    [Lang_Constants.TextType.B1130]: [
         `共享`,
         `Shared`,
         `Compartida`,
     ],
-    [TextType.B1131]: [
+    [Lang_Constants.TextType.B1131]: [
         `DoR版`,
         `DoR`,
         `DarkConflict`,
     ],
-    [TextType.B1132]: [
+    [Lang_Constants.TextType.B1132]: [
         `战役管理员`,
         `Campaign Manager`,
         `Administrador de Campaña`,
     ],
-    [TextType.B1133]: [
+    [Lang_Constants.TextType.B1133]: [
         `管理战役`,
         `Manage Campaigns`,
         `Manejar Campañas`,
     ],
-    [TextType.B1134]: [
+    [Lang_Constants.TextType.B1134]: [
         `创建新战役`,
         `Create a new Campaign`,
         `Crear nueva Campaña`,
     ],
-    [TextType.B1135]: [
+    [Lang_Constants.TextType.B1135]: [
         `战役`,
         `Campaign`,
         `Campaña`,
     ],
-    [TextType.B1136]: [
+    [Lang_Constants.TextType.B1136]: [
         `修改设计者`,
         `Set Designers`,
         `Establecer Diseñadores`,
     ],
-    [TextType.B1137]: [
+    [Lang_Constants.TextType.B1137]: [
         `修改描述`,
         `Set Description`,
         `Establecer Descripción`,
     ],
-    [TextType.B1138]: [
+    [Lang_Constants.TextType.B1138]: [
         `增加设计者`,
         `Add Designers`,
         `Añadir Diseñadores`,
     ],
-    [TextType.B1139]: [
+    [Lang_Constants.TextType.B1139]: [
         `提交`,
         `Submit`,
         `Publicar`,
     ],
-    [TextType.B1140]: [
+    [Lang_Constants.TextType.B1140]: [
         `已发布`,
         `Published`,
         `Publicado`,
     ],
-    [TextType.B1141]: [
+    [Lang_Constants.TextType.B1141]: [
         `挑战模式验证`,
         `War Room Validation`,
         `Validación de Sala de Guerra`,
     ],
-    [TextType.B1142]: [
+    [Lang_Constants.TextType.B1142]: [
         `私人`,
         `Private`,
         `Privado`,
     ],
-    [TextType.B1143]: [
+    [Lang_Constants.TextType.B1143]: [
         `自定义计数器`,
         `Custom Counter`,
         `Contador Personalizado`,
     ],
-    [TextType.B1144]: [
+    [Lang_Constants.TextType.B1144]: [
         `地块`,
         `Tile`,
         `Casilla`,
     ],
-    [TextType.B1145]: [
+    [Lang_Constants.TextType.B1145]: [
         `雾战`,
         `Fog`,
         `Niebla`,
     ],
-    [TextType.B1146]: [
+    [Lang_Constants.TextType.B1146]: [
         `表达式...`,
         `Expression...`,
         `Expresión...`,
     ],
-    [TextType.B1147]: [
+    [Lang_Constants.TextType.B1147]: [
         `复制消息`,
         `Copy Message`,
         `Copiar Mensaje`,
     ],
-    [TextType.B1148]: [
+    [Lang_Constants.TextType.B1148]: [
         `部队统计`,
         `Unit Statistics`,
         `Estadísticas de Unidad`,
     ],
-    [TextType.B1149]: [
+    [Lang_Constants.TextType.B1149]: [
         `已获得HP`,
         `HP Gain`,
         `Ganancia de HP`,
     ],
-    [TextType.B1150]: [
+    [Lang_Constants.TextType.B1150]: [
         `已损失HP`,
         `HP Loss`,
         `Pérdida de HP`,
     ],
-    [TextType.B1151]: [
+    [Lang_Constants.TextType.B1151]: [
         `已获得部队`,
         `Unit Gain`,
         `Ganancia de Unidades`,
     ],
-    [TextType.B1152]: [
+    [Lang_Constants.TextType.B1152]: [
         `已损失部队`,
         `Unit Loss`,
         `Pérdida de Unidades`,
     ],
-    [TextType.B1153]: [
+    [Lang_Constants.TextType.B1153]: [
         `剩余HP`,
         `HP Remain`,
         `HP Remanente`,
     ],
-    [TextType.B1154]: [
+    [Lang_Constants.TextType.B1154]: [
         `剩余部队`,
         `Unit Remain`,
         `Unidades Remanentes`,
     ],
-    [TextType.B1155]: [
+    [Lang_Constants.TextType.B1155]: [
         `颜色对称性`,
         `Color Symmetry`,
         `Simetría de Color`,
     ],
-    [TextType.B1156]: [
+    [Lang_Constants.TextType.B1156]: [
         `地形数组`,
         `Array of Tile`,
         `Arreglo de Casilla`,
     ],
-    [TextType.B1157]: [
+    [Lang_Constants.TextType.B1157]: [
         `部队数组`,
         `Array of Unit`,
         `Arreglo de Unidad`,
     ],
-    [TextType.B1158]: [
+    [Lang_Constants.TextType.B1158]: [
         `玩家数组`,
         `Array of Player`,
         `Arreglo de Jugador`,
     ],
-    [TextType.B1159]: [
+    [Lang_Constants.TextType.B1159]: [
         `实数数组`,
         `Array of Number`,
         `Arreglo de Número`,
     ],
-    [TextType.B1160]: [
+    [Lang_Constants.TextType.B1160]: [
         `原生`,
         `Native`,
         `Nativo`,
     ],
-    [TextType.B1161]: [
+    [Lang_Constants.TextType.B1161]: [
         `扩展`,
         `Extended`,
         `Extendido`,
     ],
-    [TextType.B1162]: [
+    [Lang_Constants.TextType.B1162]: [
         `隐藏左侧肖像`,
         `Hide Left Portrait`,
         `Ocultar Retraro Izquierdo`,
     ],
-    [TextType.B1163]: [
+    [Lang_Constants.TextType.B1163]: [
         `隐藏右侧肖像`,
         `Hide Right Portrait`,
         `Ocultar Retrato Derecho`,
     ],
-    [TextType.B1164]: [
+    [Lang_Constants.TextType.B1164]: [
         `播放音效`,
         `Play SFX`,
         `Reproducir Efectos de sonido`,
     ],
-    [TextType.B1165]: [
+    [Lang_Constants.TextType.B1165]: [
         `满能量时部队闪烁`,
         `Unit Flickering`,
         `Resplandor de Unidades`,
     ],
-    [TextType.B1166]: [
+    [Lang_Constants.TextType.B1166]: [
         `部队统计数据`,
         `Unit Statistic`,
         `Estadísticas de Unidad`,
     ],
-    [TextType.B1167]: [
+    [Lang_Constants.TextType.B1167]: [
         `部队统计数据数组`,
         `Array of Unit Statistic`,
         `Arreglo de Estadísticas de Unidad`,
     ],
-    [TextType.B1168]: [
+    [Lang_Constants.TextType.B1168]: [
         `类型ID`,
         `Type ID`,
         `ID Tipo`,
     ],
-    [TextType.B1169]: [
+    [Lang_Constants.TextType.B1169]: [
         `Lambda函数`,
         `Lambda Function`,
         `Función Lambda`,
     ],
-    [TextType.B1170]: [
+    [Lang_Constants.TextType.B1170]: [
         `在多人游戏中启用`,
         `Enabled in Multi Player Games`,
         `Habilitado en Partidas Multijugador`,
     ],
-    [TextType.B1171]: [
+    [Lang_Constants.TextType.B1171]: [
         `已获得价值`,
         `Value Gain`,
         `Ganancia de Valor`,
     ],
-    [TextType.B1172]: [
+    [Lang_Constants.TextType.B1172]: [
         `已损失价值`,
         `Value Loss`,
         `Pérdida de Valor`,
     ],
-    [TextType.B1173]: [
+    [Lang_Constants.TextType.B1173]: [
         `剩余价值`,
         `Value Remain`,
         `Valor Remanente`,
     ],
-    [TextType.B1174]: [
+    [Lang_Constants.TextType.B1174]: [
         `仅视野内`,
         `In Vision Only`,
         `Solo En Visión`,
     ],
-    [TextType.B1175]: [
+    [Lang_Constants.TextType.B1175]: [
         `显示部队`,
         `Show Units`,
         `Mostrar Unidades`,
     ],
-    [TextType.B1176]: [
+    [Lang_Constants.TextType.B1176]: [
         `导入可重复简易对话`,
         `Import Repeatable Simple Dialogues`,
         `Importar Diálogos Simples Repetibles`,
     ],
-    [TextType.B1177]: [
+    [Lang_Constants.TextType.B1177]: [
         `玩家筛选器`,
         `Player Filter`,
         `Filtro de Jugadores`,
     ],
-    [TextType.B1178]: [
+    [Lang_Constants.TextType.B1178]: [
         `持续性修改部队属性2`,
         `Persistently Modify Units' Attribute 2`,
         `Modificar Atributos de Unidades Persistentemente 2`,
     ],
-    [TextType.B1179]: [
+    [Lang_Constants.TextType.B1179]: [
         `下载APK`,
         `Download APK`,
         `Descargar APK`,
     ],
-    [TextType.B1180]: [
+    [Lang_Constants.TextType.B1180]: [
         `下载客户端`,
         `Download Client`,
         `Descargar Cliente`,
     ],
-    [TextType.B1181]: [
+    [Lang_Constants.TextType.B1181]: [
         `位置`,
         `Position`,
         `Posición`,
     ],
-    [TextType.B1182]: [
+    [Lang_Constants.TextType.B1182]: [
         `位置数组`,
         `Array of Position`,
         `Arreglo de Posición`,
     ],
-    [TextType.B1183]: [
+    [Lang_Constants.TextType.B1183]: [
         `目标`,
         `Targets`,
         `Objetivos`,
     ],
-    [TextType.B1184]: [
+    [Lang_Constants.TextType.B1184]: [
         `轮流切换`,
         `One by One`,
         `Uno a uno`,
     ],
-    [TextType.B1185]: [
+    [Lang_Constants.TextType.B1185]: [
         `强制雾战代码`,
         `Forced FoW Code`,
         `Código de Niebla de Guerra Forzado`,
     ],
-    [TextType.B1186]: [
+    [Lang_Constants.TextType.B1186]: [
         `简略`,
         `Brief`,
         `En corto`,
     ],
-    [TextType.B1187]: [
+    [Lang_Constants.TextType.B1187]: [
         `详细`,
         `Detailed`,
         `Detallado`,
     ],
-    [TextType.B1188]: [
+    [Lang_Constants.TextType.B1188]: [
         `是否正在建造建筑`,
         `Is Building a Property`,
         `Está Construyendo una Propiedad`,
     ],
-    [TextType.B1189]: [
+    [Lang_Constants.TextType.B1189]: [
         `是否正在占领建筑`,
         `Is Capturing a Property`,
         `Está Capturando una Propiedad`,
     ],
-    [TextType.B1190]: [
+    [Lang_Constants.TextType.B1190]: [
         `填充部队（表达式）`,
         `Fill with Units (Expression)`,
         `Llenar con Unidades (Expresión)`,
     ],
-    [TextType.B1191]: [
+    [Lang_Constants.TextType.B1191]: [
         `在运输部队中装载部队`,
         `Load Units in Transports`,
         `Cargar Unidades en Transportes`,
     ],
-    [TextType.B1192]: [
+    [Lang_Constants.TextType.B1192]: [
         `修改部队类型`,
         `Change Types of Units`,
         `Cambiar Tipos de Unidades`,
     ],
-    [TextType.B1193]: [
+    [Lang_Constants.TextType.B1193]: [
         `修改部队归属者`,
         `Change Ownerships of Units`,
         `Cambiar propietarios de Unidades`,
     ],
-    [TextType.B1194]: [
+    [Lang_Constants.TextType.B1194]: [
         `设置部队状态2`,
         `Set Units' State 2`,
         `Establecer Estados de Unidades 2`,
     ],
-    [TextType.B1195]: [
+    [Lang_Constants.TextType.B1195]: [
         `真实视野`,
         `True Vision`,
         `Visión Verdadera`,
     ],
-    [TextType.B1196]: [
+    [Lang_Constants.TextType.B1196]: [
         `目的地`,
         `Destination`,
         `Destino`,
     ],
-    [TextType.B1197]: [
+    [Lang_Constants.TextType.B1197]: [
         `备选地形筛选器`,
         `Alternative Tile Filter`,
         `Filtro de Casillas Alternativo`,
     ],
-    [TextType.B1198]: [
+    [Lang_Constants.TextType.B1198]: [
         `修改部队位置`,
         `Change Positions of Units`,
         `Cambiar Posición de Unidades`,
     ],
-    [TextType.B1199]: [
+    [Lang_Constants.TextType.B1199]: [
         `地形基底类型ID`,
         `Tile Base Type ID`,
         `ID Tipo de Casilla Base`,
     ],
-    [TextType.B1200]: [
+    [Lang_Constants.TextType.B1200]: [
         `基底造型`,
         `Base Shape`,
         `Forma de la Base`,
     ],
-    [TextType.B1201]: [
+    [Lang_Constants.TextType.B1201]: [
         `地形物体类型ID`,
         `Tile Object Type ID`,
         `ID Tipo de Objeto de Casilla`,
     ],
-    [TextType.B1202]: [
+    [Lang_Constants.TextType.B1202]: [
         `物体造型`,
         `Object Shape`,
         `Forma de Objeto`,
     ],
-    [TextType.B1203]: [
+    [Lang_Constants.TextType.B1203]: [
         `地形装饰类型ID`,
         `Tile Decoration Type ID`,
         `ID Tipo de Decoración de Casilla`,
     ],
-    [TextType.B1204]: [
+    [Lang_Constants.TextType.B1204]: [
         `装饰造型`,
         `Decoration Shape`,
         `Forma de Decoración`,
     ],
-    [TextType.B1205]: [
+    [Lang_Constants.TextType.B1205]: [
         `部队操作`,
         `Unit Handler`,
         `Manejador de Unidades`,
     ],
-    [TextType.B1206]: [
+    [Lang_Constants.TextType.B1206]: [
         `设置地形类型2`,
         `Set Terrains' Type 2`,
         `Establecer Tipo de Terreno 2`,
     ],
-    [TextType.B1207]: [
+    [Lang_Constants.TextType.B1207]: [
         `随机化`,
         `Randomize`,
         `Aleatorizar`,
     ],
-    [TextType.B1208]: [
+    [Lang_Constants.TextType.B1208]: [
         `设置神秘水晶状态`,
         `Set Myst.Crystals' State`,
         `Establecer Estado de Cristales Misteriosos`,
     ],
-    [TextType.B1209]: [
+    [Lang_Constants.TextType.B1209]: [
         `设置神秘加农炮状态`,
         `Set Myst.Cannons' State`,
         `Establecer Estado de Cañones Misteriosos`,
     ],
-    [TextType.B1210]: [
+    [Lang_Constants.TextType.B1210]: [
         `设置神秘激光炮状态`,
         `Set Myst.LaserTurrets' State`,
         `Establecer Estado de Torretas Laser`,
     ],
-    [TextType.B1211]: [
+    [Lang_Constants.TextType.B1211]: [
         `设置神秘建筑状态`,
         `Set Myst.Buildings' State`,
         `Establecer Estado de Edificios Misteriosos`,
     ],
-    [TextType.B1212]: [
+    [Lang_Constants.TextType.B1212]: [
         `战局操作`,
         `War Operation`,
         `Operación de Guerra`,
     ],
-    [TextType.B1213]: [
+    [Lang_Constants.TextType.B1213]: [
         `CO类别`,
         `CO Category`,
         `Categoría de CO`,
     ],
-    [TextType.B1214]: [
+    [Lang_Constants.TextType.B1214]: [
         `作战目标`,
         `Task Objectives`,
         `Objetivos`,
     ],
-    [TextType.B1215]: [
+    [Lang_Constants.TextType.B1215]: [
         `描述`,
         `Description`,
         `Descripción`,
     ],
-    [TextType.B1216]: [
+    [Lang_Constants.TextType.B1216]: [
         `最大进度`,
         `Maximum Progress`,
         `Progreso Máximo`,
     ],
-    [TextType.B1217]: [
+    [Lang_Constants.TextType.B1217]: [
         `主要目标`,
         `Main Objective`,
         `Objetivo Principal`,
     ],
-    [TextType.B1218]: [
+    [Lang_Constants.TextType.B1218]: [
         `完成得分`,
         `Completion Score`,
         `Puntaje de Completado`,
     ],
-    [TextType.B1219]: [
+    [Lang_Constants.TextType.B1219]: [
         `每进度得分`,
         `Progress Score`,
         `Puntaje de Progreso`,
     ],
-    [TextType.B1220]: [
+    [Lang_Constants.TextType.B1220]: [
         `次要目标`,
         `Secondary Objective`,
         `Objetivo Secundario`,
     ],
-    [TextType.B1221]: [
+    [Lang_Constants.TextType.B1221]: [
         `进度`,
         `Progress`,
         `Progreso`,
     ],
-    [TextType.B1222]: [
+    [Lang_Constants.TextType.B1222]: [
         `已隐藏`,
         `Hidden`,
         `Oculto`,
     ],
-    [TextType.B1223]: [
+    [Lang_Constants.TextType.B1223]: [
         `作战目标筛选器`,
         `Task Objective Filter`,
         `Filtro de Objetivos`,
     ],
-    [TextType.B1224]: [
+    [Lang_Constants.TextType.B1224]: [
         `修改作战目标状态`,
         `Set Task Objectives' State`,
         `Establecer Estado de Objetivos`,
     ],
-    [TextType.B1225]: [
+    [Lang_Constants.TextType.B1225]: [
         `添加作战目标到规则`,
         `Add Task Objectives To Rule`,
         `Añadir Objetivos a la Regla`,
     ],
-    [TextType.B1226]: [
+    [Lang_Constants.TextType.B1226]: [
         `进度更新器`,
         `Progress Updater`,
         `Actualizador de Progreso`,
     ],
-    [TextType.B1227]: [
+    [Lang_Constants.TextType.B1227]: [
         `禁用进度更新器`,
         `Disable Progress Updater`,
         `Deshabilitar Actualizador de Progreso`,
     ],
-    [TextType.B1228]: [
+    [Lang_Constants.TextType.B1228]: [
         `异常状态`,
         `Abnormal States`,
         `Estados Anormales`,
     ],
-    [TextType.B1229]: [
+    [Lang_Constants.TextType.B1229]: [
         `额外参数`,
         `Extra Params`,
         `Parámetros Extra`,
     ],
-    [TextType.B1230]: [
+    [Lang_Constants.TextType.B1230]: [
         `无收入`,
         `No Income`,
         `Sin Ingresos`,
     ],
-    [TextType.B1231]: [
+    [Lang_Constants.TextType.B1231]: [
         `CO区域半径加成`,
         `CO Zone Radius Modifier`,
         `Modificador de Radio de Zona del CO`,
     ],
-    [TextType.B1232]: [
+    [Lang_Constants.TextType.B1232]: [
         `地形异常状态`,
         `Tile Abnormal State`,
         `Estado de Casilla Anormal`,
     ],
-    [TextType.B1233]: [
+    [Lang_Constants.TextType.B1233]: [
         `地形异常状态数组`,
         `Array of Tile Abnormal State`,
         `Arreglo de Estado de Casilla Anormal`,
     ],
-    [TextType.B1234]: [
+    [Lang_Constants.TextType.B1234]: [
         `删除地形异常状态`,
         `Delete Tile Abnormal States`,
         `Eliminar Estados de Casilla Anormal`,
     ],
-    [TextType.B1235]: [
+    [Lang_Constants.TextType.B1235]: [
         `异常状态筛选器`,
         `Abnormal State Filters`,
         `Estados de Filtro Anormales`,
     ],
-    [TextType.B1236]: [
+    [Lang_Constants.TextType.B1236]: [
         `结束回合序号`,
         `End Turn Index`,
         `Índice de Turno Final`,
     ],
-    [TextType.B1237]: [
+    [Lang_Constants.TextType.B1237]: [
         `结束玩家序号`,
         `End Player Index`,
         `Índice de Jugador Final`,
     ],
-    [TextType.B1238]: [
+    [Lang_Constants.TextType.B1238]: [
         `添加地形异常状态`,
         `Add Tile Abnormal States`,
         `Añadir Estados de Casilla Anormal`,
     ],
-    [TextType.B1239]: [
+    [Lang_Constants.TextType.B1239]: [
         `修改地形异常状态`,
         `Modify Tile Abnormal States`,
         `Modificar Estados de Casilla Anormal`,
     ],
-    [TextType.B1240]: [
+    [Lang_Constants.TextType.B1240]: [
         `禁止生产部队`,
         `No Production`,
         `Sin Producción`,
     ],
-    [TextType.B1241]: [
+    [Lang_Constants.TextType.B1241]: [
         `显示回放游戏结果`,
         `Show Replay Results`,
         `Mostrar Resultados de Repeticiones`,
     ],
-    [TextType.B1242]: [
+    [Lang_Constants.TextType.B1242]: [
         `选择规则`,
         `Select a Rule`,
         `Elegir una Regla`,
     ],
-    [TextType.B1243]: [
+    [Lang_Constants.TextType.B1243]: [
         `批量调整`,
         `Batch Adjustment`,
         `Ajuste de Lote`,
     ],
-    [TextType.B1244]: [
+    [Lang_Constants.TextType.B1244]: [
         `地形与部队`,
         `Tiles & Units`,
         `Casillas y Unidades`,
     ],
-    [TextType.B1245]: [
+    [Lang_Constants.TextType.B1245]: [
         `批量绘制对称地形`,
         `Batch Draw Symmetrical Tiles`,
         `Dibujar Lote de Casillas Simétricas`,
     ],
-    [TextType.B1246]: [
+    [Lang_Constants.TextType.B1246]: [
         `前往`,
         `Proceed`,
         `Proceder`,
     ],
-    [TextType.B1247]: [
+    [Lang_Constants.TextType.B1247]: [
         `方向`,
         `Direction`,
         `Dirección`,
     ],
-    [TextType.B1248]: [
+    [Lang_Constants.TextType.B1248]: [
         `类型与造型`,
         `Types And Shapes`,
         `Tipos y Formas`,
     ],
-    [TextType.B1249]: [
+    [Lang_Constants.TextType.B1249]: [
         `双击以确定选择。`,
         `Double touch to confirm your selection.`,
         `Toca dos veces para confirmar tu selección`,
     ],
-    [TextType.B1250]: [
+    [Lang_Constants.TextType.B1250]: [
         `文本`,
         `Text`,
         `Texto`,
     ],
-    [TextType.B1251]: [
+    [Lang_Constants.TextType.B1251]: [
         `删除槽位数据`,
         `Delete Slot Data`,
         `Eliminar Información del Espacio`,
     ],
-    [TextType.B1252]: [
+    [Lang_Constants.TextType.B1252]: [
         `导入与导出`,
         `Import & Export`,
         `Importar y Exportar`,
     ],
-    [TextType.B1253]: [
+    [Lang_Constants.TextType.B1253]: [
         `导入`,
         `Import`,
         `Importar`,
     ],
-    [TextType.B1254]: [
+    [Lang_Constants.TextType.B1254]: [
         `导入已选数据`,
         `Import Selected Data`,
         `Importar Data Seleccionada`,
     ],
-    [TextType.B1255]: [
+    [Lang_Constants.TextType.B1255]: [
         `覆盖`,
         `Overwrite`,
         `Sobreescribir`,
     ],
-    [TextType.B1256]: [
+    [Lang_Constants.TextType.B1256]: [
         `选择地图编辑器存档`,
         `Select a Map Editor Slot`,
         `Elegir un Espacio del Editor de Mapas`,
     ],
-    [TextType.B1257]: [
+    [Lang_Constants.TextType.B1257]: [
         `自定义计数器名称`,
         `Custom Counter Names`,
         `Nombres de Contadores Personalizados`,
     ],
-    [TextType.B1258]: [
+    [Lang_Constants.TextType.B1258]: [
         `查看描述`,
         `View Desc`,
         `Ver Descripción`,
     ],
-    [TextType.B1259]: [
+    [Lang_Constants.TextType.B1259]: [
         `台词`,
         `Line`,
         `Línea`,
     ],
-    [TextType.B1260]: [
+    [Lang_Constants.TextType.B1260]: [
         `顶部`,
         `Top`,
         `Superior`,
     ],
-    [TextType.B1261]: [
+    [Lang_Constants.TextType.B1261]: [
         `底部`,
         `Bottom`,
         `Inferior`,
     ],
-    [TextType.B1262]: [
+    [Lang_Constants.TextType.B1262]: [
         `沙盒模式`,
         `Sandbox Mode`,
         `Modo Sandbox`,
     ],
-    [TextType.B1263]: [
+    [Lang_Constants.TextType.B1263]: [
         `(合作) AI使用的CO`,
         `(Coop) CO for A.I.`,
         `(Cooperativo) CO para I.A.`,
     ],
-    [TextType.B1264]: [
+    [Lang_Constants.TextType.B1264]: [
         `(挑战) AI使用的CO`,
         `(War Room) CO for A.I.`,
         `(Sala de Guerra) CO para I.A.`,
     ],
-    [TextType.B1265]: [
+    [Lang_Constants.TextType.B1265]: [
         `(挑战) 玩家可选的CO`,
         `(War Room) COs for Player`,
         `(Sala de Guerra) COs para Jugador`,
     ],
-    [TextType.B1266]: [
+    [Lang_Constants.TextType.B1266]: [
         `(战役) 势力颜色`,
         `(Campaign) Force Color`,
         `(Campaña) Forzar Color`,
     ],
-    [TextType.B1267]: [
+    [Lang_Constants.TextType.B1267]: [
         `CO主动技能量需求增长系数`,
         `CO Power Energy Increase`,
         `Aumento de Energía del CO`,
     ],
-    [TextType.B1268]: [
+    [Lang_Constants.TextType.B1268]: [
         `CO类型`,
         `CO Type`,
         `Tipo de CO`,
     ],
-    [TextType.B1269]: [
+    [Lang_Constants.TextType.B1269]: [
         `区域型（毁灭之日）`,
         `Zoned (DoR)`,
         `Zonal (DarkConflict)`,
     ],
-    [TextType.B1270]: [
+    [Lang_Constants.TextType.B1270]: [
         `全局型（老三代）`,
         `Global (Trilogy)`,
         `Global (Trilogía)`,
     ],
-    [TextType.B1271]: [
+    [Lang_Constants.TextType.B1271]: [
         `CO能量最大值增长系数`,
         `CO Max. Energy Increase`,
         `Aumento de Energía Máxima del CO`,
     ],
-    [TextType.B1272]: [
+    [Lang_Constants.TextType.B1272]: [
         `CO能量初始最大值`,
         `CO Base Max. Energy`,
         `Energía Base Máxima del CO`,
     ],
-    [TextType.B1273]: [
+    [Lang_Constants.TextType.B1273]: [
         `技能类型`,
         `Skill Type`,
         `Tipo de Habilidad`,
     ],
-    [TextType.B1274]: [
+    [Lang_Constants.TextType.B1274]: [
         `已选择`,
         `Selected`,
         `Seleccionada`,
     ],
-    [TextType.B1275]: [
+    [Lang_Constants.TextType.B1275]: [
         `加载其他地图`,
         `Load another Map`,
         `Cargar otro Mapa`,
     ],
-    [TextType.B1276]: [
+    [Lang_Constants.TextType.B1276]: [
         `邮件`,
         `Mail`,
         `Correo`,
     ],
-    [TextType.B1277]: [
+    [Lang_Constants.TextType.B1277]: [
         `游戏版本`,
         `Game Version`,
         `Versión de Juego`,
     ],
-    [TextType.B1278]: [
+    [Lang_Constants.TextType.B1278]: [
         `杂项设定`,
         `Misc Settings`,
         `Configuraciones Misceláneas`,
     ],
-    [TextType.B1279]: [
+    [Lang_Constants.TextType.B1279]: [
         `杂项`,
         `Misc`,
         `Misceláneas`,
     ],
-    [TextType.B1280]: [
+    [Lang_Constants.TextType.B1280]: [
         `新版贴图`,
         `New Texture`,
         `Nueva Textura`,
     ],
-    [TextType.B1281]: [
+    [Lang_Constants.TextType.B1281]: [
         `播放中`,
         `Playing`,
         `Jugando`,
     ],
-    [TextType.B1282]: [
+    [Lang_Constants.TextType.B1282]: [
         `消耗`,
         `Cost`,
         `Costo`,
     ],
-    [TextType.B1283]: [
+    [Lang_Constants.TextType.B1283]: [
         `我的战局`,
         `My Games`,
         `Mis Partidas`,
     ],
-    [TextType.B1284]: [
+    [Lang_Constants.TextType.B1284]: [
         `设定回合限时`,
         `Set Game Timer`,
         `Establecer Temporizador de Juego`,
     ],
-    [TextType.B1285]: [
+    [Lang_Constants.TextType.B1285]: [
         `创建自由模式房间`,
         `Create Free Mode Room`,
         `Crear Sala de Modo Libre`,
     ],
-    [TextType.B1286]: [
+    [Lang_Constants.TextType.B1286]: [
         `BGM设置`,
         `BGM Settings`,
         `Configuraciones de Música de fondo`,
     ],
-    [TextType.B1287]: [
+    [Lang_Constants.TextType.B1287]: [
         `场景`,
         `Scene`,
         `Escena`,
     ],
-    [TextType.B1288]: [
+    [Lang_Constants.TextType.B1288]: [
         `大厅`,
         `Lobby`,
         `Lobby`,
     ],
-    [TextType.B1289]: [
+    [Lang_Constants.TextType.B1289]: [
         `无部队`,
         `No Units`,
         `Sin Unidades`,
     ],
-    [TextType.B1290]: [
+    [Lang_Constants.TextType.B1290]: [
         `毫秒`,
         `ms`,
         `ms`,
     ],
-    [TextType.B1291]: [
+    [Lang_Constants.TextType.B1291]: [
         `我的收藏`,
         `My Favorite`,
         `Mis Favoritos`,
     ],
-    [TextType.B1292]: [
+    [Lang_Constants.TextType.B1292]: [
         `操作数`,
         `Operations`,
         `Operaciones`,
     ],
-    [TextType.B1293]: [
+    [Lang_Constants.TextType.B1293]: [
         `玩家编组`,
         `Brackets`,
         `Llaves`,
     ],
-    [TextType.B1294]: [
+    [Lang_Constants.TextType.B1294]: [
         `据点`,
         `Properties`,
         `Propiedades`,
     ],
-    [TextType.B1295]: [
+    [Lang_Constants.TextType.B1295]: [
         `合计`,
         `Total`,
         `Total`,
     ],
-    [TextType.B1296]: [
+    [Lang_Constants.TextType.B1296]: [
         `据点统计`,
         `Property Statistics`,
         `Estadísticas de Propiedad`,
     ],
-    [TextType.B1297]: [
+    [Lang_Constants.TextType.B1297]: [
         `忽略阻挡的部队`,
         `Ignore Obstructive Units`,
         `Ignorar Unidades Obstructivas`,
     ],
-    [TextType.B1298]: [
+    [Lang_Constants.TextType.B1298]: [
         `友军`,
         `Ally`,
         `Aliado`,
     ],
-    [TextType.B1299]: [
+    [Lang_Constants.TextType.B1299]: [
         `敌军`,
         `Enemy`,
         `Enemigo`,
     ],
-    [TextType.B1300]: [
+    [Lang_Constants.TextType.B1300]: [
         `未验证`,
         `Not Verified`,
         `No Verificado`,
     ],
-    [TextType.B1301]: [
+    [Lang_Constants.TextType.B1301]: [
         `已屏蔽`,
         `Blocked`,
         `Bloqueado`,
     ],
-    [TextType.B1302]: [
+    [Lang_Constants.TextType.B1302]: [
         `(合作) 玩家可用的CO`,
         `(Coop) COs for Player`,
         `(Cooperativo) COs para Jugador`,
     ],
-    [TextType.B1303]: [
+    [Lang_Constants.TextType.B1303]: [
         `(对战) 玩家可用的CO`,
         `(Versus) COs for Player`,
         `(Versus) COs para Jugador`,
     ],
-    [TextType.B1304]: [
+    [Lang_Constants.TextType.B1304]: [
         `(匹配) 玩家可用的CO`,
         `(Match) COs for Player`,
         `(Partida) COs para Jugador`,
     ],
-    [TextType.B1305]: [
+    [Lang_Constants.TextType.B1305]: [
         `(排位) 玩家可用的CO`,
         `(Ranked) COs for Player`,
         `(Rankeada) COs para Jugador`,
     ],
-    [TextType.B1306]: [
+    [Lang_Constants.TextType.B1306]: [
         `(联赛) 玩家可用的CO`,
         `(Tourney) COs for Player`,
         `(Torneo) COs para Jugador`,
     ],
-    [TextType.B1307]: [
+    [Lang_Constants.TextType.B1307]: [
         `燃烧`,
         `Fire`,
         `Fogata`,
     ],
-    [TextType.B1308]: [
+    [Lang_Constants.TextType.B1308]: [
         `Tiny Wars 2`,
         `Tiny Wars 2`,
         `Tiny Wars 2`,
     ],
-    [TextType.B1309]: [
+    [Lang_Constants.TextType.B1309]: [
         `显示标记`,
         `Show Markers`,
         `Mostrar Marcadores`,
     ],
-    [TextType.B1310]: [
+    [Lang_Constants.TextType.B1310]: [
         `必填`,
         `Required`,
         `Requerido`,
     ],
-    [TextType.B1311]: [
+    [Lang_Constants.TextType.B1311]: [
         `可选`,
         `Optional`,
         `Opcional`,
     ],
-    [TextType.B1312]: [
+    [Lang_Constants.TextType.B1312]: [
         `发动指定类型的CO瞬发技能`,
         `Trigger CO Skill Type`,
         `Activar Tipo de Habilidad de CO`,
     ],
-    [TextType.B1313]: [
+    [Lang_Constants.TextType.B1313]: [
         `浅水`,
         `Shallow Water`,
         `Agua Somera`,
     ],
-    [TextType.B1314]: [
+    [Lang_Constants.TextType.B1314]: [
         `深水`,
         `Deep Water`,
         `Agua Profunda`,
     ],
-    [TextType.B1315]: [
+    [Lang_Constants.TextType.B1315]: [
         `飞行`,
         `Flying`,
         `Volando`,
     ],
-    [TextType.B1316]: [
+    [Lang_Constants.TextType.B1316]: [
         `修理`,
         `Mend`,
         `Remendar`,
     ],
-    [TextType.B1317]: [
+    [Lang_Constants.TextType.B1317]: [
         `固有状态`,
         `Fixed State`,
         `Estado Fijo`,
     ],
-    [TextType.B1318]: [
+    [Lang_Constants.TextType.B1318]: [
         `强化`,
         `Boost`,
         `Mejorar`,
     ],
-    [TextType.B1319]: [
+    [Lang_Constants.TextType.B1319]: [
         `乏力`,
         `Weak`,
         `Débil`,
     ],
-    [TextType.B1320]: [
+    [Lang_Constants.TextType.B1320]: [
         `破甲`,
         `Fragile`,
         `Frágil`,
     ],
-    [TextType.B1321]: [
+    [Lang_Constants.TextType.B1321]: [
         `常规武器`,
         `Conventional Weapon`,
         `Arma Convencional`,
     ],
-    [TextType.B1322]: [
+    [Lang_Constants.TextType.B1322]: [
         `强化武器`,
         `Boosted Weapon`,
         `Arma Mejorada`,
     ],
-    [TextType.B1325]: [
+    [Lang_Constants.TextType.B1325]: [
         `主音量`,
         `Master Volume`,
         `Volumen Principal`,
     ],
-    [TextType.B1326]: [
+    [Lang_Constants.TextType.B1326]: [
         `目标数量`,
         `Num of Targets`,
         `Número de Objetivos`,
     ],
-    [TextType.B1327]: [
+    [Lang_Constants.TextType.B1327]: [
         `查找全部`,
         `Find All`,
         `Hallar Todos`,
     ],
-    [TextType.B1328]: [
+    [Lang_Constants.TextType.B1328]: [
         `多人明战`,
         `Multi Player Std`,
         `Estándar Multijugador`,
     ],
-    [TextType.B1329]: [
+    [Lang_Constants.TextType.B1329]: [
         `多人雾战`,
         `Multi Player FoW`,
         `Niebla de Guerra Multijugador`,
     ],
-    [TextType.B1330]: [
+    [Lang_Constants.TextType.B1330]: [
         `前往Discord`,
         `Go to Discord`,
         `Ir a Discord`,
     ],
-    [TextType.B1331]: [
+    [Lang_Constants.TextType.B1331]: [
         `地形视野加成`,
         `Tile Vision Bonus`,
         `Bonificación de Visión de Casilla`,
     ],
-    [TextType.B1332]: [
+    [Lang_Constants.TextType.B1332]: [
         `电子邮箱`,
         `Email`,
         `Email`,
     ],
-    [TextType.B1333]: [
+    [Lang_Constants.TextType.B1333]: [
         `地址`,
         `Address`,
         `Dirección`,
     ],
-    [TextType.B1334]: [
+    [Lang_Constants.TextType.B1334]: [
         `验证码`,
         `Verification Code`,
         `Código de Verificación`,
     ],
-    [TextType.B1335]: [
+    [Lang_Constants.TextType.B1335]: [
         `验证`,
         `Verify`,
         `Verificar`,
     ],
-    [TextType.B1336]: [
+    [Lang_Constants.TextType.B1336]: [
         `密码重置`,
         `Reset Password`,
         `Reestablecer Contraseña`,
     ],
-    [TextType.B1337]: [
+    [Lang_Constants.TextType.B1337]: [
         `“回合开始”弹窗`,
         `"Turn Start" Pop Up`,
         `Notificación de "Comienzo de Turno"`,
     ],
-    [TextType.B1338]: [
+    [Lang_Constants.TextType.B1338]: [
         `全部数据`,
         `All Data`,
         `Toda la Data`,
     ],
-    [TextType.B1339]: [
+    [Lang_Constants.TextType.B1339]: [
         `视野值数组`,
         `Values of Visibility`,
         `Valores de Visibilidad`,
     ],
-    [TextType.B1340]: [
+    [Lang_Constants.TextType.B1340]: [
         `修改指定位置的部队移动路径视野`,
         `Set Unit Movement Path Visibilities for Positions`,
         `Establecer Visibilidades de Camino de movimiento de unidades para Posición`,
     ],
-    [TextType.B1341]: [
+    [Lang_Constants.TextType.B1341]: [
         `当前战局`,
         `Current War`,
         `Partida Actual`,
     ],
-    [TextType.B1342]: [
+    [Lang_Constants.TextType.B1342]: [
         `我的队伍`,
         `My Team`,
         `Mi Equipo`,
     ],
-    [TextType.B1343]: [
+    [Lang_Constants.TextType.B1343]: [
         `图像与声音`,
         `Image & Sound`,
         `Imagen y Sonido`,
     ],
-    [TextType.B1344]: [
+    [Lang_Constants.TextType.B1344]: [
         `其他`,
         `Others`,
         `Otros`,
     ],
-    [TextType.B1345]: [
+    [Lang_Constants.TextType.B1345]: [
         `天气与战争迷雾`,
         `Weather & Fog`,
         `Clima y Niebla de Guerra`,
     ],
-    [TextType.B1346]: [
+    [Lang_Constants.TextType.B1346]: [
         `已选择CO`,
         `Selected COs`,
         `COs Seleccionados`,
     ],
-    [TextType.B1347]: [
+    [Lang_Constants.TextType.B1347]: [
         `未选择的`,
         `Unselected`,
         `No Seleccionados`,
     ],
-    [TextType.B1348]: [
+    [Lang_Constants.TextType.B1348]: [
         `老三代`,
         `Trilogy`,
         `Trilogía`,
     ],
-    [TextType.B1349]: [
+    [Lang_Constants.TextType.B1349]: [
         `自爆`,
         `Self-Detonation`,
         `Auto-Detonación`,
     ],
-    [TextType.B1350]: [
+    [Lang_Constants.TextType.B1350]: [
         `碾压`,
         `Crush`,
         `Aplastar`,
     ],
-    [TextType.B1351]: [
+    [Lang_Constants.TextType.B1351]: [
         `维修`,
         `Repair`,
         `Reparar`,
     ],
-    [TextType.B1352]: [
+    [Lang_Constants.TextType.B1352]: [
         `幸运限值%`,
         `Luck Limits %`,
         `Límites de Suerte %`,
     ],
-    [TextType.B1353]: [
+    [Lang_Constants.TextType.B1353]: [
         `接受未关注的玩家的私信`,
         `Accept PMs from Not Following Players`,
         `Aceptar Mensajes de Jugadores que No sigues`,
     ],
-    [TextType.B1354]: [
+    [Lang_Constants.TextType.B1354]: [
         `观战请求已被接受`,
         `Spectate Accepted`,
         `Aceptado como Espectador`,
     ],
-    [TextType.B1355]: [
+    [Lang_Constants.TextType.B1355]: [
         `起飞`,
         `Take Off`,
         `Despegar`,
     ],
-    [TextType.B1356]: [
+    [Lang_Constants.TextType.B1356]: [
         `主动技能能量消耗`,
         `Power Skills Energy Cost`,
         `Costo de Energía de Habilidades de Poder`,
     ],
-    [TextType.B1357]: [
+    [Lang_Constants.TextType.B1357]: [
         `地形类型ID`,
         `Tile Type ID`,
         `ID Tipo de Casilla`,
     ],
-    [TextType.B1358]: [
+    [Lang_Constants.TextType.B1358]: [
         `部队类型ID`,
         `Unit Type ID`,
         `ID Tipo de Unidad`,
     ],
-    [TextType.B1359]: [
+    [Lang_Constants.TextType.B1359]: [
         `天气类型ID`,
         `Weather Type ID`,
         `ID Tipo de Clima`,
     ],
-    [TextType.B1360]: [
+    [Lang_Constants.TextType.B1360]: [
         `战局操作类型ID`,
         `War Operation Type ID`,
         `ID Tipo de Operación de Guerra`,
     ],
-    [TextType.B1361]: [
+    [Lang_Constants.TextType.B1361]: [
         `地形异常状态类型ID`,
         `Tile Abnormal State Type ID`,
         `ID Tipo de Estado de Casilla Anormal`,
     ],
-    [TextType.B1362]: [
+    [Lang_Constants.TextType.B1362]: [
         `部队移动类型ID`,
         `Unit Move Type ID`,
         `ID TIpo de Movimiento de Unidad`,
     ],
-    [TextType.B1363]: [
+    [Lang_Constants.TextType.B1363]: [
         `扩大匹配范围`,
         `Expand Match Range`,
         `Expandir Rango de Emparejamiento`,
     ],
-    [TextType.B1364]: [
+    [Lang_Constants.TextType.B1364]: [
         `排位赛已超时`,
         `Booted in Ranked Match`,
         `Lanzado en Partida Ranked`,
     ],
-    [TextType.B1365]: [
+    [Lang_Constants.TextType.B1365]: [
         `仅飞行`,
         `Flying Only`,
         `Solo Volando`,
     ],
-    [TextType.B1366]: [
+    [Lang_Constants.TextType.B1366]: [
         `仅非飞行`,
         `Non-Flying Only`,
         `Solo No-Volando`,
     ],
-    [TextType.B1367]: [
+    [Lang_Constants.TextType.B1367]: [
         `私人笔记`,
         `Private Notes`,
         `Notas Privadas`,
     ],
-    [TextType.B1368]: [
+    [Lang_Constants.TextType.B1368]: [
         `部队移动加快`,
         `Units Move Faster`,
         `Unidades se mueven más rápido`,
     ],
-    [TextType.B1369]: [
+    [Lang_Constants.TextType.B1369]: [
         `搭乘费用与最大同时搭乘数量`,
         `Boarding Cost & Max. Number of CO Units`,
         `Costo de Despliegue y Número máximo de Unidades del CO`,
     ],
-    [TextType.B1370]: [
+    [Lang_Constants.TextType.B1370]: [
         `可搭乘的部队种类(即专精部队)`,
         `Board-able Units (a.k.a. Speciality Units)`,
         `Unidades abordables (a.k.a. Unidades de Especialidad)`,
     ],
-    [TextType.B1371]: [
+    [Lang_Constants.TextType.B1371]: [
         `CO能量收入`,
         `CO Energy Income`,
         `Ingresos de Energía de CO`,
     ],
-    [TextType.B1372]: [
+    [Lang_Constants.TextType.B1372]: [
         `创建游戏`,
         `Create Game`,
         `Crear Partida`,
     ],
-    [TextType.B1373]: [
+    [Lang_Constants.TextType.B1373]: [
         `批处理`,
         `Batch`,
         `Lote`,
     ],
-    [TextType.B1374]: [
+    [Lang_Constants.TextType.B1374]: [
         `摧毁部队`,
         `Destroy Unit(s)`,
         `Destruir Unidad(es)`,
     ],
-    [TextType.B1375]: [
+    [Lang_Constants.TextType.B1375]: [
         `我的履历`,
         `My Profile`,
         `Mi Perfil`,
     ],
-    [TextType.B1376]: [
+    [Lang_Constants.TextType.B1376]: [
         `在线聊天`,
         `Online Chat`,
         `Chat En línea`,
     ],
-    [TextType.B1377]: [
+    [Lang_Constants.TextType.B1377]: [
         `地图编辑`,
         `Map Editor`,
         `Editor de Mapas`,
     ],
-    [TextType.B1378]: [
+    [Lang_Constants.TextType.B1378]: [
         `切换模式`,
         `Switch Mode`,
         `Cambiar Modo`,
     ],
-    [TextType.B1379]: [
+    [Lang_Constants.TextType.B1379]: [
         `当前`,
         `Current`,
         `Actual`,
     ],
-    [TextType.B1380]: [
+    [Lang_Constants.TextType.B1380]: [
         `报名参赛`,
         `Registration`,
         `Registro`,
     ],
-    [TextType.B1381]: [
+    [Lang_Constants.TextType.B1381]: [
         `联赛信息`,
         `Tournament Info`,
         `Info. de Torneo`,
     ],
-    [TextType.B1382]: [
+    [Lang_Constants.TextType.B1382]: [
         `继续观战`,
         `Continue`,
         `Continuar`,
     ],
-    [TextType.B1383]: [
+    [Lang_Constants.TextType.B1383]: [
         `下一步`,
         `Next Step`,
         `Próximo paso`,
     ],
-    [TextType.B1384]: [
+    [Lang_Constants.TextType.B1384]: [
         `上页`,
         `Prev`,
         `Anterior`,
     ],
-    [TextType.B1385]: [
+    [Lang_Constants.TextType.B1385]: [
         `下页`,
         `Next`,
         `Siguiente`,
     ],
-    [TextType.B1386]: [
+    [Lang_Constants.TextType.B1386]: [
         `页数`,
         `Pages`,
         `Páginas`,
     ],
-    [TextType.B1387]: [
+    [Lang_Constants.TextType.B1387]: [
         `已筛选`,
         `Filtered`,
         `Filtrado`,
     ],
-    [TextType.B1388]: [
+    [Lang_Constants.TextType.B1388]: [
         `更改为`,
         `Change to`,
         `Cambiar a`,
     ],
-    [TextType.B1389]: [
+    [Lang_Constants.TextType.B1389]: [
         `地图最小宽度`,
         `Min. Map Width`,
         `Ancho mínimo de Mapa`,
     ],
-    [TextType.B1390]: [
+    [Lang_Constants.TextType.B1390]: [
         `地图最大宽度`,
         `Max. Map Width`,
         `Ancho máximo de Mapa`,
     ],
-    [TextType.B1391]: [
+    [Lang_Constants.TextType.B1391]: [
         `地图最小高度`,
         `Min. Map Height`,
         `Altura mínima de Mapa`,
     ],
-    [TextType.B1392]: [
+    [Lang_Constants.TextType.B1392]: [
         `地图最大高度`,
         `Max. Map Height`,
         `Altura máxima de Mapa`,
     ],
-    [TextType.B1393]: [
+    [Lang_Constants.TextType.B1393]: [
         `回合数量`,
         `Num of Turns`,
         `Número de Turnos`,
     ],
-    [TextType.B1394]: [
+    [Lang_Constants.TextType.B1394]: [
         `战局操作数量`,
         `Num of War Operations`,
         `Número de Operaciones de Guerra`,
     ],
-    [TextType.B1395]: [
+    [Lang_Constants.TextType.B1395]: [
         `最小操作数`,
         `Min. Operations`,
         `Operaciones mínimas`,
     ],
-    [TextType.B1396]: [
+    [Lang_Constants.TextType.B1396]: [
         `最大操作数`,
         `Max. Operations`,
         `Operaciones máximas`,
     ],
-    [TextType.B1397]: [
+    [Lang_Constants.TextType.B1397]: [
         `屏幕振动`,
         `Screen Vibration`,
         `Vibración de Pantalla`,
     ],
-    [TextType.B1398]: [
+    [Lang_Constants.TextType.B1398]: [
         `邀请人`,
         `Inviter`,
         `Invitador`,
     ],
-    [TextType.B1399]: [
+    [Lang_Constants.TextType.B1399]: [
         `A.I. 已暂停`,
         `A.I. Paused`,
         `I.A. Pausada`,
     ],
-    [TextType.B1400]: [
+    [Lang_Constants.TextType.B1400]: [
         `能否在任意事件触发后立刻触发`,
         `Can be triggered right after any event`,
         `Puede ser activada justo después de cualquier evento`,
     ],
-    [TextType.B1401]: [
+    [Lang_Constants.TextType.B1401]: [
         `是否在回合内`,
         `Is in turn or not`,
         `Está o no en turno`,
     ],
-    [TextType.B1402]: [
+    [Lang_Constants.TextType.B1402]: [
         `是否要跳过回合`,
         `Is skipping turn or not`,
         `Se está (o no) saltando el turno`,
     ],
-    [TextType.B1403]: [
+    [Lang_Constants.TextType.B1403]: [
         `是其中之一`,
         `Is one of`,
         `Es uno de`,
     ],
-    [TextType.B1404]: [
+    [Lang_Constants.TextType.B1404]: [
         `归属于该玩家的部队的数量`,
         `The number of units belonging to the player`,
         `El número de unidades que pertenecen al jugador`,
     ],
-    [TextType.B1405]: [
+    [Lang_Constants.TextType.B1405]: [
         `归属于该玩家，且符合指定条件的部队的数量`,
         `The number of units belonging to the player that meet the specified conditions`,
         `El número de unidades que pertenecen al jugador que cumplen con las condiciones especificadas`,
     ],
-    [TextType.B1406]: [
+    [Lang_Constants.TextType.B1406]: [
         `归属于该玩家的地块的数量`,
         `The number of tiles belonging to the player`,
         `El número de terrenos que pertenecen al jugador`,
     ],
-    [TextType.B1407]: [
+    [Lang_Constants.TextType.B1407]: [
         `归属于该玩家，且符合指定条件的地块的数量`,
         `The number of tiles belonging to the player that meet the specified conditions`,
         `El número de terrenos que pertenecen al jugador y cumplen con las condiciones especificadas`,
     ],
-    [TextType.B1408]: [
+    [Lang_Constants.TextType.B1408]: [
         `已指定`,
         `Specified`,
         `Especificado`,
     ],
-    [TextType.B1409]: [
+    [Lang_Constants.TextType.B1409]: [
         `与...集合相等`,
         `equal to`,
         `igual a`,
     ],
-    [TextType.B1410]: [
+    [Lang_Constants.TextType.B1410]: [
         `与...集合不等`,
         `NOT equal to`,
         `NO igual a`,
     ],
-    [TextType.B1411]: [
+    [Lang_Constants.TextType.B1411]: [
         `是...的超集`,
         `is superset of`,
         `forma parte de`,
     ],
-    [TextType.B1412]: [
+    [Lang_Constants.TextType.B1412]: [
         `不是...的超集`,
         `is NOT superset of`,
         `NO forma parte de`,
     ],
-    [TextType.B1413]: [
+    [Lang_Constants.TextType.B1413]: [
         `是...的子集`,
         `is subset of`,
         `es parte de`,
     ],
-    [TextType.B1414]: [
+    [Lang_Constants.TextType.B1414]: [
         `不是...的子集`,
         `is NOT subset of`,
         `NO es parte de`,
     ],
-    [TextType.B1415]: [
+    [Lang_Constants.TextType.B1415]: [
         `与...存在交集`,
         `has intersection with`,
         `posee intersección con`,
     ],
-    [TextType.B1416]: [
+    [Lang_Constants.TextType.B1416]: [
         `与...不存在交集`,
         `has NO intersection with`,
         `NO posee intersección con`,
     ],
-    [TextType.B1417]: [
+    [Lang_Constants.TextType.B1417]: [
         `集合关系`,
         `Set Relation`,
         `Establecer Relación`,
     ],
-    [TextType.B1418]: [
+    [Lang_Constants.TextType.B1418]: [
         `该地块上的部队（含已被装载的部队）的总数量`,
         `Number of units (including the loaded ones) on the tile`,
         `Número de unidades (incluyendo las transportadas) sobre la casilla`,
     ],
-    [TextType.B1419]: [
+    [Lang_Constants.TextType.B1419]: [
         `该地块上的符合指定条件的部队（含已被装载的部队）的总数量`,
         `Number of units (including the loaded ones) on the tile that meet the specified conditions`,
         `Número de unidades (incluyendo las transportadas) sobre la casilla que cumplen con las condiciones especificadas`,
     ],
-    [TextType.B1420]: [
+    [Lang_Constants.TextType.B1420]: [
         `地块`,
         `Tiles`,
         `Casillas`,
     ],
-    [TextType.B1421]: [
+    [Lang_Constants.TextType.B1421]: [
         `关于地块的归属者`,
         `About the tile owner`,
         `Sobre el propietario de la casilla`,
     ],
-    [TextType.B1422]: [
+    [Lang_Constants.TextType.B1422]: [
         `关于部队的归属者`,
         `About the unit owner`,
         `Sobre el propietario de la unidad`,
     ],
-    [TextType.B1423]: [
+    [Lang_Constants.TextType.B1423]: [
         `关于部队所在的地块`,
         `About the tile in which the unit is located`,
         `Sobre la casilla en que la unidad está localizada`,
     ],
-    [TextType.B1424]: [
+    [Lang_Constants.TextType.B1424]: [
         `填充数量`,
         `Number of Fills`,
         `Número de Rellenos`,
     ],
-    [TextType.B1425]: [
+    [Lang_Constants.TextType.B1425]: [
         `添加元素`,
         `Add Items`,
         `Añadir Ítems`,
     ],
-    [TextType.B1426]: [
+    [Lang_Constants.TextType.B1426]: [
         `删除元素`,
         `Delete Items`,
         `Eliminar Ítems`,
     ],
-    [TextType.B1427]: [
+    [Lang_Constants.TextType.B1427]: [
         `CO能否搭乘部队`,
         `Can CO Board`,
         `Puede abordar el CO`,
     ],
-    [TextType.B1428]: [
+    [Lang_Constants.TextType.B1428]: [
         `部队能否合流`,
         `Can Units Join`,
         `Unidades pueden unirse`,
     ],
-    [TextType.B1429]: [
+    [Lang_Constants.TextType.B1429]: [
         `可致命`,
         `Can be Lethal`,
         `Puede ser Fatal`,
     ],
-    [TextType.B1430]: [
+    [Lang_Constants.TextType.B1430]: [
         `地形自定义名称`,
         `Tile Custom Names`,
         `Nombres personalizados de Casilla`,
     ],
-    [TextType.B1431]: [
+    [Lang_Constants.TextType.B1431]: [
         `使用中`,
         `Using`,
         `Usando`,
     ],
-    [TextType.B1432]: [
+    [Lang_Constants.TextType.B1432]: [
         `自定义名称ID`,
         `Custom Name ID`,
         `ID Nombre Personalizado`,
     ],
-    [TextType.B1433]: [
+    [Lang_Constants.TextType.B1433]: [
         `部队自定义名称`,
         `Unit Custom Names`,
         `Nombres Personalizados Unidad`,
     ],
-    [TextType.B1434]: [
+    [Lang_Constants.TextType.B1434]: [
         `批量应用`,
         `Batch Apply`,
         `Aplicar en Lote`,
     ],
-    [TextType.B1435]: [
+    [Lang_Constants.TextType.B1435]: [
         `西班牙语`,
         `Spanish`,
         `Español`,
     ],
-    [TextType.B1436]: [
+    [Lang_Constants.TextType.B1436]: [
         `神秘建筑`,
         `Myst. Building`,
         `EdificioMisterioso`,
     ],
-    [TextType.B1437]: [
+    [Lang_Constants.TextType.B1437]: [
         `神秘水晶`,
         `Myst. Crystal`,
         `Cristales Misteriosos`,
     ],
-    [TextType.B1438]: [
+    [Lang_Constants.TextType.B1438]: [
         `神秘加农炮`,
         `Myst. Cannon`,
         `Cañones Misteriosos`,
     ],
-    [TextType.B1439]: [
+    [Lang_Constants.TextType.B1439]: [
         `神秘激光炮`,
         `Myst. Laser Turret`,
         `Torretas Laser Misteriosos`,
     ],
-    [TextType.B1440]: [ // TODO
+    [Lang_Constants.TextType.B1440]: [ // TODO
         `左侧`,
         `Left`,
         `Left`,
     ],
-    [TextType.B1441]: [ // TODO
+    [Lang_Constants.TextType.B1441]: [ // TODO
         `右侧`,
         `Right`,
         `Right`,
     ],
-    [TextType.B1442]: [ // TODO
+    [Lang_Constants.TextType.B1442]: [ // TODO
         `肖像`,
         `Portrait`,
         `Portrait`,
     ],
-    [TextType.B1443]: [ // TODO
+    [Lang_Constants.TextType.B1443]: [ // TODO
         `资金消耗`,
         `Fund Consumption`,
         `Fund Consumption`,
     ],
-    [TextType.B1444]: [ // TODO
+    [Lang_Constants.TextType.B1444]: [ // TODO
         `部队能否强化自身`,
         `Can Units Boost`,
         `Can Units Boost`,
     ],
-    [TextType.B1445]: [ // TODO
+    [Lang_Constants.TextType.B1445]: [ // TODO
         `平均积分`,
         `Everage Rating`,
         `Everage Rating`,
     ],
-    [TextType.B1446]: [ // TODO
+    [Lang_Constants.TextType.B1446]: [ // TODO
         `留在此处`,
         `Stay Here`,
         `Stay Here`,
     ],
-    [TextType.B1447]: [ // TODO
+    [Lang_Constants.TextType.B1447]: [ // TODO
         `消除者`,
         `Eliminator`,
         `Eliminator`,
     ],
-    [TextType.B1448]: [ // TODO
+    [Lang_Constants.TextType.B1448]: [ // TODO
         `给予者`,
         `Giver`,
         `Giver`,
     ],
-    [TextType.B1449]: [ // TODO
+    [Lang_Constants.TextType.B1449]: [ // TODO
         `AI部队生产权重加成`,
         `AI Unit Production Weight Modifier`,
         `AI Unit Production Weight Modifier`,
     ],
-    [TextType.B1450]: [ // TODO
+    [Lang_Constants.TextType.B1450]: [ // TODO
         `通关分数预览`,
         `Passing Score Preview`,
         `Passing Score Preview`,
     ],
-    [TextType.B1451]: [ // TODO
+    [Lang_Constants.TextType.B1451]: [ // TODO
         `地形造型调整`,
         `Tile Shape Adjustment`,
         `Tile Shape Adjustment`,
     ],
-    [TextType.B1452]: [ // TODO
+    [Lang_Constants.TextType.B1452]: [ // TODO
         `在主界面中显示开关`,
         `Show Toggle in Main Screen`,
         `Show Toggle in Main Screen`,
     ],
-    [TextType.B1453]: [ // TODO
+    [Lang_Constants.TextType.B1453]: [ // TODO
         `异常状态类型ID`,
         `Abnormal State Type ID`,
         `Abnormal State Type ID`,
     ],
-    [TextType.B1454]: [ // TODO]
+    [Lang_Constants.TextType.B1454]: [ // TODO]
         `导入到地图到编辑器`,
         `Import into the Map Editor`,
         `Import into the Map Editor`,
     ],
-    [TextType.B1455]: [ // TODO
+    [Lang_Constants.TextType.B1455]: [ // TODO
         `永不结束`,
         `Never Ends`,
         `Never Ends`,
     ],
-    [TextType.B1456]: [ // TODO
+    [Lang_Constants.TextType.B1456]: [ // TODO
         `此功能不可用`,
         `Not Supported`,
         `Not Supported`,
     ],
-    [TextType.B1457]: [ // TODO
+    [Lang_Constants.TextType.B1457]: [ // TODO
         `最大修改数量`,
         `Max Num of Modifications`,
         `Max Num of Modifications`,
     ],
-    [TextType.B1458]: [ // TODO
+    [Lang_Constants.TextType.B1458]: [ // TODO
         `修改模式`,
         `Modification Mode`,
         `Modification Mode`,
     ],
-    [TextType.B1459]: [ // TODO
+    [Lang_Constants.TextType.B1459]: [ // TODO
         `地形异常状态`,
         `Tile Abnormal States`,
         `Tile Abnormal States`,
     ],
-    [TextType.B1460]: [ // TODO
+    [Lang_Constants.TextType.B1460]: [ // TODO
         `原定结束时间`,
         `Original End Time`,
         `Original End Time`,
     ],
-    [TextType.B1461]: [ // TODO
+    [Lang_Constants.TextType.B1461]: [ // TODO
         `战局当前时间`,
         `War's Current Time`,
         `War's Current Time`,
     ],
-    [TextType.B1462]: [ // TODO
+    [Lang_Constants.TextType.B1462]: [ // TODO
         `状态结束时间与战局当前时间之差`,
         `Difference between the state's end time and the war's current time`,
         `Difference between the state's end time and the war's current time`,
     ],
-    [TextType.B1463]: [ // TODO
+    [Lang_Constants.TextType.B1463]: [ // TODO
         `不做修改`,
         `Do Not Change`,
         `Do Not Change`,
     ],
-    [TextType.B1464]: [ // TODO
+    [Lang_Constants.TextType.B1464]: [ // TODO
         `直接赋值`,
         `Directly Assign`,
         `Directly Assign`,
     ],
-    [TextType.B1465]: [ // TODO
+    [Lang_Constants.TextType.B1465]: [ // TODO
         `瘟疫`,
         `Plague`,
         `Plague`,
     ],
-    [TextType.B1466]: [ // TODO
+    [Lang_Constants.TextType.B1466]: [ // TODO
         `添加部队异常状态`,
         `Add Unit Abnormal States`,
         `Add Unit Abnormal States`,
     ],
-    [TextType.B1467]: [ // TODO
+    [Lang_Constants.TextType.B1467]: [ // TODO
         `修改部队异常状态`,
         `Modify Unit Abnormal States`,
         `Modify Unit Abnormal States`,
     ],
-    [TextType.B1468]: [ // TODO
+    [Lang_Constants.TextType.B1468]: [ // TODO
         `部队异常状态`,
         `Unit Abnormal States`,
         `Unit Abnormal States`,
     ],
-    [TextType.B1469]: [ // TODO
+    [Lang_Constants.TextType.B1469]: [ // TODO
         `删除部队异常状态`,
         `Delete Unit Abnormal States`,
         `Delete Unit Abnormal States`,
     ],
-    [TextType.B1470]: [ // TODO
+    [Lang_Constants.TextType.B1470]: [ // TODO
         `导出地图缓存`,
         `Export Map Cache`,
         `Export Map Cache`,
     ],
-    [TextType.B1471]: [ // TODO
+    [Lang_Constants.TextType.B1471]: [ // TODO
         `选择模板`,
         `Choose a Template`,
         `Choose a Template`,
     ],
-    [TextType.B1472]: [ // TODO
+    [Lang_Constants.TextType.B1472]: [ // TODO
         `忽略`,
         `Ignore`,
         `Ignore`,
     ],
-    [TextType.B1473]: [ // TODO
+    [Lang_Constants.TextType.B1473]: [ // TODO
         `部队最大数量`,
         `Max. Num of Units`,
         `Max. Num of Units`,
     ],
-    [TextType.B1474]: [ // TODO
+    [Lang_Constants.TextType.B1474]: [ // TODO
         `CO能量值`,
         `CO Energy Value`,
         `CO Energy Value`,
     ],
-    [TextType.B1475]: [ // TODO
+    [Lang_Constants.TextType.B1475]: [ // TODO
         `回合增量时间`,
         `Incremental Time per Turn`,
         `Incremental Time per Turn`,
     ],
-    [TextType.B1476]: [ // TODO
+    [Lang_Constants.TextType.B1476]: [ // TODO
         `取反`,
         `Invert`,
         `Invert`,
     ],
-    [TextType.B1477]: [ // TODO
+    [Lang_Constants.TextType.B1477]: [ // TODO
         `创建`,
         `Create`,
         `Create`,
     ],
-    [TextType.B1478]: [ // TODO
+    [Lang_Constants.TextType.B1478]: [ // TODO
         `克隆`,
         `Clone`,
         `Clone`,
     ],
-    [TextType.B1479]: [ // TODO
+    [Lang_Constants.TextType.B1479]: [ // TODO
         `导出`,
         `Export`,
         `Export`,
     ],
-    [TextType.B1480]: [
+    [Lang_Constants.TextType.B1480]: [
         `作战目标`,
         `Objectives`,
         `Objetivos`,
     ],
-    [TextType.B1481]: [   // TODO
+    [Lang_Constants.TextType.B1481]: [   // TODO
         `外部链接`,
         `External Link`,
         `External Link`,
@@ -32015,32 +32017,32 @@ export const CommonText: Record<number, string[]> = {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Format strings.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    [TextType.F0000]: [
+    [Lang_Constants.TextType.F0000]: [
         `地图名称: %s`,
         `Map name: %s`,
         `Nombre Mapa: %s`,
     ],
-    [TextType.F0001]: [
+    [Lang_Constants.TextType.F0001]: [
         `作者: %s`,
         `Designer: %s`,
         `Diseñador: %s`,
     ],
-    [TextType.F0002]: [
+    [Lang_Constants.TextType.F0002]: [
         `人数: %s`,
         `Players: %s`,
         `Jugadores: %s`,
     ],
-    [TextType.F0003]: [
+    [Lang_Constants.TextType.F0003]: [
         `全服评分: %s`,
         `Rating: %s`,
         `Calificación: %s`,
     ],
-    [TextType.F0004]: [
+    [Lang_Constants.TextType.F0004]: [
         `全服游玩次数: %s`,
         `Games played: %s`,
         `Partidas jugadas: %s`,
     ],
-    [TextType.F0005]: [
+    [Lang_Constants.TextType.F0005]: [
         [
             `此操作将直接改写战局事件动作 A%s （战役地图：#%s-%s）。`,
             ``,
@@ -32069,562 +32071,562 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0006]: [
+    [Lang_Constants.TextType.F0006]: [
         `%d个部队尚未行动。`,
         `%d unit(s) is(are) idle.`,
         `%d unidad(es) está(n) inactiva(s).`,
     ],
-    [TextType.F0007]: [
+    [Lang_Constants.TextType.F0007]: [
         `%d个%s空闲，位置：%s。`,
         `%d %s(s) is(are) idle. Position(s): %s.`,
         `%d %s está(n) inactivas. Posición(es): %s.`,
     ],
-    [TextType.F0008]: [
+    [Lang_Constants.TextType.F0008]: [
         `玩家[%s]已投降！`,
         `Player [%s] has resigned!`,
         `Jugador [%s] se ha rendido!`,
     ],
-    [TextType.F0009]: [
+    [Lang_Constants.TextType.F0009]: [
         `%s 的履历`,
         `%s's Profile`,
         `%s Perfil`,
     ],
-    [TextType.F0010]: [
+    [Lang_Constants.TextType.F0010]: [
         `修改ID为 %s 的自定义计数器的值，公式为：%s`,
         `Set the value of the Custom Counters whose ID is %s to: %s`,
         `Establecer el valor de los Contadores Personalizados cuyo ID sea %s a: %s`,
     ],
-    [TextType.F0011]: [
+    [Lang_Constants.TextType.F0011]: [
         `要求的表达式结果类型：%s`,
         `Expected result type of the expression: %s`,
         `Resultados Esperados tipo de la Expresión: %s`,
     ],
-    [TextType.F0012]: [
+    [Lang_Constants.TextType.F0012]: [
         `修改天气，种类：%s，持续回合数：%s。`,
         `Change the weather condition, type: %s, turns: %s.`,
         `Cambiar la condición de clima, tipo: %s, turnos: %s.`,
     ],
-    [TextType.F0013]: [
+    [Lang_Constants.TextType.F0013]: [
         `函数参数数量不合法，函数名：%s()，期望数量：%s，实际数量：%s。`,
         `Illegal number of parameters, function: %s(), expected: %s, actual: %s.`,
         `Número de parámetros ilegales, función: %s(), esperado: %s, real: %s.`,
     ],
-    [TextType.F0014]: [
+    [Lang_Constants.TextType.F0014]: [
         `函数参数类型不合法，函数名：%s()，参数序号: %s，期望类型：%s，实际类型：%s。`,
         `Illegal type of parameter, function: %s(), index: %s, expected: %s, actual: %s.`,
         `Tipos de parámetros ilegales, función: %s(), índice: %s, esperado: %s, real: %s.`,
     ],
-    [TextType.F0015]: [
+    [Lang_Constants.TextType.F0015]: [
         `Lambda函数返回类型不合法，函数名：%s()，参数序号: %s，期望类型：%s，实际类型：%s。`,
         `Illegal return type of lambda function, function: %s(), index: %s, expected: %s, actual: %s.`,
         `Devolución ilegal de la función lambda, función: %s(), índice: %s, esperado: %s, real: %s.`,
     ],
-    [TextType.F0016]: [
+    [Lang_Constants.TextType.F0016]: [
         `表达式返回类型不合法，期望类型：%s，实际类型：%s。`,
         `Illegal return type of expression, expected: %s, actual: %s.`,
         `Devolución ilegal de tipo de expresión, esperado: %s, real: %s.`,
     ],
-    [TextType.F0017]: [
+    [Lang_Constants.TextType.F0017]: [
         `P%d [%s] 已拒绝和局！`,
         `P%d [%s] declines to end the game in draw!`,
         `P%d [%s] rechaza terminar la partida en Empate!`,
     ],
-    [TextType.F0018]: [
+    [Lang_Constants.TextType.F0018]: [
         `P%d [%s] 已同意和局！`,
         `P%d [%s] agrees to end the game in draw!`,
         `P%d [%s] acepta terminar la partida en empate!`,
     ],
-    [TextType.F0019]: [
+    [Lang_Constants.TextType.F0019]: [
         `P%d [%s] 求和！`,
         `P%d [%s] requests to end the game in draw!`,
         `P%d [%s] ofrece terminar la partida en Empate!`,
     ],
-    [TextType.F0020]: [
+    [Lang_Constants.TextType.F0020]: [
         `最多%d字，可留空`,
         `%d characters for maximum, optional`,
         `%d caracteres para el máximo, opcional`,
     ],
-    [TextType.F0021]: [
+    [Lang_Constants.TextType.F0021]: [
         `变量名称不存在：%s。`,
         `Unrecognized variable name: %s.`,
         `Nombre de variable no-reconocida: %s.`,
     ],
-    [TextType.F0022]: [
+    [Lang_Constants.TextType.F0022]: [
         `%s (p%d) 回合正式开始！！`,
         `It's %s (p%d)'s turn!!`,
         `Es el turno de %s (p%d)`,
     ],
-    [TextType.F0023]: [
+    [Lang_Constants.TextType.F0023]: [
         `地图的总格子数必须小于等于%d。`,
         `The number of the grids must be less than or equal to %d.`,
         `El número de las grillas debe ser menor o igual que %d.`,
     ],
-    [TextType.F0024]: [
+    [Lang_Constants.TextType.F0024]: [
         `函数名称不存在：%s()。`,
         `Unrecognized function name: %s().`,
         `Nombre de función no-reconocida: %s().`,
     ],
-    [TextType.F0025]: [
+    [Lang_Constants.TextType.F0025]: [
         `操作数类型不合法，操作符：%s，操作数序号: %s，期望类型：%s，实际类型：%s。`,
         `Illegal type of operand, operator: %s, index: %s, expected: %s, actual: %s.`,
         `Tipo ilegal de operando, operador: %s, índice: %s, esperado: %s, real: %s.`,
     ],
-    [TextType.F0026]: [
+    [Lang_Constants.TextType.F0026]: [
         `数据加载中，请%s秒后重试`,
         `Now loading, please wait %ds and retry.`,
         `Cargando, por favor espere %ds y re-intente.`,
     ],
-    [TextType.F0027]: [
+    [Lang_Constants.TextType.F0027]: [
         `"%s"上的一局多人对战已经正式开始！`,
         `A game on "%s" has started!`,
         `Una partida en "%s" ha comenzado!`,
     ],
-    [TextType.F0028]: [
+    [Lang_Constants.TextType.F0028]: [
         `玩家[%s]因超时而告负！`,
         `Player [%s] has ran out of time!`,
         `Jugador [%s] se ha quedado sin tiempo!`,
     ],
-    [TextType.F0029]: [
+    [Lang_Constants.TextType.F0029]: [
         `您确定要踢掉玩家"%s"吗？`,
         `Are you sure you want to kick off the player '%s'?`,
         `¿Seguro que quiere expulsar al jugador '%s'?`,
     ],
-    [TextType.F0030]: [
+    [Lang_Constants.TextType.F0030]: [
         `%s (p%d) 回合结束。`,
         `%s (p%d) has ended the turn!!`,
         `%s (p%d) ha terminado el turno!`,
     ],
-    [TextType.F0031]: [
+    [Lang_Constants.TextType.F0031]: [
         `Lambda函数参数数量不合法，期望数量：%s，实际数量：%s。`,
         `The number of parameters for lambda function is invalid, expected: %s, actual: %s.`,
         `El número de parámetros para la función lambda no es válido, esperado: %s, real: %s.`,
     ],
-    [TextType.F0032]: [
+    [Lang_Constants.TextType.F0032]: [
         `Lambda函数参数名称出现了重复，参数名称：%s。`,
         `There are duplicated parameter name for lambda function, name: %s.`,
         `Hay nombres de parámetros duplicados para la función lambda, nombre: %s.`,
     ],
-    [TextType.F0033]: [
+    [Lang_Constants.TextType.F0033]: [
         `启用SetPath模式后，在指定部队移动路线时，您需要连续点击两次目标格子才能呼出操作菜单。这会增加操作量，但同时也便于指定移动路线，这在雾战中尤其有用。\n您确定要启用吗？\n（当前状态：%s）`,
         `While the Set Path mode is enabled, you have to double click (or touch) a tile in order to make the unit action panel appear when you are moving units. This mode can be useful especially in FoW.\nAre you sure you want to enable it? \n(Current status: %s)`,
         `Mientras el modo Establecer Caminos está habilitado, debes hacer doble click (o toque) en una casilla con tal de hacer que el panel de acciones de unidad aparezca al mover unidades. Este modo puede ser útil especialmente en Niebla de Guerra.\n¿Seguro que quieres habilitarlo? \n(Estado actual: %s)`,
     ],
-    [TextType.F0034]: [
+    [Lang_Constants.TextType.F0034]: [
         `最多输入%d个字符，请检查`,
         `Please limit the text length to %d characters.`,
         `Por favor limite el largo del texto a %d caracteres.`,
     ],
-    [TextType.F0035]: [
+    [Lang_Constants.TextType.F0035]: [
         `上下文不合法因而无法调用成员函数，函数名称：%s()。`,
         `The context is invalid for member function call, function: %s().`,
         `El contexto no es válido para el llamado de la función miembro, función: %s().`,
     ],
-    [TextType.F0036]: [
+    [Lang_Constants.TextType.F0036]: [
         `上下文不存在指定的成员函数，上下文种类：%s，函数名称：%s()。`,
         `The context doesn't contain the specified member function, context: %s, function: %s().`,
         `El contexto no incluye la función miembro especificada, contexto: %s, función: %s().`,
     ],
-    [TextType.F0037]: [
+    [Lang_Constants.TextType.F0037]: [
         `上下文不合法因而无法调用成员变量，变量名称：%s。`,
         `The context is invalid for member variable, variable: %s.`,
         `El contexto no es válido para la variable miembro, variable: %s.`,
     ],
-    [TextType.F0038]: [
+    [Lang_Constants.TextType.F0038]: [
         `上下文不存在指定的成员变量，上下文种类：%s，变量名称：%s。`,
         `The context doesn't contain the specified member variable, context: %s, variable: %s.`,
         `El contexto no incluye la variable miembro especificada, contexto: %s, variable: %s.`,
     ],
-    [TextType.F0039]: [
+    [Lang_Constants.TextType.F0039]: [
         `解析?:操作符时遇到了不合法的token：%s`,
         `Unexpected token when parsing operator ?:, token: %s.`,
         `Token inesperado al analizar operador ?: token: %s.`,
     ],
-    [TextType.F0040]: [
+    [Lang_Constants.TextType.F0040]: [
         `解析表达式叶子节点时遇到了不合法的token：%s`,
         `Unexpected token when parsing expression leaf, token: %s.`,
         `Token inesperado al analizar expresión leaf, token: %s.`,
     ],
-    [TextType.F0041]: [
+    [Lang_Constants.TextType.F0041]: [
         `解析成员时遇到了不合法的token：%s`,
         `Unexpected token when parsing member, token: %s.`,
         `Token inesperado al analizar miembro, token: %s.`,
     ],
-    [TextType.F0042]: [
+    [Lang_Constants.TextType.F0042]: [
         `修改自定义计数器的值，ID：%s，值：%s。`,
         `Set the value of Custom Counters, ID: %s, value: %s`,
         `Establecer el valor de los Contadores Personalizados, ID: %s, valor: %s.`,
     ],
-    [TextType.F0043]: [
+    [Lang_Constants.TextType.F0043]: [
         `持续性修改符合此条件的玩家的属性：%s。`,
         `Persistently modify the attributes of players who meet this condition: %s.`,
         `Modificar persistentemente los atributos de los jugadores que cumplen esta condición: %s.`,
     ],
-    [TextType.F0044]: [
+    [Lang_Constants.TextType.F0044]: [
         `持续性修改符合此条件的部队的属性：%s。`,
         `Persistently modify the attributes of units which meet this condition: %s.`,
         `Modificar persistentemente los atributos de las unidades que cumplen esta condición: %s.`,
     ],
-    [TextType.F0045]: [
+    [Lang_Constants.TextType.F0045]: [
         `修改符合此条件的玩家的属性：%s。`,
         `Modify the attributes of players who meet this condition: %s.`,
         `Modificar los atributos de los jugadores que cumplen esta condición: %s.`,
     ],
-    [TextType.F0046]: [
+    [Lang_Constants.TextType.F0046]: [
         `把符合条件的目标移动到屏幕中心：%s。`,
         `Move the targets that meet the condition to the center of the screen: %s.`,
         `Mover al centro de la pantalla los objetivos que cumplen la condición: %s.`,
     ],
-    [TextType.F0047]: [
+    [Lang_Constants.TextType.F0047]: [
         `把强制雾战代码修改为：%s。`,
         `Set the Forced FoW Code to: %s.`,
         `Establecer el Código de Niebla de Guerra Forzado a: %s.`,
     ],
-    [TextType.F0048]: [
+    [Lang_Constants.TextType.F0048]: [
         `在满足此条件的所有格子上增加部队：%s。`,
         `Add units on all grids that meet this condition: %s.`,
         `Añadir unidades en todas las grillas que cumplan esta condición: %s.`,
     ],
-    [TextType.F0049]: [
+    [Lang_Constants.TextType.F0049]: [
         `在满足此条件的所有部队上装载部队：%s。`,
         `Load new units into all units that meet this condition: %s.`,
         `Cargar nuevas unidades en todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0050]: [
+    [Lang_Constants.TextType.F0050]: [
         `摧毁满足此条件的所有部队：%s。`,
         `Destroy all units that meet this condition: %s.`,
         `Destruir todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0051]: [
+    [Lang_Constants.TextType.F0051]: [
         `修改满足此条件的所有部队的类型：%s。`,
         `Change the types of all units that meet this condition: %s.`,
         `Cambiar los tipos a todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0052]: [
+    [Lang_Constants.TextType.F0052]: [
         `修改满足此条件的所有部队的归属者：%s。`,
         `Change the ownerships of all units that meet this condition: %s.`,
         `Cambiar la propiedad de todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0053]: [
+    [Lang_Constants.TextType.F0053]: [
         `修改满足此条件的所有部队的属性：%s。`,
         `Change the attributes of all units that meet this condition: %s.`,
         `Cambiar los atributos de todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0054]: [
+    [Lang_Constants.TextType.F0054]: [
         `修改满足此条件的所有部队的位置：%s。`,
         `Change the positions of all units that meet this condition: %s.`,
         `Cambiar las posiciones de todas las unidades que cumplan esta condición %s.`,
     ],
-    [TextType.F0055]: [
+    [Lang_Constants.TextType.F0055]: [
         `修改满足此条件的所有地形的类型：%s。`,
         `Change the types of all tiles that meet this condition: %s.`,
         `Cambiar los tipos de todas las casillas que cumplan esta condición %s.`,
     ],
-    [TextType.F0056]: [
+    [Lang_Constants.TextType.F0056]: [
         `修改满足此条件的所有地形的属性：%s。`,
         `Change the attributes of all tiles that meet this condition: %s.`,
         `Cambiar los atributos de todas las casillas que cumplan esta condición %s.`,
     ],
-    [TextType.F0057]: [
+    [Lang_Constants.TextType.F0057]: [
         `修改满足此条件的所有神秘水晶的属性：%s。`,
         `Change the attributes of all Myst.Crystals that meet this condition: %s.`,
         `Cambiar los atributos de todos los Cristales Misteriosos que cumplan esta condición %s.`,
     ],
-    [TextType.F0058]: [
+    [Lang_Constants.TextType.F0058]: [
         `修改满足此条件的所有神秘加农炮的属性：%s。`,
         `Change the attributes of all Myst.Cannons that meet this condition: %s.`,
         `Cambiar los atributos de todos los Cañones Misteriosos que cumplan esta condición %s.`,
     ],
-    [TextType.F0059]: [
+    [Lang_Constants.TextType.F0059]: [
         `在地图上增加部队: %s`,
         `Add units on map: %s`,
         `Añadir unidades en el mapa: %s`,
     ],
-    [TextType.F0060]: [
+    [Lang_Constants.TextType.F0060]: [
         `当前正在使用条件节点%s。确定要用新的空节点代替它吗？`,
         `The condition node %s is being used. Are you sure you want to replace it by a new empty one?`,
         `El nodo de condición %s está en uso. ¿Seguro que quieres reemplazarlo por uno nuevo vacío?`,
     ],
-    [TextType.F0061]: [
+    [Lang_Constants.TextType.F0061]: [
         `此条件节点中包含了重复的节点%s。请删除重复的节点。`,
         `There are duplicated sub nodes %s in the node. Please remove the duplication.`,
         `Hay Sub-nodos duplicados %s en el nodo. Por favor remueva los duplicados.`,
     ],
-    [TextType.F0062]: [
+    [Lang_Constants.TextType.F0062]: [
         `此条件节点中包含了重复的条件%s。请删除重复的条件。`,
         `There are duplicated condition %s in the node. Please remove the duplication.`,
         `Hay condiciones duplicadas %s en el nodo. Por favor remueva los duplicados.`,
     ],
-    [TextType.F0063]: [
+    [Lang_Constants.TextType.F0063]: [
         `已删除%d个节点、%d个条件和%d个动作。`,
         `%d nodes, %d conditions and %d actions have been deleted.`,
         `%d nodos, %d condiciones y %d acciones han sido eliminados.`,
     ],
-    [TextType.F0064]: [
+    [Lang_Constants.TextType.F0064]: [
         `%s无效`,
         `The %s is invalid.`,
         `El %s no es válido.`,
     ],
-    [TextType.F0065]: [
+    [Lang_Constants.TextType.F0065]: [
         `您是否希望前往 %s 网站?`,
         `Do you want to go to the %s website?`,
         `¿Quieres ir al sitio web de %s ?`,
     ],
-    [TextType.F0066]: [
+    [Lang_Constants.TextType.F0066]: [
         `修改满足此条件的所有神秘建筑的属性：%s。`,
         `Change the attributes of all Myst.Buildings that meet this condition: %s.`,
         `Cambiar los atributos de todos los Edificios Misteriosos que cumplan esta condición: %s.`,
     ],
-    [TextType.F0067]: [
+    [Lang_Constants.TextType.F0067]: [
         `无法在 %s 上放置部队。`,
         `It's not allowed to place units on %s.`,
         `No está permitido colocar unidades en %s.`,
     ],
-    [TextType.F0068]: [
+    [Lang_Constants.TextType.F0068]: [
         `请输入数字，最多 %d 位`,
         `Please enter a number, up to %d digits.`,
         `Por favor ingrese un número, de hasta %d dígitos.`,
     ],
-    [TextType.F0069]: [
+    [Lang_Constants.TextType.F0069]: [
         `您已成功加入房间 #%d`,
         `You have successfully joined room #%d`,
         `Te has unido exitosamente a la sala #%d`,
     ],
-    [TextType.F0070]: [
+    [Lang_Constants.TextType.F0070]: [
         `发生剧情对话，参与CO: %s`,
         `Start a dialogue, COs: %s`,
         `Comenzar un diálogo, COs: %s`,
     ],
-    [TextType.F0071]: [
+    [Lang_Constants.TextType.F0071]: [
         `#%d 对话数据不合法`,
         `The #%d dialogue is invalid.`,
         `El #%d diálogo no es válido.`,
     ],
-    [TextType.F0072]: [
+    [Lang_Constants.TextType.F0072]: [
         `您确定要修改 P%d 的所属队伍吗？`,
         `Are you sure you want to modify the team of P%d?`,
         `¿Seguro que quieres modificar el equipo de P%d?`,
     ],
-    [TextType.F0073]: [
+    [Lang_Constants.TextType.F0073]: [
         `当前天气：%s（默认：%s）。`,
         `Current weather: %s (default: %s).`,
         `Clima actual: %s (por defecto: %s).`,
     ],
-    [TextType.F0074]: [
+    [Lang_Constants.TextType.F0074]: [
         `当前天气将在第%d回合、P%d开始前结束（当前：第%d回合、P%d）。`,
         `The current weather will end before D%d P%d's turn begins (current: D%d P%d).`,
         `El clima actual terminará antes de que el turno de D%d P%d comienze (actual: D%d P%d).`,
     ],
-    [TextType.F0075]: [
+    [Lang_Constants.TextType.F0075]: [
         `把坐标(%d, %d)移动到屏幕中心`,
         `Move (%d, %d) to the screen center.`,
         `Mover (%d, %d) al centro de la pantalla.`,
     ],
-    [TextType.F0076]: [
+    [Lang_Constants.TextType.F0076]: [
         `把天气改为%s，持续%d回合`,
         `Set the weather condition to %s for %d turns.`,
         `Establecer la condición de clima a %s por %d turnos.`,
     ],
-    [TextType.F0077]: [
+    [Lang_Constants.TextType.F0077]: [
         `把天气永久改为%s`,
         `Set the weather condition to %s forever.`,
         `Establecer la condición de clima a %s indefinidamente.`,
     ],
-    [TextType.F0078]: [
+    [Lang_Constants.TextType.F0078]: [
         `修改符合此条件的作战目标的属性：%s。`,
         `Modify the attributes of task objectives which meet this condition: %s.`,
         `Modificar los atributos de los objetivos que cumplan esta condición: %s.`,
     ],
-    [TextType.F0079]: [
+    [Lang_Constants.TextType.F0079]: [
         `删除满足此条件的地形的异常状态：%s。`,
         `Delete the abnormal states from the tiles that meet the condition: %s.`,
         `Eliminar el Estado Anormal de las casillas que cumplan la condición: %s.`,
     ],
-    [TextType.F0080]: [
+    [Lang_Constants.TextType.F0080]: [
         `给满足此条件的地形增加异常状态：%s。`,
         `Add abnormal states to the tiles that meet the condition: %s.`,
         `Añadir estados anormales a las casillas que cumplan la condición: %s.`,
     ],
-    [TextType.F0081]: [
+    [Lang_Constants.TextType.F0081]: [
         `修改满足此条件的地形的异常状态：%s。`,
         `Modify abnormal states of tiles that meet the condition: %s.`,
         `Modificar estados anormales de casillas que cumplan la condición: %s.`,
     ],
-    [TextType.F0082]: [
+    [Lang_Constants.TextType.F0082]: [
         `您将同意%d人的观战请求，同时拒绝%d人的观战请求。\n您确定要继续吗？`,
         `You are going to accept %d players' requests while declining %d players' ones.\nAre you sure you want to continue?`,
         `Vas a aceptar las solicitudes de %d jugadores, mientras rechazas las de %d jugadores.\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.F0083]: [
+    [Lang_Constants.TextType.F0083]: [
         `您将向%d个玩家发起观战请求。\n您确定要继续吗？`,
         `You are going to send requests to %d players.\nAre you sure you want to continue?`,
         `Vas a enviar solicitudes a %d jugadores.\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.F0084]: [
+    [Lang_Constants.TextType.F0084]: [
         `%s 已成功创建`,
         `%s is created successfully.`,
         `%s fue creada con éxito.`,
     ],
-    [TextType.F0085]: [
+    [Lang_Constants.TextType.F0085]: [
         `发生简易剧情对话，参与CO: %s`,
         `Start a simple dialogue, COs: %s`,
         `Empezar un diálogo simple, COs: %s`,
     ],
-    [TextType.F0086]: [
+    [Lang_Constants.TextType.F0086]: [
         `插入 %s 行`,
         `Insert %s Rows`,
         `Insertar %s Filas`,
     ],
-    [TextType.F0087]: [
+    [Lang_Constants.TextType.F0087]: [
         `删除 %s 行`,
         `Delete %s Rows`,
         `Eliminar %s Filas`,
     ],
-    [TextType.F0088]: [
+    [Lang_Constants.TextType.F0088]: [
         `假设当前值是10000，则动作执行后将变为%d`,
         `Assume the current value is 10000, then the value will become %d after this action is executed.`,
         `Asumiendo que el valor actual es 10000, entonces el valor se transformará en %d luego de que esta acción sea ejecutada`,
     ],
-    [TextType.F0089]: [
+    [Lang_Constants.TextType.F0089]: [
         `插入 %s 列`,
         `Insert %s Columns`,
         `Insertar %s Columnas`,
     ],
-    [TextType.F0090]: [
+    [Lang_Constants.TextType.F0090]: [
         `获取 %s 的所有部队。这些部队的数量 %s %s`,
         `Get all units that %s. The number of the units %s %s.`,
         `Obtener todas las unidades que %s. el número de unidades %s %s.`,
     ],
-    [TextType.F0091]: [
+    [Lang_Constants.TextType.F0091]: [
         `%s无效。`,
         `Invalid %s.`,
         `%s No válido.`,
     ],
-    [TextType.F0092]: [
+    [Lang_Constants.TextType.F0092]: [
         `选择%s`,
         `Select %s`,
         `Elija %s`,
     ],
-    [TextType.F0093]: [
+    [Lang_Constants.TextType.F0093]: [
         `获取 %s 的所有地形。这些地形的数量 %s %s`,
         `Get all terrains that %s. The number of the terrains %s %s.`,
         `Obtener todos los terrenos que %s. El número de terrenos es %s %s.`,
     ],
-    [TextType.F0094]: [
+    [Lang_Constants.TextType.F0094]: [
         `事件在当前回合内触发的次数 %s %s。`,
         `The number of times the event is triggered in the current turn %s %s.`,
         `El número de veces que el evento se ha activado en el turno actual %s %s.`,
     ],
-    [TextType.F0095]: [
+    [Lang_Constants.TextType.F0095]: [
         `事件ID是 %s。`,
         `The event ID is %s.`,
         `La ID del evento es %s.`,
     ],
-    [TextType.F0096]: [
+    [Lang_Constants.TextType.F0096]: [
         `符合指定条件的战局事件的数量 %s %s。`,
         `The number of war events that meet the specified conditions %s %s.`,
         `El número de eventos de guerra que cumplen con las condiciones especificadas %s %s.`,
     ],
-    [TextType.F0097]: [
+    [Lang_Constants.TextType.F0097]: [
         `任意%s`,
         `Any %s`,
         `Cualquier %s`,
     ],
-    [TextType.F0098]: [
+    [Lang_Constants.TextType.F0098]: [
         `符合指定条件的 %s 的数量 %s %s。`,
         `The number of %s that meet the specified conditions %s %s.`,
         `El número de %s que cumplen las condiciones especificadas %s %s.`,
     ],
-    [TextType.F0099]: [
+    [Lang_Constants.TextType.F0099]: [
         `存活状态是 %s`,
         `the Alive State is %s`,
         `El Estado en Partida es %s`,
     ],
-    [TextType.F0100]: [
+    [Lang_Constants.TextType.F0100]: [
         `资金 %s %s`,
         `the Fund %s %s`,
         `El Presupuesto %s %s`,
     ],
-    [TextType.F0101]: [
+    [Lang_Constants.TextType.F0101]: [
         `CO能量值百分比 %s %s`,
         `the CO Energy %% %s %s`,
         `La Energía del CO %% %s %s`,
     ],
-    [TextType.F0102]: [
+    [Lang_Constants.TextType.F0102]: [
         `激活中的CO技能类型是 %s`,
         `the activating CO Skill Type is %s`,
         `El tipo de habilidad de CO activa es %s`,
     ],
-    [TextType.F0103]: [
+    [Lang_Constants.TextType.F0103]: [
         `ID为 %s%s 的事件的数量 %s %s`,
         `The number of events whose ID is %s%s %s %s.`,
         `El número de eventos cuya ID sea %s%s %s %s.`,
     ],
-    [TextType.F0104]: [
+    [Lang_Constants.TextType.F0104]: [
         `符合以下所有条件的战局事件的数量 %s %s。`,
         `The number of war events that meet all of the following conditions %s %s.`,
         `El número de eventos de guerra que cumplen todas las siguientes condiciones %s %s.`,
     ],
-    [TextType.F0105]: [
+    [Lang_Constants.TextType.F0105]: [
         `事件在整个战局内触发的次数 %s %s。`,
         `The number of times the event is triggered throughout the game %s %s.`,
         `El número de veces que el evento se ha activado durante la partida %s %s.`,
     ],
-    [TextType.F0106]: [
+    [Lang_Constants.TextType.F0106]: [
         `当前天气是 %s%s`,
         `The Weather Condition is %s%s.`,
         `La Condición del Clima es %s%s.`,
     ],
-    [TextType.F0107]: [
+    [Lang_Constants.TextType.F0107]: [
         `战争迷雾%s`,
         `the Fog of War is %s`,
         `la Niebla de Guerra está %s`,
     ],
-    [TextType.F0108]: [
+    [Lang_Constants.TextType.F0108]: [
         `把战争迷雾改为%s，持续%d回合`,
         `Set the Fog of War to %s for %d turns.`,
         `Establecer la Niebla de Guerra a %s por %d turnos.`,
     ],
-    [TextType.F0109]: [
+    [Lang_Constants.TextType.F0109]: [
         `把战争迷雾永久改为%s`,
         `Set the Fog of War to %s forever.`,
         `Establecer la Niebla de Guerra a %s indefinidamente`,
     ],
-    [TextType.F0110]: [
+    [Lang_Constants.TextType.F0110]: [
         `修改ID为 %s 的自定义计数器的值，公式为：当前值 * %d%% + %d`,
         `Set the value of the Custom Counters whose ID is %s to: current value * %d%% + %d.`,
         `Establecer el valor de los Contadores Personalizados cuya ID sea %s a: valor actual * %d%% + %d.`,
     ],
-    [TextType.F0111]: [
+    [Lang_Constants.TextType.F0111]: [
         `ID为 %s%s 的自定义计数器的数量 %s %s`,
         `The number of Custom Counters whose ID is %s%s %s %s.`,
         `El número de Contadores Personalizados cuya ID sea %s%s %s %s.`,
     ],
-    [TextType.F0112]: [
+    [Lang_Constants.TextType.F0112]: [
         `值 %s %s`,
         `the Value %s %s`,
         `El Valor %s %s.`,
     ],
-    [TextType.F0113]: [
+    [Lang_Constants.TextType.F0113]: [
         `值除以 %s 的余数 %s %s`,
         `the Value mod %s %s %s`,
         `La modificación del Valor %s %s %s`,
     ],
-    [TextType.F0114]: [
+    [Lang_Constants.TextType.F0114]: [
         `修改 %s 的所有部队的属性。`,
         `Get all units that %s, then modify their states.`,
         `Obtener todas las unidades que %s, luego modificar sus estados.`,
     ],
-    [TextType.F0115]: [
+    [Lang_Constants.TextType.F0115]: [
         `归属于 %s`,
         `is owned by %s`,
         `es propiedad de %s`,
     ],
-    [TextType.F0116]: [
+    [Lang_Constants.TextType.F0116]: [
         `删除 %s 列`,
         `Delete %s Columns`,
         `Eliminar %s Columnas`,
     ],
-    [TextType.F0117]: [
+    [Lang_Constants.TextType.F0117]: [
         [
             `CO能量值达到最大值后，就无法进一步积累。`,
             ``,
@@ -32665,52 +32667,52 @@ export const CommonText: Record<number, string[]> = {
             `Además, si tu unidad del CO es destruida, la Energía del CO disminuirá a 0, y las habilidades activas (si las hay) serán suspendidas.`,
         ].join(`\n`),
     ],
-    [TextType.F0118]: [
+    [Lang_Constants.TextType.F0118]: [
         `行动状态为 %s`,
         `the action state is %s`,
         `El estado de acción es %s`,
     ],
-    [TextType.F0119]: [
+    [Lang_Constants.TextType.F0119]: [
         `%s: 当前值 * %s%% + %s。`,
         `%s: current value * %s%% + %s.`,
         `%s: valor actual * %s%% + %s.`,
     ],
-    [TextType.F0120]: [
+    [Lang_Constants.TextType.F0120]: [
         `真实HP %s %s`,
         `the real HP %s %s`,
         `el HP real %s %s`,
     ],
-    [TextType.F0121]: [
+    [Lang_Constants.TextType.F0121]: [
         `燃料%% %s %s`,
         `the fuel%% %s %s`,
         `El combustible%% %s %s`,
     ],
-    [TextType.F0122]: [
+    [Lang_Constants.TextType.F0122]: [
         `主武器弹药%% %s %s`,
         `the primary weapon ammo%% %s %s`,
         `La munición del arma principal%% %s %s`,
     ],
-    [TextType.F0123]: [
+    [Lang_Constants.TextType.F0123]: [
         `晋升等级 %s %s`,
         `the promotion %s %s`,
         `el nivel de promoción %s %s`,
     ],
-    [TextType.F0124]: [
+    [Lang_Constants.TextType.F0124]: [
         `找到 %s 的所有部队，并摧毁它们。`,
         `Get all units that %s, then destroy them all.`,
         `Obtener todas las unidades que %s, luego destruirlas todas`,
     ],
-    [TextType.F0125]: [
+    [Lang_Constants.TextType.F0125]: [
         `%s: %s。`,
         `%s: %s.`,
         `%s: %s.`,
     ],
-    [TextType.F0126]: [
+    [Lang_Constants.TextType.F0126]: [
         `找到玩家序号为 %s%s 的所有玩家，并修改他们的属性。`,
         `Get all players that is %s%s, then modify their states.`,
         `Obtener todos los jugadores que %s%s, luego modificar sus estados.`,
     ],
-    [TextType.F0127]: [
+    [Lang_Constants.TextType.F0127]: [
         [
             `恭喜您获得本局的胜利！`,
             ``,
@@ -32742,37 +32744,37 @@ export const CommonText: Record<number, string[]> = {
             `Puntaje Final: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0128]: [
+    [Lang_Constants.TextType.F0128]: [
         `找到 %s 的所有地块，并修改其属性。`,
         `Get all terrains that %s, then modify their states.`,
         `Obtener todos los terrenos que %s, luego modificar sus estados.`,
     ],
-    [TextType.F0129]: [
+    [Lang_Constants.TextType.F0129]: [
         `找到 %s 的所有地块，并修改其类型。`,
         `Get all terrains that %s, then modify their type.`,
         `Obtener todos los terrenos que %s, luego modificar sus tipos.`,
     ],
-    [TextType.F0130]: [
+    [Lang_Constants.TextType.F0130]: [
         `停止ID为 %s 的持续性事件动作。`,
         `Stop the persistent event actions whose ID is: %s.`,
         `Detener las acciones de eventos persistentes cuya ID sea: %s`,
     ],
-    [TextType.F0131]: [
+    [Lang_Constants.TextType.F0131]: [
         `持续性显示文字: %s`,
         `Persistently show text: %s`,
         `Mostrar texto persistentemente: %s`,
     ],
-    [TextType.F0132]: [
+    [Lang_Constants.TextType.F0132]: [
         `CO是 %s`,
         `the CO is %s`,
         `el CO es %s`,
     ],
-    [TextType.F0133]: [
+    [Lang_Constants.TextType.F0133]: [
         `无法选中 "%s"。`,
         `"%s" cannot be chosen.`,
         `"%s" no puede ser elegido.`,
     ],
-    [TextType.F0134]: [
+    [Lang_Constants.TextType.F0134]: [
         [
             `CO能量值达到最大值后，就无法进一步积累。`,
             ``,
@@ -32801,87 +32803,87 @@ export const CommonText: Record<number, string[]> = {
             `- Daño Recibido es el daño que tu unidad sufre de parte de la unidad enemiga.`,
         ].join(`\n`),
     ],
-    [TextType.F0135]: [
+    [Lang_Constants.TextType.F0135]: [
         `生效中的符合指定条件的持续性动作的数量 %s %s。`,
         `The number of ongoing persistent actions that meet the specified conditions %s %s.`,
         `El número de acciones persistentes en curso que cumplan las condiciones especificadas %s %s.`,
     ],
-    [TextType.F0136]: [
+    [Lang_Constants.TextType.F0136]: [
         `找到玩家序号为 %s 的所有玩家，并持续性修改他们的属性。`,
         `Get all players that is %s, then persistently modify their attributes.`,
         `Obtener todos los jugadores que %s, luego modificar persistentemente sus atributos.`,
     ],
-    [TextType.F0137]: [
+    [Lang_Constants.TextType.F0137]: [
         `禁止生产部队: %s。`,
         `Prohibit the units production: %s.`,
         `Prohibir la producción de unidades: %s.`,
     ],
-    [TextType.F0138]: [
+    [Lang_Constants.TextType.F0138]: [
         `剩余%s`,
         `Remaining %s`,
         `%s Remanente`,
     ],
-    [TextType.F0139]: [
+    [Lang_Constants.TextType.F0139]: [
         `占领点数 %s %s`,
         `the Capture Point %s %s`,
         `Los Puntos de Captura %s %s`,
     ],
-    [TextType.F0140]: [
+    [Lang_Constants.TextType.F0140]: [
         `建筑点数 %s %s`,
         `the Build Point %s %s`,
         `Los Puntos de Construcción %s %s`,
     ],
-    [TextType.F0141]: [
+    [Lang_Constants.TextType.F0141]: [
         `尚未指定 %s`,
         `%s is not specified.`,
         `No se especificó %s.`,
     ],
-    [TextType.F0142]: [
+    [Lang_Constants.TextType.F0142]: [
         `类型为 %s`,
         `the type is %s`,
         `el tipo es %s`,
     ],
-    [TextType.F0143]: [
+    [Lang_Constants.TextType.F0143]: [
         `由玩家手动进行的、且符合指定条件的操作的总数量 %s %s。`,
         `The total number of actions performed manually by players that meet the specified conditions %s %s.`,
         `El número total de acciones efectuadas manualmente por los jugadores que cumplan las condiciones especificadas %s %s.`,
     ],
-    [TextType.F0144]: [
+    [Lang_Constants.TextType.F0144]: [
         `这些操作发生在在最近的 %s 个回合中。`,
         `The actions are performed in the recent %s turns.`,
         `Las acciones son efectuadas en los %s turnos recientes.`,
     ],
-    [TextType.F0145]: [
+    [Lang_Constants.TextType.F0145]: [
         `您最多只能选择%d名CO。`,
         `You can choose up to %d CO(s).`,
         `Puedes elegir hasta %d CO(s)`,
     ],
-    [TextType.F0146]: [
+    [Lang_Constants.TextType.F0146]: [
         `请输入%s`,
         `Please input %s`,
         `Por favor ingrese %s`,
     ],
-    [TextType.F0147]: [
+    [Lang_Constants.TextType.F0147]: [
         `您最多只能选择%d名玩家。`,
         `You can choose up to %d players.`,
         `Puedes elegir hasta %d jugadores.`,
     ],
-    [TextType.F0148]: [
+    [Lang_Constants.TextType.F0148]: [
         `您最多只能选择%d个选项。`,
         `You can choose up to %d item(s).`,
         `Puedes elegir hasta %d ítem(s).`,
     ],
-    [TextType.F0149]: [
+    [Lang_Constants.TextType.F0149]: [
         `在该地形上的部队的数量 %s %s`,
         `the number of units on the tile %s %s`,
         `el número de unidades en la casilla %s %s`,
     ],
-    [TextType.F0150]: [
+    [Lang_Constants.TextType.F0150]: [
         `请最少选择%d个选择肢。`,
         `Please choose at least %d item(s).`,
         `Por favor escoja al menos %d ítems.`,
     ],
-    [TextType.F0151]: [
+    [Lang_Constants.TextType.F0151]: [
         [
             `您参与的一局游戏已结束。`,
             ``,
@@ -32913,7 +32915,7 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0152]: [
+    [Lang_Constants.TextType.F0152]: [
         [
             `您被邀请参与一局自定义游戏。`,
             ``,
@@ -32939,7 +32941,7 @@ export const CommonText: Record<number, string[]> = {
             `Invitador: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0153]: [
+    [Lang_Constants.TextType.F0153]: [
         [
             `您被邀请参与一局合作模式游戏。`,
             ``,
@@ -32965,7 +32967,7 @@ export const CommonText: Record<number, string[]> = {
             `Invitador: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0154]: [
+    [Lang_Constants.TextType.F0154]: [
         [
             `您被邀请参与一局自由模式游戏。`,
             ``,
@@ -32988,12 +32990,12 @@ export const CommonText: Record<number, string[]> = {
             `Invitador: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0155]: [
+    [Lang_Constants.TextType.F0155]: [
         `请最少选择%d名玩家。`,
         `Please choose at least %d player(s).`,
         `Por favor escoja al menos %d jugador(es).`,
     ],
-    [TextType.F0156]: [
+    [Lang_Constants.TextType.F0156]: [
         [
             `您的地图已过审并发布。恭喜您！`,
             ``,
@@ -33022,7 +33024,7 @@ export const CommonText: Record<number, string[]> = {
             `Puedes modificar el espacio del mapa, incluyendo un nuevo mapa sobre él y/o limpiar el espacio. El mapa publicado no será afectado.`,
         ].join(`\n`),
     ],
-    [TextType.F0157]: [
+    [Lang_Constants.TextType.F0157]: [
         [
             `以下事件将被直接添加到线上地图中，请仔细检查确认：`,
             ``,
@@ -33054,7 +33056,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0158]: [
+    [Lang_Constants.TextType.F0158]: [
         [
             `以下事件将被删除，请仔细检查确认：`,
             ``,
@@ -33086,27 +33088,27 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0159]: [
+    [Lang_Constants.TextType.F0159]: [
         `已调整%s个地形`,
         `%s tile(s) have been adjusted.`,
         `%s casillas se han ajustado`,
     ],
-    [TextType.F0160]: [
+    [Lang_Constants.TextType.F0160]: [
         `移动到(%s,%s)`,
         `Move to (%s,%s).`,
         `Mover a (%s,%s).`,
     ],
-    [TextType.F0161]: [
+    [Lang_Constants.TextType.F0161]: [
         `相对于当前坐标移动(%s,%s)`,
         `Move away by (%s,%s).`,
         `Mover afuera por (%s,%s).`,
     ],
-    [TextType.F0162]: [
+    [Lang_Constants.TextType.F0162]: [
         `Tiny Wars 第%s届联赛的优胜玩家。`,
         `The winner of the #%s Tiny Wars Tournament.`,
         `El ganador del #%s Torneo de Tiny Wars.`,
     ],
-    [TextType.F0163]: [
+    [Lang_Constants.TextType.F0163]: [
         [
             `常规联赛已结束，您在本次联赛中夺得了勋章。恭喜您！`,
             ``,
@@ -33129,27 +33131,27 @@ export const CommonText: Record<number, string[]> = {
             `Puedes mostrar tu medalla junto a tu apodo a través del panel de tu perfil.`,
         ].join(`\n`),
     ],
-    [TextType.F0164]: [
+    [Lang_Constants.TextType.F0164]: [
         `修改后，报名阶段将在 %s 后结束。\n\n您确定要继续吗？`,
         `After this modification, the registration period will end in %s.\n\nAre you sure you want to continue?`,
         `Luego de esta modificación, el periodo de registro terminará en %s.\n\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.F0165]: [
+    [Lang_Constants.TextType.F0165]: [
         `修改后，准备阶段将在 %s 后结束。\n\n您确定要继续吗？`,
         `After this modification, the preparation period will end in %s.\n\nAre you sure you want to continue?`,
         `Luego de esta modificación, el periodo de preparación terminará en %s.\n\n¿Seguro que quieres continuar?`,
     ],
-    [TextType.F0166]: [
+    [Lang_Constants.TextType.F0166]: [
         `找到满足 %s 的所有地块，并填充 %s。`,
         `Get all terrains that %s, then fill them with %s.`,
         `Obtener todos los terrenos que %s, entonces rellenarlos con %s.`,
     ],
-    [TextType.F0167]: [
+    [Lang_Constants.TextType.F0167]: [
         `修改ID为 %s 的自定义计数器的值，公式为：当前值 * ((R1 * %s) + %s) + R2 * %s + %s。`,
         `Set the value of the Custom Counters whose ID is %s to: current value * ((R1 * %s) + %s) + R2 * %s + %s.`,
         `Establecer el valor de los Contadores Personalizados cuya ID sea %s a: valor actual * ((R1 * %s) + %s) + R2 * %s + %s.`,
     ],
-    [TextType.F0168]: [
+    [Lang_Constants.TextType.F0168]: [
         [
             `您确定要删掉以下对话吗？`,
             ``,
@@ -33166,117 +33168,117 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0169]: [
+    [Lang_Constants.TextType.F0169]: [
         `与坐标 %s 的最小距离 %s %s`,
         `the min. distance to coordinates %s %s %s`,
         `La distancia mínima a las coordenadas %s %s %s`,
     ],
-    [TextType.F0170]: [
+    [Lang_Constants.TextType.F0170]: [
         `与区域 %s 的最小距离 %s %s`,
         `the min. distance to locations %s %s %s`,
         `La distancia mínima a las posiciones %s %s %s`,
     ],
-    [TextType.F0171]: [
+    [Lang_Constants.TextType.F0171]: [
         `带有标签 %s`,
         `has Tag %s`,
         `Tiene marca %s`,
     ],
-    [TextType.F0172]: [
+    [Lang_Constants.TextType.F0172]: [
         `在该地形上的符合筛选器的部队的数量 %s %s`,
         `the number of filtered units on the tile %s %s`,
         `el número de unidades filtradas en la casilla %s %s`,
     ],
-    [TextType.F0173]: [
+    [Lang_Constants.TextType.F0173]: [
         `已装载部队数量 %s %s`,
         `the number of loaded units %s %s`,
         `el número de unidades cargadas %s %s`,
     ],
-    [TextType.F0174]: [
+    [Lang_Constants.TextType.F0174]: [
         `燃料 %s %s`,
         `the fuel %s %s`,
         `el combustible %s %s`,
     ],
-    [TextType.F0175]: [
+    [Lang_Constants.TextType.F0175]: [
         `主武器弹药 %s %s`,
         `the primary weapon ammo %s %s`,
         `la munición del arma principal %s %s`,
     ],
-    [TextType.F0176]: [
+    [Lang_Constants.TextType.F0176]: [
         `照明弹弹药 %s %s`,
         `the flare ammo %s %s`,
         `la munición de bengalas %s %s`,
     ],
-    [TextType.F0177]: [
+    [Lang_Constants.TextType.F0177]: [
         `建造材料 %s %s`,
         `the build material %s %s`,
         `el material de construcción %s %s`,
     ],
-    [TextType.F0178]: [
+    [Lang_Constants.TextType.F0178]: [
         `生产材料 %s %s`,
         `the production material %s %s`,
         `el material de producción %s %s`,
     ],
-    [TextType.F0179]: [
+    [Lang_Constants.TextType.F0179]: [
         `类型为 %s%s 的部队。`,
         `All units that is %s%s.`,
         `Todas las unidades de tipo %s%s`,
     ],
-    [TextType.F0180]: [
+    [Lang_Constants.TextType.F0180]: [
         `找到所有地块，并填充 %s。`,
         `Get all terrains and fill them with %s.`,
         `Obtener todos los terrenos y rellenarlo con %s.`,
     ],
-    [TextType.F0181]: [
+    [Lang_Constants.TextType.F0181]: [
         `类型为 %s%s 的地形。`,
         `All tiles that is %s%s.`,
         `Todas las casillas de tipo %s%s`,
     ],
-    [TextType.F0182]: [
+    [Lang_Constants.TextType.F0182]: [
         `x坐标为 %s`,
         `the x-coordinate is %s`,
         `la coordenada x es %s`,
     ],
-    [TextType.F0183]: [
+    [Lang_Constants.TextType.F0183]: [
         `y坐标为 %s`,
         `the y-coordinate is %s`,
         `la coordenada y es %s`,
     ],
-    [TextType.F0184]: [
+    [Lang_Constants.TextType.F0184]: [
         `符合以下条件的位置: %s。`,
         `The positions that meet the following conditions: %s.`,
         `Las posiciones que cumplen las siguientes condiciones: %s.`,
     ],
-    [TextType.F0185]: [
+    [Lang_Constants.TextType.F0185]: [
         `您确定要禁用以下CO吗？\n%s`,
         `Are you sure you want to ban the following COs?\n%s`,
         `¿Seguro que quieres banear a los siguientes COs?\n%s`,
     ],
-    [TextType.F0186]: [
+    [Lang_Constants.TextType.F0186]: [
         `获取所有地形。这些地形的数量 %s %s`,
         `Get all terrains. The number of the terrains %s %s.`,
         `Obtener todos los terrenos. El número de terrenos %s %s.`,
     ],
-    [TextType.F0187]: [
+    [Lang_Constants.TextType.F0187]: [
         `获取所有部队。这些部队的数量 %s %s`,
         `Get all units. The number of the units %s %s.`,
         `Obtener todas las unidades. El número de unidades %s %s.`,
     ],
-    [TextType.F0188]: [
+    [Lang_Constants.TextType.F0188]: [
         `持续性修改 %s 的所有部队的属性。`,
         `Get all units that is %s, then modify their attributes persistently.`,
         `Obtener todas las unidades que sean %s, luego modificar sus atributos persistentemente.`,
     ],
-    [TextType.F0189]: [
+    [Lang_Constants.TextType.F0189]: [
         `允许生产部队: %s。`,
         `Allow the units production: %s.`,
         `Permitir la producción de unidades: %s.`,
     ],
-    [TextType.F0190]: [
+    [Lang_Constants.TextType.F0190]: [
         `禁入区域是 %s`,
         `the no-entry location is %s`,
         `La posición de no-entrada es %s`,
     ],
-    [TextType.F0191]: [
+    [Lang_Constants.TextType.F0191]: [
         [
             `以下对话未被任何预设规则使用，因此将被删除：`,
             `%s。`,
@@ -33296,12 +33298,12 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0192]: [
+    [Lang_Constants.TextType.F0192]: [
         `修改 %s 的属性。`,
         `Modify the attributes of %s.`,
         `Modificar los atributos de %s.`,
     ],
-    [TextType.F0193]: [
+    [Lang_Constants.TextType.F0193]: [
         [
             `共有 %d 个格子符合条件，其中 %d 个格子将受到本次操作影响。`,
             `您确定要继续吗？`,
@@ -33315,7 +33317,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que quieres continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0194]: [
+    [Lang_Constants.TextType.F0194]: [
         [
             `您提交的挑战模式游戏数据已通过系统验证。恭喜您！`,
             ``,
@@ -33341,7 +33343,7 @@ export const CommonText: Record<number, string[]> = {
             `Puntaje: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0195]: [
+    [Lang_Constants.TextType.F0195]: [
         [
             `您提交的挑战模式游戏数据未能通过系统验证。`,
             ``,
@@ -33367,7 +33369,7 @@ export const CommonText: Record<number, string[]> = {
             `Código de Error: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0196]: [
+    [Lang_Constants.TextType.F0196]: [
         [
             `您提交的战役模式游戏数据已通过系统验证。恭喜您！`,
             ``,
@@ -33393,7 +33395,7 @@ export const CommonText: Record<number, string[]> = {
             `Puntaje: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0197]: [
+    [Lang_Constants.TextType.F0197]: [
         [
             `您提交的战役模式游戏数据未能通过系统验证。`,
             ``,
@@ -33419,17 +33421,17 @@ export const CommonText: Record<number, string[]> = {
             `Código de Error: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0198]: [
+    [Lang_Constants.TextType.F0198]: [
         `AI模式为 %s`,
         `the A.I. Mode is %s`,
         `El Modo I.A. es %s`,
     ],
-    [TextType.F0199]: [
+    [Lang_Constants.TextType.F0199]: [
         `此表达式的结果值为实数且不等于0： %s`,
         `The result value of this expression is a real number and not equal to 0: %s.`,
         `El valor resultanto de esta expresión es un número real y diferente a 0: %s.`,
     ],
-    [TextType.F0200]: [
+    [Lang_Constants.TextType.F0200]: [
         [
             `天气会改变局内所有玩家的属性，具体影响如下：`,
             ``,
@@ -33446,7 +33448,7 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0201]: [
+    [Lang_Constants.TextType.F0201]: [
         [
             `无法连续举办多次联赛。`,
             ``,
@@ -33463,7 +33465,7 @@ export const CommonText: Record<number, string[]> = {
             `Por favor espere %s y ejecute esta operación de nuevo.`,
         ].join(`\n`),
     ],
-    [TextType.F0202]: [
+    [Lang_Constants.TextType.F0202]: [
         [
             `扣减部队所在地形的占领点数。部队每有1点HP，则占领点数减%f。`,
             `如果部队有强化buff，则占领点数额外减%f，且强化buff在执行占领指令后消失。`,
@@ -33480,7 +33482,7 @@ export const CommonText: Record<number, string[]> = {
             `Los PC remanentes se redondearán hacia arriba automáticamente. Cuando los PC disminuyan a 0 o inferior, te convertirás en el propietario del terreno.`,
         ].join(`\n`),
     ],
-    [TextType.F0203]: [
+    [Lang_Constants.TextType.F0203]: [
         [
             `扣减部队所在地形的占领点数。部队每有1点HP，则占领点数减%f（非强化状态下为%f）。`,
             `地形的剩余占领点数将自动向上取整。当点数降到0或以下时，你成为该地形的拥有者。`,
@@ -33497,12 +33499,12 @@ export const CommonText: Record<number, string[]> = {
             `Luego de ejecutar esta acción, el estatus de Mejora de la unidad desaparecerá (si la tiene).`,
         ].join(`\n`),
     ],
-    [TextType.F0204]: [
+    [Lang_Constants.TextType.F0204]: [
         `操作过于频繁，请 %s 秒后重试。`,
         `Operation is too frequent, please retry after %s second(s).`,
         `La operación es muy frecuente, por favor re-intente luego de %s segundos.`,
     ],
-    [TextType.F0205]: [
+    [Lang_Constants.TextType.F0205]: [
         [
             `请选择 %s 个格子作为CO技能的目标。`,
             ``,
@@ -33519,17 +33521,17 @@ export const CommonText: Record<number, string[]> = {
             `Luego de seleccionar suficientes casillas, haga click en cualquiera de ellas nuevamente para activar la habilidad.`,
         ].join(`\n`),
     ],
-    [TextType.F0206]: [
+    [Lang_Constants.TextType.F0206]: [
         `已创建子节点 N%s。`,
         `Child node N%s has been created.`,
         `Nodo niño N%s ha sido creado.`,
     ],
-    [TextType.F0207]: [
+    [Lang_Constants.TextType.F0207]: [
         `修改符合此条件的所有位置的部队移动路径视野：%s。`,
         `Modify the unit movement path visibility of positions which meet this condition: %s.`,
         `Modificar la visibilidad de camino de movimiento de la unidad, de posiciones que cumplan esta condición: %s.`,
     ],
-    [TextType.F0208]: [ // TODO
+    [Lang_Constants.TextType.F0208]: [ // TODO
         [
             `部队下潜（隐形）后，将不会被敌人发现踪迹，除非以下条件中的至少任意一个成立：`,
             `- 部队与敌人部队直接相邻`,
@@ -33555,7 +33557,7 @@ export const CommonText: Record<number, string[]> = {
             `%s`
         ].join(`\n`),
     ],
-    [TextType.F0209]: [
+    [Lang_Constants.TextType.F0209]: [
         [
             `执行自爆指令后，部队将被摧毁。`,
             `同时，与该部队距离小于等于 %s 的所有部队将失去 %s HP，但至少剩余 1 点真实HP。`,
@@ -33575,7 +33577,7 @@ export const CommonText: Record<number, string[]> = {
             `¿Seguro que deseas continuar?`,
         ].join(`\n`),
     ],
-    [TextType.F0210]: [
+    [Lang_Constants.TextType.F0210]: [
         [
             `您的观战请求已被接受。`,
             ``,
@@ -33613,12 +33615,12 @@ export const CommonText: Record<number, string[]> = {
             `Apodo: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0211]: [
+    [Lang_Constants.TextType.F0211]: [
         `%d个部队尚未行动，其中%d个部队尚未移动。`,
         `%d unit(s) is(are) idle, of which %d has(have) not yet moved.`,
         `Unidad(es) %d está(n) inactiva, de las cuales %d no se ha(n) movido`,
     ],
-    [TextType.F0212]: [
+    [Lang_Constants.TextType.F0212]: [
         [
             `使自身获得飞行状态，同时获得%sHP（强化状态下为%s）。`,
             `执行此操作后，部队的强化状态将会消失（如有）。`,
@@ -33632,7 +33634,7 @@ export const CommonText: Record<number, string[]> = {
             `Luego de efectuar esta acción, el estatus de Mejora de la unidad desaparecerá (si la tiene).`,
         ].join(`\n`),
     ],
-    [TextType.F0213]: [
+    [Lang_Constants.TextType.F0213]: [
         [
             `使自身获得飞行状态，同时获得%sHP（非强化状态下为%s）。`,
             `执行此操作后，部队的强化状态将会消失（如有）。`,
@@ -33646,7 +33648,7 @@ export const CommonText: Record<number, string[]> = {
             `Luego de efectuar esta acción, el estatus de Mejora de la unidad desaparecerá (si la tiene).`,
         ].join(`\n`),
     ],
-    [TextType.F0214]: [
+    [Lang_Constants.TextType.F0214]: [
         [
             `您在排位赛中超时，系统已自动把您的同时对局数量重置为0。`,
             `若要再次参加排位赛，请重新设置您的同时对局数量。`,
@@ -33666,177 +33668,177 @@ export const CommonText: Record<number, string[]> = {
             `ID de partida: %s`,
         ].join(`\n`),
     ],
-    [TextType.F0215]: [
+    [Lang_Constants.TextType.F0215]: [
         `替换为 %s`,
         `Replace with %s`,
         `Reemplazar con %s`,
     ],
-    [TextType.F0216]: [
+    [Lang_Constants.TextType.F0216]: [
         `当前回合内的玩家是 %s。`,
         `The player in the current turn is %s.`,
         `El jugador en el turno actual es %s.`,
     ],
-    [TextType.F0217]: [
+    [Lang_Constants.TextType.F0217]: [
         `玩家是 %s。`,
         `The player is %s.`,
         `El jugador es %s.`,
     ],
-    [TextType.F0218]: [
+    [Lang_Constants.TextType.F0218]: [
         `玩家存活状态是 %s。`,
         `The alive state of the player is %s.`,
         `El estado en partida del jugador es %s.`,
     ],
-    [TextType.F0219]: [
+    [Lang_Constants.TextType.F0219]: [
         `玩家持有的资金 %s %s。`,
         `Fund of the player %s %s.`,
         `Presupuesto del jugador %s %s.`,
     ],
-    [TextType.F0220]: [
+    [Lang_Constants.TextType.F0220]: [
         `玩家当前CO能量值相对于最大CO能量值的百分比 %s %s。`,
         `Percentage of the player's current CO energy value relative to the maximum CO energy value %s %s.`,
         `Porcentaje del valor relativo actual de Energía del CO del jugador respecto al valor de Energía de CO máxima %s %s.`,
     ],
-    [TextType.F0221]: [
+    [Lang_Constants.TextType.F0221]: [
         `玩家当前生效中的CO技能组是 %s。`,
         `The CO skill set currently in effect for the player is %s.`,
         `La habilidad del CO activada corresponde al jugador %s.`,
     ],
-    [TextType.F0222]: [
+    [Lang_Constants.TextType.F0222]: [
         `玩家CO的名称是 %s。`,
         `The CO name for the player is %s.`,
         `El nombre del CO del jugador es %s.`,
     ],
-    [TextType.F0223]: [
+    [Lang_Constants.TextType.F0223]: [
         `符合以下所有条件的玩家的数量 %s %s。`,
         `The number of players that meet all of the following conditions %s %s.`,
         `El número de jugadores que cumplen todas las siguientes condiciones %s %s.`,
     ],
-    [TextType.F0224]: [
+    [Lang_Constants.TextType.F0224]: [
         `当前天气是 %s。`,
         `The current weather is %s.`,
         `El clima actual es %s.`,
     ],
-    [TextType.F0225]: [
+    [Lang_Constants.TextType.F0225]: [
         `生效中的符合以下所有条件的持续性动作的数量 %s %s。`,
         `The number of ongoing persistent actions that meet all of the following conditions %s %s.`,
         `El número de acciones persistentes ocurriendo que cumplen todas las siguientes condiciones %s %s.`,
     ],
-    [TextType.F0226]: [
+    [Lang_Constants.TextType.F0226]: [
         `动作ID是 %s。`,
         `The action ID is %s.`,
         `La ID de acción es %s.`,
     ],
-    [TextType.F0227]: [
+    [Lang_Constants.TextType.F0227]: [
         `由玩家手动进行的、且符合以下所有条件的操作的总数量 %s %s。`,
         `The total number of actions performed manually by players that meet all of the following conditions %s %s.`,
         `El número total de acciones efectuadas manualmente por jugadores que cumplen con todas las siguientes condiciones %s %s.`,
     ],
-    [TextType.F0228]: [
+    [Lang_Constants.TextType.F0228]: [
         `%s 是以下的其中之一：%s`,
         `The %s is one of the followings: %s`,
         `El %s es uno de los siguientes: %s`,
     ],
-    [TextType.F0229]: [
+    [Lang_Constants.TextType.F0229]: [
         `%s 不是以下的其中之一：%s`,
         `The %s is NOT one of the followings: %s`,
         `El %s NO es uno de los siguientes: %s`,
     ],
-    [TextType.F0230]: [
+    [Lang_Constants.TextType.F0230]: [
         `%s满足以下所有条件：\n%s`,
         `The %s meets all of the following conditions:\n%s`,
         `El %s cumple todas las siguientes condiciones:\n%s`,
     ],
-    [TextType.F0231]: [
+    [Lang_Constants.TextType.F0231]: [
         `%s以下属性符合指定条件：%s`,
         `The following attributes of the %s meet the specified conditions: %s`,
         `Los siguientes atributos del %s cumplen las condiciones especificadas: %s`,
     ],
-    [TextType.F0232]: [
+    [Lang_Constants.TextType.F0232]: [
         `统计符合以下所有条件的 %s 的数量：\n%s\n统计所得数量 %s %s。`,
         `Count the number of %s who meet all of the following conditions:\n%s\nThe resulting number %s %s.`,
         `Contar el número de %s que cumplen con todas las siguientes condiciones:\n%s\nEl número resultante %s %s.`,
     ],
-    [TextType.F0233]: [
+    [Lang_Constants.TextType.F0233]: [
         `%s数量比较符`,
         `Comparator of Number of %s`,
         `Comparador de Número de %s`,
     ],
-    [TextType.F0234]: [
+    [Lang_Constants.TextType.F0234]: [
         `CO已搭乘该部队：%s`,
         `CO has boarded the unit: %s`,
         `CO se ha desplegado en la unidad: %s`,
     ],
-    [TextType.F0235]: [
+    [Lang_Constants.TextType.F0235]: [
         `部队已下潜：%s`,
         `The unit has dived: %s`,
         `La unidad se ha sumergido: %s`,
     ],
-    [TextType.F0236]: [
+    [Lang_Constants.TextType.F0236]: [
         `部队已被装载到其他部队中：%s。`,
         `The unit has been loaded into another unit: %s`,
         `La unidad ha sido cargada en otra unidad: %s`,
     ],
-    [TextType.F0237]: [
+    [Lang_Constants.TextType.F0237]: [
         `%s所组成的集合，与以下的值所组成的集合相同：%s。`,
         `The set consisting %s is equal to the set consisting of these numbers: %s.`,
         `El grupo consistente de %s es igual al grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0238]: [
+    [Lang_Constants.TextType.F0238]: [
         `%s所组成的集合，与以下的值所组成的集合不相同：%s。`,
         `The set consisting %s is NOT equal to the set consisting of these numbers: %s.`,
         `El grupo consistente de %s NO es igual al grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0239]: [
+    [Lang_Constants.TextType.F0239]: [
         `%s所组成的集合，是以下的值所组成的集合的超集：%s。`,
         `The set consisting %s is the superset of the set consisting of these numbers: %s.`,
         `El grupo consistente de %s es parte del grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0240]: [
+    [Lang_Constants.TextType.F0240]: [
         `%s所组成的集合，不是以下的值所组成的集合的超集：%s。`,
         `The set consisting %s is NOT the superset of the set consisting of these numbers: %s.`,
         `El grupo consistente de %s NO es parte del grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0241]: [
+    [Lang_Constants.TextType.F0241]: [
         `%s所组成的集合，是以下的值所组成的集合的子集：%s。`,
         `The set consisting %s is the subset of the set consisting of these numbers: %s.`,
         `El grupo consistente de %s forma parte del grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0242]: [
+    [Lang_Constants.TextType.F0242]: [
         `%s所组成的集合，不是以下的值所组成的集合的子集：%s。`,
         `The set consisting %s is NOT the subset of the set consisting of these numbers: %s.`,
         `El grupo consistente de %s NO forma parte del grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0243]: [
+    [Lang_Constants.TextType.F0243]: [
         `%s所组成的集合，与以下的值所组成的集合存在交集：%s。`,
         `There is intersection of the set consisting %s and the set consisting of these numbers: %s.`,
         `Hay intersección del grupo consistente de %s y el grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0244]: [
+    [Lang_Constants.TextType.F0244]: [
         `%s所组成的集合，与以下的值所组成的集合不存在交集：%s。`,
         `There is NO intersection of the set consisting %s and the set consisting of these numbers: %s.`,
         `No hay ninguna intersección del grupo consistente de %s y el grupo consistente de estos números: %s.`,
     ],
-    [TextType.F0245]: [
+    [Lang_Constants.TextType.F0245]: [
         `地形已高亮：%s`,
         `The terrain has been highlighted: %s`,
         `El terreno ha sido destacado: %s`,
     ],
-    [TextType.F0246]: [
+    [Lang_Constants.TextType.F0246]: [
         `查找符合以下所有条件的运输部队：\n%s\n在这些运输部队中分别搭载 %s 个 %s。`,
         `Find all transports which meet all of the following conditions:\n%s\nLoad %s %s into each of the transports.`,
         `Hallar todos los transportes que cumplen todas las siguientes condiciones:\n%s\nCargar %s %s en cada uno de los transportes.`,
     ],
-    [TextType.F0247]: [
+    [Lang_Constants.TextType.F0247]: [
         `在符合指定条件的运输部队中分别搭载 %s 个 %s。`,
         `Load %s %s into each of the transports that meet the specified conditions.`,
         `Cargar %s %s en cada uno de los transportes que cumplan las condiciones especificadas.`,
     ],
-    [TextType.F0248]: [
+    [Lang_Constants.TextType.F0248]: [
         `查找符合以下所有条件的部队：\n%s\n把这些部队全部摧毁。`,
         `Find all units that meet all of the following conditions:\n%s\nDestroy all of them.`,
         `Hallar todas las unidades que cumplan todas las siguientes condiciones:\n%s\nDestruirlas a todas`,
     ],
-    [TextType.F0249]: [
+    [Lang_Constants.TextType.F0249]: [
         [
             `查找符合以下所有条件的部队：`,
             `%s`,
@@ -33856,12 +33858,12 @@ export const CommonText: Record<number, string[]> = {
             `%s`
         ].join(`\n`),
     ],
-    [TextType.F0250]: [
+    [Lang_Constants.TextType.F0250]: [
         `把符合指定条件的所有部队的归属者改为 %s 。`,
         `Change the ownership of all units that meet specified conditions to %s.`,
         `Cambiar la propiedad de todas las unidades que cumplen las condiciones especificadas a %s.`,
     ],
-    [TextType.F0251]: [
+    [Lang_Constants.TextType.F0251]: [
         [
             `查找符合以下所有条件的部队：`,
             `%s`,
@@ -33878,12 +33880,12 @@ export const CommonText: Record<number, string[]> = {
             `Cambiar la propiedad de las unidades a %s.`,
         ].join(`\n`),
     ],
-    [TextType.F0252]: [
+    [Lang_Constants.TextType.F0252]: [
         `把符合指定条件的所有部队的类型改为 %s 。`,
         `Change the type of all units that meet specified conditions to %s.`,
         `Cambiar el tipo de todas las unidades que cumplen con las condiciones especificadas a %s.`,
     ],
-    [TextType.F0253]: [
+    [Lang_Constants.TextType.F0253]: [
         [
             `查找符合以下所有条件的部队：`,
             `%s`,
@@ -33900,12 +33902,12 @@ export const CommonText: Record<number, string[]> = {
             `Cambiar el tipo de las unidades a %s.`,
         ].join(`\n`),
     ],
-    [TextType.F0254]: [
+    [Lang_Constants.TextType.F0254]: [
         `修改符合指定条件的所有 %s 的以下属性值：%s。`,
         `Change the following attributes of all %s that meet specified conditions: %s.`,
         `Cambiar los siguientes atributos de todas las %s que cumplan con las condiciones especificadas: %s.`,
     ],
-    [TextType.F0255]: [
+    [Lang_Constants.TextType.F0255]: [
         [
             `查找符合以下所有条件的 %s：`,
             `%s`,
@@ -33925,7 +33927,7 @@ export const CommonText: Record<number, string[]> = {
             `%s.`,
         ].join(`\n`),
     ],
-    [TextType.F0256]: [
+    [Lang_Constants.TextType.F0256]: [
         [
             `按以下步骤修改 %s：`,
             `%s`,
@@ -33939,17 +33941,17 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0257]: [
+    [Lang_Constants.TextType.F0257]: [
         `%s 个 %s`,
         `%s %s`,
         `%s %s`,
     ],
-    [TextType.F0258]: [ // TODO
+    [Lang_Constants.TextType.F0258]: [ // TODO
         `查找符合所有指定条件的 %s，并移动视角使这些 %s 位于屏幕中心。`,
         `Find %s that meet all of the specified conditions, then move the viewpoints so that these %s are in the center of the screen.`,
         `Find %s that meet all of the specified conditions, then move the viewpoints so that these %s are in the center of the screen.`,
     ],
-    [TextType.F0259]: [ // TODO
+    [Lang_Constants.TextType.F0259]: [ // TODO
         [
             `查找符合以下所有条件的 %s：`,
             `%s`,
@@ -33966,12 +33968,12 @@ export const CommonText: Record<number, string[]> = {
             `Move the viewpoints so that these %s are in the center of the screen.`,
         ].join(`\n`),
     ],
-    [TextType.F0260]: [ // TODO
+    [Lang_Constants.TextType.F0260]: [ // TODO
         `查找符合指定条件的所有 %s，向它们添加异常状态：%s。`,
         `Find all %s that meet specified conditions, and add an abnormal state to them: %s.`,
         `Find all %s that meet specified conditions, and add an abnormal state to them: %s.`,
     ],
-    [TextType.F0261]: [ // TODO
+    [Lang_Constants.TextType.F0261]: [ // TODO
         [
             `查找符合以下所有条件的 %s：`,
             `%s`,
@@ -33991,12 +33993,12 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0262]: [ // TODO
+    [Lang_Constants.TextType.F0262]: [ // TODO
         `查找符合指定条件的所有 %s，并将它们删除。`,
         `Find all %s that meet specified conditions, and delete them.`,
         `Find all %s that meet specified conditions, and delete them.`,
     ],
-    [TextType.F0263]: [
+    [Lang_Constants.TextType.F0263]: [
         [
             `查找并删除符合以下所有条件的 %s：`,
             `%s`,
@@ -34010,7 +34012,7 @@ export const CommonText: Record<number, string[]> = {
             `%s`,
         ].join(`\n`),
     ],
-    [TextType.F0264]: [ // TODO
+    [Lang_Constants.TextType.F0264]: [ // TODO
         [
             `使部队进入已行动状态，该部队在本回合内无法再执行其他指令。`,
             `若在雾战中执行本指令，部队会在抵达目的地后获得额外 %d 格视野范围，并持续到本回合结束。`,
@@ -34024,7 +34026,7 @@ export const CommonText: Record<number, string[]> = {
             `If executed during FoW, the unit gains additional %d vision range upon reaching its destination, lasting until the end of the turn.`,
         ].join(`\n`),
     ],
-    [TextType.F0265]: [ // TODO
+    [Lang_Constants.TextType.F0265]: [ // TODO
         [
             `以下预设规则将被删除：`,
             `%s`,
@@ -34044,22 +34046,22 @@ export const CommonText: Record<number, string[]> = {
             `Are you sure you want to continue?`,
         ].join(`\n`),
     ],
-    [TextType.F0266]: [ // TODO
+    [Lang_Constants.TextType.F0266]: [ // TODO
         `您所拥有的部队数量已达到规则指定的上限(%s / %s)。`,
         `The number of units you possess has reached the maximum limit (%s / %s).`,
         `The number of units you possess has reached the maximum limit (%s / %s).`,
     ],
-    [TextType.F0267]: [ // TODO
+    [Lang_Constants.TextType.F0267]: [ // TODO
         `事件包含的条件节点数量必须在 %d 到 %d 之间，当前数量为 %d。`,
         `The number of condition nodes in an event must be between %d and %d, but the current number is %d.`,
         `The number of condition nodes in an event must be between %d and %d, but the current number is %d.`,
     ],
-    [TextType.F0268]: [ // TODO
+    [Lang_Constants.TextType.F0268]: [ // TODO
         `条件节点 %s (在事件 %s 中)包含的动作数量必须在 %d 到 %d 之间，当前数量为 %d。`,
         `The number of actions in condition node %s in event %s must be between %d and %d, but the current number is %d.`,
         `The number of actions in condition node %s in event %s must be between %d and %d, but the current number is %d.`,
     ],
-    [TextType.F0269]: [ // TODO
+    [Lang_Constants.TextType.F0269]: [ // TODO
         [
             `以下外部链接将被打开：`,
             `%s`,
@@ -34083,7 +34085,7 @@ export const CommonText: Record<number, string[]> = {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Rich strings.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    [TextType.R0000]: [
+    [Lang_Constants.TextType.R0000]: [
         [
             `本选项影响您在回合中的行动顺序，以及您所属的队伍（由地图规则设定）`,
             ``,
@@ -34121,7 +34123,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0001]: [
+    [Lang_Constants.TextType.R0001]: [
         [
             `本选项影响您部队和建筑的外观（颜色）。`,
         ].join(`\n`),
@@ -34135,7 +34137,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0002]: [
+    [Lang_Constants.TextType.R0002]: [
         [
             `本选项影响战局是明战或雾战。`,
             ``,
@@ -34164,7 +34166,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0003]: [
+    [Lang_Constants.TextType.R0003]: [
         [
             `当战局正式开始，或某个玩家结束回合后，则服务器自动开始下个玩家回合的倒计时（无论该玩家是否在线）。`,
             `如果某个玩家的回合时间超出了限制，则服务器将自动为该玩家执行投降操作。`,
@@ -34187,7 +34189,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0004]: [
+    [Lang_Constants.TextType.R0004]: [
         [
             `CO能够搭乘到部队中，并改变临近区域的部队的战斗能力。此外，部分CO能通过战斗积累能量，并以此释放强大的power，从而进一步制造优势。`,
             `CO详细规则如下：`,
@@ -34264,7 +34266,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n\n`),
     ],
 
-    [TextType.R0005]: [
+    [Lang_Constants.TextType.R0005]: [
         [
             `账号和密码都只能使用数字、字母、下划线，长度不小于6位。`,
             ``,
@@ -34290,7 +34292,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0006]: [
+    [Lang_Constants.TextType.R0006]: [
         [
             `模拟战是一种辅助您进行战局规划/地图测试的工具。`,
             ``,
@@ -34314,7 +34316,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0007]: [
+    [Lang_Constants.TextType.R0007]: [
         [
             `自由模式是一个多人对战模式，但与对战模式不同的是，您可以以任意战局局面为战局起点。`,
             `常见的应用场景包括：`,
@@ -34341,7 +34343,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0008]: [
+    [Lang_Constants.TextType.R0008]: [
         [
             `合作模式是一个多人游戏模式。`,
             `与对战模式不同的是，AI会参与游戏。您可以与AI和/或其他玩家组队，对抗其他AI和/或玩家。`,
@@ -34371,7 +34373,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0009]: [
+    [Lang_Constants.TextType.R0009]: [
         [
             `天气会改变局内所有玩家的属性，具体影响如下：`,
             ``,
@@ -34398,7 +34400,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0010]: [
+    [Lang_Constants.TextType.R0010]: [
         [
             `A.I.模式会决定了此部队被A.I.操作时的行动方式，具体如下：`,
             ``,
@@ -34422,7 +34424,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0011]: [
+    [Lang_Constants.TextType.R0011]: [
         [
             `在挑战模式中，您每次通过任意关卡，系统都会计算此次的关卡得分，并上传到服务器，与全服玩家进行排名比拼。`,
             ``,
@@ -34470,7 +34472,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0012]: [
+    [Lang_Constants.TextType.R0012]: [
         [
             `若回合数超过了回合限制，或战局总动作数超过了动作数限制，则本局游戏将自动以和局结束。`,
         ].join(`\n`),
@@ -34482,13 +34484,13 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0013]: [
+    [Lang_Constants.TextType.R0013]: [
         `每回合的可用时间是固定不变的。`,
         `The available time for each round is fixed.`,
         `El tiempo límite para cada ronda está fijado.`,
     ],
 
-    [TextType.R0014]: [
+    [Lang_Constants.TextType.R0014]: [
         [
             `增量计时：玩家每回合可用的时间将受到前面回合所消耗的时间的影响。此模式有三个参数，分别为“初始时间”，“部队增量时间”和“回合增量时间”。`,
             ``,
@@ -34522,7 +34524,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0015]: [
+    [Lang_Constants.TextType.R0015]: [
         [
             `欢迎使用战局事件/可重复对话编辑器。请注意以下规则：`,
             ``,
@@ -34552,7 +34554,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0016]: [
+    [Lang_Constants.TextType.R0016]: [
         [
             `对战模式是主要的多人游戏模式。这个模式的游戏流程如下：`,
             ``,
@@ -34582,7 +34584,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0017]: [
+    [Lang_Constants.TextType.R0017]: [
         [
             `匹配模式是一种多人游戏模式，该模式的游戏流程和排位赛完全相同。无论战绩如何，您的排位分数也不会受到影响。流程如下：`,
             ``,
@@ -34612,7 +34614,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0018]: [
+    [Lang_Constants.TextType.R0018]: [
         [
             `常规联赛是系统定期举办的联赛，赛制为单淘汰赛。玩家可以自由选择是否参赛。比赛前三名玩家将获得永久勋章。联赛规则如下：`,
             ``,
@@ -34648,7 +34650,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0019]: [
+    [Lang_Constants.TextType.R0019]: [
         [
             `常规联赛全流程共包含四个阶段，分别是注册、准备、战斗和结束。在这些阶段中，联赛委员会可以：`,
             ``,
@@ -34729,7 +34731,7 @@ export const CommonText: Record<number, string[]> = {
         ].join(`\n`),
     ],
 
-    [TextType.R0020]: [
+    [Lang_Constants.TextType.R0020]: [
         [
             `支持的运算符如下（按优先级从高到低排列，其中每组的各个运算符的优先级相同）：`,
             `（为了简洁，把运算符左侧的值称为左值，右侧的值称为右值）`,

@@ -1,125 +1,94 @@
-import { StateId } from "../../actionPlanners/Constants.ts";
-import { Idle } from "../../actionPlanners/states/Idle.ts";
-import { RequestingPlayerEndTurn } from "../../actionPlanners/states/RequestingPlayerEndTurn.ts";
-import type { Point } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwCursor } from "../interface/IBwCursor.ts";
-import type { IBwCursorView } from "../interface/IBwCursorView.ts";
 import {
-    showLang,
-    show,
-} from "../../FloatText.ts";
-import {
-    getMeWarClass,
-    getSpwWarClass,
-    getMpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getSquaredPointDistance } from "../../geometries/Utils.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import {
-    getCursorCorner,
-    getArrayCursorAiming,
-} from "../../helpers/ImageSource.ts";
-import {
-    createLazyFunc,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import {
-    PointerEventType,
-    type PointerUnifiedEventData,
-} from "../../helpers/PointerInput.ts";
-import {
-    addListener,
-    deleteListener,
-    checkHasDirectionKeys,
-} from "../../keyboard/KbManager.ts";
-import {
-    type EventData,
-    KeyCode,
-} from "../../keyboard/KbTypes.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
-import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
-import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import type {
-    BwCursorDragged,
-    BwFieldZoomedByTouch,
-    BwFieldDragged,
-    BwCursorTapped,
-} from "../../notifications/DataTypes.ts";
-import {
-    addEventListener,
-    removeEventListener,
-    dispatch,
-} from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import {
-    getUiContainerClass,
-    getUiImageClass,
-} from "../../ui/utils/UiFactory.ts";
-import type { Event } from "../../egret/Egret.ts";
+    AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwCursorView,
+    ActionPlanners_States_Idle,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    ActionPlanners_States_RequestingPlayerEndTurn,
+    FloatText,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    Ui_Components_UiImage,
+    Notifications_Dispatcher,
+    Keyboard_KbManager,
+    type Notifications_DataTypes,
+    Helpers_Misc,
+    Keyboard_KbTypes,
+    Tween_Executor,
+    Helpers_ImageSource,
+    MapEditor_Model_MeHelpers,
+    Graphics_Utils,
+    GamePanels_Dict,
+    MapEditor_Model_MeModel,
+    Geometries_Utils,
+    Lang_Utils,
+    Numbers_Utils,
+    type Ui_Interfaces_IUiImage,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Helpers_PointerInput,
+    MapEditor_Model_MeProxy,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiContainer,
+    type Egret_Egret,
+} from "../../internal.ts";
 
 const _PULSE_IN_DURATION                    = 150;
 const _PULSE_OUT_DURATION                   = 150;
 const _PULSE_INTERVAL_DURATION              = 300;
 const _TARGET_FRAME_DURATION                = 100;
 const _DRAG_FIELD_SQUARED_TRIGGER_DISTANCE  = 400;
-const getImageSourceForCursorCorner         = createLazyFunc(() => getCursorCorner());
-const getImageSourcesForCursorAiming        = createLazyFunc(() => getArrayCursorAiming());
+const getImageSourceForCursorCorner         = Helpers_Misc.createLazyFunc(() => Helpers_ImageSource.getCursorCorner());
+const getImageSourcesForCursorAiming        = Helpers_Misc.createLazyFunc(() => Helpers_ImageSource.getArrayCursorAiming());
 
-const getGridWidth                  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight                 = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
-const getOutLength                  = createLazyFunc(() => getGridWidth() / 6);
-const getInLength                   = createLazyFunc(() => getGridWidth() / 9);
-const getUpperLeftCornerOuterX      = createLazyFunc(() => -getOutLength());
-const getUpperLeftCornerOuterY      = createLazyFunc(() => -getOutLength());
-const getUpperLeftCornerInnerX      = createLazyFunc(() => getInLength());
-const getUpperLeftCornerInnerY      = createLazyFunc(() => getInLength());
-const getUpperRightCornerOuterX     = createLazyFunc(() => getGridWidth() + getOutLength());
-const getUpperRightCornerOuterY     = createLazyFunc(() => -getOutLength());
-const getUpperRightCornerInnerX     = createLazyFunc(() => getGridWidth() - getInLength());
-const getUpperRightCornerInnerY     = createLazyFunc(() => getInLength());
-const getLowerLeftCornerOuterX      = createLazyFunc(() => -getOutLength());
-const getLowerLeftCornerOuterY      = createLazyFunc(() => getGridHeight() + getOutLength());
-const getLowerLeftCornerInnerX      = createLazyFunc(() => getInLength());
-const getLowerLeftCornerInnerY      = createLazyFunc(() => getGridHeight() - getInLength());
-const getLowerRightCornerOuterX     = createLazyFunc(() => getGridWidth()  + getOutLength());
-const getLowerRightCornerOuterY     = createLazyFunc(() => getGridHeight() + getOutLength());
-const getLowerRightCornerInnerX     = createLazyFunc(() => getGridWidth()  - getInLength());
-const getLowerRightCornerInnerY     = createLazyFunc(() => getGridHeight() - getInLength());
+const getGridWidth                  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight                 = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
+const getOutLength                  = Helpers_Misc.createLazyFunc(() => getGridWidth() / 6);
+const getInLength                   = Helpers_Misc.createLazyFunc(() => getGridWidth() / 9);
+const getUpperLeftCornerOuterX      = Helpers_Misc.createLazyFunc(() => -getOutLength());
+const getUpperLeftCornerOuterY      = Helpers_Misc.createLazyFunc(() => -getOutLength());
+const getUpperLeftCornerInnerX      = Helpers_Misc.createLazyFunc(() => getInLength());
+const getUpperLeftCornerInnerY      = Helpers_Misc.createLazyFunc(() => getInLength());
+const getUpperRightCornerOuterX     = Helpers_Misc.createLazyFunc(() => getGridWidth() + getOutLength());
+const getUpperRightCornerOuterY     = Helpers_Misc.createLazyFunc(() => -getOutLength());
+const getUpperRightCornerInnerX     = Helpers_Misc.createLazyFunc(() => getGridWidth() - getInLength());
+const getUpperRightCornerInnerY     = Helpers_Misc.createLazyFunc(() => getInLength());
+const getLowerLeftCornerOuterX      = Helpers_Misc.createLazyFunc(() => -getOutLength());
+const getLowerLeftCornerOuterY      = Helpers_Misc.createLazyFunc(() => getGridHeight() + getOutLength());
+const getLowerLeftCornerInnerX      = Helpers_Misc.createLazyFunc(() => getInLength());
+const getLowerLeftCornerInnerY      = Helpers_Misc.createLazyFunc(() => getGridHeight() - getInLength());
+const getLowerRightCornerOuterX     = Helpers_Misc.createLazyFunc(() => getGridWidth()  + getOutLength());
+const getLowerRightCornerOuterY     = Helpers_Misc.createLazyFunc(() => getGridHeight() + getOutLength());
+const getLowerRightCornerInnerX     = Helpers_Misc.createLazyFunc(() => getGridWidth()  - getInLength());
+const getLowerRightCornerInnerY     = Helpers_Misc.createLazyFunc(() => getGridHeight() - getInLength());
 
-export class BwCursorView extends UiContainer implements IBwCursorView {
-    private _cursor?                : IBwCursor;
+export class BwCursorView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwCursorView.IBwCursorView {
+    private _cursor?                : BaseWar_Interface_IBwCursor.IBwCursor;
     private _frameIndexForImgTarget = 0;
 
-    private _currGlobalTouchPoints      = new Map<number, Point>();
-    private _prevGlobalTouchPoints      = new Map<number, Point>();
+    private _currGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
+    private _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
     private _touchIdForTouchingCursor   : number | null = null;
-    private _initialGlobalTouchPoint?   : Point;
+    private _initialGlobalTouchPoint?   : AuxiliaryTypes_AuxiliaryTypes.Point;
     private _isTouchMovedOrMultiple?    : boolean;
     private _targetAreaRadius           = 2;
     private _lastNewDirectionKeyTime    = new Date().getTime();
     private _lastAllDirectionKeyTime    = new Date().getTime();
     private _lastSaveMapTime            = 0;
 
-    private readonly _conForAll             = new (getUiContainerClass())();
-    private readonly _conForNormal          = new (getUiContainerClass())();
-    private readonly _conForTarget          = new (getUiContainerClass())();
-    private readonly _conForTargetArea      = new (getUiContainerClass())();
-    private readonly _imgUpperLeftCorner    = new (getUiImageClass())({ textureSourceName: getImageSourceForCursorCorner() });
-    private readonly _imgUpperRightCorner   = new (getUiImageClass())({ textureSourceName: getImageSourceForCursorCorner() });
-    private readonly _imgLowerLeftCorner    = new (getUiImageClass())({ textureSourceName: getImageSourceForCursorCorner() });
-    private readonly _imgLowerRightCorner   = new (getUiImageClass())({ textureSourceName: getImageSourceForCursorCorner() });
-    private readonly _imgTarget             = new (getUiImageClass())({ textureSourceName: getImageSourcesForCursorAiming()[this._frameIndexForImgTarget] });
+    private readonly _conForAll             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForNormal          = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForTarget          = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForTargetArea      = new Ui_Components_UiContainer.UiContainer();
+    private readonly _imgUpperLeftCorner    = new Ui_Components_UiImage.UiImage({ textureSourceName: getImageSourceForCursorCorner() });
+    private readonly _imgUpperRightCorner   = new Ui_Components_UiImage.UiImage({ textureSourceName: getImageSourceForCursorCorner() });
+    private readonly _imgLowerLeftCorner    = new Ui_Components_UiImage.UiImage({ textureSourceName: getImageSourceForCursorCorner() });
+    private readonly _imgLowerRightCorner   = new Ui_Components_UiImage.UiImage({ textureSourceName: getImageSourceForCursorCorner() });
+    private readonly _imgTarget             = new Ui_Components_UiImage.UiImage({ textureSourceName: getImageSourcesForCursorAiming()[this._frameIndexForImgTarget] });
 
     public constructor() {
         super();
@@ -131,27 +100,27 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         this._initConForTargetArea();
     }
 
-    public init(cursor: IBwCursor): void {
+    public init(cursor: BaseWar_Interface_IBwCursor.IBwCursor): void {
         this._cursor = cursor;
 
         const mapSize = cursor.getMapSize();
         this.setUnscaledManualWidth(mapSize.getWidth() * getGridWidth());
         this.setUnscaledManualHeight(mapSize.getHeight() * getGridHeight());
     }
-    public fastInit(cursor: IBwCursor): void {
+    public fastInit(cursor: BaseWar_Interface_IBwCursor.IBwCursor): void {
         this._cursor = cursor;
     }
 
     public startRunningView(): void {
-        addEventListener(TypeId.ZoomableContentsMoved, this._onNotifyZoomableContentsMoved, this);
-        addListener(this._onKeyboard, this);
+        Notifications_Dispatcher.addEventListener(Notifications_TypeId.TypeId.ZoomableContentsMoved, this._onNotifyZoomableContentsMoved, this);
+        Keyboard_KbManager.addListener(this._onKeyboard, this);
 
         {
             const agent = this.getEventAgent();
-            agent.addPointerEventListener(PointerEventType.Press,        this._onPointerPress,       this);
-            agent.addPointerEventListener(PointerEventType.ReleaseIn,    this._onPointerReleaseIn,   this);
-            agent.addPointerEventListener(PointerEventType.ReleaseOut,   this._onPointerReleaseOut,  this);
-            agent.addPointerEventListener(PointerEventType.PressMove,    this._onPointerPressMove,   this);
+            agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Press,        this._onPointerPress,       this);
+            agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn,    this._onPointerReleaseIn,   this);
+            agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut,   this._onPointerReleaseOut,  this);
+            agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.PressMove,    this._onPointerPressMove,   this);
         }
 
         this.updateView();
@@ -165,15 +134,15 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         this._stopNormalAnimation();
         this._stopTargetAnimation();
 
-        removeEventListener(TypeId.ZoomableContentsMoved,        this._onNotifyZoomableContentsMoved,    this);
-        deleteListener(this._onKeyboard, this);
+        Notifications_Dispatcher.removeEventListener(Notifications_TypeId.TypeId.ZoomableContentsMoved,        this._onNotifyZoomableContentsMoved,    this);
+        Keyboard_KbManager.deleteListener(this._onKeyboard, this);
 
         {
             const agent = this.getEventAgent();
-            agent.removePointerEventListener(PointerEventType.Press,         this._onPointerPress,       this);
-            agent.removePointerEventListener(PointerEventType.ReleaseIn,     this._onPointerReleaseIn,   this);
-            agent.removePointerEventListener(PointerEventType.ReleaseOut,    this._onPointerReleaseOut,  this);
-            agent.removePointerEventListener(PointerEventType.PressMove,     this._onPointerPressMove,   this);
+            agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.Press,         this._onPointerPress,       this);
+            agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn,     this._onPointerReleaseIn,   this);
+            agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut,    this._onPointerReleaseOut,  this);
+            agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.PressMove,     this._onPointerPressMove,   this);
         }
 
         this._currGlobalTouchPoints.clear();
@@ -207,8 +176,8 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
     //     this._conForSiloArea.visible = visible;
     // }
 
-    private _getCursor(): IBwCursor {
-        return getExisted(this._cursor);
+    private _getCursor(): BaseWar_Interface_IBwCursor.IBwCursor {
+        return Helpers_Misc.getExisted(this._cursor);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,21 +186,21 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
     private _onNotifyZoomableContentsMoved(): void {
         const touchPoints = this._currGlobalTouchPoints;
         if ((this._touchIdForTouchingCursor != null) && (touchPoints.size === 1)) {
-            const point         = touchPoints.values().next().value as Point;
+            const point         = touchPoints.values().next().value as AuxiliaryTypes_AuxiliaryTypes.Point;
             const gridIndex     = this._getGridIndexByGlobalXY(point.x, point.y);
             const currGridIndex = this._getCursor().getGridIndex();
             if (!gridIndex.checkIsEqual(currGridIndex)) {
                 this._isTouchMovedOrMultiple = true;
-                dispatch(TypeId.BwCursorDragged, {
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
                     current     : currGridIndex,
                     draggedTo   : gridIndex,
-                } as BwCursorDragged);
+                } as Notifications_DataTypes.BwCursorDragged);
             }
         }
     }
 
-    private _onPointerPress(e: Event): void {
-        const data      = e.data as PointerUnifiedEventData;
+    private _onPointerPress(e: Egret_Egret.Event): void {
+        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchId   = data.pointerId;
         const stageX    = data.stageX;
         const stageY    = data.stageY;
@@ -253,31 +222,31 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
             this._isTouchMovedOrMultiple = true;
         }
     }
-    private _onPointerReleaseIn(e: Event): void {
-        const data = e.data as PointerUnifiedEventData;
+    private _onPointerReleaseIn(e: Egret_Egret.Event): void {
+        const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         this._removeTouch(data.pointerId);
     }
-    private _onPointerReleaseOut(e: Event): void {
-        const data = e.data as PointerUnifiedEventData;
+    private _onPointerReleaseOut(e: Egret_Egret.Event): void {
+        const data = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         this._removeTouch(data.pointerId);
     }
-    private _onPointerPressMove(e: Event): void {
-        const data                  = e.data as PointerUnifiedEventData;
+    private _onPointerPressMove(e: Egret_Egret.Event): void {
+        const data                  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchId               = data.pointerId;
         const stageX                = data.stageX;
         const stageY                = data.stageY;
         const currGlobalTouchPoints = this._currGlobalTouchPoints;
         if (currGlobalTouchPoints.has(touchId)) {
-            const initialGlobalTouchPoint   = getExisted(this._initialGlobalTouchPoint);
+            const initialGlobalTouchPoint   = Helpers_Misc.getExisted(this._initialGlobalTouchPoint);
             this._isTouchMovedOrMultiple    = (this._isTouchMovedOrMultiple)
-                || (getSquaredPointDistance(stageX, stageY, initialGlobalTouchPoint.x, initialGlobalTouchPoint.y) > _DRAG_FIELD_SQUARED_TRIGGER_DISTANCE);
+                || (Geometries_Utils.getSquaredPointDistance(stageX, stageY, initialGlobalTouchPoint.x, initialGlobalTouchPoint.y) > _DRAG_FIELD_SQUARED_TRIGGER_DISTANCE);
             currGlobalTouchPoints.set(touchId, { x: stageX, y: stageY });
 
             if (currGlobalTouchPoints.size > 1) {
-                dispatch(TypeId.BwFieldZoomedByTouch, {
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwFieldZoomedByTouch, {
                     current : currGlobalTouchPoints,
                     previous: this._prevGlobalTouchPoints,
-                } as BwFieldZoomedByTouch);
+                } as Notifications_DataTypes.BwFieldZoomedByTouch);
             } else {
                 if (this._touchIdForTouchingCursor != null) {
                     const { x: localX, y: localY }  = this.globalToLocal(stageX, stageY);
@@ -285,17 +254,17 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
                     const currGridIndex             = this._getCursor().getGridIndex();
                     if (!gridIndex.checkIsEqual(currGridIndex)) {
                         this._isTouchMovedOrMultiple = true;
-                        dispatch(TypeId.BwCursorDragged, {
+                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
                             current     : currGridIndex,
                             draggedTo   : gridIndex,
-                        } as BwCursorDragged);
+                        } as Notifications_DataTypes.BwCursorDragged);
                     }
                 } else {
                     if (this._isTouchMovedOrMultiple) {
-                        dispatch(TypeId.BwFieldDragged, {
+                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwFieldDragged, {
                             current : currGlobalTouchPoints.values().next().value,
                             previous: this._prevGlobalTouchPoints.values().next().value,
-                        } as BwFieldDragged);
+                        } as Notifications_DataTypes.BwFieldDragged);
                     }
                 }
             }
@@ -317,14 +286,14 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
             if (!currGlobalTouchPoints.size) {
                 // this.getEventAgent().removePointerEventListener(PointerManager.PointerEventType.PressMove, this._onPointerPressMove, this);
                 if (!this._isTouchMovedOrMultiple) {
-                    const initialGlobalTouchPoint = getExisted(this._initialGlobalTouchPoint);
-                    dispatch(TypeId.BwCursorTapped, {
+                    const initialGlobalTouchPoint = Helpers_Misc.getExisted(this._initialGlobalTouchPoint);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
                         current : this._getCursor().getGridIndex(),
                         tappedOn: this._getGridIndexByGlobalXY(initialGlobalTouchPoint.x, initialGlobalTouchPoint.y),
-                    } as BwCursorTapped);
+                    } as Notifications_DataTypes.BwCursorTapped);
                 } else {
                     if (touchIdForTouchingCursor != null) {
-                        dispatch(TypeId.BwCursorDragEnded);
+                        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragEnded);
                     }
                 }
                 delete this._initialGlobalTouchPoint;
@@ -332,7 +301,7 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         }
     }
 
-    private async _onKeyboard(data: EventData): Promise<void> {
+    private async _onKeyboard(data: Keyboard_KbTypes.EventData): Promise<void> {
         const cursor        = this._getCursor();
         const war           = cursor.getWar();
         const actionPlanner = war.getActionPlanner();
@@ -351,28 +320,28 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         const cursorGridIndex   = cursor.getGridIndex();
         const newKeys           = data.newKeys;
         const allKeys           = data.allKeys;
-        if ((newKeys.has(KeyCode.J)) || (newKeys.has(KeyCode.Enter))) {
+        if ((newKeys.has(Keyboard_KbTypes.KeyCode.J)) || (newKeys.has(Keyboard_KbTypes.KeyCode.Enter))) {
             data.isHandled = true;
-            dispatch(TypeId.BwCursorTapped, {
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
                 current     : cursorGridIndex,
                 tappedOn    : cursorGridIndex,
-            } as BwCursorTapped);
+            } as Notifications_DataTypes.BwCursorTapped);
 
-        } else if (newKeys.has(KeyCode.K)) {
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.K)) {
             data.isHandled = true;
             actionPlanner.cancelCurrentState();
 
-        } else if (newKeys.has(KeyCode.Escape)) {
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Escape)) {
             data.isHandled = true;
-            if (war instanceof getMeWarClass()) {
+            if (war instanceof MapEditor_Model_MeWar.MeWar) {
                 war.getDrawer().setModePreview();
-                playShortSfx(ShortSfxCode.ButtonCancel01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             } else {
                 actionPlanner.cancelCurrentState();
             }
 
-        } else if ((newKeys.has(KeyCode.S)) && (allKeys.has(KeyCode.Control))) {
-            if (war instanceof getMeWarClass()) {
+        } else if ((newKeys.has(Keyboard_KbTypes.KeyCode.S)) && (allKeys.has(Keyboard_KbTypes.KeyCode.Control))) {
+            if (war instanceof MapEditor_Model_MeWar.MeWar) {
                 data.isHandled = true;
 
                 const currentTime   = Date.now();
@@ -380,13 +349,13 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
                 if (deltaTime < 500) {
                     return;
                 } else if (deltaTime < 10000) {
-                    showLang(TextType.A0421);
+                    FloatText.showLang(Lang_Constants.TextType.A0421);
                     return;
                 }
                 this._lastSaveMapTime = currentTime;
 
                 if ((war == null) || (war.getIsReviewingMap())) {
-                    showLang(TextType.A0273);
+                    FloatText.showLang(Lang_Constants.TextType.A0273);
                     return;
                 }
                 // if (!war.getIsMapModified()) {
@@ -395,17 +364,17 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
                 // }
 
                 const slotIndex = war.getMapSlotIndex();
-                if (slotIndex === await getReviewingMapSlotIndex()) {
-                    showLang(TextType.A0422);
+                if (slotIndex === await MapEditor_Model_MeModel.getReviewingMapSlotIndex()) {
+                    FloatText.showLang(Lang_Constants.TextType.A0422);
                     return;
                 }
 
                 const mapRawData = await war.serializeForMap();
-                getCriticalErrorCodeForMapRawData(mapRawData).then(errorCode => {
+                MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData).then(errorCode => {
                     if (errorCode) {
-                        show(getText(TextType.A0304));
+                        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0304));
                     } else {
-                        reqMeSubmitNormalMap({
+                        MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                             slotIndex                   : slotIndex,
                             mapRawData                  : mapRawData,
                             needReview                  : false,
@@ -416,76 +385,76 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
                 });
             }
 
-        } else if (newKeys.has(KeyCode.I)) {
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.I)) {
             data.isHandled = true;
 
-            if (((war instanceof getSpwWarClass()) && (war.getPlayerInTurn().getUserId() != null))                    ||
-                ((war instanceof getMpwWarClass()) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
+            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+                ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
-                Idle.getInstance().apply(actionPlanner);
+                ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
                 const gridIndex = war.getIdleBuildingGridIndex();
                 if (!gridIndex) {
-                    playShortSfx(ShortSfxCode.ButtonForbidden01);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
                 } else {
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
                     war.getView().tweenGridToCentralArea(gridIndex);
                     war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                    playShortSfx(ShortSfxCode.ButtonNeutral01);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
             } else {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             }
 
-        } else if (newKeys.has(KeyCode.U)) {
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.U)) {
             data.isHandled = true;
 
-            if (((war instanceof getSpwWarClass()) && (war.getPlayerInTurn().getUserId() != null))                    ||
-                ((war instanceof getMpwWarClass()) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
+            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+                ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
-                Idle.getInstance().apply(actionPlanner);
+                ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
                 const gridIndex = war.getIdleUnitGridIndex();
                 if (!gridIndex) {
-                    playShortSfx(ShortSfxCode.ButtonForbidden01);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
                 } else {
                     cursor.setGridIndex(gridIndex);
                     cursor.updateView();
                     war.getView().tweenGridToCentralArea(gridIndex);
                     war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                    playShortSfx(ShortSfxCode.ButtonNeutral01);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
                 }
             } else {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             }
 
-        } else if (newKeys.has(KeyCode.Y)) {
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Y)) {
             data.isHandled = true;
 
-            if (((war instanceof getSpwWarClass()) && (war.getPlayerInTurn().getUserId() != null))                    ||
-                ((war instanceof getMpwWarClass()) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
+            if (((war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) && (war.getPlayerInTurn().getUserId() != null))                    ||
+                ((war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) && (war.getPlayerIndexLoggedIn() === war.getPlayerIndexInTurn()))
             ) {
                 if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
-                    show(getText(TextType.A0034));
-                    playShortSfx(ShortSfxCode.ButtonForbidden01);
+                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0034));
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
                 } else {
-                    openPanel(getDict().CommonConfirmPanel, {
-                        getTitle    : () => getText(TextType.B0036),
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
                         getContent  : () => war.getHintForEndTurn(),
-                        callback    : () => RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                        callback    : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
                     });
-                    playShortSfx(ShortSfxCode.CursorConfirm01);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
                 }
             } else {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             }
 
-        } else if ((allKeys.has(KeyCode.Q)) || (allKeys.has(KeyCode.E))) {
+        } else if ((allKeys.has(Keyboard_KbTypes.KeyCode.Q)) || (allKeys.has(Keyboard_KbTypes.KeyCode.E))) {
             data.isHandled = true;
 
-            const zoomOut   = allKeys.has(KeyCode.Q);
-            const zoomIn    = allKeys.has(KeyCode.E);
+            const zoomOut   = allKeys.has(Keyboard_KbTypes.KeyCode.Q);
+            const zoomIn    = allKeys.has(Keyboard_KbTypes.KeyCode.E);
             if (((zoomOut) && (!zoomIn))    ||
                 ((!zoomOut) && (zoomIn))
             ) {
@@ -493,11 +462,11 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
                 war.getView().zoomField(point.x, point.y, zoomIn);
             }
 
-        } else if (checkHasDirectionKeys(allKeys)) {
+        } else if (Keyboard_KbManager.checkHasDirectionKeys(allKeys)) {
             data.isHandled = true;
 
             const time                  = new Date().getTime();
-            const hasNewDirectionKey    = checkHasDirectionKeys(newKeys);
+            const hasNewDirectionKey    = Keyboard_KbManager.checkHasDirectionKeys(newKeys);
             if ((hasNewDirectionKey)                                                                            ||
                 ((time - this._lastNewDirectionKeyTime > 300) && (time - this._lastAllDirectionKeyTime > 80))
             ) {
@@ -508,24 +477,24 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
 
                 const mapSize       = war.getTileMap().getMapSize();
                 const keys          = hasNewDirectionKey ? newKeys : allKeys;
-                const newGridIndex  = new GridIndex(
-                    getValueInRange({
+                const newGridIndex  = new AuxiliaryTypes_GridIndex.GridIndex(
+                    Numbers_Utils.getValueInRange({
                         minValue    : 0,
                         maxValue    : mapSize.getWidth() - 1,
-                        rawValue    : cursorGridIndex.getX() + (keys.has(KeyCode.A) ? -1 : 0) + (keys.has(KeyCode.D) ? 1 : 0),
+                        rawValue    : cursorGridIndex.getX() + (keys.has(Keyboard_KbTypes.KeyCode.A) ? -1 : 0) + (keys.has(Keyboard_KbTypes.KeyCode.D) ? 1 : 0),
                     }),
-                    getValueInRange({
+                    Numbers_Utils.getValueInRange({
                         minValue    : 0,
                         maxValue    : mapSize.getHeight() - 1,
-                        rawValue    : cursorGridIndex.getY() + (keys.has(KeyCode.W) ? -1 : 0) + (keys.has(KeyCode.S) ? 1 : 0),
+                        rawValue    : cursorGridIndex.getY() + (keys.has(Keyboard_KbTypes.KeyCode.W) ? -1 : 0) + (keys.has(Keyboard_KbTypes.KeyCode.S) ? 1 : 0),
                     }),
                 );
 
                 if (!newGridIndex.checkIsEqual(cursorGridIndex)) {
-                    dispatch(TypeId.BwCursorDragged, {
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorDragged, {
                         current     : cursorGridIndex,
                         draggedTo   : newGridIndex,
-                    } as BwCursorDragged);
+                    } as Notifications_DataTypes.BwCursorDragged);
                 }
             }
         }
@@ -547,52 +516,52 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         const state         = actionPlanner.getStateId();
         const con           = this._conForNormal;
 
-        if (state === StateId.Idle) {
+        if (state === ActionPlanners_Constants.StateId.Idle) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ExecutingAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ExecutingAction) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingUnitMovePath) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
             con.setIsVisible(!actionPlanner.getFocusUnit()?.checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex));
 
-        } else if (state === StateId.ChoosingUnitAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingUnitAttackTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex));
 
-        } else if (state === StateId.ChoosingUnitCrushTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(!actionPlanner.getUnitCrushCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex)));
 
-        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitDropDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingUnitFlareDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitRepairTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(!actionPlanner.getUnitRepairCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex)));
 
-        } else if (state === StateId.ChoosingUnitSiloDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingTileProductionTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.PreviewingUnitAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.PreviewingUnitMovableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.PreviewingUnitVisibleArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.PreviewingTileAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(true);
 
         } else {
@@ -606,52 +575,52 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         const gridIndex     = cursor.getGridIndex();
         const state         = actionPlanner.getStateId();
 
-        if (state === StateId.Idle) {
+        if (state === ActionPlanners_Constants.StateId.Idle) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ExecutingAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ExecutingAction) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitMovePath) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
             con.setIsVisible(!!actionPlanner.getFocusUnit()?.checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex));
 
-        } else if (state === StateId.ChoosingUnitAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitAttackTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex));
 
-        } else if (state === StateId.ChoosingUnitCrushTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(actionPlanner.getUnitCrushCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex)));
 
-        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingUnitDropDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitFlareDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingUnitRepairTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(actionPlanner.getUnitRepairCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex)));
 
-        } else if (state === StateId.ChoosingUnitSiloDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(true);
 
-        } else if (state === StateId.ChoosingTileProductionTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitMovableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitVisibleArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingTileAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(false);
 
         } else {
@@ -663,55 +632,55 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         const con           = this._conForTargetArea;
         const state         = actionPlanner.getStateId();
 
-        if (state === StateId.Idle) {
+        if (state === ActionPlanners_Constants.StateId.Idle) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ExecutingAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ExecutingAction) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitMovePath) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitAction) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitAttackTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitCrushTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(true);
             this._resetImagesForTargetArea();
 
-        } else if (state === StateId.ChoosingUnitDropDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitFlareDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(true);
             this._resetImagesForTargetArea();
 
-        } else if (state === StateId.ChoosingUnitRepairTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.ChoosingUnitSiloDestination) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(true);
             this._resetImagesForTargetArea();
 
-        } else if (state === StateId.ChoosingTileProductionTarget) {
+        } else if (state === ActionPlanners_Constants.StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitMovableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingUnitVisibleArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(false);
 
-        } else if (state === StateId.PreviewingTileAttackableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(false);
 
         } else {
@@ -820,56 +789,56 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
             conForTargetArea.removeUiChildAt(conForTargetArea.getUiChildren().length - 1);
         }
     }
-    private _getOrCreateImageForConTargetArea(index: number): IUiImage {
+    private _getOrCreateImageForConTargetArea(index: number): Ui_Interfaces_IUiImage.IUiImage {
         const con = this._conForTargetArea;
         while (index >= con.getUiChildren().length) {
-            const img = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+            const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
             img.setIsSmoothing(false);
             con.addUiChild(img);
         }
 
-        return con.getUiChildAt(index) as IUiImage;
+        return con.getUiChildAt(index) as Ui_Interfaces_IUiImage.IUiImage;
     }
 
     private _startNormalAnimation(): void {
         this._stopNormalAnimation();
 
-        Executor.get(this._imgUpperLeftCorner, { loop: true })
+        Tween_Executor.Executor.get(this._imgUpperLeftCorner, { loop: true })
             .set({ customX: getUpperLeftCornerOuterX(), customY: getUpperLeftCornerOuterY() })
             .to({ customX: getUpperLeftCornerInnerX(), customY: getUpperLeftCornerInnerY() }, _PULSE_IN_DURATION)
             .to({ customX: getUpperLeftCornerOuterX(), customY: getUpperLeftCornerOuterY() }, _PULSE_OUT_DURATION)
             .wait(_PULSE_INTERVAL_DURATION);
 
-        Executor.get(this._imgUpperRightCorner, { loop: true })
+        Tween_Executor.Executor.get(this._imgUpperRightCorner, { loop: true })
             .set({ customX: getUpperRightCornerOuterX(), customY: getUpperRightCornerOuterY() })
             .to({ customX: getUpperRightCornerInnerX(), customY: getUpperRightCornerInnerY() }, _PULSE_IN_DURATION)
             .to({ customX: getUpperRightCornerOuterX(), customY: getUpperRightCornerOuterY() }, _PULSE_OUT_DURATION)
             .wait(_PULSE_INTERVAL_DURATION);
 
-        Executor.get(this._imgLowerLeftCorner, { loop: true })
+        Tween_Executor.Executor.get(this._imgLowerLeftCorner, { loop: true })
             .set({ customX: getLowerLeftCornerOuterX(), customY: getLowerLeftCornerOuterY() })
             .to({ customX: getLowerLeftCornerInnerX(), customY: getLowerLeftCornerInnerY() }, _PULSE_IN_DURATION)
             .to({ customX: getLowerLeftCornerOuterX(), customY: getLowerLeftCornerOuterY() }, _PULSE_OUT_DURATION)
             .wait(_PULSE_INTERVAL_DURATION);
 
-        Executor.get(this._imgLowerRightCorner, { loop: true })
+        Tween_Executor.Executor.get(this._imgLowerRightCorner, { loop: true })
             .set({ customX: getLowerRightCornerOuterX(), customY: getLowerRightCornerOuterY() })
             .to({ customX: getLowerRightCornerInnerX(), customY: getLowerRightCornerInnerY() }, _PULSE_IN_DURATION)
             .to({ customX: getLowerRightCornerOuterX(), customY: getLowerRightCornerOuterY() }, _PULSE_OUT_DURATION)
             .wait(_PULSE_INTERVAL_DURATION);
     }
     private _stopNormalAnimation(): void {
-        Executor.removeTweens(this._imgUpperLeftCorner);
-        Executor.removeTweens(this._imgUpperRightCorner);
-        Executor.removeTweens(this._imgLowerLeftCorner);
-        Executor.removeTweens(this._imgLowerRightCorner);
+        Tween_Executor.Executor.removeTweens(this._imgUpperLeftCorner);
+        Tween_Executor.Executor.removeTweens(this._imgUpperRightCorner);
+        Tween_Executor.Executor.removeTweens(this._imgLowerLeftCorner);
+        Tween_Executor.Executor.removeTweens(this._imgLowerRightCorner);
     }
 
     private _startTargetAnimation(): void {
         this._stopTargetAnimation();
 
         const totalFramesCount = getImageSourcesForCursorAiming().length;
-        Executor.get(this._imgTarget, { loop: true })
+        Tween_Executor.Executor.get(this._imgTarget, { loop: true })
             .wait(_TARGET_FRAME_DURATION)
             .call(() => {
                 ++this._frameIndexForImgTarget;
@@ -879,7 +848,7 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
     }
     private _stopTargetAnimation(): void {
         this._frameIndexForImgTarget = 0;
-        Executor.removeTweens(this._imgTarget);
+        Tween_Executor.Executor.removeTweens(this._imgTarget);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -897,10 +866,10 @@ export class BwCursorView extends UiContainer implements IBwCursorView {
         gridY = Math.min(gridY, this._getCursor().getMapSize().getHeight() - 1);
         return gridY;
     }
-    private _getGridIndexByLocalXY(localX: number, localY: number): GridIndex {
-        return new GridIndex(this._getGridXByLocalX(localX), this._getGridYByLocalY(localY));
+    private _getGridIndexByLocalXY(localX: number, localY: number): AuxiliaryTypes_GridIndex.GridIndex {
+        return new AuxiliaryTypes_GridIndex.GridIndex(this._getGridXByLocalX(localX), this._getGridYByLocalY(localY));
     }
-    private _getGridIndexByGlobalXY(globalX: number, globalY: number): GridIndex {
+    private _getGridIndexByGlobalXY(globalX: number, globalY: number): AuxiliaryTypes_GridIndex.GridIndex {
         const point = this.globalToLocal(globalX, globalY);
         return this._getGridIndexByLocalXY(point.x, point.y);
     }

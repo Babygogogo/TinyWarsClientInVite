@@ -1,71 +1,60 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getTileName,
-    getTileObjectName,
-} from "../../lang/Utils.ts";
-import {
-    setShowMapEditorAutoAdjustToggle,
-    getShowMapEditorAutoAdjustToggle,
-} from "../../localData/Storage.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import {
-    TileTypeId,
-    ObjectTypeId,
-} from "../../tiles/constants/Common.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    LocalData_Storage,
+    Lang_Utils,
+    Tiles_Constants_Common,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnAll!                       : IUiButton;
-    private readonly _btnRiver!                     : IUiButton;
-    private readonly _btnBeach!                     : IUiButton;
-    private readonly _btnSea!                       : IUiButton;
-    private readonly _btnDecoration!                : IUiButton;
-    private readonly _btnRoad!                      : IUiButton;
-    private readonly _btnBridge!                    : IUiButton;
-    private readonly _btnPlasma!                    : IUiButton;
-    private readonly _btnSuperPlasma!               : IUiButton;
+    private readonly _btnAll!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRiver!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnBeach!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSea!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDecoration!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRoad!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnBridge!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPlasma!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSuperPlasma!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupRealTimeAdjustContainer! : IUiLayout;
-    private readonly _groupRealTimeAdjust!          : IUiLayout;
-    private readonly _imgRealTimeAdjust!            : IUiImage;
-    private readonly _labelRealTimeAdjust!          : IUiLabel;
-    private readonly _btnHelpRealTimeAdjust!        : IUiButton;
+    private readonly _groupRealTimeAdjustContainer! : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupRealTimeAdjust!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgRealTimeAdjust!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelRealTimeAdjust!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelpRealTimeAdjust!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupRealTimeToggle!          : IUiLayout;
-    private readonly _imgRealTimeToggle!            : IUiImage;
-    private readonly _labelRealTimeToggle!          : IUiLabel;
+    private readonly _groupRealTimeToggle!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgRealTimeToggle!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelRealTimeToggle!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupGlobalAdjustContainer!   : IUiLayout;
-    private readonly _groupGlobalAdjust!            : IUiLayout;
-    private readonly _labelGlobalAdjust!            : IUiLabel;
-    private readonly _btnHelpGlobalAdjust!          : IUiButton;
+    private readonly _groupGlobalAdjustContainer!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupGlobalAdjust!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelGlobalAdjust!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelpGlobalAdjust!          : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -104,8 +93,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent  : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback    : () => {
                 drawer.autoAdjustBeaches();
                 drawer.autoAdjustBridges(drawer.getBridgeConnectTileTypeArray().concat());
@@ -124,8 +113,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoAdjustRivers(),
         });
     }
@@ -135,8 +124,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoAdjustBeaches(),
         });
     }
@@ -146,8 +135,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoAdjustSeas(),
         });
     }
@@ -157,8 +146,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoFillTileDecorations(),
         });
     }
@@ -170,14 +159,14 @@ export class Panel extends UiPanel<OpenData> {
 
         const gameConfig    = war.getGcData();
         const drawer        = war.getDrawer();
-        openPanel(getDict().CommonChooseTileTypePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileTypePanel, {
             gameConfig              : gameConfig,
             currentTileTypeArray    : drawer.getRoadConnectTileTypeArray(),
             availableTileTypeArray  : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText             : () => getText(TextType.A0398),
+            getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0398),
             callbackOnConfirm       : tileTypeArray => {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent : () => getText(TextType.A0259),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
                     callback: () => war.getDrawer().autoAdjustRoads(tileTypeArray),
                 });
             }
@@ -191,14 +180,14 @@ export class Panel extends UiPanel<OpenData> {
 
         const gameConfig    = war.getGcData();
         const drawer        = war.getDrawer();
-        openPanel(getDict().CommonChooseTileTypePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileTypePanel, {
             gameConfig              : gameConfig,
             currentTileTypeArray    : drawer.getBridgeConnectTileTypeArray(),
             availableTileTypeArray  : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText             : () => getText(TextType.A0399),
+            getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0399),
             callbackOnConfirm       : tileTypeArray => {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent : () => getText(TextType.A0259),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
                     callback: () => war.getDrawer().autoAdjustBridges(tileTypeArray),
                 });
             }
@@ -210,8 +199,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoAdjustPlasmas(),
         });
     }
@@ -221,8 +210,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0259),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
             callback: () => drawer.autoAdjustPipes(),
         });
     }
@@ -230,23 +219,23 @@ export class Panel extends UiPanel<OpenData> {
         this.getOpenData()?.war.getDrawer().setIsRealTimeAdjust(!this._imgRealTimeAdjust.getIsVisible());
         this._updateImgRealTimeAdjust();
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupRealTimeToggle(): void {
-        setShowMapEditorAutoAdjustToggle(!getShowMapEditorAutoAdjustToggle());
+        LocalData_Storage.setShowMapEditorAutoAdjustToggle(!LocalData_Storage.getShowMapEditorAutoAdjustToggle());
         this._updateImgRealTimeToggle();
 
-        dispatch(TypeId.MeAutoAdjustToggleVisibilityChanged);
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeAutoAdjustToggleVisibilityChanged);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedBtnHelpRealTimeAdjust(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0032),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0032),
         });
     }
     private _onTouchedBtnHelpGlobalAdjust(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0778),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0778),
         });
     }
 
@@ -260,19 +249,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelTitle.setLangText(TextType.B1451);
-        this._btnAll.setLangText(TextType.B0120);
-        this._btnRiver.setText(getTileName(TileTypeId.River, gameConfig) ?? UndefinedError);
-        this._btnBeach.setText(getTileName(TileTypeId.Beach, gameConfig) ?? UndefinedError);
-        this._btnSea.setText(getTileName(TileTypeId.Sea, gameConfig) ?? UndefinedError);
-        this._btnDecoration.setLangText(TextType.TileDecoration);
-        this._btnRoad.setText(getTileObjectName(ObjectTypeId.Road, gameConfig) ?? UndefinedError);
-        this._btnBridge.setText(getTileObjectName(ObjectTypeId.Bridge, gameConfig) ?? UndefinedError);
-        this._btnPlasma.setText(getTileObjectName(ObjectTypeId.Plasma, gameConfig) ?? UndefinedError);
-        this._btnSuperPlasma.setText(getTileObjectName(ObjectTypeId.Pipe, gameConfig) ?? UndefinedError);
-        this._labelRealTimeAdjust.setLangText(TextType.B1121);
-        this._labelRealTimeToggle.setLangText(TextType.B1452);
-        this._labelGlobalAdjust.setLangText(TextType.B1243);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1451);
+        this._btnAll.setLangText(Lang_Constants.TextType.B0120);
+        this._btnRiver.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.River, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnBeach.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.Beach, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnSea.setText(Lang_Utils.getTileName(Tiles_Constants_Common.TileTypeId.Sea, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnDecoration.setLangText(Lang_Constants.TextType.TileDecoration);
+        this._btnRoad.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Road, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnBridge.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Bridge, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnPlasma.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Plasma, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._btnSuperPlasma.setText(Lang_Utils.getTileObjectName(Tiles_Constants_Common.ObjectTypeId.Pipe, gameConfig) ?? Lang_Constants.UndefinedError);
+        this._labelRealTimeAdjust.setLangText(Lang_Constants.TextType.B1121);
+        this._labelRealTimeToggle.setLangText(Lang_Constants.TextType.B1452);
+        this._labelGlobalAdjust.setLangText(Lang_Constants.TextType.B1243);
 
         this._groupRealTimeAdjust.arrangeItems();
         this._groupRealTimeToggle.arrangeItems();
@@ -285,6 +274,6 @@ export class Panel extends UiPanel<OpenData> {
         this._imgRealTimeAdjust.setIsVisible(!!this.getOpenData()?.war.getDrawer().getIsRealTimeAdjust());
     }
     private _updateImgRealTimeToggle(): void {
-        this._imgRealTimeToggle.setIsVisible(getShowMapEditorAutoAdjustToggle());
+        this._imgRealTimeToggle.setIsVisible(LocalData_Storage.getShowMapEditorAutoAdjustToggle());
     }
 }

@@ -1,83 +1,82 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter                       : EpExpressionInfo;
-    ActBaseType                         : EpExpressionInfo;
-    ActBaseShapeId                      : EpExpressionInfo;
-    ActObjectType                       : EpExpressionInfo;
-    ActObjectShapeId                    : EpExpressionInfo;
-    ActDecorationType                   : EpExpressionInfo;
-    ActDecorationShapeId                : EpExpressionInfo;
-    ActUnitHandler                      : EpExpressionInfo;
-    ActUnitFilter                       : EpExpressionInfo;
+    ConTileFilter                       : ExpressionParsers_Types.EpExpressionInfo;
+    ActBaseType                         : ExpressionParsers_Types.EpExpressionInfo;
+    ActBaseShapeId                      : ExpressionParsers_Types.EpExpressionInfo;
+    ActObjectType                       : ExpressionParsers_Types.EpExpressionInfo;
+    ActObjectShapeId                    : ExpressionParsers_Types.EpExpressionInfo;
+    ActDecorationType                   : ExpressionParsers_Types.EpExpressionInfo;
+    ActDecorationShapeId                : ExpressionParsers_Types.EpExpressionInfo;
+    ActUnitHandler                      : ExpressionParsers_Types.EpExpressionInfo;
+    ActUnitFilter                       : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConTileFilter       : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.TileFilter),
-        getHelpText     : () => getText(TextType.A0648),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.TileFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0648),
     },
     ActBaseType : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1199),
-        getHelpText     : () => getText(TextType.A0649),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1199),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0649),
     },
     ActBaseShapeId : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1200),
-        getHelpText     : () => getText(TextType.A0650),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1200),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0650),
     },
     ActObjectType : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1201),
-        getHelpText     : () => getText(TextType.A0651),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1201),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0651),
     },
     ActObjectShapeId : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1202),
-        getHelpText     : () => getText(TextType.A0652),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1202),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0652),
     },
     ActDecorationType : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1203),
-        getHelpText     : () => getText(TextType.A0653),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1203),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0653),
     },
     ActDecorationShapeId : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1204),
-        getHelpText     : () => getText(TextType.A0654),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1204),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0654),
     },
     ActUnitHandler : {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1205),
-        getHelpText     : () => getText(TextType.A0655),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1205),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0655),
     },
     ActUnitFilter : {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.UnitFilter),
-        getHelpText     : () => getText(TextType.A0656),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.UnitFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0656),
     },
 };

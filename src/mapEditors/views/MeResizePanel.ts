@@ -1,52 +1,48 @@
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { show } from "../../FloatText.ts";
-import { Common } from "../../maps/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getFormattedText,
-    getText,
-} from "../../lang/Utils.ts";
-import {
-    resizeMap,
-    addOffset,
-} from "../../mapEditor/model/MeHelpers.ts";
-import { getWar } from "../../mapEditor/model/MeModel.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    MapEditor_Model_MeHelpers,
+    Maps_Constants,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    MapEditor_Model_MeModel,
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MapSize,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 import { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnHelp!              : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelCurrSizeTitle!   : IUiLabel;
-    private readonly _labelCurrWidth!       : IUiLabel;
-    private readonly _labelCurrHeight!      : IUiLabel;
-    private readonly _labelCurrGrids!       : IUiLabel;
-    private readonly _labelNewSizeTitle!    : IUiLabel;
-    private readonly _labelNewWidth!        : IUiLabel;
-    private readonly _labelNewHeight!       : IUiLabel;
-    private readonly _labelNewGrids!        : IUiLabel;
-    private readonly _btnCancel!            : IUiButton;
-    private readonly _btnConfirm!           : IUiButton;
+    private readonly _labelCurrSizeTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrWidth!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrHeight!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrGrids!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewSizeTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewWidth!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewHeight!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNewGrids!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCancel!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnDeltaTop!          : IUiButton;
-    private readonly _btnDeltaBottom!       : IUiButton;
-    private readonly _btnDeltaLeft!         : IUiButton;
-    private readonly _btnDeltaRight!        : IUiButton;
+    private readonly _btnDeltaTop!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeltaBottom!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeltaLeft!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeltaRight!        : Ui_Interfaces_IUiButton.IUiButton;
 
     private _deltaLeft      = 0;
     private _deltaRight     = 0;
@@ -55,7 +51,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCancel,          callback: this.closePanel, },
@@ -81,8 +77,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getFormattedText(TextType.F0023, Common.MaxGridsCount),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount),
         });
     }
 
@@ -121,17 +117,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const war               = getExisted(getWar());
+        const war               = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
         const { width, height } = war.getTileMap().getMapSize().getWH();
         const newWidth          = width + deltaLeft + deltaRight;
         const newHeight         = height + deltaTop + deltaBottom;
-        if ((newWidth <= 0) || (newHeight <= 0) || (newWidth * newHeight > Common.MaxGridsCount)) {
-            show(getText(TextType.A0265));
+        if ((newWidth <= 0) || (newHeight <= 0) || (newWidth * newHeight > Maps_Constants.Common.MaxGridsCount)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0265));
             return;
         }
 
         const gameConfig    = war.getGcData();
-        const tempData      = resizeMap({
+        const tempData      = MapEditor_Model_MeHelpers.resizeMap({
             mapRawData  : await war.serializeForMap(),
             newWidth    : width + Math.max(0, deltaLeft) + Math.max(0, deltaRight),
             newHeight   : height + Math.max(0, deltaTop) + Math.max(0, deltaBottom),
@@ -139,8 +135,8 @@ export class Panel extends UiPanel<OpenData> {
         });
         war.stopRunning();
         await war.initWithMapRawData({
-            mapRawData: resizeMap({
-                mapRawData: addOffset({
+            mapRawData: MapEditor_Model_MeHelpers.resizeMap({
+                mapRawData: MapEditor_Model_MeHelpers.addOffset({
                     mapRawData  : tempData,
                     offsetX     : deltaLeft,
                     offsetY     : deltaTop,
@@ -168,15 +164,15 @@ export class Panel extends UiPanel<OpenData> {
             .startRunningView();
 
         this.closePanel();
-        dispatch(TypeId.MeMapSizeChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSizeChanged);
     }
 
     private _onTouchedBtnDeltaTop(): void {
-        const minValue      = -Common.MaxGridsCount;
-        const maxValue      = Common.MaxGridsCount;
+        const minValue      = -Maps_Constants.Common.MaxGridsCount;
+        const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaTop;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0857),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0857),
             currentValue,
             minValue,
             maxValue,
@@ -189,11 +185,11 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaBottom(): void {
-        const minValue      = -Common.MaxGridsCount;
-        const maxValue      = Common.MaxGridsCount;
+        const minValue      = -Maps_Constants.Common.MaxGridsCount;
+        const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaBottom;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0858),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0858),
             currentValue,
             minValue,
             maxValue,
@@ -206,11 +202,11 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaLeft(): void {
-        const minValue      = -Common.MaxGridsCount;
-        const maxValue      = Common.MaxGridsCount;
+        const minValue      = -Maps_Constants.Common.MaxGridsCount;
+        const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaLeft;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0859),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0859),
             currentValue,
             minValue,
             maxValue,
@@ -223,11 +219,11 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaRight(): void {
-        const minValue      = -Common.MaxGridsCount;
-        const maxValue      = Common.MaxGridsCount;
+        const minValue      = -Maps_Constants.Common.MaxGridsCount;
+        const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaRight;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0860),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0860),
             currentValue,
             minValue,
             maxValue,
@@ -250,11 +246,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
-        this._labelTitle.setLangText(TextType.B0290);
-        this._labelCurrSizeTitle.setLangText(TextType.B0855);
-        this._labelNewSizeTitle.setLangText(TextType.B0856);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0290);
+        this._labelCurrSizeTitle.setLangText(Lang_Constants.TextType.B0855);
+        this._labelNewSizeTitle.setLangText(Lang_Constants.TextType.B0856);
 
         this._updateBtnDeltaTop();
         this._updateBtnDeltaBottom();
@@ -263,7 +259,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForData(): void {
-        const war                   = getExisted(getWar());
+        const war                   = Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
         const { width, height }     = war.getTileMap().getMapSize().getWH();
         this._labelCurrWidth.setText("" + width);
         this._labelCurrHeight.setText("" + height);
@@ -284,7 +280,7 @@ export class Panel extends UiPanel<OpenData> {
         labelNewHeight.setText("" + newHeight);
         labelNewHeight.setTextColor(newHeight > 0 ? 0xffffff : 0xff0000);
         labelNewGrids.setText(`` + newGrids);
-        labelNewGrids.setTextColor(((newGrids > 0) && (newGrids <= Common.MaxGridsCount)) ? 0xffffff : 0xff0000);
+        labelNewGrids.setTextColor(((newGrids > 0) && (newGrids <= Maps_Constants.Common.MaxGridsCount)) ? 0xffffff : 0xff0000);
         this._updateBtnDeltaTop();
         this._updateBtnDeltaBottom();
         this._updateBtnDeltaLeft();
@@ -295,11 +291,11 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaTop;
         const value = this._deltaTop;
         if (value === 0) {
-            btn.setLangText(TextType.B0857);
+            btn.setLangText(Lang_Constants.TextType.B0857);
         } else {
             btn.setText(value > 0
-                ? getFormattedText(TextType.F0086, value)
-                : getFormattedText(TextType.F0087, -value)
+                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value)
             );
         }
     }
@@ -307,11 +303,11 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaBottom;
         const value = this._deltaBottom;
         if (value === 0) {
-            btn.setLangText(TextType.B0858);
+            btn.setLangText(Lang_Constants.TextType.B0858);
         } else {
             btn.setText(value > 0
-                ? getFormattedText(TextType.F0086, value)
-                : getFormattedText(TextType.F0087, -value)
+                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value)
             );
         }
     }
@@ -319,11 +315,11 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaLeft;
         const value = this._deltaLeft;
         if (value === 0) {
-            btn.setLangText(TextType.B0859);
+            btn.setLangText(Lang_Constants.TextType.B0859);
         } else {
             btn.setText(value > 0
-                ? getFormattedText(TextType.F0089, value)
-                : getFormattedText(TextType.F0116, -value)
+                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value)
             );
         }
 
@@ -332,11 +328,11 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaRight;
         const value = this._deltaRight;
         if (value === 0) {
-            btn.setLangText(TextType.B0860);
+            btn.setLangText(Lang_Constants.TextType.B0860);
         } else {
             btn.setText(value > 0
-                ? getFormattedText(TextType.F0089, value)
-                : getFormattedText(TextType.F0116, -value)
+                ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value)
             );
         }
     }
@@ -351,11 +347,11 @@ function generateNewGridMarkData({ oldData, deltaLeft, deltaRight, deltaTop, del
     oldWidth    : number;
     oldHeight   : number;
 }): GridMarkData {
-    const oldMapSize    = new MapSize(oldWidth, oldHeight);
-    const newMapSize    = new MapSize(oldWidth + deltaLeft + deltaRight, oldHeight + deltaTop + deltaBottom);
+    const oldMapSize    = new AuxiliaryTypes_MapSize.MapSize(oldWidth, oldHeight);
+    const newMapSize    = new AuxiliaryTypes_MapSize.MapSize(oldWidth + deltaLeft + deltaRight, oldHeight + deltaTop + deltaBottom);
     const newList       : GridIdAndMarkTypeId[] = [];
     for (const item of oldData.getGridIdAndMarkTypeIdList()) {
-        const gridIndex = GridIndex.getGridIndexByGridId(item.getGridId(), oldMapSize);
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(item.getGridId(), oldMapSize);
         gridIndex.setX(gridIndex.getX() + deltaLeft);
         gridIndex.setY(gridIndex.getY() + deltaTop);
 

@@ -1,85 +1,77 @@
-import { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { Common } from "../../maps/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import {
-    getDecodedMapTagIdList,
-    getEncodedMapTagId,
-} from "../../mapTags/Utils.ts";
-import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+    Maps_Constants,
+    MapTags_Utils,
+    GamePanels_Dict,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    Helpers_Collection,
+    AuxiliaryTypes_MapFilter,
+    GamePanels_Manager,
+    Players_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export type OpenData = {
-    mapFilter           : MapFilter | null;
-    callbackOnConfirm   : (mapFilter: MapFilter) => void;
+    mapFilter           : AuxiliaryTypes_MapFilter.MapFilter | null;
+    callbackOnConfirm   : (mapFilter: AuxiliaryTypes_MapFilter.MapFilter) => void;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnHelp!                  : IUiButton;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnReset!                 : IUiButton;
-    private readonly _btnSearch!                : IUiButton;
+    private readonly _btnReset!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearch!                : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapNameTitle!        : IUiLabel;
-    private readonly _labelMapName!             : IUiLabel;
-    private readonly _btnModifyMapName!         : IUiButton;
-    private readonly _btnDeleteMapName!         : IUiButton;
+    private readonly _labelMapNameTitle!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapName!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapName!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapDesignerTitle!    : IUiLabel;
-    private readonly _labelMapDesigner!         : IUiLabel;
-    private readonly _btnModifyMapDesigner!     : IUiButton;
-    private readonly _btnDeleteMapDesigner!     : IUiButton;
+    private readonly _labelMapDesignerTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapDesigner!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapDesigner!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapDesigner!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayersCountTitle!   : IUiLabel;
-    private readonly _labelPlayersCount!        : IUiLabel;
-    private readonly _btnModifyPlayersCount!    : IUiButton;
-    private readonly _btnDeletePlayersCount!    : IUiButton;
+    private readonly _labelPlayersCountTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayersCount!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyPlayersCount!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeletePlayersCount!    : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayedTimesTitle!    : IUiLabel;
-    private readonly _labelPlayedTimes!         : IUiLabel;
-    private readonly _btnModifyPlayedTimes!     : IUiButton;
-    private readonly _btnDeletePlayedTimes!     : IUiButton;
+    private readonly _labelPlayedTimesTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayedTimes!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyPlayedTimes!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeletePlayedTimes!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMinRatingTitle!      : IUiLabel;
-    private readonly _labelMinRating!           : IUiLabel;
-    private readonly _btnModifyMinRating!       : IUiButton;
-    private readonly _btnDeleteMinRating!       : IUiButton;
+    private readonly _labelMinRatingTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMinRating!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMinRating!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMinRating!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapTagTitle!         : IUiLabel;
-    private readonly _labelMapTag!              : IUiLabel;
-    private readonly _btnModifyMapTag!          : IUiButton;
-    private readonly _btnDeleteMapTag!          : IUiButton;
+    private readonly _labelMapTagTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapTag!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapTag!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapTag!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapWidthTitle!       : IUiLabel;
-    private readonly _labelMapWidth!            : IUiLabel;
-    private readonly _btnModifyMapWidth!        : IUiButton;
-    private readonly _btnDeleteMapWidth!        : IUiButton;
+    private readonly _labelMapWidthTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapWidth!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapWidth!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapWidth!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapHeightTitle!      : IUiLabel;
-    private readonly _labelMapHeight!           : IUiLabel;
-    private readonly _btnModifyMapHeight!       : IUiButton;
-    private readonly _btnDeleteMapHeight!       : IUiButton;
+    private readonly _labelMapHeightTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapHeight!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapHeight!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapHeight!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _mapFilter                          = new MapFilter();
+    private _mapFilter                          = new AuxiliaryTypes_MapFilter.MapFilter();
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -113,7 +105,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnDeleteMapHeight,         callback: this._onTouchedBtnDeleteMapHeight },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -121,19 +113,19 @@ export class Panel extends UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._mapFilter = this.getOpenData()?.mapFilter?.clone() ?? new MapFilter();
+        this._mapFilter = this.getOpenData()?.mapFilter?.clone() ?? new AuxiliaryTypes_MapFilter.MapFilter();
         this._updateComponentsForLanguage();
         this._resetComponentsForFilter();
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0063),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0063),
         });
     }
 
     private _onTouchedBtnReset(): void {
-        this._mapFilter = new MapFilter();
+        this._mapFilter = new AuxiliaryTypes_MapFilter.MapFilter();
         this._resetComponentsForFilter();
     }
 
@@ -144,8 +136,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMapName(): void {
         const filter = this._mapFilter;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0225),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0225),
             currentValue    : filter.mapName ?? ``,
             maxChars        : 20,
             canBeEmpty      : true,
@@ -164,8 +156,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMapDesigner(): void {
         const filter = this._mapFilter;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0251),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0251),
             currentValue    : filter.mapDesigner ?? ``,
             maxChars        : 20,
             canBeEmpty      : true,
@@ -185,12 +177,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnModifyPlayersCount(): void {
         const filter    = this._mapFilter;
         const range     = filter.playersCountRange ?? [];
-        openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0922),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
+            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0922),
             minNumber           : 2,
-            maxNumber           : PlayerIndex.Max,
+            maxNumber           : Players_Constants.PlayerIndex.Max,
             currentLowerNumber  : range[0] ?? 2,
-            currentUpperNumber  : range[1] ?? PlayerIndex.Max,
+            currentUpperNumber  : range[1] ?? Players_Constants.PlayerIndex.Max,
             callback            : (minNumber, maxNumber) => {
                 filter.playersCountRange = [minNumber, maxNumber];
                 this._updateLabelPlayersCount();
@@ -204,8 +196,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyPlayedTimes(): void {
         const filter = this._mapFilter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0568),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0568),
             currentValue    : filter.playedTimes ?? 0,
             maxValue        : 9999,
             minValue        : 0,
@@ -223,8 +215,8 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnModifyMinRating(): void {
         const filter    = this._mapFilter;
         const range     = filter.globalRatingRange ?? [];
-        openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0569),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
+            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0569),
             minNumber           : 0,
             maxNumber           : 10,
             currentLowerNumber  : range[0] ?? 0,
@@ -241,16 +233,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnModifyMapTag(): Promise<void> {
-        const mapTagData = await getMapTag();
+        const mapTagData = await NormalMap_Model_NormalMapModel.getMapTag();
         const filter        = this._mapFilter;
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
-            availableNumberArray    : getNonNullElements(mapTagData?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
-            currentNumberArray      : getDecodedMapTagIdList(filter.mapTagIdFlags ?? 0),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
+            availableNumberArray    : Helpers_Collection.getNonNullElements(mapTagData?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
+            currentNumberArray      : MapTags_Utils.getDecodedMapTagIdList(filter.mapTagIdFlags ?? 0),
             showNumber              : true,
-            getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0445)),
-            getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? UndefinedError,
+            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
+            getNumberMainText       : mapTagId => Lang_Utils.getLanguageText({ textArray: mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : newMapTagIdArray => {
-                filter.mapTagIdFlags = getEncodedMapTagId(newMapTagIdArray);
+                filter.mapTagIdFlags = MapTags_Utils.getEncodedMapTagId(newMapTagIdArray);
                 this._updateLabelMapTag();
             },
         });
@@ -260,14 +252,13 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelMapTag();
     }
 
-
     private _onTouchedBtnMapWidth(): void {
         const filter            = this._mapFilter;
         const oldMaxMapWidth    = filter.maxMapWidth;
         const minValue          = 1;
-        const maxValue          = Common.MaxGridsCount;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1389),
+        const maxValue          = Maps_Constants.Common.MaxGridsCount;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1389),
             currentValue    : filter.minMapWidth,
             minValue        : minValue,
             maxValue        : oldMaxMapWidth ?? maxValue,
@@ -279,8 +270,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelMapWidth();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1390),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1390),
                     currentValue    : oldMaxMapWidth,
                     minValue        : newMinMapWidth ?? minValue,
                     maxValue        : maxValue,
@@ -307,9 +298,9 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._mapFilter;
         const oldMaxMapHeight   = filter.maxMapHeight;
         const minValue          = 1;
-        const maxValue          = Common.MaxGridsCount;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1391),
+        const maxValue          = Maps_Constants.Common.MaxGridsCount;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1391),
             currentValue    : filter.minMapHeight,
             minValue        : minValue,
             maxValue        : oldMaxMapHeight ?? maxValue,
@@ -321,8 +312,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelMapHeight();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1392),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1392),
                     currentValue    : oldMaxMapHeight,
                     minValue        : newMinMapHeight ?? minValue,
                     maxValue        : maxValue,
@@ -361,18 +352,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0447);
-        this._labelMapNameTitle.setLangText(TextType.B0225);
-        this._labelMapDesignerTitle.setLangText(TextType.B0251);
-        this._labelPlayersCountTitle.setLangText(TextType.B0922);
-        this._labelPlayedTimesTitle.setLangText(TextType.B0565);
-        this._labelMinRatingTitle.setLangText(TextType.B0364);
-        this._labelMapTagTitle.setLangText(TextType.B0445);
-        this._labelMapWidthTitle.setLangText(TextType.B0034);
-        this._labelMapHeightTitle.setLangText(TextType.B0035);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0447);
+        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
+        this._labelMapDesignerTitle.setLangText(Lang_Constants.TextType.B0251);
+        this._labelPlayersCountTitle.setLangText(Lang_Constants.TextType.B0922);
+        this._labelPlayedTimesTitle.setLangText(Lang_Constants.TextType.B0565);
+        this._labelMinRatingTitle.setLangText(Lang_Constants.TextType.B0364);
+        this._labelMapTagTitle.setLangText(Lang_Constants.TextType.B0445);
+        this._labelMapWidthTitle.setLangText(Lang_Constants.TextType.B0034);
+        this._labelMapHeightTitle.setLangText(Lang_Constants.TextType.B0035);
 
-        this._btnReset.setLangText(TextType.B0391);
-        this._btnSearch.setLangText(TextType.B0228);
+        this._btnReset.setLangText(Lang_Constants.TextType.B0391);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
 
         this._updateLabelMapTag();
         this._updateLabelMapWidth();
@@ -403,13 +394,13 @@ export class Panel extends UiPanel<OpenData> {
         );
     }
     private async _updateLabelMapTag(): Promise<void> {
-        const mapTagIdArray = getDecodedMapTagIdList(this._mapFilter.mapTagIdFlags ?? 0);
+        const mapTagIdArray = MapTags_Utils.getDecodedMapTagIdList(this._mapFilter.mapTagIdFlags ?? 0);
         const length        = mapTagIdArray.length;
         const label         = this._labelMapTag;
         if (length == 0) {
             label.setText(``);
         } else if (length === 1) {
-            label.setText(getLanguageText({ textArray: (await getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagIdArray[0])?.getNameArray() }) ?? UndefinedError);
+            label.setText(Lang_Utils.getLanguageText({ textArray: (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagIdArray[0])?.getNameArray() }) ?? Lang_Constants.UndefinedError);
         } else {
             label.setText(`${length}`);
         }
@@ -422,7 +413,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minWidth == null) && (maxWidth == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minWidth ?? getText(TextType.B0776)} ~ ${maxWidth ?? getText(TextType.B0776)}`);
+            label.setText(`${minWidth ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxWidth ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
     private _updateLabelMapHeight(): void {
@@ -433,7 +424,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 }

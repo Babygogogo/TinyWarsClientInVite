@@ -1,22 +1,24 @@
-import { GridIndex } from "./GridIndex.ts";
-import { getExisted } from "../helpers/Misc.ts";
+import {
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+} from "../internal.ts";
 import { MovePath as ProtoMovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 
 export class MovePath {
-    public nodes            : GridIndex[];
+    public nodes            : AuxiliaryTypes_GridIndex.GridIndex[];
     public fuelConsumption  : number;
     public isBlocked        : boolean;
 
-    public constructor(nodes: GridIndex[], fuelConsumption: number, isBlocked: boolean) {
+    public constructor(nodes: AuxiliaryTypes_GridIndex.GridIndex[], fuelConsumption: number, isBlocked: boolean) {
         this.nodes              = nodes;
         this.fuelConsumption    = fuelConsumption;
         this.isBlocked          = isBlocked;
     }
 
     public static create(movePath: ProtoMovePath): MovePath {
-        const nodes: GridIndex[] = [];
+        const nodes: AuxiliaryTypes_GridIndex.GridIndex[] = [];
         for (const node of movePath.getNodes()) {
-            nodes.push(getExisted(GridIndex.convertGridIndex(node)));
+            nodes.push(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(node)));
         }
 
         return new MovePath(nodes, movePath.getFuelConsumption(), !!movePath.getIsBlocked());

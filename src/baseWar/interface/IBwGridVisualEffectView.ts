@@ -1,10 +1,12 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwGridVisualEffect } from "./IBwGridVisualEffect.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type Ui_Interfaces_IUiContainer,
+} from "../../internal.ts";
 
-export interface IBwGridVisualEffectView extends IUiContainer {
-    init(gridVisualEffect: IBwGridVisualEffect): void;
-    fastInit(gridVisualEffect: IBwGridVisualEffect): void;
+export interface IBwGridVisualEffectView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(gridVisualEffect: BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect): void;
+    fastInit(gridVisualEffect: BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect): void;
 
     startRunningView(): void;
     stopRunningView(): void;
@@ -12,29 +14,29 @@ export interface IBwGridVisualEffectView extends IUiContainer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    showEffectBlock(gridIndex: GridIndex): void;
+    showEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectDive(gridIndex: GridIndex): void;
+    showEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectExplosion(gridIndex: GridIndex): void;
+    showEffectExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectFlare(gridIndex: GridIndex): void;
+    showEffectFlare(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectDamage(gridIndex: GridIndex): void;
+    showEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectSupply(gridIndex: GridIndex): void;
+    showEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectRepair(gridIndex: GridIndex): void;
+    showEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectSiloExplosion(gridIndex: GridIndex): void;
+    showEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectCoPowerActivation(gridIndex: GridIndex): void;
+    showEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectCoSuperPowerActivation(gridIndex: GridIndex): void;
+    showEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectCharge(gridIndex: GridIndex): void;
+    showEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectSurface(gridIndex: GridIndex): void;
+    showEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    showEffectAiming(gridIndex: GridIndex, timeMs: number): void;
+    showEffectAiming(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, timeMs: number): void;
 }

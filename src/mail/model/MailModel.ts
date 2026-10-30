@@ -1,23 +1,25 @@
-import { getExisted } from "../../helpers/Misc.ts";
-import { MailData } from "./MailData.ts";
+import {
+    Helpers_Misc,
+    Mail_Model_MailData,
+} from "../../internal.ts";
 import type { MailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
 import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
 
-const _mailArray: MailData[] = [];
+const _mailArray: Mail_Model_MailData.MailData[] = [];
 
 export function resetAllMailDataArray(mailFullDataArray: MailFullData[]): void {
     _mailArray.length = 0;
 
     for (const data of mailFullDataArray) {
-        _mailArray.push(new MailData(data));
+        _mailArray.push(new Mail_Model_MailData.MailData(data));
     }
 
     _mailArray.sort((v1, v2) => v2.getMailId() - v1.getMailId());
 }
-export function getAllMailDataArray(): MailData[] {
+export function getAllMailDataArray(): Mail_Model_MailData.MailData[] {
     return _mailArray;
 }
-export function getMail(mailId: number): MailData | null {
+export function getMail(mailId: number): Mail_Model_MailData.MailData | null {
     return getAllMailDataArray().find(v => v.getMailId() === mailId) ?? null;
 }
 
@@ -26,7 +28,7 @@ export function checkIsRed(): boolean {
 }
 
 export function updateOnMsgMailGetMail(mailFullData: MailFullData): void {
-    const mailData  = new MailData(mailFullData);
+    const mailData  = new Mail_Model_MailData.MailData(mailFullData);
     const mailId    = mailData.getMailId();
     const index     = _mailArray.findIndex(v => v.getMailId() === mailId);
     if (index >= 0) {
@@ -43,5 +45,5 @@ export function updateOnMsgMailDeleteMail(mailId: number): void {
     }
 }
 export function updateOnMsgMailSetIsNew(msg: MailSetIsNewResponse): void {
-    getMail(getExisted(msg.getMailId()))?.setIsNew(!!msg.getIsNew());
+    getMail(Helpers_Misc.getExisted(msg.getMailId()))?.setIsNew(!!msg.getIsNew());
 }

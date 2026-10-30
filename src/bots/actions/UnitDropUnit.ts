@@ -1,19 +1,21 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Bots_CommonParams,
+    type AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { DropDestination } from "../../proto/schema/CommonProto/Structure/DropDestination.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
 export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex, pathNodes }: {
-    commonParams    : CommonParams;
-    unit            : IUnit;
-    gridIndex       : GridIndex;
-    pathNodes       : MovePathNode[];
-}): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+    commonParams    : Bots_CommonParams.CommonParams;
+    unit            : Units_IUnit.IUnit;
+    gridIndex       : AuxiliaryTypes_GridIndex.GridIndex;
+    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[];
+}): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if ((!unit.getCfgCanDropLoadedUnit()) || (unit.getLoadedUnitsCount() <= 0)) {
         return null;
@@ -79,7 +81,7 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
 }
 
 async function getScoreForActionUnitDropUnit(dropDestinations: DropDestination[]): Promise<number> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     return dropDestinations.length * 100;
 }

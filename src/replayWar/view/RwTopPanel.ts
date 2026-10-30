@@ -1,139 +1,110 @@
-import { Idle } from "../../actionPlanners/states/Idle.ts";
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { checkHasUnreadMessage } from "../../chat/Model.ts";
-import { getCachedUnitImageSource } from "../../common/model/CommonModel.ts";
-import { EnergyTypeId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
 import {
-    showLang,
-    show,
-} from "../../FloatText.ts";
-import { getFinalSkinId } from "../../forceSkins/Utils.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import {
-    openPanel,
-    closePanel,
-} from "../../gamePanels/Manager.ts";
-import {
-    getCoEyeBackground,
-    getCoEye,
-} from "../../helpers/ImageSource.ts";
-import {
-    type EventData,
-    KeyCode,
-} from "../../keyboard/KbTypes.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getPlayerTeamName,
-} from "../../lang/Utils.ts";
-import { getReplayPauseTime } from "../../localData/Storage.ts";
-import type { BwCursorTapped } from "../../notifications/DataTypes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../players/Constants.ts";
-import type { IRwWar } from "../interface/IRwWar.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import {
-    playCoBgmWithWar,
-    playShortSfx,
-} from "../../sounds/SoundPlayer.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    UnitTypeId,
-    AnimationTypeId,
-} from "../../units/Constants.ts";
-import {
-    getSelfSettingsCoBgmCodeArray,
-    getSelfSettingsTextureVersion,
-    getUserNickname,
-} from "../../users/Model.ts";
+    Players_Constants,
+    Units_Constants,
+    type Notifications_DataTypes,
+    AuxiliaryTypes_ChatToTarget,
+    Timer_TimerModel,
+    Chat_Model,
+    GamePanels_Manager,
+    Notifications_Dispatcher,
+    Cos_Constants,
+    Keyboard_KbTypes,
+    Common_Model_CommonModel,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    ForceSkins_Utils,
+    Lang_Utils,
+    LocalData_Storage,
+    Users_Model,
+    Stages_StageManager,
+    ActionPlanners_States_Idle,
+    type ReplayWar_Interface_IRwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    CoSkills_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    type Ui_Types_UiListItemData,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war : IRwWar;
+    war : ReplayWar_Interface_IRwWar.IRwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _btnPlayerList!        : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _btnPlayerList!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnWeather!           : IUiButton;
+    private readonly _btnWeather!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupPlayerList!      : IUiContainer;
-    private readonly _listPlayer!           : IUiScrollList<DataForListPlayer>;
+    private readonly _groupPlayerList!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForListPlayer>;
 
-    private readonly _btnUnitInfo!          : IUiButton;
-    private readonly _btnChat!              : IUiButton;
+    private readonly _btnUnitInfo!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChat!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupPauseTime!       : IUiContainer;
-    private readonly _layoutPauseTime!      : IUiLayout;
-    private readonly _labelPauseTimeTitle!  : IUiLabel;
-    private readonly _labelPauseTime!       : IUiLabel;
+    private readonly _groupPauseTime!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutPauseTime!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPauseTimeTitle!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPauseTime!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupShowUnits!       : IUiContainer;
-    private readonly _layoutShowUnits!      : IUiLayout;
-    private readonly _labelShowUnitsTitle!  : IUiLabel;
-    private readonly _labelShowUnits!       : IUiLabel;
+    private readonly _groupShowUnits!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutShowUnits!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelShowUnitsTitle!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelShowUnits!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupVisionTeam!      : IUiContainer;
-    private readonly _layoutVisionTeam!     : IUiLayout;
-    private readonly _labelVisionTeamTitle! : IUiLabel;
-    private readonly _labelVisionTeam!      : IUiLabel;
+    private readonly _groupVisionTeam!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutVisionTeam!     : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelVisionTeamTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelVisionTeam!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupProgress!        : IUiContainer;
-    private readonly _layoutProgress!       : IUiLayout;
-    private readonly _layoutTurn!           : IUiLayout;
-    private readonly _labelTurnTitle!       : IUiLabel;
-    private readonly _labelTurn!            : IUiLabel;
-    private readonly _layoutAction!         : IUiLayout;
-    private readonly _labelActionTitle!     : IUiLabel;
-    private readonly _labelAction!          : IUiLabel;
+    private readonly _groupProgress!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutProgress!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutTurn!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTurnTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurn!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutAction!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelActionTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAction!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupCo!              : IUiContainer;
-    private readonly _imgCo!                : IUiImage;
-    private readonly _imgSkin!              : IUiImage;
+    private readonly _groupCo!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgCo!                : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSkin!              : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _btnRewindBegin!       : IUiButton;
-    private readonly _btnRewindTurn!        : IUiButton;
-    private readonly _btnRewindAction!      : IUiButton;
-    private readonly _btnForwardAction!     : IUiButton;
-    private readonly _btnForwardTurn!       : IUiButton;
-    private readonly _btnForwardEnd!        : IUiButton;
-    private readonly _btnPlay!              : IUiButton;
-    private readonly _btnPause!             : IUiButton;
-    private readonly _btnPlayAction!        : IUiButton;
+    private readonly _btnRewindBegin!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRewindTurn!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRewindAction!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnForwardAction!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnForwardTurn!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnForwardEnd!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPlay!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPause!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPlayAction!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnInfo!              : IUiButton;
-    private readonly _btnMenu!              : IUiButton;
+    private readonly _btnInfo!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMenu!              : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
-            { type: TypeId.ReplayTick,                      callback: this._onNotifyReplayTick },
-            { type: TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
-            { type: TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: TypeId.ReplayAutoReplayChanged,         callback: this._onNotifyReplayAutoReplayChanged },
-            { type: TypeId.RwPauseTimeChanged,              callback: this._onNotifyRwPauseTimeChanged },
-            { type: TypeId.MsgChatGetAllReadProgressList,   callback: this._onNotifyMsgChatGetAllReadProgressList },
-            { type: TypeId.MsgChatUpdateReadProgress,       callback: this._onNotifyMsgChatUpdateReadProgress },
-            { type: TypeId.MsgChatGetAllMessages,           callback: this._onNotifyMsgChatGetAllMessages },
-            { type: TypeId.MsgChatAddMessage,               callback: this._onNotifyMsgChatAddMessage },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
+            { type: Notifications_TypeId.TypeId.ReplayTick,                      callback: this._onNotifyReplayTick },
+            { type: Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
+            { type: Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
+            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type: Notifications_TypeId.TypeId.ReplayAutoReplayChanged,         callback: this._onNotifyReplayAutoReplayChanged },
+            { type: Notifications_TypeId.TypeId.RwPauseTimeChanged,              callback: this._onNotifyRwPauseTimeChanged },
+            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback: this._onNotifyMsgChatGetAllReadProgressList },
+            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback: this._onNotifyMsgChatUpdateReadProgress },
+            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback: this._onNotifyMsgChatGetAllMessages },
+            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,               callback: this._onNotifyMsgChatAddMessage },
         ]);
         this._setUiListenerArray([
             { ui: this._btnPlayerList,      callback: this._onTouchedBtnPlayerList },
@@ -189,10 +160,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : war,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyReplayTick(): void {
@@ -211,10 +182,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : war,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyBwOverridingSkinIdChanged(): void {
@@ -249,9 +220,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonCoListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoListPanel, {
             war         : war,
             playerIndex : war.getPlayerIndexInTurn(),
         });
@@ -262,8 +233,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.Weather),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
             getContent : () => desc,
         });
     }
@@ -275,9 +246,9 @@ export class Panel extends UiPanel<OpenData> {
 
         const actionPlanner = war.getActionPlanner();
         if (!actionPlanner.checkIsStateRequesting()) {
-            Idle.getInstance().apply(actionPlanner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
-        openPanel(getDict().BwWarInfoPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war: war });
     }
     private _onTouchedBtnUnitInfo(): void {
         const war = this.getOpenData()?.war;
@@ -286,11 +257,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if ((war.getIsAutoReplay()) || (war.getIsExecutingAction())) {
-            showLang(TextType.A0412);
+            FloatText.showLang(Lang_Constants.TextType.A0412);
             return;
         }
 
-        openPanel(getDict().BwUnitListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                     : war,
             callbackForMoveCursor   : unit => {
                 const gridIndex = unit.getGridIndex();
@@ -299,21 +270,21 @@ export class Panel extends UiPanel<OpenData> {
                 cursor.updateView();
                 war.getView().tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                playShortSfx(ShortSfxCode.ButtonNeutral01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
             callbackForSelectUnit   : unit => {
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
-                dispatch(TypeId.BwCursorTapped, {
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
                     current : gridIndex,
                     tappedOn: gridIndex,
-                } as BwCursorTapped);
-                closePanel(getDict().BwUnitListPanel);
+                } as Notifications_DataTypes.BwCursorTapped);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
     }
     private _onTouchedBtnChat(): void {
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({}) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
     }
     private _onTouchedGroupProgress(): void {
         const war = this.getOpenData()?.war;
@@ -321,7 +292,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (war.getIsAutoReplay()) {
             war.setIsAutoReplay(false);
@@ -329,11 +300,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else {
-            openPanel(getDict().RwReplayProgressPanel, { war });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayProgressPanel, { war });
         }
     }
     private _onTouchedGroupPauseTime(): void {
@@ -342,9 +313,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().RwPauseTimePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwPauseTimePanel, {
             war     : war,
         });
     }
@@ -354,7 +325,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         war.setIsShowAllUnits(!war.getIsShowAllUnits());
         war.updateTilesAndUnitsOnVisibilityChanged(false);
@@ -367,7 +338,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         war.tickVisionTeamIndex();
         war.updateTilesAndUnitsOnVisibilityChanged(false);
@@ -383,17 +354,17 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            show(getText(TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             await war.loadPreviousAction();
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -406,17 +377,17 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            show(getText(TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             await war.loadPreviousCheckpoint();
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -429,17 +400,17 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInBeginning()) {
-            show(getText(TextType.A0042));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0042));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             await war.loadCheckpoint(0);
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -452,17 +423,17 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            show(getText(TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             await war.loadNextAction();
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -475,17 +446,17 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            show(getText(TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             await war.loadNextCheckpoint();
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -498,24 +469,24 @@ export class Panel extends UiPanel<OpenData> {
         war.setIsAutoReplay(false);
 
         if (!war.getIsRunning()) {
-            show(getText(TextType.A0040));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0040));
         } else if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0044));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0044));
         } else if (war.checkIsInEnd()) {
-            show(getText(TextType.A0043));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0043));
         } else if (war.getIsTickingReplay()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
 
-            openPanel(getDict().CommonBlockPanel, {
-                title   : getText(TextType.B0088),
-                content : getText(TextType.A0040),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
+                title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
+                content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
             });
             await war.loadCheckpoint(war.getAllCheckpointInfoArray().length - 1);
-            closePanel(getDict().CommonBlockPanel);
+            GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
 
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
             this._updateView();
         }
     }
@@ -526,7 +497,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (war.checkIsInEnd()) {
-            show(getText(TextType.A0041));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0041));
         } else {
             war.setIsAutoReplay(true);
         }
@@ -541,7 +512,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (war.checkIsInEnd()) {
-            show(getText(TextType.A0041));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0041));
         } else {
             war.setIsAutoReplay(true);
             war.setIsAutoReplay(false);
@@ -555,13 +526,13 @@ export class Panel extends UiPanel<OpenData> {
 
         const actionPlanner = war.getActionPlanner();
         if (!actionPlanner.checkIsStateRequesting()) {
-            Idle.getInstance().apply(actionPlanner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
 
-        openPanel(getDict().RwWarMenuPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwWarMenuPanel, { war: war });
     }
 
-    private _onKeyboard(data: EventData): void {
+    private _onKeyboard(data: Keyboard_KbTypes.EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -571,9 +542,9 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const newKeys   = data.newKeys;
-        const hasKeyAlt = data.allKeys.has(KeyCode.Alt);
-        if (newKeys.has(KeyCode.Num3)) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+        const hasKeyAlt = data.allKeys.has(Keyboard_KbTypes.KeyCode.Alt);
+        if (newKeys.has(Keyboard_KbTypes.KeyCode.Num3)) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             data.isHandled = true;
 
             if (hasKeyAlt) {
@@ -582,8 +553,8 @@ export class Panel extends UiPanel<OpenData> {
                 this._onTouchedBtnForwardEnd();
             }
 
-        } else if (newKeys.has(KeyCode.Num2)) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Num2)) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             data.isHandled = true;
 
             if (hasKeyAlt) {
@@ -592,8 +563,8 @@ export class Panel extends UiPanel<OpenData> {
                 this._onTouchedBtnForwardTurn();
             }
 
-        } else if (newKeys.has(KeyCode.Num1)) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Num1)) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             data.isHandled = true;
 
             if (hasKeyAlt) {
@@ -602,11 +573,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._onTouchedBtnForwardAction();
             }
 
-        } else if (newKeys.has(KeyCode.Whitespace)) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(Keyboard_KbTypes.KeyCode.Whitespace)) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             data.isHandled = true;
 
-            if (data.allKeys.has(KeyCode.Shift)) {
+            if (data.allKeys.has(Keyboard_KbTypes.KeyCode.Shift)) {
                 this._onTouchedBtnPlayAction();
             } else {
                 if (this._btnPlay.getIsVisible()) {
@@ -647,7 +618,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const playersCountUnneutral = war.getPlayersCountUnneutral();
         const dataArray             : DataForListPlayer[] = [];
-        for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
             dataArray.push({
                 playerIndex : playerIndex,
                 war         : war,
@@ -659,21 +630,21 @@ export class Panel extends UiPanel<OpenData> {
         this._updateGroupPlayerListHeight();
     }
     private _updateGroupPlayerListHeight(): void {
-        this._groupPlayerList.setUnscaledManualHeight(Math.min((this._listPlayer.getBoundDataArray()?.length ?? 0) * 74, getStage().stageHeight - 120));
+        this._groupPlayerList.setUnscaledManualHeight(Math.min((this._listPlayer.getBoundDataArray()?.length ?? 0) * 74, Stages_StageManager.getStage().stageHeight - 120));
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTurnTitle.setLangText(TextType.Turns);
-        this._labelActionTitle.setLangText(TextType.B0090);
-        this._labelPauseTimeTitle.setLangText(TextType.B0846);
-        this._labelShowUnitsTitle.setLangText(TextType.B1175);
-        this._labelVisionTeamTitle.setLangText(TextType.B0891);
-        this._btnRewindAction.setLangText(TextType.B0616);
-        this._btnRewindTurn.setLangText(TextType.B0191);
-        this._btnForwardTurn.setLangText(TextType.B0191);
-        this._btnForwardAction.setLangText(TextType.B0616);
-        this._btnInfo.setLangText(TextType.B0223);
-        this._btnMenu.setLangText(TextType.B0155);
+        this._labelTurnTitle.setLangText(Lang_Constants.TextType.Turns);
+        this._labelActionTitle.setLangText(Lang_Constants.TextType.B0090);
+        this._labelPauseTimeTitle.setLangText(Lang_Constants.TextType.B0846);
+        this._labelShowUnitsTitle.setLangText(Lang_Constants.TextType.B1175);
+        this._labelVisionTeamTitle.setLangText(Lang_Constants.TextType.B0891);
+        this._btnRewindAction.setLangText(Lang_Constants.TextType.B0616);
+        this._btnRewindTurn.setLangText(Lang_Constants.TextType.B0191);
+        this._btnForwardTurn.setLangText(Lang_Constants.TextType.B0191);
+        this._btnForwardAction.setLangText(Lang_Constants.TextType.B0616);
+        this._btnInfo.setLangText(Lang_Constants.TextType.B0223);
+        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
 
         this._updateLabelPauseTime();
         this._updateLabelShowUnits();
@@ -690,20 +661,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelPauseTime(): void {
-        this._labelPauseTime.setText(`${getReplayPauseTime()}${getText(TextType.B1290)}`);
+        this._labelPauseTime.setText(`${LocalData_Storage.getReplayPauseTime()}${Lang_Utils.getText(Lang_Constants.TextType.B1290)}`);
         this._layoutPauseTime.arrangeItems();
     }
 
     private _updateLabelShowUnits(): void {
-        this._labelShowUnits.setLangText(this.getOpenData()?.war.getIsShowAllUnits() ? TextType.B0120 : TextType.B1174);
+        this._labelShowUnits.setLangText(this.getOpenData()?.war.getIsShowAllUnits() ? Lang_Constants.TextType.B0120 : Lang_Constants.TextType.B1174);
         this._layoutShowUnits.arrangeItems();
     }
 
     private _updateLabelVisionTeam(): void {
         const teamIndex = this.getOpenData()?.war.getVisionTeamIndex();
         this._labelVisionTeam.setText(teamIndex == null
-            ? getText(TextType.B0890)
-            : (getPlayerTeamName(teamIndex) ?? UndefinedError)
+            ? Lang_Utils.getText(Lang_Constants.TextType.B0890)
+            : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError)
         );
         this._layoutVisionTeam.arrangeItems();
     }
@@ -724,8 +695,8 @@ export class Panel extends UiPanel<OpenData> {
         const war = this.getOpenData()?.war;
         if (war?.getIsRunning()) {
             const player = war.getPlayerInTurn();
-            this._imgSkin.loadSource(getCoEyeBackground(getFinalSkinId(war, player.getPlayerIndex())));
-            this._imgCo.loadSource(getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== AliveStateId.Dead) ?? UndefinedError);
+            this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(war, player.getPlayerIndex())));
+            this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
         }
     }
 
@@ -738,41 +709,41 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateBtnChat(): void {
-        this._btnChat.setRedVisible(checkHasUnreadMessage());
+        this._btnChat.setRedVisible(Chat_Model.checkHasUnreadMessage());
     }
 }
 
-interface DataForListPlayer extends UiListItemData {
-    war         : IRwWar;
+interface DataForListPlayer extends Ui_Types_UiListItemData.UiListItemData {
+    war         : ReplayWar_Interface_IRwWar.IRwWar;
     playerIndex : number;
 }
-class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
-    private readonly _imgInTurn!            : IUiImage;
-    private readonly _layoutContent!        : IUiLayout;
-    private readonly _labelTeam!            : IUiLabel;
-    private readonly _labelNickname!        : IUiLabel;
+class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForListPlayer> {
+    private readonly _imgInTurn!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _layoutContent!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTeam!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNickname!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutCo!             : IUiLayout;
-    private readonly _imgSkin!              : IUiImage;
-    private readonly _imgCo!                : IUiImage;
+    private readonly _layoutCo!             : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgSkin!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo!                : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutOuterEnergy!    : IUiLayout;
-    private readonly _labelEnergy!          : IUiLabel;
-    private readonly _layoutEnergy!         : IUiLayout;
-    private readonly _labelEnergy1!         : IUiLabel;
-    private readonly _labelEnergy2!         : IUiLabel;
+    private readonly _layoutOuterEnergy!    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelEnergy!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutEnergy!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelEnergy1!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelEnergy2!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelFund!            : IUiLabel;
-    private readonly _labelIncome!          : IUiLabel;
+    private readonly _labelFund!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIncome!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgUnit!              : IUiImage;
-    private readonly _labelUnitCount!       : IUiLabel;
-    private readonly _labelUnitValue!       : IUiLabel;
+    private readonly _imgUnit!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelUnitCount!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitValue!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.ReplayTick,                      callback: this._onNotifyReplayTick },
-            { type: TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type: Notifications_TypeId.TypeId.ReplayTick,                      callback: this._onNotifyReplayTick },
+            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -796,7 +767,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
 
         const userId    = openData.war.getPlayer(openData.playerIndex).getUserId();
         if (userId != null) {
-            openPanel(getDict().UserPanel, { userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId });
         }
     }
 
@@ -814,14 +785,14 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         const playerIndex       = openData.playerIndex;
         const player            = war.getPlayer(playerIndex);
         this._imgInTurn.setIsVisible(war.getPlayerIndexInTurn() === playerIndex);
-        this._imgCo.loadSource(getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== AliveStateId.Dead) ?? UndefinedError);
-        this._imgUnit.loadSource(getCachedUnitImageSource({
+        this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
+        this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
             gcData      : war.getGcData(),
-            version         : getSelfSettingsTextureVersion(),
+            version         : Users_Model.getSelfSettingsTextureVersion(),
             skinId          : player.getUnitAndTileSkinId(),
-            unitType        : UnitTypeId.First,
+            unitType        : Units_Constants.UnitTypeId.First,
             isDark          : false,
-            animationType   : AnimationTypeId.Stand,
+            animationType   : Units_Constants.AnimationTypeId.Stand,
             tickCount       : 0,
         }));
         this._updateImgSkin();
@@ -839,7 +810,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
             return;
         }
 
-        this._imgSkin.loadSource(getCoEyeBackground(getFinalSkinId(openData.war, openData.playerIndex)));
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(openData.war, openData.playerIndex)));
     }
 
     private async _updateLabelTeamAndNickname(): Promise<void> {
@@ -851,7 +822,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         const player    = openData.war.getPlayer(openData.playerIndex);
         const userId    = player.getUserId();
         this._labelTeam.setText(String.fromCharCode(`A`.charCodeAt(0) + (player.getTeamIndex() - 1)));
-        this._labelNickname.setText(userId == null ? getText(TextType.B0607) : (await getUserNickname(userId) ?? UndefinedError));
+        this._labelNickname.setText(userId == null ? Lang_Utils.getText(Lang_Constants.TextType.B0607) : (await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
     }
 
     private _updateComponentsForEnergy(): void {
@@ -865,12 +836,12 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         const skillType     = player.getCoUsingSkillType();
         const label         = this._labelEnergy;
         const currentEnergy = player.getCoCurrentEnergy();
-        if (skillType === SkillTypeId.Power) {
+        if (skillType === CoSkills_Constants.SkillTypeId.Power) {
             label.setText(`E: ${currentEnergy}(P)`);
-        } else if (skillType === SkillTypeId.SuperPower) {
+        } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
             label.setText(`E: ${currentEnergy}(SP)`);
         } else {
-            label.setText(player.getCoEnergyType() === EnergyTypeId.Trilogy
+            label.setText(player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Trilogy
                 ? `E: ${player.getCoCurrentEnergy()}`
                 : `E: ${player.getCoCurrentEnergy()}  Z: ${player.getCoZoneRadius()}`
             );

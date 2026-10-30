@@ -1,85 +1,56 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { CoId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getTotalDefensePercentOffsetForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitDefense.ts";
-import { getTotalOffsetForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitLuckRange.ts";
-import { getTotalOffsetPctForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitOffense.ts";
-import { getDamageMultiplierForDefenseBonus } from "../../damageCalculators/Utils.ts";
-import { show } from "../../FloatText.ts";
 import {
-    getDefaultSkinId,
-    getRawOverridingSkinId,
-} from "../../forceSkins/Utils.ts";
-import { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import {
-    closePanel,
-    openPanel,
-} from "../../gamePanels/Manager.ts";
-import { getCoEye } from "../../helpers/ImageSource.ts";
-import {
-    createLazyFunc,
-    createLazyFunc2,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import { format } from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getCoSkillTypeName,
-    getText,
-    getWeatherName,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import {
-    DefenseModifier,
-    Luck,
-} from "../../playerRules/Constants.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Tiles_Utils_Common,
+    TileObjects_Utils,
+    GamePanels_Manager,
+    Cos_Constants,
+    Helpers_Misc,
+    AuxiliaryTypes_DamageCalculatorPlayerData,
+    PlayerRules_Constants,
+    Helpers_Text,
+    GameConfigs_GameConfig,
+    Helpers_ImageSource,
+    Lang_Utils,
+    DamageCalculators_Utils,
+    ForceSkins_Utils,
+    TileBases_Utils,
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    CoSkills_Utils_Persistent_SelfUnitDefense,
+    CoSkills_Utils_Persistent_SelfUnitLuckRange,
+    CoSkills_Utils_Persistent_SelfUnitOffense,
+    Tiles_Constants_Common,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    CoSkills_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTileView,
+    Ui_Components_UiUnitView,
+    Ui_Types_UiUnitViewData,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Types_UiTileViewData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Utils_Serialization,
+    Units_Utils_Common,
+    Common_Model_CommonModel,
+    Units_Constants,
+    type Units_IUnit,
+} from "../../internal.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getDefaultTileBaseType } from "../../tileBases/Utils.ts";
-import { checkIsValidPlayerIndexForTileObject } from "../../tileObjects/Utils.ts";
-import {
-    ObjectTypeId,
-    TileTypeId,
-} from "../../tiles/constants/Common.ts";
-import {
-    checkCanDefendUnit,
-    getDefenseAmount,
-} from "../../tiles/utils/Common.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { UiTileViewData } from "../../ui/types/UiTileViewData.ts";
-import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import {
-    getUiTileViewClass,
-    getUiUnitViewClass,
-} from "../../ui/utils/UiFactory.ts";
-import {
-    Hp,
-    WeaponTypeId,
-} from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { getNormalizedHp } from "../../units/utils/Common.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
-import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 
 type CalculatorData = {
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     weatherType     : number;
-    attackerData    : DamageCalculatorPlayerData;
-    defenderData    : DamageCalculatorPlayerData;
+    attackerData    : AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData;
+    defenderData    : AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData;
 };
 type DamageInfo = {
     damage      : number;
@@ -93,107 +64,107 @@ type DamageRange = {
 let _savedData: CalculatorData | null = null;
 
 export interface OpenData {
-    war                     : IBwWar | null;
+    war                     : BaseWar_Interface_IBwWar.IBwWar | null;
     data                    : CalculatorData | null;
     needReviseWeaponType    : boolean;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnHelp!              : IUiButton;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayer1!         : IUiLabel;
-    private readonly _btnSelect1!           : IUiButton;
-    private readonly _labelPlayer2!         : IUiLabel;
-    private readonly _btnSelect2!           : IUiButton;
+    private readonly _labelPlayer1!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSelect1!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelPlayer2!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSelect2!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _imgCo1!               : IUiImage;
-    private readonly _imgCo2!               : IUiImage;
-    private readonly _btnSkill1!            : IUiButton;
-    private readonly _btnSkill2!            : IUiButton;
+    private readonly _imgCo1!               : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo2!               : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnSkill1!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSkill2!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _conTileView1!         : IUiContainer;
-    private readonly _conTileView2!         : IUiContainer;
-    private readonly _btnTileView1!         : IUiButton;
-    private readonly _btnTileView2!         : IUiButton;
+    private readonly _conTileView1!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conTileView2!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnTileView1!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnTileView2!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _conUnitView1!         : IUiContainer;
-    private readonly _conUnitView2!         : IUiContainer;
-    private readonly _btnUnitView1!         : IUiButton;
-    private readonly _btnUnitView2!         : IUiButton;
+    private readonly _conUnitView1!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conUnitView2!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnUnitView1!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnUnitView2!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnHp1!               : IUiButton;
-    private readonly _btnHp2!               : IUiButton;
-    private readonly _labelHp1!             : IUiLabel;
-    private readonly _labelHp2!             : IUiLabel;
+    private readonly _btnHp1!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHp2!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelHp1!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHp2!             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnWeapon1!           : IUiButton;
-    private readonly _btnWeapon2!           : IUiButton;
-    private readonly _labelWeapon1!         : IUiLabel;
-    private readonly _labelWeapon2!         : IUiLabel;
+    private readonly _btnWeapon1!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnWeapon2!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelWeapon1!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelWeapon2!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnPromotion1!        : IUiButton;
-    private readonly _btnPromotion2!        : IUiButton;
-    private readonly _labelPromotion1!      : IUiLabel;
-    private readonly _labelPromotion2!      : IUiLabel;
+    private readonly _btnPromotion1!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPromotion2!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelPromotion1!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPromotion2!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnTower1!            : IUiButton;
-    private readonly _btnTower2!            : IUiButton;
-    private readonly _labelTower1!          : IUiLabel;
-    private readonly _labelTower2!          : IUiLabel;
+    private readonly _btnTower1!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnTower2!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTower1!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTower2!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnOffenseBonus1!     : IUiButton;
-    private readonly _btnOffenseBonus2!     : IUiButton;
-    private readonly _labelOffenseBonus1!   : IUiLabel;
-    private readonly _labelOffenseBonus2!   : IUiLabel;
+    private readonly _btnOffenseBonus1!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnOffenseBonus2!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelOffenseBonus1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOffenseBonus2!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnDefenseBonus1!     : IUiButton;
-    private readonly _btnDefenseBonus2!     : IUiButton;
-    private readonly _labelDefenseBonus1!   : IUiLabel;
-    private readonly _labelDefenseBonus2!   : IUiLabel;
+    private readonly _btnDefenseBonus1!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDefenseBonus2!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelDefenseBonus1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDefenseBonus2!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnLuck1!             : IUiButton;
-    private readonly _btnLuck2!             : IUiButton;
-    private readonly _labelLuck1!           : IUiLabel;
-    private readonly _labelLuck2!           : IUiLabel;
+    private readonly _btnLuck1!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnLuck2!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelLuck1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLuck2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnCoOnboard1!        : IUiButton;
-    private readonly _btnCoOnboard2!        : IUiButton;
-    private readonly _labelCoOnboard1!      : IUiLabel;
-    private readonly _labelCoOnboard2!      : IUiLabel;
+    private readonly _btnCoOnboard1!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCoOnboard2!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCoOnboard1!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCoOnboard2!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnFund1!             : IUiButton;
-    private readonly _btnFund2!             : IUiButton;
-    private readonly _labelFund1!           : IUiLabel;
-    private readonly _labelFund2!           : IUiLabel;
+    private readonly _btnFund1!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnFund2!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelFund1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFund2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnCity1!             : IUiButton;
-    private readonly _btnCity2!             : IUiButton;
-    private readonly _labelCity1!           : IUiLabel;
-    private readonly _labelCity2!           : IUiLabel;
+    private readonly _btnCity1!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCity2!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCity1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCity2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnSwitchPlayer!      : IUiButton;
-    private readonly _btnSaveState!         : IUiButton;
-    private readonly _btnLoadState!         : IUiButton;
+    private readonly _btnSwitchPlayer!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSaveState!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnLoadState!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnWeather!           : IUiButton;
-    private readonly _labelWeather!         : IUiLabel;
+    private readonly _btnWeather!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelWeather!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutDamage!         : IUiLayout;
-    private readonly _layoutAttackDamage!   : IUiLayout;
-    private readonly _labelAttackTitle!     : IUiLabel;
-    private readonly _labelAttackDamage!    : IUiLabel;
+    private readonly _layoutDamage!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutAttackDamage!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelAttackTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAttackDamage!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutDefendDamage!   : IUiLayout;
-    private readonly _labelDefendTitle!     : IUiLabel;
-    private readonly _labelDefendDamage!    : IUiLabel;
+    private readonly _layoutDefendDamage!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDefendTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDefendDamage!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView1             = new (getUiUnitViewClass())();
-    private readonly _unitView2             = new (getUiUnitViewClass())();
-    private readonly _tileView1             = new (getUiTileViewClass())();
-    private readonly _tileView2             = new (getUiTileViewClass())();
+    private readonly _unitView1             = new Ui_Components_UiUnitView.UiUnitView();
+    private readonly _unitView2             = new Ui_Components_UiUnitView.UiUnitView();
+    private readonly _tileView1             = new Ui_Components_UiTileView.UiTileView();
+    private readonly _tileView2             = new Ui_Components_UiTileView.UiTileView();
 
     private _calculatorData?                : CalculatorData;
 
@@ -238,9 +209,9 @@ export class Panel extends UiPanel<OpenData> {
             { ui : this._btnWeather,                 callback : this._onTouchedBtnWeather },
         ]);
         this._setNotifyListenerArray([
-            { type : TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
-            { type : TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
-            { type : TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
         ]);
 
         this._setIsTouchMaskEnabled();
@@ -284,22 +255,22 @@ export class Panel extends UiPanel<OpenData> {
         this._updateView();
     }
 
-    public static createDefaultPlayerData(gameConfig: GameConfig): DamageCalculatorPlayerData {
+    public static createDefaultPlayerData(gameConfig: GameConfigs_GameConfig.GameConfig): AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData {
         const unitType = gameConfig.getFirstUnitType();
-        return new DamageCalculatorPlayerData({
-            coId                   : CoId.Empty,
-            coSkillType            : SkillTypeId.Passive,
+        return new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
+            coId                   : Cos_Constants.CoId.Empty,
+            coSkillType            : CoSkills_Constants.SkillTypeId.Passive,
             unitType               : unitType,
-            unitHp                 : Hp.MaxHp,
-            unitWeaponType         : WeaponTypeId.Primary,
+            unitHp                 : Units_Constants.Hp.MaxHp,
+            unitWeaponType         : Units_Constants.WeaponTypeId.Primary,
             unitPromotion          : 0,
-            tileType               : getExisted(gameConfig.getTileType(getDefaultTileBaseType(), ObjectTypeId.Empty)),
+            tileType               : Helpers_Misc.getExisted(gameConfig.getTileType(TileBases_Utils.getDefaultTileBaseType(), Tiles_Constants_Common.ObjectTypeId.Empty)),
             tileCustomBuildingData : null,
             towersCount            : 0,
             offenseBonus           : 0,
             defenseBonus           : 0,
             upperLuck              : gameConfig.getSystemCfg().getDefaultLuckUpperLimit(),
-            lowerLuck              : Luck.DefaultLowerLimit,
+            lowerLuck              : PlayerRules_Constants.Luck.DefaultLowerLimit,
             coOnboard              : false,
             hasPrimaryAmmo         : !!gameConfig.getUnitTemplateCfg(unitType)?.getPrimaryWeaponMaxAmmo(),
             fund                   : 0,
@@ -311,20 +282,20 @@ export class Panel extends UiPanel<OpenData> {
         this._calculatorData = data;
     }
     private _getCalculatorData(): CalculatorData {
-        return getExisted(this._calculatorData);
+        return Helpers_Misc.getExisted(this._calculatorData);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.B1111),
-            getContent : () => getText(TextType.A0033),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1111),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0033),
         });
     }
 
     private _onTouchedBtnSelect1(): void {
-        const war = getExisted(this.getOpenData()?.war);
-        openPanel(getDict().BwUnitListPanel, {
+        const war = Helpers_Misc.getExisted(this.getOpenData()?.war);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                   : war,
             callbackForMoveCursor : () => {
                 // nothing to do
@@ -333,13 +304,13 @@ export class Panel extends UiPanel<OpenData> {
                 this._getCalculatorData().attackerData = this._createPlayerDataForUnit(unit);
                 this._reviseWeaponType();
                 this._updateView();
-                closePanel(getDict().BwUnitListPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
     }
     private _onTouchedBtnSelect2(): void {
-        const war = getExisted(this.getOpenData()?.war);
-        openPanel(getDict().BwUnitListPanel, {
+        const war = Helpers_Misc.getExisted(this.getOpenData()?.war);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
             war                   : war,
             callbackForMoveCursor : () => {
                 // nothing to do
@@ -348,11 +319,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._getCalculatorData().defenderData = this._createPlayerDataForUnit(unit);
                 this._reviseWeaponType();
                 this._updateView();
-                closePanel(getDict().BwUnitListPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
     }
-    private _createPlayerDataForUnit(attackerUnit: IUnit): DamageCalculatorPlayerData {
+    private _createPlayerDataForUnit(attackerUnit: Units_IUnit.IUnit): AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData {
         const attackerPlayerIndex   = attackerUnit.getPlayerIndex();
         const attackerPlayer        = attackerUnit.getPlayer();
         const attackerGridIndex     = attackerUnit.getGridIndex();
@@ -363,12 +334,12 @@ export class Panel extends UiPanel<OpenData> {
         const hasFog                = war.getFogMap().checkHasFogCurrently();
         const attackerTile          = tileMap.getTile(attackerGridIndex);
         const allTiles              = tileMap.getAllTiles();
-        const allCities             = allTiles.filter(v => v.getTileTypeId() === TileTypeId.City);
-        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === TileTypeId.CommandTower);
+        const allCities             = allTiles.filter(v => v.getTileTypeId() === Tiles_Constants_Common.TileTypeId.City);
+        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === Tiles_Constants_Common.TileTypeId.CommandTower);
         const watcherTeamIndexes    = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const canSeeHiddenInfo1     = (!hasFog) || (watcherTeamIndexes.has(attackerPlayer.getTeamIndex()));
         const playerRule            = commonSettingsManager.getPlayerRule(attackerPlayerIndex);
-        const getIsAffectedByCo1    = createLazyFunc((): boolean => {
+        const getIsAffectedByCo1    = Helpers_Misc.createLazyFunc((): boolean => {
             if ((attackerUnit.getIsCoOnboard()) || (!gameConfig.getCoBasicCfg(attackerPlayer.getCoId())?.getMaxBoardCount())) {
                 return true;
             }
@@ -376,11 +347,11 @@ export class Panel extends UiPanel<OpenData> {
             const distance = attackerGridIndex.getMinDistance(attackerPlayer.getCoGridIndexListOnMap());
             return (distance != null) && (distance <= attackerPlayer.getCoZoneRadius());
         });
-        return new DamageCalculatorPlayerData({
+        return new AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData({
             coId        : attackerPlayer.getCoId(),
             coSkillType : attackerPlayer.checkCoIsUsingActiveSkill()
                 ? attackerPlayer.getCoUsingSkillType()
-                : (getIsAffectedByCo1() ? SkillTypeId.Passive : null),
+                : (getIsAffectedByCo1() ? CoSkills_Constants.SkillTypeId.Passive : null),
             unitType               : attackerUnit.getUnitType(),
             unitHp                 : attackerUnit.getCurrentHp(),
             unitWeaponType         : null,
@@ -405,9 +376,9 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedImgCo2(): void {
         this._handleTouchedImgCo(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedImgCo(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedImgCo(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const gameConfig = this._getCalculatorData().gameConfig;
-        openPanel(getDict().CommonChooseSingleCoIdPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
             gameConfig         : gameConfig,
             currentCoId        : playerData.coId,
             availableCoIdArray : gameConfig.getAllEnabledCoArray().map(v => v.getCoId()),
@@ -418,7 +389,7 @@ export class Panel extends UiPanel<OpenData> {
             },
         });
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnSkill1(): void {
@@ -427,7 +398,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnSkill2(): void {
         this._handleTouchedBtnSkill(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnSkill(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnSkill(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         playerData.coSkillType  = getNextCoSkillType(this._getCalculatorData().gameConfig, playerData.coId, playerData.coSkillType);
         this._updateView();
     }
@@ -438,15 +409,15 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnUnitView2(): void {
         this._handleTouchedConUnitView(this.getOpenData()?.war, this._getCalculatorData().defenderData, 2);
     }
-    private _handleTouchedConUnitView(war: Undefinable<IBwWar>, playerData: DamageCalculatorPlayerData, playerIndex: number): void {
+    private _handleTouchedConUnitView(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerIndex: number): void {
         const gameConfig = this._getCalculatorData().gameConfig;
-        openPanel(getDict().CommonChooseSingleUnitTypePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleUnitTypePanel, {
             gameConfig       : gameConfig,
             currentUnitType  : playerData.unitType,
             unitTypeArray    : gameConfig.getAllUnitTypeArray(),
             playerIndex      : playerIndex,
-            skinId           : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? getDefaultSkinId(playerIndex),
-            overridingSkinId : war == null ? undefined : getRawOverridingSkinId(war, playerIndex),
+            skinId           : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId : war == null ? undefined : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
             callback         : unitType => {
                 if (playerData.unitType !== unitType) {
                     playerData.unitType         = unitType;
@@ -465,14 +436,14 @@ export class Panel extends UiPanel<OpenData> {
         this._doReviseWeaponType(playerData1, playerData2);
         this._doReviseWeaponType(playerData2, playerData1);
     }
-    private _doReviseWeaponType(playerData1: DamageCalculatorPlayerData, playerData2: DamageCalculatorPlayerData): void {
+    private _doReviseWeaponType(playerData1: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData, playerData2: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const gameConfig    = this._getCalculatorData().gameConfig;
-        const armorType2    = getExisted(gameConfig.getUnitTemplateCfg(playerData2.unitType)?.getArmorTypeId());
+        const armorType2    = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(playerData2.unitType)?.getArmorTypeId());
         const damageCfg     = (gameConfig.getDamageChartCfgs(playerData1.unitType) ?? {})[armorType2];
-        if ((damageCfg[WeaponTypeId.Primary].getDamage() != null) && (playerData1.hasPrimaryAmmo)) {
-            playerData1.unitWeaponType = WeaponTypeId.Primary;
-        } else if (damageCfg[WeaponTypeId.Secondary].getDamage() != null) {
-            playerData1.unitWeaponType = WeaponTypeId.Secondary;
+        if ((damageCfg[Units_Constants.WeaponTypeId.Primary].getDamage() != null) && (playerData1.hasPrimaryAmmo)) {
+            playerData1.unitWeaponType = Units_Constants.WeaponTypeId.Primary;
+        } else if (damageCfg[Units_Constants.WeaponTypeId.Secondary].getDamage() != null) {
+            playerData1.unitWeaponType = Units_Constants.WeaponTypeId.Secondary;
         } else {
             playerData1.unitWeaponType = null;
         }
@@ -484,9 +455,9 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnTileView2(): void {
         this._handleTouchedConTileView(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedConTileView(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedConTileView(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const gameConfig = this._getCalculatorData().gameConfig;
-        openPanel(getDict().CommonChooseSingleTileTypePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleTileTypePanel, {
             gameConfig      : gameConfig,
             currentTileType : playerData.tileType,
             tileTypeArray   : gameConfig.getTileTypeArrayForTileChart(),
@@ -503,12 +474,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnHp2(): void {
         this._handleTouchedBtnHp(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnHp(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnHp(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.unitHp;
         const minValue      = 1;
-        const maxValue      = Hp.MaxHp;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.Hp),
+        const maxValue      = Units_Constants.Hp.MaxHp;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -525,7 +496,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnWeapon2(): void {
         this._handleTouchedBtnWeapon(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnWeapon(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnWeapon(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         playerData.unitWeaponType = getNextUnitWeaponType(this._getCalculatorData().gameConfig, playerData.unitType, playerData.unitWeaponType);
         this._updateView();
     }
@@ -536,7 +507,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnPromotion2(): void {
         this._handleTouchedBtnPromotion(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnPromotion(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnPromotion(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const minValue              = 0;
         const maxValue              = this._getCalculatorData().gameConfig.getUnitMaxPromotion();
         const newValue              = playerData.unitPromotion + 1;
@@ -550,12 +521,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnTower2(): void {
         this._handleTouchedBtnTower(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnTower(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnTower(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.towersCount;
         const minValue      = 0;
         const maxValue      = 999;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.B0833),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0833),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -572,12 +543,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnOffenseBonus2(): void {
         this._handleTouchedBtnOffenseBonus(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnOffenseBonus(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnOffenseBonus(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.offenseBonus;
         const minValue      = -10000;
         const maxValue      = 10000;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.B0183),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0183),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -594,12 +565,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnDefenseBonus2(): void {
         this._handleTouchedBtnDefenseBonus(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnDefenseBonus(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnDefenseBonus(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.defenseBonus;
-        const minValue      = DefenseModifier.MinLimit;
-        const maxValue      = DefenseModifier.MaxLimit;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.DefBonus$),
+        const minValue      = PlayerRules_Constants.DefenseModifier.MinLimit;
+        const maxValue      = PlayerRules_Constants.DefenseModifier.MaxLimit;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -616,9 +587,9 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnLuck2(): void {
         this._handleTouchedBtnLuck(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnLuck(playerData: DamageCalculatorPlayerData): void {
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.B0189),
+    private _handleTouchedBtnLuck(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0189),
             currentValue : playerData.lowerLuck,
             minValue     : -10000,
             maxValue     : playerData.upperLuck,
@@ -626,8 +597,8 @@ export class Panel extends UiPanel<OpenData> {
                 playerData.lowerLuck = newLowerLuck;
                 this._updateView();
 
-                openPanel(getDict().CommonInputIntegerPanel, {
-                    getTitle     : () => getText(TextType.B0190),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0190),
                     currentValue : playerData.upperLuck,
                     minValue     : playerData.lowerLuck,
                     maxValue     : 10000,
@@ -646,7 +617,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnCoOnboard2(): void {
         this._handleTouchedBtnCoOnboard(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnCoOnboard(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnCoOnboard(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         playerData.coOnboard = !playerData.coOnboard;
         this._updateView();
     }
@@ -657,12 +628,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnFund2(): void {
         this._handleTouchedBtnFund(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnFund(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnFund(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.fund;
         const minValue      = -10000000;
         const maxValue      = 10000000;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.Fund),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Fund),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -679,12 +650,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnCity2(): void {
         this._handleTouchedBtnProperty(this._getCalculatorData().defenderData);
     }
-    private _handleTouchedBtnProperty(playerData: DamageCalculatorPlayerData): void {
+    private _handleTouchedBtnProperty(playerData: AuxiliaryTypes_DamageCalculatorPlayerData.DamageCalculatorPlayerData): void {
         const currValue     = playerData.citiesCount;
         const minValue      = 0;
         const maxValue      = 999;
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle     : () => getText(TextType.B0834),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0834),
             currentValue : currValue,
             minValue,
             maxValue,
@@ -704,12 +675,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnSaveState(): void {
         _savedData = cloneCalculatorData(this._getCalculatorData());
 
-        show(getText(TextType.A0288));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0288));
     }
     private _onTouchedBtnLoadState(): void {
         const savedData = _savedData;
         if (savedData == null) {
-            show(getText(TextType.A0289));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0289));
         } else {
             this._setCalculatorData(cloneCalculatorData(savedData));
             this._updateView();
@@ -728,7 +699,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyUnitAnimationTick(): void {
-        const tickCount = getUnitAnimationTickCount();
+        const tickCount = Common_Model_CommonModel.getUnitAnimationTickCount();
         this._unitView1.updateOnAnimationTick(tickCount);
         this._unitView2.updateOnAnimationTick(tickCount);
     }
@@ -749,8 +720,8 @@ export class Panel extends UiPanel<OpenData> {
         const canSelect     = war != null;
         this._btnSelect1.setIsVisible(canSelect);
         this._btnSelect2.setIsVisible(canSelect);
-        this._imgCo1.loadSource(getCoEye(gameConfig, attackerData.coId, true) ?? UndefinedError);
-        this._imgCo2.loadSource(getCoEye(gameConfig, defenderData.coId, true) ?? UndefinedError);
+        this._imgCo1.loadSource(Helpers_ImageSource.getCoEye(gameConfig, attackerData.coId, true) ?? Lang_Constants.UndefinedError);
+        this._imgCo2.loadSource(Helpers_ImageSource.getCoEye(gameConfig, defenderData.coId, true) ?? Lang_Constants.UndefinedError);
         this._labelHp1.setText(`${attackerData.unitHp}`);
         this._labelHp2.setText(`${defenderData.unitHp}`);
         this._labelPromotion1.setText(`${attackerData.unitPromotion}`);
@@ -765,13 +736,13 @@ export class Panel extends UiPanel<OpenData> {
         this._labelLuck2.setText(`${defenderData.lowerLuck}\n${defenderData.upperLuck}`);
         this._labelFund1.setText(`${attackerData.fund}`);
         this._labelFund2.setText(`${defenderData.fund}`);
-        this._labelCoOnboard1.setLangText(attackerData.coOnboard ? TextType.Yes : TextType.No);
-        this._labelCoOnboard2.setLangText(defenderData.coOnboard ? TextType.Yes : TextType.No);
+        this._labelCoOnboard1.setLangText(attackerData.coOnboard ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
+        this._labelCoOnboard2.setLangText(defenderData.coOnboard ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._labelCity1.setText(`${attackerData.citiesCount}`);
         this._labelCity2.setText(`${defenderData.citiesCount}`);
         this._labelWeapon1.setText(getWeaponTypeName(attackerData.unitWeaponType));
         this._labelWeapon2.setText(getWeaponTypeName(defenderData.unitWeaponType));
-        this._labelWeather.setText(getWeatherName(data.weatherType, gameConfig) ?? UndefinedError);
+        this._labelWeather.setText(Lang_Utils.getWeatherName(data.weatherType, gameConfig) ?? Lang_Constants.UndefinedError);
         this._unitView1.update(createUnitViewData(war, attackerData.unitType, 1, gameConfig));
         this._unitView2.update(createUnitViewData(war, defenderData.unitType, 2, gameConfig));
         this._tileView1.init(createTileViewData(war, attackerData.tileType, 1, gameConfig)).updateView();
@@ -780,45 +751,45 @@ export class Panel extends UiPanel<OpenData> {
         {
             const coSkillType1  = attackerData.coSkillType;
             const coSkillType2  = defenderData.coSkillType;
-            this._btnSkill1.setText(coSkillType1 == null ? getText(TextType.B0829) : (getCoSkillTypeName(coSkillType1) ?? UndefinedError));
-            this._btnSkill2.setText(coSkillType2 == null ? getText(TextType.B0829) : (getCoSkillTypeName(coSkillType2) ?? UndefinedError));
+            this._btnSkill1.setText(coSkillType1 == null ? Lang_Utils.getText(Lang_Constants.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType1) ?? Lang_Constants.UndefinedError));
+            this._btnSkill2.setText(coSkillType2 == null ? Lang_Utils.getText(Lang_Constants.TextType.B0829) : (Lang_Utils.getCoSkillTypeName(coSkillType2) ?? Lang_Constants.UndefinedError));
         }
 
         this._updateComponentsForDamage();
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0828);
-        this._labelPlayer1.setLangText(TextType.B0831);
-        this._labelPlayer2.setLangText(TextType.B0832);
-        this._btnSelect1.setLangText(TextType.B0258);
-        this._btnSelect2.setLangText(TextType.B0258);
-        this._btnHp1.setLangText(TextType.Hp);
-        this._btnHp2.setLangText(TextType.Hp);
-        this._btnWeapon1.setLangText(TextType.B0830);
-        this._btnWeapon2.setLangText(TextType.B0830);
-        this._btnPromotion1.setLangText(TextType.Promotion);
-        this._btnPromotion2.setLangText(TextType.Promotion);
-        this._btnTower1.setLangText(TextType.B0833);
-        this._btnTower2.setLangText(TextType.B0833);
-        this._btnOffenseBonus1.setLangText(TextType.B0183);
-        this._btnOffenseBonus2.setLangText(TextType.B0183);
-        this._btnDefenseBonus1.setLangText(TextType.DefBonus$);
-        this._btnDefenseBonus2.setLangText(TextType.DefBonus$);
-        this._btnLuck1.setLangText(TextType.B1352);
-        this._btnLuck2.setLangText(TextType.B1352);
-        this._btnCoOnboard1.setLangText(TextType.CoOnboard);
-        this._btnCoOnboard2.setLangText(TextType.CoOnboard);
-        this._btnFund1.setLangText(TextType.Fund);
-        this._btnFund2.setLangText(TextType.Fund);
-        this._btnCity1.setLangText(TextType.B0834);
-        this._btnCity2.setLangText(TextType.B0834);
-        this._btnSwitchPlayer.setLangText(TextType.B0835);
-        this._btnSaveState.setLangText(TextType.B0844);
-        this._btnLoadState.setLangText(TextType.B0845);
-        this._btnWeather.setLangText(TextType.Weather);
-        this._labelAttackTitle.setText(`${getText(TextType.B0039)}:`);
-        this._labelDefendTitle.setText(`${getText(TextType.B0837)}:`);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0828);
+        this._labelPlayer1.setLangText(Lang_Constants.TextType.B0831);
+        this._labelPlayer2.setLangText(Lang_Constants.TextType.B0832);
+        this._btnSelect1.setLangText(Lang_Constants.TextType.B0258);
+        this._btnSelect2.setLangText(Lang_Constants.TextType.B0258);
+        this._btnHp1.setLangText(Lang_Constants.TextType.Hp);
+        this._btnHp2.setLangText(Lang_Constants.TextType.Hp);
+        this._btnWeapon1.setLangText(Lang_Constants.TextType.B0830);
+        this._btnWeapon2.setLangText(Lang_Constants.TextType.B0830);
+        this._btnPromotion1.setLangText(Lang_Constants.TextType.Promotion);
+        this._btnPromotion2.setLangText(Lang_Constants.TextType.Promotion);
+        this._btnTower1.setLangText(Lang_Constants.TextType.B0833);
+        this._btnTower2.setLangText(Lang_Constants.TextType.B0833);
+        this._btnOffenseBonus1.setLangText(Lang_Constants.TextType.B0183);
+        this._btnOffenseBonus2.setLangText(Lang_Constants.TextType.B0183);
+        this._btnDefenseBonus1.setLangText(Lang_Constants.TextType.DefBonus$);
+        this._btnDefenseBonus2.setLangText(Lang_Constants.TextType.DefBonus$);
+        this._btnLuck1.setLangText(Lang_Constants.TextType.B1352);
+        this._btnLuck2.setLangText(Lang_Constants.TextType.B1352);
+        this._btnCoOnboard1.setLangText(Lang_Constants.TextType.CoOnboard);
+        this._btnCoOnboard2.setLangText(Lang_Constants.TextType.CoOnboard);
+        this._btnFund1.setLangText(Lang_Constants.TextType.Fund);
+        this._btnFund2.setLangText(Lang_Constants.TextType.Fund);
+        this._btnCity1.setLangText(Lang_Constants.TextType.B0834);
+        this._btnCity2.setLangText(Lang_Constants.TextType.B0834);
+        this._btnSwitchPlayer.setLangText(Lang_Constants.TextType.B0835);
+        this._btnSaveState.setLangText(Lang_Constants.TextType.B0844);
+        this._btnLoadState.setLangText(Lang_Constants.TextType.B0845);
+        this._btnWeather.setLangText(Lang_Constants.TextType.Weather);
+        this._labelAttackTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0039)}:`);
+        this._labelDefendTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0837)}:`);
     }
 
     private _updateComponentsForDamage(): void {
@@ -826,7 +797,7 @@ export class Panel extends UiPanel<OpenData> {
         const attackDamageInfoArray = getAttackDamageInfoArray(calculatorData, false);
         const labelAttackDamage     = this._labelAttackDamage;
         if (!attackDamageInfoArray.length) {
-            labelAttackDamage.setLangText(TextType.B0836);
+            labelAttackDamage.setLangText(Lang_Constants.TextType.B0836);
         } else {
             labelAttackDamage.setText(`${attackDamageInfoArray[0].damage} ~ ${attackDamageInfoArray[attackDamageInfoArray.length - 1].damage}`);
         }
@@ -841,9 +812,9 @@ export class Panel extends UiPanel<OpenData> {
         const counterDamageDict = new Map<number, { range: DamageRange | null, possibility: number }>();
         for (const info of revisedAttackDamageInfoArray) {
             const unitHp        = Math.max(calculatorData.defenderData.unitHp - info.damage, 0);
-            const normalizedHp  = getNormalizedHp(unitHp);
+            const normalizedHp  = Units_Utils_Common.getNormalizedHp(unitHp);
             if (counterDamageDict.has(normalizedHp)) {
-                getExisted(counterDamageDict.get(normalizedHp)).possibility += info.possibility;
+                Helpers_Misc.getExisted(counterDamageDict.get(normalizedHp)).possibility += info.possibility;
                 continue;
             }
 
@@ -858,9 +829,9 @@ export class Panel extends UiPanel<OpenData> {
         const textArray: string[] = [];
         for (const [normalizedHp, info] of counterDamageDict) {
             const range                 = info.range;
-            const textForPossibility    = `(${format(`%.2f`, info.possibility * 100)}%)`;
+            const textForPossibility    = `(${Helpers_Text.format(`%.2f`, info.possibility * 100)}%)`;
             if (range == null) {
-                textArray.push(`@${normalizedHp}HP${textForPossibility}: ${getText(TextType.B0836)}`);
+                textArray.push(`@${normalizedHp}HP${textForPossibility}: ${Lang_Utils.getText(Lang_Constants.TextType.B0836)}`);
             } else {
                 textArray.push(`@${normalizedHp}HP${textForPossibility}: ${range.minDamage} ~ ${range.maxDamage}`);
             }
@@ -884,7 +855,7 @@ function cloneCalculatorData(data: CalculatorData): CalculatorData {
 }
 
 async function createDefaultCalculatorData(): Promise<CalculatorData> {
-    const gameConfig = await getLatestGameConfig();
+    const gameConfig = await GameConfigs_Provider.getLatestGameConfig();
     return {
         gameConfig,
         weatherType  : gameConfig.getDefaultWeatherType(),
@@ -892,59 +863,59 @@ async function createDefaultCalculatorData(): Promise<CalculatorData> {
         defenderData : Panel.createDefaultPlayerData(gameConfig),
     };
 }
-function getNextCoSkillType(gameConfig: GameConfig, coId: number, skillType: Undefinable<SkillTypeId>): SkillTypeId | null {
-    if (coId === CoId.Empty) {
+function getNextCoSkillType(gameConfig: GameConfigs_GameConfig.GameConfig, coId: number, skillType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CoSkills_Constants.SkillTypeId>): CoSkills_Constants.SkillTypeId | null {
+    if (coId === Cos_Constants.CoId.Empty) {
         return null;
     }
 
     const cfg = gameConfig.getCoBasicCfg(coId);
     if (skillType == null) {
-        return SkillTypeId.Passive;
+        return CoSkills_Constants.SkillTypeId.Passive;
 
-    } else if (skillType === SkillTypeId.Passive) {
+    } else if (skillType === CoSkills_Constants.SkillTypeId.Passive) {
         if (cfg?.getPowerSkillIds()?.length) {
-            return SkillTypeId.Power;
+            return CoSkills_Constants.SkillTypeId.Power;
         } else {
-            return getNextCoSkillType(gameConfig, coId, SkillTypeId.Power);
+            return getNextCoSkillType(gameConfig, coId, CoSkills_Constants.SkillTypeId.Power);
         }
 
-    } else if (skillType === SkillTypeId.Power) {
+    } else if (skillType === CoSkills_Constants.SkillTypeId.Power) {
         if (cfg?.getSuperPowerSkillIds()?.length) {
-            return SkillTypeId.SuperPower;
+            return CoSkills_Constants.SkillTypeId.SuperPower;
         } else {
-            return getNextCoSkillType(gameConfig, coId, SkillTypeId.SuperPower);
+            return getNextCoSkillType(gameConfig, coId, CoSkills_Constants.SkillTypeId.SuperPower);
         }
 
     } else {
         return null;
     }
 }
-function getNextUnitWeaponType(gameConfig: GameConfig, unitType: number, weaponType: Undefinable<WeaponTypeId>): WeaponTypeId | null {
+function getNextUnitWeaponType(gameConfig: GameConfigs_GameConfig.GameConfig, unitType: number, weaponType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Units_Constants.WeaponTypeId>): Units_Constants.WeaponTypeId | null {
     const cfg = gameConfig.getUnitTemplateCfg(unitType);
     if (weaponType == null) {
         if (cfg?.getPrimaryWeaponMaxAmmo() != null) {
-            return WeaponTypeId.Primary;
+            return Units_Constants.WeaponTypeId.Primary;
         } else {
-            return getNextUnitWeaponType(gameConfig, unitType, WeaponTypeId.Primary);
+            return getNextUnitWeaponType(gameConfig, unitType, Units_Constants.WeaponTypeId.Primary);
         }
 
-    } else if (weaponType === WeaponTypeId.Primary) {
+    } else if (weaponType === Units_Constants.WeaponTypeId.Primary) {
         if (gameConfig.checkHasSecondaryWeapon(unitType)) {
-            return WeaponTypeId.Secondary;
+            return Units_Constants.WeaponTypeId.Secondary;
         } else {
-            return getNextUnitWeaponType(gameConfig, unitType, WeaponTypeId.Secondary);
+            return getNextUnitWeaponType(gameConfig, unitType, Units_Constants.WeaponTypeId.Secondary);
         }
 
     } else {
         return null;
     }
 }
-function createUnitViewData(war: Undefinable<IBwWar>, unitType: number, playerIndex: number, gameConfig: GameConfig): UiUnitViewData {
-    return new UiUnitViewData({
+function createUnitViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, unitType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Ui_Types_UiUnitViewData.UiUnitViewData {
+    return new Ui_Types_UiUnitViewData.UiUnitViewData({
         gameConfig       : gameConfig,
-        skinId           : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? getDefaultSkinId(playerIndex),
-        overridingSkinId : war == null ? undefined : getRawOverridingSkinId(war, playerIndex),
-        unitData         : createDefault({
+        skinId           : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
+        overridingSkinId : war == null ? undefined : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
+        unitData         : Units_Utils_Serialization.createDefault({
             gridIndex   : { x : 0, y : 0 },
             unitTypeId  : unitType,
             playerIndex : playerIndex,
@@ -953,10 +924,10 @@ function createUnitViewData(war: Undefinable<IBwWar>, unitType: number, playerIn
         }),
     });
 }
-function createTileViewData(war: Undefinable<IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfig): UiTileViewData {
-    const objectType    = getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
-    const baseType      = getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
-    if (checkIsValidPlayerIndexForTileObject({
+function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>, tileType: number, playerIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Ui_Types_UiTileViewData.UiTileViewData {
+    const objectType    = Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
+    const baseType      = Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
+    if (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({
         playerIndex    : playerIndex,
         tileObjectType : objectType
     })) {
@@ -967,8 +938,8 @@ function createTileViewData(war: Undefinable<IBwWar>, tileType: number, playerIn
             tileDecorationShapeId : null,
             tileObjectType        : objectType,
             tileObjectShapeId     : 0,
-            skinId                : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? getDefaultSkinId(playerIndex),
-            overridingSkinId      : war == null ? undefined : getRawOverridingSkinId(war, playerIndex),
+            skinId                : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId      : war == null ? undefined : ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex),
             gameConfig            : gameConfig,
         };
     } else {
@@ -979,18 +950,18 @@ function createTileViewData(war: Undefinable<IBwWar>, tileType: number, playerIn
             tileDecorationShapeId : null,
             tileObjectType        : objectType,
             tileObjectShapeId     : 0,
-            skinId                : getDefaultSkinId(PlayerIndex.Neutral),
+            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
             overridingSkinId      : undefined,
             gameConfig            : gameConfig,
         };
     }
 }
 
-function getWeaponTypeName(weaponType: Undefinable<WeaponTypeId>): string {
+function getWeaponTypeName(weaponType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Units_Constants.WeaponTypeId>): string {
     if (weaponType == null) {
-        return getText(TextType.None);
+        return Lang_Utils.getText(Lang_Constants.TextType.None);
     } else {
-        return getText(weaponType === WeaponTypeId.Primary ? TextType.B0692 : TextType.B0693);
+        return Lang_Utils.getText(weaponType === Units_Constants.WeaponTypeId.Primary ? Lang_Constants.TextType.B0692 : Lang_Constants.TextType.B0693);
     }
 }
 
@@ -1064,17 +1035,17 @@ function getAttackDamageRange(calculatorData: CalculatorData, isCounter: boolean
 }
 
 function getCfgDamage({ gameConfig, attackerUnitType, defenderUnitType, weaponType }: {
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     attackerUnitType    : number;
     defenderUnitType    : number;
-    weaponType          : Undefinable<WeaponTypeId>;
-}): Undefinable<number> {
+    weaponType          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<Units_Constants.WeaponTypeId>;
+}): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     if (weaponType == null) {
         return null;
     }
 
-    const armorType = getExisted(gameConfig.getUnitTemplateCfg(defenderUnitType)?.getArmorTypeId());
-    return getExisted(gameConfig.getDamageChartCfgs(attackerUnitType))[armorType][weaponType].getDamage();
+    const armorType = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(defenderUnitType)?.getArmorTypeId());
+    return Helpers_Misc.getExisted(gameConfig.getDamageChartCfgs(attackerUnitType))[armorType][weaponType].getDamage();
 }
 function getLuckLimitModifierByCo(calculatorData: CalculatorData): { lower: number, upper: number } {
     const gameConfig            = calculatorData.gameConfig;
@@ -1083,7 +1054,7 @@ function getLuckLimitModifierByCo(calculatorData: CalculatorData): { lower: numb
     let lowerModifier           = 0;
     let upperModifier           = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, attackerData.coId, attackerData.coSkillType)) {
-        const offsets = getTotalOffsetForDamageCalculatorPanel({
+        const offsets = CoSkills_Utils_Persistent_SelfUnitLuckRange.getTotalOffsetForDamageCalculatorPanel({
             cfg        : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
             gameConfig : gameConfig,
             unitTypeId : attackerUnitTypeId,
@@ -1106,16 +1077,16 @@ function getAttackerLuckLimit(calculatorData: CalculatorData): { lower: number, 
     };
 }
 function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, tileCustomBuildingData, coId, coSkillType }: {
-    gameConfig              : GameConfig;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     unitType                : number;
     unitHp                  : number;
     tileType                : number;
-    tileCustomBuildingData  : Undefinable<TileCustomBuildingData>;
+    tileCustomBuildingData  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomBuildingData>;
     coId                    : number;
-    coSkillType             : Undefinable<number>;
+    coSkillType             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 }): number {
-    const tileTemplateCfg = getExisted(gameConfig.getTileTemplateCfg(tileType));
-    if (!checkCanDefendUnit({
+    const tileTemplateCfg = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(tileType));
+    if (!Tiles_Utils_Common.checkCanDefendUnit({
         templateCfg        : tileTemplateCfg,
         customBuildingData : tileCustomBuildingData,
         gameConfig         : gameConfig,
@@ -1124,7 +1095,7 @@ function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, t
         return 0;
     }
 
-    const rawDefenseAmount = getDefenseAmount(tileTemplateCfg, tileCustomBuildingData);
+    const rawDefenseAmount = Tiles_Utils_Common.getDefenseAmount(tileTemplateCfg, tileCustomBuildingData);
     for (const skillId of getCoSkillIdArray(gameConfig, coId, coSkillType)) {
         const skillCfg = gameConfig.getCoSkillCfg(skillId);
         if (skillCfg == null) {
@@ -1141,16 +1112,16 @@ function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, t
         }
     }
 
-    return rawDefenseAmount * getNormalizedHp(unitHp) / getNormalizedHp(Hp.MaxHp);
+    return rawDefenseAmount * Units_Utils_Common.getNormalizedHp(unitHp) / Units_Utils_Common.getNormalizedHp(Units_Constants.Hp.MaxHp);
 }
-function getCoSkillIdArray(gameConfig: GameConfig, coId: number, skillType: Undefinable<SkillTypeId>): number[] {
+function getCoSkillIdArray(gameConfig: GameConfigs_GameConfig.GameConfig, coId: number, skillType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CoSkills_Constants.SkillTypeId>): number[] {
     if (skillType == null) {
         return [];
     } else {
         const cfg = gameConfig.getCoBasicCfg(coId);
-        if (skillType === SkillTypeId.Passive) {
+        if (skillType === CoSkills_Constants.SkillTypeId.Passive) {
             return cfg?.getPassiveSkillIds() ?? [];
-        } else if (skillType === SkillTypeId.Power) {
+        } else if (skillType === CoSkills_Constants.SkillTypeId.Power) {
             return cfg?.getPowerSkillIds() ?? [];
         } else {
             return cfg?.getSuperPowerSkillIds() ?? [];
@@ -1164,7 +1135,7 @@ function getAttackModifierByCo({ isCounter, calculatorData }: {
     const attackerData          = calculatorData.attackerData;
     const attackerCoId          = attackerData.coId;
     const attackerCoSkillType   = attackerData.coSkillType;
-    if ((attackerCoId === CoId.Empty) || (attackerCoSkillType == null)) {
+    if ((attackerCoId === Cos_Constants.CoId.Empty) || (attackerCoSkillType == null)) {
         return 0;
     }
 
@@ -1176,19 +1147,19 @@ function getAttackModifierByCo({ isCounter, calculatorData }: {
     const attackerPromotion                 = attackerData.unitPromotion;
     const attackerTileCustomBuildingData    = attackerData.tileCustomBuildingData;
     const attackerIsCoOnboard               = attackerData.coOnboard;
-    const attackerTileCfg                   = getExisted(gameConfig.getTileTemplateCfg(attackerTileTypeId));
-    const attackerTileDefenseAmount         = getDefenseAmount(attackerTileCfg, attackerTileCustomBuildingData);
-    const canAttackerTileDefendUnit         = checkCanDefendUnit({
+    const attackerTileCfg                   = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(attackerTileTypeId));
+    const attackerTileDefenseAmount         = Tiles_Utils_Common.getDefenseAmount(attackerTileCfg, attackerTileCustomBuildingData);
+    const canAttackerTileDefendUnit         = Tiles_Utils_Common.checkCanDefendUnit({
         gameConfig         : gameConfig,
         templateCfg        : attackerTileCfg,
         customBuildingData : attackerTileCustomBuildingData,
         unitType           : attackerUnitTypeId
     });
     const weatherTypeId                     = calculatorData.weatherType;
-    const getOwnTilesCount                  = createLazyFunc2(() => attackerData.citiesCount);  // TODO: 这里做了简化处理（因为只有kindle有这个技能），以后如果有类似的新技能，就需要完整实现地形计数逻辑
+    const getOwnTilesCount                  = Helpers_Misc.createLazyFunc2(() => attackerData.citiesCount);  // TODO: 这里做了简化处理（因为只有kindle有这个技能），以后如果有类似的新技能，就需要完整实现地形计数逻辑
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, attackerCoId, attackerCoSkillType)) {
-        modifier += getTotalOffsetPctForDamageCalculatorPanel({
+        modifier += CoSkills_Utils_Persistent_SelfUnitOffense.getTotalOffsetPctForDamageCalculatorPanel({
             cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId        : attackerUnitTypeId,
@@ -1244,7 +1215,7 @@ function getAttackerOffensePierce(calculatorData: CalculatorData): number[] {
     const attackerData          = calculatorData.attackerData;
     const attackerCoId          = attackerData.coId;
     const attackerCoSkillType   = attackerData.coSkillType;
-    if ((attackerCoId === CoId.Empty) || (attackerCoSkillType == null)) {
+    if ((attackerCoId === Cos_Constants.CoId.Empty) || (attackerCoSkillType == null)) {
         return result;
     }
 
@@ -1279,7 +1250,7 @@ function getAttackBonusMultiplier({ isCounter, calculatorData }: {
 }): number {
     const gameConfig                = calculatorData.gameConfig;
     const attackerData              = calculatorData.attackerData;
-    const commandTowerTemplateCfg   = gameConfig.getTileTemplateCfg(TileTypeId.CommandTower);
+    const commandTowerTemplateCfg   = gameConfig.getTileTemplateCfg(Tiles_Constants_Common.TileTypeId.CommandTower);
     const amountFromPromotion       = gameConfig.getUnitPromotionAttackBonus(attackerData.unitPromotion);
     const amountFromWarRule         = attackerData.offenseBonus;
     const amountFromGlobalTiles     = attackerData.towersCount * (commandTowerTemplateCfg == null ? 0 : commandTowerTemplateCfg.getGlobalAttackBonus());
@@ -1296,7 +1267,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
     const defenderData          = calculatorData.defenderData;
     const defenderCoId          = defenderData.coId;
     const defenderCoSkillType   = defenderData.coSkillType;
-    if ((defenderCoId === CoId.Empty) || (defenderCoSkillType == null)) {
+    if ((defenderCoId === Cos_Constants.CoId.Empty) || (defenderCoSkillType == null)) {
         return 0;
     }
 
@@ -1308,10 +1279,10 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
     const defenderFund                      = defenderData.fund;
     const defenderHp                        = defenderData.unitHp;
     const defenderTileCustomBuildingData    = defenderData.tileCustomBuildingData;
-    const defenderTileCfg                   = getExisted(gameConfig.getTileTemplateCfg(defenderTileTypeId));
-    const defenderTileDefenseAmount         = getDefenseAmount(defenderTileCfg, defenderTileCustomBuildingData);
-    const getOwnTilesCount                  = createLazyFunc2(() => defenderData.towersCount);
-    const canDefenderTileDefendUnit         = checkCanDefendUnit({
+    const defenderTileCfg                   = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(defenderTileTypeId));
+    const defenderTileDefenseAmount         = Tiles_Utils_Common.getDefenseAmount(defenderTileCfg, defenderTileCustomBuildingData);
+    const getOwnTilesCount                  = Helpers_Misc.createLazyFunc2(() => defenderData.towersCount);
+    const canDefenderTileDefendUnit         = Tiles_Utils_Common.checkCanDefendUnit({
         gameConfig         : gameConfig,
         templateCfg        : defenderTileCfg,
         customBuildingData : defenderTileCustomBuildingData,
@@ -1319,7 +1290,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
     });
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, defenderCoId, defenderCoSkillType)) {
-        modifier += getTotalDefensePercentOffsetForDamageCalculatorPanel({
+        modifier += CoSkills_Utils_Persistent_SelfUnitDefense.getTotalDefensePercentOffsetForDamageCalculatorPanel({
             cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId1       : calculatorData.attackerData.unitType,
@@ -1339,7 +1310,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
 function getDefenseBonusMultiplier(calculatorData: CalculatorData): number {
     const gameConfig                = calculatorData.gameConfig;
     const defenderData              = calculatorData.defenderData;
-    const commandTowerTemplateCfg   = gameConfig.getTileTemplateCfg(TileTypeId.CommandTower);
+    const commandTowerTemplateCfg   = gameConfig.getTileTemplateCfg(Tiles_Constants_Common.TileTypeId.CommandTower);
     const amountFromPromotion       = gameConfig.getUnitPromotionDefenseBonus(defenderData.unitPromotion);
     const amountFromCo              = getDefenseModifierByCo(calculatorData);
     const amountFromGlobalTiles     = defenderData.towersCount * (commandTowerTemplateCfg == null ? 0 : commandTowerTemplateCfg.getGlobalDefenseBonus());
@@ -1354,7 +1325,7 @@ function getDefenseBonusMultiplier(calculatorData: CalculatorData): number {
     });
     const attackerOffensePierce = getAttackerOffensePierce(calculatorData);
 
-    return getDamageMultiplierForDefenseBonus(
+    return DamageCalculators_Utils.getDamageMultiplierForDefenseBonus(
         gameConfig,
         amountFromTile              * (100 - attackerOffensePierce[0]) / 100 +
         amountFromPromotion         * (100 - attackerOffensePierce[1]) / 100 +
@@ -1379,7 +1350,7 @@ function getAttackDamage({ luckValue, isCounter, calculatorData, cfgAttackDamage
     const defenseBonusMultiplier    = getDefenseBonusMultiplier(calculatorData);
     return Math.max(0, Math.floor(0.000001 +
         (cfgAttackDamage * attackBonusMultiplier + luckValue)   *
-        (getNormalizedHp(attackerHp) / 10)     *
+        (Units_Utils_Common.getNormalizedHp(attackerHp) / 10)     *
         defenseBonusMultiplier
     ));
 }

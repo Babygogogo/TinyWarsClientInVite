@@ -1,10 +1,12 @@
-import type { ShortSfxCode } from "../../sounds/Constants.ts";
-import type { IUiOpenableComponent } from "./IUiOpenableComponent.ts";
-import type { UiItemTapEventData } from "../types/UiItemTapEventData.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
+import {
+    type Ui_Interfaces_IUiOpenableComponent,
+    type Sounds_Constants,
+    type Ui_Types_UiItemTapEventData,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
-export interface IUiListItemRenderer<OpenData extends UiListItemData> extends IUiOpenableComponent<OpenData> {
-    onItemTapEvent(e: UiItemTapEventData): void;
+export interface IUiListItemRenderer<OpenData extends Ui_Types_UiListItemData.UiListItemData> extends Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
+    onItemTapEvent(e: Ui_Types_UiItemTapEventData.UiItemTapEventData): void;
 
-    getShortSfxCode(): ShortSfxCode;
+    getShortSfxCode(): Sounds_Constants.ShortSfxCode;
 }

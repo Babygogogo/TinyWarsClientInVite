@@ -1,60 +1,36 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { newError } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-    getUnitBuffName,
-} from "../../../lang/Utils.ts";
-import { MaxInt32 } from "../../../numbers/Constants.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
-import {
-    getDescForEmbed as getPlayersDescForEmbed,
-    checkIsValid as checkIsValidPlayerFilter,
-    checkIsMeet as checkIsMeetPlayerFilter,
-} from "../../../players/utils/Filter.ts";
+    WarEvents_Actions_Constants_Common,
+    UnitBuffs_Utils_Common,
+    Players_Utils_Filter,
+    Tiles_Utils_Filter,
+    UnitBuffs_Utils_Filter,
+    Units_Utils_Filter,
+    WarEvents_Actions_Utils_Common,
+    Lang_Utils,
+    Numbers_Constants,
+    Helpers_Misc,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Units_IUnit,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import { UnitBuff } from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { WeaModifyUnitBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaModifyUnitBuffSimple.ts";
-import {
-    getDescForEmbed as getTilesDescForEmbed,
-    checkIsValid as checkIsValidTileFilter,
-    checkIsMeet as checkIsMeetTileFilter,
-} from "../../../tiles/utils/Filter.ts";
-import {
-    checkIsValidTypeId,
-    checkIsValidModificationEndTurnIndex,
-    checkIsValidModificationEndPlayerIndex,
-    checkIsValid as checkIsValidUnitBuff,
-    checkIsExpired,
-} from "../../../unitBuffs/utils/Common.ts";
-import {
-    getDescForEmbed as getUnitBuffsDescForEmbed,
-    checkIsValid as checkIsValidUnitBuffFilter,
-    checkIsMeet as checkIsMeetUnitBuffFilter,
-} from "../../../unitBuffs/utils/Filter.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import {
-    getDescForEmbed as getUnitsDescForEmbed,
-    checkIsValid as checkIsValidUnitFilter,
-    checkIsMeet as checkIsMeetUnitFilter,
-} from "../../../units/utils/Filter.ts";
-import { BuffEndTimeModificationMode } from "../constants/Common.ts";
-import { checkIsValidBuffEndTimeModificationMode } from "./Common.ts";
 
 export function checkIsValid(
-    data                    : Undefinable<WeaModifyUnitBuffSimple>,
-    mapSize                 : MapSize,
+    data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>,
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaModifyUnitBuffSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -62,26 +38,26 @@ export function getBriefDesc(data: Undefinable<WeaModifyUnitBuffSimple>): string
     const textArray: string[] = [];
     {
         if (data.getActBuffType() != null) {
-            textArray.push(getText(TextType.AbnormalStateTypeId));
+            textArray.push(Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
         }
     }
     {
         if ((data.getActEndPlayerIndex() != null)                                          ||
-            (data.getActEndPlayerIndexMode() != BuffEndTimeModificationMode.DoNotChange)   ||
+            (data.getActEndPlayerIndexMode() != WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange)   ||
             (data.getActEndTurnIndex() != null)                                            ||
-            (data.getActEndTurnIndexMode() != BuffEndTimeModificationMode.DoNotChange)
+            (data.getActEndTurnIndexMode() != WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange)
         ) {
-            textArray.push(getText(TextType.EndTime));
+            textArray.push(Lang_Utils.getText(Lang_Constants.TextType.EndTime));
         }
     }
 
-    return getFormattedText(
-        TextType.F0254,
-        getText(TextType.B1468),
-        textArray.join(`, `) || getText(TextType.None)
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0254,
+        Lang_Utils.getText(Lang_Constants.TextType.B1468),
+        textArray.join(`, `) || Lang_Utils.getText(Lang_Constants.TextType.None)
     );
 }
-export function getDetailDesc(data: Undefinable<WeaModifyUnitBuffSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -91,30 +67,30 @@ export function getDetailDesc(data: Undefinable<WeaModifyUnitBuffSimple>): strin
         {
             const filter = data.getConUnitBuffFilter();
             if (filter != null) {
-                conTextArray.push(`- ${getUnitBuffsDescForEmbed(filter)}`);
+                conTextArray.push(`- ${UnitBuffs_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConUnitFilter();
             if (filter != null) {
-                conTextArray.push(`- ${getUnitsDescForEmbed(filter)}`);
+                conTextArray.push(`- ${Units_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConTileFilter();
             if (filter != null) {
-                conTextArray.push(`- (${getText(TextType.B1423)}) ${getTilesDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${getText(TextType.B1422)}) ${getPlayersDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${getText(TextType.A0944)}`);
+            conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
         }
     }
 
@@ -123,39 +99,39 @@ export function getDetailDesc(data: Undefinable<WeaModifyUnitBuffSimple>): strin
         {
             const act = data.getActBuffType();
             if (act != null) {
-                actTextArray.push(`- ${getText(TextType.AbnormalStateTypeId)}: ${getUnitBuffName(act)}`);
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId)}: ${Lang_Utils.getUnitBuffName(act)}`);
             }
         }
         {
-            const turnIndexMode     = data.getActEndTurnIndexMode() as BuffEndTimeModificationMode;
-            const playerIndexMode   = data.getActEndPlayerIndexMode() as BuffEndTimeModificationMode;
-            if ((turnIndexMode != BuffEndTimeModificationMode.DoNotChange)      ||
-                (playerIndexMode != BuffEndTimeModificationMode.DoNotChange)
+            const turnIndexMode     = data.getActEndTurnIndexMode() as WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode;
+            const playerIndexMode   = data.getActEndPlayerIndexMode() as WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode;
+            if ((turnIndexMode != WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange)      ||
+                (playerIndexMode != WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange)
             ) {
-                if ((turnIndexMode == BuffEndTimeModificationMode.Delete) ||
-                    (playerIndexMode == BuffEndTimeModificationMode.Delete)
+                if ((turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) ||
+                    (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)
                 ) {
-                    actTextArray.push(`- ${getText(TextType.EndTime)}: ${getText(TextType.B1455)}`);
+                    actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTime)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1455)}`);
                 } else {
                     {
                         const turnIndex = data.getActEndTurnIndex() ?? 0;
-                        if (turnIndexMode == BuffEndTimeModificationMode.AddOffset) {
-                            actTextArray.push(`- ${getText(TextType.EndTurnIndex)}: ${getText(TextType.B1460)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
-                        } else if (turnIndexMode == BuffEndTimeModificationMode.SetAbsoluteValue) {
-                            actTextArray.push(`- ${getText(TextType.EndTurnIndex)}: ${turnIndex}`);
-                        } else if (turnIndexMode == BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
-                            actTextArray.push(`- ${getText(TextType.EndTurnIndex)}: ${getText(TextType.B1461)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
+                        if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1460)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
+                        } else if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${turnIndex}`);
+                        } else if (turnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1461)} ${turnIndex >= 0 ? `+` : ``}${turnIndex}`);
                         }
                     }
 
                     {
                         const playerIndex = data.getActEndPlayerIndex() ?? 0;
-                        if (playerIndexMode == BuffEndTimeModificationMode.AddOffset) {
-                            actTextArray.push(`- ${getText(TextType.EndPlayerIndex)}: ${getText(TextType.B1460)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
-                        } else if (playerIndexMode == BuffEndTimeModificationMode.SetAbsoluteValue) {
-                            actTextArray.push(`- ${getText(TextType.EndPlayerIndex)}: ${playerIndex}`);
-                        } else if (playerIndexMode == BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
-                            actTextArray.push(`- ${getText(TextType.EndPlayerIndex)}: ${getText(TextType.B1461)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
+                        if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1460)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
+                        } else if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${playerIndex}`);
+                        } else if (playerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
+                            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1461)} ${playerIndex >= 0 ? `+` : ``}${playerIndex}`);
                         }
                     }
                 }
@@ -163,126 +139,126 @@ export function getDetailDesc(data: Undefinable<WeaModifyUnitBuffSimple>): strin
         }
 
         if (!actTextArray.length) {
-            actTextArray.push(`- ${getText(TextType.A0957)}`);
+            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0957)}`);
         }
     }
 
-    return getFormattedText(
-        TextType.F0255,
-        getText(TextType.B1468),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0255,
+        Lang_Utils.getText(Lang_Constants.TextType.B1468),
         conTextArray.join(`\n`),
-        getText(TextType.B1468),
+        Lang_Utils.getText(Lang_Constants.TextType.B1468),
         actTextArray.join(`\n`),
     );
 }
 
 export function getErrorTip(
     data                    : WeaModifyUnitBuffSimple,
-    mapSize                 : MapSize,
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig
 ): string | null {
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                            &&
-            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gcData))
+            (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gcData))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConUnitFilter();
         if ((filter != null) &&
-            (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gcData))
+            (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                    &&
-            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gcData))
+            (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
         }
     }
     {
         const filter = data.getConUnitBuffFilter();
         if ((filter != null)                                &&
-            (!checkIsValidUnitBuffFilter(filter))
+            (!UnitBuffs_Utils_Filter.checkIsValid(filter))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1235));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1235));
         }
     }
     {
         const con = data.getConMaxModifyCount();
         if ((con != null) && (con <= 0)) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1457));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1457));
         }
     }
 
     {
         const act = data.getActBuffType();
         if (act != null) {
-            if (!checkIsValidTypeId(act)) {
-                return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
+            if (!UnitBuffs_Utils_Common.checkIsValidTypeId(act)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
             }
         }
     }
     {
         const actEndTurnIndexMode   = data.getActEndTurnIndexMode();
         const actEndPlayerIndexMode = data.getActEndPlayerIndexMode();
-        if ((!checkIsValidBuffEndTimeModificationMode(actEndTurnIndexMode)) ||
-            (!checkIsValidBuffEndTimeModificationMode(actEndPlayerIndexMode))
+        if ((!WarEvents_Actions_Utils_Common.checkIsValidBuffEndTimeModificationMode(actEndTurnIndexMode)) ||
+            (!WarEvents_Actions_Utils_Common.checkIsValidBuffEndTimeModificationMode(actEndPlayerIndexMode))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1458));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1458));
         }
 
-        if ((actEndTurnIndexMode == BuffEndTimeModificationMode.Delete)     ||
-            (actEndPlayerIndexMode == BuffEndTimeModificationMode.Delete)
+        if ((actEndTurnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)     ||
+            (actEndPlayerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete)
         ) {
             if (actEndTurnIndexMode != actEndPlayerIndexMode) {
-                return getFormattedText(TextType.F0091, getText(TextType.B1458));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1458));
             }
 
             if (data.getActEndTurnIndex() != null) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
             }
 
             if (data.getActEndPlayerIndex() != null) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
             }
 
         } else {
-            if (actEndTurnIndexMode == BuffEndTimeModificationMode.DoNotChange) {
+            if (actEndTurnIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) {
                 if (data.getActEndTurnIndex() != null) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
                 }
 
             } else {
                 const actEndTurnIndex = data.getActEndTurnIndex();
                 if (actEndTurnIndex == null) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
                 }
 
-                if (!checkIsValidModificationEndTurnIndex(actEndTurnIndex)) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+                if (!UnitBuffs_Utils_Common.checkIsValidModificationEndTurnIndex(actEndTurnIndex)) {
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
                 }
             }
 
-            if (actEndPlayerIndexMode == BuffEndTimeModificationMode.DoNotChange) {
+            if (actEndPlayerIndexMode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) {
                 if (data.getActEndPlayerIndex() != null) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
                 }
 
             } else {
                 const actEndPlayerIndex = data.getActEndPlayerIndex();
                 if (actEndPlayerIndex == null) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
                 }
 
-                if (!checkIsValidModificationEndPlayerIndex(actEndPlayerIndex)) {
-                    return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+                if (!UnitBuffs_Utils_Common.checkIsValidModificationEndPlayerIndex(actEndPlayerIndex)) {
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
                 }
             }
         }
@@ -296,8 +272,8 @@ export async function applyWithExtraData(_action: WeaModifyUnitBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
-    const targetUnitDict = new Map<IUnit, UnitBuff[]>();
+export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+    const targetUnitDict = new Map<Units_IUnit.IUnit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();
         const turnManager           = war.getTurnManager();
@@ -308,8 +284,8 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
         const conUnitFilter         = action.getConUnitFilter();
         const conPlayerFilter       = action.getConPlayerFilter();
         const conUnitBuffFilter     = action.getConUnitBuffFilter();
-        const conMaxModifyCount     = action.getConMaxModifyCount() ?? MaxInt32;
-        const playerFilterDict      = new Map<IPlayer, boolean>();
+        const conMaxModifyCount     = action.getConMaxModifyCount() ?? Numbers_Constants.MaxInt32;
+        const playerFilterDict      = new Map<Players_IPlayer.IPlayer, boolean>();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const oldBuffList = unit.getBuffList();
             if ((oldBuffList == null)       ||
@@ -319,13 +295,13 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
             }
 
             if ((conUnitFilter != null) &&
-                (!checkIsMeetUnitFilter(conUnitFilter, unit))
+                (!Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))
             ) {
                 continue;
             }
 
             if ((conTileFilter != null)                                                                 &&
-                (!checkIsMeetTileFilter(conTileFilter, tileMap.getTile(unit.getGridIndex())))
+                (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tileMap.getTile(unit.getGridIndex())))
             ) {
                 continue;
             }
@@ -345,7 +321,7 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
                 }
 
                 if ((conUnitBuffFilter != null)                                             &&
-                    (!checkIsMeetUnitBuffFilter(conUnitBuffFilter, oldBuff, war))
+                    (!UnitBuffs_Utils_Filter.checkIsMeet(conUnitBuffFilter, oldBuff, war))
                 ) {
                     newBuffList.push(oldBuff);
                 } else {
@@ -384,9 +360,9 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
     }
 }
 
-function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
+        resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
@@ -394,37 +370,37 @@ function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: P
 function calculateExpiringTimePart(
     mode        : number,
     actionTime  : number,
-    buffTime    : Undefinable<number>,
+    buffTime    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
     warTime     : number
-): Undefinable<number> {
-    if (mode == BuffEndTimeModificationMode.Delete) {
+): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
+    if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
         return null;
 
-    } else if (mode == BuffEndTimeModificationMode.DoNotChange) {
+    } else if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.DoNotChange) {
         return buffTime;
 
-    } else if (mode == BuffEndTimeModificationMode.AddOffset) {
+    } else if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.AddOffset) {
         if (buffTime == null) {
             return null;
         } else {
             return actionTime + buffTime;
         }
 
-    } else if (mode == BuffEndTimeModificationMode.SetAbsoluteValue) {
+    } else if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetAbsoluteValue) {
         return actionTime;
 
-    } else if (mode == BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
+    } else if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.SetValueRelativeToCurrentTime) {
         return actionTime + warTime;
 
     } else {
-        throw newError(`Invalid mode: ${mode}`);
+        throw Helpers_Misc.newError(`Invalid mode: ${mode}`);
     }
 }
 
 function calculateExpiringTime(
     action              : WeaModifyUnitBuffSimple,
-    buffEndTurnIndex    : Undefinable<number>,
-    buffEndPlayerIndex  : Undefinable<number>,
+    buffEndTurnIndex    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
+    buffEndPlayerIndex  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
     warTurnIndex        : number,
     warPlayerIndex      : number,
     playersCountNeutral : number
@@ -484,9 +460,9 @@ function generateNewBuff(
         extraParamArray     : oldBuff.getExtraParamArray(),
     });
 
-    if (!checkIsValidUnitBuff(newBuff)) {
+    if (!UnitBuffs_Utils_Common.checkIsValid(newBuff)) {
         return oldBuff;
-    } else if (checkIsExpired(newBuff, warTurnIndex, warPlayerIndex)) {
+    } else if (UnitBuffs_Utils_Common.checkIsExpired(newBuff, warTurnIndex, warPlayerIndex)) {
         return null;
     } else {
         return newBuff;

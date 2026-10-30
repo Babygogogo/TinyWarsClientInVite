@@ -1,56 +1,51 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    createRange,
-    getNonNullElements,
-} from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import {
-    AllLocationsCount,
-    MinId,
-    MaxId,
-} from "../../locations/Constants.ts";
-import { decode } from "../../locations/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    Locations_Constants,
+    Helpers_Collection,
+    Locations_Utils,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
     needChangeLocationVisibility    : boolean;
     currentGroupedLocationIds       : number[];
-    war                             : IBwWar;
+    war                             : BaseWar_Interface_IBwWar.IBwWar;
     getTitleText                    : () => string;
     callback                        : (locationIdArray: number[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupSelectAll!   : IUiLayout;
-    private readonly _imgSelectAll!     : IUiImage;
-    private readonly _labelSelectAll!   : IUiLabel;
-    private readonly _listLocation!     : IUiScrollList<DataForLocationRenderer>;
+    private readonly _groupSelectAll!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgSelectAll!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelSelectAll!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listLocation!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForLocationRenderer>;
 
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnCancel!        : IUiButton;
-    private readonly _labelTips!        : IUiLabel;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTips!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCancel,              callback: this._onTouchedBtnCancel },
@@ -60,11 +55,11 @@ export class Panel extends UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -91,12 +86,12 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const list = this._listLocation;
-        list.setSelectedItemIndexes(isSelectAll ? createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
+        list.setSelectedItemIndexes(isSelectAll ? Helpers_Collection.createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
         this.updateImgSelectAll();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedBtnConfirm(): void {
-        this.getOpenData()?.callback(getNonNullElements(this._listLocation.getSelectedDataArray()?.map(v => v?.locationId) ?? []));
+        this.getOpenData()?.callback(Helpers_Collection.getNonNullElements(this._listLocation.getSelectedDataArray()?.map(v => v?.locationId) ?? []));
         this.closePanel();
     }
     private _onTouchedBtnCancel(): void {
@@ -108,8 +103,8 @@ export class Panel extends UiPanel<OpenData> {
         this.closePanel();
     }
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0781),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0781),
         });
     }
 
@@ -118,17 +113,17 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? getText(TextType.Location));
-        this._labelSelectAll.setLangText(TextType.B0761);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
-        this._labelTips.setLangText(TextType.A0982);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Utils.getText(Lang_Constants.TextType.Location));
+        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTips.setLangText(Lang_Constants.TextType.A0982);
 
         this._groupSelectAll.arrangeItems();
     }
 
     public updateImgSelectAll(): void {
-        this._imgSelectAll.setIsVisible((this._listLocation.getSelectedItems()?.length ?? 0) >= AllLocationsCount);
+        this._imgSelectAll.setIsVisible((this._listLocation.getSelectedItems()?.length ?? 0) >= Locations_Constants.AllLocationsCount);
     }
     private async _updateListLocation(): Promise<void> {
         const openData = this.getOpenData();
@@ -147,11 +142,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const needChangeLocationVisibility  = openData.needChangeLocationVisibility;
-        const locationIdList                = decode(openData.currentGroupedLocationIds);
+        const locationIdList                = Locations_Utils.decode(openData.currentGroupedLocationIds);
         const selectedItemIndexes           : number[] = [];
         let index                           = 0;
         const dataArray                     : DataForLocationRenderer[] = [];
-        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
+        for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             dataArray.push({
                 war                             : war,
                 needChangeLocationVisibility    : needChangeLocationVisibility,
@@ -172,21 +167,21 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForLocationRenderer extends UiListItemData {
-    war                             : IBwWar;
+interface DataForLocationRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war                             : BaseWar_Interface_IBwWar.IBwWar;
     needChangeLocationVisibility    : boolean;
     locationId                      : number;
     useCount                        : number;
     noEntryCount                    : number;
     panel                           : Panel;
 }
-class LocationRenderer extends UiListItemRenderer<DataForLocationRenderer> {
-    private readonly _layoutInfo!       : IUiLayout;
-    private readonly _labelLocationId!  : IUiLabel;
+class LocationRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForLocationRenderer> {
+    private readonly _layoutInfo!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelLocationId!  : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutUsage!      : IUiLayout;
-    private readonly _labelInUse!       : IUiLabel;
-    private readonly _labelNoEntry!     : IUiLabel;
+    private readonly _layoutUsage!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelInUse!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNoEntry!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();

@@ -1,53 +1,52 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getPowerSkillTargetsCount } from "../../../coSkills/utils/Common.ts";
-import { newError } from "../../../helpers/Misc.ts";
 import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../../players/Constants.ts";
+    Players_Constants,
+    Utils_ClientErrorCode,
+    CoSkills_Utils_Common,
+    AuxiliaryTypes_GridIndex,
+    Helpers_Misc,
+    Turns_Constants,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-export function revise(war: IBwWar, rawAction: WoPlayerUseCoSkill, requesterUserId: Undefinable<number>): WoContainer {
-    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_00);
+export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayerUseCoSkill, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
     if ((playerInTurn == null)                                      ||
-        (playerInTurn.getPlayerIndex() === PlayerIndex.Neutral)     ||
-        (playerInTurn.getAliveState() !== AliveStateId.Alive) ||
+        (playerInTurn.getPlayerIndex() === Players_Constants.PlayerIndex.Neutral)     ||
+        (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive) ||
         (playerInTurn.getUserId() != requesterUserId)
     ) {
-        throw newError(`Invalid playerIndex or aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_01);
+        throw Helpers_Misc.newError(`Invalid playerIndex or aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_01);
     }
 
     const skillType = rawAction.getSkillType();
     if ((skillType == null) || (!playerInTurn.checkCanUseCoSkill(skillType))) {
-        throw newError(`Invalid skillType: ${skillType}`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_02);
+        throw Helpers_Misc.newError(`Invalid skillType: ${skillType}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_02);
     }
 
-    const count                 = getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
+    const count                 = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
     const targetGridIndexArray  = rawAction.getTargetGridIndexArray();
     if (count != targetGridIndexArray.length) {
-        throw newError(`Invalid targets count.`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_03);
+        throw Helpers_Misc.newError(`Invalid targets count.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_03);
     }
 
     const mapSize     = war.getTileMap().getMapSize();
     const gridIdSet   = new Set<number>();
     for (const protoGridIndex of targetGridIndexArray) {
-        const gridIndex = GridIndex.convertGridIndex(protoGridIndex);
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(protoGridIndex);
         if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
-            throw newError(`Invalid target grid index.`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_04);
+            throw Helpers_Misc.newError(`Invalid target grid index.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_04);
         }
 
         const gridId = gridIndex.getGridId(mapSize);
         if (gridIdSet.has(gridId)) {
-            throw newError(`Duplicated target grid index.`, ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_04);
+            throw Helpers_Misc.newError(`Duplicated target grid index.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerUseCoSkill_04);
         }
 
         gridIdSet.add(gridId);

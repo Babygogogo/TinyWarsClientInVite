@@ -1,39 +1,38 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwDrawVoteManager } from "../interface/IBwDrawVoteManager.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
 import {
-    newError,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
+    Players_Utils_Common,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type BaseWar_Interface_IBwDrawVoteManager,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class BwDrawVoteManager implements IBwDrawVoteManager {
-    private _remainingVotes     : Undefinable<number>;
-    private _drawVoteData       : Undefinable<SerialDrawVoteManager>;
-    private _war?               : IBwWar;
+export class BwDrawVoteManager implements BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
+    private _remainingVotes     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _drawVoteData       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>;
+    private _war?               : BaseWar_Interface_IBwWar.IBwWar;
 
     public init(
-        playerManagerData   : Undefinable<SerialPlayerManager>,
-        remainingVotes      : Undefinable<number>,
-        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
+        playerManagerData   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>,
+        remainingVotes      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
+        drawVoteManagerData : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>,
     ): void {
         const totalPlayersCount = playerManagerData?.getPlayers()?.length ?? 0;
         if (remainingVotes == null) {
             if ((drawVoteManagerData != null)                                                                                           &&
-                (!checkIsValidPlayerIndexSubset(drawVoteManagerData.getAgreedPlayerIndexArray(), totalPlayersCount - 1))
+                (!Players_Utils_Common.checkIsValidPlayerIndexSubset(drawVoteManagerData.getAgreedPlayerIndexArray(), totalPlayersCount - 1))
             ) {
-                throw newError(`Invalid agreedPlayerIndexArray.`, ClientErrorCode.BwDrawVoteManager_Init_00);
+                throw Helpers_Misc.newError(`Invalid agreedPlayerIndexArray.`, Utils_ClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_00);
             }
 
         } else {
             if (remainingVotes >= totalPlayersCount) {
-                throw newError(`remainingVotes >= maxVotes.`, ClientErrorCode.BwDrawVoteManager_Init_01);
+                throw Helpers_Misc.newError(`remainingVotes >= maxVotes.`, Utils_ClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_01);
             }
             if (drawVoteManagerData != null) {
-                throw newError(`Invalid data.`, ClientErrorCode.BwDrawVoteManager_Init_02);
+                throw Helpers_Misc.newError(`Invalid data.`, Utils_ClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_02);
             }
         }
 
@@ -41,28 +40,28 @@ export class BwDrawVoteManager implements IBwDrawVoteManager {
         this._setDrawVoteData(drawVoteManagerData);
     }
     public fastInit(
-        remainingVotes      : Undefinable<number>,
-        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
+        remainingVotes      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
+        drawVoteManagerData : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>,
     ): void {
         this._setRemainingVotes(remainingVotes);
         this._setDrawVoteData(drawVoteManagerData);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._setWar(war);
     }
 
-    public getRemainingVotes(): Undefinable<number> {
+    public getRemainingVotes(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         return this._remainingVotes;
     }
-    private _setRemainingVotes(votes: Undefinable<number>): void {
+    private _setRemainingVotes(votes: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
         this._remainingVotes = votes;
     }
 
-    public getDrawVoteData(): Undefinable<SerialDrawVoteManager> {
+    public getDrawVoteData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager> {
         return this._drawVoteData;
     }
-    private _setDrawVoteData(data: Undefinable<SerialDrawVoteManager>) {
+    private _setDrawVoteData(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialDrawVoteManager>) {
         this._drawVoteData = data;
     }
 
@@ -161,11 +160,11 @@ export class BwDrawVoteManager implements IBwDrawVoteManager {
         }
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
     }
-    private _getWar(): IBwWar {
-        return getExisted(this._war);
+    private _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war);
     }
 
     private _getMaxVotes(): number {

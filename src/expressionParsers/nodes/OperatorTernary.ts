@@ -1,36 +1,35 @@
-import type { Base as ContextsBase } from "../contexts/Base.ts";
 import {
-    ResultType,
-    ContextType,
-} from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { Base as ResultsBase } from "../results/Base.ts";
-import { Num } from "../results/Num.ts";
-import { getErrorTextForOperandType } from "../Utils.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+    ExpressionParsers_Nodes_Base,
+    Utils_ClientErrorCode,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Results_Num,
+    type ExpressionParsers_Contexts_Base,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 
 const ValidOperandTypes = [
-    ResultType.Player,
-    ResultType.PlayerArray,
-    ResultType.Unit,
-    ResultType.UnitArray,
-    ResultType.Tile,
-    ResultType.TileArray,
-    ResultType.TileBuff,
-    ResultType.TileBuffArray,
-    ResultType.UnitStatistic,
-    ResultType.UnitStatisticArray,
-    ResultType.Number,
-    ResultType.NumberArray,
+    ExpressionParsers_Enums.ResultType.Player,
+    ExpressionParsers_Enums.ResultType.PlayerArray,
+    ExpressionParsers_Enums.ResultType.Unit,
+    ExpressionParsers_Enums.ResultType.UnitArray,
+    ExpressionParsers_Enums.ResultType.Tile,
+    ExpressionParsers_Enums.ResultType.TileArray,
+    ExpressionParsers_Enums.ResultType.TileBuff,
+    ExpressionParsers_Enums.ResultType.TileBuffArray,
+    ExpressionParsers_Enums.ResultType.UnitStatistic,
+    ExpressionParsers_Enums.ResultType.UnitStatisticArray,
+    ExpressionParsers_Enums.ResultType.Number,
+    ExpressionParsers_Enums.ResultType.NumberArray,
 ];
 
-export class OperatorTernary extends Base {
-    private _condition  : Base;
-    private _lhs        : Base;              // Left hand side of the operation
-    private _rhs        : Base;              // Right hand side of the operation
+export class OperatorTernary extends ExpressionParsers_Nodes_Base.Base {
+    private _condition  : ExpressionParsers_Nodes_Base.Base;
+    private _lhs        : ExpressionParsers_Nodes_Base.Base;              // Left hand side of the operation
+    private _rhs        : ExpressionParsers_Nodes_Base.Base;              // Right hand side of the operation
 
-    public constructor(condition: Base, lhs: Base, rhs: Base) {
+    public constructor(condition: ExpressionParsers_Nodes_Base.Base, lhs: ExpressionParsers_Nodes_Base.Base, rhs: ExpressionParsers_Nodes_Base.Base) {
         super();
 
         this._condition = condition;
@@ -38,10 +37,10 @@ export class OperatorTernary extends Base {
         this._rhs       = rhs;
     }
 
-    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+    public override eval(ctx: ExpressionParsers_Contexts_Base.Base, rootCtx: ExpressionParsers_Contexts_Base.Base, lambdaArgumentDict: Map<string, ExpressionParsers_Results_Base.Base> | null, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         const condition = this._condition.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
-        if (!(condition instanceof Num)) {
-            throw newError(`Condition is not finite: ${condition}`);
+        if (!(condition instanceof ExpressionParsers_Results_Num.Num)) {
+            throw Helpers_Misc.newError(`Condition is not finite: ${condition}`);
         }
 
         return condition.num !== 0
@@ -49,32 +48,32 @@ export class OperatorTernary extends Base {
             : this._rhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
     }
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ContextType;
-        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
-        localVariableDict       : Map<string, ResultType> | null;
+        contextType             : ExpressionParsers_Enums.ContextType;
+        lambdaArgumentInfoDict  : Map<string, ExpressionParsers_Enums.ResultType> | null;
+        localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ResultType {
+    }): ExpressionParsers_Enums.ResultType {
         const conditionType = this._condition.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-        if (conditionType !== ResultType.Number) {
-            throw newError(
-                getErrorTextForOperandType("?:", 1, ResultType.Number, conditionType),
-                ClientErrorCode.EpNodeOperatorTernary_GetResultType_00
+        if (conditionType !== ExpressionParsers_Enums.ResultType.Number) {
+            throw Helpers_Misc.newError(
+                ExpressionParsers_Utils.getErrorTextForOperandType("?:", 1, ExpressionParsers_Enums.ResultType.Number, conditionType),
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_00
             );
         }
 
         const lhsType = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
         if (ValidOperandTypes.indexOf(lhsType) < 0) {
-            throw newError(
-                getErrorTextForOperandType("?:", 2, ValidOperandTypes, lhsType),
-                ClientErrorCode.EpNodeOperatorTernary_GetResultType_01
+            throw Helpers_Misc.newError(
+                ExpressionParsers_Utils.getErrorTextForOperandType("?:", 2, ValidOperandTypes, lhsType),
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_01
             );
         }
 
         const rhsType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
         if (rhsType !== lhsType) {
-            throw newError(
-                getErrorTextForOperandType("?:", 3, lhsType, rhsType),
-                ClientErrorCode.EpNodeOperatorTernary_GetResultType_02
+            throw Helpers_Misc.newError(
+                ExpressionParsers_Utils.getErrorTextForOperandType("?:", 3, lhsType, rhsType),
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_02
             );
         }
 

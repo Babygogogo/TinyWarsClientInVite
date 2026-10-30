@@ -1,36 +1,33 @@
-import type { CommonParams } from "../CommonParams.ts";
 import {
-    getUnitTypeSetForCoSkillSetUnitIdle,
-    getCoPowerSkillTargetGridIndexArray,
-    getBestScoreAndActionForCandidateUnit,
-    candidateUnitSorter,
-} from "../Utils.ts";
-import { EnergyTypeId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+    Units_Constants,
+    Bots_Utils,
+    Timer_TimerModel,
+    Utils_ClientErrorCode,
+    Cos_Constants,
+    Helpers_Misc,
+    CoSkills_Constants,
+    type Bots_CommonParams,
+    type Units_IUnit,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export async function getActionForPhase01(commonParams: CommonParams): Promise<WoContainer | null> {
+export async function getActionForPhase01(commonParams: Bots_CommonParams.CommonParams): Promise<WoContainer | null> {
     const war               = commonParams.getWar();
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const player            = war.getPlayer(playerIndexInTurn);
     const coEnergyType      = player.getCoEnergyType();
 
-    if (coEnergyType === EnergyTypeId.Trilogy) {
-        const unitsInfo         = getExisted(commonParams.getUnitsInfoDict().get(playerIndexInTurn), ClientErrorCode.SpwRobot_GetActionForPhase1_00);
+    if (coEnergyType === Cos_Constants.EnergyTypeId.Trilogy) {
+        const unitsInfo         = Helpers_Misc.getExisted(commonParams.getUnitsInfoDict().get(playerIndexInTurn), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetActionForPhase1_00);
         const allUnitsCount     = unitsInfo.allCountOnMap;
         const idleUnitsCount    = unitsInfo.idleCountOnMap;
         const gameConfig        = war.getGcData();
-        if (player.checkCanUseCoSkill(SkillTypeId.SuperPower)) {
-            const unitTypeSetForCoSkillSetUnitIdle = getUnitTypeSetForCoSkillSetUnitIdle(player, SkillTypeId.SuperPower, gameConfig);
+        if (player.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower)) {
+            const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.SuperPower, gameConfig);
             if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
                 const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
                 if ((!targetUnits.length)                                                                               ||
-                    (targetUnits.some(v => (v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction())))
+                    (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
                 ) {
                     return null;
                 }
@@ -43,21 +40,21 @@ export async function getActionForPhase01(commonParams: CommonParams): Promise<W
 
             return WoContainer.fromJson({
                 WoPlayerUseCoSkill: {
-                    skillType               : SkillTypeId.SuperPower,
-                    targetGridIndexArray    : getCoPowerSkillTargetGridIndexArray(commonParams, player, SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
+                    skillType               : CoSkills_Constants.SkillTypeId.SuperPower,
+                    targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
                 },
             });
 
-        } else if (player.checkCanUseCoSkill(SkillTypeId.Power)) {
-            if (player.getCoCurrentEnergy() > getExisted(player.getCoPowerEnergy(), ClientErrorCode.SpwRobot_GetActionForPhase1_01) * 1.1) {
+        } else if (player.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.Power)) {
+            if (player.getCoCurrentEnergy() > Helpers_Misc.getExisted(player.getCoPowerEnergy(), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetActionForPhase1_01) * 1.1) {
                 return null;
             }
 
-            const unitTypeSetForCoSkillSetUnitIdle = getUnitTypeSetForCoSkillSetUnitIdle(player, SkillTypeId.Power, gameConfig);
+            const unitTypeSetForCoSkillSetUnitIdle = Bots_Utils.getUnitTypeSetForCoSkillSetUnitIdle(player, CoSkills_Constants.SkillTypeId.Power, gameConfig);
             if (unitTypeSetForCoSkillSetUnitIdle.size > 0) {
                 const targetUnits = war.getUnitMap().getAllUnitsOnMap(v => (v.getPlayerIndex() === playerIndexInTurn) && (unitTypeSetForCoSkillSetUnitIdle.has(v.getUnitType())));
                 if ((!targetUnits.length)                                                                               ||
-                    (targetUnits.some(v => (v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction())))
+                    (targetUnits.some(v => (v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction())))
                 ) {
                     return null;
                 }
@@ -70,8 +67,8 @@ export async function getActionForPhase01(commonParams: CommonParams): Promise<W
 
             return WoContainer.fromJson({
                 WoPlayerUseCoSkill: {
-                    skillType               : SkillTypeId.Power,
-                    targetGridIndexArray    : getCoPowerSkillTargetGridIndexArray(commonParams, player, SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
+                    skillType               : CoSkills_Constants.SkillTypeId.Power,
+                    targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
                 },
             });
 
@@ -80,9 +77,9 @@ export async function getActionForPhase01(commonParams: CommonParams): Promise<W
         }
     }
 
-    if (coEnergyType === EnergyTypeId.Dor) {
+    if (coEnergyType === Cos_Constants.EnergyTypeId.Dor) {
         for (const unit of await getCandidateUnitsForPhase1(commonParams)) {
-            const action = (await getBestScoreAndActionForCandidateUnit(commonParams, unit))?.action;
+            const action = (await Bots_Utils.getBestScoreAndActionForCandidateUnit(commonParams, unit))?.action;
             if (action) {
                 return action;
             }
@@ -94,30 +91,30 @@ export async function getActionForPhase01(commonParams: CommonParams): Promise<W
     return null;
 }
 
-async function getCandidateUnitsForPhase1(commonParams: CommonParams): Promise<IUnit[]> {
-    await checkAndCallLater();
+async function getCandidateUnitsForPhase1(commonParams: Bots_CommonParams.CommonParams): Promise<Units_IUnit.IUnit[]> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : IUnit[] = [];
+    const units             : Units_IUnit.IUnit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)                                                       &&
-            (unit.getActionState() === ActionStateId.Idle)                                                    &&
+            (unit.getActionState() === Units_Constants.ActionStateId.Idle)                                                    &&
             (unit.checkCanAiDoAction())                                                                         &&
-            ((unit.checkCanUseCoSkill(SkillTypeId.Power) || (unit.checkCanUseCoSkill(SkillTypeId.SuperPower))))
+            ((unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.Power) || (unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower))))
         ) {
             units.push(unit);
         }
     }
     for (const unit of unitMap.getAllUnitsLoaded()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)                                                       &&
-            (unit.getActionState() === ActionStateId.Idle)                                                    &&
+            (unit.getActionState() === Units_Constants.ActionStateId.Idle)                                                    &&
             (unit.checkCanAiDoAction())                                                                         &&
-            ((unit.checkCanUseCoSkill(SkillTypeId.Power) || (unit.checkCanUseCoSkill(SkillTypeId.SuperPower))))
+            ((unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.Power) || (unit.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower))))
         ) {
             const loaderUnit = unit.getLoaderUnit();
             if ((loaderUnit?.getPlayerIndex() === playerIndexInTurn)            &&
-                (loaderUnit.getActionState() === ActionStateId.Idle)          &&
+                (loaderUnit.getActionState() === Units_Constants.ActionStateId.Idle)          &&
                 (loaderUnit.checkCanAiDoAction())                               &&
                 (loaderUnit.checkCanLaunchLoadedUnit())                         &&
                 (unitMap.getUnitOnMap(loaderUnit.getGridIndex()) === loaderUnit)
@@ -127,5 +124,5 @@ async function getCandidateUnitsForPhase1(commonParams: CommonParams): Promise<I
         }
     }
 
-    return units.sort(candidateUnitSorter).slice(0, 10);
+    return units.sort(Bots_Utils.candidateUnitSorter).slice(0, 10);
 }

@@ -1,43 +1,39 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Lang_Utils,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiContainer,
+    Ui_Components_UiImage,
+    Ui_Components_UiLabel,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    Ui_Utils_UiSkinHelpers,
+} from "../../internal.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import {
-    getUiLabelClass,
-    getUiContainerClass,
-    getUiImageClass,
-} from "../../ui/utils/UiFactory.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {
-    war     : IBwWar;
+    war     : BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _labelTitle!           : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupTaskObjective!   : IUiLayout;
+    private readonly _groupTaskObjective!   : Ui_Interfaces_IUiLayout.IUiLayout;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -61,7 +57,7 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1214);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1214);
 
         this._updateGroupTaskObjective();
     }
@@ -78,7 +74,7 @@ export class Panel extends UiPanel<OpenData> {
         const allTaskObjectiveArray = war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray() ?? [];
         const stateArray            = war.getTaskObjectiveManager().getStateArray();
         {
-            group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1217)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1217)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, true);
             for (const data of dataArray) {
@@ -92,7 +88,7 @@ export class Panel extends UiPanel<OpenData> {
         group.addItem(createSeparator(), false);
 
         {
-            group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1220)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1220)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, false);
             for (const data of dataArray) {
@@ -107,8 +103,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-function createLabelForTaskObjectiveCategory(text: string): IUiLabel {
-    const label = new (getUiLabelClass());
+function createLabelForTaskObjectiveCategory(text: string): Ui_Interfaces_IUiLabel.IUiLabel {
+    const label = new Ui_Components_UiLabel.UiLabel;
     label.setText(text);
     label.setIsBold(true);
     label.setFontSize(12);
@@ -120,25 +116,25 @@ function createTaskObjectiveRenderer(data: DataForTaskObjectiveRenderer): TaskOb
     renderer.setData(data);
     return renderer;
 }
-function createGroupEmpty(): IUiContainer {
-    const label     = new (getUiLabelClass());
+function createGroupEmpty(): Ui_Interfaces_IUiContainer.IUiContainer {
+    const label     = new Ui_Components_UiLabel.UiLabel;
     label.setText(`----`);
     label.setFontSize(16);
     label.setX(30);
 
-    const group = new (getUiContainerClass());
+    const group = new Ui_Components_UiContainer.UiContainer;
     group.addUiChild(label);
     return group;
 }
-function createSeparator(): IUiImage {
-    const img = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000`});
+function createSeparator(): Ui_Interfaces_IUiImage.IUiImage {
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000`});
     img.setUnscaledManualWidth(560);
     img.setUnscaledManualHeight(1);
     img.setIsSmoothing(false);
     img.setIsVisible(false);
     return img;
 }
-function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
+function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Interface_IBwWar.IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
     const dataArray: DataForTaskObjectiveRenderer[] = [];
     for (const taskObjective of allTaskObjectiveArray.filter(v => isMain === !!v.getIsMain())) {
         const objectiveId = taskObjective.getObjectiveId();
@@ -154,19 +150,19 @@ function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray
 
 interface DataForTaskObjectiveRenderer {
     taskObjective   : TaskObjective;
-    war             : IBwWar;
+    war             : BaseWar_Interface_IBwWar.IBwWar;
 }
-class TaskObjectiveRenderer extends UiContainer {
-    private readonly _groupCompleted!   : IUiContainer;
-    private readonly _imgCompleted!     : IUiImage;
-    private readonly _labelDesc!        : IUiLabel;
+class TaskObjectiveRenderer extends Ui_Components_UiContainer.UiContainer {
+    private readonly _groupCompleted!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgCompleted!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelDesc!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _data           : DataForTaskObjectiveRenderer | null = null;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "component/taskObjective/TaskObjective001.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "component/taskObjective/TaskObjective001.exml");
     }
 
     public updateOnLoadedSkin(): void {
@@ -195,7 +191,7 @@ class TaskObjectiveRenderer extends UiContainer {
         const maxProgress       = taskObjective.getMaxProgress();
         const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) == objectiveId)?.getCurrentProgress() ?? 0;
         const labelDesc         = this._labelDesc;
-        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${getLanguageText({ textArray: taskObjective.getDesc() })}`);
+        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${Lang_Utils.getLanguageText({ textArray: taskObjective.getDesc() })}`);
         this.setUnscaledManualHeight(labelDesc.getScaledHeight());
 
         const groupCompleted = this._groupCompleted;

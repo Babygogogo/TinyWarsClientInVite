@@ -1,34 +1,36 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import {
+    type Units_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type Ui_Interfaces_IUiContainer,
+    type Units_IUnit,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
-import type { AnimationTypeId } from "./Constants.ts";
-import type { IUnit } from "./IUnit.ts";
 
-export interface IUnitView extends IUiContainer {
-    init(unit: IUnit): IUnitView;
+export interface IUnitView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(unit: Units_IUnit.IUnit): IUnitView;
 
     startRunningView(): IUnitView;
     stopRunningView(): void;
 
-    getUnit(): IUnit | null;
+    getUnit(): Units_IUnit.IUnit | null;
 
     resetAllViews(): void;
 
-    showUnitAnimation(type: AnimationTypeId): void;
+    showUnitAnimation(type: Units_Constants.AnimationTypeId): void;
 
     updateImageHp(): void;
 
     moveAlongPath({ path, isDiving, isBlocked, aiming, updateViewAfterMove }: {
-        path                : GridIndex[];
+        path                : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
-        aiming              : Undefinable<GridIndex>;
+        aiming              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
         updateViewAfterMove : boolean;
     }): Promise<void>;
     moveAlongExtraPath({ path, aiming, deleteViewAfterMoving }: {
         path                    : GridIndexAndPathInfo[];
-        aiming                  : Undefinable<GridIndex>;
+        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
         deleteViewAfterMoving   : boolean;
     }): Promise<void>;
 }

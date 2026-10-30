@@ -1,52 +1,33 @@
-import type {
-    UiListener,
-    Point,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { IBwWarView } from "../interface/IBwWarView.ts";
 import {
-    getRwWarBaseClass,
-    getMeWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import {
-    createLazyFunc,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import { UndefinedError } from "../../lang/Constants.ts";
-import { getLanguageText } from "../../lang/Utils.ts";
-import type {
-    BwFieldZoomedByTouch,
-    BwFieldDragged,
-} from "../../notifications/DataTypes.ts";
-import {
-    addEventListeners,
-    removeEventListeners,
-} from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { Listener } from "../../notifications/Types.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import type { IUiComponent } from "../../ui/interfaces/IUiComponent.ts";
-import type { IUiZoomableComponent } from "../../ui/interfaces/IUiZoomableComponent.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import {
-    getUiZoomableComponentClass,
-    getUiContainerClass,
-    getUiLabelClass,
-} from "../../ui/utils/UiFactory.ts";
-import { getSelfSettingsIsScreenVibrationEnabled } from "../../users/Model.ts";
-import {
-    Event,
-    setTimeout,
-    clearTimeout,
-} from "../../egret/Egret.ts";
+    MapEditor_Model_MeWar,
+    ReplayWar_Model_RwWarBase,
+    Ui_Components_UiLabel,
+    Ui_Components_UiZoomableComponent,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarView,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Graphics_Utils,
+    Lang_Utils,
+    Stages_StageManager,
+    Numbers_Utils,
+    Notifications_TypeId,
+    Ui_Components_UiContainer,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Types_UiVerticalAlign,
+    Lang_Constants,
+    type Notifications_DataTypes,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiZoomableComponent,
+    type Notifications_Types,
+    Egret_Egret,
+    Users_Model,
+} from "../../internal.ts";
 
-const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth      = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight     = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 const CENTRAL_PADDING   = 120;
 
 type Padding = {
@@ -67,32 +48,32 @@ const PADDINGS = new Map<PaddingType, Padding>([
     [PaddingType.Replay,    { left: 150,    right: 150,     top: 60,    bottom: 20 }],
 ]);
 
-export class BwWarView extends UiContainer implements IBwWarView {
-    private _fieldContainer         = new (getUiZoomableComponentClass())();
-    private _weatherContainer       = new (getUiContainerClass());
-    private _labelPersistentText    = new (getUiLabelClass());
+export class BwWarView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwWarView.IBwWarView {
+    private _fieldContainer         = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
+    private _weatherContainer       = new Ui_Components_UiContainer.UiContainer;
+    private _labelPersistentText    = new Ui_Components_UiLabel.UiLabel;
 
     private _isShowingVibration = false;
     private _vibrationMaxOffset = 4;
     private _vibrationTimeoutId : number | null = null;
 
-    private _war? : IBwWar;
+    private _war? : BaseWar_Interface_IBwWar.IBwWar;
 
-    private _notifyListeners: Listener[] = [
-        { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-        { type: TypeId.BwFieldZoomedByTouch,    callback: this._onNotifyBwFieldZoomedByTouch },
-        { type: TypeId.BwFieldDragged,          callback: this._onNotifyBwFieldDragged },
+    private _notifyListeners: Notifications_Types.Listener[] = [
+        { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+        { type: Notifications_TypeId.TypeId.BwFieldZoomedByTouch,    callback: this._onNotifyBwFieldZoomedByTouch },
+        { type: Notifications_TypeId.TypeId.BwFieldDragged,          callback: this._onNotifyBwFieldDragged },
     ];
-    private _uiListeners: UiListener[] = [
-        { ui: this,     callback: this._onEnterFrame,   eventType: Event.ENTER_FRAME },
+    private _uiListeners: AuxiliaryTypes_AuxiliaryTypes.UiListener[] = [
+        { ui: this,     callback: this._onEnterFrame,   eventType: Egret_Egret.Event.ENTER_FRAME },
     ];
 
     public constructor() {
         super();
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
+            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -115,15 +96,15 @@ export class BwWarView extends UiContainer implements IBwWarView {
             labelPersistentText.setFontSize(12);
             labelPersistentText.setStrokeWidth(2);
             labelPersistentText.setY(60);
-            labelPersistentText.setHorizontalAlign(UiHorizontalAlign.Center);
+            labelPersistentText.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center);
             labelPersistentText.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign: { align: UiHorizontalAlign.Center },
+                horizontalAlign: { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
             });
             this.addUiChild(labelPersistentText);
         }
     }
 
-    public init(war: IBwWar): void {
+    public init(war: BaseWar_Interface_IBwWar.IBwWar): void {
         const mapSize           = war.getTileMap().getMapSize();
         const fieldContainer    = this._fieldContainer;
         const padding           = getPadding(war);
@@ -140,14 +121,14 @@ export class BwWarView extends UiContainer implements IBwWarView {
         this._weatherContainer.addUiChild(war.getWeatherManager().getView());
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public fastInit(war: IBwWar): void {
+    public fastInit(war: BaseWar_Interface_IBwWar.IBwWar): void {
         // nothing to do
     }
 
     public startRunningView(): void {
-        addEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.addEventListener(getExisted(listener.eventType), listener.callback, this);
+            listener.ui.addEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(true);
@@ -155,20 +136,20 @@ export class BwWarView extends UiContainer implements IBwWarView {
         this.updatePersistentText();
     }
     public stopRunning(): void {
-        removeEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.removeEventListener(getExisted(listener.eventType), listener.callback, this);
+            listener.ui.removeEventListener(Helpers_Misc.getExisted(listener.eventType), listener.callback, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(false);
     }
 
-    public getFieldContainer(): IUiZoomableComponent {
+    public getFieldContainer(): Ui_Interfaces_IUiZoomableComponent.IUiZoomableComponent {
         return this._fieldContainer;
     }
 
-    public tweenGridToCentralArea(gridIndex: GridIndex): void {
-        const stage             = getStage();
+    public tweenGridToCentralArea(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+        const stage             = Stages_StageManager.getStage();
         const container         = this._fieldContainer;
         const stageWidth        = stage.stageWidth;
         const stageHeight       = stage.stageHeight;
@@ -180,12 +161,12 @@ export class BwWarView extends UiContainer implements IBwWarView {
         const currX             = currPoint.x;
         const currY             = currPoint.y;
         // const padding           = this._padding;
-        const newX              = getValueInRange({
+        const newX              = Numbers_Utils.getValueInRange({
             minValue    : CENTRAL_PADDING + currX - topLeftPoint.x,
             maxValue    : stageWidth - CENTRAL_PADDING + currX - bottomRightPoint.x,
             rawValue    : currX,
         });
-        const newY              = getValueInRange({
+        const newY              = Numbers_Utils.getValueInRange({
             minValue    : CENTRAL_PADDING + currY - topLeftPoint.y,
             maxValue    : stageHeight - CENTRAL_PADDING + currY - bottomRightPoint.y,
             rawValue    : currY,
@@ -193,17 +174,17 @@ export class BwWarView extends UiContainer implements IBwWarView {
         const newPoint  = this._getRevisedContentPointForMoveGrid(gridIndex, newX, newY);
         container.tweenContentToPoint(newPoint.x, newPoint.y, false);
     }
-    public moveGridToCenter(gridIndex: GridIndex): void {
-        const stage = getStage();
+    public moveGridToCenter(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
+        const stage = Stages_StageManager.getStage();
         this._moveGridToPoint(gridIndex, stage.stageWidth / 2, stage.stageHeight / 2);
     }
-    private _moveGridToPoint(gridIndex: GridIndex, x: number, y: number): void {
+    private _moveGridToPoint(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, x: number, y: number): void {
         const point     = this._getRevisedContentPointForMoveGrid(gridIndex, x, y);
         const container = this._fieldContainer;
         container.setContentX(point.x, false);
         container.setContentY(point.y, false);
     }
-    private _getRevisedContentPointForMoveGrid(gridIndex: GridIndex, x: number, y: number): Point {
+    private _getRevisedContentPointForMoveGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, x: number, y: number): AuxiliaryTypes_AuxiliaryTypes.Point {
         const container = this._fieldContainer;
         const point1    = container.getContentsContainerLocalToGlobal({
             x: (gridIndex.getX() + 0.5) * getGridWidth(),
@@ -219,13 +200,13 @@ export class BwWarView extends UiContainer implements IBwWarView {
     public showVibration(duration = 450, maxOffset = 5): void {
         this.stopVibration();
 
-        if (!getSelfSettingsIsScreenVibrationEnabled()) {
+        if (!Users_Model.getSelfSettingsIsScreenVibrationEnabled()) {
             return;
         }
 
         this._isShowingVibration    = true;
         this._vibrationMaxOffset    = maxOffset;
-        this._vibrationTimeoutId    = setTimeout(() => {
+        this._vibrationTimeoutId    = Egret_Egret.setTimeout(() => {
             this.stopVibration();
         }, this, duration);
     }
@@ -234,7 +215,7 @@ export class BwWarView extends UiContainer implements IBwWarView {
         resetContainer(this._fieldContainer);
 
         if (this._vibrationTimeoutId != null) {
-            clearTimeout(this._vibrationTimeoutId);
+            Egret_Egret.clearTimeout(this._vibrationTimeoutId);
             this._vibrationTimeoutId = null;
         }
     }
@@ -264,7 +245,7 @@ export class BwWarView extends UiContainer implements IBwWarView {
             const action = warEventManager.getWarEventAction(actionId).getWeaPersistentShowText();
             if (action) {
                 textArray.push(war.getWarEventManager().handleEscapeText(
-                    getLanguageText({ textArray: action.getTextArray() }) ?? UndefinedError,
+                    Lang_Utils.getLanguageText({ textArray: action.getTextArray() }) ?? Lang_Constants.UndefinedError,
                 ));
             }
         }
@@ -282,12 +263,12 @@ export class BwWarView extends UiContainer implements IBwWarView {
         this.updatePersistentText();
     }
 
-    private _onNotifyBwFieldZoomedByTouch(e: Event): void {
-        const data = e.data as BwFieldZoomedByTouch;
+    private _onNotifyBwFieldZoomedByTouch(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.BwFieldZoomedByTouch;
         this._fieldContainer.setZoomByTouches(data.current, data.previous);
     }
-    private _onNotifyBwFieldDragged(e: Event): void {
-        const data = e.data as BwFieldDragged;
+    private _onNotifyBwFieldDragged(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.BwFieldDragged;
         this._fieldContainer.setDragByTouches(data.current, data.previous);
     }
 
@@ -296,21 +277,21 @@ export class BwWarView extends UiContainer implements IBwWarView {
     }
 }
 
-function resetContainer(container: IUiComponent): void {
+function resetContainer(container: Ui_Interfaces_IUiComponent.IUiComponent): void {
     container.checkAndInitSizerInfo().setSizerOptions({
-        verticalAlign   : { align       : UiVerticalAlign.Middle },
-        horizontalAlign : { align       : UiHorizontalAlign.Center },
+        verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+        horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
         width           : { percentage  : 100 },
         height          : { percentage  : 100 },
     });
 }
 
-function getPadding(war: IBwWar): Padding {
-    if (war instanceof getRwWarBaseClass()) {
-        return getExisted(PADDINGS.get(PaddingType.Replay));
-    } else if (war instanceof getMeWarClass()) {
-        return getExisted(PADDINGS.get(PaddingType.MapEditor));
+function getPadding(war: BaseWar_Interface_IBwWar.IBwWar): Padding {
+    if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return Helpers_Misc.getExisted(PADDINGS.get(PaddingType.Replay));
+    } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
+        return Helpers_Misc.getExisted(PADDINGS.get(PaddingType.MapEditor));
     } else {
-        return getExisted(PADDINGS.get(PaddingType.Default));
+        return Helpers_Misc.getExisted(PADDINGS.get(PaddingType.Default));
     }
 }

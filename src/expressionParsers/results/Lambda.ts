@@ -1,19 +1,21 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import type { Base as NodesBase } from "../nodes/Base.ts";
-import { Base } from "./Base.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+    type ExpressionParsers_Nodes_Base,
+} from "../../internal.ts";
 
-export class Lambda extends Base {
-    public readonly node: NodesBase;
+export class Lambda extends ExpressionParsers_Results_Base.Base {
+    public readonly node: ExpressionParsers_Nodes_Base.Base;
 
-    public constructor(war: IBwWar, node: NodesBase) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, node: ExpressionParsers_Nodes_Base.Base) {
         super(war);
 
         this.node = node;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.Lambda;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.Lambda;
     }
     public override checkIsEqual(): boolean {
         return false;

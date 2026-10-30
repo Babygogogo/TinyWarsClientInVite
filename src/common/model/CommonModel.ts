@@ -1,33 +1,20 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { reqCommonGetCoStatistics } from "./CommonProxy.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import type { TextureVersionId } from "../../graphics/Constants.ts";
 import {
-    getUnit,
-    getUnitFlash,
-    getTileBase,
-    getTileDecoration,
-    getTileObject,
-    getTileBuff,
-} from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getNumText } from "../../helpers/Text.ts";
-import {
-    getShowTileAnimation,
-    getShowUnitAnimation,
-} from "../../localData/Storage.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    AuxiliaryTypes_CachedDataAccessor,
+    Egret_Egret,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Helpers_Text,
+    LocalData_Storage,
+    Helpers_ImageSource,
+    Common_Model_CommonProxy,
+    Notifications_TypeId,
+    type Units_Constants,
+    type GameConfigs_GameConfig,
+    type Graphics_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
 import type { DataForMrwPlayerRank } from "../../proto/schema/CommonProto/Structure/DataForMrwPlayerRank.ts";
-import type { AnimationTypeId } from "../../units/Constants.ts";
-import {
-    setInterval,
-    clearInterval,
-    startTick,
-    stopTick,
-} from "../../egret/Egret.ts";
 
 type FrameCfg       = {
     source  : string | null;
@@ -49,36 +36,36 @@ let _stateIndicatorTickCount            = 0;
 let _gridAnimationTickCount             = 0;
 let _isTransparentTouchLayerTouched     = false;
 
-const _unitAndTileTexturePrefixDict     = new Map<TextureVersionId, string>();
-const _unitAndTileTextureLongPrefixDict = new Map<TextureVersionId, string>();
-const _unitImageSourceDict              = new Map<TextureVersionId, Map<boolean, Map<AnimationTypeId, Map<number, Map<number, FrameCfg>>>>>();
-const _unitFlashImageSourceDict         = new Map<TextureVersionId, Map<number, Map<number, string>>>();
-const _tileBaseImageSourceDict          = new Map<TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
-const _tileDecorationImageSourceDict    = new Map<TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
-const _tileObjectImageSourceDict        = new Map<TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
-const _tileBuffImageSourceDict          = new Map<TextureVersionId, Map<number, Map<boolean, string>>>();
+const _unitAndTileTexturePrefixDict     = new Map<Graphics_Constants.TextureVersionId, string>();
+const _unitAndTileTextureLongPrefixDict = new Map<Graphics_Constants.TextureVersionId, string>();
+const _unitImageSourceDict              = new Map<Graphics_Constants.TextureVersionId, Map<boolean, Map<Units_Constants.AnimationTypeId, Map<number, Map<number, FrameCfg>>>>>();
+const _unitFlashImageSourceDict         = new Map<Graphics_Constants.TextureVersionId, Map<number, Map<number, string>>>();
+const _tileBaseImageSourceDict          = new Map<Graphics_Constants.TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
+const _tileDecorationImageSourceDict    = new Map<Graphics_Constants.TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
+const _tileObjectImageSourceDict        = new Map<Graphics_Constants.TextureVersionId, Map<number, Map<number, Map<number, Map<boolean, Map<number, Map<number, FrameCfg>>>>>>>();
+const _tileBuffImageSourceDict          = new Map<Graphics_Constants.TextureVersionId, Map<number, Map<boolean, string>>>();
 
 let _mrwRankArray           : DataForMrwPlayerRank[] | null = null;
-const _coStatisticsAccessor = new CachedDataAccessor<null, CommonGetCoStatisticsResponse>({
-    reqData : () => reqCommonGetCoStatistics(),
+const _coStatisticsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, CommonGetCoStatisticsResponse>({
+    reqData : () => Common_Model_CommonProxy.reqCommonGetCoStatistics(),
 });
 
 export function init(): void {
-    if (getShowTileAnimation()) {
+    if (LocalData_Storage.getShowTileAnimation()) {
         startTileAnimationTick();
     }
-    if (getShowUnitAnimation()) {
+    if (LocalData_Storage.getShowUnitAnimation()) {
         startUnitAnimationTick();
     }
 
-    setInterval(() => {
+    Egret_Egret.setInterval(() => {
         ++_gridAnimationTickCount;
-        dispatch(TypeId.GridAnimationTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.GridAnimationTick);
     }, null, GRID_ANIMATION_INTERVAL_MS);
 
-    setInterval(() => {
+    Egret_Egret.setInterval(() => {
         ++_stateIndicatorTickCount;
-        dispatch(TypeId.StateIndicatorTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.StateIndicatorTick);
     }, null, STATE_INDICATOR_INTERVAL_MS);
 
     updateOnUnitAndTileTextureVersionChanged();
@@ -87,15 +74,15 @@ export function init(): void {
 export function startTileAnimationTick(): void {
     stopTileAnimationTick();
 
-    _intervalIdForTileAnimation = setInterval(() => {
+    _intervalIdForTileAnimation = Egret_Egret.setInterval(() => {
         ++_tileAnimationTickCount;
         tickTileImageSources();
-        dispatch(TypeId.TileAnimationTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.TileAnimationTick);
     }, null, TILE_ANIMATION_INTERVAL_MS);
 }
 export function stopTileAnimationTick(): void {
     if (_intervalIdForTileAnimation != null) {
-        clearInterval(_intervalIdForTileAnimation);
+        Egret_Egret.clearInterval(_intervalIdForTileAnimation);
         _intervalIdForTileAnimation = null;
     }
 }
@@ -110,11 +97,11 @@ export function startUnitAnimationTick(): void {
     stopUnitAnimationTick();
 
     setIsUnitAnimationTicking(true);
-    startTick(onEgretTickForUnitAnimation, null);
+    Egret_Egret.startTick(onEgretTickForUnitAnimation, null);
 }
 export function stopUnitAnimationTick(): void {
     if (getIsUnitAnimationTicking()) {
-        stopTick(onEgretTickForUnitAnimation, null);
+        Egret_Egret.stopTick(onEgretTickForUnitAnimation, null);
         setIsUnitAnimationTicking(false);
     }
 }
@@ -123,11 +110,11 @@ function onEgretTickForUnitAnimation(time: number): boolean {
     if (_unitAnimationTickCount !== newCount) {
         _unitAnimationTickCount = newCount;
         tickUnitImageSources();
-        dispatch(TypeId.UnitAnimationTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UnitAnimationTick);
     }
 
     setIsUnitFlashVisible((newCount % 4 === 0) && (time % UNIT_FLASH_DIVIDER <= 100));
-    dispatch(TypeId.UnitFlashTick);
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UnitFlashTick);
 
     return false;
 }
@@ -159,22 +146,22 @@ export function updateOnUnitAndTileTextureVersionChanged(): void {
     tickUnitImageSources();
 }
 
-export function getUnitAndTileTexturePrefix(version: TextureVersionId): string {
+export function getUnitAndTileTexturePrefix(version: Graphics_Constants.TextureVersionId): string {
     const prefix = _unitAndTileTexturePrefixDict.get(version);
     if (prefix != null) {
         return prefix;
     } else {
-        const text = `v${getNumText(version)}_`;
+        const text = `v${Helpers_Text.getNumText(version)}_`;
         _unitAndTileTexturePrefixDict.set(version, text);
         return text;
     }
 }
-export function getUnitAndTileTextureLongPrefix(version: TextureVersionId): string {
+export function getUnitAndTileTextureLongPrefix(version: Graphics_Constants.TextureVersionId): string {
     const prefix = _unitAndTileTextureLongPrefixDict.get(version);
     if (prefix != null) {
         return prefix;
     } else {
-        const text = `ver${getNumText(version)}_`;
+        const text = `ver${Helpers_Text.getNumText(version)}_`;
         _unitAndTileTextureLongPrefixDict.set(version, text);
         return text;
     }
@@ -191,48 +178,48 @@ export function tickUnitImageSources(): void {
 }
 
 export function getCachedUnitImageSource({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GameConfig;
-    version         : TextureVersionId;
+    gcData          : GameConfigs_GameConfig.GameConfig;
+    version         : Graphics_Constants.TextureVersionId;
     skinId          : number;
     unitType        : number;
     isDark          : boolean;
-    animationType   : AnimationTypeId;
+    animationType   : Units_Constants.AnimationTypeId;
     tickCount       : number;
 }): string {
     if (!_unitImageSourceDict.has(version)) {
         _unitImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_unitImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_unitImageSourceDict.get(version));
     if (!dict1.has(isDark)) {
         dict1.set(isDark, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(isDark));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(isDark));
     if (!dict2.has(animationType)) {
         dict2.set(animationType, new Map());
     }
 
-    const dict3 = getExisted(dict2.get(animationType));
+    const dict3 = Helpers_Misc.getExisted(dict2.get(animationType));
     if (!dict3.has(skinId)) {
         dict3.set(skinId, new Map());
     }
 
-    const dict4 = getExisted(dict3.get(skinId));
+    const dict4 = Helpers_Misc.getExisted(dict3.get(skinId));
     if (!dict4.has(unitType)) {
         dict4.set(unitType, { source: null, tick: null });
     }
 
-    const cfg = getExisted(dict4.get(unitType));
+    const cfg = Helpers_Misc.getExisted(dict4.get(unitType));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount });
+        cfg.source  = Helpers_ImageSource.getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount });
     }
 
-    return getExisted(cfg.source);
+    return Helpers_Misc.getExisted(cfg.source);
 }
 export function getCachedUnitFlashImageSource({ version, skinId, unitType }: {
-    version         : TextureVersionId;
+    version         : Graphics_Constants.TextureVersionId;
     skinId          : number;
     unitType        : number;
 }): string {
@@ -240,21 +227,21 @@ export function getCachedUnitFlashImageSource({ version, skinId, unitType }: {
         _unitFlashImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_unitFlashImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_unitFlashImageSourceDict.get(version));
     if (!dict1.has(skinId)) {
         dict1.set(skinId, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(skinId));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(skinId));
     if (!dict2.has(unitType)) {
-        dict2.set(unitType, getUnitFlash({ version, skinId, unitType }));
+        dict2.set(unitType, Helpers_ImageSource.getUnitFlash({ version, skinId, unitType }));
     }
 
-    return getExisted(dict2.get(unitType));
+    return Helpers_Misc.getExisted(dict2.get(unitType));
 }
 
 export function getCachedTileBaseImageSource({ version, themeType, skinId, baseType, isDark, shapeId, tickCount } : {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     themeType   : number;
     skinId      : number;
     baseType    : number;
@@ -266,50 +253,50 @@ export function getCachedTileBaseImageSource({ version, themeType, skinId, baseT
         _tileBaseImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_tileBaseImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_tileBaseImageSourceDict.get(version));
     if (!dict1.has(themeType)) {
         dict1.set(themeType, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(themeType));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(themeType));
     if (!dict2.has(skinId)) {
         dict2.set(skinId, new Map());
     }
 
-    const dict3 = getExisted(dict2.get(skinId));
+    const dict3 = Helpers_Misc.getExisted(dict2.get(skinId));
     if (!dict3.has(baseType)) {
         dict3.set(baseType, new Map());
     }
 
-    const dict4 = getExisted(dict3.get(baseType));
+    const dict4 = Helpers_Misc.getExisted(dict3.get(baseType));
     if (!dict4.has(isDark)) {
         dict4.set(isDark, new Map());
     }
 
-    const dict5 = getExisted(dict4.get(isDark));
+    const dict5 = Helpers_Misc.getExisted(dict4.get(isDark));
     if (!dict5.has(shapeId)) {
         dict5.set(shapeId, new Map());
     }
 
-    const dict6 = getExisted(dict5.get(shapeId));
+    const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
         dict6.set(tickCount, { source: null, tick: null });
     }
 
-    const cfg = getExisted(dict6.get(tickCount));
+    const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = getTileBase({ version, themeType, skinId, baseType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileBase({ version, themeType, skinId, baseType, isDark, shapeId, tickCount });
     }
 
-    return getExisted(cfg.source);
+    return Helpers_Misc.getExisted(cfg.source);
 }
 
 export function getCachedTileDecorationImageSource({ version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount }: {
-    version             : TextureVersionId;
+    version             : Graphics_Constants.TextureVersionId;
     themeType           : number;
     skinId              : number;
-    tileDecorationType  : Undefinable<number>;
+    tileDecorationType  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     isDark              : boolean;
     shapeId             : number;
     tickCount           : number;
@@ -322,47 +309,47 @@ export function getCachedTileDecorationImageSource({ version, themeType, skinId,
         _tileDecorationImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_tileDecorationImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_tileDecorationImageSourceDict.get(version));
     if (!dict1.has(themeType)) {
         dict1.set(themeType, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(themeType));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(themeType));
     if (!dict2.has(skinId)) {
         dict2.set(skinId, new Map());
     }
 
-    const dict3 = getExisted(dict2.get(skinId));
+    const dict3 = Helpers_Misc.getExisted(dict2.get(skinId));
     if (!dict3.has(tileDecorationType)) {
         dict3.set(tileDecorationType, new Map());
     }
 
-    const dict4 = getExisted(dict3.get(tileDecorationType));
+    const dict4 = Helpers_Misc.getExisted(dict3.get(tileDecorationType));
     if (!dict4.has(isDark)) {
         dict4.set(isDark, new Map());
     }
 
-    const dict5 = getExisted(dict4.get(isDark));
+    const dict5 = Helpers_Misc.getExisted(dict4.get(isDark));
     if (!dict5.has(shapeId)) {
         dict5.set(shapeId, new Map());
     }
 
-    const dict6 = getExisted(dict5.get(shapeId));
+    const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
         dict6.set(tickCount, { source: null, tick: null });
     }
 
-    const cfg = getExisted(dict6.get(tickCount));
+    const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = getTileDecoration({ version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileDecoration({ version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount });
     }
 
-    return getExisted(cfg.source);
+    return Helpers_Misc.getExisted(cfg.source);
 }
 
 export function getCachedTileObjectImageSource({ version, themeType, skinId, objectType, isDark, shapeId, tickCount }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     themeType   : number;
     skinId      : number;
     objectType  : number;
@@ -374,46 +361,46 @@ export function getCachedTileObjectImageSource({ version, themeType, skinId, obj
         _tileObjectImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_tileObjectImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_tileObjectImageSourceDict.get(version));
     if (!dict1.has(themeType)) {
         dict1.set(themeType, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(themeType));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(themeType));
     if (!dict2.has(skinId)) {
         dict2.set(skinId, new Map());
     }
 
-    const dict3 = getExisted(dict2.get(skinId));
+    const dict3 = Helpers_Misc.getExisted(dict2.get(skinId));
     if (!dict3.has(objectType)) {
         dict3.set(objectType, new Map());
     }
 
-    const dict4 = getExisted(dict3.get(objectType));
+    const dict4 = Helpers_Misc.getExisted(dict3.get(objectType));
     if (!dict4.has(isDark)) {
         dict4.set(isDark, new Map());
     }
 
-    const dict5 = getExisted(dict4.get(isDark));
+    const dict5 = Helpers_Misc.getExisted(dict4.get(isDark));
     if (!dict5.has(shapeId)) {
         dict5.set(shapeId, new Map());
     }
 
-    const dict6 = getExisted(dict5.get(shapeId));
+    const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
         dict6.set(tickCount, { source: null, tick: null });
     }
 
-    const cfg = getExisted(dict6.get(tickCount));
+    const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = getTileObject({ version, themeType, skinId, objectType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileObject({ version, themeType, skinId, objectType, isDark, shapeId, tickCount });
     }
 
-    return getExisted(cfg.source);
+    return Helpers_Misc.getExisted(cfg.source);
 }
 export function getCachedTileBuffImageSource({ version, buffType, isDark }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     buffType    : number;
     isDark      : boolean;
 }): string {
@@ -421,17 +408,17 @@ export function getCachedTileBuffImageSource({ version, buffType, isDark }: {
         _tileBuffImageSourceDict.set(version, new Map());
     }
 
-    const dict1 = getExisted(_tileBuffImageSourceDict.get(version));
+    const dict1 = Helpers_Misc.getExisted(_tileBuffImageSourceDict.get(version));
     if (!dict1.has(buffType)) {
         dict1.set(buffType, new Map());
     }
 
-    const dict2 = getExisted(dict1.get(buffType));
+    const dict2 = Helpers_Misc.getExisted(dict1.get(buffType));
     if (!dict2.has(isDark)) {
-        dict2.set(isDark, getTileBuff({ version, buffType, isDark }));
+        dict2.set(isDark, Helpers_ImageSource.getTileBuff({ version, buffType, isDark }));
     }
 
-    return getExisted(dict2.get(isDark));
+    return Helpers_Misc.getExisted(dict2.get(isDark));
 }
 
 export function setMrwRankArray(rankList: DataForMrwPlayerRank[]): void {
@@ -441,7 +428,7 @@ export function getMrwRankList(): DataForMrwPlayerRank[] | null {
     return _mrwRankArray;
 }
 
-export function getCoStatistics(): Promise<Undefinable<CommonGetCoStatisticsResponse>> {
+export function getCoStatistics(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<CommonGetCoStatisticsResponse>> {
     return _coStatisticsAccessor.getData(null);
 }
 export function setCoStatistics(data: CommonGetCoStatisticsResponse): void {

@@ -1,75 +1,74 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { RoomFilter } from "../../auxiliaryTypes/RoomFilter.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getUserNickname } from "../../users/Model.ts";
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    Lang_Utils,
+    Users_Model,
+    GamePanels_Manager,
+    AuxiliaryTypes_RoomFilter,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export type OpenData = {
-    roomFilter          : Undefinable<RoomFilter>;
+    roomFilter          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_RoomFilter.RoomFilter>;
     isMapNameEnabled    : boolean;
-    callbackOnConfirm   : (roomFilter: RoomFilter) => void;
+    callbackOnConfirm   : (roomFilter: AuxiliaryTypes_RoomFilter.RoomFilter) => void;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnHelp!                      : IUiButton;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnReset!                     : IUiButton;
-    private readonly _btnSearch!                    : IUiButton;
-    private readonly _groupFilter!                  : IUiLayout;
+    private readonly _btnReset!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearch!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupFilter!                  : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupRoomId!                  : IUiContainer;
-    private readonly _labelRoomIdTitle!             : IUiLabel;
-    private readonly _labelRoomId!                  : IUiLabel;
-    private readonly _btnModifyRoomId!              : IUiLabel;
-    private readonly _btnDeleteRoomId!              : IUiLabel;
+    private readonly _groupRoomId!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelRoomIdTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRoomId!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyRoomId!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnDeleteRoomId!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupMapName!                 : IUiContainer;
-    private readonly _labelMapNameTitle!            : IUiLabel;
-    private readonly _labelMapName!                 : IUiLabel;
-    private readonly _btnModifyMapName!             : IUiButton;
-    private readonly _btnDeleteMapName!             : IUiButton;
+    private readonly _groupMapName!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelMapNameTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyMapName!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapName!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupUserInRoom!              : IUiContainer;
-    private readonly _labelUserInRoomTitle!         : IUiLabel;
-    private readonly _labelUserInRoom!              : IUiLabel;
-    private readonly _btnModifyUserInRoom!          : IUiButton;
-    private readonly _btnDeleteUserInRoom!          : IUiButton;
+    private readonly _groupUserInRoom!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelUserInRoomTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUserInRoom!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyUserInRoom!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteUserInRoom!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupUserNotInRoom!           : IUiContainer;
-    private readonly _labelUserNotInRoomTitle!      : IUiLabel;
-    private readonly _labelUserNotInRoom!           : IUiLabel;
-    private readonly _btnModifyUserNotInRoom!       : IUiButton;
-    private readonly _btnDeleteUserNotInRoom!       : IUiButton;
+    private readonly _groupUserNotInRoom!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelUserNotInRoomTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUserNotInRoom!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyUserNotInRoom!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteUserNotInRoom!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupCoCategory!              : IUiContainer;
-    private readonly _labelCoCategoryTitle!         : IUiLabel;
-    private readonly _labelCoCategory!              : IUiLabel;
-    private readonly _btnModifyCoCategory!          : IUiButton;
-    private readonly _btnDeleteCoCategory!          : IUiButton;
+    private readonly _groupCoCategory!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelCoCategoryTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCoCategory!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyCoCategory!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteCoCategory!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupHasFog!                  : IUiContainer;
-    private readonly _labelHasFogTitle!             : IUiLabel;
-    private readonly _labelHasFog!                  : IUiLabel;
-    private readonly _btnModifyHasFog!              : IUiButton;
-    private readonly _btnDeleteHasFog!              : IUiButton;
+    private readonly _groupHasFog!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelHasFogTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHasFog!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModifyHasFog!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteHasFog!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _filter                                 = new RoomFilter();
+    private _filter                                 = new AuxiliaryTypes_RoomFilter.RoomFilter();
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -97,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnDeleteCoCategory,        callback: this._onTouchedBtnDeleteCoCategory },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -108,18 +107,18 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
         this._updateGroupFilter();
 
-        this._filter = this.getOpenData()?.roomFilter?.clone() ?? new RoomFilter();
+        this._filter = this.getOpenData()?.roomFilter?.clone() ?? new AuxiliaryTypes_RoomFilter.RoomFilter();
         this._updateComponentsForFilter();
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0063),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0063),
         });
     }
 
     private _onTouchedBtnReset(): void {
-        this._filter = new RoomFilter();
+        this._filter = new AuxiliaryTypes_RoomFilter.RoomFilter();
         this._updateComponentsForFilter();
     }
 
@@ -129,8 +128,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnModifyUserInRoom(): void {
-        openPanel(getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : () => getText(TextType.B0023),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
+            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0023),
             callbackOnConfirm   : userId => {
                 this._filter.userIdInRoom = userId;
                 this._updateLabelUserInRoom();
@@ -143,8 +142,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnModifyUserNotInRoom(): void {
-        openPanel(getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : () => getText(TextType.B0027),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
+            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0027),
             callbackOnConfirm   : userId => {
                 this._filter.userIdNotInRoom = userId;
                 this._updateLabelUserNotInRoom();
@@ -158,8 +157,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyRoomId(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0814),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0814),
             minValue        : 0,
             maxValue        : 99999999,
             currentValue    : filter.roomId ?? 0,
@@ -176,8 +175,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnModifyMapName(): void {
         const filter = this._filter;
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0225),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0225),
             currentValue    : filter.mapName ?? ``,
             maxChars        : 20,
             canBeEmpty      : true,
@@ -206,8 +205,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onTouchedBtnModifyCoCategory(): Promise<void> {
         const filter        = this._filter;
-        const gameConfig    = await getLatestGameConfig();
-        openPanel(getDict().CommonChooseSingleCoCategoryIdPanel, {
+        const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoCategoryIdPanel, {
             currentCoCategoryId             : filter.coCategoryId ?? null,
             gameConfig                      : gameConfig,
             availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
@@ -228,15 +227,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0228);
-        this._labelRoomIdTitle.setLangText(TextType.B0814);
-        this._labelMapNameTitle.setLangText(TextType.B0225);
-        this._labelUserInRoomTitle.setLangText(TextType.B0023);
-        this._labelUserNotInRoomTitle.setLangText(TextType.B0027);
-        this._labelCoCategoryTitle.setLangText(TextType.B0028);
-        this._labelHasFogTitle.setLangText(TextType.B0020);
-        this._btnReset.setLangText(TextType.B0567);
-        this._btnSearch.setLangText(TextType.B0228);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0228);
+        this._labelRoomIdTitle.setLangText(Lang_Constants.TextType.B0814);
+        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
+        this._labelUserInRoomTitle.setLangText(Lang_Constants.TextType.B0023);
+        this._labelUserNotInRoomTitle.setLangText(Lang_Constants.TextType.B0027);
+        this._labelCoCategoryTitle.setLangText(Lang_Constants.TextType.B0028);
+        this._labelHasFogTitle.setLangText(Lang_Constants.TextType.B0020);
+        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
 
         this._updateLabelHasFog();
     }
@@ -274,12 +273,12 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _updateLabelUserInRoom(): Promise<void> {
         const userId                = this._filter.userIdInRoom;
-        this._labelUserInRoom.setText(userId == null ? `` : (await getUserNickname(userId) ?? UndefinedError));
+        this._labelUserInRoom.setText(userId == null ? `` : (await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
     }
 
     private async _updateLabelUserNotInRoom(): Promise<void> {
         const userId                    = this._filter.userIdNotInRoom;
-        this._labelUserNotInRoom.setText(userId == null ? `` : (await getUserNickname(userId) ?? UndefinedError));
+        this._labelUserNotInRoom.setText(userId == null ? `` : (await Users_Model.getUserNickname(userId) ?? Lang_Constants.UndefinedError));
     }
 
     private async _updateLabelCoCategory(): Promise<void> {
@@ -288,8 +287,8 @@ export class Panel extends UiPanel<OpenData> {
         if (coCategoryId == null) {
             label.setText(``);
         } else {
-            const config    = await getLatestGameConfig();
-            label.setText(config.getCoCategoryCfg(coCategoryId)?.getName() ?? UndefinedError);
+            const config    = await GameConfigs_Provider.getLatestGameConfig();
+            label.setText(config.getCoCategoryCfg(coCategoryId)?.getName() ?? Lang_Constants.UndefinedError);
         }
     }
 
@@ -297,9 +296,9 @@ export class Panel extends UiPanel<OpenData> {
         const hasFog    = this._filter.hasFog;
         const label     = this._labelHasFog;
         if (hasFog === true) {
-            label.setLangText(TextType.Yes);
+            label.setLangText(Lang_Constants.TextType.Yes);
         } else if (hasFog === false) {
-            label.setLangText(TextType.No);
+            label.setLangText(Lang_Constants.TextType.No);
         } else {
             label.setText(``);
         }

@@ -1,24 +1,27 @@
-import type {
-    Undefinable,
-    ReplayCheckpointData,
-    ReplayCheckpointInfo,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import { show } from "../../FloatText.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { getReplayPauseTime } from "../../localData/Storage.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    BaseWar_Model_BwWar,
+    BaseWar_Model_BwWarEventManager,
+    FloatText,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWarEventManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Timer_TimerModel,
+    WarOperations_Executors_Executor,
+    Utils_ClientErrorCode,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    LocalData_Storage,
+    Users_Model,
+    Lang_Utils,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Sounds_SoundPlayer,
+    Egret_Egret,
+    Lang_Constants,
+    Notifications_TypeId,
+    type ReplayWar_Interface_IRwWarBase,
+} from "../../internal.ts";
+
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
@@ -32,32 +35,25 @@ import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/
 import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
 import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
-import type { IRwWarBase } from "../interface/IRwWarBase.ts";
-import { playCoBgmWithWar } from "../../sounds/SoundPlayer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { setTimeout } from "../../egret/Egret.ts";
-import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 
 type TurnIndexAndPlayerIndex = {
     turnIndex   : number;
     playerIndex : number;
 };
 
-export abstract class RwWarBase extends BwWar implements IRwWarBase {
-    private readonly _warEventManager               = new (getBwWarEventManagerClass())();
+export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements ReplayWar_Interface_IRwWarBase.IRwWarBase {
+    private readonly _warEventManager               = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
     private _srcExecutedOperationArray              : WoContainer[] | null = null;
 
-    private _settingsForMcw                         : Undefinable<SettingsForMcw>;
-    private _settingsForMfw                         : Undefinable<SettingsForMfw>;
-    private _settingsForMrw                         : Undefinable<SettingsForMrw>;
-    private _settingsForMmw                         : Undefinable<SettingsForMmw>;
-    private _settingsForCcw                         : Undefinable<SettingsForCcw>;
-    private _settingsForAtw                         : Undefinable<SettingsForAtw>;
-    private _settingsForScw                         : Undefinable<SettingsForScw>;
-    private _settingsForSfw                         : Undefinable<SettingsForSfw>;
-    private _settingsForSrw                         : Undefinable<SettingsForSrw>;
+    private _settingsForMcw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw>;
+    private _settingsForMfw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMfw>;
+    private _settingsForMrw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMrw>;
+    private _settingsForMmw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMmw>;
+    private _settingsForCcw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForCcw>;
+    private _settingsForAtw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForAtw>;
+    private _settingsForScw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForScw>;
+    private _settingsForSfw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSfw>;
+    private _settingsForSrw                         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSrw>;
 
     private _visionTeamIndex                        : number | null = null;
     private _isTickingReplay                        = false;
@@ -67,19 +63,19 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     private _firstOperationId                       = 0;
     private _nextOperationId                        = 0;
     private _checkpointIdsForNextOperationId        = new Map<number, number>();
-    private _checkpointDataListForCheckpointId      = new Map<number, ReplayCheckpointData>();
+    private _checkpointDataListForCheckpointId      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData>();
     private _turnAndPlayerIndexesForCheckpointId    = new Map<number, TurnIndexAndPlayerIndex>();
     private readonly _gridMarkData                  = new GridMarkData();
 
-    public abstract serializeForCheckpoint(): ReplayCheckpointData;
+    public abstract serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData;
     public abstract tickVisionTeamIndex(): number | null;
 
-    public init(warData: SerialWar, gameConfig: GameConfig): void {
+    public init(warData: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         warData                             = warData.clone();
         const srcExecutedOperationArray     = warData.getExecutedOperationManager()?.getExecutedOperationArray() ?? [];
         this._srcExecutedOperationArray     = srcExecutedOperationArray;
         warData.setExecutedOperationManager(new SerialExecutedOperationManager());
-        this._baseInit(warData, gameConfig, getWarTypeId(warData));
+        this._baseInit(warData, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(warData));
 
         this._setSettingsForMcw(warData.getSettingsForMcw());
         this._setSettingsForScw(warData.getSettingsForScw());
@@ -102,7 +98,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         });
     }
 
-    public getWarEventManager(): IBwWarEventManager {
+    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
         return this._warEventManager;
     }
 
@@ -116,7 +112,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         return null;
     }
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
     public getNormalMapId(): number | null {
         const settingsForMcw = this.getSettingsForMcw();
@@ -159,61 +155,61 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
 
     public getWarOperationDescSuffix(): string {
         const lastOperationId = this._getLastOperationId();
-        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${getText(TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
+        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_Constants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
     }
 
-    public getSettingsForMcw(): Undefinable<SettingsForMcw> {
+    public getSettingsForMcw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw> {
         return this._settingsForMcw;
     }
-    protected _setSettingsForMcw(value: Undefinable<SettingsForMcw>): void {
+    protected _setSettingsForMcw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw>): void {
         this._settingsForMcw = value;
     }
-    public getSettingsForScw(): Undefinable<SettingsForScw> {
+    public getSettingsForScw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForScw> {
         return this._settingsForScw;
     }
-    protected _setSettingsForScw(value: Undefinable<SettingsForScw>): void {
+    protected _setSettingsForScw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForScw>): void {
         this._settingsForScw = value;
     }
-    public getSettingsForSfw(): Undefinable<SettingsForSfw> {
+    public getSettingsForSfw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSfw> {
         return this._settingsForSfw;
     }
-    protected _setSettingsForSfw(value: Undefinable<SettingsForSfw>): void {
+    protected _setSettingsForSfw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSfw>): void {
         this._settingsForSfw = value;
     }
-    public getSettingsForSrw(): Undefinable<SettingsForSrw> {
+    public getSettingsForSrw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSrw> {
         return this._settingsForSrw;
     }
-    protected _setSettingsForSrw(value: Undefinable<SettingsForSrw>): void {
+    protected _setSettingsForSrw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSrw>): void {
         this._settingsForSrw = value;
     }
-    public getSettingsForMrw(): Undefinable<SettingsForMrw> {
+    public getSettingsForMrw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMrw> {
         return this._settingsForMrw;
     }
-    protected _setSettingsForMrw(value: Undefinable<SettingsForMrw>): void {
+    protected _setSettingsForMrw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMrw>): void {
         this._settingsForMrw = value;
     }
-    public getSettingsForMmw(): Undefinable<SettingsForMmw> {
+    public getSettingsForMmw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMmw> {
         return this._settingsForMmw;
     }
-    protected _setSettingsForMmw(value: Undefinable<SettingsForMmw>): void {
+    protected _setSettingsForMmw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMmw>): void {
         this._settingsForMmw = value;
     }
-    public getSettingsForAtw(): Undefinable<SettingsForAtw> {
+    public getSettingsForAtw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForAtw> {
         return this._settingsForAtw;
     }
-    protected _setSettingsForAtw(value: Undefinable<SettingsForAtw>): void {
+    protected _setSettingsForAtw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForAtw>): void {
         this._settingsForAtw = value;
     }
-    public getSettingsForCcw(): Undefinable<SettingsForCcw> {
+    public getSettingsForCcw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForCcw> {
         return this._settingsForCcw;
     }
-    protected _setSettingsForCcw(value: Undefinable<SettingsForCcw>): void {
+    protected _setSettingsForCcw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForCcw>): void {
         this._settingsForCcw = value;
     }
-    public getSettingsForMfw(): Undefinable<SettingsForMfw> {
+    public getSettingsForMfw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMfw> {
         return this._settingsForMfw;
     }
-    protected _setSettingsForMfw(value: Undefinable<SettingsForMfw>): void {
+    protected _setSettingsForMfw(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMfw>): void {
         this._settingsForMfw = value;
     }
 
@@ -263,7 +259,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     public setIsAutoReplay(isAuto: boolean): void {
         if (this.getIsAutoReplay() !== isAuto) {
             this._isAutoReplay = isAuto;
-            dispatch(TypeId.ReplayAutoReplayChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayAutoReplayChanged);
 
             if ((isAuto) && (!this.getIsExecutingAction()) && (!this.checkIsInEnd())) {
                 this._executeNextAction(false);
@@ -294,7 +290,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     }
     public setNextOperationId(nextOperationId: number): void {
         this._nextOperationId = nextOperationId;
-        dispatch(TypeId.RwNextOperationIdChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RwNextOperationIdChanged);
     }
     public getNextAction(): WoContainer | null {
         const array = this._srcExecutedOperationArray;
@@ -312,19 +308,19 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         this._checkpointIdsForNextOperationId.set(nextOperationId, checkpointId);
     }
 
-    private _getCheckpointData(checkpointId: number): ReplayCheckpointData | null {
+    private _getCheckpointData(checkpointId: number): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData | null {
         return this._checkpointDataListForCheckpointId.get(checkpointId) ?? null;
     }
-    private _setCheckpointData(checkpointId: number, data: ReplayCheckpointData): void {
+    private _setCheckpointData(checkpointId: number, data: AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData): void {
         this._checkpointDataListForCheckpointId.set(checkpointId, data);
     }
 
-    public getAllCheckpointInfoArray(): ReplayCheckpointInfo[] {
-        const turnManager   = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(0)?.warData)).getTurnManager(), ClientErrorCode.HrwWar_GetAllCheckpointInfoArray_00);
+    public getAllCheckpointInfoArray(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointInfo[] {
+        const turnManager   = Helpers_Misc.getExisted(SerialWar.decode(Helpers_Misc.getExisted(this._getCheckpointData(0)?.warData)).getTurnManager(), Utils_ClientErrorCode.ClientErrorCode.HrwWar_GetAllCheckpointInfoArray_00);
         let checkpointId    = 0;
         let turnIndex       = turnManager.getTurnIndex();
         let playerIndex     = turnManager.getPlayerIndex();
-        const infoArray     : ReplayCheckpointInfo[] = [{
+        const infoArray     : AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointInfo[] = [{
             checkpointId        : checkpointId,
             nextOperationId     : this._getFirstOperationId(),
             turnIndex           : turnIndex,
@@ -366,7 +362,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         this._setIsTickingReplay(true);
         await this._doLoadCheckpoint(checkpointId, floatText);
         this._setIsTickingReplay(false);
-        dispatch(TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
     }
     /** 不加锁，也不判断当前是否被锁 */
     private async _doLoadCheckpoint(checkpointId: number, floatText = true): Promise<void> {
@@ -374,7 +370,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
 
         this.setIsBatchExecuteAction(true);
         while (!this._getCheckpointData(checkpointId)) {
-            await checkAndCallLater(50);
+            await Timer_TimerModel.checkAndCallLater(50);
             await this._executeNextAction(true);
         }
         this.setIsBatchExecuteAction(false);
@@ -393,12 +389,12 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         this._setIsTickingReplay(true);
         await this._doLoadPreviousCheckpoint(floatText);
         this._setIsTickingReplay(false);
-        dispatch(TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
     }
     /** 不加锁，也不判断当前是否被锁 */
     private _doLoadPreviousCheckpoint(floatText = true): Promise<void> {
         const nextOperationId   = this.getNextOperationId();
-        const checkpointId      = Math.min(getExisted(this._getCheckpointId(nextOperationId)), getExisted(this._getCheckpointId(nextOperationId - 1)));
+        const checkpointId      = Math.min(Helpers_Misc.getExisted(this._getCheckpointId(nextOperationId)), Helpers_Misc.getExisted(this._getCheckpointId(nextOperationId - 1)));
         return this._doLoadCheckpoint(checkpointId, floatText);
     }
     public async loadNextCheckpoint(): Promise<void> {
@@ -411,27 +407,27 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         }
 
         this._setIsTickingReplay(true);
-        await this._doLoadCheckpoint(getExisted(this._getCheckpointId(this.getNextOperationId())) + 1);
+        await this._doLoadCheckpoint(Helpers_Misc.getExisted(this._getCheckpointId(this.getNextOperationId())) + 1);
         this._setIsTickingReplay(false);
-        dispatch(TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
     }
     private async _loadExistingCheckpoint(checkpointId: number, floatText = true): Promise<void> {
         if ((this.getIsExecutingAction()) || (!this.getIsRunning())) {
-            throw newError(`RwWarBase._loadExistingCheckpoint() can't load!`);
+            throw Helpers_Misc.newError(`RwWarBase._loadExistingCheckpoint() can't load!`);
         }
 
         this.setIsAutoReplay(false);
 
-        const checkpointData = getExisted(this._getCheckpointData(checkpointId));
+        const checkpointData = Helpers_Misc.getExisted(this._getCheckpointData(checkpointId));
         this.fastLoadState(SerialWar.decode(checkpointData.warData));
-        await checkAndCallLater();
+        await Timer_TimerModel.checkAndCallLater();
 
         this.setNextOperationId(checkpointData.nextOperationId);
         this.setIsEnded(this.checkIsInEnd());
 
         if (floatText) {
             const lastOperationId = this._getLastOperationId();
-            show(`${getText(TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${getText(TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
+            FloatText.show(`${Lang_Utils.getText(Lang_Constants.TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${Lang_Utils.getText(Lang_Constants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
         }
     }
 
@@ -459,14 +455,14 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : this,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);
-        dispatch(TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
     }
     public async loadNextAction(): Promise<void> {
         if ((this.checkIsInEnd())           ||
@@ -485,14 +481,14 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : this,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);
-        dispatch(TypeId.ReplayTick);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
     }
 
     private async _executeNextAction(isFastExecute: boolean): Promise<void> {
@@ -502,14 +498,14 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
             (this.checkIsInEnd())        ||
             (this.getIsExecutingAction())
         ) {
-            show(getText(TextType.B0110));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0110));
         } else {
             await this._doExecuteAction(action, isFastExecute);
         }
     }
     private async _doExecuteAction(action: WoContainer, isFastExecute: boolean): Promise<void> {
         this.setNextOperationId(this.getNextOperationId() + 1);
-        await checkAndExecute(this, action, isFastExecute);
+        await WarOperations_Executors_Executor.checkAndExecute(this, action, isFastExecute);
 
         const isInEnd = this.checkIsInEnd();
         if (isInEnd) {
@@ -518,7 +514,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
 
         const operationId       = this.getNextOperationId();
         const turnManager       = this.getTurnManager();
-        const prevCheckpointId  = getExisted(this._getCheckpointId(operationId - 1));
+        const prevCheckpointId  = Helpers_Misc.getExisted(this._getCheckpointId(operationId - 1));
         const prevTurnData      = this._getTurnAndPlayerIndexByCheckpointId(prevCheckpointId);
         const isNewCheckpoint   = (isInEnd) || (turnManager.getTurnIndex() !== prevTurnData.turnIndex) || (turnManager.getPlayerIndexInTurn() !== prevTurnData.playerIndex);
         const checkpointId      = isNewCheckpoint ? prevCheckpointId + 1 : prevCheckpointId;
@@ -530,23 +526,23 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
         }
 
         if (!isFastExecute) {
-            dispatch(TypeId.ReplayTick);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ReplayTick);
         }
 
         if ((!isInEnd) && (this.getIsAutoReplay()) && (!this.getIsExecutingAction()) && (this.getIsRunning())) {
-            setTimeout(() => {
+            Egret_Egret.setTimeout(() => {
                 if ((!this.checkIsInEnd()) && (this.getIsAutoReplay()) && (!this.getIsExecutingAction()) && (this.getIsRunning())) {
-                    this._doExecuteAction(getExisted(this.getNextAction()), isFastExecute);
+                    this._doExecuteAction(Helpers_Misc.getExisted(this.getNextAction()), isFastExecute);
                 }
-            }, null, getReplayPauseTime());
+            }, null, LocalData_Storage.getReplayPauseTime());
         }
     }
     private _getTurnAndPlayerIndexByCheckpointId(checkpointId: number): TurnIndexAndPlayerIndex {
         const dict = this._turnAndPlayerIndexesForCheckpointId;
         if (dict.has(checkpointId)) {
-            return getExisted(dict.get(checkpointId));
+            return Helpers_Misc.getExisted(dict.get(checkpointId));
         } else {
-            const turnData      = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(checkpointId)).warData).getTurnManager());
+            const turnData      = Helpers_Misc.getExisted(SerialWar.decode(Helpers_Misc.getExisted(this._getCheckpointData(checkpointId)).warData).getTurnManager());
             const turnIndex     = turnData.getTurnIndex();
             const playerIndex   = turnData.getPlayerIndex();
             const data          : TurnIndexAndPlayerIndex = {

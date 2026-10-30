@@ -1,15 +1,17 @@
-import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { UiOpenableComponent } from "./UiOpenableComponent.ts";
-import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
-import type { UiItemTapEventData } from "../types/UiItemTapEventData.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
+import {
+    Helpers_PointerInput,
+    Sounds_Constants,
+    Ui_Components_UiOpenableComponent,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Types_UiItemTapEventData,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
-export abstract class UiListItemRenderer<OpenData extends UiListItemData>
-    extends     UiOpenableComponent<OpenData>
-    implements  IUiListItemRenderer<OpenData>
+export abstract class UiListItemRenderer<OpenData extends Ui_Types_UiListItemData.UiListItemData>
+    extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<OpenData>
 {
-    private _shortSfxCode = ShortSfxCode.None;
+    private _shortSfxCode = Sounds_Constants.ShortSfxCode.None;
 
     // public constructor() {
     //     super();
@@ -19,22 +21,22 @@ export abstract class UiListItemRenderer<OpenData extends UiListItemData>
     // }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onItemTapEvent(_e: UiItemTapEventData): void {
+    public onItemTapEvent(_e: Ui_Types_UiItemTapEventData.UiItemTapEventData): void {
         // to be overridden
     }
 
-    protected _setShortSfxCode(code: ShortSfxCode): void {
+    protected _setShortSfxCode(code: Sounds_Constants.ShortSfxCode): void {
         this._shortSfxCode = code;
     }
-    public getShortSfxCode(): ShortSfxCode {
+    public getShortSfxCode(): Sounds_Constants.ShortSfxCode {
         return this._shortSfxCode;
     }
 
     protected _applySettingsForWholeTouch(
         touchEnabled            = true,
         touchChildrenEnabled    = false,
-        mouseStyle              = MouseStyleType.Pointer,
-        shortSfxCode            = ShortSfxCode.ButtonNeutral01
+        mouseStyle              = Helpers_PointerInput.MouseStyleType.Pointer,
+        shortSfxCode            = Sounds_Constants.ShortSfxCode.ButtonNeutral01
     ): void {
         this.setIsTouchEnabled(touchEnabled);
         this.setIsTouchChildrenEnabled(touchChildrenEnabled);

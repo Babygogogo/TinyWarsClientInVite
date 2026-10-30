@@ -1,5 +1,7 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MaxValue } from "../numbers/Constants.ts";
+import {
+    Numbers_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export function checkIsSameList<T>(list1: T[], list2: T[]): boolean {
     const length = list1.length;
@@ -49,7 +51,7 @@ export function createEmptyMap<T>(mapWidth: number, mapHeight?: number, defaultV
 export function pickRandomElement<T>(list: T[], randomValue?: number): T {
     return list[Math.floor((randomValue ?? Math.random()) * list.length)];
 }
-export function deleteElementFromList<T>(arr: T[], element: T, maxDeleteCount = MaxValue): number {
+export function deleteElementFromList<T>(arr: T[], element: T, maxDeleteCount = Numbers_Constants.MaxValue): number {
     let index       = 0;
     let deleteCount = 0;
     while ((index < arr.length) && (deleteCount < maxDeleteCount)) {
@@ -62,7 +64,7 @@ export function deleteElementFromList<T>(arr: T[], element: T, maxDeleteCount = 
     }
     return deleteCount;
 }
-export function deleteElementFromList2<T>(arr: T[], predicate: (element: T) => boolean, maxDeleteCount = MaxValue): number {
+export function deleteElementFromList2<T>(arr: T[], predicate: (element: T) => boolean, maxDeleteCount = Numbers_Constants.MaxValue): number {
     let index       = 0;
     let deleteCount = 0;
     while ((index < arr.length) && (deleteCount < maxDeleteCount)) {
@@ -80,7 +82,7 @@ export function addElementToListIfNotExists<T>(arr: T[], element: T): void {
         arr.push(element);
     }
 }
-export function getNonNullElements<T>(arr: Undefinable<T>[]): T[] {
+export function getNonNullElements<T>(arr: AuxiliaryTypes_AuxiliaryTypes.Undefinable<T>[]): T[] {
     return arr.filter(v => v != null) as T[];
 }
 export function moveElementInList<T>(array: T[], element: T, deltaIndex: number): boolean {

@@ -1,18 +1,20 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWar_Model_SpwWar,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class ScwWar extends SpwWar {
+export class ScwWar extends SinglePlayerWar_Model_SpwWar.SpwWar {
     private _settingsForScw?    : SettingsForScw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForScw(getExisted(data.getSettingsForScw(), ClientErrorCode.ScwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForScw(Helpers_Misc.getExisted(data.getSettingsForScw(), Utils_ClientErrorCode.ClientErrorCode.ScwWar_Init_00));
         this.getRetractManager().setCanRetract(true);
 
         this._initView();
@@ -62,13 +64,13 @@ export class ScwWar extends SpwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForScw(settings: SettingsForScw): void {
         this._settingsForScw = settings;
     }
     private _getSettingsForScw(): SettingsForScw {
-        return getExisted(this._settingsForScw);
+        return Helpers_Misc.getExisted(this._settingsForScw);
     }
 }

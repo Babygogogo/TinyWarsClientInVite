@@ -1,21 +1,23 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { IPlayer } from "../../players/IPlayer.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+} from "../../internal.ts";
 
-export class PlayerArray extends Base {
-    public readonly array: IPlayer[];
+export class PlayerArray extends ExpressionParsers_Results_Base.Base {
+    public readonly array: Players_IPlayer.IPlayer[];
 
-    public constructor(war: IBwWar, array: IPlayer[]) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, array: Players_IPlayer.IPlayer[]) {
         super(war);
 
         this.array = array;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.PlayerArray;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.PlayerArray;
     }
-    public checkIsEqual(rhs: Base): boolean {
+    public checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         if (!(rhs instanceof PlayerArray)) {
             return false;
         }

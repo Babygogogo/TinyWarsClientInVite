@@ -1,23 +1,25 @@
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiLayoutBase } from "../interfaces/IUiLayoutBase.ts";
-import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import { UiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
-import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import {
+    Ui_Types_UiHorizontalAlign,
+    Ui_Types_UiLayoutOrientation,
+    Ui_Types_UiVerticalAlign,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiLayoutBase,
+} from "../../internal.ts";
 
 interface RowInfo {
     maxHeight   : number;
     totalWidth  : number;       // includes gap
-    items       : IUiComponent[];
+    items       : Ui_Interfaces_IUiComponent.IUiComponent[];
 }
 interface ColumnInfo {
     maxWidth    : number;
     totalHeight : number;       // includes gap
-    items       : IUiComponent[];
+    items       : Ui_Interfaces_IUiComponent.IUiComponent[];
 }
 
 // TODO 未考虑item旋转、锚点、负缩放等情况
-export function arrangeItems(layout: IUiLayoutBase, allItems: IUiComponent[]): void {
-    if (layout.getOrientation() === UiLayoutOrientation.Rows) {
+export function arrangeItems(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase, allItems: Ui_Interfaces_IUiComponent.IUiComponent[]): void {
+    if (layout.getOrientation() === Ui_Types_UiLayoutOrientation.UiLayoutOrientation.Rows) {
         if (!layout.getMultiItemsPerBlock()) {
             _arrangeItemsAsRows1(layout, allItems);
         } else {
@@ -33,7 +35,7 @@ export function arrangeItems(layout: IUiLayoutBase, allItems: IUiComponent[]): v
 
     // layout.resetBoundsArea();
 }
-function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): void {
+function _arrangeItemsAsRows1(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase, allItems: Ui_Interfaces_IUiComponent.IUiComponent[]): void {
     if (allItems.length <= 0) {
         return;
     }
@@ -43,7 +45,7 @@ function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): 
     {
         const hAlign        = layout.getItemsHorizontalAlign();
         const paddingLeft   = padding?.left ?? 0;
-        if (hAlign === UiHorizontalAlign.Left) {
+        if (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) {
             for (const item of allItems) {
                 item.setX(paddingLeft);
             }
@@ -59,7 +61,7 @@ function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): 
                 availableWidth = requestedWidth - paddingLeft - (padding?.right ?? 0);
             }
 
-            if (hAlign === UiHorizontalAlign.Center) {
+            if (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center) {
                 for (const item of allItems) {
                     item.setX(paddingLeft + (availableWidth - item.getScaledWidth()) / 2);
                 }
@@ -77,7 +79,7 @@ function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): 
         const paddingTop        = padding?.top ?? 0;
         const requestedHeight   = layout.getUnscaledRequestedHeight() ?? layout.getUnscaledManualHeight();
         let y                   = 0;
-        if ((vAlign === UiVerticalAlign.Top) || (requestedHeight == null)) {
+        if ((vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) || (requestedHeight == null)) {
             y = paddingTop;
 
         } else {
@@ -86,7 +88,7 @@ function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): 
             for (const item of allItems) {
                 totalHeight += item.getScaledHeight();
             }
-            y = (vAlign === UiVerticalAlign.Middle)
+            y = (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle)
                 ? paddingTop + (availableHeight - totalHeight) / 2
                 : paddingTop + (availableHeight - totalHeight);
         }
@@ -97,7 +99,7 @@ function _arrangeItemsAsRows1(layout: IUiLayoutBase, allItems: IUiComponent[]): 
         }
     }
 }
-function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]): void {
+function _arrangeItemsAsColumns1(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase, allItems: Ui_Interfaces_IUiComponent.IUiComponent[]): void {
     if (allItems.length <= 0) {
         return;
     }
@@ -107,7 +109,7 @@ function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]
     {
         const vAlign        = layout.getItemsVerticalAlign();
         const paddingTop    = padding?.top ?? 0;
-        if (vAlign === UiVerticalAlign.Top) {
+        if (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) {
             for (const item of allItems) {
                 item.setY(paddingTop);
             }
@@ -123,7 +125,7 @@ function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]
                 availableHeight = requestedHeight - paddingTop - (padding?.bottom ?? 0);
             }
 
-            if (vAlign === UiVerticalAlign.Middle) {
+            if (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle) {
                 for (const item of allItems) {
                     item.setY(paddingTop + (availableHeight - item.getScaledHeight()) / 2);
                 }
@@ -141,7 +143,7 @@ function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]
         const paddingLeft       = padding?.left ?? 0;
         const requestedWidth    = layout.getUnscaledRequestedWidth() ?? layout.getUnscaledManualWidth();
         let x                   = 0;
-        if ((hAlign === UiHorizontalAlign.Left) || (requestedWidth == null)) {
+        if ((hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) || (requestedWidth == null)) {
             x = paddingLeft;
 
         } else {
@@ -150,7 +152,7 @@ function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]
             for (const item of allItems) {
                 totalWidth += item.getScaledWidth();
             }
-            x = (hAlign === UiHorizontalAlign.Center)
+            x = (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center)
                 ? paddingLeft + (availableWidth - totalWidth) / 2
                 : paddingLeft + (availableWidth - totalWidth);
         }
@@ -161,7 +163,7 @@ function _arrangeItemsAsColumns1(layout: IUiLayoutBase, allItems: IUiComponent[]
         }
     }
 }
-function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): void {
+function _arrangeItemsAsRows2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase, allItems: Ui_Interfaces_IUiComponent.IUiComponent[]): void {
     if (allItems.length <= 0) {
         return;
     }
@@ -180,7 +182,7 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
     {
         let rowMaxHeight    = 0;
         let rowTotalWidth   = 0;
-        const newRowItems   : IUiComponent[] = [];
+        const newRowItems   : Ui_Interfaces_IUiComponent.IUiComponent[] = [];
 
         for (const item of allItems) {
             const itemWidth     = item.getScaledWidth();
@@ -220,7 +222,7 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
     const rowsAvailableWidth    = availableWidth ?? Math.max(...rowInfoArray.map(v => v.totalWidth));
     const requestedHeight       = layout.getUnscaledRequestedHeight() ?? layout.getUnscaledManualHeight();
     let y                       = 0;
-    if ((vAlign === UiVerticalAlign.Top) || (requestedHeight == null)) {
+    if ((vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) || (requestedHeight == null)) {
         y = paddingTop;
     } else {
         let rowsTotalHeight = (rowInfoArray.length - 1) * vMargin;
@@ -228,7 +230,7 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
             rowsTotalHeight += rowInfo.maxHeight;
         }
         const rowsAvailableHeight = requestedHeight - paddingTop - (padding?.bottom ?? 0);
-        y = (vAlign === UiVerticalAlign.Middle)
+        y = (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle)
             ? paddingTop + (rowsAvailableHeight - rowsTotalHeight) / 2
             : paddingTop + (rowsAvailableHeight - rowsTotalHeight);
     }
@@ -238,11 +240,11 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
 
         {
             let x = 0;
-            if (hAlign === UiHorizontalAlign.Left) {
+            if (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) {
                 x = paddingLeft;
             } else {
                 const rowWidth = rowInfo.totalWidth;
-                x = (hAlign === UiHorizontalAlign.Center)
+                x = (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center)
                     ? paddingLeft + (rowsAvailableWidth - rowWidth) / 2
                     : paddingLeft + (rowsAvailableWidth - rowWidth);
             }
@@ -256,11 +258,11 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
         {
             const rowHeight = rowInfo.maxHeight;
             for (const item of items) {
-                if (vAlign === UiVerticalAlign.Top) {
+                if (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) {
                     item.setY(y);
                 } else {
                     const itemHeight = item.getScaledHeight();
-                    item.setY(vAlign === UiVerticalAlign.Middle
+                    item.setY(vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle
                         ? y + (rowHeight - itemHeight) / 2
                         : y + (rowHeight - itemHeight)
                     );
@@ -270,7 +272,7 @@ function _arrangeItemsAsRows2(layout: IUiLayoutBase, allItems: IUiComponent[]): 
         }
     }
 }
-function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]): void {
+function _arrangeItemsAsColumns2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase, allItems: Ui_Interfaces_IUiComponent.IUiComponent[]): void {
     if (allItems.length <= 0) {
         return;
     }
@@ -289,7 +291,7 @@ function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]
     {
         let columnMaxWidth      = 0;
         let columnTotalHeight   = 0;
-        const newColumnItems    : IUiComponent[] = [];
+        const newColumnItems    : Ui_Interfaces_IUiComponent.IUiComponent[] = [];
 
         for (const item of allItems) {
             const itemWidth         = item.getScaledWidth();
@@ -329,7 +331,7 @@ function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]
     const requestedWidth            = layout.getUnscaledRequestedWidth() ?? layout.getUnscaledManualWidth();
     const columnsAvailableHeight    = availableHeight ?? Math.max(...columnInfoArray.map(v => v.totalHeight));
     let x                           = 0;
-    if ((hAlign === UiHorizontalAlign.Left) || (requestedWidth == null)) {
+    if ((hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) || (requestedWidth == null)) {
         x = paddingLeft;
     } else {
         let columnsTotalWidth = (columnInfoArray.length - 1) * hMargin;
@@ -337,7 +339,7 @@ function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]
             columnsTotalWidth += rowInfo.maxWidth;
         }
         const columnsAvailableWidth = requestedWidth - paddingLeft - (padding?.right ?? 0);
-        x = (hAlign === UiHorizontalAlign.Center)
+        x = (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center)
             ? paddingLeft + (columnsAvailableWidth - columnsTotalWidth) / 2
             : paddingLeft + (columnsAvailableWidth - columnsTotalWidth);
     }
@@ -347,11 +349,11 @@ function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]
 
         {
             let y = 0;
-            if (vAlign === UiVerticalAlign.Top) {
+            if (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) {
                 y = paddingTop;
             } else {
                 const columnHeight = columnInfo.totalHeight;
-                y = (vAlign === UiVerticalAlign.Middle)
+                y = (vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle)
                     ? paddingTop + (columnsAvailableHeight - columnHeight) / 2
                     : paddingTop + (columnsAvailableHeight - columnHeight);
             }
@@ -365,11 +367,11 @@ function _arrangeItemsAsColumns2(layout: IUiLayoutBase, allItems: IUiComponent[]
         {
             const columnWidth = columnInfo.maxWidth;
             for (const item of items) {
-                if (hAlign === UiHorizontalAlign.Left) {
+                if (hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) {
                     item.setX(x);
                 } else {
                     const itemWidth = item.getScaledWidth();
-                    item.setX(hAlign === UiHorizontalAlign.Center
+                    item.setX(hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center
                         ? x + (columnWidth - itemWidth) / 2
                         : x + (columnWidth - itemWidth)
                     );

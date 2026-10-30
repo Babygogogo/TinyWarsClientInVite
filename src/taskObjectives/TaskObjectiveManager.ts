@@ -1,25 +1,24 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { BwWar } from "../baseWar/model/BwWar.ts";
-import { TaskObjective } from "../expressionParsers/contexts/TaskObjective.ts";
-import { Parser } from "../expressionParsers/Parser.ts";
-import { Num } from "../expressionParsers/results/Num.ts";
 import {
-    newError,
-    getExisted,
-} from "../helpers/Misc.ts";
-import { getValueInInt32 } from "../numbers/Utils.ts";
+    Utils_ClientErrorCode,
+    TaskObjectives_Utils,
+    Helpers_Misc,
+    Numbers_Utils,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Contexts_TaskObjective,
+    type BaseWar_Model_BwWar,
+    type TaskObjectives_ITaskObjectiveManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
-import type { ITaskObjectiveManager } from "./ITaskObjectiveManager.ts";
-import { getErrorCodeForState } from "./Utils.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-export class TaskObjectiveManager implements ITaskObjectiveManager {
+export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
     private _stateArray             : TaskObjectiveState[] = [];
-    private _war?                   : BwWar;
+    private _war?                   : BaseWar_Model_BwWar.BwWar;
 
-    public init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void {
+    public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TaskObjectiveFullData>): void {
         if (data == null) {
             return;
         }
@@ -29,19 +28,19 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         for (const state of stateArray) {
             const objectiveId = state.getObjectiveId();
             if (taskObjectiveIdSet.has(objectiveId)) {
-                throw newError(`Duplicated objectiveId: ${objectiveId}`);
+                throw Helpers_Misc.newError(`Duplicated objectiveId: ${objectiveId}`);
             }
             taskObjectiveIdSet.add(objectiveId);
 
-            const errorCode = getErrorCodeForState(state, taskObjectiveFullData);
+            const errorCode = TaskObjectives_Utils.getErrorCodeForState(state, taskObjectiveFullData);
             if (errorCode) {
-                throw newError(`Invalid state.`, errorCode);
+                throw Helpers_Misc.newError(`Invalid state.`, errorCode);
             }
         }
 
         this._setStateArray(stateArray);
     }
-    public fastInit(data: Undefinable<SerialTaskObjectiveManager>): void {
+    public fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>): void {
         this._setStateArray(data?.getStateArray() ?? []);
     }
 
@@ -57,15 +56,15 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         return this.serialize();
     }
 
-    public startRunning(war: BwWar): void {
+    public startRunning(war: BaseWar_Model_BwWar.BwWar): void {
         this._setWar(war);
     }
 
-    private _setWar(war: BwWar): void {
+    private _setWar(war: BaseWar_Model_BwWar.BwWar): void {
         this._war = war;
     }
-    public getWar(): BwWar {
-        return getExisted(this._war, ClientErrorCode.BwWeatherManager_GetWar_00);
+    public getWar(): BaseWar_Model_BwWar.BwWar {
+        return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
     private _setStateArray(stateArray: TaskObjectiveState[]): void {
@@ -174,11 +173,11 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
     }
 }
 
-function evalProgress(war: BwWar, updater: string, objectiveId: number, defaultValue: number): number {
+function evalProgress(war: BaseWar_Model_BwWar.BwWar, updater: string, objectiveId: number, defaultValue: number): number {
     try {
-        const epResult = Parser.getParseResult(updater).eval(new TaskObjective(war, objectiveId), false);
-        if (epResult instanceof Num) {
-            return getValueInInt32(epResult.num);
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(updater).eval(new ExpressionParsers_Contexts_TaskObjective.TaskObjective(war, objectiveId), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInInt32(epResult.num);
         } else {
             return defaultValue;
         }

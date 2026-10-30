@@ -1,21 +1,17 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    PointerEventType,
-    type PointerUnifiedEventData,
-} from "../../helpers/PointerInput.ts";
-import {
-    UndefinedError,
-    TextType,
-} from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { Event } from "../../egret/Egret.ts";
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Helpers_PointerInput,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 // eslint-disable-next-line no-shadow
 const enum TouchingType {
@@ -33,22 +29,22 @@ export type OpenData = {
     getTitleText        : () => string;
     callback            : (newMinNumber: number, newMaxNumber: number) => void;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnHelp!                  : IUiButton;
-    private readonly _btnCancel!                : IUiButton;
-    private readonly _btnConfirm!               : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupBar!                 : IUiContainer;
-    private readonly _imgBar!                   : IUiImage;
-    private readonly _imgLowerPoint!            : IUiImage;
-    private readonly _imgUpperPoint!            : IUiImage;
+    private readonly _groupBar!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBar!                   : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgLowerPoint!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgUpperPoint!            : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutCount!              : IUiLayout;
-    private readonly _labelLowerCount!          : IUiLabel;
-    private readonly _labelUpperCount!          : IUiLabel;
+    private readonly _layoutCount!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelLowerCount!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUpperCount!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _selectedLowerNum                   = 0;
     private _selectedUpperNum                   = 0;
@@ -56,14 +52,14 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupBar,       callback: this._onTouchedGroupBar },
-            { ui: this._groupBar,       callback: this._onTouchBeginGroupBar,           eventType: PointerEventType.Press },
-            { ui: this._groupBar,       callback: this._onTouchMoveGroupBar,            eventType: PointerEventType.PressMove },
-            { ui: this._groupBar,       callback: this._onTouchEndGroupBar,             eventType: PointerEventType.ReleaseIn },
-            { ui: this._groupBar,       callback: this._onTouchReleaseOutsideGroupBar,  eventType: PointerEventType.ReleaseOut },
+            { ui: this._groupBar,       callback: this._onTouchBeginGroupBar,           eventType: Helpers_PointerInput.PointerEventType.Press },
+            { ui: this._groupBar,       callback: this._onTouchMoveGroupBar,            eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui: this._groupBar,       callback: this._onTouchEndGroupBar,             eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui: this._groupBar,       callback: this._onTouchReleaseOutsideGroupBar,  eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
 
             { ui: this._btnCancel,      callback: this._onTouchedBtnCancel },
             { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
@@ -93,7 +89,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupBar(e: Event): void {
+    private _onTouchedGroupBar(e: Egret_Egret.Event): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -102,7 +98,7 @@ export class Panel extends UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as PointerUnifiedEventData;
+        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX()) ) {
@@ -116,14 +112,14 @@ export class Panel extends UiPanel<OpenData> {
         this._touchingType = TouchingType.None;
         this._updateGroupBar();
     }
-    private _onTouchBeginGroupBar(e: Event): void {
-        const data          = e.data as PointerUnifiedEventData;
+    private _onTouchBeginGroupBar(e: Egret_Egret.Event): void {
+        const data          = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchX        = this._groupBar.globalToLocal(data.stageX, data.stageY).x;
         this._touchingType  = Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX())
             ? TouchingType.Lower
             : TouchingType.Upper;
     }
-    private _onTouchMoveGroupBar(e: Event): void {
+    private _onTouchMoveGroupBar(e: Egret_Egret.Event): void {
         const touchingType = this._touchingType;
         if (touchingType === TouchingType.None) {
             return;
@@ -137,7 +133,7 @@ export class Panel extends UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as PointerUnifiedEventData;
+        const data      = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (touchingType === TouchingType.Lower) {
@@ -169,7 +165,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const func = this.getOpenData()?.getHelpText;
         if (func) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => func(),
             });
         }
@@ -185,9 +181,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? Lang_Constants.UndefinedError);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
     }
 
     private _updateGroupBar(): void {

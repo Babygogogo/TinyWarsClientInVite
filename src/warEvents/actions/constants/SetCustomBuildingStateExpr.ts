@@ -1,139 +1,138 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter                   : EpExpressionInfo;
-    ActDefenseAmount                : EpExpressionInfo;
-    ActDefenseUnitTypeArray         : EpExpressionInfo;
-    ActMaxCapturePoint              : EpExpressionInfo;
-    ActIsDefeatedOnCapture          : EpExpressionInfo;
-    ActRepairNormalizedHp           : EpExpressionInfo;
-    ActRepairUnitTypeArray          : EpExpressionInfo;
-    ActIncomePerTurn                : EpExpressionInfo;
-    ActVisionRange                  : EpExpressionInfo;
-    ActIsVisionEnabledForAllPlayers : EpExpressionInfo;
-    ActHideUnitTypeArray            : EpExpressionInfo;
-    ActProduceUnitTypeArray         : EpExpressionInfo;
-    ActGlobalAttackBonus            : EpExpressionInfo;
-    ActGlobalDefenseBonus           : EpExpressionInfo;
-    ActUnitTypeArrayForCoBoard      : EpExpressionInfo;
-    ActBlockEnemyUnitTypeArray      : EpExpressionInfo;
+    ConTileFilter                   : ExpressionParsers_Types.EpExpressionInfo;
+    ActDefenseAmount                : ExpressionParsers_Types.EpExpressionInfo;
+    ActDefenseUnitTypeArray         : ExpressionParsers_Types.EpExpressionInfo;
+    ActMaxCapturePoint              : ExpressionParsers_Types.EpExpressionInfo;
+    ActIsDefeatedOnCapture          : ExpressionParsers_Types.EpExpressionInfo;
+    ActRepairNormalizedHp           : ExpressionParsers_Types.EpExpressionInfo;
+    ActRepairUnitTypeArray          : ExpressionParsers_Types.EpExpressionInfo;
+    ActIncomePerTurn                : ExpressionParsers_Types.EpExpressionInfo;
+    ActVisionRange                  : ExpressionParsers_Types.EpExpressionInfo;
+    ActIsVisionEnabledForAllPlayers : ExpressionParsers_Types.EpExpressionInfo;
+    ActHideUnitTypeArray            : ExpressionParsers_Types.EpExpressionInfo;
+    ActProduceUnitTypeArray         : ExpressionParsers_Types.EpExpressionInfo;
+    ActGlobalAttackBonus            : ExpressionParsers_Types.EpExpressionInfo;
+    ActGlobalDefenseBonus           : ExpressionParsers_Types.EpExpressionInfo;
+    ActUnitTypeArrayForCoBoard      : ExpressionParsers_Types.EpExpressionInfo;
+    ActBlockEnemyUnitTypeArray      : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConTileFilter: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.TileFilter),
-        getHelpText     : () => getText(TextType.A0662),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.TileFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
     },
     ActDefenseAmount: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.DefBonus$),
-        getHelpText     : () => getText(TextType.A0685),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0685),
     },
     ActDefenseUnitTypeArray: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.DefensibleUnits),
-        getHelpText     : () => getText(TextType.A0686),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.DefensibleUnits),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0686),
     },
     ActMaxCapturePoint: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.MaxCapturePoint),
-        getHelpText     : () => getText(TextType.A0687),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.MaxCapturePoint),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0687),
     },
     ActIsDefeatedOnCapture: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.DefeatIfCaptured),
-        getHelpText     : () => getText(TextType.A0688),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0688),
     },
     ActRepairNormalizedHp: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RepairHpAmount),
-        getHelpText     : () => getText(TextType.A0689),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RepairHpAmount),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0689),
     },
     ActRepairUnitTypeArray: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RepairableUnits),
-        getHelpText     : () => getText(TextType.A0690),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0690),
     },
     ActIncomePerTurn: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.Income),
-        getHelpText     : () => getText(TextType.A0691),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Income),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0691),
     },
     ActVisionRange: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.VisionRange),
-        getHelpText     : () => getText(TextType.A0692),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.VisionRange),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0692),
     },
     ActIsVisionEnabledForAllPlayers: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.SharedVision),
-        getHelpText     : () => getText(TextType.A0693),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.SharedVision),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0693),
     },
     ActHideUnitTypeArray: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.HidableUnits),
-        getHelpText     : () => getText(TextType.A0694),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.HidableUnits),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0694),
     },
     ActProduceUnitTypeArray: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.ProducibleUnits),
-        getHelpText     : () => getText(TextType.A0695),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0695),
     },
     ActGlobalAttackBonus: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.GlobalAtkBonus),
-        getHelpText     : () => getText(TextType.A0696),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.GlobalAtkBonus),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0696),
     },
     ActGlobalDefenseBonus: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.GlobalDefBonus),
-        getHelpText     : () => getText(TextType.A0697),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.GlobalDefBonus),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0697),
     },
     ActUnitTypeArrayForCoBoard: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.CoBoardableUnit),
-        getHelpText     : () => getText(TextType.A0698),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0698),
     },
     ActBlockEnemyUnitTypeArray: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.BlockableEnemyUnits),
-        getHelpText     : () => getText(TextType.A0699),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0699),
     },
 };

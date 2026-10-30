@@ -1,7 +1,9 @@
-import { UiPanel } from "../../ui/components/UiPanel.ts";
+import {
+    Ui_Components_UiPanel,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     public constructor() {
         super();
 

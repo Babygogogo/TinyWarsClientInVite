@@ -1,9 +1,11 @@
-import type { IField } from "./IField.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import {
+    type Fields_IField,
+    type Ui_Interfaces_IUiContainer,
+} from "../internal.ts";
 
-export interface IFieldView extends IUiContainer {
-    init(field: IField): void;
-    fastInit(field: IField): void;
+export interface IFieldView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(field: Fields_IField.IField): void;
+    fastInit(field: Fields_IField.IField): void;
 
     startRunningView(): void;
     stopRunningView(): void;

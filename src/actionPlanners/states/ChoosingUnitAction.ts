@@ -1,72 +1,71 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel } from "../../gamePanels/Manager.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import { getSelfSettingsIsSetPathMode } from "../../users/Model.ts";
+    Units_Constants,
+    GamePanels_Manager,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Users_Model,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    ActionPlanners_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+} from "../../internal.ts";
 
-export class ChoosingUnitAction implements IState {
+export class ChoosingUnitAction implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ChoosingUnitAction();
 
     public static getInstance(): ChoosingUnitAction {
         return ChoosingUnitAction._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ChoosingUnitAction;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         if (actionPlanner.getChosenUnitsForDrop().length) {
-            return StateId.ChoosingUnitDropDestination;
+            return ActionPlanners_Constants.StateId.ChoosingUnitDropDestination;
         } else {
             // return State.MakingMovePath;
             const war               = actionPlanner.getWar();
             const existingUnit      = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
             const selfPlayerIndex   = war.getPlayerIndexInTurn();
-            if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+            if (Helpers_Misc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
                 if (!existingUnit) {
-                    if (!getSelfSettingsIsSetPathMode()) {
-                        return StateId.ChoosingUnitAction;
+                    if (!Users_Model.getSelfSettingsIsSetPathMode()) {
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     } else {
                         const previousGridIndex = war.getCursor().getPreviousGridIndex();
                         if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
-                            return StateId.ChoosingUnitAction;
+                            return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                         } else {
-                            return StateId.ChoosingUnitMovePath;
+                            return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                         }
                     }
                 } else {
                     if (existingUnit.getPlayerIndex() !== selfPlayerIndex) {
                         if (existingUnit.checkHasWeapon()) {
-                            return StateId.PreviewingUnitAttackableArea;
+                            return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                         } else {
-                            return StateId.PreviewingUnitMovableArea;
+                            return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                         }
                     } else {
-                        const focusUnit = getExisted(actionPlanner.getFocusUnit());
+                        const focusUnit = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
                         if ((focusUnit === actionPlanner.getFocusUnitLoaded()) && (gridIndex.checkIsEqual(focusUnit.getGridIndex()))) {
-                            return StateId.ChoosingUnitMovePath;
+                            return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                         } else {
                             if ((focusUnit === existingUnit) || (focusUnit.checkCanJoinUnit(existingUnit)) || (existingUnit.checkCanLoadUnit(focusUnit))) {
-                                return StateId.ChoosingUnitAction;
+                                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                             } else {
-                                if (existingUnit.getActionState() === ActionStateId.Idle) {
-                                    return StateId.ChoosingUnitMovePath;
+                                if (existingUnit.getActionState() === Units_Constants.ActionStateId.Idle) {
+                                    return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                                 } else {
                                     if (existingUnit.checkHasWeapon()) {
-                                        return StateId.PreviewingUnitAttackableArea;
+                                        return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                                     } else {
-                                        return StateId.PreviewingUnitMovableArea;
+                                        return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                                     }
                                 }
                             }
@@ -77,36 +76,36 @@ export class ChoosingUnitAction implements IState {
                 if (actionPlanner.checkCanFocusUnitOnMapAttackTarget(gridIndex)) {
                     const previousGridIndex = war.getCursor().getPreviousGridIndex();
                     if ((previousGridIndex == null) || (!gridIndex.checkIsEqual(previousGridIndex))) {
-                        return StateId.ChoosingUnitMovePath;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                     } else {
-                        if (getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
+                        if (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
                             if (existingUnit) {
-                                return StateId.RequestingUnitAttackUnit;
+                                return ActionPlanners_Constants.StateId.RequestingUnitAttackUnit;
                             } else {
-                                return StateId.RequestingUnitAttackTile;
+                                return ActionPlanners_Constants.StateId.RequestingUnitAttackTile;
                             }
                         } else {
-                            return StateId.ChoosingUnitMovePath;
+                            return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                         }
                     }
                 } else {
                     if (actionPlanner.getFocusUnitLoaded()) {
-                        return StateId.ChoosingUnitAction;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     } else {
                         if (!existingUnit) {
                             if (war.getTileMap().getTile(gridIndex).checkIsMapWeapon()) {
-                                return StateId.PreviewingTileAttackableArea;
+                                return ActionPlanners_Constants.StateId.PreviewingTileAttackableArea;
                             } else {
-                                return StateId.Idle;
+                                return ActionPlanners_Constants.StateId.Idle;
                             }
                         } else {
-                            if ((existingUnit.getPlayerIndex() === selfPlayerIndex) && (existingUnit.getActionState() === ActionStateId.Idle)) {
-                                return StateId.ChoosingUnitMovePath;
+                            if ((existingUnit.getPlayerIndex() === selfPlayerIndex) && (existingUnit.getActionState() === Units_Constants.ActionStateId.Idle)) {
+                                return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
                             } else {
                                 if (existingUnit.checkHasWeapon()) {
-                                    return StateId.PreviewingUnitAttackableArea;
+                                    return ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea;
                                 } else {
-                                    return StateId.PreviewingUnitMovableArea;
+                                    return ActionPlanners_Constants.StateId.PreviewingUnitMovableArea;
                                 }
                             }
                         }
@@ -116,131 +115,131 @@ export class ChoosingUnitAction implements IState {
         }
     }
 
-    public getNextStateIdOnDrag(actionPlanner: IActionPlanner): StateId {
+    public getNextStateIdOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): ActionPlanners_Constants.StateId {
         if (actionPlanner.getChosenUnitsForDrop().length) {
-            return StateId.ChoosingUnitAction;
+            return ActionPlanners_Constants.StateId.ChoosingUnitAction;
         } else {
-            return StateId.ChoosingUnitMovePath;
+            return ActionPlanners_Constants.StateId.ChoosingUnitMovePath;
         }
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
-        closePanel(getDict().BwUnitActionsPanel);
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
 
         if (actionPlanner.getChosenUnitsForDrop().length) {
             const data = actionPlanner.popBackChosenUnitForDrop();
             actionPlanner.setChoosingUnitForDrop(data.unit);
             actionPlanner.setAvailableDropDestinations(actionPlanner.calculateAvailableDropDestination(data.unit, actionPlanner.getChosenDropDestinations()));
-            actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitDropDestination);
         } else {
-            actionPlanner.setStateId(StateId.ChoosingUnitMovePath);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitMovePath);
         }
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.ButtonCancel01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitMovePath) {
-            if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
+            if (Helpers_Misc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
                 actionPlanner.updateMovePathByDestination(gridIndex);
-                playShortSfx(ShortSfxCode.CursorConfirm01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
             } else {
                 actionPlanner.clearFocusUnitLoaded();
                 actionPlanner.resetMovableArea();
                 actionPlanner.resetAttackableArea();
-                actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex());
-                playShortSfx(ShortSfxCode.ButtonCancel01);
+                actionPlanner.resetMovePathAsShortest(Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex());
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             }
 
-        } else if (currState === StateId.ChoosingUnitAction) {
-            if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+            if (Helpers_Misc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
                 actionPlanner.updateMovePathByDestination(gridIndex);
-                playShortSfx(ShortSfxCode.CursorConfirm01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
             } else {
-                if (getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
-                    playShortSfx(ShortSfxCode.CursorConfirm01);
+                if (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
                 } else {
                     if (actionPlanner.getFocusUnitLoaded()) {
                         actionPlanner.clearFocusUnitLoaded();
                         actionPlanner.resetMovableArea();
                         actionPlanner.resetAttackableArea();
-                        actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex());
-                        playShortSfx(ShortSfxCode.ButtonCancel01);
+                        actionPlanner.resetMovePathAsShortest(Helpers_Misc.getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex());
+                        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
                     } else {
-                        playShortSfx(ShortSfxCode.CursorConfirm01);
+                        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
                     }
                 }
             }
 
-        } else if (currState === StateId.ChoosingUnitAttackTarget) {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
-        } else if (currState === StateId.ChoosingUnitCrushTarget) {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
-        } else if (currState === StateId.ChoosingCoActiveSkillTarget) {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
-        } else if (currState === StateId.ChoosingUnitDropDestination) {
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             const shouldAddDrop = actionPlanner.getAvailableDropDestinations()?.some(g => g.checkIsEqual(gridIndex));
             if (shouldAddDrop) {
                 actionPlanner.pushBackChosenUnitForDrop({
-                    unit        : getExisted(actionPlanner.getChoosingUnitForDrop()),
+                    unit        : Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop()),
                     destination : gridIndex,
                 });
             }
             actionPlanner.clearChoosingUnitForDrop();
             actionPlanner.clearAvailableDropDestinations();
-            playShortSfx(shouldAddDrop ? ShortSfxCode.CursorConfirm01 : ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(shouldAddDrop ? Sounds_Constants.ShortSfxCode.CursorConfirm01 : Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
-        } else if (currState === StateId.ChoosingUnitFlareDestination) {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
-        } else if (currState === StateId.ChoosingUnitRepairTarget) {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+        } else if (currState === ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitAction) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             // Nothing to do.
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnDragEnded(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId === StateId.ChoosingUnitMovePath) {
-            if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+        if (currStateId === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) {
+            if (Helpers_Misc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
                 actionPlanner.updateMovePathByDestination(gridIndex);
             } else {
-                throw newError(`currStateId: ${currStateId}`);
+                throw Helpers_Misc.newError(`currStateId: ${currStateId}`);
             }
 
         } else {
-            throw newError(`currStateId: ${currStateId}`);
+            throw Helpers_Misc.newError(`currStateId: ${currStateId}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.CursorConfirm01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
     }
 }

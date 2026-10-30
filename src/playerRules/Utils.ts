@@ -1,50 +1,36 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    CategoryId,
-    CoId,
-} from "../cos/Constants.ts";
-import { checkIsValidSkinId } from "../forceSkins/Utils.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { checkIsSameSet } from "../helpers/Collection.ts";
-import {
-    InitialFund,
-    IncomeMultiplier,
-    EnergyAddPctOnCoBoard,
-    EnergyLossPctOnCoDie,
-    EnergyGrowthMultiplier,
-    MoveRangeModifier,
-    UnitVisionRangeModifier,
-    TileVisionRangeModifier,
-    AttackPowerModifier,
-    DefenseModifier,
-    Luck,
-    MaxUnitsCount,
-} from "./Constants.ts";
-import { PlayerIndex } from "../players/Constants.ts";
+    PlayerRules_Constants,
+    Cos_Constants,
+    Helpers_Collection,
+    ForceSkins_Utils,
+    Utils_ClientErrorCode,
+    Players_Constants,
+    Teams_Constants,
+    WarTypes_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import { PlayerRule } from "../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 import type { RuleAvailability } from "../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import { TeamIndex } from "../teams/Constants.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { WarTypeId } from "../warTypes/Constants.ts";
 
-export function createDefaultPlayerRule(playerIndex: number, gcData: GameConfig): PlayerRule {
+export function createDefaultPlayerRule(playerIndex: number, gcData: GameConfigs_GameConfig.GameConfig): PlayerRule {
     return PlayerRule.fromJson({
         playerIndex                 : playerIndex,
         teamIndex                   : playerIndex,
         bannedCoCategoryIdArray     : [],
         bannedUnitTypeArray         : [],
-        initialFund                 : InitialFund.Default,
-        incomeMultiplier            : IncomeMultiplier.Default,
+        initialFund                 : PlayerRules_Constants.InitialFund.Default,
+        incomeMultiplier            : PlayerRules_Constants.IncomeMultiplier.Default,
         maxUnitsCount               : null,
-        energyAddPctOnCoBoard       : EnergyAddPctOnCoBoard.Default,
-        energyLossPctOnCoDie        : EnergyLossPctOnCoDie.Default,
-        energyGrowthMultiplier      : EnergyGrowthMultiplier.Default,
+        energyAddPctOnCoBoard       : PlayerRules_Constants.EnergyAddPctOnCoBoard.Default,
+        energyLossPctOnCoDie        : PlayerRules_Constants.EnergyLossPctOnCoDie.Default,
+        energyGrowthMultiplier      : PlayerRules_Constants.EnergyGrowthMultiplier.Default,
         canActivateCoSkill          : true,
         canCoBoard                  : true,
         canUnitJoin                 : true,
-        moveRangeModifier           : MoveRangeModifier.Default,
-        unitVisionRangeModifier     : UnitVisionRangeModifier.Default,
-        tileVisionRangeModifier     : TileVisionRangeModifier.Default,
+        moveRangeModifier           : PlayerRules_Constants.MoveRangeModifier.Default,
+        unitVisionRangeModifier     : PlayerRules_Constants.UnitVisionRangeModifier.Default,
+        tileVisionRangeModifier     : PlayerRules_Constants.TileVisionRangeModifier.Default,
         mcwHumanCoCategoryIdArray   : [],
         mmwHumanCoCategoryIdArray   : [],
         mrwHumanCoCategoryIdArray   : [],
@@ -56,15 +42,15 @@ export function createDefaultPlayerRule(playerIndex: number, gcData: GameConfig)
         srwAiCoId                   : null,
         campaignAiCoId              : null,
         campaignSkinId              : null,
-        attackPowerModifier         : AttackPowerModifier.Default,
-        defenseModifier             : DefenseModifier.Default,
-        luckLowerLimit              : Luck.DefaultLowerLimit,
+        attackPowerModifier         : PlayerRules_Constants.AttackPowerModifier.Default,
+        defenseModifier             : PlayerRules_Constants.DefenseModifier.Default,
+        luckLowerLimit              : PlayerRules_Constants.Luck.DefaultLowerLimit,
         luckUpperLimit              : gcData.getSystemCfg().getDefaultLuckUpperLimit(),
     });
 }
-export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcData: GameConfig): PlayerRule[] {
+export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcData: GameConfigs_GameConfig.GameConfig): PlayerRule[] {
     const playerRuleDataList: PlayerRule[] = [];
-    for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+    for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
         playerRuleDataList.push(createDefaultPlayerRule(playerIndex, gcData));
     }
     return playerRuleDataList;
@@ -73,137 +59,137 @@ export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcDat
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, isCampaignMap }: {
     playerRule              : PlayerRule;
-    gameConfig              : GameConfig;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     playersCountUnneutral   : number;
     isCampaignMap           : boolean;
-}): ClientErrorCode {
+}): Utils_ClientErrorCode.ClientErrorCode {
     {
         const playerIndex = playerRule.getPlayerIndex();
         if ((playerIndex == null)                                   ||
-            (playerIndex <  PlayerIndex.First)  ||
+            (playerIndex <  Players_Constants.PlayerIndex.First)  ||
             (playerIndex >  playersCountUnneutral)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_01;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_01;
         }
     }
 
     {
         const teamIndex = playerRule.getTeamIndex();
         if ((teamIndex == null)                                 ||
-            (teamIndex <  TeamIndex.First)    ||
+            (teamIndex <  Teams_Constants.TeamIndex.First)    ||
             (teamIndex >  playersCountUnneutral)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_02;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_02;
         }
     }
 
     {
         const initialFund = playerRule.getInitialFund();
         if ((initialFund == null)                                           ||
-            (initialFund > InitialFund.MaxLimit)    ||
-            (initialFund < InitialFund.MinLimit)
+            (initialFund > PlayerRules_Constants.InitialFund.MaxLimit)    ||
+            (initialFund < PlayerRules_Constants.InitialFund.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_03;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_03;
         }
     }
 
     {
         const incomeMultiplier = playerRule.getIncomeMultiplier();
         if ((incomeMultiplier == null)                                              ||
-            (incomeMultiplier > IncomeMultiplier.MaxLimit)  ||
-            (incomeMultiplier < IncomeMultiplier.MinLimit)
+            (incomeMultiplier > PlayerRules_Constants.IncomeMultiplier.MaxLimit)  ||
+            (incomeMultiplier < PlayerRules_Constants.IncomeMultiplier.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_04;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_04;
         }
     }
 
     {
         const energyAddPctOnCoBoard = playerRule.getEnergyAddPctOnCoBoard();
-        if ((energyAddPctOnCoBoard > EnergyAddPctOnCoBoard.MaxLimit)    ||
-            (energyAddPctOnCoBoard < EnergyAddPctOnCoBoard.MinLimit)
+        if ((energyAddPctOnCoBoard > PlayerRules_Constants.EnergyAddPctOnCoBoard.MaxLimit)    ||
+            (energyAddPctOnCoBoard < PlayerRules_Constants.EnergyAddPctOnCoBoard.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_05;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_05;
         }
     }
 
     {
         const energyGrowthMultiplier = playerRule.getEnergyGrowthMultiplier();
         if ((energyGrowthMultiplier == null)                                                    ||
-            (energyGrowthMultiplier > EnergyGrowthMultiplier.MaxLimit)  ||
-            (energyGrowthMultiplier < EnergyGrowthMultiplier.MinLimit)
+            (energyGrowthMultiplier > PlayerRules_Constants.EnergyGrowthMultiplier.MaxLimit)  ||
+            (energyGrowthMultiplier < PlayerRules_Constants.EnergyGrowthMultiplier.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_06;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_06;
         }
     }
 
     {
         const moveRangeModifier = playerRule.getMoveRangeModifier();
         if ((moveRangeModifier == null)                                                 ||
-            (moveRangeModifier > MoveRangeModifier.MaxLimit)    ||
-            (moveRangeModifier < MoveRangeModifier.MinLimit)
+            (moveRangeModifier > PlayerRules_Constants.MoveRangeModifier.MaxLimit)    ||
+            (moveRangeModifier < PlayerRules_Constants.MoveRangeModifier.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_07;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_07;
         }
     }
 
     {
         const energyLossPctOnCoDie = playerRule.getEnergyLossPctOnCoDie();
-        if ((energyLossPctOnCoDie > EnergyLossPctOnCoDie.MaxLimit)   ||
-            (energyLossPctOnCoDie < EnergyLossPctOnCoDie.MinLimit)
+        if ((energyLossPctOnCoDie > PlayerRules_Constants.EnergyLossPctOnCoDie.MaxLimit)   ||
+            (energyLossPctOnCoDie < PlayerRules_Constants.EnergyLossPctOnCoDie.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_08;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_08;
         }
     }
 
     {
         const unitVisionRangeModifier = playerRule.getUnitVisionRangeModifier();
         if ((unitVisionRangeModifier == null)                                                       ||
-            (unitVisionRangeModifier > UnitVisionRangeModifier.MaxLimit)    ||
-            (unitVisionRangeModifier < UnitVisionRangeModifier.MinLimit)
+            (unitVisionRangeModifier > PlayerRules_Constants.UnitVisionRangeModifier.MaxLimit)    ||
+            (unitVisionRangeModifier < PlayerRules_Constants.UnitVisionRangeModifier.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_09;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_09;
         }
     }
 
     {
         const tileVisionRangeModifier = playerRule.getTileVisionRangeModifier();
-        if ((tileVisionRangeModifier > TileVisionRangeModifier.MaxLimit)    ||
-            (tileVisionRangeModifier < TileVisionRangeModifier.MinLimit)
+        if ((tileVisionRangeModifier > PlayerRules_Constants.TileVisionRangeModifier.MaxLimit)    ||
+            (tileVisionRangeModifier < PlayerRules_Constants.TileVisionRangeModifier.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_10;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_10;
         }
     }
 
     {
         const luckLowerLimit = playerRule.getLuckLowerLimit();
         if ((luckLowerLimit == null)                                    ||
-            (luckLowerLimit > Luck.MaxLimit)    ||
-            (luckLowerLimit < Luck.MinLimit)
+            (luckLowerLimit > PlayerRules_Constants.Luck.MaxLimit)    ||
+            (luckLowerLimit < PlayerRules_Constants.Luck.MinLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_11;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_11;
         }
 
         const luckUpperLimit = playerRule.getLuckUpperLimit();
         if ((luckUpperLimit == null)                                    ||
-            (luckUpperLimit > Luck.MaxLimit)    ||
-            (luckUpperLimit < Luck.MinLimit)    ||
+            (luckUpperLimit > PlayerRules_Constants.Luck.MaxLimit)    ||
+            (luckUpperLimit < PlayerRules_Constants.Luck.MinLimit)    ||
             (luckUpperLimit < luckLowerLimit)
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_12;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_12;
         }
     }
 
     {
         const bannedCoCategoryIdArray = playerRule.getBannedCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(bannedCoCategoryIdArray)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_13;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_13;
         }
     }
 
     {
         const bannedUnitTypeArray = playerRule.getBannedUnitTypeArray();
         if (!gameConfig.checkIsValidUnitTypeSubset(bannedUnitTypeArray)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_14;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_14;
         }
     }
 
@@ -212,9 +198,9 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
         if (srwAiCoId != null) {
             const cfg = gameConfig.getCoBasicCfg(srwAiCoId);
             if ((cfg == null)                                           ||
-                (cfg.getCoCategoryId() === CategoryId.Random)
+                (cfg.getCoCategoryId() === Cos_Constants.CategoryId.Random)
             ) {
-                return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_15;
+                return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_15;
             }
         }
     }
@@ -224,63 +210,63 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
         if (ccwAiCoId != null) {
             const cfg = gameConfig.getCoBasicCfg(ccwAiCoId);
             if ((cfg == null)                                           ||
-                (cfg.getCoCategoryId() === CategoryId.Random)
+                (cfg.getCoCategoryId() === Cos_Constants.CategoryId.Random)
             ) {
-                return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_16;
+                return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_16;
             }
         }
     }
 
     {
         const arr = playerRule.getSrwHumanCoCategoryIdArray();
-        if ((arr.includes(CategoryId.Random))   ||
+        if ((arr.includes(Cos_Constants.CategoryId.Random))   ||
             (!gameConfig.checkIsValidCoCategoryIdSubset(arr))
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_17;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_17;
         }
     }
 
     {
         const arr = playerRule.getMcwHumanCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(arr)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_18;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_18;
         }
     }
 
     {
         const arr = playerRule.getCcwHumanCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(arr)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_19;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_19;
         }
     }
 
     {
         const arr = playerRule.getMmwHumanCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(arr)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_20;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_20;
         }
     }
 
     {
         const arr = playerRule.getMrwHumanCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(arr)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_21;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_21;
         }
     }
 
     {
         const arr = playerRule.getAtwHumanCoCategoryIdArray();
         if (!gameConfig.checkIsValidCoCategoryIdSubset(arr)) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_22;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_22;
         }
     }
 
     {
         const arr = playerRule.getCampaignHumanCoIdArray();
         if ((!gameConfig.checkIsValidCoIdSubset(arr))                                                       ||
-            (arr.some(v => gameConfig.getCoBasicCfg(v)?.getCoCategoryId() === CategoryId.Random))
+            (arr.some(v => gameConfig.getCoBasicCfg(v)?.getCoCategoryId() === Cos_Constants.CategoryId.Random))
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_23;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_23;
         }
     }
 
@@ -289,9 +275,9 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
         if (campaignAiCoId != null) {
             const cfg = gameConfig.getCoBasicCfg(campaignAiCoId);
             if ((cfg == null)                                           ||
-                (cfg.getCoCategoryId() === CategoryId.Random)
+                (cfg.getCoCategoryId() === Cos_Constants.CategoryId.Random)
             ) {
-                return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_24;
+                return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_24;
             }
         }
     }
@@ -299,9 +285,9 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
     {
         const skinId = playerRule.getCampaignSkinId();
         if ((skinId != null)                                                &&
-            (!checkIsValidSkinId(skinId, false))
+            (!ForceSkins_Utils.checkIsValidSkinId(skinId, false))
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_25;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_25;
         }
     }
 
@@ -309,7 +295,7 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
         {
             if (playerRule.getCampaignAiCoId() == null) {
                 if (!playerRule.getCampaignHumanCoIdArray().length) {
-                    return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_26;
+                    return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_26;
                 }
             } else {
                 // if (campaignHumanCoIdArray.length) {
@@ -319,32 +305,32 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
         }
 
         if (playerRule.getCampaignSkinId() == null) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_27;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_27;
         }
     }
 
     {
         const maxUnitsCount = playerRule.getMaxUnitsCount();
         if ((maxUnitsCount != null)                                              &&
-            ((maxUnitsCount > MaxUnitsCount.MaxLimit)    ||
-             (maxUnitsCount < MaxUnitsCount.MinLimit))
+            ((maxUnitsCount > PlayerRules_Constants.MaxUnitsCount.MaxLimit)    ||
+             (maxUnitsCount < PlayerRules_Constants.MaxUnitsCount.MinLimit))
         ) {
-            return ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_28;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrDataForPlayerRule_GetErrorCodeForRuleForPlayers_28;
         }
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
 
 export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, playersCountUnneutral, ruleAvailability, isCampaignMap }: {
     playerRuleList          : PlayerRule[];
-    gameConfig              : GameConfig;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     playersCountUnneutral   : number;
     ruleAvailability        : RuleAvailability | null;
     isCampaignMap           : boolean;
-}): ClientErrorCode {
+}): Utils_ClientErrorCode.ClientErrorCode {
     if ((playerRuleList == null) || (playerRuleList.length !== playersCountUnneutral)) {
-        return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_00;
+        return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_00;
     }
 
     const canSrw                    = ruleAvailability?.getCanSrw();
@@ -367,7 +353,7 @@ export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, play
                 playersCountUnneutral   : playersCountUnneutral,
                 isCampaignMap           : isCampaignMap,
             });
-            if (errorCode !== ClientErrorCode.NoError) {
+            if (errorCode !== Utils_ClientErrorCode.ClientErrorCode.NoError) {
                 return errorCode;
             }
         }
@@ -376,12 +362,12 @@ export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, play
         if ((playerIndex == null)                                   ||
             (allPlayerIndexSet.has(playerIndex))
         ) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_01;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_01;
         }
 
         const teamIndex = data.getTeamIndex();
         if (teamIndex == null) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_02;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_02;
         }
 
         allPlayerIndexSet.add(playerIndex);
@@ -424,7 +410,7 @@ export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, play
                 if ((skinId == null)                                                ||
                     (campaignAllSkinIdSet.has(skinId))
                 ) {
-                    return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_20;
+                    return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_20;
                 }
 
                 campaignAllSkinIdSet.add(skinId);
@@ -433,40 +419,40 @@ export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, play
     }
 
     if (allPlayerIndexSet.size !== playersCountUnneutral) {
-        return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_21;
+        return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_21;
     }
     if (allTeamIndexSet.size <= 1) {
-        return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_22;
+        return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_22;
     }
 
     if (canSrw) {
         if (!srwAiTeamIndexSet.size) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_23;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_23;
         }
         if (srwHumanTeamIndexSet.size !== 1) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_24;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_24;
         }
     }
 
     if (canCcw) {
         if (!ccwAiPlayerIndexSet.size) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_25;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_25;
         }
         if (ccwHumanPlayerIndexSet.size <= 1) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_26;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_26;
         }
     }
 
     if (isCampaignMap) {
         if (!campaignAiTeamIndexSet.size) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_27;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_27;
         }
         if (campaignHumanTeamIndexSet.size !== 1) {
-            return ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_28;
+            return Utils_ClientErrorCode.ClientErrorCode.PhWrRuleForPlayers_GetErrorCode_28;
         }
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
 
 export function checkIsSame(playerRule1: PlayerRule, playerRule2: PlayerRule): boolean {
@@ -497,55 +483,55 @@ export function checkIsSame(playerRule1: PlayerRule, playerRule2: PlayerRule): b
         return false;
     }
 
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getBannedCoCategoryIdArray()),
         new Set(playerRule2.getBannedCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getBannedUnitTypeArray()),
         new Set(playerRule2.getBannedUnitTypeArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getSrwHumanCoCategoryIdArray()),
         new Set(playerRule2.getSrwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMcwHumanCoCategoryIdArray()),
         new Set(playerRule2.getMcwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getCcwHumanCoCategoryIdArray()),
         new Set(playerRule2.getCcwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMmwHumanCoCategoryIdArray()),
         new Set(playerRule2.getMmwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMrwHumanCoCategoryIdArray()),
         new Set(playerRule2.getMrwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getAtwHumanCoCategoryIdArray()),
         new Set(playerRule2.getAtwHumanCoCategoryIdArray())
     )) {
         return false;
     }
-    if (!checkIsSameSet(
+    if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getCampaignHumanCoIdArray()),
         new Set(playerRule2.getCampaignHumanCoIdArray())
     )) {
@@ -558,7 +544,7 @@ export function checkIsSame(playerRule1: PlayerRule, playerRule2: PlayerRule): b
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getFinalScwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -567,14 +553,14 @@ export function getFinalScwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : null,
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.ScwFog : WarTypeId.ScwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.ScwFog : WarTypes_Constants.WarTypeId.ScwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalSrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -587,14 +573,14 @@ export function getFinalSrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : playerRule.getSrwHumanCoCategoryIdArray(),
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.SrwFog : WarTypeId.SrwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.SrwFog : WarTypes_Constants.WarTypeId.SrwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalSfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -603,14 +589,14 @@ export function getFinalSfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : null,
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.SfwFog : WarTypeId.SfwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.SfwFog : WarTypes_Constants.WarTypeId.SfwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalMfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -619,14 +605,14 @@ export function getFinalMfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : null,
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.MfwFog : WarTypeId.MfwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.MfwFog : WarTypes_Constants.WarTypeId.MfwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalMcwHumanCoIdSet({ playerRule, gameConfiguration, hasFogByDefault, includeRandom }: {
     playerRule          : PlayerRule;
-    gameConfiguration   : GameConfig;
+    gameConfiguration   : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault     : boolean;
     includeRandom       : boolean;
 }): Set<number> {
@@ -635,14 +621,14 @@ export function getFinalMcwHumanCoIdSet({ playerRule, gameConfiguration, hasFogB
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : playerRule.getMcwHumanCoCategoryIdArray(),
         gcData                      : gameConfiguration,
-        warType                     : hasFogByDefault ? WarTypeId.McwFog : WarTypeId.McwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.McwFog : WarTypes_Constants.WarTypeId.McwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalCcwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -655,14 +641,14 @@ export function getFinalCcwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : null,
         specifiedCoCategoryIdArray  : playerRule.getCcwHumanCoCategoryIdArray(),
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.CcwFog : WarTypeId.CcwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.CcwFog : WarTypes_Constants.WarTypeId.CcwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalMmwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -672,14 +658,14 @@ export function getFinalMmwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : bannedCoCategoryIdSetByBp,
         specifiedCoCategoryIdArray  : playerRule.getMmwHumanCoCategoryIdArray(),
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.MmwFog : WarTypeId.MmwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.MmwFog : WarTypes_Constants.WarTypeId.MmwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalMrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -689,14 +675,14 @@ export function getFinalMrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : bannedCoCategoryIdSetByBp,
         specifiedCoCategoryIdArray  : playerRule.getMrwHumanCoCategoryIdArray(),
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.MrwFog : WarTypeId.MrwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.MrwFog : WarTypes_Constants.WarTypeId.MrwStd,
         includeRandom               : includeRandom,
     });
 }
 
 export function getFinalAtwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -706,17 +692,17 @@ export function getFinalAtwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
         bpBannedCoCategoryIdSet     : bannedCoCategoryIdSetByBp,
         specifiedCoCategoryIdArray  : playerRule.getAtwHumanCoCategoryIdArray(),
         gcData                      : gameConfig,
-        warType                     : hasFogByDefault ? WarTypeId.AtwFog : WarTypeId.AtwStd,
+        warType                     : hasFogByDefault ? WarTypes_Constants.WarTypeId.AtwFog : WarTypes_Constants.WarTypeId.AtwStd,
         includeRandom               : includeRandom,
     });
 }
 
 function getFinalHumanCoIdSet({ ruleBannedCoCategoryIdArray, bpBannedCoCategoryIdSet, specifiedCoCategoryIdArray, gcData, warType, includeRandom }: {
-    ruleBannedCoCategoryIdArray : Undefinable<number[]>;
-    bpBannedCoCategoryIdSet     : Undefinable<Set<number>>;
-    specifiedCoCategoryIdArray  : Undefinable<number[]>;
-    gcData                      : GameConfig;
-    warType                     : WarTypeId;
+    ruleBannedCoCategoryIdArray : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
+    bpBannedCoCategoryIdSet     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<Set<number>>;
+    specifiedCoCategoryIdArray  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
+    gcData                      : GameConfigs_GameConfig.GameConfig;
+    warType                     : WarTypes_Constants.WarTypeId;
     includeRandom               : boolean;
 }): Set<number> {
     const cfgEnabledCoCfgArray      = gcData.getEnabledCoArray(warType);
@@ -731,17 +717,17 @@ function getFinalHumanCoIdSet({ ruleBannedCoCategoryIdArray, bpBannedCoCategoryI
         const coIdSet = new Set(cfgEnabledCoCfgArray.filter(v => {
             const categoryId = v.getCoCategoryId();
             return (!bannedCoCategoryIdSet.has(categoryId))
-                && ((includeRandom) || (categoryId !== CategoryId.Random));
+                && ((includeRandom) || (categoryId !== Cos_Constants.CategoryId.Random));
         }).map(v => v.getCoId()));
-        return coIdSet.size > 0 ? coIdSet : new Set([CoId.Empty]);
+        return coIdSet.size > 0 ? coIdSet : new Set([Cos_Constants.CoId.Empty]);
 
     } else {
         const coIdSet = new Set(cfgEnabledCoCfgArray.filter(v => {
             const categoryId = v.getCoCategoryId();
             return (specifiedCoCategoryIdSet.has(categoryId))
                 && (!bannedCoCategoryIdSet.has(categoryId))
-                && ((includeRandom) || (categoryId !== CategoryId.Random));
+                && ((includeRandom) || (categoryId !== Cos_Constants.CategoryId.Random));
         }).map(v => v.getCoId()));
-        return coIdSet.size > 0 ? coIdSet : new Set([CoId.Empty]);
+        return coIdSet.size > 0 ? coIdSet : new Set([Cos_Constants.CoId.Empty]);
     }
 }

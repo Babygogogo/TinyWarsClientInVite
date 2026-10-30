@@ -1,21 +1,23 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { IUnit } from "../../units/IUnit.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+} from "../../internal.ts";
 
-export class NullableUnit extends Base {
-    public readonly unit: IUnit | null;
+export class NullableUnit extends ExpressionParsers_Results_Base.Base {
+    public readonly unit: Units_IUnit.IUnit | null;
 
-    public constructor(war: IBwWar, unit: IUnit | null) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, unit: Units_IUnit.IUnit | null) {
         super(war);
 
         this.unit = unit;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.Unit;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.Unit;
     }
-    public checkIsEqual(rhs: Base): boolean {
+    public checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         return (rhs instanceof NullableUnit)
             && (this.unit != null)
             && (this.unit === rhs.unit);

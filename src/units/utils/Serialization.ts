@@ -1,27 +1,25 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+import {
+    Units_Constants,
+    UnitBuffs_Utils_Common,
+    Units_Utils_Common,
+    Utils_ClientErrorCode,
+    type GameConfigs_GameConfig,
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+    type AuxiliaryTypes_MapSize,
+    Players_Constants,
+    WeightedGridIndexes_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-    type SerialUnitJson as ProtoSerialUnitJson,
+type SerialUnitJson as ProtoSerialUnitJson,
     SerialUnit,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import { checkIsValid } from "../../unitBuffs/utils/Common.ts";
-import { ActionStateId } from "../Constants.ts";
-import type { IUnit } from "../IUnit.ts";
-import {
-    checkIsValidProduceMaterial,
-    checkIsValidPrimaryAmmo,
-    checkIsValidEncodedTagId,
-} from "./Common.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { toGridIndexAndWeight } from "../../weightedGridIndexes/Utils.ts";
 
-export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: number): SerialUnit {
-    const unitTemplateCfg       = getExisted(unit.getGcData().getUnitTemplateCfg(newUnitTypeId));
+export function createNewUnitDataForChangeType(unit: Units_IUnit.IUnit, newUnitTypeId: number): SerialUnit {
+    const unitTemplateCfg       = Helpers_Misc.getExisted(unit.getGcData().getUnitTemplateCfg(newUnitTypeId));
     const maxBuildMaterial      = unitTemplateCfg.getMaxBuildMaterial() ?? 0;
     const maxPrimaryWeaponAmmo  = unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? 0;
     const maxFlareAmmo          = unitTemplateCfg.getFlareMaxAmmo() ?? 0;
@@ -66,64 +64,64 @@ export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: numbe
 
 export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playersCountUnneutral, gameConfig }: {
     unitData                : SerialUnit;
-    gameConfig              : GameConfig;
-    mapSize                 : Undefinable<MapSize>;
-    playersCountUnneutral   : Undefinable<number>;
-}): ClientErrorCode {
-    const gridIndex = GridIndex.convertGridIndex(unitData.getGridIndex());
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
+    mapSize                 : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_MapSize.MapSize>;
+    playersCountUnneutral   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+}): Utils_ClientErrorCode.ClientErrorCode {
+    const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex());
     if (gridIndex == null) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_00;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_00;
     }
     if ((mapSize) && (!gridIndex.checkIsInsideMap(mapSize))) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_01;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_01;
     }
 
     const unitType      = unitData.getUnitType();
     const playerIndex   = unitData.getPlayerIndex();
-    if ((playerIndex < PlayerIndex.First) ||
-        (playerIndex > PlayerIndex.Max)
+    if ((playerIndex < Players_Constants.PlayerIndex.First) ||
+        (playerIndex > Players_Constants.PlayerIndex.Max)
     ) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_03;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_03;
     }
     if ((playersCountUnneutral != null) && (playerIndex > playersCountUnneutral)) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_04;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_04;
     }
 
     const cfg = gameConfig.getUnitTemplateCfg(unitType);
     if (cfg == null) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_05;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_05;
     }
 
     if (unitData.getCurrentBuildMaterial() > (cfg.getMaxBuildMaterial() ?? 0)) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_06;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_06;
     }
 
     if (unitData.getCurrentFuel() > cfg.getMaxFuel()) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_07;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_07;
     }
 
     if (unitData.getCurrentHp() > cfg.getMaxHp()) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_08;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_08;
     }
 
-    if (!checkIsValidProduceMaterial(unitData.getCurrentProduceMaterial())) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_09;
+    if (!Units_Utils_Common.checkIsValidProduceMaterial(unitData.getCurrentProduceMaterial())) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_09;
     }
 
     if (unitData.getCurrentPromotion() > gameConfig.getUnitMaxPromotion()) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_10;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_10;
     }
 
     if (unitData.getFlareCurrentAmmo() > (cfg.getFlareMaxAmmo() ?? 0)) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_11;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_11;
     }
 
     if ((unitData.getIsDiving()) && (cfg.getDiveCfg() == null)) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_12;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_12;
     }
 
-    if (!checkIsValidPrimaryAmmo(unitData.getPrimaryWeaponCurrentAmmo())) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_13;
+    if (!Units_Utils_Common.checkIsValidPrimaryAmmo(unitData.getPrimaryWeaponCurrentAmmo())) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_13;
     }
 
     // if (unitData.getDeprecatedIsCapturingTile()) {
@@ -132,46 +130,46 @@ export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playe
 
     const actionState = unitData.getActionState();
     if ((actionState != null)                           &&
-        (actionState !== ActionStateId.Idle)    &&
-        (actionState !== ActionStateId.Acted)
+        (actionState !== Units_Constants.ActionStateId.Idle)    &&
+        (actionState !== Units_Constants.ActionStateId.Acted)
     ) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_15;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_15;
     }
 
     const loaderUnitId = unitData.getLoaderUnitId();
     if ((loaderUnitId != null) && (loaderUnitId === unitData.getUnitId())) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_16;
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_16;
     }
 
     const groupedTagId = unitData.getGroupedTagId();
-    if (!checkIsValidEncodedTagId(groupedTagId)) {
-        return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_17;
+    if (!Units_Utils_Common.checkIsValidEncodedTagId(groupedTagId)) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_17;
     }
 
     {
         const aiWeightedDestination = unitData.getAiWeightedDestination();
         if (aiWeightedDestination != null) {
-            const gridIndexAndWeight = toGridIndexAndWeight(aiWeightedDestination);
+            const gridIndexAndWeight = WeightedGridIndexes_Utils.toGridIndexAndWeight(aiWeightedDestination);
             if (gridIndexAndWeight == null) {
-                return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_18;
+                return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_18;
             }
             if ((mapSize) && (!gridIndexAndWeight.gridIndex.checkIsInsideMap(mapSize))) {
-                return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_19;
+                return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_19;
             }
         }
     }
 
     {
         const buffArray = unitData.getBuffArray();
-        if (buffArray.some(v => !checkIsValid(v))) {
-            return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_20;
+        if (buffArray.some(v => !UnitBuffs_Utils_Common.checkIsValid(v))) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_20;
         }
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
 
-export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GameConfig): void {
+export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GameConfigs_GameConfig.GameConfig): void {
     const cfg = gcData.getUnitTemplateCfg(unitData.getUnitType());
     if (!cfg) {
         return;
@@ -195,9 +193,9 @@ export function createDefault({ unitTypeId, unitId, playerIndex, gridIndex, gcDa
     unitId      : number;
     playerIndex : number;
     gridIndex   : Required<GridIndexJson>;
-    gcData      : GameConfig;
+    gcData      : GameConfigs_GameConfig.GameConfig;
 }): SerialUnit {
-    const cfg = getExisted(gcData.getUnitTemplateCfg(unitTypeId));
+    const cfg = Helpers_Misc.getExisted(gcData.getUnitTemplateCfg(unitTypeId));
     return create({
         unitType                        : unitTypeId,
         unitId                          : unitId,

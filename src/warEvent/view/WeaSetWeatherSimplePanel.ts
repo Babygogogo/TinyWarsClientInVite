@@ -1,54 +1,47 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getWeatherName,
-} from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Graphics_Constants,
+    Notifications_Dispatcher,
+    WarEvents_Actions_Utils_Common,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Lang_Constants,
+    Turns_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaSetWeatherSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import {
-    getErrorTipForAction,
-    getDetailDescForAction,
-} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnType!                                  : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                                : IUiLayout;
-    private readonly _labelDesc!                                : IUiLabel;
-    private readonly _labelError!                               : IUiLabel;
+    private readonly _groupDesc!                                : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnWeatherType!                           : IUiButton;
-    private readonly _labelWeatherType!                         : IUiLabel;
+    private readonly _btnWeatherType!                           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelWeatherType!                         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnWeatherTurnsCount!                     : IUiButton;
-    private readonly _labelWeatherTurnsCount!                   : IUiLabel;
+    private readonly _btnWeatherTurnsCount!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelWeatherTurnsCount!                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -59,8 +52,8 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnWeatherTurnsCount,                   callback: this._onTouchedBtnWeatherTurnsCount },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -88,7 +81,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeActionTypeListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
             war         : openData.war,
             fullData    : openData.fullData,
             action      : openData.action,
@@ -106,14 +99,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.Weather),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
             availableNumberArray    : gameConfig.getAllWeatherTypeArray(),
             currentNumber           : action.getWeatherType(),
-            getNumberMainText       : num => getWeatherName(num, gameConfig) ?? UndefinedError,
+            getNumberMainText       : num => Lang_Utils.getWeatherName(num, gameConfig) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : weatherType => {
                 action.setWeatherType(weatherType);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -129,14 +122,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle        : () => getText(TextType.Turns),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
             minValue        : 0,
-            maxValue        : TurnIndex.MaxLimit,
+            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
             currentValue    : action.getWeatherTurnsCount(),
             callback        : turnsCount => {
                 action.setWeatherTurnsCount(turnsCount);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -149,11 +142,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_Constants.TextType.B0516);
 
-        this._btnWeatherType.setLangText(TextType.Weather);
-        this._btnWeatherTurnsCount.setLangText(TextType.Turns);
+        this._btnWeatherType.setLangText(Lang_Constants.TextType.Weather);
+        this._btnWeatherTurnsCount.setLangText(Lang_Constants.TextType.Turns);
 
         this._updateLabelDescAndLabelError();
 
@@ -169,11 +162,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
-        this._labelDesc.setText(getDetailDescForAction(action, war.getGcData()) || UndefinedError);
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -181,23 +174,23 @@ export class Panel extends UiPanel<OpenData> {
         const weatherType   = this._getAction()?.getWeatherType();
         const gameConfig    = this.getOpenData()?.war.getGcData();
         this._labelWeatherType.setText(((weatherType == null) || (gameConfig == null))
-            ? UndefinedError
-            : (getWeatherName(weatherType, gameConfig) ?? UndefinedError)
+            ? Lang_Constants.UndefinedError
+            : (Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError)
         );
     }
 
     private _updateLabelWeatherTurnsCount(): void {
         const turnsCount = this._getAction()?.getWeatherTurnsCount();
         this._labelWeatherTurnsCount.setText(turnsCount == null
-            ? UndefinedError
+            ? Lang_Constants.UndefinedError
             : (turnsCount == 0
-                ? getText(TextType.B0141)
+                ? Lang_Utils.getText(Lang_Constants.TextType.B0141)
                 : `${turnsCount}`
             )
         );
     }
 
-    private _getAction(): Undefinable<WeaSetWeatherSimple> {
+    private _getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetWeatherSimple> {
         return this.getOpenData()?.action.getWeaSetWeatherSimple();
     }
 }

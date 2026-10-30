@@ -1,23 +1,25 @@
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { UiOrientation } from "../types/UiOrientation.ts";
-import type { UiScrollerOptions } from "../types/UiScrollerOptions.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiContainerBase,
+    type Ui_Types_UiOrientation,
+    type Ui_Types_UiScrollerOptions,
+} from "../../internal.ts";
 
-export interface IUiScrollerBase extends IUiContainerBase {
+export interface IUiScrollerBase extends Ui_Interfaces_IUiContainerBase.IUiContainerBase {
     getIsTouchChildrenEnabled(): boolean;
     setIsTouchChildrenEnabled(enabled: boolean): void;
 
     setUnscaledManualWidth(width: number | undefined, needArrange?: boolean): boolean;
     setUnscaledManualHeight(height: number | undefined, needArrange?: boolean): boolean;
 
-    getOptions(): UiScrollerOptions;
-    setOptions(options: UiScrollerOptions): void;
+    getOptions(): Ui_Types_UiScrollerOptions.UiScrollerOptions;
+    setOptions(options: Ui_Types_UiScrollerOptions.UiScrollerOptions): void;
 
-    getItem(index: number): IUiComponent | undefined;
-    getAllItems(): IUiComponent[] | undefined;
+    getItem(index: number): Ui_Interfaces_IUiComponent.IUiComponent | undefined;
+    getAllItems(): Ui_Interfaces_IUiComponent.IUiComponent[] | undefined;
 
-    getOrientation(): UiOrientation | undefined;
-    setOrientation(orientation: UiOrientation | undefined): void;
+    getOrientation(): Ui_Types_UiOrientation.UiOrientation | undefined;
+    setOrientation(orientation: Ui_Types_UiOrientation.UiOrientation | undefined): void;
 
     getIsScrollable(): boolean;
     setIsScrollable(value: boolean): void;

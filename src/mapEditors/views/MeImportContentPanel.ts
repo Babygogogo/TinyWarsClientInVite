@@ -1,53 +1,55 @@
-import { showLang } from "../../FloatText.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 export interface OpenData {
     srcMapRawData   : MapRawData;
-    war             : IMeWar;
+    war             : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                              : IUiImage;
-    private readonly _group!                                : IUiContainer;
-    private readonly _labelTitle!                           : IUiLabel;
-    private readonly _btnHelp!                              : IUiButton;
-    private readonly _btnClose!                             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelTileAndUnit!                     : IUiLabel;
-    private readonly _btnOverwriteTileAndUnit!              : IUiButton;
+    private readonly _labelTileAndUnit!                     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnOverwriteTileAndUnit!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelWarEvent!                        : IUiLabel;
-    private readonly _btnImportWarEvent!                    : IUiButton;
-    private readonly _btnOverwriteWarEvent!                 : IUiButton;
+    private readonly _labelWarEvent!                        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnImportWarEvent!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnOverwriteWarEvent!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelTaskObjective!                   : IUiLabel;
-    private readonly _btnImportTaskObjective!               : IUiButton;
-    private readonly _btnOverwriteTaskObjective!            : IUiButton;
+    private readonly _labelTaskObjective!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnImportTaskObjective!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnOverwriteTaskObjective!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelRepeatableSimpleDialogue!        : IUiLabel;
-    private readonly _btnImportRepeatableSimpleDialogue!    : IUiButton;
-    private readonly _btnOverwriteRepeatableSimpleDialogue! : IUiButton;
+    private readonly _labelRepeatableSimpleDialogue!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnImportRepeatableSimpleDialogue!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnOverwriteRepeatableSimpleDialogue! : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelAll!                             : IUiLabel;
-    private readonly _btnOverwriteAll!                      : IUiButton;
+    private readonly _labelAll!                             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnOverwriteAll!                      : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,                                callback: this._onTouchedBtnHelp },
@@ -76,8 +78,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0876)
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0876)
         });
     }
 
@@ -87,8 +89,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent  : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : async () => {
                 const war                   = openData.war;
                 const dstMapRawData         = await war.serializeForMap();
@@ -100,7 +102,7 @@ export class Panel extends UiPanel<OpenData> {
                 await war.initWithMapRawData({
                     mapRawData                  : dstMapRawData,
                     slotIndex                   : war.getMapSlotIndex(),
-                    gameConfig                  : await getLatestGameConfig(),
+                    gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
                     srcNormalMapIdForAddEvent   : null,
                     gridMarkData                : null,
                 });
@@ -120,7 +122,7 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData         = openData.srcMapRawData;
         const newWarEventFullData   = srcMapRawData.getWarEventFullData()?.clone();
         if (newWarEventFullData == null) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
         if ((!newWarEventFullData.getActionArray().length)             &&
@@ -129,7 +131,7 @@ export class Panel extends UiPanel<OpenData> {
             (!newWarEventFullData.getCustomCounterNameArray().length)  &&
             (!newWarEventFullData.getEventArray().length)
         ) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
@@ -144,20 +146,20 @@ export class Panel extends UiPanel<OpenData> {
                 return ((id === id1) && (name != name1))
                     || ((id !== id1) && (name == name1));
             })) {
-                showLang(TextType.A0877);
+                FloatText.showLang(Lang_Constants.TextType.A0877);
                 return;
             }
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1253),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 importWarEventFullData(newWarEventFullData, currentWarEventFullData);
                 warEventManager.setWarEventFullData(currentWarEventFullData);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             }
         });
     }
@@ -170,7 +172,7 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData     = openData.srcMapRawData;
         const warEventFullData  = srcMapRawData.getWarEventFullData()?.clone();
         if (warEventFullData == null) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
         if ((!warEventFullData.getActionArray().length)             &&
@@ -179,18 +181,18 @@ export class Panel extends UiPanel<OpenData> {
             (!warEventFullData.getCustomCounterNameArray().length)  &&
             (!warEventFullData.getEventArray().length)
         ) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1255),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 openData.war.getWarEventManager().setWarEventFullData(warEventFullData);
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             }
         });
     }
@@ -204,19 +206,19 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcFullData   = srcMapRawData.getTaskObjectiveFullData()?.clone();
         if (!srcFullData) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
         const srcDataArray = srcFullData.getTaskObjectiveArray();
         if (!srcDataArray?.length) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1253),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 const war               = openData.war;
                 const existingFullData  = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
@@ -227,9 +229,9 @@ export class Panel extends UiPanel<OpenData> {
                     existingDataArray.push(data);
                 }
                 war.setTaskObjectiveFullData(existingFullData);
-                dispatch(TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
         });
     }
@@ -242,24 +244,24 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcFullData   = srcMapRawData.getTaskObjectiveFullData()?.clone();
         if (!srcFullData) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
         const dataArray = srcFullData.getTaskObjectiveArray();
         if (!dataArray?.length) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1255),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 openData.war.setTaskObjectiveFullData(srcFullData);
-                dispatch(TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
         });
     }
@@ -273,13 +275,13 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const srcDataArray  = srcMapRawData.getMapSimpleDialogueArray().map(v => v.clone());
         if (!srcDataArray) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1253),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1253),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 const existingDataArray = openData.war.getMapSimpleDialogueArray();
                 let dialogueId          = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getDialogueId())) : 0) + 1;
@@ -288,9 +290,9 @@ export class Panel extends UiPanel<OpenData> {
                     existingDataArray.push(data);
                 }
 
-                dispatch(TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
         });
     }
@@ -303,18 +305,18 @@ export class Panel extends UiPanel<OpenData> {
         const srcMapRawData = openData.srcMapRawData;
         const dataArray     = srcMapRawData.getMapSimpleDialogueArray().map(v => v.clone());
         if (!dataArray) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B1255),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1255),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 openData.war.setMapSimpleDialogueArray(dataArray);
-                dispatch(TypeId.MeMapSimpleDialogueChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged);
 
-                showLang(TextType.OperationSucceeded);
+                FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
             },
         });
     }
@@ -325,8 +327,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent  : () => getText(TextType.A0875),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0875),
             callback    : async () => {
                 const mapRawData = openData.srcMapRawData.clone();
                 for (const rule of mapRawData.getTemplateWarRuleArray()) {
@@ -340,7 +342,7 @@ export class Panel extends UiPanel<OpenData> {
                 await war.initWithMapRawData({
                     mapRawData                  : mapRawData,
                     slotIndex                   : war.getMapSlotIndex(),
-                    gameConfig                  : await getLatestGameConfig(),
+                    gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
                     srcNormalMapIdForAddEvent   : null,
                     gridMarkData                : null,
                 });
@@ -356,25 +358,25 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1253);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1253);
 
-        this._labelTileAndUnit.setLangText(TextType.B1244);
-        this._btnOverwriteTileAndUnit.setLangText(TextType.B1255);
+        this._labelTileAndUnit.setLangText(Lang_Constants.TextType.B1244);
+        this._btnOverwriteTileAndUnit.setLangText(Lang_Constants.TextType.B1255);
 
-        this._labelWarEvent.setLangText(TextType.B0469);
-        this._btnImportWarEvent.setLangText(TextType.B1253);
-        this._btnOverwriteWarEvent.setLangText(TextType.B1255);
+        this._labelWarEvent.setLangText(Lang_Constants.TextType.B0469);
+        this._btnImportWarEvent.setLangText(Lang_Constants.TextType.B1253);
+        this._btnOverwriteWarEvent.setLangText(Lang_Constants.TextType.B1255);
 
-        this._labelTaskObjective.setLangText(TextType.B1214);
-        this._btnImportTaskObjective.setLangText(TextType.B1253);
-        this._btnOverwriteTaskObjective.setLangText(TextType.B1255);
+        this._labelTaskObjective.setLangText(Lang_Constants.TextType.B1214);
+        this._btnImportTaskObjective.setLangText(Lang_Constants.TextType.B1253);
+        this._btnOverwriteTaskObjective.setLangText(Lang_Constants.TextType.B1255);
 
-        this._labelRepeatableSimpleDialogue.setLangText(TextType.B1095);
-        this._btnImportRepeatableSimpleDialogue.setLangText(TextType.B1253);
-        this._btnOverwriteRepeatableSimpleDialogue.setLangText(TextType.B1255);
+        this._labelRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1095);
+        this._btnImportRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1253);
+        this._btnOverwriteRepeatableSimpleDialogue.setLangText(Lang_Constants.TextType.B1255);
 
-        this._labelAll.setLangText(TextType.B1338);
-        this._btnOverwriteAll.setLangText(TextType.B1255);
+        this._labelAll.setLangText(Lang_Constants.TextType.B1338);
+        this._btnOverwriteAll.setLangText(Lang_Constants.TextType.B1255);
     }
 }
 

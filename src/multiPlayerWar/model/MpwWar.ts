@@ -1,41 +1,40 @@
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { removeUnitOnMap } from "../../destructions/Utils.ts";
-import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import type { IMpwWar } from "../interface/IMpwWar.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import type { IPlayer } from "../../players/IPlayer.ts";
-import { TeamIndex } from "../../teams/Constants.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import {
-    getAllUnitsOnMapVisibleToTeams,
-    getAllTilesVisibleToTeams,
-} from "../../visibilities/Utils.ts";
+    BaseWar_Model_BwWar,
+    BaseWar_Model_BwWarEventManager,
+    Destructions_Utils,
+    type BaseWar_Interface_IBwWarEventManager,
+    Helpers_Collection,
+    Visibilities_Utils,
+    Timer_TimerModel,
+    Players_Constants,
+    Teams_Constants,
+    type MultiPlayerWar_Interface_IMpwWar,
+    type Players_IPlayer,
+} from "../../internal.ts";
 
-export abstract class MpwWar extends BwWar implements IMpwWar {
-    private readonly _warEventManager       = new (getBwWarEventManagerClass())();
+export abstract class MpwWar extends BaseWar_Model_BwWar.BwWar implements MultiPlayerWar_Interface_IMpwWar.IMpwWar {
+    private readonly _warEventManager       = new BaseWar_Model_BwWarEventManager.BwWarEventManager();
 
     private _visionTeamIndex    : number | null = null;
 
-    public getWarEventManager(): IBwWarEventManager {
+    public getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager {
         return this._warEventManager;
     }
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const watcherTeamIndexes    = this.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const visibleUnitsOnMap     = getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
+        const visibleUnitsOnMap     = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
         for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
             if (visibleUnitsOnMap.has(unit)) {
                 if (!isFastExecute) {
                     unit.setViewVisible(true);
                 }
             } else {
-                removeUnitOnMap(this, unit.getGridIndex());
+                Destructions_Utils.removeUnitOnMap(this, unit.getGridIndex());
             }
         }
 
-        const visibleTiles  = getAllTilesVisibleToTeams(this, watcherTeamIndexes);
+        const visibleTiles  = Visibilities_Utils.getAllTilesVisibleToTeams(this, watcherTeamIndexes);
         const tileMap       = this.getTileMap();
         for (const tile of tileMap.getAllTiles()) {
             if (visibleTiles.has(tile)) {
@@ -66,7 +65,7 @@ export abstract class MpwWar extends BwWar implements IMpwWar {
             return;
         }
 
-        const visibleTiles = getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
+        const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
         for (const tile of this.getTileMap().getAllTiles()) {
             tile.setHasFog(!visibleTiles.has(tile));
 
@@ -80,12 +79,12 @@ export abstract class MpwWar extends BwWar implements IMpwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getBootRestTime(playerIndex: number): number | null {
-        if (playerIndex === PlayerIndex.Neutral) {
+        if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
             return null;
         } else {
             const restTime = this.getPlayer(playerIndex).getRestTimeToBoot();
             if (playerIndex === this.getPlayerIndexInTurn()) {
-                return (this.getEnterTurnTime() + restTime - getServerTimestamp()) || null;
+                return (this.getEnterTurnTime() + restTime - Timer_TimerModel.getServerTimestamp()) || null;
             } else {
                 return restTime;
             }
@@ -99,7 +98,7 @@ export abstract class MpwWar extends BwWar implements IMpwWar {
     public getPlayerIndexLoggedIn(): number | null {
         return this.getPlayerManager().getPlayerIndexLoggedIn();
     }
-    public getPlayerLoggedIn(): IPlayer | null {
+    public getPlayerLoggedIn(): Players_IPlayer.IPlayer | null {
         return this.getPlayerManager().getPlayerLoggedIn();
     }
 
@@ -114,7 +113,7 @@ export abstract class MpwWar extends BwWar implements IMpwWar {
     }
     public tickVisionTeamIndex(): number | null {
         const teamIndexArray = [...this.getPlayerManager().getWatcherTeamIndexesForSelf()].sort((v1, v2) => v1 - v2);
-        deleteElementFromList(teamIndexArray, TeamIndex.Neutral);
+        Helpers_Collection.deleteElementFromList(teamIndexArray, Teams_Constants.TeamIndex.Neutral);
 
         const currentVisionTeamIndex    = this.getVisionTeamIndex();
         const newVisionTeamIndex        = currentVisionTeamIndex == null

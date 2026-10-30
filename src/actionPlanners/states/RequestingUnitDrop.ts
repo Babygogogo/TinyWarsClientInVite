@@ -1,41 +1,39 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import { DropDestination } from "../../auxiliaryTypes/DropDestination.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getMpwWarClass,
-    getSpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
-import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { reqUnitDrop } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
+    AuxiliaryTypes_DropDestination,
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    MultiPlayerWar_Model_MpwProxy,
+    SinglePlayerWar_Model_SpwLocalProxy,
+} from "../../internal.ts";
 
-export class RequestingUnitDrop implements IState {
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+
+export class RequestingUnitDrop implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new RequestingUnitDrop();
 
     public static getInstance(): RequestingUnitDrop {
         return RequestingUnitDrop._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.RequestingUnitDrop;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.RequestingUnitDrop;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -45,21 +43,21 @@ export class RequestingUnitDrop implements IState {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            const unit = getExisted(actionPlanner.getChoosingUnitForDrop());
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            const unit = Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop());
             actionPlanner.pushBackChosenUnitForDrop({
                 unit        : unit,
                 destination : gridIndex,
             });
 
-            const destinations: DropDestination[] = [];
+            const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                destinations.push(new DropDestination(data.destination, data.unit.getUnitId()));
+                destinations.push(new AuxiliaryTypes_DropDestination.DropDestination(data.destination, data.unit.getUnitId()));
             }
 
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId             : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitDropUnit          : {
                     path                : {
@@ -70,24 +68,24 @@ export class RequestingUnitDrop implements IState {
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingUnitDrop);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitDrop);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingUnitDrop);
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitDrop);
             actionPlanner.updateView();
 
             actionPlanner.pushBackChosenUnitForDrop({
-                unit        : getExisted(actionPlanner.getChoosingUnitForDrop()),
+                unit        : Helpers_Misc.getExisted(actionPlanner.getChoosingUnitForDrop()),
                 destination : gridIndex,
             });
 
-            const destinations: DropDestination[] = [];
+            const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                destinations.push(new DropDestination(data.destination, data.unit.getUnitId()));
+                destinations.push(new AuxiliaryTypes_DropDestination.DropDestination(data.destination, data.unit.getUnitId()));
             }
 
-            reqUnitDrop({
+            SinglePlayerWar_Model_SpwLocalProxy.reqUnitDrop({
                 war                 : war,
                 path                : actionPlanner.generateProtoMovePath(),
                 launchUnitId        : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
@@ -97,22 +95,22 @@ export class RequestingUnitDrop implements IState {
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`RequestingUnitDropState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`RequestingUnitDropState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            const destinations: DropDestination[] = [];
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                destinations.push(new DropDestination(data.destination, data.unit.getUnitId()));
+                destinations.push(new AuxiliaryTypes_DropDestination.DropDestination(data.destination, data.unit.getUnitId()));
             }
 
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId             : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitDropUnit          : {
                     path: {
@@ -123,20 +121,20 @@ export class RequestingUnitDrop implements IState {
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingUnitDrop);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitDrop);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingUnitDrop);
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitDrop);
             actionPlanner.updateView();
 
-            const destinations: DropDestination[] = [];
+            const destinations: AuxiliaryTypes_DropDestination.DropDestination[] = [];
             for (const data of actionPlanner.getChosenUnitsForDrop()) {
-                destinations.push(new DropDestination(data.destination, data.unit.getUnitId()));
+                destinations.push(new AuxiliaryTypes_DropDestination.DropDestination(data.destination, data.unit.getUnitId()));
             }
 
             const unit = actionPlanner.getFocusUnitLoaded();
-            reqUnitDrop({
+            SinglePlayerWar_Model_SpwLocalProxy.reqUnitDrop({
                 war                 : war,
                 path                : actionPlanner.generateProtoMovePath(),
                 launchUnitId        : unit?.getUnitId() ?? null,

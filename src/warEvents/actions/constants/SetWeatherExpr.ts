@@ -1,27 +1,26 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    WeatherType                         : EpExpressionInfo;
-    WeatherTurnsCount                   : EpExpressionInfo;
+    WeatherType                         : ExpressionParsers_Types.EpExpressionInfo;
+    WeatherTurnsCount                   : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     WeatherType       : {
-        contextType     : ContextType.Weather,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Weather,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.Weather),
-        getHelpText     : () => getText(TextType.A0526),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0526),
     },
     WeatherTurnsCount : {
-        contextType     : ContextType.Weather,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Weather,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.Turns),
-        getHelpText     : () => getText(TextType.A0527),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0527),
     },
 };

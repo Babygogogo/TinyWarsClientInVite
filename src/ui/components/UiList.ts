@@ -1,59 +1,48 @@
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import {
-    PointerEventType,
-    type PointerUnifiedEventData,
-} from "../../helpers/PointerInput.ts";
-import { getSkin } from "../../ResManager.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiLayoutBase } from "./UiLayoutBase.ts";
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiList } from "../interfaces/IUiList.ts";
-import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
-import { UiCommonEventType } from "../types/UiCommonEventType.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
-import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-import { UiSkinState } from "../types/UiSkinState.ts";
-import { getUiListItemRendererClass } from "../utils/UiFactory.ts";
-import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
-import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
-import {
-    getRevisedAttrValue,
-    loadSkin,
-    loadSkinStateRecursively,
-} from "../utils/UiSkinHelpers.ts";
-import type {
-    DisplayObject,
-    Event,
-} from "../../egret/Egret.ts";
+    Helpers_Misc,
+    ResManager,
+    Sounds_SoundPlayer,
+    Helpers_PointerInput,
+    Ui_Types_UiCommonEventType,
+    Ui_Components_UiLayoutBase,
+    Ui_Components_UiListItemRenderer,
+    Ui_Types_UiSkinState,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiList,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Types_UiListItemData,
+    type Ui_Types_UiSkinAttrs,
+    Ui_Utils_UiLayoutHelpers,
+    Ui_Utils_UiSizerHelpers,
+    Ui_Utils_UiSkinHelpers,
+    type Egret_Egret,
+} from "../../internal.ts";
 
-export class UiList<DataForRenderer extends UiListItemData>
-    extends UiLayoutBase
-    implements IUiList<DataForRenderer>
+export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData>
+    extends Ui_Components_UiLayoutBase.UiLayoutBase
+    implements Ui_Interfaces_IUiList.IUiList<DataForRenderer>
 {
-    private _previousSelectedItems? : IUiListItemRenderer<DataForRenderer>[];
-    private _selectedItems?         : IUiListItemRenderer<DataForRenderer>[];
+    private _previousSelectedItems? : Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
+    private _selectedItems?         : Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
 
-    private _itemRendererClass?     : new () => IUiListItemRenderer<DataForRenderer>;
+    private _itemRendererClass?     : new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>;
     private _requireSelection       = false;
     private _allowMultiSelection    = false;
     private _maxSelection           = Number.MAX_SAFE_INTEGER;
 
-    public override loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
+    public override loadSkinAttrs(oldSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined, newSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void {
         super.loadSkinAttrs(oldSkinAttrs, newSkinAttrs);
 
-        const requireSelection      = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "requireSelection");
-        const allowMultiSelection   = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "allowMultiSelection");
+        const requireSelection      = Ui_Utils_UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "requireSelection");
+        const allowMultiSelection   = Ui_Utils_UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "allowMultiSelection");
         (requireSelection.needChange)      && (this.setRequireSelection(!!requireSelection.value));
         (allowMultiSelection.needChange)   && (this.setAllowMultiSelection(!!allowMultiSelection.value));
     }
 
-    public getItemRendererClass(): (new () => IUiListItemRenderer<DataForRenderer>) | undefined {
+    public getItemRendererClass(): (new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>) | undefined {
         return this._itemRendererClass;
     }
-    public setItemRendererClass(itemRenderer: new () => IUiListItemRenderer<DataForRenderer>): void {
+    public setItemRendererClass(itemRenderer: new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void {
         this._itemRendererClass = itemRenderer;
     }
 
@@ -94,31 +83,31 @@ export class UiList<DataForRenderer extends UiListItemData>
         }
     }
 
-    private createItemRenderers(dataArray: DataForRenderer[]): IUiListItemRenderer<DataForRenderer>[] {
-        const rendererClass = getExisted(this.getItemRendererClass());
+    private createItemRenderers(dataArray: DataForRenderer[]): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] {
+        const rendererClass = Helpers_Misc.getExisted(this.getItemRendererClass());
         const skinInfo      = this.getSkinInfo();
-        const loadedSkin    = skinInfo == null ? undefined : getExisted(skinInfo.getSkin());
+        const loadedSkin    = skinInfo == null ? undefined : Helpers_Misc.getExisted(skinInfo.getSkin());
         const itemSkin      = loadedSkin == null
             ? undefined
-            : (loadedSkin.itemSkin ?? getExisted(getSkin(getExisted(loadedSkin.itemSkinName))));
+            : (loadedSkin.itemSkin ?? Helpers_Misc.getExisted(ResManager.getSkin(Helpers_Misc.getExisted(loadedSkin.itemSkinName))));
         return dataArray.map(v => {
             const renderer = new rendererClass();
             renderer.setOpenData(v);
             if (itemSkin != null) {
-                loadSkin(renderer, itemSkin);
+                Ui_Utils_UiSkinHelpers.loadSkin(renderer, itemSkin);
             }
 
             return renderer;
         });
     }
 
-    private async _addItem(item: IUiListItemRenderer<DataForRenderer>): Promise<void> {
-        this.addChild(item as unknown as DisplayObject);
+    private async _addItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): Promise<void> {
+        this.addChild(item as unknown as Egret_Egret.DisplayObject);
 
         await item.open();
         await item.applyOpenData();
     }
-    public async addItemByData(data: DataForRenderer): Promise<IUiListItemRenderer<DataForRenderer>> {
+    public async addItemByData(data: DataForRenderer): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>> {
         const item = this.createItemRenderers([data])[0];
         await this._addItem(item);
         this.arrangeItems();
@@ -130,7 +119,7 @@ export class UiList<DataForRenderer extends UiListItemData>
 
         return item;
     }
-    public async addItemsByData(dataArray: DataForRenderer[]): Promise<IUiListItemRenderer<DataForRenderer>[]> {
+    public async addItemsByData(dataArray: DataForRenderer[]): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[]> {
         const items = this.createItemRenderers(dataArray);
         await Promise.all(items.map(v => this._addItem(v)));
         this.arrangeItems();
@@ -146,7 +135,7 @@ export class UiList<DataForRenderer extends UiListItemData>
         return items;
     }
 
-    public async removeItemAt(index: number): Promise<IUiListItemRenderer<DataForRenderer> | undefined> {
+    public async removeItemAt(index: number): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined> {
         const item = this.getItemAt(index);
         if (item) {
             {
@@ -162,16 +151,16 @@ export class UiList<DataForRenderer extends UiListItemData>
             this._unregisterListenersForItem(item);
 
             await item.close();
-            this.removeChild(item as unknown as DisplayObject);
+            this.removeChild(item as unknown as Egret_Egret.DisplayObject);
             this.arrangeItems();
         }
 
         return item;
     }
-    public removeItem(item: IUiListItemRenderer<DataForRenderer>): Promise<IUiListItemRenderer<DataForRenderer> | undefined> {
+    public removeItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined> {
         return this.removeItemAt(this.getAllItems().indexOf(item));
     }
-    public async removeAllItems(): Promise<IUiListItemRenderer<DataForRenderer>[]> {
+    public async removeAllItems(): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[]> {
         const allItems = this.getAllItems().concat();
         if (allItems.length) {
             this.setSelectedItems(undefined);
@@ -187,32 +176,32 @@ export class UiList<DataForRenderer extends UiListItemData>
         return allItems;
     }
 
-    public getItemAt(index: number): IUiListItemRenderer<DataForRenderer> | undefined {
+    public getItemAt(index: number): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined {
         return this.getAllItems()[index];
     }
-    public getItemIndex(item: IUiListItemRenderer<DataForRenderer>): number {
-        return this.getChildIndex(item as unknown as DisplayObject);
+    public getItemIndex(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): number {
+        return this.getChildIndex(item as unknown as Egret_Egret.DisplayObject);
     }
-    public getAllItems(): IUiListItemRenderer<DataForRenderer>[] {
-        return this.$children as unknown as IUiListItemRenderer<DataForRenderer>[];
+    public getAllItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] {
+        return this.$children as unknown as Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
     }
 
-    public getPreviousSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined {
+    public getPreviousSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined {
         return this._previousSelectedItems;
     }
     public getPreviousSelectedItemIndexes(): number[] | undefined {
-        return this.getPreviousSelectedItems()?.map(v => this.getChildIndex(v as unknown as DisplayObject));
+        return this.getPreviousSelectedItems()?.map(v => this.getChildIndex(v as unknown as Egret_Egret.DisplayObject));
     }
-    private _setPreviousSelectedItems(items: IUiListItemRenderer<DataForRenderer>[] | undefined): void {
+    private _setPreviousSelectedItems(items: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined): void {
         this._previousSelectedItems = items;
     }
 
-    public getSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined {
+    public getSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined {
         return this._selectedItems;
     }
-    public setSelectedItems(newItems: IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin = true): void {
+    public setSelectedItems(newItems: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin = true): void {
         if (newItems?.some(v => v.getParent() !== this)) {
-            throw newError(`Invalid selectedItems.`);
+            throw Helpers_Misc.newError(`Invalid selectedItems.`);
         }
 
         this._setPreviousSelectedItems(this.getSelectedItems()?.concat());
@@ -222,7 +211,7 @@ export class UiList<DataForRenderer extends UiListItemData>
             this._resetItemsSkin();
         }
     }
-    private _updateSelectedItemsOnTap(tappedItem: IUiListItemRenderer<DataForRenderer>): void {
+    private _updateSelectedItemsOnTap(tappedItem: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void {
         const openData              = tappedItem.getOpenData();
         const selectedItems         = this.getSelectedItems()?.concat() ?? [];
         const selectedItemsCount    = selectedItems.length;
@@ -255,10 +244,10 @@ export class UiList<DataForRenderer extends UiListItemData>
     }
 
     public getSelectedItemIndexes(): number[] | undefined {
-        return this.getSelectedItems()?.map(v => this.getChildIndex(v as unknown as DisplayObject));
+        return this.getSelectedItems()?.map(v => this.getChildIndex(v as unknown as Egret_Egret.DisplayObject));
     }
     public setSelectedItemIndexes(indexes: number[], needResetItemsSkin = true): void {
-        const items: IUiListItemRenderer<DataForRenderer>[] = [];
+        const items: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] = [];
         for (const index of indexes) {
             const item = this.getItemAt(index);
             if (item) {
@@ -268,7 +257,7 @@ export class UiList<DataForRenderer extends UiListItemData>
         this.setSelectedItems(items, needResetItemsSkin);
     }
 
-    public getFirstSelectedItem(): IUiListItemRenderer<DataForRenderer> | undefined {
+    public getFirstSelectedItem(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined {
         const items = this.getSelectedItems();
         return items ? items[0] : undefined;
     }
@@ -291,10 +280,10 @@ export class UiList<DataForRenderer extends UiListItemData>
     }
 
     public arrangeItems(needApplySizer = true): void {
-        arrangeItems(this, this.getAllItems());
+        Ui_Utils_UiLayoutHelpers.arrangeItems(this, this.getAllItems());
 
         if (needApplySizer) {
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
 
@@ -316,57 +305,57 @@ export class UiList<DataForRenderer extends UiListItemData>
 
         for (const item of symmetricDifferenceSet) {
             if ((item.getParent() === this) && (item.getSkinInfo())) {
-                loadSkinStateRecursively(item, newSet.has(item) ? UiSkinState.Down : UiSkinState.Up);
+                Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, newSet.has(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
             }
         }
     }
 
-    private _registerListenersForItem(item: IUiListItemRenderer<DataForRenderer>): void {
+    private _registerListenersForItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void {
         const agent = item.getEventAgent();
-        agent.addPointerEventListener(PointerEventType.Press,        this._onItemPointerDown,        this);
-        agent.addPointerEventListener(PointerEventType.Tap,          this._onItemPointerTap,         this);
-        agent.addPointerEventListener(PointerEventType.ReleaseIn,    this._onItemPointerUp,          this);
-        agent.addPointerEventListener(PointerEventType.ReleaseOut,   this._onItemPointerUpOutside,   this);
+        agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Press,        this._onItemPointerDown,        this);
+        agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.Tap,          this._onItemPointerTap,         this);
+        agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn,    this._onItemPointerUp,          this);
+        agent.addPointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut,   this._onItemPointerUpOutside,   this);
     }
-    private _unregisterListenersForItem(item: IUiListItemRenderer<DataForRenderer>): void {
+    private _unregisterListenersForItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void {
         const agent = item.getEventAgent();
-        agent.removePointerEventListener(PointerEventType.Press,      this._onItemPointerDown,        this);
-        agent.removePointerEventListener(PointerEventType.Tap,        this._onItemPointerTap,         this);
-        agent.removePointerEventListener(PointerEventType.ReleaseIn,  this._onItemPointerUp,          this);
-        agent.removePointerEventListener(PointerEventType.ReleaseOut, this._onItemPointerUpOutside,   this);
+        agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.Press,      this._onItemPointerDown,        this);
+        agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.Tap,        this._onItemPointerTap,         this);
+        agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseIn,  this._onItemPointerUp,          this);
+        agent.removePointerEventListener(Helpers_PointerInput.PointerEventType.ReleaseOut, this._onItemPointerUpOutside,   this);
     }
-    private _onItemPointerDown(e: Event): void {
+    private _onItemPointerDown(e: Egret_Egret.Event): void {
         // log(`UiList._onItemPointerDown`, e);
 
-        const item = (e.data as PointerUnifiedEventData).dispatcher;
-        if ((item instanceof getUiListItemRendererClass()) && (item.getSkinInfo())) {
-            loadSkinStateRecursively(
+        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
+            Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(
                 item,
-                UiSkinState.Down
+                Ui_Types_UiSkinState.UiSkinState.Down
             );
         }
     }
-    private _onItemPointerTap(e: Event): void {
+    private _onItemPointerTap(e: Egret_Egret.Event): void {
         // log(`UiList._onItemPointerTap`, e);
 
-        const dispatcher    = getExisted((e.data as PointerUnifiedEventData).dispatcher) as unknown as IUiComponent;
+        const dispatcher    = Helpers_Misc.getExisted((e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher) as unknown as Ui_Interfaces_IUiComponent.IUiComponent;
         const renderer      = this.getAllItems().find(v => v.checkIsSameOrAncestor(dispatcher));
         if (renderer == null) {
             return;
         }
 
         this._updateSelectedItemsOnTap(renderer);
-        playShortSfx(renderer.getShortSfxCode());
+        Sounds_SoundPlayer.playShortSfx(renderer.getShortSfxCode());
 
         const isSelected = !!this.getSelectedItems()?.includes(renderer);
         if (renderer.getSkinInfo()) {
-            loadSkinStateRecursively(renderer, isSelected ? UiSkinState.Down : UiSkinState.Up);
+            Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(renderer, isSelected ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }
 
         const itemIndex = this.getItemIndex(renderer);
         if (isSelected !== !!this.getPreviousSelectedItems()?.includes(renderer)) {
             this.dispatchEventWith(
-                isSelected ? UiCommonEventType.ListItemSelectedByTap : UiCommonEventType.ListItemDeselectedByTap,
+                isSelected ? Ui_Types_UiCommonEventType.UiCommonEventType.ListItemSelectedByTap : Ui_Types_UiCommonEventType.UiCommonEventType.ListItemDeselectedByTap,
                 undefined,
                 itemIndex
             );
@@ -374,20 +363,20 @@ export class UiList<DataForRenderer extends UiListItemData>
 
         renderer.onItemTapEvent({ itemIndex: itemIndex });
     }
-    private _onItemPointerUp(e: Event): void {
+    private _onItemPointerUp(e: Egret_Egret.Event): void {
         // log(`UiList._onItemPointerUp`, e);
 
-        const item = (e.data as PointerUnifiedEventData).dispatcher;
-        if ((item instanceof getUiListItemRendererClass()) && (item.getSkinInfo())) {
-            loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? UiSkinState.Down : UiSkinState.Up);
+        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
+            Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }
     }
-    private _onItemPointerUpOutside(e: Event): void {
+    private _onItemPointerUpOutside(e: Egret_Egret.Event): void {
         // log(`UiList._onItemPointerUpOutside`, e);
 
-        const item = (e.data as PointerUnifiedEventData).dispatcher;
-        if ((item instanceof getUiListItemRendererClass()) && (item.getSkinInfo())) {
-            loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? UiSkinState.Down : UiSkinState.Up);
+        const item = (e.data as Helpers_PointerInput.PointerUnifiedEventData).dispatcher;
+        if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
+            Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(item, this.getSelectedItems()?.includes(item) ? Ui_Types_UiSkinState.UiSkinState.Down : Ui_Types_UiSkinState.UiSkinState.Up);
         }
     }
 }

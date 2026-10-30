@@ -1,18 +1,20 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Bots_CommonParams,
+    type AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
 export async function getScoreAndActionUnitSelfDetonate(
-    commonParams    : CommonParams,
-    focusUnit       : IUnit,
-    destination     : GridIndex,
-    pathNodes       : MovePathNode[]
-): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+    commonParams    : Bots_CommonParams.CommonParams,
+    focusUnit       : Units_IUnit.IUnit,
+    destination     : AuxiliaryTypes_GridIndex.GridIndex,
+    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[]
+): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const selfDetonateCfg = focusUnit.getTemplateCfg().getSelfDetonateCfg();
     if (selfDetonateCfg == null) {

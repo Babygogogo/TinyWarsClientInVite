@@ -1,38 +1,22 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { show } from "../../../FloatText.ts";
 import {
-    getRwWarBaseClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../../gamePanels/Dict.ts";
-import { openPanel } from "../../../gamePanels/Manager.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-} from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../../players/Constants.ts";
-import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    FloatText,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    Players_Constants,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Lang_Constants,
+} from "../../../internal.ts";
 
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemBeginTurn(war, action);
     } else {
@@ -40,12 +24,12 @@ export async function execute(war: IBwWar, action: WoSystemBeginTurn, isFast: bo
     }
 }
 
-async function fastExeSystemBeginTurn(war: IBwWar, action: WoSystemBeginTurn): Promise<void> {
+async function fastExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<void> {
     await war.getTurnManager().endPhaseStandby(action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemBeginTurn(war: IBwWar, action: WoSystemBeginTurn): Promise<void> {
+async function normalExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<void> {
     // const desc = await war.getDescForExeSystemBeginTurn(action);
     // (desc) && (FloatText.show(desc));
 
@@ -53,15 +37,15 @@ async function normalExeSystemBeginTurn(war: IBwWar, action: WoSystemBeginTurn):
 
     const playerInTurn  = war.getPlayerInTurn();
     const playerIndex   = playerInTurn.getPlayerIndex();
-    if ((playerIndex !== PlayerIndex.Neutral)         &&
-        (playerInTurn.getAliveState() !== AliveStateId.Dead)
+    if ((playerIndex !== Players_Constants.PlayerIndex.Neutral)         &&
+        (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Dead)
     ) {
         const nickname = await playerInTurn.getNickname();
-        if ((war instanceof getRwWarBaseClass()) && (!war.getIsShowTurnStartPopUp())) {
-            show(`[P${playerIndex} ${nickname}] ${getText(TextType.B0679)}`);
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (!war.getIsShowTurnStartPopUp())) {
+            FloatText.show(`[P${playerIndex} ${nickname}] ${Lang_Utils.getText(Lang_Constants.TextType.B0679)}`);
         } else {
             await new Promise<void>(resolve => {
-                openPanel(getDict().BwBeginTurnPanel, {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
                     gameConfig          : war.getGcData(),
                     playerIndex         : playerIndex,
                     teamIndex           : playerInTurn.getTeamIndex(),
@@ -79,32 +63,27 @@ async function normalExeSystemBeginTurn(war: IBwWar, action: WoSystemBeginTurn):
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoSystemBeginTurn): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemBeginTurn): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const playerIndex = war.getPlayerIndexInTurn();
-        if (playerIndex === PlayerIndex.Neutral) {
-            return getFormattedText(TextType.F0022, getText(TextType.B0111), playerIndex);
+        if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, Lang_Utils.getText(Lang_Constants.TextType.B0111), playerIndex);
         } else {
-            return getFormattedText(TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
         }
-    } else if (war instanceof _rwWarBaseClass) {
-        return `P${war.getPlayerIndexInTurn()} ${await war.getPlayerInTurn().getNickname()} ${getText(TextType.B0094)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `P${war.getPlayerIndexInTurn()} ${await war.getPlayerInTurn().getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0094)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         const playerIndex = war.getPlayerIndexInTurn();
-        if (playerIndex === PlayerIndex.Neutral) {
-            return getFormattedText(TextType.F0022, getText(TextType.B0111), playerIndex);
+        if (playerIndex === Players_Constants.PlayerIndex.Neutral) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, Lang_Utils.getText(Lang_Constants.TextType.B0111), playerIndex);
         } else {
-            return getFormattedText(TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0022, await war.getPlayerInTurn().getNickname(), playerIndex);
         }
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

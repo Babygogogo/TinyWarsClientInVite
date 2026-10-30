@@ -1,62 +1,53 @@
-import { showLang } from "../../FloatText.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getLatestConfigVersion,
-    getPreviousConfigVersion,
-    getNextConfigVersion,
-    getGameConfig,
-} from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import {
-    getUserAvatar,
-    getMedal,
-} from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { format } from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getSpmOverallTopDataArray } from "../model/LeaderboardModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUserPublicInfo } from "../../users/Model.ts";
+    Helpers_Text,
+    GamePanels_Dict,
+    Helpers_Misc,
+    GameConfigs_Provider,
+    Helpers_ImageSource,
+    Leaderboard_Model_LeaderboardModel,
+    Users_Model,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelSpmNoData!       : IUiLabel;
-    private readonly _labelSpmRank!         : IUiLabel;
-    private readonly _labelSpmNickname!     : IUiLabel;
-    private readonly _labelSpmScore!        : IUiLabel;
-    private readonly _listSpm!              : IUiScrollList<DataForSpmUserRenderer>;
+    private readonly _labelSpmNoData!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSpmRank!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSpmNickname!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSpmScore!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listSpm!              : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSpmUserRenderer>;
 
-    private readonly _layoutVersion!        : IUiLayout;
-    private readonly _labelVersionTitle!    : IUiLabel;
-    private readonly _labelVersion!         : IUiLabel;
-    private readonly _btnPreviousVersion!   : IUiButton;
-    private readonly _btnNextVersion!       : IUiButton;
+    private readonly _layoutVersion!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelVersionTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelVersion!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnPreviousVersion!   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextVersion!       : Ui_Interfaces_IUiButton.IUiButton;
 
     private _configVersion = ``;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -71,7 +62,7 @@ export class Panel extends UiPanel<OpenData> {
         this._listSpm.setItemRendererClass(SpmUserRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._configVersion = await getLatestConfigVersion();
+        this._configVersion = await GameConfigs_Provider.getLatestConfigVersion();
 
         this._updateComponentsForLanguage();
         this._updateView();
@@ -86,9 +77,9 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private async _onTouchedBtnPreviousVersion(): Promise<void> {
-        const configVersion = await getPreviousConfigVersion(this._configVersion);
+        const configVersion = await GameConfigs_Provider.getPreviousConfigVersion(this._configVersion);
         if (configVersion == null) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
         } else {
             this._configVersion = configVersion;
             this._updateView();
@@ -96,9 +87,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnNextVersion(): Promise<void> {
-        const configVersion = await getNextConfigVersion(this._configVersion);
+        const configVersion = await GameConfigs_Provider.getNextConfigVersion(this._configVersion);
         if (configVersion == null) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
         } else {
             this._configVersion = configVersion;
             this._updateView();
@@ -121,28 +112,28 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1103);
-        this._labelSpmNoData.setLangText(TextType.B0278);
-        this._labelSpmRank.setLangText(TextType.B0904);
-        this._labelSpmNickname.setLangText(TextType.B0175);
-        this._labelSpmScore.setLangText(TextType.B0579);
-        this._labelVersionTitle.setLangText(TextType.B1104);
-        this._btnPreviousVersion.setLangText(TextType.B1029);
-        this._btnNextVersion.setLangText(TextType.B1030);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1103);
+        this._labelSpmNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelSpmRank.setLangText(Lang_Constants.TextType.B0904);
+        this._labelSpmNickname.setLangText(Lang_Constants.TextType.B0175);
+        this._labelSpmScore.setLangText(Lang_Constants.TextType.B0579);
+        this._labelVersionTitle.setLangText(Lang_Constants.TextType.B1104);
+        this._btnPreviousVersion.setLangText(Lang_Constants.TextType.B1029);
+        this._btnNextVersion.setLangText(Lang_Constants.TextType.B1030);
     }
 
     private async _updateComponentsForSpm(): Promise<void> {
         const configVersion = this._configVersion;
-        const gameConfig    = await getGameConfig(configVersion);
+        const gameConfig    = await GameConfigs_Provider.getGameConfig(configVersion);
         const dataArray     : DataForSpmUserRenderer[] = [];
         if (gameConfig != null) {
-            for (const data of (await getSpmOverallTopDataArray(configVersion))?.getDataArray() ?? []) {
+            for (const data of (await Leaderboard_Model_LeaderboardModel.getSpmOverallTopDataArray(configVersion))?.getDataArray() ?? []) {
                 const length    = dataArray.length;
-                const score     = getExisted(data.getScore());
+                const score     = Helpers_Misc.getExisted(data.getScore());
                 dataArray.push({
                     gameConfig  : gameConfig,
                     index       : length + 1,
-                    userId      : getExisted(data.getUserId()),
+                    userId      : Helpers_Misc.getExisted(data.getUserId()),
                     score       : score,
                     isLast      : false,
                     rank        : length === 0
@@ -164,8 +155,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForSpmUserRenderer extends UiListItemData {
-    gameConfig  : GameConfig;
+interface DataForSpmUserRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     index       : number;
     rank        : number;
     userId      : number;
@@ -173,18 +164,18 @@ interface DataForSpmUserRenderer extends UiListItemData {
     isLast      : boolean;
 }
 class SpmUserRenderer
-    extends     UiListItemRenderer<DataForSpmUserRenderer>
-    implements  IUiListItemRenderer<DataForSpmUserRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSpmUserRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSpmUserRenderer>
 {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgAvatar!        : IUiImage;
-    private readonly _imgBottom!        : IUiImage;
-    private readonly _imgMedal!         : IUiImage;
-    private readonly _labelIndex!       : IUiLabel;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgAvatar!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgBottom!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgMedal!         : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelIndex!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelNickname!    : IUiLabel;
-    private readonly _labelScore!       : IUiLabel;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelNickname!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelScore!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -195,7 +186,7 @@ class SpmUserRenderer
     }
 
     public onItemTapEvent(): void {
-        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,20 +206,20 @@ class SpmUserRenderer
         labelNickname.setText(``);
         imgAvatar.loadSource(``);
         imgMedal.loadSource(``);
-        labelScore.setText(`${format(`%.2f`, openData.score)}`);
+        labelScore.setText(`${Helpers_Text.format(`%.2f`, openData.score)}`);
         this._labelIndex.setText(`${rank}`);
         this._imgBottom.setIsVisible(!openData.isLast);
 
         const userId            = openData.userId;
-        const userInfo          = await getUserPublicInfo(userId);
+        const userInfo          = await Users_Model.getUserPublicInfo(userId);
         if ((userInfo == null) || (userId !== this.getOpenData()?.userId)) {
             return;
         }
 
         const medalId = (userInfo.getShowMedalIdArray())[0];
-        imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
-        imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        labelNickname.setText(userInfo?.getNickname() ?? UndefinedError);
+        imgAvatar.loadSource(Helpers_ImageSource.getUserAvatar(userInfo.getAvatarId() ?? 1));
+        imgMedal.loadSource(medalId == null ? `` : Helpers_ImageSource.getMedal(medalId));
+        labelNickname.setText(userInfo?.getNickname() ?? Lang_Constants.UndefinedError);
 
         this._layoutName.arrangeItems();
     }

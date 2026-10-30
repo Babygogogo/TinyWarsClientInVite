@@ -1,8 +1,10 @@
-import type { IUiOpenableComponent } from "./IUiOpenableComponent.ts";
-import type { UiCoData } from "../types/UiCoData.ts";
-import type { UiCoInfoType } from "../types/UiCoInfoType.ts";
+import {
+    type Ui_Interfaces_IUiOpenableComponent,
+    type Ui_Types_UiCoData,
+    type Ui_Types_UiCoInfoType,
+} from "../../internal.ts";
 
-export interface IUiCoInfo extends IUiOpenableComponent<UiCoData> {
+export interface IUiCoInfo extends Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<Ui_Types_UiCoData.UiCoData> {
     updateOnSelectedInfoType(): void;
-    getSelectedInfoType(): UiCoInfoType | null;
+    getSelectedInfoType(): Ui_Types_UiCoInfoType.UiCoInfoType | null;
 }

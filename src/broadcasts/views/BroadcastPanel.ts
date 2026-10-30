@@ -1,30 +1,29 @@
 import {
-    getOngoingMessageIdArray,
-    getMessageData,
-} from "../Provider.ts";
-import { UndefinedError } from "../../lang/Constants.ts";
-import { getLanguageText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+    Tween_Executor,
+    Lang_Utils,
+    Broadcasts_Provider,
+    Stages_StageManager,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Lang_Constants,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 const _FLOW_SPEED = 80;
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupLamp!    : IUiContainer;
-    private readonly _labelLamp!    : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupLamp!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelLamp!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _ongoingMessageIdSet    = new Set<number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onMsgBroadcastGetAllMessageIdArray },
+            { type: Notifications_TypeId.TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onMsgBroadcastGetAllMessageIdArray },
         ]);
 
         this.setIsTouchChildrenEnabled(false);
@@ -33,7 +32,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onNotifyTimeTick(): Promise<void> {
-        const messageIdArray    = await getOngoingMessageIdArray();
+        const messageIdArray    = await Broadcasts_Provider.getOngoingMessageIdArray();
         const ongoingSet        = this._ongoingMessageIdSet;
         if ((messageIdArray.length !== ongoingSet.size)     ||
             (messageIdArray.some(v => !ongoingSet.has(v)))
@@ -51,7 +50,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _resetView(): Promise<void> {
-        this._resetComponentsForLamp(await getOngoingMessageIdArray());
+        this._resetComponentsForLamp(await Broadcasts_Provider.getOngoingMessageIdArray());
     }
 
     private async _resetComponentsForLamp(messageIdArray: number[]): Promise<void> {
@@ -61,12 +60,12 @@ export class Panel extends UiPanel<OpenData> {
         const textList: string[] = [];
         for (const messageId of messageIdArray) {
             ongoingSet.add(messageId);
-            textList.push(getLanguageText({ textArray: (await getMessageData(messageId))?.getTextList() }) ?? UndefinedError);
+            textList.push(Lang_Utils.getLanguageText({ textArray: (await Broadcasts_Provider.getMessageData(messageId))?.getTextList() }) ?? Lang_Constants.UndefinedError);
         }
 
         const group = this._groupLamp;
         const label = this._labelLamp;
-        Executor.removeTweens(label);
+        Tween_Executor.Executor.removeTweens(label);
 
         if (!textList.length) {
             group.setIsVisible(false);
@@ -74,9 +73,9 @@ export class Panel extends UiPanel<OpenData> {
             group.setIsVisible(true);
 
             label.setText(textList.join("    "));
-            const stageWidth    = getStage().stageWidth;
+            const stageWidth    = Stages_StageManager.getStage().stageWidth;
             const textWidth     = label.getScaledWidth();
-            Executor.get(label, { loop: true })
+            Tween_Executor.Executor.get(label, { loop: true })
                 .set({ customX: stageWidth })
                 .to({ customX: -textWidth }, (stageWidth + textWidth) / _FLOW_SPEED * 1000);
         }

@@ -1,5 +1,6 @@
-
-import { $warn } from "./Egret";
+import {
+    Egret_Egret,
+} from "../internal.ts";
 
 export function getItem(key: string): string | null {
     return window.localStorage.getItem(key);
@@ -10,7 +11,7 @@ export function setItem(key: string, value: string): boolean {
         window.localStorage.setItem(key, value);
         return true;
     } catch {
-        $warn(1047, key, value);
+        Egret_Egret.$warn(1047, key, value);
         return false;
     }
 }

@@ -1,21 +1,29 @@
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../../gamePanels/Dict.ts";
 import {
-    closePanel,
-    openPanel,
-} from "../../../gamePanels/Manager.ts";
-import {
-    newError,
-    getExisted,
-} from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import {
-    checkIsValidLanguageTextArray,
-    getText,
-} from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
+    WarEvents_Conditions_Utils_CustomCounter,
+    WarEvents_Conditions_Utils_EventCalledCount,
+    WarEvents_Conditions_Utils_Expression,
+    Lang_Utils,
+    WarEvents_Conditions_Utils_ManualActionStatistics,
+    WarEvents_Conditions_Utils_OngoingPersistentActionPresence,
+    WarEvents_Conditions_Utils_PlayerPresence,
+    WarEvents_Conditions_Utils_TilePresence,
+    WarEvents_Conditions_Utils_TurnAndPlayer,
+    WarEvents_Conditions_Utils_UnitPresence,
+    WarEvents_Conditions_Utils_WeatherAndFog,
+    Utils_ClientErrorCode,
+    GamePanels_Manager,
+    ValueAndComparators_Constants,
+    WarEvents_Conditions_Constants,
+    WarEvents_Constants,
+    GamePanels_Dict,
+    Helpers_Misc,
+    WarEvents_FullDatas_Utils,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type MapEditor_Interface_IMeWar,
+    type AuxiliaryTypes_MapSize,
+} from "../../../internal.ts";
 import { ConditionIdAndFlags } from "../../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { WarEventCondition } from "../../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
@@ -29,79 +37,11 @@ import { WecTilePresence } from "../../../proto/schema/CommonProto/WarEvent/WecT
 import { WecTurnAndPlayer } from "../../../proto/schema/CommonProto/WarEvent/WecTurnAndPlayer.ts";
 import { WecUnitPresence } from "../../../proto/schema/CommonProto/WarEvent/WecUnitPresence.ts";
 import { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { ComparatorId } from "../../../valueAndComparators/Constants.ts";
-import {
-    ConditionTypeId,
-    MaxCountPerMap,
-} from "../Constants.ts";
-import {
-    checkIsValid as checkCustomCounterIsValid,
-    getBriefDesc as getCustomCounterBriefDesc,
-    getDetailedDesc as getCustomCounterDetailedDesc,
-    getErrorTip as getCustomCounterErrorTip,
-} from "./CustomCounter.ts";
-import {
-    checkIsValid as checkEventCalledCountIsValid,
-    getBriefDesc as getEventCalledCountBriefDesc,
-    getDetailedDesc as getEventCalledCountDetailedDesc,
-    getErrorTip as getEventCalledCountErrorTip,
-} from "./EventCalledCount.ts";
-import {
-    checkIsValid as checkExpressionIsValid,
-    getBriefDesc as getExpressionBriefDesc,
-    getDetailedDesc as getExpressionDetailedDesc,
-    getErrorTip as getExpressionErrorTip,
-} from "./Expression.ts";
-import {
-    checkIsValid as checkManualActionStatisticsIsValid,
-    getBriefDesc as getManualActionStatisticsBriefDesc,
-    getDetailedDesc as getManualActionStatisticsDetailedDesc,
-    getErrorTip as getManualActionStatisticsErrorTip,
-} from "./ManualActionStatistics.ts";
-import {
-    checkIsValid as checkOngoingPersistentActionPresenceIsValid,
-    getBriefDesc as getOngoingPersistentActionPresenceBriefDesc,
-    getDetailedDesc as getOngoingPersistentActionPresenceDetailedDesc,
-    getErrorTip as getOngoingPersistentActionPresenceErrorTip,
-} from "./OngoingPersistentActionPresence.ts";
-import {
-    checkIsValid as checkPlayerPresenceIsValid,
-    getBriefDesc as getPlayerPresenceBriefDesc,
-    getDetailedDesc as getPlayerPresenceDetailedDesc,
-    getErrorTip as getPlayerPresenceErrorTip,
-} from "./PlayerPresence.ts";
-import {
-    checkIsValid as checkTilePresenceIsValid,
-    getBriefDesc as getTilePresenceBriefDesc,
-    getDetailedDesc as getTilePresenceDetailedDesc,
-    getErrorTip as getTilePresenceErrorTip,
-} from "./TilePresence.ts";
-import {
-    checkIsValid as checkTurnAndPlayerIsValid,
-    getBriefDesc as getTurnAndPlayerBriefDesc,
-    getDetailedDesc as getTurnAndPlayerDetailedDesc,
-    getErrorTip as getTurnAndPlayerErrorTip,
-} from "./TurnAndPlayer.ts";
-import {
-    checkIsValid as checkUnitPresenceIsValid,
-    getBriefDesc as getUnitPresenceBriefDesc,
-    getDetailedDesc as getUnitPresenceDetailedDesc,
-    getErrorTip as getUnitPresenceErrorTip,
-} from "./UnitPresence.ts";
-import {
-    checkIsValid as checkWeatherAndFogIsValid,
-    getBriefDesc as getWeatherAndFogBriefDesc,
-    getDetailedDesc as getWeatherAndFogDetailedDesc,
-    getErrorTip as getWeatherAndFogErrorTip,
-} from "./WeatherAndFog.ts";
-import { Event } from "../../Constants.ts";
-import { getNode } from "../../fullDatas/Utils.ts";
 
 export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet }: {  // DONE
     condition               : WarEventCondition;
-    mapSize                 : MapSize;
-    gameConfig              : GameConfig;
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     playersCountUnneutral   : number;
     customCounterNameSet    : Set<string>;
 }): boolean {
@@ -113,9 +53,9 @@ export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, 
     if (wecCommonData?.getConditionId() == null) {
         return false;
     }
-    if (!checkIsValidLanguageTextArray({
+    if (!Lang_Utils.checkIsValidLanguageTextArray({
         list            : wecCommonData.getConditionNameArray(),
-        maxTextLength   : Event.MaxNameLength,
+        maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
         minTextLength   : 1,
         minTextCount    : 0,
     })) {
@@ -123,151 +63,151 @@ export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, 
     }
 
     // TODO add more checkers when the condition types grow.
-    return (checkEventCalledCountIsValid(condition.getWecEventCalledCount()))
-        || (checkPlayerPresenceIsValid(condition.getWecPlayerPresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (checkTurnAndPlayerIsValid(condition.getWecTurnAndPlayer(), playersCountUnneutral))
-        || (checkWeatherAndFogIsValid(condition.getWecWeatherAndFog(), gameConfig))
-        || (checkTilePresenceIsValid(condition.getWecTilePresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (checkUnitPresenceIsValid(condition.getWecUnitPresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (checkExpressionIsValid(condition.getWecExpression(), customCounterNameSet))
-        || (checkCustomCounterIsValid(condition.getWecCustomCounter()))
-        || (checkOngoingPersistentActionPresenceIsValid(condition.getWecOngoingPersistentActionPresence()))
-        || (checkManualActionStatisticsIsValid(condition.getWecManualActionStatistics(), playersCountUnneutral));
+    return (WarEvents_Conditions_Utils_EventCalledCount.checkIsValid(condition.getWecEventCalledCount()))
+        || (WarEvents_Conditions_Utils_PlayerPresence.checkIsValid(condition.getWecPlayerPresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (WarEvents_Conditions_Utils_TurnAndPlayer.checkIsValid(condition.getWecTurnAndPlayer(), playersCountUnneutral))
+        || (WarEvents_Conditions_Utils_WeatherAndFog.checkIsValid(condition.getWecWeatherAndFog(), gameConfig))
+        || (WarEvents_Conditions_Utils_TilePresence.checkIsValid(condition.getWecTilePresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (WarEvents_Conditions_Utils_UnitPresence.checkIsValid(condition.getWecUnitPresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (WarEvents_Conditions_Utils_Expression.checkIsValid(condition.getWecExpression(), customCounterNameSet))
+        || (WarEvents_Conditions_Utils_CustomCounter.checkIsValid(condition.getWecCustomCounter()))
+        || (WarEvents_Conditions_Utils_OngoingPersistentActionPresence.checkIsValid(condition.getWecOngoingPersistentActionPresence()))
+        || (WarEvents_Conditions_Utils_ManualActionStatistics.checkIsValid(condition.getWecManualActionStatistics(), playersCountUnneutral));
 }
 
-export function resetCondition(condition: WarEventCondition, conditionType: ConditionTypeId): void {
+export function resetCondition(condition: WarEventCondition, conditionType: WarEvents_Conditions_Constants.ConditionTypeId): void {
     condition.clearConditionData();
 
-    if (conditionType === ConditionTypeId.WecTurnAndPlayer) {
+    if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer) {
         condition.setWecTurnAndPlayer(WecTurnAndPlayer.fromJson({
-            turnIndexComparator             : ComparatorId.EqualTo,
-            turnIndexRemainderComparator    : ComparatorId.EqualTo,
+            turnIndexComparator             : ValueAndComparators_Constants.ComparatorId.EqualTo,
+            turnIndexRemainderComparator    : ValueAndComparators_Constants.ComparatorId.EqualTo,
             playerIndexArray                : [],
         }));
-    } else if (conditionType === ConditionTypeId.WecWeatherAndFog) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog) {
         condition.setWecWeatherAndFog(WecWeatherAndFog.fromJson({
             weatherTypeArray    : [],
         }));
-    } else if (conditionType === ConditionTypeId.WecEventCalledCount) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount) {
         condition.setWecEventCalledCount(WecEventCalledCount.fromJson({
             eventIdArray            : [],
             eventsCount             : 0,
-            eventsCountComparator   : ComparatorId.EqualTo,
-            timesInTurnComparator   : ComparatorId.EqualTo,
-            timesTotalComparator    : ComparatorId.EqualTo,
+            eventsCountComparator   : ValueAndComparators_Constants.ComparatorId.EqualTo,
+            timesInTurnComparator   : ValueAndComparators_Constants.ComparatorId.EqualTo,
+            timesTotalComparator    : ValueAndComparators_Constants.ComparatorId.EqualTo,
         }));
-    } else if (conditionType === ConditionTypeId.WecPlayerPresence) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence) {
         condition.setWecPlayerPresence(WecPlayerPresence.fromJson({
             conPlayerComparator : {
                 value       : 0,
-                comparator  : ComparatorId.EqualTo,
+                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
             },
         }));
-    } else if (conditionType === ConditionTypeId.WecTilePresence) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence) {
         condition.setWecTilePresence(WecTilePresence.fromJson({
             conTileComparator   : {
                 value       : 0,
-                comparator  : ComparatorId.EqualTo,
+                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
             },
         }));
-    } else if (conditionType === ConditionTypeId.WecUnitPresence) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence) {
         condition.setWecUnitPresence(WecUnitPresence.fromJson({
             conUnitComparator   : {
                 value       : 0,
-                comparator  : ComparatorId.EqualTo,
+                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
             },
         }));
-    } else if (conditionType === ConditionTypeId.WecExpression) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecExpression) {
         condition.setWecExpression(WecExpression.fromJson({
             expression  : "",
         }));
-    } else if (conditionType === ConditionTypeId.WecCustomCounter) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter) {
         condition.setWecCustomCounter(WecCustomCounter.fromJson({
             counterIdArray              : [],
             counterCount                : 1,
-            counterCountComparator      : ComparatorId.EqualTo,
-            valueComparator             : ComparatorId.EqualTo,
-            valueRemainderComparator    : ComparatorId.EqualTo,
+            counterCountComparator      : ValueAndComparators_Constants.ComparatorId.EqualTo,
+            valueComparator             : ValueAndComparators_Constants.ComparatorId.EqualTo,
+            valueRemainderComparator    : ValueAndComparators_Constants.ComparatorId.EqualTo,
         }));
-    } else if (conditionType === ConditionTypeId.WecOngoingPersistentActionPresence) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence) {
         condition.setWecOngoingPersistentActionPresence(WecOngoingPersistentActionPresence.fromJson({
             ongoingActionIdArray            : [],
             ongoingActionsCount             : 1,
-            ongoingActionsCountComparator   : ComparatorId.EqualTo,
+            ongoingActionsCountComparator   : ValueAndComparators_Constants.ComparatorId.EqualTo,
         }));
-    } else if (conditionType === ConditionTypeId.WecManualActionStatistics) {
+    } else if (conditionType === WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics) {
         condition.setWecManualActionStatistics(WecManualActionStatistics.fromJson({
             playerIndexArray    : [],
             recentTurnsCount    : 1,
             totalActions        : {
                 value           : 1,
-                comparator      : ComparatorId.EqualTo,
+                comparator      : ValueAndComparators_Constants.ComparatorId.EqualTo,
             },
         }));
     } else {
         // todo: handle more condition types.
-        throw newError(`Invalid conditionType: ${conditionType}.`, ClientErrorCode.WarEventHelper_ResetCondition_00);
+        throw Helpers_Misc.newError(`Invalid conditionType: ${conditionType}.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_ResetCondition_00);
     }
 }
 
 export function openConditionModifyPanel({ fullData, condition, war }: {
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
 }): void {
     // todo: handle more condition types.
-    closePanel(getDict().WecPlayerPresencePanel);
-    closePanel(getDict().WecTurnAndPlayerPanel);
-    closePanel(getDict().WecEventCalledCountPanel);
-    closePanel(getDict().WecTilePresencePanel);
-    closePanel(getDict().WecUnitPresencePanel);
-    closePanel(getDict().WecWeatherAndFogPanel);
-    closePanel(getDict().WecExpressionPanel);
-    closePanel(getDict().WeConditionModifyPanel60);
-    closePanel(getDict().WecOngoingPersistentActionPanel);
-    closePanel(getDict().WecManualActionStatisticsPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecPlayerPresencePanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecTurnAndPlayerPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecEventCalledCountPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecTilePresencePanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecUnitPresencePanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecWeatherAndFogPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecExpressionPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionModifyPanel60);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecOngoingPersistentActionPanel);
+    GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WecManualActionStatisticsPanel);
 
-    if      (condition.getWecPlayerPresence())                  { openPanel(getDict().WecPlayerPresencePanel,                 { fullData, condition, war }); }
-    else if (condition.getWecTurnAndPlayer())                   { openPanel(getDict().WecTurnAndPlayerPanel,                  { fullData, condition, war }); }
-    else if (condition.getWecEventCalledCount())                { openPanel(getDict().WecEventCalledCountPanel,               { fullData, condition, war }); }
-    else if (condition.getWecTilePresence())                    { openPanel(getDict().WecTilePresencePanel,                   { fullData, condition, war }); }
-    else if (condition.getWecUnitPresence())                    { openPanel(getDict().WecUnitPresencePanel,                   { fullData, condition, war }); }
-    else if (condition.getWecWeatherAndFog())                   { openPanel(getDict().WecWeatherAndFogPanel,                  { fullData, condition, war }); }
-    else if (condition.getWecExpression())                      { openPanel(getDict().WecExpressionPanel,                     { fullData, condition, war }); }
-    else if (condition.getWecCustomCounter())                   { openPanel(getDict().WeConditionModifyPanel60,               { fullData, condition, war }); }
-    else if (condition.getWecOngoingPersistentActionPresence()) { openPanel(getDict().WecOngoingPersistentActionPanel,        { fullData, condition, war }); }
-    else if (condition.getWecManualActionStatistics())          { openPanel(getDict().WecManualActionStatisticsPanel,         { fullData, condition, war }); }
-    else                                                        { throw newError(`Invalid condition.`, ClientErrorCode.WarEventHelper_OpenConditionModifyPanel_00); }
+    if      (condition.getWecPlayerPresence())                  { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecPlayerPresencePanel,                 { fullData, condition, war }); }
+    else if (condition.getWecTurnAndPlayer())                   { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTurnAndPlayerPanel,                  { fullData, condition, war }); }
+    else if (condition.getWecEventCalledCount())                { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecEventCalledCountPanel,               { fullData, condition, war }); }
+    else if (condition.getWecTilePresence())                    { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecTilePresencePanel,                   { fullData, condition, war }); }
+    else if (condition.getWecUnitPresence())                    { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecUnitPresencePanel,                   { fullData, condition, war }); }
+    else if (condition.getWecWeatherAndFog())                   { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecWeatherAndFogPanel,                  { fullData, condition, war }); }
+    else if (condition.getWecExpression())                      { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecExpressionPanel,                     { fullData, condition, war }); }
+    else if (condition.getWecCustomCounter())                   { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionModifyPanel60,               { fullData, condition, war }); }
+    else if (condition.getWecOngoingPersistentActionPresence()) { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecOngoingPersistentActionPanel,        { fullData, condition, war }); }
+    else if (condition.getWecManualActionStatistics())          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WecManualActionStatisticsPanel,         { fullData, condition, war }); }
+    else                                                        { throw Helpers_Misc.newError(`Invalid condition.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_OpenConditionModifyPanel_00); }
 }
 
-export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
-    return (getEventCalledCountBriefDesc(con.getWecEventCalledCount()))
-        || (getPlayerPresenceBriefDesc(con.getWecPlayerPresence()))
-        || (getTurnAndPlayerBriefDesc(con.getWecTurnAndPlayer()))
-        || (getWeatherAndFogBriefDesc(con.getWecWeatherAndFog()))
-        || (getTilePresenceBriefDesc(con.getWecTilePresence()))
-        || (getUnitPresenceBriefDesc(con.getWecUnitPresence()))
-        || (getExpressionBriefDesc(con.getWecExpression()))
-        || (getCustomCounterBriefDesc(con.getWecCustomCounter()))
-        || (getOngoingPersistentActionPresenceBriefDesc(con.getWecOngoingPersistentActionPresence()))
-        || (getManualActionStatisticsBriefDesc(con.getWecManualActionStatistics()));
+export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
+    return (WarEvents_Conditions_Utils_EventCalledCount.getBriefDesc(con.getWecEventCalledCount()))
+        || (WarEvents_Conditions_Utils_PlayerPresence.getBriefDesc(con.getWecPlayerPresence()))
+        || (WarEvents_Conditions_Utils_TurnAndPlayer.getBriefDesc(con.getWecTurnAndPlayer()))
+        || (WarEvents_Conditions_Utils_WeatherAndFog.getBriefDesc(con.getWecWeatherAndFog()))
+        || (WarEvents_Conditions_Utils_TilePresence.getBriefDesc(con.getWecTilePresence()))
+        || (WarEvents_Conditions_Utils_UnitPresence.getBriefDesc(con.getWecUnitPresence()))
+        || (WarEvents_Conditions_Utils_Expression.getBriefDesc(con.getWecExpression()))
+        || (WarEvents_Conditions_Utils_CustomCounter.getBriefDesc(con.getWecCustomCounter()))
+        || (WarEvents_Conditions_Utils_OngoingPersistentActionPresence.getBriefDesc(con.getWecOngoingPersistentActionPresence()))
+        || (WarEvents_Conditions_Utils_ManualActionStatistics.getBriefDesc(con.getWecManualActionStatistics()));
 }
-export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
-    return (getEventCalledCountDetailedDesc(con.getWecEventCalledCount()))
-        || (getPlayerPresenceDetailedDesc(con.getWecPlayerPresence()))
-        || (getTurnAndPlayerDetailedDesc(con.getWecTurnAndPlayer()))
-        || (getWeatherAndFogDetailedDesc(con.getWecWeatherAndFog(), gameConfig))
-        || (getTilePresenceDetailedDesc(con.getWecTilePresence()))
-        || (getUnitPresenceDetailedDesc(con.getWecUnitPresence()))
-        || (getExpressionDetailedDesc(con.getWecExpression()))
-        || (getCustomCounterDetailedDesc(con.getWecCustomCounter()))
-        || (getOngoingPersistentActionPresenceDetailedDesc(con.getWecOngoingPersistentActionPresence()))
-        || (getManualActionStatisticsDetailedDesc(con.getWecManualActionStatistics()));
+export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
+    return (WarEvents_Conditions_Utils_EventCalledCount.getDetailedDesc(con.getWecEventCalledCount()))
+        || (WarEvents_Conditions_Utils_PlayerPresence.getDetailedDesc(con.getWecPlayerPresence()))
+        || (WarEvents_Conditions_Utils_TurnAndPlayer.getDetailedDesc(con.getWecTurnAndPlayer()))
+        || (WarEvents_Conditions_Utils_WeatherAndFog.getDetailedDesc(con.getWecWeatherAndFog(), gameConfig))
+        || (WarEvents_Conditions_Utils_TilePresence.getDetailedDesc(con.getWecTilePresence()))
+        || (WarEvents_Conditions_Utils_UnitPresence.getDetailedDesc(con.getWecUnitPresence()))
+        || (WarEvents_Conditions_Utils_Expression.getDetailedDesc(con.getWecExpression()))
+        || (WarEvents_Conditions_Utils_CustomCounter.getDetailedDesc(con.getWecCustomCounter()))
+        || (WarEvents_Conditions_Utils_OngoingPersistentActionPresence.getDetailedDesc(con.getWecOngoingPersistentActionPresence()))
+        || (WarEvents_Conditions_Utils_ManualActionStatistics.getDetailedDesc(con.getWecManualActionStatistics()));
 }
-export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: IBwWar): string | null {
+export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
     const conditionsCount = fullData.getConditionArray().length;
-    if (conditionsCount > MaxCountPerMap) {
-        return `${getText(TextType.A0185)} (${conditionsCount}/${MaxCountPerMap})`;
+    if (conditionsCount > WarEvents_Conditions_Constants.MaxCountPerMap) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.A0185)} (${conditionsCount}/${WarEvents_Conditions_Constants.MaxCountPerMap})`;
     }
 
     // if (Object.keys(condition.toJson()).length !== 2) {
@@ -282,59 +222,59 @@ export function getErrorTipForCondition(fullData: WarEventFullData, condition: W
     // todo add more tips for the future conditions.
     const wecEventCalledCount = condition.getWecEventCalledCount();
     if (wecEventCalledCount) {
-        return getEventCalledCountErrorTip(wecEventCalledCount, fullData);
+        return WarEvents_Conditions_Utils_EventCalledCount.getErrorTip(wecEventCalledCount, fullData);
     }
 
     const wecPlayerPresence = condition.getWecPlayerPresence();
     if (wecPlayerPresence) {
-        return getPlayerPresenceErrorTip(wecPlayerPresence, playersCountUnneutral, mapSize, gameConfig);
+        return WarEvents_Conditions_Utils_PlayerPresence.getErrorTip(wecPlayerPresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecTurnAndPlayer = condition.getWecTurnAndPlayer();
     if (wecTurnAndPlayer) {
-        return getTurnAndPlayerErrorTip(wecTurnAndPlayer, war);
+        return WarEvents_Conditions_Utils_TurnAndPlayer.getErrorTip(wecTurnAndPlayer, war);
     }
 
     const wecWeatherAndFog = condition.getWecWeatherAndFog();
     if (wecWeatherAndFog) {
-        return getWeatherAndFogErrorTip(wecWeatherAndFog, war);
+        return WarEvents_Conditions_Utils_WeatherAndFog.getErrorTip(wecWeatherAndFog, war);
     }
 
     const wecTilePresence = condition.getWecTilePresence();
     if (wecTilePresence) {
-        return getTilePresenceErrorTip(wecTilePresence, playersCountUnneutral, mapSize, gameConfig);
+        return WarEvents_Conditions_Utils_TilePresence.getErrorTip(wecTilePresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecUnitPresence = condition.getWecUnitPresence();
     if (wecUnitPresence) {
-        return getUnitPresenceErrorTip(wecUnitPresence, playersCountUnneutral, mapSize, gameConfig);
+        return WarEvents_Conditions_Utils_UnitPresence.getErrorTip(wecUnitPresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecExpression = condition.getWecExpression();
     if (wecExpression) {
-        return getExpressionErrorTip(wecExpression, customCounterNameSet);
+        return WarEvents_Conditions_Utils_Expression.getErrorTip(wecExpression, customCounterNameSet);
     }
 
     const wecCustomCounter = condition.getWecCustomCounter();
     if (wecCustomCounter) {
-        return getCustomCounterErrorTip(wecCustomCounter);
+        return WarEvents_Conditions_Utils_CustomCounter.getErrorTip(wecCustomCounter);
     }
 
     const wecOngoingPersistentActionPresence = condition.getWecOngoingPersistentActionPresence();
     if (wecOngoingPersistentActionPresence) {
-        return getOngoingPersistentActionPresenceErrorTip(wecOngoingPersistentActionPresence);
+        return WarEvents_Conditions_Utils_OngoingPersistentActionPresence.getErrorTip(wecOngoingPersistentActionPresence);
     }
 
     const wecManualActionStatistics = condition.getWecManualActionStatistics();
     if (wecManualActionStatistics) {
-        return getManualActionStatisticsErrorTip(wecManualActionStatistics, war);
+        return WarEvents_Conditions_Utils_ManualActionStatistics.getErrorTip(wecManualActionStatistics, war);
     }
 
-    return getText(TextType.A0187);
+    return Lang_Utils.getText(Lang_Constants.TextType.A0187);
 }
 
 export function addDefaultCondition(fullData: WarEventFullData, nodeId: number): number { // DONE
-    const node                      = getExisted(getNode(fullData, nodeId), ClientErrorCode.WarEventHelper_AddDefaultCondition_00);
+    const node                      = Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getNode(fullData, nodeId), Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_AddDefaultCondition_00);
     const conditionIdAndFlagsArray  = node.getConditionIdAndFlagsArray();
     const conditionArray            = fullData.getConditionArray();
     for (let conditionId = 1; ; ++conditionId) {
@@ -345,12 +285,12 @@ export function addDefaultCondition(fullData: WarEventFullData, nodeId: number):
                     conditionNameArray  : [],
                 },
                 WecTurnAndPlayer : {
-                    turnIndexComparator             : ComparatorId.EqualTo,
-                    turnIndexRemainderComparator    : ComparatorId.EqualTo,
+                    turnIndexComparator             : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                    turnIndexRemainderComparator    : ValueAndComparators_Constants.ComparatorId.EqualTo,
                     playerIndexArray                : [],
                 },
             }));
-            conditionArray.sort((v1, v2) => getExisted(v1.getWecCommonData()?.getConditionId()) - getExisted(v2.getWecCommonData()?.getConditionId()));
+            conditionArray.sort((v1, v2) => Helpers_Misc.getExisted(v1.getWecCommonData()?.getConditionId()) - Helpers_Misc.getExisted(v2.getWecCommonData()?.getConditionId()));
 
             conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId: conditionId }));
             conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());
@@ -361,7 +301,7 @@ export function addDefaultCondition(fullData: WarEventFullData, nodeId: number):
 }
 export function cloneCondition(fullData: WarEventFullData, srcConditionId: number): number {
     const conditionArray    = fullData.getConditionArray();
-    const newCondition      = getExisted(conditionArray.find(v => v.getWecCommonData()?.getConditionId() === srcConditionId)).clone();
+    const newCondition      = Helpers_Misc.getExisted(conditionArray.find(v => v.getWecCommonData()?.getConditionId() === srcConditionId)).clone();
     conditionArray.push(newCondition);
 
     for (let conditionId = 1; ; ++conditionId) {
@@ -369,8 +309,8 @@ export function cloneCondition(fullData: WarEventFullData, srcConditionId: numbe
             continue;
         }
 
-        getExisted(newCondition.getWecCommonData()).setConditionId(conditionId);
-        conditionArray.sort((v1, v2) => getExisted(v1.getWecCommonData()?.getConditionId()) - getExisted(v2.getWecCommonData()?.getConditionId()));
+        Helpers_Misc.getExisted(newCondition.getWecCommonData()).setConditionId(conditionId);
+        conditionArray.sort((v1, v2) => Helpers_Misc.getExisted(v1.getWecCommonData()?.getConditionId()) - Helpers_Misc.getExisted(v2.getWecCommonData()?.getConditionId()));
         return conditionId;
     }
 }

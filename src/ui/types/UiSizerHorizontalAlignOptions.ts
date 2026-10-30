@@ -1,6 +1,8 @@
-import type { UiHorizontalAlign } from "./UiHorizontalAlign.ts";
+import {
+    type Ui_Types_UiHorizontalAlign,
+} from "../../internal.ts";
 
 export interface UiSizerHorizontalAlignOptions {
-    align?  : UiHorizontalAlign;    // default: Left
+    align?  : Ui_Types_UiHorizontalAlign.UiHorizontalAlign;    // default: Left
     offset? : number;               // default: 0
 }

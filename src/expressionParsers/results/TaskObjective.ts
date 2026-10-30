@@ -1,20 +1,22 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+} from "../../internal.ts";
 
-export class TaskObjective extends Base {
+export class TaskObjective extends ExpressionParsers_Results_Base.Base {
     public readonly objectiveId: number;
 
-    public constructor(war: IBwWar, objectiveId: number) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number) {
         super(war);
 
         this.objectiveId = objectiveId;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.TaskObjective;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.TaskObjective;
     }
-    public checkIsEqual(rhs: Base): boolean {
+    public checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         return (this.war === rhs.war)
             && (this.objectiveId >= 0)
             && (rhs instanceof TaskObjective)

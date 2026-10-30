@@ -1,47 +1,43 @@
-import { showLang } from "../../FloatText.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getBgmSfxName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import {
-    getSelfSettingsBgmCodeForLobby,
-    getSelfSettingsBgmCodeForMapEditor,
-} from "../Model.ts";
-import { reqUserSetSceneBgmSettings } from "../Proxy.ts";
+    Lang_Utils,
+    GamePanels_Dict,
+    Users_Model,
+    GamePanels_Manager,
+    Users_Proxy,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = {
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutContent!        : IUiLayout;
-    private readonly _layoutLobby!          : IUiLayout;
-    private readonly _labelLobby!           : IUiLabel;
-    private readonly _btnLobby!             : IUiButton;
+    private readonly _layoutContent!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutLobby!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelLobby!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnLobby!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutMapEditor!      : IUiLayout;
-    private readonly _labelMapEditor!       : IUiLabel;
-    private readonly _btnMapEditor!         : IUiButton;
+    private readonly _layoutMapEditor!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMapEditor!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMapEditor!         : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserSetSceneBgmSettings,  callback: this._onNotifyMsgUserSetSceneBgmSettings },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserSetSceneBgmSettings,  callback: this._onNotifyMsgUserSetSceneBgmSettings },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                           callback: this.closePanel },
@@ -65,7 +61,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserSetSceneBgmSettings(): void {
-        showLang(TextType.OperationSucceeded);
+        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
         this._updateBtnLobby();
         this._updateBtnMapEditor();
     }
@@ -76,15 +72,15 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const currentBgmCode = getSelfSettingsBgmCodeForLobby();
-        openPanel(getDict().SoundsChooseSingleBgmPanel, {
+        const currentBgmCode = Users_Model.getSelfSettingsBgmCodeForLobby();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
             gameConfig          : gameConfig,
             currentBgmCode      : currentBgmCode,
             callbackOnConfirm   : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
-                    showLang(TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 } else {
-                    reqUserSetSceneBgmSettings({
+                    Users_Proxy.reqUserSetSceneBgmSettings({
                         lobbyBgmCode    : newBgmCode,
                     });
                 }
@@ -98,15 +94,15 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const currentBgmCode = getSelfSettingsBgmCodeForMapEditor();
-        openPanel(getDict().SoundsChooseSingleBgmPanel, {
+        const currentBgmCode = Users_Model.getSelfSettingsBgmCodeForMapEditor();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
             gameConfig          : gameConfig,
             currentBgmCode      : currentBgmCode,
             callbackOnConfirm   : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
-                    showLang(TextType.OperationSucceeded);
+                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 } else {
-                    reqUserSetSceneBgmSettings({
+                    Users_Proxy.reqUserSetSceneBgmSettings({
                         mapEditorBgmCode    : newBgmCode,
                     });
                 }
@@ -122,9 +118,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1286);
-        this._labelLobby.setLangText(TextType.B1288);
-        this._labelMapEditor.setLangText(TextType.B0271);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1286);
+        this._labelLobby.setLangText(Lang_Constants.TextType.B1288);
+        this._labelMapEditor.setLangText(Lang_Constants.TextType.B0271);
 
         this._layoutLobby.arrangeItems();
         this._layoutMapEditor.arrangeItems();
@@ -139,8 +135,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const bgmCode = getSelfSettingsBgmCodeForLobby();
-        this._btnLobby.setText(getBgmSfxName(bgmCode, gameConfig) ?? UndefinedError);
+        const bgmCode = Users_Model.getSelfSettingsBgmCodeForLobby();
+        this._btnLobby.setText(Lang_Utils.getBgmSfxName(bgmCode, gameConfig) ?? Lang_Constants.UndefinedError);
     }
 
     private _updateBtnMapEditor(): void {
@@ -149,7 +145,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const bgmCode = getSelfSettingsBgmCodeForMapEditor();
-        this._btnMapEditor.setText(getBgmSfxName(bgmCode, gameConfig) ?? UndefinedError);
+        const bgmCode = Users_Model.getSelfSettingsBgmCodeForMapEditor();
+        this._btnMapEditor.setText(Lang_Utils.getBgmSfxName(bgmCode, gameConfig) ?? Lang_Constants.UndefinedError);
     }
 }

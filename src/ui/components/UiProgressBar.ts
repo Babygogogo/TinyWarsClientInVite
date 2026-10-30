@@ -1,15 +1,17 @@
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { UiContainer } from "./UiContainer.ts";
-import type { IUiImage } from "../interfaces/IUiImage.ts";
-import type { IUiLabel } from "../interfaces/IUiLabel.ts";
-import type { IUiProgressBar } from "../interfaces/IUiProgressBar.ts";
-import { Rectangle } from "../../egret/Egret.ts";
+import {
+    Numbers_Utils,
+    Egret_Egret,
+    Ui_Components_UiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiProgressBar,
+} from "../../internal.ts";
 
-export class UiProgressBar extends UiContainer implements IUiProgressBar {
-    private readonly _labelDisplay? : IUiLabel;
-    private readonly _imgThumb?     : IUiImage;
+export class UiProgressBar extends Ui_Components_UiContainer.UiContainer implements Ui_Interfaces_IUiProgressBar.IUiProgressBar {
+    private readonly _labelDisplay? : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgThumb?     : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _graphicMask   = new Rectangle(-1, -1, 1, 1);    // xy设为-1用于补偿egret的遮罩bug
+    private readonly _graphicMask   = new Egret_Egret.Rectangle(-1, -1, 1, 1);    // xy设为-1用于补偿egret的遮罩bug
     private _startValue             = 0;
     private _endValue               = 100;
     private _currentValue           = 0;
@@ -87,7 +89,7 @@ export class UiProgressBar extends UiContainer implements IUiProgressBar {
             const isNegative            = startValue > endValue;
             const revisedStartValue     = isNegative ? -startValue : startValue;
             const revisedEndValue       = isNegative ? -endValue : endValue;
-            const revisedCurrentValue   = getValueInRange({
+            const revisedCurrentValue   = Numbers_Utils.getValueInRange({
                 minValue    : revisedStartValue,
                 maxValue    : revisedEndValue,
                 rawValue    : this.getCurrentValue() * (isNegative ? -1 : 1),

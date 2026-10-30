@@ -1,27 +1,19 @@
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getCurrentLanguageType,
-    getSecondaryLanguageType,
-    getFormattedText,
-    getLanguageText,
-    getLanguageTypeName,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Lang_Utils,
+    GamePanels_Dict,
+    Helpers_Misc,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export interface OpenData {
     currentTextArray    : LanguageText[];
@@ -31,26 +23,26 @@ export interface OpenData {
     getHelpText?        : () => string;
     callback            : (textArray: LanguageText[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _input1!           : IUiPromptedInput;
-    private readonly _btnDelete1!       : IUiButton;
-    private readonly _label1!           : IUiLabel;
+    private readonly _input1!           : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnDelete1!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _label1!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _input2!           : IUiPromptedInput;
-    private readonly _btnDelete2!       : IUiButton;
-    private readonly _label2!           : IUiLabel;
+    private readonly _input2!           : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnDelete2!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _label2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnClose!         : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -79,7 +71,7 @@ export class Panel extends UiPanel<OpenData> {
         const func = this.getOpenData()?.getHelpText;
         const text = func ? func() : null;
         if (text) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
@@ -100,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
         const text2 = this._input2.trimInputText();
         if ((!text1) && (!text2)) {
             if (!openData.allowEmpty) {
-                show(getText(TextType.A0156));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0156));
             } else {
                 openData.callback([]);
                 this.closePanel();
@@ -110,17 +102,17 @@ export class Panel extends UiPanel<OpenData> {
 
         const textArray : LanguageText[] = [];
         if (text1) {
-            textArray.push(LanguageText.fromJson({ languageType: getCurrentLanguageType(), text: text1 }));
+            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getCurrentLanguageType(), text: text1 }));
         }
         if (text2) {
-            textArray.push(LanguageText.fromJson({ languageType: getSecondaryLanguageType(), text: text2 }));
+            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getSecondaryLanguageType(), text: text2 }));
         }
 
         const maxLength = openData.maxTextLength;
-        if (textArray.every(v => getExisted(v.getText()).length <= 0)) {
-            show(getText(TextType.A0155));
-        } else if (textArray.some(v => getExisted(v.getText()).length > maxLength)) {
-            show(getFormattedText(TextType.F0034, maxLength));
+        if (textArray.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
+        } else if (textArray.some(v => Helpers_Misc.getExisted(v.getText()).length > maxLength)) {
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0034, maxLength));
         } else {
             openData.callback(textArray);
             this.closePanel();
@@ -137,16 +129,16 @@ export class Panel extends UiPanel<OpenData> {
 
         const textArray = openData.currentTextArray;
         this._btnHelp.setIsVisible(!!openData.getHelpText);
-        this._input1.setInputText(getLanguageText({ textArray: textArray, languageType: getCurrentLanguageType(), useAlternate: false }) ?? ``);
-        this._input2.setInputText(getLanguageText({ textArray: textArray, languageType: getSecondaryLanguageType(), useAlternate: false }) ?? ``);
+        this._input1.setInputText(Lang_Utils.getLanguageText({ textArray: textArray, languageType: Lang_Utils.getCurrentLanguageType(), useAlternate: false }) ?? ``);
+        this._input2.setInputText(Lang_Utils.getLanguageText({ textArray: textArray, languageType: Lang_Utils.getSecondaryLanguageType(), useAlternate: false }) ?? ``);
     }
 
     private _updateComponentsForLanguage(): void {
         const getTitleText = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(getTitleText ? getTitleText() : getText(TextType.B0708));
-        this._btnClose.setLangText(TextType.B0154);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._label1.setText(getLanguageTypeName(getCurrentLanguageType()) ?? UndefinedError);
-        this._label2.setText(getLanguageTypeName(getSecondaryLanguageType()) ?? UndefinedError);
+        this._labelTitle.setText(getTitleText ? getTitleText() : Lang_Utils.getText(Lang_Constants.TextType.B0708));
+        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._label1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
+        this._label2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
     }
 }

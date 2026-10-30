@@ -1,4 +1,6 @@
-import { newError } from "./Misc.ts";
+import {
+    Helpers_Misc,
+} from "../internal.ts";
 
 export function decodeTeamIndex(encodedTeamIndex: number): number[] {
     const decodedTeamIndexList: number[] = [];
@@ -13,7 +15,7 @@ export function encodeTeamIndex(teamIndexList: number[]): number {
     let encodedTeamIndex = 0;
     for (const teamIndex of teamIndexList) {
         if ((teamIndex >= 32) || (teamIndex < 0) || (teamIndex !== Math.floor(teamIndex))) {
-            throw newError(`Invalid flag: ${teamIndex}`);
+            throw Helpers_Misc.newError(`Invalid flag: ${teamIndex}`);
         }
 
         encodedTeamIndex |= 1 << teamIndex;

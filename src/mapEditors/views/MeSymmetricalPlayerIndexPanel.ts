@@ -1,41 +1,43 @@
-import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getSkinCircle } from "../../helpers/ImageSource.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import {
+    Notifications_Dispatcher,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    Helpers_ImageSource,
+    Lang_Utils,
+    GamePanels_Manager,
+    Players_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listSkin!         : IUiScrollList<DataForSkinRenderer>;
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnCancel!        : IUiButton;
+    private readonly _listSkin!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSkinRenderer>;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!        : Ui_Interfaces_IUiButton.IUiButton;
 
     private _symmetricalPlayerIndexArray   : number[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
@@ -79,14 +81,14 @@ export class Panel extends UiPanel<OpenData> {
         if (drawer == null) {
             return;
         }
-        for (let playerIndex = PlayerIndex.Neutral; playerIndex <= PlayerIndex.Max; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.Neutral; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
             selectedPlayerIndexArray[playerIndex] = drawer.getSymmetricalPlayerIndex(playerIndex);
         }
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0478),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0478),
         });
     }
 
@@ -97,12 +99,12 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const array = this.getSymmetricalPlayerIndexArray();
-        for (let playerIndex = PlayerIndex.First; playerIndex <= PlayerIndex.Max; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
             drawer.setSymmetricalPlayerIndex(playerIndex, array[playerIndex]);
         }
 
         this.closePanel();
-        dispatch(TypeId.MeDrawerSymmetricalPlayerIndexChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeDrawerSymmetricalPlayerIndexChanged);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -110,18 +112,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1155);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1155);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
     }
 
     private async _updateListSkin(): Promise<void> {
         const dataArray: DataForSkinRenderer[] = [];
-        for (let playerIndex = PlayerIndex.First; playerIndex <= PlayerIndex.Max; ++playerIndex) {
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
             dataArray.push({
                 playerIndex     : playerIndex,
                 panel           : this,
-                showSeparator   : playerIndex != PlayerIndex.Max,
+                showSeparator   : playerIndex != Players_Constants.PlayerIndex.Max,
             });
         }
 
@@ -129,18 +131,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForSkinRenderer extends UiListItemData {
+interface DataForSkinRenderer extends Ui_Types_UiListItemData.UiListItemData {
     playerIndex     : number;
     panel           : Panel;
     showSeparator   : boolean;
 }
 class SkinRenderer
-    extends     UiListItemRenderer<DataForSkinRenderer>
-    implements  IUiListItemRenderer<DataForSkinRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSkinRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer>
 {
-    private readonly _imgSrcSkin!      : IUiImage;
-    private readonly _imgDstSkin!      : IUiImage;
-    private readonly _imgSeparator!     : IUiImage;
+    private readonly _imgSrcSkin!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgDstSkin!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSeparator!     : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -158,8 +160,8 @@ class SkinRenderer
 
         const playerIndex   = openData.playerIndex;
         const panel         = openData.panel;
-        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            availableSkinIdArray    : getAllSkinIdArray(false),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
+            availableSkinIdArray    : ForceSkins_Utils.getAllSkinIdArray(false),
             currentSkinId           : panel.getSymmetricalPlayerIndex(playerIndex),
             callback                : skinId => {
                 panel.setSymmetricalPlayerIndex(playerIndex, skinId);
@@ -175,8 +177,8 @@ class SkinRenderer
         }
 
         const playerIndex = openData.playerIndex;
-        this._imgSrcSkin.loadSource(getSkinCircle(playerIndex, true));
-        this._imgDstSkin.loadSource(getSkinCircle(openData.panel.getSymmetricalPlayerIndex(playerIndex), true));
+        this._imgSrcSkin.loadSource(Helpers_ImageSource.getSkinCircle(playerIndex, true));
+        this._imgDstSkin.loadSource(Helpers_ImageSource.getSkinCircle(openData.panel.getSymmetricalPlayerIndex(playerIndex), true));
         this._imgSeparator.setIsVisible(openData.showSeparator);
     }
 }

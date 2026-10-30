@@ -1,56 +1,52 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getUnitName,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
+    Stages_Constants,
+    Tween_Executor,
+    Lang_Utils,
+    Common_Model_CommonModel,
+    Numbers_Utils,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiUnitView,
+    Ui_Types_UiUnitViewData,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Utils_Serialization,
+} from "../../internal.ts";
 
 export interface OpenData {
-    gameConfig          : GameConfig;
-    currentUnitType     : Undefinable<number>;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
+    currentUnitType     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     unitTypeArray       : number[];
     playerIndex         : number;
     skinId              : number;
-    overridingSkinId    : Undefinable<number>;
+    overridingSkinId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     getTitleText?       : () => string;
     callback            : (unitType: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _btnClose!     : IUiButton;
-    private readonly _listType!     : IUiScrollList<DataForTypeRenderer>;
-    private readonly _labelTips!    : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _listType!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTypeRenderer>;
+    private readonly _labelTips!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private _selectedUnitType       : Undefinable<number>;
+    private _selectedUnitType       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -73,10 +69,10 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnSelectUnitType(unitType: number): void {
         if (this._selectedUnitType !== unitType) {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             this._selectedUnitType = unitType;
         } else {
-            playShortSfx(ShortSfxCode.ButtonConfirm01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
             this.getOpenData()?.callback(unitType);
             this.closePanel();
         }
@@ -94,8 +90,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         const func              = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : getText(TextType.B0516));
-        this._labelTips.setLangText(TextType.B1249);
+        this._labelTitle.setText(func ? func() : Lang_Utils.getText(Lang_Constants.TextType.B0516));
+        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();
@@ -126,39 +122,39 @@ export class Panel extends UiPanel<OpenData> {
 
         const rowCount          = Math.ceil(dataArray.length / 4);
         this._selectedUnitType  = currentUnitType;
-        this._group.setUnscaledManualHeight(getValueInRange({
+        this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
             rawValue    : rowCount * 36 + (rowCount - 1) * 10 + 80,
             minValue    : 200,
-            maxValue    : Dimension.DesignMinHeight,
+            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
 }
 
-interface DataForTypeRenderer extends UiListItemData {
-    gameConfig          : GameConfig;
+interface DataForTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     unitType            : number;
     playerIndex         : number;
     skinId              : number;
-    overridingSkinId    : Undefinable<number>;
+    overridingSkinId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     panel               : Panel;
 }
-class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
-    private readonly _conUnitView!  : IUiContainer;
-    private readonly _imgSelected!  : IUiImage;
+class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTypeRenderer> {
+    private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName!    : IUiLabel;
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView      = new (getUiUnitViewClass())();
+    private readonly _unitView      = new Ui_Components_UiUnitView.UiUnitView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-            { type: TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type: Notifications_TypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
         ]);
-        this._applySettingsForWholeTouch(undefined, undefined, undefined, ShortSfxCode.None);
+        this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
 
         this._conUnitView.addUiChild(this._unitView);
     }
@@ -167,13 +163,13 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -189,7 +185,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
     }
     private _onNotifyUnitStateIndicatorTick(): void {
         this._unitView.updateOnStateIndicatorTick();
@@ -210,7 +206,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
             return;
         }
 
-        this._labelName.setText(getUnitName(openData.unitType, openData.gameConfig) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getUnitName(openData.unitType, openData.gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
     private _updateUnitView(): void {
@@ -223,18 +219,18 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         const unitType      = openData.unitType;
         const playerIndex   = openData.playerIndex;
         this._labelId.setText(`#${unitType}`);
-        this._unitView.update(new UiUnitViewData({
+        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
             gameConfig          : gameConfig,
             skinId              : openData.skinId,
             overridingSkinId    : openData.overridingSkinId,
-            unitData            : createDefault({
+            unitData            : Units_Utils_Serialization.createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 unitTypeId  : unitType,
                 playerIndex : playerIndex,
                 unitId      : -1,
                 gcData      : gameConfig,
             }),
-        }), getUnitAnimationTickCount());
+        }), Common_Model_CommonModel.getUnitAnimationTickCount());
         this._layoutName.arrangeItems();
     }
 }

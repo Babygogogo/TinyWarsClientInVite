@@ -1,22 +1,24 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonSettingManager.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type { IPlayer } from "../../players/IPlayer.ts";
+import {
+    type BaseWar_Interface_IBwCommonSettingManager,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Interface_IBwWarStatisticsManager,
+    type Players_IPlayer,
+    type SinglePlayerWar_Interface_ISpwRetractManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { ISpwRetractManager } from "./ISpwRetractManager.ts";
 
-export interface ISpwWar extends IBwWar {
+export interface ISpwWar extends BaseWar_Interface_IBwWar.IBwWar {
     serialize(): SerialWar;
 
     updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
-    getCommonSettingManager(): IBwCommonSettingManager;
-    getWarEventManager(): IBwWarEventManager;
-    getWarStatisticsManager(): IBwWarStatisticsManager;
-    getRetractManager(): ISpwRetractManager;
+    getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
+    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
+    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
+    getRetractManager(): SinglePlayerWar_Interface_ISpwRetractManager.ISpwRetractManager;
 
     getIsExecuteActionsWithExtraData(): boolean;
 
@@ -28,11 +30,11 @@ export interface ISpwWar extends IBwWar {
     setSaveSlotIndex(slotIndex: number | null): void;
     getSaveSlotIndex(): number | null;
 
-    setSaveSlotExtraData(extraData: Undefinable<SpmWarSaveSlotExtraData>): void;
+    setSaveSlotExtraData(extraData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SpmWarSaveSlotExtraData>): void;
     getSaveSlotExtraData(): SpmWarSaveSlotExtraData;
 
     getHumanPlayerIndexes(): number[];
-    getHumanPlayers(): IPlayer[];
+    getHumanPlayers(): Players_IPlayer.IPlayer[];
 
     calculateTotalScore(): number;
 }

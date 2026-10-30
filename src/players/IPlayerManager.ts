@@ -1,18 +1,20 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import type { IPlayer } from "./IPlayer.ts";
+import {
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export interface IPlayerManager {
     getWatcherTeamIndexesForSelf(): Set<number>;
 
-    init(data: Undefinable<SerialPlayerManager>, gameConfig: GameConfig): void;
-    fastInit(data: SerialPlayerManager, gameConfig: GameConfig): void;
+    init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>, gameConfig: GameConfigs_GameConfig.GameConfig): void;
+    fastInit(data: SerialPlayerManager, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     initWatcherTeamIndexesForHrw(warData: SerialWar): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
 
     serialize(): SerialPlayerManager;
     serializeForCreateSfw(): SerialPlayerManager;
@@ -22,18 +24,18 @@ export interface IPlayerManager {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////
     checkHasPlayer(playerIndex: number): boolean;
-    getPlayer(playerIndex: number): IPlayer;
-    getAllPlayersDict(): Map<number, IPlayer>;
+    getPlayer(playerIndex: number): Players_IPlayer.IPlayer;
+    getAllPlayersDict(): Map<number, Players_IPlayer.IPlayer>;
     /** 返回结果已按playerIndex排序 */
-    getAllPlayers(includeNeutral?: boolean): IPlayer[];
+    getAllPlayers(includeNeutral?: boolean): Players_IPlayer.IPlayer[];
 
-    getPlayerByUserId(userId: number): IPlayer | null;
+    getPlayerByUserId(userId: number): Players_IPlayer.IPlayer | null;
 
-    getPlayerInTurn(): IPlayer;
+    getPlayerInTurn(): Players_IPlayer.IPlayer;
 
-    getHumanPlayers(): IPlayer[];
+    getHumanPlayers(): Players_IPlayer.IPlayer[];
 
-    getPlayerLoggedIn(): IPlayer | null;
+    getPlayerLoggedIn(): Players_IPlayer.IPlayer | null;
     getPlayerIndexLoggedIn(): number | null;
 
     getTeamIndex(playerIndex: number): number;
@@ -54,7 +56,7 @@ export interface IPlayerManager {
 
     checkIsSameTeam(playerIndex1: number, playerIndex2: number): boolean;
 
-    forEachPlayer(includeNeutral: boolean, func: (p: IPlayer) => void): void;
+    forEachPlayer(includeNeutral: boolean, func: (p: Players_IPlayer.IPlayer) => void): void;
 
     checkHasAliveWatcherTeam(watcherUserId: number): boolean;
 }

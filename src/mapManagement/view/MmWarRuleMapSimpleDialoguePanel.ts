@@ -1,54 +1,46 @@
-import { showLang } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    moveElementInList,
-    deleteElementFromList,
-} from "../../helpers/Collection.ts";
-import { getTruncatedText } from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Text,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
     mapRawData              : MapRawData;
     templateWarRule         : TemplateWarRule;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnAdd!               : IUiButton;
-    private readonly _btnDeleteAll!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteAll!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _list!                 : IUiScrollList<DataForItemRenderer>;
-    private readonly _labelNoData!          : IUiLabel;
+    private readonly _list!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForItemRenderer>;
+    private readonly _labelNoData!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MeMapSimpleDialogueChanged,                  callback: this._onNotifyMeMapSimpleDialogueChanged },
-            { type: TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,                  callback: this._onNotifyMeMapSimpleDialogueChanged },
+            { type: Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -89,7 +81,7 @@ export class Panel extends UiPanel<OpenData> {
         const mapRawData                = openData.mapRawData;
         const mapSimpleDialogueArray    = mapRawData.getMapSimpleDialogueArray();
         if (mapSimpleDialogueArray == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             const templateWarRule           = openData.templateWarRule;
             const allDialogueIdSet          = new Set(mapSimpleDialogueArray.map(v => v.getDialogueId()));
@@ -97,15 +89,15 @@ export class Panel extends UiPanel<OpenData> {
             for (const dialogueId of currentDialogueIdArray) {
                 allDialogueIdSet.delete(dialogueId);
             }
-            openPanel(getDict().CommonChooseMultiNumberPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 availableNumberArray        : [...allDialogueIdSet].sort((v1, v2) => v1 - v2),
                 currentNumberArray          : [],
                 showNumber                  : true,
-                getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B1095)),
-                getNumberMainText           : dialogueId => getTruncatedText(
-                    getLanguageText({
+                getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B1095)),
+                getNumberMainText           : dialogueId => Helpers_Text.getTruncatedText(
+                    Lang_Utils.getLanguageText({
                         textArray: mapSimpleDialogueArray.find(v => (v.getDialogueId()) === dialogueId)?.getDialogueNameArray()
-                    }) ?? UndefinedError,
+                    }) ?? Lang_Constants.UndefinedError,
                     15
                 ),
                 callbackOnConfirm           : additionalDialogueIdArray => {
@@ -118,7 +110,7 @@ export class Panel extends UiPanel<OpenData> {
                             }
                         }
                     }
-                    dispatch(TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
                 },
             });
         }
@@ -129,11 +121,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0803),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0803),
             callback: () => {
                 openData.templateWarRule.setMapSimpleDialogueIdArray([]);
-                dispatch(TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
             },
         });
     }
@@ -145,8 +137,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B1095)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setLangText(TextType.A0842);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1095)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoData.setLangText(Lang_Constants.TextType.A0842);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -170,19 +162,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForItemRenderer extends UiListItemData {
+interface DataForItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     mapRawData      : MapRawData;
     dialogueId      : number;
     templateWarRule : TemplateWarRule;
 }
-class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName!    : IUiLabel;
+class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForItemRenderer> {
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnUp!        : IUiButton;
-    private readonly _btnDown!      : IUiButton;
-    private readonly _btnDelete!    : IUiButton;
+    private readonly _btnUp!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDown!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDelete!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -191,7 +183,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
             { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -209,8 +201,8 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
 
         const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
         if (dialogueIdArray) {
-            moveElementInList(dialogueIdArray, openData.dialogueId, -1);
-            dispatch(TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+            Helpers_Collection.moveElementInList(dialogueIdArray, openData.dialogueId, -1);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
         }
     }
     private _onTouchedBtnDown(): void {
@@ -221,8 +213,8 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
 
         const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
         if (dialogueIdArray) {
-            moveElementInList(dialogueIdArray, openData.dialogueId, 1);
-            dispatch(TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+            Helpers_Collection.moveElementInList(dialogueIdArray, openData.dialogueId, 1);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
         }
     }
     private _onTouchedBtnDelete(): void {
@@ -233,8 +225,8 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
 
         const dialogueIdArray = openData.templateWarRule.getMapSimpleDialogueIdArray();
         if (dialogueIdArray) {
-            deleteElementFromList(dialogueIdArray, openData.dialogueId);
-            dispatch(TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
+            Helpers_Collection.deleteElementFromList(dialogueIdArray, openData.dialogueId);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged);
         }
     }
     private _onNotifyLanguageChanged(): void {
@@ -249,10 +241,10 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
 
         const dialogueId = openData.dialogueId;
         this._labelId.setText(`#${dialogueId}`);
-        this._labelName.setText(getTruncatedText(
-            getLanguageText({
+        this._labelName.setText(Helpers_Text.getTruncatedText(
+            Lang_Utils.getLanguageText({
                 textArray: openData.mapRawData.getMapSimpleDialogueArray().find(v => (v.getDialogueId()) === dialogueId)?.getDialogueNameArray()
-            }) ?? UndefinedError,
+            }) ?? Lang_Constants.UndefinedError,
             30
         ));
         this._layoutName.arrangeItems();

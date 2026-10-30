@@ -1,15 +1,14 @@
-import type {
-    TextType,
-    LanguageType,
-} from "../../lang/Constants.ts";
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+    type Lang_Constants,
+    type Ui_Types_UiHorizontalAlign,
+    type Ui_Types_UiVerticalAlign,
+} from "../../internal.ts";
 
-export interface IUiLabel extends IUiComponent {
+export interface IUiLabel extends Ui_Interfaces_IUiComponent.IUiComponent {
     getText(): string;
     setText(text: string): void;
-    setLangText(langTextType: TextType, languageType?: LanguageType): void;
+    setLangText(langTextType: Lang_Constants.TextType, languageType?: Lang_Constants.LanguageType): void;
     getFontFamily(): string;
     setFontFamily(fontFamily: string): void;
     getFontSize(): number;
@@ -30,10 +29,10 @@ export interface IUiLabel extends IUiComponent {
     setAutoShrinkWidth(width: number | undefined): void;
     getAutoShrinkHeight(): number | undefined;
     setAutoShrinkHeight(height: number | undefined): void;
-    getHorizontalAlign(): UiHorizontalAlign;
-    setHorizontalAlign(align: UiHorizontalAlign): void;
-    getVerticalAlign(): UiVerticalAlign;
-    setVerticalAlign(align: UiVerticalAlign): void;
+    getHorizontalAlign(): Ui_Types_UiHorizontalAlign.UiHorizontalAlign;
+    setHorizontalAlign(align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign): void;
+    getVerticalAlign(): Ui_Types_UiVerticalAlign.UiVerticalAlign;
+    setVerticalAlign(align: Ui_Types_UiVerticalAlign.UiVerticalAlign): void;
 
     /** 仅用于配合tween */
     get customX(): number;

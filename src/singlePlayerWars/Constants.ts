@@ -1,4 +1,4 @@
-﻿
+
 export const enum Common {
     MaxSaveSlotCount = 10,
     MaxSaveSlotCommentLength = 15,

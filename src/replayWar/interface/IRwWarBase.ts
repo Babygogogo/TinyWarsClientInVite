@@ -1,12 +1,10 @@
-import type {
-    Undefinable,
-    ReplayCheckpointData,
-    ReplayCheckpointInfo,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonSettingManager.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
+import {
+    type BaseWar_Interface_IBwCommonSettingManager,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Interface_IBwWarStatisticsManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
@@ -19,13 +17,13 @@ import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/
 import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 
-export interface IRwWarBase extends IBwWar {
-    serializeForCheckpoint(): ReplayCheckpointData;
+export interface IRwWarBase extends BaseWar_Interface_IBwWar.IBwWar {
+    serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData;
     tickVisionTeamIndex(): number | null;
 
-    getCommonSettingManager(): IBwCommonSettingManager;
-    getWarEventManager(): IBwWarEventManager;
-    getWarStatisticsManager(): IBwWarStatisticsManager;
+    getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
+    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
+    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
 
     getCanCheat(): boolean;
     getIsNeedExecutedOperations(): boolean;
@@ -34,15 +32,15 @@ export interface IRwWarBase extends IBwWar {
     getNormalMapId(): number | null;
     getWarOperationDescSuffix(): string;
 
-    getSettingsForMcw(): Undefinable<SettingsForMcw>;
-    getSettingsForScw(): Undefinable<SettingsForScw>;
-    getSettingsForSfw(): Undefinable<SettingsForSfw>;
-    getSettingsForSrw(): Undefinable<SettingsForSrw>;
-    getSettingsForMrw(): Undefinable<SettingsForMrw>;
-    getSettingsForMmw(): Undefinable<SettingsForMmw>;
-    getSettingsForAtw(): Undefinable<SettingsForAtw>;
-    getSettingsForCcw(): Undefinable<SettingsForCcw>;
-    getSettingsForMfw(): Undefinable<SettingsForMfw>;
+    getSettingsForMcw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMcw>;
+    getSettingsForScw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForScw>;
+    getSettingsForSfw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSfw>;
+    getSettingsForSrw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForSrw>;
+    getSettingsForMrw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMrw>;
+    getSettingsForMmw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMmw>;
+    getSettingsForAtw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForAtw>;
+    getSettingsForCcw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForCcw>;
+    getSettingsForMfw(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SettingsForMfw>;
 
     getGridMarkData(): GridMarkData;
 
@@ -66,7 +64,7 @@ export interface IRwWarBase extends IBwWar {
     setNextOperationId(nextOperationId: number): void;
     getNextAction(): WoContainer | null;
 
-    getAllCheckpointInfoArray(): ReplayCheckpointInfo[];
+    getAllCheckpointInfoArray(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointInfo[];
 
     loadCheckpoint(checkpointId: number, floatText?: boolean): Promise<void>;
     loadPreviousCheckpoint(floatText?: boolean): Promise<void>;

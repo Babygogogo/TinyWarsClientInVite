@@ -1,35 +1,34 @@
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import {
-    checkIsRedForMmReviewingMaps,
-    getEnabledNormalMapIdSet,
-} from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+    NormalMap_Model_NormalMapModel,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnReviewMap!     : IUiButton;
-    private readonly _btnModifyMap!     : IUiButton;
-    private readonly _btnModifyMapTag!  : IUiButton;
+    private readonly _btnReviewMap!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnModifyMap!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnModifyMapTag!  : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMmReloadAllMaps,      callback: this._onMsgMmReloadAllMaps },
-            { type: TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgMmReloadAllMaps,      callback: this._onMsgMmReloadAllMaps },
+            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -56,7 +55,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onMsgMmReloadAllMaps(): void {
-        show(getText(TextType.A0075));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0075));
     }
     private _onMsgMmGetReviewingMaps(): void {
         this._updateRedForBtnReviewMap();
@@ -66,30 +65,30 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0192);
-        this._btnReviewMap.setLangText(TextType.B0295);
-        this._btnModifyMap.setLangText(TextType.B0317);
-        this._btnModifyMapTag.setLangText(TextType.B0445);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0192);
+        this._btnReviewMap.setLangText(Lang_Constants.TextType.B0295);
+        this._btnModifyMap.setLangText(Lang_Constants.TextType.B0317);
+        this._btnModifyMapTag.setLangText(Lang_Constants.TextType.B0445);
     }
 
     private async _updateRedForBtnReviewMap(): Promise<void> {
-        this._btnReviewMap.setRedVisible(await checkIsRedForMmReviewingMaps());
+        this._btnReviewMap.setRedVisible(await NormalMap_Model_NormalMapModel.checkIsRedForMmReviewingMaps());
     }
 
     private _onTouchedBtnReviewMap(): void {
-        openPanel(getDict().MmReviewListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmReviewListPanel, void 0);
     }
     private async _onTouchedBtnModifyMap(): Promise<void> {
-        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await getEnabledNormalMapIdSet()],
-            getTitleText                : () => getText(TextType.B0317),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
+            availableNormalMapIdArray   : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
             isAutoClose                 : false,
             callback                    : normalMapId => {
-                openPanel(getDict().MmCommandPanel, { normalMapId });
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmCommandPanel, { normalMapId });
             },
         });
     }
     private _onTouchedBtnModifyMapTag(): void {
-        openPanel(getDict().MmMapTagListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmMapTagListPanel, void 0);
     }
 }

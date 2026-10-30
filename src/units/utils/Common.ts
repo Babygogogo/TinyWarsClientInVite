@@ -1,14 +1,8 @@
-import { newError } from "../../helpers/Misc.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
 import {
-    AllActionStateIdArray,
-    AllAiModeIdArray,
-    TagId,
-    Hp,
-    LoadedStateId,
-    ProduceMaterialHardLimit,
-    PrimaryAmmoHardLimit,
-} from "../Constants.ts";
+    Units_Constants,
+    Numbers_Utils,
+    Helpers_Misc,
+} from "../../internal.ts";
 
 export function checkIsUnitIdCompact(unitIdList: number[]): boolean {
     if (unitIdList.length <= 0) {
@@ -37,7 +31,7 @@ export function checkIsUnitIdCompact(unitIdList: number[]): boolean {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidActionStateId(actionState: number): boolean {
-    return AllActionStateIdArray.includes(actionState);
+    return Units_Constants.AllActionStateIdArray.includes(actionState);
 }
 
 export function checkIsValidActionStateIdSubset(actionStateArray: number[]): boolean {
@@ -47,7 +41,7 @@ export function checkIsValidActionStateIdSubset(actionStateArray: number[]): boo
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidAiModeId(aiMode: number): boolean {
-    return AllAiModeIdArray.includes(aiMode);
+    return Units_Constants.AllAiModeIdArray.includes(aiMode);
 }
 export function checkIsValidAiModeIdSubset(aiModeArray: number[]): boolean {
     return (new Set(aiModeArray).size === aiModeArray.length)
@@ -56,7 +50,7 @@ export function checkIsValidAiModeIdSubset(aiModeArray: number[]): boolean {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidEncodedTagId(encodedTagId: number): boolean {
-    return (encodedTagId >= 0) && (encodedTagId <= TagId.MaxEncodedTagId);
+    return (encodedTagId >= 0) && (encodedTagId <= Units_Constants.TagId.MaxEncodedTagId);
 }
 
 export function getEncodedTagId(tagIdArray: number[]): number {
@@ -68,17 +62,17 @@ export function getEncodedTagId(tagIdArray: number[]): number {
 }
 
 export function checkIsValidTagId(tagId: number): boolean {
-    return (tagId >= TagId.MinTagId) && (tagId <= TagId.MaxTagId);
+    return (tagId >= Units_Constants.TagId.MinTagId) && (tagId <= Units_Constants.TagId.MaxTagId);
 }
 export function checkIsValidTagIdSubset(subset: number[]): boolean {
-    return (subset.length <= TagId.MaxTagId - TagId.MinTagId + 1)
+    return (subset.length <= Units_Constants.TagId.MaxTagId - Units_Constants.TagId.MinTagId + 1)
         && (subset.every(v => checkIsValidTagId(v)))
         && (new Set(subset).size == subset.length);
 }
 
 export function getTagIdList(encodedTagIds: number, hasTag: boolean): number[] {
     const tagIdArray: number[] = [];
-    for (let tagId = TagId.MinTagId; tagId <= TagId.MaxTagId; ++tagId) {
+    for (let tagId = Units_Constants.TagId.MinTagId; tagId <= Units_Constants.TagId.MaxTagId; ++tagId) {
         if (hasTag === !!((encodedTagIds >>> (tagId - 1)) & 1)) {
             tagIdArray.push(tagId);
         }
@@ -88,28 +82,28 @@ export function getTagIdList(encodedTagIds: number, hasTag: boolean): number[] {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getNormalizedHp(hp: number): number {
-    return Math.ceil(hp / Hp.Normalizer);
+    return Math.ceil(hp / Units_Constants.Hp.Normalizer);
 }
 
 export function checkIsMeetLoadedStateId(stateId: number, isLoaded: boolean): boolean {
     switch (stateId) {
-        case LoadedStateId.AnyState     : return true;
-        case LoadedStateId.IsNotLoaded  : return !isLoaded;
-        case LoadedStateId.IsLoaded     : return isLoaded;
-        default                             : throw newError(`Invalid state: ${stateId}`);
+        case Units_Constants.LoadedStateId.AnyState     : return true;
+        case Units_Constants.LoadedStateId.IsNotLoaded  : return !isLoaded;
+        case Units_Constants.LoadedStateId.IsLoaded     : return isLoaded;
+        default                             : throw Helpers_Misc.newError(`Invalid state: ${stateId}`);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidProduceMaterial(material: number): boolean {
     return (material === Math.floor(material))
-        && (material >= ProduceMaterialHardLimit.Min)
-        && (material <= ProduceMaterialHardLimit.Max);
+        && (material >= Units_Constants.ProduceMaterialHardLimit.Min)
+        && (material <= Units_Constants.ProduceMaterialHardLimit.Max);
 }
 export function getValidProduceMaterial(material: number): number {
-    return getValueInRange({
-        minValue    : ProduceMaterialHardLimit.Min,
-        maxValue    : ProduceMaterialHardLimit.Max,
+    return Numbers_Utils.getValueInRange({
+        minValue    : Units_Constants.ProduceMaterialHardLimit.Min,
+        maxValue    : Units_Constants.ProduceMaterialHardLimit.Max,
         rawValue    : Math.floor(material),
     });
 }
@@ -117,13 +111,13 @@ export function getValidProduceMaterial(material: number): number {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidPrimaryAmmo(ammo: number): boolean {
     return (ammo === Math.floor(ammo))
-        && (ammo >= PrimaryAmmoHardLimit.Min)
-        && (ammo <= PrimaryAmmoHardLimit.Max);
+        && (ammo >= Units_Constants.PrimaryAmmoHardLimit.Min)
+        && (ammo <= Units_Constants.PrimaryAmmoHardLimit.Max);
 }
 export function getValidPrimaryAmmo(ammo: number): number {
-    return getValueInRange({
-        minValue    : PrimaryAmmoHardLimit.Min,
-        maxValue    : PrimaryAmmoHardLimit.Max,
+    return Numbers_Utils.getValueInRange({
+        minValue    : Units_Constants.PrimaryAmmoHardLimit.Min,
+        maxValue    : Units_Constants.PrimaryAmmoHardLimit.Max,
         rawValue    : Math.floor(ammo),
     });
 }

@@ -1,57 +1,52 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { Tween } from "../../graphics/Constants.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getFormattedText,
-    getText,
-    getGameVersionName,
-} from "../../lang/Utils.ts";
-import { checkIsRedForMultiPlayer } from "../model/LobbyModel.ts";
-import { checkIsRedForMyMrwWars } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed } from "../../multiRankRoom/model/MrrModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import {
-    playBgm,
-    playShortSfx,
-} from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { Constants } from "../../urls/Constants.ts";
-import { getSelfSettingsBgmCodeForLobby } from "../../users/Model.ts";
+    MultiRankRoom_Model_MrrModel,
+    Lobby_Model_LobbyModel,
+    MultiPlayerWar_Model_MpwModel,
+    Urls_Constants,
+    Tween_Executor,
+    GamePanels_Dict,
+    Lang_Utils,
+    Users_Model,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Graphics_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupTips!            : IUiContainer;
-    private readonly _groupWelcome!         : IUiLayout;
-    private readonly _labelTips0!           : IUiLabel;
-    private readonly _labelTips1!           : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupTips!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupWelcome!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTips0!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips1!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupQq!              : IUiLayout;
-    private readonly _labelTips2!           : IUiLabel;
-    private readonly _labelTips3!           : IUiLabel;
+    private readonly _groupQq!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTips2!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips3!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupDiscord!         : IUiLayout;
-    private readonly _labelTips4!           : IUiLabel;
-    private readonly _labelTips5!           : IUiLabel;
+    private readonly _groupDiscord!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTips4!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips5!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupGithub!          : IUiLayout;
-    private readonly _labelTips6!           : IUiLabel;
-    private readonly _labelTips7!           : IUiLabel;
+    private readonly _groupGithub!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTips6!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips7!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupSwitchVersion!   : IUiLayout;
-    private readonly _btnSwitchVersion!     : IUiButton;
+    private readonly _groupSwitchVersion!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnSwitchVersion!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _group!                : IUiContainer;
-    private readonly _btnSinglePlayer!      : IUiButton;
-    private readonly _btnMultiPlayer!       : IUiButton;
-    private readonly _btnRanking!           : IUiButton;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSinglePlayer!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMultiPlayer!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRanking!           : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -63,14 +58,14 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnRanking,         callback: this._onTouchedBtnRanking },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserLogout,                       callback: this._onMsgUserLogout },
-            { type: TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type: TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type: TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onMsgMrrGetJoinedRoomIdArray },
-            { type: TypeId.MsgMpwCommonGetWarProgressInfo,      callback: this._onMsgMpwCommonGetWarProgressInfo },
-            { type: TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onMsgMpwWatchGetRequestedWarIdArray },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserLogout,                       callback: this._onMsgUserLogout },
+            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onMsgMrrGetJoinedRoomIdArray },
+            { type: Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback: this._onMsgMpwCommonGetWarProgressInfo },
+            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onMsgMpwWatchGetRequestedWarIdArray },
         ]);
     }
     protected _doApplyOpenData(): void {
@@ -78,7 +73,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnMultiPlayer();
         this._updateBtnRanking();
 
-        playBgm(getSelfSettingsBgmCodeForLobby());
+        Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForLobby());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -86,45 +81,45 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedGroupDiscord(): void {
         if ((window) && (window.open)) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getFormattedText(TextType.F0065, `Discord`),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `Discord`),
                 callback: () => {
-                    window.open(Constants.DiscordUrl);
+                    window.open(Urls_Constants.Constants.DiscordUrl);
                 },
             });
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
 
     private _onTouchedGroupGithub(): void {
         if ((window) && (window.open)) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getFormattedText(TextType.F0065, `GitHub`),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `GitHub`),
                 callback: () => {
-                    window.open(Constants.GithubUrl);
+                    window.open(Urls_Constants.Constants.GithubUrl);
                 },
             });
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
 
     private _onTouchedBtnSwitchVersion(): void {
-        openPanel(getDict().CommonChangeVersionPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChangeVersionPanel, void 0);
     }
 
     private _onTouchedBtnMultiPlayer(): void {
         this.closePanel();
-        openPanel(getDict().McrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrMainMenuPanel, void 0);
     }
 
     private _onTouchedBtnSinglePlayer(): void {
         this.closePanel();
-        openPanel(getDict().SpmMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmMainMenuPanel, void 0);
     }
 
     private _onTouchedBtnRanking(): void {
         this.closePanel();
-        openPanel(getDict().MrrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrMainMenuPanel, void 0);
     }
 
     private _onMsgUserLogout(): void {
@@ -164,121 +159,121 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnMultiPlayer,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnRanking,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 100,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSinglePlayer,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 200,
         });
 
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupWelcome,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupQq,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 50,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupDiscord,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 100,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupGithub,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 150,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupSwitchVersion,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 200,
         });
 
-        await wait(200 + Tween.DefaultDuration);
+        await Timer_TimerModel.wait(200 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnMultiPlayer,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnRanking,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSinglePlayer,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
 
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupWelcome,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupQq,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupDiscord,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupGithub,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupSwitchVersion,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._labelTips0.setLangText(TextType.A0195);
-        this._labelTips1.setLangText(TextType.A0833);
-        this._labelTips2.setText(`${getText(TextType.B0537)}:`);
+        this._labelTips0.setLangText(Lang_Constants.TextType.A0195);
+        this._labelTips1.setLangText(Lang_Constants.TextType.A0833);
+        this._labelTips2.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0537)}:`);
         this._labelTips3.setText(`368142455`);
-        this._labelTips4.setText(`${getText(TextType.B0538)}:`);
+        this._labelTips4.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0538)}:`);
         // this._labelTips5.textFlow   = [{
         //     text    : GameConfig.DiscordUrl,
         //     style   : { underline: true },
         // }];
-        this._labelTips5.setText(Constants.DiscordUrl);
-        this._labelTips6.setText(`${getText(TextType.B0539)}:`);
+        this._labelTips5.setText(Urls_Constants.Constants.DiscordUrl);
+        this._labelTips6.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0539)}:`);
         // this._labelTips7.textFlow   = [{
         //     text    : GameConfig.GithubUrl,
         //     style   : { underline: true },
         // }];
-        this._labelTips7.setText(Constants.GithubUrl);
+        this._labelTips7.setText(Urls_Constants.Constants.GithubUrl);
 
-        this._btnSwitchVersion.setText(`${getText(TextType.B1277)}: ${getGameVersionName(window.GAME_VERSION)}`);
+        this._btnSwitchVersion.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
 
         this._groupWelcome.arrangeItems();
         this._groupQq.arrangeItems();
@@ -288,13 +283,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _updateBtnMultiPlayer(): Promise<void> {
-        this._btnMultiPlayer.setRedVisible(await checkIsRedForMultiPlayer());
+        this._btnMultiPlayer.setRedVisible(await Lobby_Model_LobbyModel.checkIsRedForMultiPlayer());
     }
 
     private async _updateBtnRanking(): Promise<void> {
         this._btnRanking.setRedVisible(
-            (await checkIsRedForMyMrwWars()) ||
-            (await checkIsRed())
+            (await MultiPlayerWar_Model_MpwModel.checkIsRedForMyMrwWars()) ||
+            (await MultiRankRoom_Model_MrrModel.checkIsRed())
         );
     }
 }

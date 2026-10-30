@@ -1,6 +1,8 @@
-import type { IUiContainer } from "./IUiContainer.ts";
+import {
+    type Ui_Interfaces_IUiContainer,
+} from "../../internal.ts";
 
-export interface IUiOpenableComponent<OpenData> extends IUiContainer {
+export interface IUiOpenableComponent<OpenData> extends Ui_Interfaces_IUiContainer.IUiContainer {
     /**
      * 外部需确保实际执行open前，此控件已有parent、且未打开。
      */

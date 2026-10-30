@@ -1,27 +1,29 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { SkillTypeId } from "../../coSkills/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type CoSkills_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export class UiUnitViewData {
     public unitData             : SerialUnit;
     public skinId               : number;
-    public overridingSkinId     : Undefinable<number>;
+    public overridingSkinId     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     public hasLoadedUnit?       : boolean;
-    public coUsingSkillType?    : SkillTypeId;
+    public coUsingSkillType?    : CoSkills_Constants.SkillTypeId;
     public isCapturingTile?     : boolean;
     public isBuildingTile?      : boolean;
-    public gameConfig           : GameConfig;
+    public gameConfig           : GameConfigs_GameConfig.GameConfig;
 
     public constructor({ unitData, skinId, overridingSkinId, hasLoadedUnit, coUsingSkillType, isCapturingTile, isBuildingTile, gameConfig }: {
         unitData            : SerialUnit;
         skinId              : number;
-        overridingSkinId    : Undefinable<number>;
+        overridingSkinId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
         hasLoadedUnit?      : boolean;
-        coUsingSkillType?   : SkillTypeId;
+        coUsingSkillType?   : CoSkills_Constants.SkillTypeId;
         isCapturingTile?    : boolean;
         isBuildingTile?     : boolean;
-        gameConfig          : GameConfig;
+        gameConfig          : GameConfigs_GameConfig.GameConfig;
     }) {
         this.unitData           = unitData;
         this.skinId             = skinId;

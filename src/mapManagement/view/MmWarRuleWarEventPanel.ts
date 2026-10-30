@@ -1,53 +1,45 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    moveElementInList,
-    deleteElementFromList,
-} from "../../helpers/Collection.ts";
-import { getTruncatedText } from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Text,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
     warEventArray       : WarEvent[];
     templateWarRule     : TemplateWarRule;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnAdd!               : IUiButton;
-    private readonly _btnDeleteAll!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteAll!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listEvent!            : IUiScrollList<DataForEventRenderer>;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _labelNoEvent!         : IUiLabel;
+    private readonly _listEvent!            : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForEventRenderer>;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNoEvent!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
-            { type: TypeId.MeWarRuleWarEventIdArrayChanged, callback: this._onNotifyMeWarRuleWarEventIdArrayChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged, callback: this._onNotifyMeWarRuleWarEventIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -92,15 +84,15 @@ export class Panel extends UiPanel<OpenData> {
         for (const warEventId of currentWarEventIdArray) {
             allWarEventIdSet.delete(warEventId);
         }
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
             availableNumberArray        : [...allWarEventIdSet],
             currentNumberArray          : [],
             showNumber                  : true,
-            getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B0461)),
-            getNumberMainText           : warEventId => getTruncatedText(
-                getLanguageText({
+            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
+            getNumberMainText           : warEventId => Helpers_Text.getTruncatedText(
+                Lang_Utils.getLanguageText({
                     textArray: warEventArray.find(v => v.getEventId() === warEventId)?.getEventNameArray()
-                }) ?? UndefinedError,
+                }) ?? Lang_Constants.UndefinedError,
                 15
             ),
             callbackOnConfirm           : additionalWarEventIdArray => {
@@ -113,7 +105,7 @@ export class Panel extends UiPanel<OpenData> {
                         }
                     }
                 }
-                dispatch(TypeId.MeWarRuleWarEventIdArrayChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
             },
         });
     }
@@ -123,11 +115,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0801),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0801),
             callback: () => {
                 openData.templateWarRule.setWarEventIdArray([]);
-                dispatch(TypeId.MeWarRuleWarEventIdArrayChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
             },
         });
     }
@@ -139,8 +131,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0461)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoEvent.setLangText(TextType.B0278);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0461)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoEvent.setLangText(Lang_Constants.TextType.B0278);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -164,19 +156,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForEventRenderer extends UiListItemData {
+interface DataForEventRenderer extends Ui_Types_UiListItemData.UiListItemData {
     warEventArray       : WarEvent[];
     warEventId          : number;
     templateWarRule     : TemplateWarRule;
 }
-class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelEventId!     : IUiLabel;
-    private readonly _labelEventName!   : IUiLabel;
+class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForEventRenderer> {
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelEventId!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelEventName!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnUp!            : IUiButton;
-    private readonly _btnDown!          : IUiButton;
-    private readonly _btnDelete!        : IUiButton;
+    private readonly _btnUp!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDown!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDelete!        : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -185,7 +177,7 @@ class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
             { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -203,8 +195,8 @@ class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
 
         const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
         if (warEventIdArray) {
-            moveElementInList(warEventIdArray, openData.warEventId, -1);
-            dispatch(TypeId.MeWarRuleWarEventIdArrayChanged);
+            Helpers_Collection.moveElementInList(warEventIdArray, openData.warEventId, -1);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
         }
     }
     private _onTouchedBtnDown(): void {
@@ -215,8 +207,8 @@ class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
 
         const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
         if (warEventIdArray) {
-            moveElementInList(warEventIdArray, openData.warEventId, 1);
-            dispatch(TypeId.MeWarRuleWarEventIdArrayChanged);
+            Helpers_Collection.moveElementInList(warEventIdArray, openData.warEventId, 1);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
         }
     }
     private _onTouchedBtnDelete(): void {
@@ -227,8 +219,8 @@ class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
 
         const warEventIdArray = openData.templateWarRule.getWarEventIdArray();
         if (warEventIdArray) {
-            deleteElementFromList(warEventIdArray, openData.warEventId);
-            dispatch(TypeId.MeWarRuleWarEventIdArrayChanged);
+            Helpers_Collection.deleteElementFromList(warEventIdArray, openData.warEventId);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
         }
     }
     private _onNotifyLanguageChanged(): void {
@@ -243,10 +235,10 @@ class ConditionRenderer extends UiListItemRenderer<DataForEventRenderer> {
 
         const eventId = openData.warEventId;
         this._labelEventId.setText(`E${eventId}`);
-        this._labelEventName.setText(getTruncatedText(
-            getLanguageText({
+        this._labelEventName.setText(Helpers_Text.getTruncatedText(
+            Lang_Utils.getLanguageText({
                 textArray: openData.warEventArray.find(v => v.getEventId() === eventId)?.getEventNameArray()
-            }) ?? UndefinedError,
+            }) ?? Lang_Constants.UndefinedError,
             30
         ));
         this._layoutName.arrangeItems();

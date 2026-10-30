@@ -1,33 +1,27 @@
-import type {
-    DecodedSpmWarSaveSlotData,
-    Undefinable,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
-import { show } from "../../FloatText.ts";
-import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import { decompress } from "../../helpers/Gzip.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getLanguageText,
-    getText,
-} from "../../lang/Utils.ts";
-import {
-    StoreSpmReplayData,
-    StoreSpmWarSaveSlotFullData,
-} from "../../localData/Storage.ts";
-import {
-    getMapNameInCurrentLanguage,
-    getRawData,
-} from "../../normalMap/model/NormalMapModel.ts";
-import { addEventListeners } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Notifications_Dispatcher,
+    AuxiliaryTypes_CachedDataAccessor,
+    WarRules_Utils_Instance,
+    Helpers_Gzip,
+    FogMaps_Constants,
+    Campaigns_Mains_Provider,
+    Helpers_Misc,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    Users_Model,
+    Turns_Constants,
+    Players_Constants,
+    SinglePlayerMode_Model_SpmProxy,
+    FloatText,
+    SinglePlayerWars_Constants,
+    LocalData_Storage,
+    Lang_Constants,
+    Notifications_TypeId,
+    SingleRankedWars_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as CampaignCreateWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
 import type { S as CampaignSaveWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignSaveWar/S.ts";
 import type { S as SpmCreateScwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
@@ -45,76 +39,60 @@ import type { S as SpmSaveSrwResponse } from "../../proto/schema/CommonProto/Net
 import type { S as SpmValidateSrwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { Common as SinglePlayerWarsCommon } from "../../singlePlayerWars/Constants.ts";
-import { ValidateStatusId } from "../../singleRankedWars/Constants.ts";
-import {
-    PhaseCode,
-    TurnIndex,
-} from "../../turns/Constants.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../egret/Egret.ts";
-import { create } from "../../warRules/utils/Instance.ts";
-import {
-    reqSpmGetAllWarSaveSlotTimestamps,
-    reqSpmGetRankList,
-    reqSpmGetReplayData,
-    reqSpmGetWarSaveSlotFullData,
-    reqSpmGetWarSaveSlotFullDataArray,
-} from "./SpmProxy.ts";
 
 // 多人模式战局当前数据（需要把后端warID改为数据库自增，下同）
 // 多人模式半路回放
 
-const _allSlotTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number>>({
-    reqData : () => reqSpmGetAllWarSaveSlotTimestamps(),
+const _allSlotTimestampsAccessor    = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, Map<number, number>>({
+    reqData : () => SinglePlayerMode_Model_SpmProxy.reqSpmGetAllWarSaveSlotTimestamps(),
 });
 /** 只用于保证收到过消息 */
-const _dataArrayAccessor            = new CachedDataAccessor<null, boolean>({
+const _dataArrayAccessor            = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */},
 });
-const _slotFullDataAccessor         = new CachedDataAccessor<number, DecodedSpmWarSaveSlotData>({
-    reqData : (slotIndex) => reqSpmGetWarSaveSlotFullData(slotIndex),
+const _slotFullDataAccessor         = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypes_AuxiliaryTypes.DecodedSpmWarSaveSlotData>({
+    reqData : (slotIndex) => SinglePlayerMode_Model_SpmProxy.reqSpmGetWarSaveSlotFullData(slotIndex),
 });
 
 export function init(): void {
-    addEventListeners([
-        { type : TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw, },
+    Notifications_Dispatcher.addEventListeners([
+        { type : Notifications_TypeId.TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw, },
     ], null);
 }
 
-function _onNotifyMsgSpmValidateSrw(e: Event): void {
+function _onNotifyMsgSpmValidateSrw(e: Egret_Egret.Event): void {
     const data      = e.data as SpmValidateSrwResponse;
     const status    = data.getStatus();
-    if (status === ValidateStatusId.ConfigVersionNotLatest) {
-        show(getText(TextType.A0278));
-    } else if (status === ValidateStatusId.ScoreNotHighest) {
-        show(getText(TextType.A0279));
-    } else if (status === ValidateStatusId.ScoreTooLow) {
-        show(getText(TextType.A0281));
+    if (status === SingleRankedWars_Constants.ValidateStatusId.ConfigVersionNotLatest) {
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0278));
+    } else if (status === SingleRankedWars_Constants.ValidateStatusId.ScoreNotHighest) {
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0279));
+    } else if (status === SingleRankedWars_Constants.ValidateStatusId.ScoreTooLow) {
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0281));
     } else {
-        show(getText(TextType.A0280));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0280));
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for save slots.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getAllSlotTimestamps(): Promise<Undefinable<Map<number, number>>> {
+export function getAllSlotTimestamps(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<Map<number, number>>> {
     return _allSlotTimestampsAccessor.getData(null);
 }
 function setAllSlotTimestamps(dict: Map<number, number>): void {
     _allSlotTimestampsAccessor.setData(null, dict);
 }
 
-export async function getSlotFullData(slotIndex: number): Promise<Undefinable<DecodedSpmWarSaveSlotData>> {
+export async function getSlotFullData(slotIndex: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.DecodedSpmWarSaveSlotData>> {
     const timestamp = (await getAllSlotTimestamps())?.get(slotIndex);
     if (timestamp == null) {
         return null;
     }
 
-    const userId = getSelfUserId();
+    const userId = Users_Model.getSelfUserId();
     if (userId != null) {
-        const cachedData = await StoreSpmWarSaveSlotFullData.getData(userId, slotIndex);
+        const cachedData = await LocalData_Storage.StoreSpmWarSaveSlotFullData.getData(userId, slotIndex);
         if (cachedData != null) {
             if ((cachedData.extraData.getTimestamp() ?? 0) === timestamp) {
                 return cachedData;
@@ -125,18 +103,18 @@ export async function getSlotFullData(slotIndex: number): Promise<Undefinable<De
 
     return _slotFullDataAccessor.getData(slotIndex);
 }
-async function setSlotFullData(slotIndex: number, fullData: DecodedSpmWarSaveSlotData | null): Promise<void> {
+async function setSlotFullData(slotIndex: number, fullData: AuxiliaryTypes_AuxiliaryTypes.DecodedSpmWarSaveSlotData | null): Promise<void> {
     _slotFullDataAccessor.setData(slotIndex, fullData);
 
-    const userId = getSelfUserId();
+    const userId = Users_Model.getSelfUserId();
     if (userId != null) {
-        await StoreSpmWarSaveSlotFullData.setData(userId, slotIndex, fullData);
+        await LocalData_Storage.StoreSpmWarSaveSlotFullData.setData(userId, slotIndex, fullData);
     }
 }
 
 export async function updateOnMsgSpmGetAllWarSaveSlotTimestamps(data: SpmGetAllWarSaveSlotTimestampsResponse): Promise<void> {
-    const selfUserId            = getSelfUserId();
-    const existingDataDict      = selfUserId == null ? null : await StoreSpmWarSaveSlotFullData.getAllDataDictForKey1(selfUserId);
+    const selfUserId            = Users_Model.getSelfUserId();
+    const existingDataDict      = selfUserId == null ? null : await LocalData_Storage.StoreSpmWarSaveSlotFullData.getAllDataDictForKey1(selfUserId);
     const infoArray             = data.getInfoArray();
     const neededSlotIndexSet    = new Set<number>();
     const resultDict            = new Map<number, number>();
@@ -154,7 +132,7 @@ export async function updateOnMsgSpmGetAllWarSaveSlotTimestamps(data: SpmGetAllW
         }
     }
 
-    reqSpmGetWarSaveSlotFullDataArray([...neededSlotIndexSet]);
+    SinglePlayerMode_Model_SpmProxy.reqSpmGetWarSaveSlotFullDataArray([...neededSlotIndexSet]);
     await _dataArrayAccessor.getData(null);
 
     setAllSlotTimestamps(resultDict);
@@ -170,8 +148,8 @@ export async function updateOnMsgSpmGetWarSaveSlotFullDataArray(data: SpmGetWarS
         const slotIndex = d.getSlotIndex() ?? 0;
         promiseArray.push(setSlotFullData(slotIndex, {
             slotIndex : slotIndex,
-            warData   : SerialWar.decode(decompress(getExisted(d.getCompressedWarData()))),
-            extraData : SpmWarSaveSlotExtraData.decode(getExisted(d.getEncodedExtraData())),
+            warData   : SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(d.getCompressedWarData()))),
+            extraData : SpmWarSaveSlotExtraData.decode(Helpers_Misc.getExisted(d.getEncodedExtraData())),
         }));
     }
     await Promise.all(promiseArray);
@@ -187,8 +165,8 @@ export function updateOnMsgSpmGetWarSaveSlotFullData(data: SpmGetWarSaveSlotFull
     } else {
         return setSlotFullData(slotIndex, {
             slotIndex : slotIndex,
-            warData   : SerialWar.decode(decompress(getExisted(slotData.getCompressedWarData()))),
-            extraData : SpmWarSaveSlotExtraData.decode(getExisted(slotData.getEncodedExtraData())),
+            warData   : SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(slotData.getCompressedWarData()))),
+            extraData : SpmWarSaveSlotExtraData.decode(Helpers_Misc.getExisted(slotData.getEncodedExtraData())),
         });
     }
 }
@@ -200,10 +178,10 @@ export function updateOnFailedMsgSpmGetWarSaveSlotFullData(data: SpmGetWarSaveSl
 }
 
 export function updateOnMsgSpmCreateScw(data: SpmCreateScwResponse): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, Helpers_Misc.getExisted(data.getExtraData()), Helpers_Misc.getExisted(data.getWarData()));
 }
 export async function updateOnMsgSpmCreateSfw(data: SpmCreateSfwResponse): Promise<void> {
-    await updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
+    await updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, Helpers_Misc.getExisted(data.getExtraData()), Helpers_Misc.getExisted(data.getWarData()));
 
     // PanelHelpers.open(PanelHelpers.PanelDict.CommonConfirmPanel, {
     //     content : Lang.getText(LangTextType.A0107),
@@ -217,37 +195,37 @@ export async function updateOnMsgSpmCreateSfw(data: SpmCreateSfwResponse): Promi
     // });
 }
 export function updateOnMsgSpmCreateSrw(data: SpmCreateSrwResponse): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, Helpers_Misc.getExisted(data.getExtraData()), Helpers_Misc.getExisted(data.getWarData()));
 }
 export function updateOnMsgCampaignCreateWar(data: CampaignCreateWarResponse): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getSlotExtraData()), getExisted(data.getWarData()));
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, Helpers_Misc.getExisted(data.getSlotExtraData()), Helpers_Misc.getExisted(data.getWarData()));
 }
 export function updateOnMsgSpmSaveScw(data: SpmSaveScwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        getExisted(data.getSlotExtraData()),
-        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
+        Helpers_Misc.getExisted(data.getSlotExtraData()),
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
     );
 }
 export function updateOnMsgSpmSaveSfw(data: SpmSaveSfwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        getExisted(data.getSlotExtraData()),
-        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
+        Helpers_Misc.getExisted(data.getSlotExtraData()),
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
     );
 }
 export function updateOnMsgSpmSaveSrw(data: SpmSaveSrwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        getExisted(data.getSlotExtraData()),
-        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
+        Helpers_Misc.getExisted(data.getSlotExtraData()),
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
     );
 }
 export function updateOnMsgCampaignSaveWar(data: CampaignSaveWarResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        getExisted(data.getSlotExtraData()),
-        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
+        Helpers_Misc.getExisted(data.getSlotExtraData()),
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
     );
 }
 export async function updateOnMsgSpmDeleteWarSaveSlot(slotIndex: number): Promise<void> {
@@ -270,13 +248,13 @@ export async function checkIsEmpty(slotIndex: number): Promise<boolean> {
 }
 export async function getEmptySlotIndexArray(): Promise<number[]> {
     const promiseArray: Promise<boolean>[] = [];
-    for (let slotIndex = 0; slotIndex < SinglePlayerWarsCommon.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWars_Constants.Common.MaxSaveSlotCount; ++slotIndex) {
         promiseArray.push(checkIsEmpty(slotIndex));
     }
 
     const emptyResultArray      = await Promise.all(promiseArray);
     const emptySlotIndexArray   : number[] = [];
-    for (let slotIndex = 0; slotIndex < SinglePlayerWarsCommon.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWars_Constants.Common.MaxSaveSlotCount; ++slotIndex) {
         if (emptyResultArray[slotIndex]) {
             emptySlotIndexArray.push(slotIndex);
         }
@@ -302,41 +280,41 @@ export async function getSlotName(slotIndex: number): Promise<string> {
 
     const mpwWarId = slotExtraData.getMpwWarId();
     if (mpwWarId != null) {
-        return `${getText(TextType.B0226)}: ${mpwWarId}`;
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0226)}: ${mpwWarId}`;
     }
 
     const warData       = slotData.warData;
-    const normalMapId   = getNormalMapId(warData);
+    const normalMapId   = Helpers_ProtoSchema_WarSerialization_SerialWar.getNormalMapId(warData);
     if (normalMapId != null) {
-        return (await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError;
+        return (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || Lang_Constants.UndefinedError;
     }
 
     const settingsForCaw = warData.getSettingsForCaw();
     if (settingsForCaw != null) {
-        const mapRawData = await getCampaignMapRawData(settingsForCaw.getCampaignId(), settingsForCaw.getCampaignMapId());
-        return getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? UndefinedError;
+        const mapRawData = await Campaigns_Mains_Provider.getCampaignMapRawData(settingsForCaw.getCampaignId(), settingsForCaw.getCampaignMapId());
+        return Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? Lang_Constants.UndefinedError;
     }
 
-    return `(${getText(TextType.B0321)})`;
+    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0321)})`;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for rank list.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _rankDataGetter = new CachedDataAccessor<number, SpmRankInfoForRule[]>({
-    reqData : (normalMapId: number) => reqSpmGetRankList(normalMapId),
+const _rankDataGetter = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, SpmRankInfoForRule[]>({
+    reqData : (normalMapId: number) => SinglePlayerMode_Model_SpmProxy.reqSpmGetRankList(normalMapId),
 });
 
-export function getRankData(normalMapId: number): Promise<Undefinable<SpmRankInfoForRule[]>> {
+export function getRankData(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<SpmRankInfoForRule[]>> {
     return _rankDataGetter.getData(normalMapId);
 }
 
 export function updateOnMsgSpmGetRankList(data: SpmGetRankListResponse): void {
-    _rankDataGetter.setData(getExisted(data.getNormalMapId()), data.getInfoArray());
+    _rankDataGetter.setData(Helpers_Misc.getExisted(data.getNormalMapId()), data.getInfoArray());
 }
 
 export async function getRankIndex(normalMapId: number, ruleId: number, score: number): Promise<number | null> {
-    const rankDataArray = (await getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().concat().sort((v1, v2) => getExisted(v2.getScore()) - getExisted(v1.getScore()));
+    const rankDataArray = (await getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().concat().sort((v1, v2) => Helpers_Misc.getExisted(v2.getScore()) - Helpers_Misc.getExisted(v1.getScore()));
     if (rankDataArray == null) {
         return null;
     }
@@ -348,30 +326,30 @@ export async function getRankIndex(normalMapId: number, ruleId: number, score: n
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for replay data.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _replayDataAccessor = new CachedDataAccessor<number, SerialWar>({
-    reqData : (rankId: number) => reqSpmGetReplayData(rankId),
+const _replayDataAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, SerialWar>({
+    reqData : (rankId: number) => SinglePlayerMode_Model_SpmProxy.reqSpmGetReplayData(rankId),
 });
 
-export async function getReplayData(rankId: number): Promise<Undefinable<SerialWar>> {
-    return (await StoreSpmReplayData.getData(rankId)) ?? _replayDataAccessor.getData(rankId);
+export async function getReplayData(rankId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWar>> {
+    return (await LocalData_Storage.StoreSpmReplayData.getData(rankId)) ?? _replayDataAccessor.getData(rankId);
 }
 function setReplayData(rankId: number, data: SerialWar | null): Promise<void> {
     _replayDataAccessor.setData(rankId, data);
-    return StoreSpmReplayData.setData(rankId, data);
+    return LocalData_Storage.StoreSpmReplayData.setData(rankId, data);
 }
-async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): Promise<SerialWar | null> {
+async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Uint8Array>): Promise<SerialWar | null> {
     if (encodedWar == null) {
         return null;
     }
 
     const warData               = SerialWar.decode(encodedWar);
-    const settingsForCommon     = getExisted(warData.getSettingsForCommon());
+    const settingsForCommon     = Helpers_Misc.getExisted(warData.getSettingsForCommon());
     const srcInstanceWarRule    = settingsForCommon.getInstanceWarRule();
     if (srcInstanceWarRule == null) {
         return null;
     }
 
-    const mapRawData = await getRawData(getExisted(warData.getSettingsForSrw()?.getNormalMapId()));
+    const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(Helpers_Misc.getExisted(warData.getSettingsForSrw()?.getNormalMapId()));
     if (mapRawData == null) {
         return null;
     }
@@ -386,7 +364,7 @@ async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): P
         return null;
     }
 
-    settingsForCommon.setInstanceWarRule(create({
+    settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
         templateWarRule           : templateWarRule,
         warEventFullData          : mapRawData.getWarEventFullData(),
         allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
@@ -396,7 +374,7 @@ async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): P
     if (!warData.checkHasField()) {
         warData.createIfNotExistsField().loadJson({
             fogMap : {
-                forceFogCode : ForcedFogCode.None,
+                forceFogCode : FogMaps_Constants.ForcedFogCode.None,
                 mapsFromPath : [],
             },
         });
@@ -404,9 +382,9 @@ async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): P
 
     if (!warData.checkHasTurnManager()) {
         warData.createIfNotExistsTurnManager().loadJson({
-            turnIndex     : TurnIndex.FirstIndex,
-            turnPhaseCode : PhaseCode.WaitBeginTurn,
-            playerIndex   : PlayerIndex.Neutral,
+            turnIndex     : Turns_Constants.TurnIndex.FirstIndex,
+            turnPhaseCode : Turns_Constants.PhaseCode.WaitBeginTurn,
+            playerIndex   : Players_Constants.PlayerIndex.Neutral,
             enterTurnTime : 0,
         });
     }

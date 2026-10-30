@@ -1,73 +1,66 @@
-import type { ToCategoryId } from "./Constants.ts";
 import {
-    updateOnAddMessage,
-    setAllMessages,
-    setReadProgress,
-    resetAllReadProgress,
-    updateOnDeleteMessage,
-} from "./Model.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import {
-    addListeners,
-    send,
-} from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Timer_TimerModel,
+    Networks_MessageCodes,
+    Chat_Model,
+    Notifications_TypeId,
+    type Egret_Egret,
+    type Chat_Constants,
+} from "../internal.ts";
 import type { S as ChatAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
 import type { S as ChatDeleteMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
 import type { S as ChatGetAllMessagesResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllMessages/S.ts";
 import type { S as ChatGetAllReadProgressListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllReadProgressList/S.ts";
 import type { S as ChatUpdateReadProgressResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
-import { getServerTimestamp } from "../timer/TimerModel.ts";
-import type { Event } from "../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgChatAddMessage,               callback: _onMsgChatAddMessage },
-        { msgCode: MessageCodes.MsgChatGetAllMessages,           callback: _onMsgChatGetAllMessages },
-        { msgCode: MessageCodes.MsgChatUpdateReadProgress,       callback: _onMsgChatUpdateReadProgress },
-        { msgCode: MessageCodes.MsgChatGetAllReadProgressList,   callback: _onMsgChatGetAllReadProgressList },
-        { msgCode: MessageCodes.MsgChatDeleteMessage,            callback: _onMsgChatDeleteMessage },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatAddMessage,               callback: _onMsgChatAddMessage },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatGetAllMessages,           callback: _onMsgChatGetAllMessages },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatUpdateReadProgress,       callback: _onMsgChatUpdateReadProgress },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatGetAllReadProgressList,   callback: _onMsgChatGetAllReadProgressList },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatDeleteMessage,            callback: _onMsgChatDeleteMessage },
     ], null);
 }
 
 export function reqChatAddMessage(
     content     : string,
-    toCategory  : ToCategoryId,
+    toCategory  : Chat_Constants.ToCategoryId,
     toTarget    : number,
 ): void {
-    send({ MsgChatAddMessage: { c: {
+    Networks_Manager.send({ MsgChatAddMessage: { c: {
         toCategory,
         toTarget,
         content,
     }, } });
 }
-function _onMsgChatAddMessage(e: Event): void {
+function _onMsgChatAddMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChatAddMessageResponse;
     if (!data.getErrorCode()) {
-        updateOnAddMessage(getExisted(data.getMessage()), true);
-        dispatch(TypeId.MsgChatAddMessage, data);
+        Chat_Model.updateOnAddMessage(Helpers_Misc.getExisted(data.getMessage()), true);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatAddMessage, data);
     }
 }
 
 export function reqGetAllMessages(): void {
-    send({ MsgChatGetAllMessages: { c: {} } });
+    Networks_Manager.send({ MsgChatGetAllMessages: { c: {} } });
 }
-function _onMsgChatGetAllMessages(e: Event): void {
+function _onMsgChatGetAllMessages(e: Egret_Egret.Event): void {
     const data = e.data as ChatGetAllMessagesResponse;
     if (!data.getErrorCode()) {
-        setAllMessages(data.getMessageList());
-        dispatch(TypeId.MsgChatGetAllMessages, data);
+        Chat_Model.setAllMessages(data.getMessageList());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatGetAllMessages, data);
     }
 }
 
 export function reqUpdateReadProgress(
-    toCategory  : ToCategoryId,
+    toCategory  : Chat_Constants.ToCategoryId,
     toTarget    : number,
-    timestamp   = getServerTimestamp(),
+    timestamp   = Timer_TimerModel.getServerTimestamp(),
 ): void {
-    send({ MsgChatUpdateReadProgress: { c: {
+    Networks_Manager.send({ MsgChatUpdateReadProgress: { c: {
         progress: {
             toCategory,
             toTarget,
@@ -75,32 +68,32 @@ export function reqUpdateReadProgress(
         }, }
     } });
 }
-function _onMsgChatUpdateReadProgress(e: Event): void {
+function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event): void {
     const data = e.data as ChatUpdateReadProgressResponse;
     if (!data.getErrorCode()) {
-        setReadProgress(getExisted(data.getProgress()));
-        dispatch(TypeId.MsgChatUpdateReadProgress, data);
+        Chat_Model.setReadProgress(Helpers_Misc.getExisted(data.getProgress()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatUpdateReadProgress, data);
     }
 }
 
 export function reqGetAllReadProgressList(): void {
-    send({ MsgChatGetAllReadProgressList: { c: {} } });
+    Networks_Manager.send({ MsgChatGetAllReadProgressList: { c: {} } });
 }
-function _onMsgChatGetAllReadProgressList(e: Event): void {
+function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event): void {
     const data = e.data as ChatGetAllReadProgressListResponse;
     if (!data.getErrorCode()) {
-        resetAllReadProgress(data.getList());
-        dispatch(TypeId.MsgChatGetAllReadProgressList, data);
+        Chat_Model.resetAllReadProgress(data.getList());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList, data);
     }
 }
 
 export function reqChatDeleteMessage(messageId: number): void {
-    send({ MsgChatDeleteMessage: { c: { messageId } } });
+    Networks_Manager.send({ MsgChatDeleteMessage: { c: { messageId } } });
 }
-function _onMsgChatDeleteMessage(e: Event): void {
+function _onMsgChatDeleteMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChatDeleteMessageResponse;
     if (!data.getErrorCode()) {
-        updateOnDeleteMessage(getExisted(data.getMessageId()));
-        dispatch(TypeId.MsgChatDeleteMessage, data);
+        Chat_Model.updateOnDeleteMessage(Helpers_Misc.getExisted(data.getMessageId()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChatDeleteMessage, data);
     }
 }

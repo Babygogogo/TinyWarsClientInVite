@@ -1,18 +1,20 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
-import type { IMrwWar } from "../interface/IMrwWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MultiPlayerWar_Model_MpwWar,
+    type GameConfigs_GameConfig,
+    type MultiRankWar_Interface_IMrwWar,
+} from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class MrwWar extends MpwWar implements IMrwWar {
+export class MrwWar extends MultiPlayerWar_Model_MpwWar.MpwWar implements MultiRankWar_Interface_IMrwWar.IMrwWar {
     private _settingsForMrw?    : SettingsForMrw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForMrw(getExisted(data.getSettingsForMrw(), ClientErrorCode.MrwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForMrw(Helpers_Misc.getExisted(data.getSettingsForMrw(), Utils_ClientErrorCode.ClientErrorCode.MrwWar_Init_00));
 
         this._initView();
     }
@@ -38,7 +40,7 @@ export class MrwWar extends MpwWar implements IMrwWar {
         this._settingsForMrw = settings;
     }
     public getSettingsForMrw(): SettingsForMrw {
-        return getExisted(this._settingsForMrw);
+        return Helpers_Misc.getExisted(this._settingsForMrw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

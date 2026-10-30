@@ -1,33 +1,35 @@
-import { pickRandomCo } from "../../cos/Utils.ts";
-import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getFinalCcwHumanCoIdSet } from "../../playerRules/Utils.ts";
+import {
+    WarOperations_Constants,
+    WarRules_Utils_Instance,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    PlayerRules_Utils,
+    Helpers_Collection,
+    WarRules_Utils_CommonData,
+    Cos_Utils,
+    MultiPlayerRooms_RoomCreatorBase,
+    ForceSkins_Constants,
+    Turns_Constants,
+    Notifications_TypeId,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { AiSkinInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCcrCreateRoom/AiSkinInfo.ts";
 import { C as CcrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgCcrCreateRoom/C.ts";
 import { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { Common } from "../../warOperations/Constants.ts";
-import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import { create } from "../../warRules/utils/Instance.ts";
 
-export class CcrRoomCreator extends RoomCreatorBase {
+export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreatorBase {
     private readonly _mapRawData        : MapRawData;
     private readonly _settingsForCcw    = new SettingsForCcw();
     private readonly _aiSkinInfoArray   : AiSkinInfo[] = [];
 
-    public constructor(gcData: GameConfig, mapRawData: MapRawData) {
+    public constructor(gcData: GameConfigs_GameConfig.GameConfig, mapRawData: MapRawData) {
         super(
             gcData,
             SettingsForCommon.fromJson({
-                turnsLimit          : TurnIndex.DefaultLimit,
-                warOperationsLimit  : Common.DefaultLimit,
+                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
             })
         );
 
@@ -35,7 +37,7 @@ export class CcrRoomCreator extends RoomCreatorBase {
 
         this.getSettingsForCcw().setNormalMapId(mapRawData.getNormalMapId());
         this.getSettingsForCommon().setConfigVersion(gcData.getVersion());
-        this.resetDataByTemplateWarRuleId(getExisted(
+        this.resetDataByTemplateWarRuleId(Helpers_Misc.getExisted(
             mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanCcw())?.getRuleId())
         );
     }
@@ -67,8 +69,8 @@ export class CcrRoomCreator extends RoomCreatorBase {
 
     public resetDataByTemplateWarRuleId(templateWarRuleId: number): void {
         const mapRawData            = this.getMapRawData();
-        const templateWarRule       = getExisted(mapRawData.getTemplateWarRuleArray().find(r => r.getRuleId() === templateWarRuleId));
-        const warRuleCommonData     = getExisted(templateWarRule.getWarRuleCommonData());
+        const templateWarRule       = Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(r => r.getRuleId() === templateWarRuleId));
+        const warRuleCommonData     = Helpers_Misc.getExisted(templateWarRule.getWarRuleCommonData());
         const humanPlayerIndexArray : number[] = [];
         const aiPlayerIndexArray    : number[] = [];
         for (const playerRule of warRuleCommonData.getPlayerRuleList()) {
@@ -81,14 +83,14 @@ export class CcrRoomCreator extends RoomCreatorBase {
         }
 
         const selfPlayerIndex   = Math.min(...humanPlayerIndexArray);
-        const availableCoIdSet  = getFinalCcwHumanCoIdSet({
-            playerRule      : getPlayerRule(warRuleCommonData, selfPlayerIndex),
+        const availableCoIdSet  = PlayerRules_Utils.getFinalCcwHumanCoIdSet({
+            playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, selfPlayerIndex),
             gameConfig      : this.getGcData(),
             hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
             includeRandom   : true,
         });
 
-        this.getSettingsForCommon().setInstanceWarRule(create({
+        this.getSettingsForCommon().setInstanceWarRule(WarRules_Utils_Instance.create({
             templateWarRule             : templateWarRule,
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
@@ -100,16 +102,16 @@ export class CcrRoomCreator extends RoomCreatorBase {
 
         const selfCoId = this.getSelfCoId();
         if ((selfCoId == null) || (!availableCoIdSet.has(selfCoId))) {
-            this.setSelfCoId(pickRandomCo([...availableCoIdSet]));
+            this.setSelfCoId(Cos_Utils.pickRandomCo([...availableCoIdSet]));
         }
     }
     public tickTemplateWarRuleId(): void {
         const currTemplateWarRuleId = this.getInstanceWarRule().getTemplateWarRuleId();
         const templateWarRuleArray  = this.getMapRawData().getTemplateWarRuleArray();
         if (currTemplateWarRuleId == null) {
-            this.resetDataByTemplateWarRuleId(getExisted(templateWarRuleArray.find(v => v.getRuleAvailability()?.getCanCcw())?.getRuleId()));
+            this.resetDataByTemplateWarRuleId(Helpers_Misc.getExisted(templateWarRuleArray.find(v => v.getRuleAvailability()?.getCanCcw())?.getRuleId()));
         } else {
-            const newTemplateWarRuleId = getNonNullElements(templateWarRuleArray.filter(v => v.getRuleAvailability()?.getCanCcw()).map(v => v.getRuleId())).sort((v1, v2) => {
+            const newTemplateWarRuleId = Helpers_Collection.getNonNullElements(templateWarRuleArray.filter(v => v.getRuleAvailability()?.getCanCcw()).map(v => v.getRuleId())).sort((v1, v2) => {
                 if (v1 > currTemplateWarRuleId) {
                     return (v2 <= currTemplateWarRuleId) ? -1 : v1 - v2;
                 } else {
@@ -122,9 +124,9 @@ export class CcrRoomCreator extends RoomCreatorBase {
 
     public tickUnitAndTileSkinId(playerIndex: number): void {
         if (playerIndex === this.getSelfPlayerIndex()) {
-            this.setSelfUnitAndTileSkinId(this.getSelfUnitAndTileSkinId() % SkinId.Last + 1);
+            this.setSelfUnitAndTileSkinId(this.getSelfUnitAndTileSkinId() % ForceSkins_Constants.SkinId.Last + 1);
         } else {
-            this.setAiSkinId(playerIndex, this.getAiSkinId(playerIndex) % SkinId.Last + 1);
+            this.setAiSkinId(playerIndex, this.getAiSkinId(playerIndex) % ForceSkins_Constants.SkinId.Last + 1);
         }
     }
 
@@ -142,7 +144,7 @@ export class CcrRoomCreator extends RoomCreatorBase {
         return this._aiSkinInfoArray;
     }
     public getAiSkinId(playerIndex: number): number {
-        return getExisted(this.getAiSkinInfoArray().find(v => v.getPlayerIndex() === playerIndex)?.getUnitAndTileSkinId());
+        return Helpers_Misc.getExisted(this.getAiSkinInfoArray().find(v => v.getPlayerIndex() === playerIndex)?.getUnitAndTileSkinId());
     }
     public setAiSkinId(playerIndex: number, skinId: number): void {
         const infoArray = this.getAiSkinInfoArray();
@@ -159,6 +161,6 @@ export class CcrRoomCreator extends RoomCreatorBase {
     public deleteAiSkinId(playerIndex: number): void {
         const infoArray = this.getAiSkinInfoArray();
         infoArray.splice(infoArray.findIndex(v => v.getPlayerIndex() === playerIndex), 1);
-        dispatch(TypeId.CcrCreateAiCoIdChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.CcrCreateAiCoIdChanged);
     }
 }

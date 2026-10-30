@@ -1,50 +1,49 @@
-import { show } from "../../FloatText.ts";
-import { Common } from "../../maps/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { clearMap } from "../../mapEditor/model/MeHelpers.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+    MapEditor_Model_MeHelpers,
+    Maps_Constants,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export type OpenData = {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnHelp!              : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelCurrSizeTitle!   : IUiLabel;
-    private readonly _labelCurrWidth!       : IUiLabel;
-    private readonly _labelCurrHeight!      : IUiLabel;
-    private readonly _labelCurrGrids!       : IUiLabel;
+    private readonly _labelCurrSizeTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrWidth!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrHeight!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCurrGrids!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelNewSizeTitle!    : IUiLabel;
-    private readonly _btnWidth!             : IUiButton;
-    private readonly _btnHeight!            : IUiButton;
-    private readonly _labelNewGrids!        : IUiLabel;
+    private readonly _labelNewSizeTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnWidth!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHeight!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelNewGrids!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnCancel!            : IUiButton;
-    private readonly _btnConfirm!           : IUiButton;
+    private readonly _btnCancel!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!           : Ui_Interfaces_IUiButton.IUiButton;
 
     private _newWidth   = 0;
     private _newHeight  = 0;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
@@ -78,8 +77,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => `${getText(TextType.A0117)}\n\n${getFormattedText(TextType.F0023, Common.MaxGridsCount)}`,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.A0117)}\n\n${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount)}`,
         });
     }
 
@@ -87,8 +86,8 @@ export class Panel extends UiPanel<OpenData> {
         const width         = this._newWidth;
         const height        = this._newHeight;
         const gridsCount    = width * height;
-        if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Common.MaxGridsCount)) {
-            show(getText(TextType.A0087));
+        if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Maps_Constants.Common.MaxGridsCount)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0087));
             return;
         }
 
@@ -100,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig    = war.getGcData();
         war.stopRunning();
         await war.initWithMapRawData({
-            mapRawData: clearMap({
+            mapRawData: MapEditor_Model_MeHelpers.clearMap({
                 mapRawData  : await war.serializeForMap(),
                 newWidth    : width,
                 newHeight   : height,
@@ -116,14 +115,14 @@ export class Panel extends UiPanel<OpenData> {
             .startRunningView();
 
         this.closePanel();
-        dispatch(TypeId.MeMapCleared);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapCleared);
     }
 
     private _onTouchedBtnWidth(): void {
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0034),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0034),
             minValue        : 1,
-            maxValue        : Math.floor(Common.MaxGridsCount / (this._newHeight || 1)),
+            maxValue        : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newHeight || 1)),
             currentValue    : this._newWidth,
             callback        : newWidth => {
                 this._newWidth = newWidth;
@@ -134,10 +133,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHeight(): void {
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B0035),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0035),
             minValue        : 1,
-            maxValue        : Math.floor(Common.MaxGridsCount / (this._newWidth || 1)),
+            maxValue        : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newWidth || 1)),
             currentValue    : this._newHeight,
             callback        : newHeight => {
                 this._newHeight = newHeight;
@@ -152,11 +151,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
-        this._labelTitle.setLangText(TextType.B0391);
-        this._labelCurrSizeTitle.setLangText(TextType.B0855);
-        this._labelNewSizeTitle.setLangText(TextType.B0856);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0391);
+        this._labelCurrSizeTitle.setLangText(Lang_Constants.TextType.B0855);
+        this._labelNewSizeTitle.setLangText(Lang_Constants.TextType.B0856);
     }
 
     private _updateBtnWidth(): void {
@@ -169,6 +168,6 @@ export class Panel extends UiPanel<OpenData> {
         const grids     = this._newWidth * this._newHeight;
         const label     = this._labelNewGrids;
         label.setText(`${grids}`);
-        label.setTextColor((grids > 0) && (grids <= Common.MaxGridsCount) ? 0xFFFFFF : 0xFFFF00);
+        label.setTextColor((grids > 0) && (grids <= Maps_Constants.Common.MaxGridsCount) ? 0xFFFFFF : 0xFFFF00);
     }
 }

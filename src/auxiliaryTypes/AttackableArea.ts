@@ -1,15 +1,14 @@
-import { GridIndex } from "./GridIndex.ts";
-import type { MapSize } from "./MapSize.ts";
-import type { MovableArea } from "./MovableArea.ts";
 import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { TypeId } from "../tiles/constants/MapWeapon.ts";
-import type { ITile } from "../tiles/ITile.ts";
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    Tiles_Constants_MapWeapon,
+    type Tiles_ITile,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_MovableArea,
+} from "../internal.ts";
 
 type Data = {
-    movePathDestination : GridIndex;
+    movePathDestination : AuxiliaryTypes_GridIndex.GridIndex;
 };
 
 export class AttackableArea {
@@ -28,20 +27,20 @@ export class AttackableArea {
         const column = this._area[x];
         return column ? column[y] : null;
     }
-    public getDataByGridIndex(gridIndex: GridIndex): Data | null {
+    public getDataByGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Data | null {
         return this.getData(gridIndex.getX(), gridIndex.getY());
     }
     public checkHasGrid(x: number, y: number): boolean {
         return this.getData(x, y) != null;
     }
-    public checkHasGridByGridIndex(gridIndex: GridIndex): boolean {
+    public checkHasGridByGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
         return this.checkHasGrid(gridIndex.getX(), gridIndex.getY());
     }
     public clear(): void {
         this._area.length = 0;
     }
 
-    public mergeFrom(area: AttackableArea, mapSize: MapSize): void {
+    public mergeFrom(area: AttackableArea, mapSize: AuxiliaryTypes_MapSize.MapSize): void {
         const oldAreaData   = this.getArea();
         const newAreaData   = area.getArea();
         if (!oldAreaData.length) {
@@ -63,11 +62,11 @@ export class AttackableArea {
     }
 
     public static create({ movableArea, mapSize, minAttackRange, maxAttackRange, checkCanAttack }: {
-        movableArea         : MovableArea;
-        mapSize             : MapSize;
+        movableArea         : AuxiliaryTypes_MovableArea.MovableArea;
+        mapSize             : AuxiliaryTypes_MapSize.MapSize;
         minAttackRange      : number | null;
         maxAttackRange      : number | null;
-        checkCanAttack      : (destination: GridIndex, target: GridIndex) => boolean;
+        checkCanAttack      : (destination: AuxiliaryTypes_GridIndex.GridIndex, target: AuxiliaryTypes_GridIndex.GridIndex) => boolean;
     }): AttackableArea {
         const area: Data[][] = [];
         if ((minAttackRange != null) && (maxAttackRange != null) && (maxAttackRange >= minAttackRange)) {
@@ -78,7 +77,7 @@ export class AttackableArea {
                     for (let moveY = 0; moveY < height; ++moveY) {
                         const movableGrid = column[moveY];
                         if (movableGrid) {
-                            const moveGridIndex = new GridIndex(moveX, moveY);
+                            const moveGridIndex = new AuxiliaryTypes_GridIndex.GridIndex(moveX, moveY);
                             for (const attackGridIndex of moveGridIndex.getGridsWithinDistance({ minDistance: minAttackRange, maxDistance: maxAttackRange, mapSize })) {
                                 const attackX = attackGridIndex.getX();
                                 const attackY = attackGridIndex.getY();
@@ -86,10 +85,10 @@ export class AttackableArea {
                                     area[attackX] = area[attackX] || [];
                                     const attackableGrid = area[attackX][attackY];
                                     if ((!attackableGrid)                                                                                                                   ||
-                                        (movableGrid.totalMoveCost < getExisted(movableArea.getDataByGridIndex(attackableGrid.movePathDestination)).totalMoveCost)
+                                        (movableGrid.totalMoveCost < Helpers_Misc.getExisted(movableArea.getDataByGridIndex(attackableGrid.movePathDestination)).totalMoveCost)
                                     ) {
                                         area[attackX][attackY] = {
-                                            movePathDestination: new GridIndex(moveX, moveY),
+                                            movePathDestination: new AuxiliaryTypes_GridIndex.GridIndex(moveX, moveY),
                                         };
                                     }
                                 }
@@ -103,7 +102,7 @@ export class AttackableArea {
         return new AttackableArea(area);
     }
 
-    public static createForTile(tile: ITile, mapSize: MapSize): AttackableArea {
+    public static createForTile(tile: Tiles_ITile.ITile, mapSize: AuxiliaryTypes_MapSize.MapSize): AttackableArea {
         const area          : Data[][] = [];
         const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
         const tileGridIndex = tile.getGridIndex();
@@ -112,23 +111,23 @@ export class AttackableArea {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         const addGrid       = (x: number, y: number) => {
-            if (new GridIndex(x, y).checkIsInsideMap(mapSize)) {
+            if (new AuxiliaryTypes_GridIndex.GridIndex(x, y).checkIsInsideMap(mapSize)) {
                 if (area[x] == null) {
                     area[x] = [];
                 }
                 area[x][y] = {
-                    movePathDestination: new GridIndex(tileGridX, tileGridY),
+                    movePathDestination: new AuxiliaryTypes_GridIndex.GridIndex(tileGridX, tileGridY),
                 };
             }
         };
 
-        if ((mapWeaponType === TypeId.Crystal) || (mapWeaponType === TypeId.CustomCrystal)) {
-            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
+        if ((mapWeaponType === Tiles_Constants_MapWeapon.TypeId.Crystal) || (mapWeaponType === Tiles_Constants_MapWeapon.TypeId.CustomCrystal)) {
+            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: Helpers_Misc.getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
                 addGrid(gridIndex.getX(), gridIndex.getY());
             }
 
-        } else if ((mapWeaponType === TypeId.CustomCannon) || (tile.checkIsNormalCannon())) {
-            const customCannonData  = getExisted(tile.getFinalCannonData());
+        } else if ((mapWeaponType === Tiles_Constants_MapWeapon.TypeId.CustomCannon) || (tile.checkIsNormalCannon())) {
+            const customCannonData  = Helpers_Misc.getExisted(tile.getFinalCannonData());
             const rangeForDown      = customCannonData.getRangeForDown();
             const rangeForUp        = customCannonData.getRangeForUp();
             const rangeForLeft      = customCannonData.getRangeForLeft();
@@ -194,8 +193,8 @@ export class AttackableArea {
                 }
             }
 
-        } else if ((mapWeaponType === TypeId.LaserTurret) || (mapWeaponType === TypeId.CustomLaserTurret)) {
-            const customLaserTurretData = getExisted(tile.getFinalLaserTurretData());
+        } else if ((mapWeaponType === Tiles_Constants_MapWeapon.TypeId.LaserTurret) || (mapWeaponType === Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)) {
+            const customLaserTurretData = Helpers_Misc.getExisted(tile.getFinalLaserTurretData());
             const rangeForDown          = customLaserTurretData.getRangeForDown();
             const rangeForUp            = customLaserTurretData.getRangeForUp();
             const rangeForLeft          = customLaserTurretData.getRangeForLeft();
@@ -239,7 +238,7 @@ export class AttackableArea {
 
         } else {
             // TODO: handle other tile types
-            throw newError(`WarCommonHelpers.createAttackableAreaForTile() invalid mapWeaponType: ${mapWeaponType}`);
+            throw Helpers_Misc.newError(`WarCommonHelpers.createAttackableAreaForTile() invalid mapWeaponType: ${mapWeaponType}`);
         }
 
         return new AttackableArea(area);

@@ -1,65 +1,67 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
-import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { format } from "../../helpers/Text.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    Helpers_Text,
+    GamePanels_Dict,
+    ForceSkins_Utils,
+    Lang_Utils,
+    Common_Model_CommonModel,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiUnitView,
+    Ui_Types_UiUnitViewData,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Utils_Serialization,
+    Units_Constants,
+} from "../../internal.ts";
 import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { Hp } from "../../units/Constants.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
 
 let IsShowHp = true;
 
 export interface OpenData {
-    war             : IBwWar;
+    war             : BaseWar_Interface_IBwWar.IBwWar;
     infoArray       : Info[];
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnHelp!                  : IUiButton;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayerIndex!         : IUiLabel;
-    private readonly _labelUnitGain0!           : IUiLabel;
-    private readonly _labelUnitLoss0!           : IUiLabel;
-    private readonly _labelUnitRemain0!         : IUiLabel;
-    private readonly _labelNormalizedHpGain0!   : IUiLabel;
-    private readonly _labelNormalizedHpLoss0!   : IUiLabel;
-    private readonly _labelNormalizedHpRemain0! : IUiLabel;
-    private readonly _labelUnitGain1!           : IUiLabel;
-    private readonly _labelUnitLoss1!           : IUiLabel;
-    private readonly _labelUnitRemain1!         : IUiLabel;
-    private readonly _labelNormalizedHpGain1!   : IUiLabel;
-    private readonly _labelNormalizedHpLoss1!   : IUiLabel;
-    private readonly _labelNormalizedHpRemain1! : IUiLabel;
+    private readonly _labelPlayerIndex!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitGain0!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitLoss0!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitRemain0!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpGain0!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpLoss0!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpRemain0! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitGain1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitLoss1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitRemain1!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpGain1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpLoss1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpRemain1! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listUnit!                 : IUiScrollList<DataForUnitRenderer>;
-    private readonly _btnSwitch!                : IUiButton;
-    private readonly _btnPreviousPlayer!        : IUiButton;
-    private readonly _btnNextPlayer!            : IUiButton;
+    private readonly _listUnit!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitRenderer>;
+    private readonly _btnSwitch!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPreviousPlayer!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextPlayer!            : Ui_Interfaces_IUiButton.IUiButton;
 
     private _playerIndex    : number | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -97,8 +99,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0477),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0477),
         });
     }
     private _onTouchedBtnSwitch(): void {
@@ -136,22 +138,22 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1148);
-        this._btnSwitch.setLangText(TextType.B0520);
-        this._btnPreviousPlayer.setLangText(TextType.B1029);
-        this._btnNextPlayer.setLangText(TextType.B1030);
-        this._labelNormalizedHpGain0.setLangText(IsShowHp ? TextType.B1149 : TextType.B1171);
-        this._labelNormalizedHpLoss0.setLangText(IsShowHp ? TextType.B1150 : TextType.B1172);
-        this._labelNormalizedHpRemain0.setLangText(IsShowHp ? TextType.B1153 : TextType.B1173);
-        this._labelUnitGain0.setLangText(TextType.B1151);
-        this._labelUnitLoss0.setLangText(TextType.B1152);
-        this._labelUnitRemain0.setLangText(TextType.B1154);
-        this._labelNormalizedHpGain1.setLangText(IsShowHp ? TextType.B1149 : TextType.B1171);
-        this._labelNormalizedHpLoss1.setLangText(IsShowHp ? TextType.B1150 : TextType.B1172);
-        this._labelNormalizedHpRemain1.setLangText(IsShowHp ? TextType.B1153 : TextType.B1173);
-        this._labelUnitGain1.setLangText(TextType.B1151);
-        this._labelUnitLoss1.setLangText(TextType.B1152);
-        this._labelUnitRemain1.setLangText(TextType.B1154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1148);
+        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
+        this._btnPreviousPlayer.setLangText(Lang_Constants.TextType.B1029);
+        this._btnNextPlayer.setLangText(Lang_Constants.TextType.B1030);
+        this._labelNormalizedHpGain0.setLangText(IsShowHp ? Lang_Constants.TextType.B1149 : Lang_Constants.TextType.B1171);
+        this._labelNormalizedHpLoss0.setLangText(IsShowHp ? Lang_Constants.TextType.B1150 : Lang_Constants.TextType.B1172);
+        this._labelNormalizedHpRemain0.setLangText(IsShowHp ? Lang_Constants.TextType.B1153 : Lang_Constants.TextType.B1173);
+        this._labelUnitGain0.setLangText(Lang_Constants.TextType.B1151);
+        this._labelUnitLoss0.setLangText(Lang_Constants.TextType.B1152);
+        this._labelUnitRemain0.setLangText(Lang_Constants.TextType.B1154);
+        this._labelNormalizedHpGain1.setLangText(IsShowHp ? Lang_Constants.TextType.B1149 : Lang_Constants.TextType.B1171);
+        this._labelNormalizedHpLoss1.setLangText(IsShowHp ? Lang_Constants.TextType.B1150 : Lang_Constants.TextType.B1172);
+        this._labelNormalizedHpRemain1.setLangText(IsShowHp ? Lang_Constants.TextType.B1153 : Lang_Constants.TextType.B1173);
+        this._labelUnitGain1.setLangText(Lang_Constants.TextType.B1151);
+        this._labelUnitLoss1.setLangText(Lang_Constants.TextType.B1152);
+        this._labelUnitRemain1.setLangText(Lang_Constants.TextType.B1154);
     }
 
     private _updateView(): void {
@@ -180,7 +182,7 @@ export class Panel extends UiPanel<OpenData> {
         const war               = openData.war;
         const gameConfig        = war.getGcData();
         const skinId            = war.getPlayer(playerIndex).getUnitAndTileSkinId();
-        const overridingSkinId  = getRawOverridingSkinId(war, playerIndex);
+        const overridingSkinId  = ForceSkins_Utils.getRawOverridingSkinId(war, playerIndex);
         const infoArray         = openData.infoArray;
         const unitTypeArray     = gameConfig.getAllUnitTypeArray();
         const subLength         = Math.ceil(unitTypeArray.length / 2);
@@ -205,8 +207,8 @@ export class Panel extends UiPanel<OpenData> {
             }
             if (!IsShowHp) {
                 const cost                      = gameConfig.getUnitTemplateCfg(singleData0.unitType)?.getProductionCost() ?? 0;
-                singleData0.normalizedHpGain    = (singleData0.normalizedHpGain) * cost / Hp.MaxNormalizedHp;
-                singleData0.normalizedHpLoss    = (singleData0.normalizedHpLoss) * cost / Hp.MaxNormalizedHp;
+                singleData0.normalizedHpGain    = (singleData0.normalizedHpGain) * cost / Units_Constants.Hp.MaxNormalizedHp;
+                singleData0.normalizedHpLoss    = (singleData0.normalizedHpLoss) * cost / Units_Constants.Hp.MaxNormalizedHp;
             }
 
             let singleData1: SingleData | null = null;
@@ -227,8 +229,8 @@ export class Panel extends UiPanel<OpenData> {
 
                 if (!IsShowHp) {
                 const cost                      = gameConfig.getUnitTemplateCfg(singleData1.unitType)?.getProductionCost() ?? 0;
-                singleData1.normalizedHpGain    = (singleData1.normalizedHpGain) * cost / Hp.MaxNormalizedHp;
-                singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss) * cost / Hp.MaxNormalizedHp;
+                singleData1.normalizedHpGain    = (singleData1.normalizedHpGain) * cost / Units_Constants.Hp.MaxNormalizedHp;
+                singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss) * cost / Units_Constants.Hp.MaxNormalizedHp;
                 }
             }
 
@@ -254,41 +256,41 @@ type SingleData = {
     unitGain            : number;
     unitLoss            : number;
 };
-interface DataForUnitRenderer extends UiListItemData {
+interface DataForUnitRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index               : number;
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     playerIndex         : number;
     skinId              : number;
-    overridingSkinId    : Undefinable<number>;
+    overridingSkinId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     singleData0         : SingleData;
     singleData1         : SingleData | null;
 }
-class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
-    private readonly _group!                    : IUiContainer;
-    private readonly _imgBackground!            : IUiImage;
-    private readonly _conUnitView0!             : IUiContainer;
-    private readonly _labelUnitGain0!           : IUiLabel;
-    private readonly _labelUnitLoss0!           : IUiLabel;
-    private readonly _labelUnitRemain0!         : IUiLabel;
-    private readonly _labelNormalizedHpGain0!   : IUiLabel;
-    private readonly _labelNormalizedHpLoss0!   : IUiLabel;
-    private readonly _labelNormalizedHpRemain0! : IUiLabel;
-    private readonly _conUnitView1!             : IUiContainer;
-    private readonly _labelUnitGain1!           : IUiLabel;
-    private readonly _labelUnitLoss1!           : IUiLabel;
-    private readonly _labelUnitRemain1!         : IUiLabel;
-    private readonly _labelNormalizedHpGain1!   : IUiLabel;
-    private readonly _labelNormalizedHpLoss1!   : IUiLabel;
-    private readonly _labelNormalizedHpRemain1! : IUiLabel;
+class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBackground!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _conUnitView0!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelUnitGain0!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitLoss0!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitRemain0!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpGain0!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpLoss0!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpRemain0! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _conUnitView1!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelUnitGain1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitLoss1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUnitRemain1!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpGain1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpLoss1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNormalizedHpRemain1! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView0                 = new (getUiUnitViewClass())();
-    private readonly _unitView1                 = new (getUiUnitViewClass())();
+    private readonly _unitView0                 = new Ui_Components_UiUnitView.UiUnitView();
+    private readonly _unitView1                 = new Ui_Components_UiUnitView.UiUnitView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
+            { type: Notifications_TypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
+            { type: Notifications_TypeId.TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conUnitView0.addUiChild(this._unitView0);
@@ -300,7 +302,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        const tick = getUnitAnimationTickCount();
+        const tick = Common_Model_CommonModel.getUnitAnimationTickCount();
         this._unitView0.updateOnAnimationTick(tick);
         this._unitView1.updateOnAnimationTick(tick);
     }
@@ -331,18 +333,18 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
             this._labelUnitGain0.setText(`${data.unitGain}`);
             this._labelUnitLoss0.setText(`${data.unitLoss}`);
             this._labelUnitRemain0.setText(`${data.unitGain - data.unitLoss}`);
-            this._unitView0.update(new UiUnitViewData({
+            this._unitView0.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
                 gameConfig          : gameConfig,
                 skinId              : skinId,
                 overridingSkinId    : overridingSkinId,
-                unitData            : createDefault({
+                unitData            : Units_Utils_Serialization.createDefault({
                     gridIndex   : { x: 0, y: 0 },
                     unitTypeId  : data.unitType,
                     unitId      : -1,
                     playerIndex : openData.playerIndex,
                     gcData      : gameConfig,
                 }),
-            }), getUnitAnimationTickCount());
+            }), Common_Model_CommonModel.getUnitAnimationTickCount());
         }
 
         {
@@ -377,18 +379,18 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
                 labelUnitGain1.setText(`${data.unitGain}`);
                 labelUnitLoss1.setText(`${data.unitLoss}`);
                 labelUnitRemain1.setText(`${data.unitGain - data.unitLoss}`);
-                unitView1.update(new UiUnitViewData({
+                unitView1.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
                     gameConfig          : gameConfig,
                     skinId              : skinId,
                     overridingSkinId    : overridingSkinId,
-                    unitData            : createDefault({
+                    unitData            : Units_Utils_Serialization.createDefault({
                         gridIndex   : { x: 0, y: 0 },
                         unitTypeId  : data.unitType,
                         playerIndex : openData.playerIndex,
                         unitId      : -1,
                         gcData      : gameConfig,
                     }),
-                }), getUnitAnimationTickCount());
+                }), Common_Model_CommonModel.getUnitAnimationTickCount());
             }
         }
     }
@@ -400,5 +402,5 @@ function getNumShortText(num: number, showKilo: boolean): string {
     }
 
     const newNum = num / 1000;
-    return (newNum % 1 === 0) ? `${newNum}` : format(`%.1f`, newNum);
+    return (newNum % 1 === 0) ? `${newNum}` : Helpers_Text.format(`%.1f`, newNum);
 }

@@ -1,21 +1,23 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { TileBuff } from "./TileBuff.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+    type ExpressionParsers_Results_TileBuff,
+} from "../../internal.ts";
 
-export class TileBuffArray extends Base {
-    public readonly buffArray: TileBuff[];
+export class TileBuffArray extends ExpressionParsers_Results_Base.Base {
+    public readonly buffArray: ExpressionParsers_Results_TileBuff.TileBuff[];
 
-    public constructor(war: IBwWar, buffArray: TileBuff[]) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, buffArray: ExpressionParsers_Results_TileBuff.TileBuff[]) {
         super(war);
 
         this.buffArray = buffArray;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.TileBuffArray;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.TileBuffArray;
     }
-    public override checkIsEqual(rhs: Base): boolean {
+    public override checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         if (!(rhs instanceof TileBuffArray)) {
             return false;
         }

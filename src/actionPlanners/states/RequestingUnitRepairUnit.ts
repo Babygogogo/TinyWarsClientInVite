@@ -1,39 +1,37 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
 import {
-    getMpwWarClass,
-    getSpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
-import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { reqUnitRepairUnit } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    MultiPlayerWar_Model_MpwProxy,
+    SinglePlayerWar_Model_SpwLocalProxy,
+} from "../../internal.ts";
 
-export class RequestingUnitRepairUnit implements IState {
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+
+export class RequestingUnitRepairUnit implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new RequestingUnitRepairUnit();
 
     public static getInstance(): RequestingUnitRepairUnit {
         return RequestingUnitRepairUnit._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.RequestingUnitRepairUnit;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.RequestingUnitRepairUnit;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -43,41 +41,41 @@ export class RequestingUnitRepairUnit implements IState {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitRepairUnit    : {
                     path            : {
                         nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
                     launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
-                    targetGridIndex : getExisted(actionPlanner.getUnitRepairTargetGridIndex()).toProto().toJson(),
+                    targetGridIndex : Helpers_Misc.getExisted(actionPlanner.getUnitRepairTargetGridIndex()).toProto().toJson(),
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingUnitRepairUnit);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitRepairUnit);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingUnitRepairUnit);
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitRepairUnit);
             actionPlanner.updateView();
 
-            reqUnitRepairUnit(
+            SinglePlayerWar_Model_SpwLocalProxy.reqUnitRepairUnit(
                 war,
                 actionPlanner.generateProtoMovePath(),
                 actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
-                getExisted(actionPlanner.getUnitRepairTargetGridIndex()),
+                Helpers_Misc.getExisted(actionPlanner.getUnitRepairTargetGridIndex()),
             );
         }
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag ended!`);
     }
 }

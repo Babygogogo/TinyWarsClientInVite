@@ -1,20 +1,22 @@
-import { Token } from "./Enums.ts";
-import type { TextReader } from "./TextReader.ts";
+import {
+    ExpressionParsers_Enums,
+    type ExpressionParsers_TextReader,
+} from "../internal.ts";
 
 export class Tokenizer {
-    private _reader         : TextReader;
+    private _reader         : ExpressionParsers_TextReader.TextReader;
     private _currentChar    = '\0';
-    private _currentToken   = Token.Unknown;
+    private _currentToken   = ExpressionParsers_Enums.Token.Unknown;
     private _number         = 0;
     private _identifier     = "";
 
-    public constructor(reader: TextReader) {
+    public constructor(reader: ExpressionParsers_TextReader.TextReader) {
         this._reader = reader;
         this.tickChar();
         this.tickToken();
     }
 
-    public getToken(): Token {
+    public getToken(): ExpressionParsers_Enums.Token {
         return this._currentToken;
     }
 
@@ -47,51 +49,51 @@ export class Tokenizer {
         // Special characters
         switch (this._currentChar) {
             case '\0':
-                this._currentToken = Token.EOF;
+                this._currentToken = ExpressionParsers_Enums.Token.EOF;
                 return;
 
             case '+':
                 this.tickChar();
-                this._currentToken = Token.Add;
+                this._currentToken = ExpressionParsers_Enums.Token.Add;
                 return;
 
             case '-':
                 this.tickChar();
-                this._currentToken = Token.Subtract;
+                this._currentToken = ExpressionParsers_Enums.Token.Subtract;
                 return;
 
             case '*':
                 this.tickChar();
-                this._currentToken = Token.Multiply;
+                this._currentToken = ExpressionParsers_Enums.Token.Multiply;
                 return;
 
             case '/':
                 this.tickChar();
-                this._currentToken = Token.Divide;
+                this._currentToken = ExpressionParsers_Enums.Token.Divide;
                 return;
 
             case '%':
                 this.tickChar();
-                this._currentToken = Token.PercentageSign;
+                this._currentToken = ExpressionParsers_Enums.Token.PercentageSign;
                 return;
 
             case '(':
                 this.tickChar();
-                this._currentToken = Token.OpenParens;
+                this._currentToken = ExpressionParsers_Enums.Token.OpenParens;
                 return;
 
             case ')':
                 this.tickChar();
-                this._currentToken = Token.CloseParens;
+                this._currentToken = ExpressionParsers_Enums.Token.CloseParens;
                 return;
 
             case '!':
                 this.tickChar();
                 if (this._getCurrentChar() === '=') {
                     this.tickChar();
-                    this._currentToken = Token.Unequal;
+                    this._currentToken = ExpressionParsers_Enums.Token.Unequal;
                 } else {
-                    this._currentToken = Token.ExclamationMark;
+                    this._currentToken = ExpressionParsers_Enums.Token.ExclamationMark;
                 }
                 return;
 
@@ -99,12 +101,12 @@ export class Tokenizer {
                 this.tickChar();
                 if (this._getCurrentChar() === '=') {
                     this.tickChar();
-                    this._currentToken = Token.Equal;
+                    this._currentToken = ExpressionParsers_Enums.Token.Equal;
                 } else if (this._getCurrentChar() === '>') {
                     this.tickChar();
-                    this._currentToken = Token.Lambda;
+                    this._currentToken = ExpressionParsers_Enums.Token.Lambda;
                 } else {
-                    this._currentToken = Token.Assign;
+                    this._currentToken = ExpressionParsers_Enums.Token.Assign;
                 }
                 return;
 
@@ -112,9 +114,9 @@ export class Tokenizer {
                 this.tickChar();
                 if (this._getCurrentChar() === '=') {
                     this.tickChar();
-                    this._currentToken = Token.GreaterEqual;
+                    this._currentToken = ExpressionParsers_Enums.Token.GreaterEqual;
                 } else {
-                    this._currentToken = Token.Greater;
+                    this._currentToken = ExpressionParsers_Enums.Token.Greater;
                 }
                 return;
 
@@ -122,9 +124,9 @@ export class Tokenizer {
                 this.tickChar();
                 if (this._getCurrentChar() === '=') {
                     this.tickChar();
-                    this._currentToken = Token.LessEqual;
+                    this._currentToken = ExpressionParsers_Enums.Token.LessEqual;
                 } else {
-                    this._currentToken = Token.Less;
+                    this._currentToken = ExpressionParsers_Enums.Token.Less;
                 }
                 return;
 
@@ -132,9 +134,9 @@ export class Tokenizer {
                 this.tickChar();
                 if (this._getCurrentChar() === '&') {
                     this.tickChar();
-                    this._currentToken = Token.LogicalAnd;
+                    this._currentToken = ExpressionParsers_Enums.Token.LogicalAnd;
                 } else {
-                    this._currentToken = Token.Unknown;
+                    this._currentToken = ExpressionParsers_Enums.Token.Unknown;
                 }
                 return;
 
@@ -142,30 +144,30 @@ export class Tokenizer {
                 this.tickChar();
                 if (this._getCurrentChar() === '|') {
                     this.tickChar();
-                    this._currentToken = Token.LogicalOr;
+                    this._currentToken = ExpressionParsers_Enums.Token.LogicalOr;
                 } else {
-                    this._currentToken = Token.Unknown;
+                    this._currentToken = ExpressionParsers_Enums.Token.Unknown;
                 }
                 return;
 
             case '?':
                 this.tickChar();
-                this._currentToken = Token.QuestionMark;
+                this._currentToken = ExpressionParsers_Enums.Token.QuestionMark;
                 return;
 
             case ':':
                 this.tickChar();
-                this._currentToken = Token.Colon;
+                this._currentToken = ExpressionParsers_Enums.Token.Colon;
                 return;
 
             case ',':
                 this.tickChar();
-                this._currentToken = Token.Comma;
+                this._currentToken = ExpressionParsers_Enums.Token.Comma;
                 return;
 
             case '.':
                 this.tickChar();
-                this._currentToken = Token.Dot;
+                this._currentToken = ExpressionParsers_Enums.Token.Dot;
                 return;
         }
 
@@ -184,7 +186,7 @@ export class Tokenizer {
 
             // Parse it
             this._number        = parseFloat(str);
-            this._currentToken  = Token.Number;
+            this._currentToken  = ExpressionParsers_Enums.Token.Number;
             return;
         }
 
@@ -200,13 +202,13 @@ export class Tokenizer {
 
             // Setup token
             this._identifier    = str;
-            this._currentToken  = Token.Identifier;
+            this._currentToken  = ExpressionParsers_Enums.Token.Identifier;
             return;
         }
 
         // unknown char
         this.tickChar();
-        this._currentToken = Token.Unknown;
+        this._currentToken = ExpressionParsers_Enums.Token.Unknown;
     }
 }
 

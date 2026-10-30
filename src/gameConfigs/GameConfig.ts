@@ -1,12 +1,16 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { EnergyTypeId } from "../cos/Constants.ts";
-import { SkillTypeId } from "../coSkills/Constants.ts";
-import { ModeId } from "../gameModes/Constants.ts";
 import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { LanguageType } from "../lang/Constants.ts";
+    WarTypes_Utils,
+    Tiles_Constants_Common,
+    Helpers_Misc,
+    Lang_Constants,
+    GameModes_Constants,
+    CoSkills_Constants,
+    Units_Constants,
+    Weathers_Constants,
+    type Cos_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type WarTypes_Constants,
+} from "../internal.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 import type { CoCategoryCfg } from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
@@ -27,17 +31,6 @@ import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTem
 import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
 import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import { CategoryId as ConstantsCategoryId } from "../tiles/constants/Common.ts";
-import {
-    CategoryId as UnitsCategoryId,
-    WeaponTypeId,
-} from "../units/Constants.ts";
-import type { WarTypeId } from "../warTypes/Constants.ts";
-import {
-    checkIsAtw,
-    checkIsMrw,
-} from "../warTypes/Utils.ts";
-import { CategoryId as WeathersCategoryId } from "../weathers/Constants.ts";
 
 export class GameConfig {
     private readonly _version                       : string;
@@ -156,25 +149,25 @@ export class GameConfig {
     public getTileTypeArrayForTileChart(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForTileChart() != null)
-            .sort((v1, v2) => getExisted(v1[1].getSortWeightForTileChart()) - getExisted(v2[1].getSortWeightForTileChart()))
+            .sort((v1, v2) => Helpers_Misc.getExisted(v1[1].getSortWeightForTileChart()) - Helpers_Misc.getExisted(v2[1].getSortWeightForTileChart()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForDamageChart(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForDamageChart() != null)
-            .sort((v1, v2) => getExisted(v1[1].getSortWeightForDamageChart()) - getExisted(v2[1].getSortWeightForDamageChart()))
+            .sort((v1, v2) => Helpers_Misc.getExisted(v1[1].getSortWeightForDamageChart()) - Helpers_Misc.getExisted(v2[1].getSortWeightForDamageChart()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForMapInfo(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForMapInfo() != null)
-            .sort((v1, v2) => getExisted(v1[1].getSortWeightForMapInfo()) - getExisted(v2[1].getSortWeightForMapInfo()))
+            .sort((v1, v2) => Helpers_Misc.getExisted(v1[1].getSortWeightForMapInfo()) - Helpers_Misc.getExisted(v2[1].getSortWeightForMapInfo()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForUnattackable(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getMaxHp() == null)
-            .sort((v1, v2) => getExisted(v1[1].getSortWeightForTileChart()) - getExisted(v2[1].getSortWeightForTileChart()))
+            .sort((v1, v2) => Helpers_Misc.getExisted(v1[1].getSortWeightForTileChart()) - Helpers_Misc.getExisted(v2[1].getSortWeightForTileChart()))
             .map(v => v[0]);
     }
 
@@ -192,9 +185,9 @@ export class GameConfig {
         return cfg ? cfg.getTileTypeIds() : null;
     }
     public checkIsTileTypeInCategory(tileType: number, tileCategory: number): boolean {
-        if (tileCategory === ConstantsCategoryId.All) {
+        if (tileCategory === Tiles_Constants_Common.CategoryId.All) {
             return true;
-        } else if (tileCategory === ConstantsCategoryId.None) {
+        } else if (tileCategory === Tiles_Constants_Common.CategoryId.None) {
             return false;
         } else {
             const typeArray = this._getTileTypeIdsByCategory(tileCategory);
@@ -226,9 +219,9 @@ export class GameConfig {
         return cfg ? cfg.getUnitTypeIds() : null;
     }
     public checkIsUnitTypeInCategory(unitType: number, unitCategory: number): boolean {
-        if (unitCategory === UnitsCategoryId.All) {
+        if (unitCategory === Units_Constants.CategoryId.All) {
             return true;
-        } else if (unitCategory === UnitsCategoryId.None) {
+        } else if (unitCategory === Units_Constants.CategoryId.None) {
             return false;
         } else {
             const typeArray = this.getUnitTypesByCategory(unitCategory);
@@ -272,9 +265,9 @@ export class GameConfig {
                 return weatherType;
             }
         }
-        throw newError(`No default weather type.`);
+        throw Helpers_Misc.newError(`No default weather type.`);
     }
-    public getNextWeatherType(weatherType: Undefinable<number>): number {
+    public getNextWeatherType(weatherType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): number {
         const weatherTypeArray = this.getAllWeatherTypeArray();
         return weatherType == null
             ? weatherTypeArray[0]
@@ -296,9 +289,9 @@ export class GameConfig {
         return cfg ? cfg.getWeatherTypeIds() : null;
     }
     public checkIsWeatherTypeInCategory(weatherType: number, category: number): boolean {
-        if (category === WeathersCategoryId.All) {
+        if (category === Weathers_Constants.CategoryId.All) {
             return true;
-        } else if (category === WeathersCategoryId.None) {
+        } else if (category === Weathers_Constants.CategoryId.None) {
             return false;
         } else {
             const typeArray = this.getWeatherTypeIdsByCategory(category);
@@ -325,8 +318,8 @@ export class GameConfig {
         const coCategoryId = this.getCoBasicCfg(coId)?.getCoCategoryId();
         return coCategoryId == null ? null : this.getCoCategoryCfg(coCategoryId);
     }
-    public getEnabledCoCategoryIdArray(warType: WarTypeId): number[] {
-        if ((checkIsAtw(warType)) || (checkIsMrw(warType))) {
+    public getEnabledCoCategoryIdArray(warType: WarTypes_Constants.WarTypeId): number[] {
+        if ((WarTypes_Utils.checkIsAtw(warType)) || (WarTypes_Utils.checkIsMrw(warType))) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
                 .map(v => v.getCoCategoryId()))]
@@ -335,8 +328,8 @@ export class GameConfig {
             return this.getAllEnabledCoCategoryIdArray();
         }
     }
-    public getEnabledCoCategoryIdArrayByGameModeId(gameModeId: ModeId): number[] {
-        if ((gameModeId === ModeId.AutoTourney) || (gameModeId === ModeId.RankedMatch)) {
+    public getEnabledCoCategoryIdArrayByGameModeId(gameModeId: GameModes_Constants.ModeId): number[] {
+        if ((gameModeId === GameModes_Constants.ModeId.AutoTourney) || (gameModeId === GameModes_Constants.ModeId.RankedMatch)) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
                 .map(v => v.getCoCategoryId()))]
@@ -391,27 +384,27 @@ export class GameConfig {
                 return coId;
             }
         }
-        throw newError(`No available CO ID for coCategoryId: ${coCategoryId}.`);
+        throw Helpers_Misc.newError(`No available CO ID for coCategoryId: ${coCategoryId}.`);
     }
     public getCoNameAndTierText(coId: number): string | null {
         return this.getCoBasicCfg(coId)?.getName() ?? null;
     }
-    public getCoEnergyType(coId: number): EnergyTypeId | null {
+    public getCoEnergyType(coId: number): Cos_Constants.EnergyTypeId | null {
         return this.getCoBasicCfg(coId)?.getCoEnergyTypeId() ?? null;
     }
     public checkIsOriginCo(coId: number): boolean {
         return this.getCoBasicCfg(coId)?.getDataDesigner() === `Intelligent Systems`;
     }
 
-    public getEnabledCoArray(warType: WarTypeId): CoBasicCfg[] {
-        if ((checkIsAtw(warType)) || (checkIsMrw(warType))) {
+    public getEnabledCoArray(warType: WarTypes_Constants.WarTypeId): CoBasicCfg[] {
+        if ((WarTypes_Utils.checkIsAtw(warType)) || (WarTypes_Utils.checkIsMrw(warType))) {
             return this._enabledCoCfgArrayForMrwAndAtw ??= [...this._coBasicCfgDict.values()].filter(v => (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw())).sort(sorterForCoBasicCfgArray);
         } else {
             return this.getAllEnabledCoArray();
         }
     }
-    public getEnabledCoArrayByGameModeId(gameModeId: ModeId): CoBasicCfg[] {
-        if ((gameModeId === ModeId.AutoTourney) || (gameModeId === ModeId.RankedMatch)) {
+    public getEnabledCoArrayByGameModeId(gameModeId: GameModes_Constants.ModeId): CoBasicCfg[] {
+        if ((gameModeId === GameModes_Constants.ModeId.AutoTourney) || (gameModeId === GameModes_Constants.ModeId.RankedMatch)) {
             return this._enabledCoCfgArrayForMrwAndAtw ??= [...this._coBasicCfgDict.values()].filter(v => (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw())).sort(sorterForCoBasicCfgArray);
         } else {
             return this.getAllEnabledCoArray();
@@ -447,16 +440,16 @@ export class GameConfig {
     public getCoSkillCfg(skillId: number): CoSkillCfg | null {
         return this._coSkillCfgDict.get(skillId) ?? null;
     }
-    public getCoSkillArray(coId: number, skillType: SkillTypeId): number[] | null {
+    public getCoSkillArray(coId: number, skillType: CoSkills_Constants.SkillTypeId): number[] | null {
         const coConfig = this.getCoBasicCfg(coId);
         if (coConfig == null) {
             return null;
         }
 
         switch (skillType) {
-            case SkillTypeId.Passive    : return coConfig.getPassiveSkillIds();
-            case SkillTypeId.Power      : return coConfig.getPowerSkillIds();
-            case SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds();
+            case CoSkills_Constants.SkillTypeId.Passive    : return coConfig.getPassiveSkillIds();
+            case CoSkills_Constants.SkillTypeId.Power      : return coConfig.getPowerSkillIds();
+            case CoSkills_Constants.SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds();
             default                     : return null;
         }
     }
@@ -471,21 +464,19 @@ export class GameConfig {
         return [...this._moveTypeCfgDict].map(v => v[0]);
     }
 
-
-
     public getTextCfg(textId: number): TextCfg | null {
         return this._textCfgDict.get(textId) ?? null;
     }
-    public getTextArray(textId: number, languageType: LanguageType): string[] | null {
+    public getTextArray(textId: number, languageType: Lang_Constants.LanguageType): string[] | null {
         const cfg = this.getTextCfg(textId);
         if (cfg == null) {
             return null;
         }
 
         switch (languageType) {
-            case LanguageType.Chinese   : return cfg.getTextArray0();
-            case LanguageType.English   : return cfg.getTextArray1();
-            case LanguageType.Spanish   : return cfg.getTextArray2();
+            case Lang_Constants.LanguageType.Chinese   : return cfg.getTextArray0();
+            case Lang_Constants.LanguageType.English   : return cfg.getTextArray1();
+            case Lang_Constants.LanguageType.Spanish   : return cfg.getTextArray2();
             default                                                 : return null;
         }
     }
@@ -502,9 +493,9 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
     }
 
     {
-        const categoryId = ConstantsCategoryId.None;
+        const categoryId = Tiles_Constants_Common.CategoryId.None;
         if (dst.has(categoryId)) {
-            (getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
+            (Helpers_Misc.getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
         } else {
             dst.set(categoryId, TileCategoryCfg.fromJson({
                 tileCategoryId : categoryId,
@@ -514,10 +505,10 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
     }
 
     {
-        const categoryId        = ConstantsCategoryId.All;
+        const categoryId        = Tiles_Constants_Common.CategoryId.All;
         const allTileTypeIds    = tileTemplateCfgs.map(v => v.getTileTypeId());
         if (dst.has(categoryId)) {
-            getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
+            Helpers_Misc.getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
         } else {
             dst.set(categoryId, TileCategoryCfg.fromJson({
                 tileCategoryId : categoryId,
@@ -535,9 +526,9 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
     }
 
     {
-        const categoryId = UnitsCategoryId.None;
+        const categoryId = Units_Constants.CategoryId.None;
         if (dst.has(categoryId)) {
-            (getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
+            (Helpers_Misc.getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
         } else {
             dst.set(categoryId, UnitCategoryCfg.fromJson({
                 unitCategoryId : categoryId,
@@ -547,10 +538,10 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
     }
 
     {
-        const categoryType      = UnitsCategoryId.All;
+        const categoryType      = Units_Constants.CategoryId.All;
         const allUnitTypeArray  = unitTemplateCfgs.map(v => v.getUnitTypeId());
         if (dst.has(categoryType)) {
-            getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
+            Helpers_Misc.getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
         } else {
             dst.set(categoryType, UnitCategoryCfg.fromJson({
                 unitCategoryId : categoryType,
@@ -678,9 +669,9 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
     }
 
     {
-        const categoryId = WeathersCategoryId.None;
+        const categoryId = Weathers_Constants.CategoryId.None;
         if (dst.has(categoryId)) {
-            getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
+            Helpers_Misc.getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
         } else {
             dst.set(categoryId, WeatherCategoryCfg.fromJson({
                 weatherCategoryId : categoryId,
@@ -690,10 +681,10 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
     }
 
     {
-        const categoryId        = WeathersCategoryId.All;
+        const categoryId        = Weathers_Constants.CategoryId.All;
         const allWeatherTypeIds = weatherCfgs.map(v => v.getWeatherTypeId());
         if (dst.has(categoryId)) {
-            getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);
+            Helpers_Misc.getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);
         } else {
             dst.set(categoryId, WeatherCategoryCfg.fromJson({
                 weatherCategoryId : categoryId,
@@ -730,7 +721,7 @@ function _getSecondaryWeaponFlags(chartCfgs: Map<number, { [armorType: number]: 
     for (const [attackerType, cfgs] of chartCfgs) {
         let hasWeapon = false;
         for (const armorType in cfgs) {
-            const cfg = cfgs[armorType][WeaponTypeId.Secondary];
+            const cfg = cfgs[armorType][Units_Constants.WeaponTypeId.Secondary];
             if ((cfg) && (cfg.getDamage() != null)) {
                 hasWeapon = true;
                 break;

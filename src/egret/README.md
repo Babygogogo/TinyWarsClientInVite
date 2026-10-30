@@ -1,24 +1,23 @@
 # Egret modules
 
-Keep application imports pointed at the public modules (`Egret`, `Sys`, `Web`,
-`Res`, and `Processor`). These entry points preserve the existing exports and
-load `Bootstrap` once to connect the platform and resource implementations.
+Engine implementations and application code import the `Egret_*` namespaces
+from `../internal.ts`. Do not import engine implementation files directly:
+the internal entry point controls evaluation order for the shared ESM cycles.
+`Egret`, `Path`, `Lifecycle`, `Sys`, `Res`, `Web`, and `Processor` evaluate before
+application modules that use their classes.
 
-`*Core` modules contain the implementations. They must not import the public
-entry points or `Bootstrap`. Reverse runtime dependencies are accessed through
-`Runtime`; type-only dependencies use `import type`. This lets every class be
-defined before platform constructors or resource processors are accessed, without
-depending on the application's import order.
+There are no Bootstrap/Runtime registration modules or Core facades. Reference
+platform constructors directly, such as `Egret_Web.WebHttpRequest`, and use
+`Egret_Sys.SystemTicker.instance` for the ticker. Resource state is exported as
+`Egret_Res.host`, `Egret_Res.config`, and `Egret_Res.queue`; built-in processors and
+`Egret_Processor._map` are initialized during module evaluation.
 
-`Lifecycle` and `Xml` depend directly on core definitions and do not require
-runtime registration for their own APIs.
-
-Run `npx eslint src/vendor/egret --max-warnings 0` to lint the engine modules.
+Run `npx eslint src/egret --max-warnings 0` to lint the engine modules.
 Mutable display-object ancestry cursors retain narrowly scoped `no-this-alias`
 exceptions; other aliases use `this` directly. Type-only class fields use
 `declare` rather than interface/class merging, without adding runtime fields.
 
-Run `npm run testEgretCircleRef` to check all public entry points, detect cycles in emitted
-JavaScript imports, and verify shared engine state and resource processors.
+Run `npm run testEgretCircleRef` to check initialization through the internal entry
+point, absence of the old registration layer, shared engine state, and resource processors.
 The tests use Node's experimental VM modules to execute TypeScript as native ES
 modules in isolated browser-like contexts.

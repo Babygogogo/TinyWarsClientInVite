@@ -1,58 +1,48 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import {
-    getTileMapViewClass,
-    getTileClass,
-} from "../gameHelpers/GhFactory.ts";
-import {
-    createEmptyMap,
-    createRange,
-} from "../helpers/Collection.ts";
-import {
-    newError,
-    getExisted,
-} from "../helpers/Misc.ts";
-import {
-    GroupSize,
-    GroupCount,
-    MinId,
-    MaxId,
-} from "../locations/Constants.ts";
-import { encode } from "../locations/Utils.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import { PlayerIndex } from "../players/Constants.ts";
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MapSize,
+    Tiles_Tile,
+    Tiles_TileMapView,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Utils_ClientErrorCode,
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    Locations_Utils,
+    Visibilities_Utils,
+    Tiles_Utils_CustomName,
+    Helpers_Misc,
+    Locations_Constants,
+    Players_Constants,
+    Tiles_Constants_Common,
+    Notifications_TypeId,
+    type Tiles_ITile,
+    type Tiles_ITileMap,
+    type Tiles_ITileMapView,
+} from "../internal.ts";
+
 import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-import { TileTypeId } from "./constants/Common.ts";
-import type { ITile } from "./ITile.ts";
-import type { ITileMap } from "./ITileMap.ts";
-import type { ITileMapView } from "./ITileMapView.ts";
-import { getErrorCodeForTileCustomNameArray } from "./utils/CustomName.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { getAllTilesVisibleToTeams } from "../visibilities/Utils.ts";
 
-export class TileMap implements ITileMap {
-    private _map?                           : ITile[][];
-    private _tileCustomNameArray?           : Undefinable<TileCustomName[]>;
-    private _mapSize?                       : MapSize;
+export class TileMap implements Tiles_ITileMap.ITileMap {
+    private _map?                           : Tiles_ITile.ITile[][];
+    private _tileCustomNameArray?           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>;
+    private _mapSize?                       : AuxiliaryTypes_MapSize.MapSize;
     private _visibleGroupedLocationIdArray  : number[] = [];
-    private _war?                           : IBwWar;
+    private _war?                           : BaseWar_Interface_IBwWar.IBwWar;
 
-    private readonly _view                  = new (getTileMapViewClass())();
+    private readonly _view                  = new Tiles_TileMapView.TileMapView();
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void {
         if (data == null) {
-            throw newError(`Empty data.`, ClientErrorCode.BwTileMap_Init_00);
+            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_00);
         }
 
         const tiles     = data.getTiles();
@@ -61,39 +51,39 @@ export class TileMap implements ITileMap {
         if ((!mapSize.checkIsValid()) ||
             (mapWidth * mapHeight !== tiles.length)
         ) {
-            throw newError(`Invalid mapSize.`, ClientErrorCode.BwTileMap_Init_02);
+            throw Helpers_Misc.newError(`Invalid mapSize.`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_02);
         }
 
         const tileCustomNameArray = data.getTileCustomNameArray();
         {
-            const errorCode = getErrorCodeForTileCustomNameArray(tileCustomNameArray);
+            const errorCode = Tiles_Utils_CustomName.getErrorCodeForTileCustomNameArray(tileCustomNameArray);
             if (errorCode) {
-                throw newError(`Invalid tileCustomNameArray.`, errorCode);
+                throw Helpers_Misc.newError(`Invalid tileCustomNameArray.`, errorCode);
             }
         }
 
-        const map = createEmptyMap<ITile>(mapWidth, mapHeight);
+        const map = Helpers_Collection.createEmptyMap<Tiles_ITile.ITile>(mapWidth, mapHeight);
         for (const tileData of tiles) {
-            const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()), ClientErrorCode.BwTileMap_Init_03);
+            const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_03);
             if (!gridIndex.checkIsInsideMap(mapSize)) {
-                throw newError(`The gridIndex is not inside the map.`, ClientErrorCode.BwTileMap_Init_04);
+                throw Helpers_Misc.newError(`The gridIndex is not inside the map.`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_04);
             }
 
             const gridX = gridIndex.getX();
             const gridY = gridIndex.getY();
             if (map[gridX][gridY]) {
-                throw newError(`Duplicated gridIndex: ${gridX}, ${gridY}`, ClientErrorCode.BwTileMap_Init_05);
+                throw Helpers_Misc.newError(`Duplicated gridIndex: ${gridX}, ${gridY}`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_05);
             }
 
-            const tile = new (getTileClass())();
+            const tile = new Tiles_Tile.Tile();
             tile.init(tileData, gameConfig);
 
             const playerIndex = tile.getPlayerIndex();
             if ((playerIndex == null)                                   ||
-                (playerIndex < PlayerIndex.Neutral)   ||
+                (playerIndex < Players_Constants.PlayerIndex.Neutral)   ||
                 (playerIndex > playersCountUnneutral)
             ) {
-                throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwTileMap_Init_06);
+                throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwTileMap_Init_06);
             }
 
             map[gridX][gridY] = tile;
@@ -107,21 +97,21 @@ export class TileMap implements ITileMap {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void {
         const map = this.getMap();
         for (const tileData of data ? data.getTiles() || [] : []) {
-            const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()));
+            const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()));
             map[gridIndex.getX()][gridIndex.getY()].fastInit(tileData, gameConfig);
         }
 
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._setWar(war);
         this.forEachTile(tile => tile.startRunning(war));
     }
@@ -176,50 +166,50 @@ export class TileMap implements ITileMap {
         });
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
     }
-    public getWar(): IBwWar {
-        return getExisted(this._war);
+    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war);
     }
 
-    private _setMap(map: ITile[][]): void {
+    private _setMap(map: Tiles_ITile.ITile[][]): void {
         this._map = map;
     }
-    public getMap(): ITile[][] {
-        return getExisted(this._map);
+    public getMap(): Tiles_ITile.ITile[][] {
+        return Helpers_Misc.getExisted(this._map);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): ITileMapView {
+    public getView(): Tiles_ITileMapView.ITileMapView {
         return this._view;
     }
 
-    public forEachTile(func: (t: ITile) => any): void {
+    public forEachTile(func: (t: Tiles_ITile.ITile) => any): void {
         for (const column of this.getMap()) {
             for (const tile of column) {
                 func(tile);
             }
         }
     }
-    public getTile(gridIndex: GridIndex): ITile {
+    public getTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Tiles_ITile.ITile {
         return this.getMap()[gridIndex.getX()][gridIndex.getY()];
     }
-    public getTileWithGridId(gridId: number): ITile {
+    public getTileWithGridId(gridId: number): Tiles_ITile.ITile {
         const width = this.getMapSize().getWidth();
         return this.getMap()[gridId % width][Math.floor(gridId / width)];
     }
-    public getAllTiles(): ITile[] {
-        const tileArray: ITile[] = [];
+    public getAllTiles(): Tiles_ITile.ITile[] {
+        const tileArray: Tiles_ITile.ITile[] = [];
         this.forEachTile(tile => tileArray.push(tile));
         return tileArray;
     }
-    public getTiles(predicate: (tile: ITile) => boolean): ITile[] {
+    public getTiles(predicate: (tile: Tiles_ITile.ITile) => boolean): Tiles_ITile.ITile[] {
         const map               = this.getMap();
         const { width, height } = this.getMapSize().getWH();
-        const tiles             : ITile[] = [];
+        const tiles             : Tiles_ITile.ITile[] = [];
         for (let i = 0; i < width; ++i) {
             for (let j = 0; j < height; ++j) {
                 const tile = map[i][j];
@@ -230,9 +220,9 @@ export class TileMap implements ITileMap {
         }
         return tiles;
     }
-    public getGridIndexListWithAnyLocationId(locationIdArray: number[]): GridIndex[] {
-        const list                      : GridIndex[] = [];
-        const groupedLocationIdArray    = encode(locationIdArray);
+    public getGridIndexListWithAnyLocationId(locationIdArray: number[]): AuxiliaryTypes_GridIndex.GridIndex[] {
+        const list                      : AuxiliaryTypes_GridIndex.GridIndex[] = [];
+        const groupedLocationIdArray    = Locations_Utils.encode(locationIdArray);
         for (const column of this.getMap()) {
             for (const tile of column) {
                 if (tile.checkHasAnyLocationIdByGroupedLocationIdArray(groupedLocationIdArray)) {
@@ -243,7 +233,7 @@ export class TileMap implements ITileMap {
         return list;
     }
 
-    public getConnectedGridIndexArrayWithTileType(origin: GridIndex, tileType: number): GridIndex[] {
+    public getConnectedGridIndexArrayWithTileType(origin: AuxiliaryTypes_GridIndex.GridIndex, tileType: number): AuxiliaryTypes_GridIndex.GridIndex[] {
         const plasmas           = [origin];
         const mapSize           = this.getMapSize();
         const searchedIndexes   = new Set<number>([origin.getGridId(mapSize)]);
@@ -267,23 +257,23 @@ export class TileMap implements ITileMap {
     }
 
     private _setMapSize(width: number, height: number): void {
-        this._mapSize = new MapSize(width, height);
+        this._mapSize = new AuxiliaryTypes_MapSize.MapSize(width, height);
     }
-    public getMapSize(): MapSize {
-        return getExisted(this._mapSize);
+    public getMapSize(): AuxiliaryTypes_MapSize.MapSize {
+        return Helpers_Misc.getExisted(this._mapSize);
     }
 
-    public getTileCustomNameArray(): Undefinable<TileCustomName[]> {
+    public getTileCustomNameArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]> {
         return this._tileCustomNameArray;
     }
-    public setTileCustomNameArray(arr: Undefinable<TileCustomName[]>): void {
+    public setTileCustomNameArray(arr: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>): void {
         this._tileCustomNameArray = arr;
     }
 
     public getTilesCountForPlayer(playerIndex: number): number {
         return this.getTilesCount(v => v.getPlayerIndex() === playerIndex);
     }
-    public getTilesCount(func: (t: ITile) => boolean): number {
+    public getTilesCount(func: (t: Tiles_ITile.ITile) => boolean): number {
         let count = 0;
         for (const column of this.getMap()) {
             for (const tile of column) {
@@ -315,7 +305,7 @@ export class TileMap implements ITileMap {
                 }
             });
         } else {
-            for (const tile of getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
+            for (const tile of Visibilities_Utils.getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
                 if (tile.getPlayerIndex() === playerIndex) {
                     bonus += tile.getGlobalAttackBonus();
                 }
@@ -325,7 +315,7 @@ export class TileMap implements ITileMap {
         if (useDamagePreviewSettings) {
             const war                       = this.getWar();
             const settings                  = war.getDamagePreviewSettings();
-            const commandTowerTemplateCfg   = war.getGcData().getTileTemplateCfg(TileTypeId.CommandTower);
+            const commandTowerTemplateCfg   = war.getGcData().getTileTemplateCfg(Tiles_Constants_Common.TileTypeId.CommandTower);
             bonus                           += (settings.isEnabled ? settings.settings.find(v => v.playerIndex === playerIndex)?.extraCommandTowerCount ?? 0 : 0)
                 * (commandTowerTemplateCfg == null ? 0 : commandTowerTemplateCfg.getGlobalAttackBonus());
         }
@@ -341,7 +331,7 @@ export class TileMap implements ITileMap {
                 }
             });
         } else {
-            for (const tile of getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
+            for (const tile of Visibilities_Utils.getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
                 if (tile.getPlayerIndex() === playerIndex) {
                     bonus += tile.getGlobalDefenseBonus();
                 }
@@ -351,7 +341,7 @@ export class TileMap implements ITileMap {
         if (useDamagePreviewSettings) {
             const war                       = this.getWar();
             const settings                  = war.getDamagePreviewSettings();
-            const commandTowerTemplateCfg   = war.getGcData().getTileTemplateCfg(TileTypeId.CommandTower);
+            const commandTowerTemplateCfg   = war.getGcData().getTileTemplateCfg(Tiles_Constants_Common.TileTypeId.CommandTower);
             bonus                           += (settings.isEnabled ? settings.settings.find(v => v.playerIndex === playerIndex)?.extraCommandTowerCount ?? 0 : 0)
                 * (commandTowerTemplateCfg == null ? 0 : commandTowerTemplateCfg.getGlobalDefenseBonus());
         }
@@ -365,7 +355,7 @@ export class TileMap implements ITileMap {
     public setVisibleGroupedLocationIdArray(idArray: number[]): void {
         this._visibleGroupedLocationIdArray = idArray;
         this.getView().resetLocationLayer();
-        dispatch(TypeId.BwTileMapLocationVisibleSet);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileMapLocationVisibleSet);
     }
     public getVisibleGroupedLocationIdArray(): number[] {
         return this._visibleGroupedLocationIdArray;
@@ -377,26 +367,26 @@ export class TileMap implements ITileMap {
             return false;
         }
 
-        const groupedLocationId = idArray[Math.floor((locationId - 1) / GroupSize)];
-        return !!((groupedLocationId >>> ((locationId - 1) % GroupSize)) & 1);
+        const groupedLocationId = idArray[Math.floor((locationId - 1) / Locations_Constants.GroupSize)];
+        return !!((groupedLocationId >>> ((locationId - 1) % Locations_Constants.GroupSize)) & 1);
     }
     public setIsLocationVisible(locationId: number, isVisible: boolean): void {
-        const groupedLocationIdArray  = this._visibleGroupedLocationIdArray ??= new Array<number>(GroupCount).fill(0);
-        const index                   = Math.floor((locationId - 1) / GroupSize);
+        const groupedLocationIdArray  = this._visibleGroupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
+        const index                   = Math.floor((locationId - 1) / Locations_Constants.GroupSize);
         if (isVisible) {
-            groupedLocationIdArray[index] |= 1 << ((locationId - 1) % GroupSize);
+            groupedLocationIdArray[index] |= 1 << ((locationId - 1) % Locations_Constants.GroupSize);
         } else {
-            groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % GroupSize));
+            groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
         this.getView().resetLocationLayer();
-        dispatch(TypeId.BwTileMapLocationVisibleSet);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileMapLocationVisibleSet);
     }
     public setAllLocationVisible(isVisible: boolean): void {
         if (!isVisible) {
             this.setVisibleGroupedLocationIdArray([]);
         } else {
-            const locationIdArray = createRange(MinId, MaxId + 1, 1);
-            this.setVisibleGroupedLocationIdArray(encode(locationIdArray));
+            const locationIdArray = Helpers_Collection.createRange(Locations_Constants.MinId, Locations_Constants.MaxId + 1, 1);
+            this.setVisibleGroupedLocationIdArray(Locations_Utils.encode(locationIdArray));
         }
     }
 }

@@ -1,12 +1,14 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { GridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
 import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 
 export class PositionFilter {
     private _conLocationIdArray         : number[] = [];
     private _conGridIndexArray          : GridIndex[] = [];
-    private _conGridIndexMinDistance?   : Undefinable<ValueAndComparator>;
-    private _conLocationMinDistance?    : Undefinable<ValueAndComparator>;
+    private _conGridIndexMinDistance?   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator>;
+    private _conLocationMinDistance?    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator>;
     private _conGridXArray              : number[] = [];
     private _conGridYArray              : number[] = [];
 
@@ -35,17 +37,17 @@ export class PositionFilter {
         this._conGridIndexArray = value.map(v => v.clone());
     }
 
-    public getConGridIndexMinDistance(): Undefinable<ValueAndComparator> {
+    public getConGridIndexMinDistance(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator> {
         return this._conGridIndexMinDistance;
     }
-    public setConGridIndexMinDistance(value: Undefinable<ValueAndComparator>): void {
+    public setConGridIndexMinDistance(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator>): void {
         this._conGridIndexMinDistance = value?.clone();
     }
 
-    public getConLocationMinDistance(): Undefinable<ValueAndComparator> {
+    public getConLocationMinDistance(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator> {
         return this._conLocationMinDistance;
     }
-    public setConLocationMinDistance(value: Undefinable<ValueAndComparator>): void {
+    public setConLocationMinDistance(value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparator>): void {
         this._conLocationMinDistance = value?.clone();
     }
 

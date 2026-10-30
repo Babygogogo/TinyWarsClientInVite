@@ -1,35 +1,34 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getSkinButtonBackground,
-    getCoEye,
-} from "../../helpers/ImageSource.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { AliveStateId } from "../../players/Constants.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiCoInfo } from "../../ui/interfaces/IUiCoInfo.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    Players_Constants,
+    Tween_Executor,
+    Helpers_ImageSource,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiCoInfo,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war         : IBwWar;
+    war         : BaseWar_Interface_IBwWar.IBwWar;
     playerIndex : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _btnClose!     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listCo!       : IUiScrollList<DataForCoRenderer>;
-    private readonly _uiCoInfo!     : IUiCoInfo;
+    private readonly _listCo!       : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCoRenderer>;
+    private readonly _uiCoInfo!     : Ui_Interfaces_IUiCoInfo.IUiCoInfo;
 
     private _previewingPlayerIndex  : number | null = null;
 
@@ -38,7 +37,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnClose,   callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -86,7 +85,7 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0140);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0140);
     }
 
     private async _updateListCo(): Promise<void> {
@@ -102,7 +101,7 @@ export class Panel extends UiPanel<OpenData> {
             dataArray.push({
                 coId        : player.getCoId(),
                 skinId      : player.getUnitAndTileSkinId(),
-                isAlive     : player.getAliveState() !== AliveStateId.Dead,
+                isAlive     : player.getAliveState() !== Players_Constants.AliveStateId.Dead,
                 playerIndex : player.getPlayerIndex(),
                 gameConfig  : gameConfig,
                 panel       : this,
@@ -129,19 +128,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForCoRenderer extends UiListItemData {
+interface DataForCoRenderer extends Ui_Types_UiListItemData.UiListItemData {
     playerIndex : number;
     skinId      : number;
     coId        : number;
     isAlive     : boolean;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     panel       : Panel;
 }
-class CoRenderer extends UiListItemRenderer<DataForCoRenderer> {
-    private readonly _imgBg!            : IUiImage;
-    private readonly _imgSelected!      : IUiImage;
-    private readonly _imgCo!            : IUiImage;
-    private readonly _labelPlayerIndex! : IUiLabel;
+class CoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCoRenderer> {
+    private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelPlayerIndex! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -151,13 +150,13 @@ class CoRenderer extends UiListItemRenderer<DataForCoRenderer> {
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -176,8 +175,8 @@ class CoRenderer extends UiListItemRenderer<DataForCoRenderer> {
             return;
         }
 
-        this._imgBg.loadSource(getSkinButtonBackground(openData.skinId));
+        this._imgBg.loadSource(Helpers_ImageSource.getSkinButtonBackground(openData.skinId));
         this._labelPlayerIndex.setText(`P${openData.playerIndex}`);
-        this._imgCo.loadSource(getCoEye(openData.gameConfig, openData.coId, openData.isAlive) ?? ``);
+        this._imgCo.loadSource(Helpers_ImageSource.getCoEye(openData.gameConfig, openData.coId, openData.isAlive) ?? ``);
     }
 }

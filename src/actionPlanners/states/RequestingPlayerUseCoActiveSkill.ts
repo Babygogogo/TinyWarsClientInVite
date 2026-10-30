@@ -1,41 +1,39 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { SkillTypeId } from "../../coSkills/Constants.ts";
 import {
-    getMpwWarClass,
-    getSpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
-import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { reqPlayerUseCoActiveSkill } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    type CoSkills_Constants,
+    Helpers_Misc,
+    MultiPlayerWar_Model_MpwProxy,
+    SinglePlayerWar_Model_SpwLocalProxy,
+} from "../../internal.ts";
 
-export class RequestingPlayerUseCoActiveSkill implements IState {
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+
+export class RequestingPlayerUseCoActiveSkill implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new RequestingPlayerUseCoActiveSkill();
 
     public static getInstance(): RequestingPlayerUseCoActiveSkill {
         return RequestingPlayerUseCoActiveSkill._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.RequestingPlayerUseCoActiveSkill;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.RequestingPlayerUseCoActiveSkill;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -45,26 +43,26 @@ export class RequestingPlayerUseCoActiveSkill implements IState {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         this.doApplyOnChooseAction(
             actionPlanner,
-            getExisted(actionPlanner.getCoActiveSkillTypeId()),
+            Helpers_Misc.getExisted(actionPlanner.getCoActiveSkillTypeId()),
             actionPlanner.getCoActiveSkillTargetGridIndexArray(),
         );
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`RequestingPlayerUseCoActiveSkillState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`RequestingPlayerUseCoActiveSkillState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner, coSkillTypeId: SkillTypeId, targetGridIndexArray: GridIndex[] | null): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, coSkillTypeId: CoSkills_Constants.SkillTypeId, targetGridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[] | null): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoPlayerUseCoSkill  : {
                     skillType               : coSkillTypeId,
@@ -72,14 +70,14 @@ export class RequestingPlayerUseCoActiveSkill implements IState {
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingPlayerUseCoActiveSkill);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingPlayerUseCoActiveSkill);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingPlayerUseCoActiveSkill);
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingPlayerUseCoActiveSkill);
             actionPlanner.updateView();
 
-            reqPlayerUseCoActiveSkill({
+            SinglePlayerWar_Model_SpwLocalProxy.reqPlayerUseCoActiveSkill({
                 war                     : war,
                 skillType               : coSkillTypeId,
                 targetGridIndexArray    : targetGridIndexArray,

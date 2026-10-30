@@ -1,8 +1,10 @@
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
-import type { IManager } from "./IManager.ts";
+import {
+    type Weathers_IManager,
+    type Ui_Interfaces_IUiContainer,
+} from "../internal.ts";
 
-export interface IView extends IUiContainer {
-    init(manager: IManager): void;
+export interface IView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(manager: Weathers_IManager.IManager): void;
 
     startRunningView(): void;
     stopRunningView(): void;

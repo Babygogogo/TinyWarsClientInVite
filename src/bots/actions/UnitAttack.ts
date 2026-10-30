@@ -1,26 +1,22 @@
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
 import {
-    IsNeedVisibility,
-    getBestScoreAndAction,
-} from "../Utils.ts";
-import { getEstimatedBattleInfo } from "../../damageCalculators/Utils.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
+    Utils_ClientErrorCode,
+    AuxiliaryTypes_GridIndex,
+    Bots_Utils,
+    Timer_TimerModel,
+    Visibilities_Utils,
+    DamageCalculators_Utils,
+    Helpers_Misc,
+    type Bots_CommonParams,
+    type Tiles_ITile,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import type { BattleDamageInfo } from "../../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type { ITile } from "../../tiles/ITile.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { checkIsUnitOnMapVisibleToTeam } from "../../visibilities/Utils.ts";
 
-export async function getScoreAndActionUnitAttack(commonParams: CommonParams, unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const minRange = unit.getMinAttackRange();
     if (minRange == null) {
@@ -51,7 +47,7 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
 
         const unitOnDestination = unitMap.getUnitOnMap(destination);
         if ((pathLength > 1) && (unitOnDestination)) {
-            if (checkIsUnitOnMapVisibleToTeam({
+            if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war                 : war,
                 observerTeamIndex   : teamIndex,
                 gridIndex           : destination,
@@ -66,10 +62,10 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
     }
 
     const totalMoveCost = destinationNode.getTotalMoveCost();
-    const promiseArray  : Promise<ScoreAndAction>[] = [];
+    const promiseArray  : Promise<Bots_Types.ScoreAndAction>[] = [];
     for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: minRange, maxDistance: maxRange, mapSize: commonParams.getMapSize() })) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
-        if ((IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
+        if ((Bots_Utils.IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
             continue;
         }
 
@@ -101,9 +97,9 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
         }
 
         promiseArray.push((async () => {
-            await checkAndCallLater();
+            await Timer_TimerModel.checkAndCallLater();
 
-            const battleInfo = getEstimatedBattleInfo({
+            const battleInfo = DamageCalculators_Utils.getEstimatedBattleInfo({
                 war                         : war,
                 movePath1                   : pathNodes.map(v => v.getGridIndex()),
                 launchUnitId1               : launchUnitId,
@@ -143,24 +139,24 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
         })());
     }
 
-    return getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
+    return Bots_Utils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
 }
 
 async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitGridIndex, battleDamageInfoArray }: {
-    commonParams            : CommonParams;
-    focusUnit               : IUnit;
-    focusUnitGridIndex      : GridIndex;
+    commonParams            : Bots_CommonParams.CommonParams;
+    focusUnit               : Units_IUnit.IUnit;
+    focusUnitGridIndex      : AuxiliaryTypes_GridIndex.GridIndex;
     battleDamageInfoArray   : BattleDamageInfo[];
 }): Promise<number> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     const focusTeamIndex            = focusUnit.getTeamIndex();
     const unitValueRatio            = commonParams.getUnitValueRatio();
     const war                       = commonParams.getWar();
     const unitMap                   = war.getUnitMap();
     const tileMap                   = war.getTileMap();
-    const unitHpDict                = new Map<IUnit, number>();
-    const tileHpDict                = new Map<ITile, number>();
+    const unitHpDict                = new Map<Units_IUnit.IUnit, number>();
+    const tileHpDict                = new Map<Tiles_ITile.ITile, number>();
     // const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 9999;
     // const scalerForEnemyDamage      = Math.pow(Math.max(1, unitValueRatio), 1) * 9999;
     const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 5;
@@ -169,14 +165,14 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
     let totalScore = 0;
     for (const battleDamageInfo of battleDamageInfoArray) {
         const damage        = battleDamageInfo.getDamage();
-        const tileGridIndex = GridIndex.convertGridIndex(battleDamageInfo.getTargetTileGridIndex());
+        const tileGridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(battleDamageInfo.getTargetTileGridIndex());
         if (tileGridIndex != null) {
             const tile2 = tileMap.getTile(tileGridIndex);
             if (!tileHpDict.has(tile2)) {
                 tileHpDict.set(tile2, tile2.getCurrentHp());
             }
 
-            const tileHp2           = getExisted(tileHpDict.get(tile2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_02);
+            const tileHp2           = Helpers_Misc.getExisted(tileHpDict.get(tile2), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_02);
             const tileTeamIndex2    = tile2.getTeamIndex();
             const actualDamage      = Math.min(tileHp2, damage);
             tileHpDict.set(tile2, tileHp2 - actualDamage);
@@ -187,12 +183,12 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
 
         const unitId2 = battleDamageInfo.getTargetUnitId();
         if (unitId2 != null) {
-            const unit2 = getExisted(unitMap.getUnitById(unitId2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_03);
+            const unit2 = Helpers_Misc.getExisted(unitMap.getUnitById(unitId2), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_03);
             if (!unitHpDict.has(unit2)) {
                 unitHpDict.set(unit2, unit2.getCurrentHp());
             }
 
-            const unitHp2               = getExisted(unitHpDict.get(unit2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_04);
+            const unitHp2               = Helpers_Misc.getExisted(unitHpDict.get(unit2), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_04);
             const unitTeamIndex2        = unit2.getTeamIndex();
             const unitProductionCost2   = unit2.getProductionCfgCost();
             const actualDamage          = Math.min(unitHp2, damage);
@@ -242,7 +238,7 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
             continue;
         }
 
-        throw newError(`Invalid battleDamageInfo.`, ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_09);
+        throw Helpers_Misc.newError(`Invalid battleDamageInfo.`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_09);
     }
 
     return totalScore;

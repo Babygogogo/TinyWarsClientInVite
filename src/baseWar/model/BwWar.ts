@@ -1,74 +1,65 @@
-import type { IActionPlanner } from "../../actionPlanners/IActionPlanner.ts";
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { IBwCommonSettingManager } from "../interface/IBwCommonSettingManager.ts";
-import type { IBwCursor } from "../interface/IBwCursor.ts";
-import type { IBwDrawVoteManager } from "../interface/IBwDrawVoteManager.ts";
-import type { IBwExecutedOperationManager } from "../interface/IBwExecutedOperationManager.ts";
-import type { IBwGridVisualEffect } from "../interface/IBwGridVisualEffect.ts";
-import type { IBwRandomNumberManager } from "../interface/IBwRandomNumberManager.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../interface/IBwWarEventManager.ts";
-import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
-import type { IBwWarView } from "../interface/IBwWarView.ts";
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { IField } from "../../fields/IField.ts";
-import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getBwWeatherManagerClass,
-    getTurnManagerClass,
-    getBwExecutedOperationManagerClass,
-    getBwRandomNumberManagerClass,
-    getBwDrawVoteManagerClass,
-    getTaskObjectiveManagerClass,
-    getFieldClass,
-    getBwWarStatisticsManagerClass,
-    getBwCommonSettingManagerClass,
-    getPlayerManagerClass,
-    getBwWarViewClass,
-    getScwWarClass,
-    getSfwWarClass,
-    getUnitClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getTileName,
-    getText,
-} from "../../lang/Utils.ts";
-import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { AliveStateId } from "../../players/Constants.ts";
-import type { IPlayer } from "../../players/IPlayer.ts";
-import type { IPlayerManager } from "../../players/IPlayerManager.ts";
-import { getPlayersCountUnneutral } from "../../players/utils/Common.ts";
+    BaseWar_Model_BwCommonSettingManager,
+    BaseWar_Model_BwDrawVoteManager,
+    BaseWar_Model_BwExecutedOperationManager,
+    BaseWar_Model_BwRandomNumberManager,
+    BaseWar_Model_BwWarStatisticsManager,
+    BaseWar_View_BwWarView,
+    Fields_Field,
+    AuxiliaryTypes_GridIndex,
+    Weathers_Manager,
+    AuxiliaryTypes_MapSize,
+    Players_PlayerManager,
+    SingleCustomWar_Model_ScwWar,
+    SingleFreeWar_Model_SfwWar,
+    TaskObjectives_TaskObjectiveManager,
+    BootTimers_Constants,
+    Turns_TurnManager,
+    Units_Unit,
+    type GameConfigs_GameConfig,
+    type ActionPlanners_IActionPlanner,
+    type BaseWar_Interface_IBwCommonSettingManager,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwDrawVoteManager,
+    type BaseWar_Interface_IBwExecutedOperationManager,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Interface_IBwRandomNumberManager,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Interface_IBwWarStatisticsManager,
+    type BaseWar_Interface_IBwWarView,
+    type Fields_IField,
+    type FogMaps_IFogMap,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Constants,
+    Players_Constants,
+    Users_Utils,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Lang_Utils,
+    Units_Utils_Common,
+    Players_Utils_Common,
+    NormalMap_Model_NormalMapModel,
+    Users_Model,
+    Timer_TimerModel,
+    Sounds_SoundPlayer,
+    Lang_Constants,
+    WarTypes_Constants,
+    type Weathers_IManager,
+    type Players_IPlayer,
+    type Players_IPlayerManager,
+    type TaskObjectives_ITaskObjectiveManager,
+    type Tiles_ITileMap,
+    type Turns_ITurnManager,
+    type Units_IUnit,
+    type Units_IUnitMap,
+    type Turns_Constants,
+} from "../../internal.ts";
+
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MovingUnitAndPath } from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { playCoBgmWithWar } from "../../sounds/SoundPlayer.ts";
-import type { ITaskObjectiveManager } from "../../taskObjectives/ITaskObjectiveManager.ts";
-import type { ITileMap } from "../../tiles/ITileMap.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import type { PhaseCode } from "../../turns/Constants.ts";
-import type { ITurnManager } from "../../turns/ITurnManager.ts";
-import {
-    ActionStateId,
-    Hp,
-} from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import type { IUnitMap } from "../../units/IUnitMap.ts";
-import { getNormalizedHp } from "../../units/utils/Common.ts";
-import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
-import { checkIsDummy } from "../../users/Utils.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
-import type { IManager } from "../../weathers/IManager.ts";
 
 type DamagePreviewSettings = {
     isEnabled   : boolean;
@@ -79,22 +70,22 @@ type DamagePreviewSettings = {
     }[];
 };
 
-export abstract class BwWar implements IBwWar {
-    private readonly _weatherManager        = new (getBwWeatherManagerClass())();
-    private readonly _turnManager           = new (getTurnManagerClass())();
-    private readonly _executedActionManager = new (getBwExecutedOperationManagerClass())();
-    private readonly _randomNumberManager   = new (getBwRandomNumberManagerClass())();
-    private readonly _drawVoteManager       = new (getBwDrawVoteManagerClass())();
-    private readonly _taskObjectiveManager  = new (getTaskObjectiveManagerClass())();
-    private readonly _field                 = new (getFieldClass())();
-    private readonly _warStatisticsManager  = new (getBwWarStatisticsManagerClass())();
-    private readonly _commonSettingManager  = new (getBwCommonSettingManagerClass())();
-    private readonly _playerManager         = new (getPlayerManagerClass())();
-    private readonly _view                  = new (getBwWarViewClass())();
+export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
+    private readonly _weatherManager        = new Weathers_Manager.Manager();
+    private readonly _turnManager           = new Turns_TurnManager.TurnManager();
+    private readonly _executedActionManager = new BaseWar_Model_BwExecutedOperationManager.BwExecutedOperationManager();
+    private readonly _randomNumberManager   = new BaseWar_Model_BwRandomNumberManager.BwRandomNumberManager();
+    private readonly _drawVoteManager       = new BaseWar_Model_BwDrawVoteManager.BwDrawVoteManager();
+    private readonly _taskObjectiveManager  = new TaskObjectives_TaskObjectiveManager.TaskObjectiveManager();
+    private readonly _field                 = new Fields_Field.Field();
+    private readonly _warStatisticsManager  = new BaseWar_Model_BwWarStatisticsManager.BwWarStatisticsManager();
+    private readonly _commonSettingManager  = new BaseWar_Model_BwCommonSettingManager.BwCommonSettingManager();
+    private readonly _playerManager         = new Players_PlayerManager.PlayerManager();
+    private readonly _view                  = new BaseWar_View_BwWarView.BwWarView();
 
-    private _gameConfig             : GameConfig | null = null;
+    private _gameConfig             : GameConfigs_GameConfig.GameConfig | null = null;
     private _warId                  : number | null = null;
-    private _warType                = WarTypeId.Undefined;
+    private _warType                = WarTypes_Constants.WarTypeId.Undefined;
     private _isRunning              = false;
     private _isExecutingAction      = false;
     private _isEnded                = false;
@@ -106,36 +97,36 @@ export abstract class BwWar implements IBwWar {
         settings    : [],
     };
 
-    public abstract init(data: SerialWar, gameConfig: GameConfig): void;
+    public abstract init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     public abstract getNormalMapId(): number | null;
     public abstract getIsNeedExecutedOperations(): boolean;
     public abstract getIsNeedSeedRandom(): boolean;
     public abstract getCanCheat(): boolean;
     public abstract getShouldSerializeFullInfoForFreeModeGames(): boolean;
-    public abstract getWarEventManager(): IBwWarEventManager;
+    public abstract getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
     public abstract getBootRestTime(playerIndex: number): number | null;
     public abstract getSettingsBootTimerParams(): number[];
     public abstract getIsExecuteActionsWithExtraData(): boolean;
     public abstract updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
-    protected _baseInit(data: SerialWar, gameConfig: GameConfig, warType: WarTypeId): void {
-        const settingsForCommon = getExisted(data.getSettingsForCommon(), ClientErrorCode.BwWar_BaseInit_00);
-        const configVersion     = getExisted(settingsForCommon.getConfigVersion(), ClientErrorCode.BwWar_BaseInit_01);
+    protected _baseInit(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig, warType: WarTypes_Constants.WarTypeId): void {
+        const settingsForCommon = Helpers_Misc.getExisted(data.getSettingsForCommon(), Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_00);
+        const configVersion     = Helpers_Misc.getExisted(settingsForCommon.getConfigVersion(), Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_01);
         if (configVersion !== gameConfig.getVersion()) {
-            throw newError(`Invalid configVersion: ${configVersion}`, ClientErrorCode.BwWar_BaseInit_02);
+            throw Helpers_Misc.newError(`Invalid configVersion: ${configVersion}`, Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_02);
         }
 
         this._setGameConfig(gameConfig);
         this.getWeatherManager().init(data.getWeatherManager());
         this.getDrawVoteManager().init(data.getPlayerManager(), data.getRemainingVotesForDraw(), data.getDrawVoteManager());
 
-        const mapSize = MapSize.createWithSerialTileMap(data.getField()?.getTileMap());
+        const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getField()?.getTileMap());
         if (!mapSize.checkIsValid()) {
-            throw newError(`Invalid mapSize: ${JSON.stringify(mapSize)}`, ClientErrorCode.BwWar_BaseInit_03);
+            throw Helpers_Misc.newError(`Invalid mapSize: ${JSON.stringify(mapSize)}`, Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_03);
         }
 
-        if (warType === WarTypeId.Undefined) {
-            throw newError(`Invalid warType: ${warType}`, ClientErrorCode.BwWar_BaseInit_04);
+        if (warType === WarTypes_Constants.WarTypeId.Undefined) {
+            throw Helpers_Misc.newError(`Invalid warType: ${warType}`, Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_04);
         }
 
         this._setWarType(warType);
@@ -143,7 +134,7 @@ export abstract class BwWar implements IBwWar {
             settings                : settingsForCommon,
             warType                 : warType,
             mapSize                 : mapSize,
-            playersCountUnneutral   : getPlayersCountUnneutral(data.getPlayerManager()),
+            playersCountUnneutral   : Players_Utils_Common.getPlayersCountUnneutral(data.getPlayerManager()),
             gameConfig              : gameConfig,
         });
 
@@ -163,7 +154,7 @@ export abstract class BwWar implements IBwWar {
         playerManager.init(data.getPlayerManager(), gameConfig);
 
         const playersCountUnneutral = playerManager.getTotalPlayersCount(false);
-        const turnManagerData       = getExisted(data.getTurnManager(), ClientErrorCode.BwWar_BaseInit_05);
+        const turnManagerData       = Helpers_Misc.getExisted(data.getTurnManager(), Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_05);
         this.getTurnManager().init(turnManagerData, playersCountUnneutral);
         this.getField().init({
             data                    : data.getField(),
@@ -189,11 +180,11 @@ export abstract class BwWar implements IBwWar {
         const playerManager         = this.getPlayerManager();
         const playersCountUnneutral = playerManager.getTotalPlayersCount(false);
         this.getWeatherManager().fastInit(warData.getWeatherManager());
-        playerManager.fastInit(getExisted(warData.getPlayerManager()), gameConfig);
-        this.getTurnManager().fastInit(getExisted(warData.getTurnManager()), playersCountUnneutral);
-        this.getWarEventManager().fastInit(getExisted(warData.getWarEventManager()));
+        playerManager.fastInit(Helpers_Misc.getExisted(warData.getPlayerManager()), gameConfig);
+        this.getTurnManager().fastInit(Helpers_Misc.getExisted(warData.getTurnManager()), playersCountUnneutral);
+        this.getWarEventManager().fastInit(Helpers_Misc.getExisted(warData.getWarEventManager()));
         this.getField().fastInit({
-            data                    : getExisted(warData.getField()),
+            data                    : Helpers_Misc.getExisted(warData.getField()),
             gameConfig              : gameConfig,
             playersCountUnneutral   : playersCountUnneutral,
         });
@@ -217,10 +208,10 @@ export abstract class BwWar implements IBwWar {
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         warView.updatePersistentText();
 
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : this,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
     }
 
@@ -230,7 +221,7 @@ export abstract class BwWar implements IBwWar {
     protected _fastInitView(): void {
         this.getView().fastInit(this);
     }
-    public getView(): IBwWarView {
+    public getView(): BaseWar_Interface_IBwWarView.IBwWarView {
         return this._view;
     }
 
@@ -292,7 +283,7 @@ export abstract class BwWar implements IBwWar {
     }
     public async serializeForMap(): Promise<MapRawData> {
         const normalMapId               = this.getNormalMapId();
-        const mapRawData                = normalMapId == null ? null : await getRawData(normalMapId);
+        const mapRawData                = normalMapId == null ? null : await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
         const tileMap                   = this.getTileMap();
         const mapSize                   = tileMap.getMapSize();
         const serialTileMap             = tileMap.serialize();
@@ -300,7 +291,7 @@ export abstract class BwWar implements IBwWar {
         const instanceWarRule           = this.getInstanceWarRule();
         const warEventFullData          = instanceWarRule.getWarEventFullData();
         const mapSimpleDialogueArray    = instanceWarRule.getMapSimpleDialogueArray();
-        const timestamp                 = getServerTimestamp();
+        const timestamp                 = Timer_TimerModel.getServerTimestamp();
 
         return MapRawData.fromJson({
             normalMapId             : null,
@@ -334,7 +325,7 @@ export abstract class BwWar implements IBwWar {
         });
     }
 
-    public startRunning(): IBwWar {
+    public startRunning(): BaseWar_Interface_IBwWar.IBwWar {
         this.getCommonSettingManager().startRunning(this);
         this.getWeatherManager().startRunning(this);
         this.getWarEventManager().startRunning(this);
@@ -349,14 +340,14 @@ export abstract class BwWar implements IBwWar {
 
         return this;
     }
-    public startRunningView(): IBwWar {
+    public startRunningView(): BaseWar_Interface_IBwWar.IBwWar {
         this.getView().startRunningView();
         this.getField().startRunningView();
         this.getWeatherManager().startRunningView();
 
         return this;
     }
-    public stopRunning(): IBwWar {
+    public stopRunning(): BaseWar_Interface_IBwWar.IBwWar {
         this.getField().stopRunning();
         this.getView().stopRunning();
         this.getWeatherManager().stopRunning();
@@ -387,7 +378,7 @@ export abstract class BwWar implements IBwWar {
         const aliveTeamIndexSet = new Set<number>();
         let hasAliveHumanPlayer = false;
         for (const [, player] of this.getPlayerManager().getAllPlayersDict()) {
-            if ((player.checkIsNeutral()) || (player.getAliveState() === AliveStateId.Dead)) {
+            if ((player.checkIsNeutral()) || (player.getAliveState() === Players_Constants.AliveStateId.Dead)) {
                 continue;
             }
 
@@ -397,7 +388,7 @@ export abstract class BwWar implements IBwWar {
             }
         }
 
-        return ((!hasAliveHumanPlayer) && (!(this instanceof getScwWarClass())) && (!(this instanceof getSfwWarClass())))
+        return ((!hasAliveHumanPlayer) && (!(this instanceof SingleCustomWar_Model_ScwWar.ScwWar)) && (!(this instanceof SingleFreeWar_Model_SfwWar.SfwWar)))
             || (aliveTeamIndexSet.size <= 1)
             || (this.getDrawVoteManager().checkIsDraw());
     }
@@ -417,11 +408,11 @@ export abstract class BwWar implements IBwWar {
         const restTimeToBoot    = player.getRestTimeToBoot();
         const enterTurnTime     = this.getEnterTurnTime();
         const bootTimeParams    = this.getSettingsBootTimerParams();
-        return (bootTimeParams[0] !== TimerTypeId.NoBoot)
+        return (bootTimeParams[0] !== BootTimers_Constants.TimerTypeId.NoBoot)
             && (player.getUserId() != null)
-            && (player.getAliveState() === AliveStateId.Alive)
+            && (player.getAliveState() === Players_Constants.AliveStateId.Alive)
             && (!player.checkIsNeutral())
-            && (getServerTimestamp() > enterTurnTime + restTimeToBoot);
+            && (Timer_TimerModel.getServerTimestamp() > enterTurnTime + restTimeToBoot);
     }
 
     public getIsViewingWarInfo(): boolean {
@@ -451,17 +442,17 @@ export abstract class BwWar implements IBwWar {
         return this._warId;
     }
 
-    private _setWarType(warType: WarTypeId): void {
+    private _setWarType(warType: WarTypes_Constants.WarTypeId): void {
         this._warType = warType;
     }
-    public getWarType(): WarTypeId {
+    public getWarType(): WarTypes_Constants.WarTypeId {
         return this._warType;
     }
 
-    public getGcData(): GameConfig {
-        return getExisted(this._gameConfig);
+    public getGcData(): GameConfigs_GameConfig.GameConfig {
+        return Helpers_Misc.getExisted(this._gameConfig);
     }
-    private _setGameConfig(gameConfig: GameConfig): void {
+    private _setGameConfig(gameConfig: GameConfigs_GameConfig.GameConfig): void {
         this._gameConfig = gameConfig;
     }
 
@@ -476,10 +467,10 @@ export abstract class BwWar implements IBwWar {
     public getPlayersCountUnneutral(): number {
         return this.getPlayerManager().getTotalPlayersCount(false);
     }
-    public getPlayer(playerIndex: number): IPlayer {
+    public getPlayer(playerIndex: number): Players_IPlayer.IPlayer {
         return this.getPlayerManager().getPlayer(playerIndex);
     }
-    public getPlayerInTurn(): IPlayer {
+    public getPlayerInTurn(): Players_IPlayer.IPlayer {
         return this.getPlayerManager().getPlayerInTurn();
     }
     public getPlayerIndexInTurn(): number {
@@ -487,63 +478,63 @@ export abstract class BwWar implements IBwWar {
     }
     public checkIsHumanInTurn(): boolean {
         const userId = this.getPlayerInTurn().getUserId();
-        return (userId != null) && (!checkIsDummy(userId));
+        return (userId != null) && (!Users_Utils.checkIsDummy(userId));
     }
 
-    public getTurnManager(): ITurnManager {
+    public getTurnManager(): Turns_ITurnManager.ITurnManager {
         return this._turnManager;
     }
-    public getFogMap(): IFogMap {
+    public getFogMap(): FogMaps_IFogMap.IFogMap {
         return this.getField().getFogMap();
     }
-    public getUnitMap(): IUnitMap {
+    public getUnitMap(): Units_IUnitMap.IUnitMap {
         return this.getField().getUnitMap();
     }
-    public getTileMap(): ITileMap {
+    public getTileMap(): Tiles_ITileMap.ITileMap {
         return this.getField().getTileMap();
     }
-    public getActionPlanner(): IActionPlanner {
+    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner {
         return this.getField().getActionPlanner();
     }
-    public getGridVisualEffect(): IBwGridVisualEffect {
+    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
         return this.getField().getGridVisualEffect();
     }
-    public getCursor(): IBwCursor {
+    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor {
         return this.getField().getCursor();
     }
 
     public getEnterTurnTime(): number {
         return this.getTurnManager().getEnterTurnTime();
     }
-    public getTurnPhaseCode(): PhaseCode {
+    public getTurnPhaseCode(): Turns_Constants.PhaseCode {
         return this.getTurnManager().getPhaseCode();
     }
 
-    public getWeatherManager(): IManager {
+    public getWeatherManager(): Weathers_IManager.IManager {
         return this._weatherManager;
     }
-    public getDrawVoteManager(): IBwDrawVoteManager {
+    public getDrawVoteManager(): BaseWar_Interface_IBwDrawVoteManager.IBwDrawVoteManager {
         return this._drawVoteManager;
     }
-    public getRandomNumberManager(): IBwRandomNumberManager {
+    public getRandomNumberManager(): BaseWar_Interface_IBwRandomNumberManager.IBwRandomNumberManager {
         return this._randomNumberManager;
     }
-    public getExecutedOperationManager(): IBwExecutedOperationManager {
+    public getExecutedOperationManager(): BaseWar_Interface_IBwExecutedOperationManager.IBwExecutedOperationManager {
         return this._executedActionManager;
     }
-    public getTaskObjectiveManager(): ITaskObjectiveManager {
+    public getTaskObjectiveManager(): TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
         return this._taskObjectiveManager;
     }
-    public getField(): IField {
+    public getField(): Fields_IField.IField {
         return this._field;
     }
-    public getWarStatisticsManager(): IBwWarStatisticsManager {
+    public getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
         return this._warStatisticsManager;
     }
-    public getCommonSettingManager(): IBwCommonSettingManager {
+    public getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager {
         return this._commonSettingManager;
     }
-    public getPlayerManager(): IPlayerManager {
+    public getPlayerManager(): Players_IPlayerManager.IPlayerManager {
         return this._playerManager;
     }
 
@@ -552,13 +543,13 @@ export abstract class BwWar implements IBwWar {
      * You must call unitMap.addUnitOnMap() or unitMap.addUnitLoaded() after calling this function.
      */
     public moveUnit({ pathNodes, launchUnitId, fuelConsumption }: {
-        pathNodes       : GridIndex[];
-        launchUnitId    : Undefinable<number>;
+        pathNodes       : AuxiliaryTypes_GridIndex.GridIndex[];
+        launchUnitId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
         fuelConsumption : number;
     }): void {
         const unitMap               = this.getUnitMap();
         const beginningGridIndex    = pathNodes[0];
-        const focusUnit             = getExisted(unitMap.getUnit(beginningGridIndex, launchUnitId));
+        const focusUnit             = Helpers_Misc.getExisted(unitMap.getUnit(beginningGridIndex, launchUnitId));
 
         if (this.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
             this.getFogMap().updateMapFromPathsByUnitAndPath({
@@ -589,10 +580,10 @@ export abstract class BwWar implements IBwWar {
         }
     }
     public async moveExtraUnit({ movingUnitAndPath, aiming, deleteViewAfterMoving }: {
-        movingUnitAndPath       : Undefinable<MovingUnitAndPath>;
-        aiming                  : Undefinable<GridIndex>;
+        movingUnitAndPath       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MovingUnitAndPath>;
+        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
         deleteViewAfterMoving   : boolean;
-    }): Promise<IUnit | null> {
+    }): Promise<Units_IUnit.IUnit | null> {
         if (movingUnitAndPath == null) {
             return null;
         }
@@ -604,7 +595,7 @@ export abstract class BwWar implements IBwWar {
 
         const movingPath = movingUnitAndPath.getPath();
         if (movingPath == null) {
-            throw newError(`Empty movingPath.`, ClientErrorCode.WarCommonHelpers_MoveExtraUnit_00);
+            throw Helpers_Misc.newError(`Empty movingPath.`, Utils_ClientErrorCode.ClientErrorCode.WarCommonHelpers_MoveExtraUnit_00);
         }
 
         const unitMap           = this.getUnitMap();
@@ -612,7 +603,7 @@ export abstract class BwWar implements IBwWar {
         const movingUnitView    = unitMap.getUnitById(movingUnitData.getUnitId())?.getView();
         (movingUnitView) && (unitMapView.removeUnit(movingUnitView));
 
-        const virtualUnit = new (getUnitClass())();
+        const virtualUnit = new Units_Unit.Unit();
         virtualUnit.init(movingUnitData, this.getGcData());
         virtualUnit.startRunning(this);
         virtualUnit.startRunningView();
@@ -644,7 +635,7 @@ export abstract class BwWar implements IBwWar {
         return true;
     }
 
-    public getIdleBuildingGridIndex(): Undefinable<GridIndex> {
+    public getIdleBuildingGridIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex> {
         const playerIndex               = this.getPlayerIndexInTurn();
         const field                     = this.getField();
         const tileMap                   = field.getTileMap();
@@ -653,10 +644,10 @@ export abstract class BwWar implements IBwWar {
         const currX                     = currGridIndex.getX();
         const currY                     = currGridIndex.getY();
         const { width, height}          = tileMap.getMapSize().getWH();
-        const checkIsIdle               = (gridIndex: GridIndex): boolean => {
+        const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
             if ((unit)                                                                                      &&
-                ((unit.getActionState() !== ActionStateId.Idle) || (unit.getPlayerIndex() !== playerIndex))
+                ((unit.getActionState() !== Units_Constants.ActionStateId.Idle) || (unit.getPlayerIndex() !== playerIndex))
             ) {
                 return false;
             }
@@ -666,7 +657,7 @@ export abstract class BwWar implements IBwWar {
         for (let y = currY; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 if ((y > currY) || (x > currX)) {
-                    const gridIndex = new GridIndex(x, y);
+                    const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                     if (checkIsIdle(gridIndex)) {
                         return gridIndex;
                     }
@@ -677,7 +668,7 @@ export abstract class BwWar implements IBwWar {
         for (let y = 0; y <= currY; ++y) {
             for (let x = 0; x < width; ++x) {
                 if ((y < currY) || (x <= currX)) {
-                    const gridIndex = new GridIndex(x, y);
+                    const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                     if (checkIsIdle(gridIndex)) {
                         return gridIndex;
                     }
@@ -687,21 +678,21 @@ export abstract class BwWar implements IBwWar {
 
         return null;
     }
-    public getIdleUnitGridIndex(): Undefinable<GridIndex> {
+    public getIdleUnitGridIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex> {
         const playerIndex               = this.getPlayerIndexInTurn();
         const field                     = this.getField();
         const unitMap                   = field.getUnitMap();
         const { x: currX, y: currY }    = field.getCursor().getGridIndex().getXY();
         const { width, height}          = unitMap.getMapSize().getWH();
-        const checkIsIdle               = (gridIndex: GridIndex): boolean => {
+        const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
-            return (unit?.getPlayerIndex() === playerIndex) && (unit.getActionState() === ActionStateId.Idle);
+            return (unit?.getPlayerIndex() === playerIndex) && (unit.getActionState() === Units_Constants.ActionStateId.Idle);
         };
 
         for (let y = currY; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
                 if ((y > currY) || (x > currX)) {
-                    const gridIndex = new GridIndex(x, y);
+                    const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                     if (checkIsIdle(gridIndex)) {
                         return gridIndex;
                     }
@@ -712,7 +703,7 @@ export abstract class BwWar implements IBwWar {
         for (let y = 0; y <= currY; ++y) {
             for (let x = 0; x < width; ++x) {
                 if ((y < currY) || (x <= currX)) {
-                    const gridIndex = new GridIndex(x, y);
+                    const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                     if (checkIsIdle(gridIndex)) {
                         return gridIndex;
                     }
@@ -730,16 +721,16 @@ export abstract class BwWar implements IBwWar {
         {
             let idleUnitsCount = 0;
             for (const unit of unitMap.getAllUnitsOnMap()) {
-                if ((unit.getPlayerIndex() === playerIndex) && (unit.getActionState() === ActionStateId.Idle)) {
+                if ((unit.getPlayerIndex() === playerIndex) && (unit.getActionState() === Units_Constants.ActionStateId.Idle)) {
                     ++idleUnitsCount;
                 }
             }
-            (idleUnitsCount) && (hints.push(getFormattedText(TextType.F0006, idleUnitsCount)));
+            (idleUnitsCount) && (hints.push(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0006, idleUnitsCount)));
         }
 
         {
             const player            = this.getPlayer(playerIndex);
-            const idleBuildingsDict = new Map<number, GridIndex[]>();
+            const idleBuildingsDict = new Map<number, AuxiliaryTypes_GridIndex.GridIndex[]>();
             const gameConfig        = this.getGcData();
             const currentFund       = player.getFund();
             for (const tile of this.getTileMap().getAllTiles()) {
@@ -754,19 +745,19 @@ export abstract class BwWar implements IBwWar {
                 }
 
                 const effectiveCoSkill  = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
-                const minNormalizedHp   = effectiveCoSkill ? getNormalizedHp(effectiveCoSkill.getHpUpperLimit()) : getNormalizedHp(Hp.MaxHp);
+                const minNormalizedHp   = effectiveCoSkill ? Units_Utils_Common.getNormalizedHp(effectiveCoSkill.getHpUpperLimit()) : Units_Utils_Common.getNormalizedHp(Units_Constants.Hp.MaxHp);
                 for (const unitType of unitTypeArray) {
                     const costModifier  = player.getUnitCostModifier(unitType);
-                    const cfgCost       = getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost());
+                    const cfgCost       = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost());
                     const minCost       = effectiveCoSkill
-                        ? Math.floor(cfgCost * costModifier * minNormalizedHp * (effectiveCoSkill.getCostMultiplierPct()) / Hp.Normalizer / 100)
+                        ? Math.floor(cfgCost * costModifier * minNormalizedHp * (effectiveCoSkill.getCostMultiplierPct()) / Units_Constants.Hp.Normalizer / 100)
                         : Math.floor(cfgCost * costModifier);
                     if (minCost <= currentFund) {
                         const tileType = tile.getTileTypeId();
                         if (!idleBuildingsDict.has(tileType)) {
                             idleBuildingsDict.set(tileType, [gridIndex]);
                         } else {
-                            getExisted(idleBuildingsDict.get(tileType)).push(gridIndex);
+                            Helpers_Misc.getExisted(idleBuildingsDict.get(tileType)).push(gridIndex);
                         }
                         break;
                     }
@@ -775,16 +766,16 @@ export abstract class BwWar implements IBwWar {
 
             const textArrayForBuildings: string[] = [];
             for (const [tileType, gridIndexArray] of idleBuildingsDict) {
-                textArrayForBuildings.push(getFormattedText(
-                    TextType.F0007, gridIndexArray.length,
-                    getTileName(tileType, gameConfig),
+                textArrayForBuildings.push(Lang_Utils.getFormattedText(
+                    Lang_Constants.TextType.F0007, gridIndexArray.length,
+                    Lang_Utils.getTileName(tileType, gameConfig),
                     gridIndexArray.map(v => `(${v.getX()}, ${v.getY()})`).join(`, `)),
                 );
             }
             (textArrayForBuildings.length) && (hints.push(textArrayForBuildings.join(`\n`)));
         }
 
-        hints.push(getText(TextType.A0024));
+        hints.push(Lang_Utils.getText(Lang_Constants.TextType.A0024));
         return hints.join(`\n\n`);
     }
 }

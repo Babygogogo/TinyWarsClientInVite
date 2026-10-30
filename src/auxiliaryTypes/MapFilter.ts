@@ -1,16 +1,18 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export class MapFilter {
-    public mapName              : Undefinable<string>;
-    public mapDesigner          : Undefinable<string>;
-    public playersCountRange    : Undefinable<number[]>;
-    public playedTimes          : Undefinable<number>;
-    public globalRatingRange    : Undefinable<number[]>;
-    public mapTagIdFlags        : Undefinable<number>;
-    public minMapWidth          : Undefinable<number>;
-    public maxMapWidth          : Undefinable<number>;
-    public minMapHeight         : Undefinable<number>;
-    public maxMapHeight         : Undefinable<number>;
+    public mapName              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+    public mapDesigner          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+    public playersCountRange    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
+    public playedTimes          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public globalRatingRange    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
+    public mapTagIdFlags        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minMapWidth          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxMapWidth          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public minMapHeight         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public maxMapHeight         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     public checkIsEmpty(): boolean {
         return (this.mapName == null)

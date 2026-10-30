@@ -1,40 +1,39 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
-    newError,
-    getExisted,
-} from "../../../helpers/Misc.ts";
-import { AliveStateId } from "../../../players/Constants.ts";
+    Units_Constants,
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    Turns_Constants,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import { ActionStateId } from "../../../units/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-export function revise(war: IBwWar, rawAction: WoPlayerDeleteUnit, requesterUserId: Undefinable<number>): WoContainer {
-    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_00);
+export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayerDeleteUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_00);
     }
 
-    const gridIndex         = getExisted(GridIndex.convertGridIndex(rawAction.getGridIndex()), ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_01);
+    const gridIndex         = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(rawAction.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_01);
     const playerIndexInTurn = war.getPlayerIndexInTurn();
     const playerInTurn      = war.getPlayerInTurn();
     if ((playerInTurn == null)                                      ||
-        (playerInTurn.getAliveState() !== AliveStateId.Alive) ||
+        (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive) ||
         (playerInTurn.getUserId() != requesterUserId)
     ) {
-        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_02);
+        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_02);
     }
 
     const unitMap   = war.getUnitMap();
     const focusUnit = unitMap.getUnitOnMap(gridIndex);
     if ((!focusUnit)                                                ||
-        (focusUnit.getActionState() !== ActionStateId.Idle)     ||
+        (focusUnit.getActionState() !== Units_Constants.ActionStateId.Idle)     ||
         (focusUnit.getPlayerIndex() !== playerIndexInTurn)          ||
         (unitMap.countUnitsOnMapForPlayer(playerIndexInTurn) <= 1)
     ) {
-        throw newError(`Invalid focusUnit.`, ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_03);
+        throw Helpers_Misc.newError(`Invalid focusUnit.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerDeleteUnit_03);
     }
 
     return WoContainer.fromJson({

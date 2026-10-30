@@ -1,41 +1,43 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import {
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export type OpenData = {
-    war         : IBwWar;
+    war         : BaseWar_Interface_IBwWar.IBwWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _labelTitle!                       : IUiLabel;
-    private readonly _btnType!                          : IUiButton;
-    private readonly _btnClose!                         : IUiButton;
-    private readonly _labelDesc!                        : IUiLabel;
-    private readonly _labelError!                       : IUiLabel;
-    private readonly _imgInnerTouchMask!                : IUiImage;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _labelTitle!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelDesc!                        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgInnerTouchMask!                : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _btnCounterId!                     : IUiButton;
-    private readonly _labelCounterId!                   : IUiLabel;
-    private readonly _labelValue!                       : IUiLabel;
-    private readonly _inputValue!                       : IUiPromptedInput;
-    private readonly _btnValueComparator!               : IUiButton;
-    private readonly _labelValueComparator!             : IUiLabel;
-    private readonly _labelValueDivider!                : IUiLabel;
-    private readonly _inputValueDivider!                : IUiPromptedInput;
-    private readonly _labelValueRemainder!              : IUiLabel;
-    private readonly _inputValueRemainder!              : IUiPromptedInput;
-    private readonly _btnValueRemainderComparator!      : IUiButton;
-    private readonly _labelValueRemainderComparator!    : IUiLabel;
-    private readonly _labelCounterCount!                : IUiLabel;
-    private readonly _inputCounterCount!                : IUiPromptedInput;
-    private readonly _btnCounterCountComparator!        : IUiButton;
-    private readonly _labelCounterCountComparator!      : IUiLabel;
+    private readonly _btnCounterId!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCounterId!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValue!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputValue!                       : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnValueComparator!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelValueComparator!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValueDivider!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputValueDivider!                : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelValueRemainder!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputValueRemainder!              : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnValueRemainderComparator!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelValueRemainderComparator!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCounterCount!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputCounterCount!                : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnCounterCountComparator!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCounterCountComparator!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
     // public updateOnLoadedSkin(): void {
     //     this._setNotifyListenerArray([

@@ -1,30 +1,29 @@
-import { getExisted } from "../helpers/Misc.ts";
 import {
-    addListeners,
-    send,
-} from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Networks_MessageCodes,
+    GameConfigs_Provider,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../internal.ts";
 import type { S as CommonLatestConfigVersionResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonLatestConfigVersion/S.ts";
-import type { Event } from "../egret/Egret.ts";
-import { setLatestConfigVersion } from "./Provider.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode : MessageCodes.MsgCommonLatestConfigVersion,    callback : _onMsgCommonLatestConfigVersion },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonLatestConfigVersion,    callback : _onMsgCommonLatestConfigVersion },
     ], null);
 }
 
 export function reqCommonLatestConfigVersion(): void {
-    send({
+    Networks_Manager.send({
         MsgCommonLatestConfigVersion : { c : {} },
     });
 }
-function _onMsgCommonLatestConfigVersion(e: Event): void {
+function _onMsgCommonLatestConfigVersion(e: Egret_Egret.Event): void {
     const data = e.data as CommonLatestConfigVersionResponse;
     if (!data.getErrorCode()) {
-        setLatestConfigVersion(getExisted(data.getVersion()));
-        dispatch(TypeId.MsgCommonLatestConfigVersion, data);
+        GameConfigs_Provider.setLatestConfigVersion(Helpers_Misc.getExisted(data.getVersion()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion, data);
     }
 }

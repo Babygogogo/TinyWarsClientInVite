@@ -1,7 +1,9 @@
-import { newError } from "../../helpers/Misc.ts";
-import type { ISpwRetractManager } from "../interface/ISpwRetractManager.ts";
+import {
+    Helpers_Misc,
+    type SinglePlayerWar_Interface_ISpwRetractManager,
+} from "../../internal.ts";
 
-export class SpwRetractManager implements ISpwRetractManager {
+export class SpwRetractManager implements SinglePlayerWar_Interface_ISpwRetractManager.ISpwRetractManager {
     private _canRetract         = false;
     private _retractStateArray  : Uint8Array[] = [];
     private _nextRetractId      = 0;
@@ -17,7 +19,7 @@ export class SpwRetractManager implements ISpwRetractManager {
         const array     = this._retractStateArray;
         const retractId = this._nextRetractId;
         if ((retractId !== 0) && (array[retractId - 1] == null)) {
-            throw newError(`Invalid retractId: ${retractId}`);
+            throw Helpers_Misc.newError(`Invalid retractId: ${retractId}`);
         }
 
         array.length = retractId;

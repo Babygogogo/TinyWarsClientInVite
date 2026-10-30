@@ -1,28 +1,27 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
-    checkIsValidId,
-    checkIsValidValue,
-} from "../../../customCounters/Utils.ts";
-import { CustomCounter } from "../../../expressionParsers/contexts/CustomCounter.ts";
-import { War } from "../../../expressionParsers/contexts/War.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
-import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText } from "../../../lang/Utils.ts";
+    CustomCounters_Utils,
+    ExpressionParsers_Contexts_CustomCounter,
+    WarEvents_Actions_Constants_SetCustomCounters,
+    Lang_Utils,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_NumArray,
+    ExpressionParsers_Parser,
+    Lang_Constants,
+    ExpressionParsers_Contexts_War,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WeaSetCustomCounters } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
-import { ExpressionInfoDict } from "../constants/SetCustomCounters.ts";
 
-export function checkIsValid(action: Undefinable<WeaSetCustomCounters>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCounters>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getIdExpression(),
-            expressionInfo          : ExpressionInfoDict.IdExpression,
+            expressionInfo          : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.IdExpression,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -30,9 +29,9 @@ export function checkIsValid(action: Undefinable<WeaSetCustomCounters>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getValueExpression(),
-            expressionInfo          : ExpressionInfoDict.ValueExpression,
+            expressionInfo          : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.ValueExpression,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -42,43 +41,43 @@ export function checkIsValid(action: Undefinable<WeaSetCustomCounters>, customCo
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetCustomCounters>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCounters>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(
-        TextType.F0042,
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0042,
         data.getIdExpression(),
         data.getValueExpression()
     );
 }
-export function getDetailDesc(data: Undefinable<WeaSetCustomCounters>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCounters>): string | null {
     return getBriefDesc(data);
 }
 
 export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = ExpressionInfoDict.IdExpression;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.IdExpression;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getIdExpression(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ValueExpression;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.ValueExpression;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getValueExpression(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -90,13 +89,13 @@ export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const customCounterIdArray: number[] = [];
     try {
-        const idResult = Parser.getParseResult(action.getIdExpression() ?? "").eval(new War(war), false);
-        if (idResult instanceof Num) {
+        const idResult = ExpressionParsers_Parser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);
+        if (idResult instanceof ExpressionParsers_Results_Num.Num) {
             customCounterIdArray.push(idResult.num);
-        } else if (idResult instanceof NumArray) {
+        } else if (idResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             customCounterIdArray.push(...idResult.numberArray);
         } else {
             return;
@@ -105,14 +104,14 @@ export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFas
         return;
     }
 
-    const customCounterIdSet    = new Set(customCounterIdArray.map(v => Math.floor(v)).filter(v => checkIsValidId(v)));
-    const expression            = Parser.getParseResult(action.getValueExpression() ?? "");
+    const customCounterIdSet    = new Set(customCounterIdArray.map(v => Math.floor(v)).filter(v => CustomCounters_Utils.checkIsValidId(v)));
+    const expression            = ExpressionParsers_Parser.Parser.getParseResult(action.getValueExpression() ?? "");
     const newValueDict          = new Map<number, number>();
     for (const counterId of customCounterIdSet) {
         try {
-            const rawValue = expression.eval(new CustomCounter(counterId, war), false);
-            if ((rawValue instanceof Num)                               &&
-                (checkIsValidValue(rawValue.num))
+            const rawValue = expression.eval(new ExpressionParsers_Contexts_CustomCounter.CustomCounter(counterId, war), false);
+            if ((rawValue instanceof ExpressionParsers_Results_Num.Num)                               &&
+                (CustomCounters_Utils.checkIsValidValue(rawValue.num))
             ) {
                 newValueDict.set(counterId, rawValue.num);
             }

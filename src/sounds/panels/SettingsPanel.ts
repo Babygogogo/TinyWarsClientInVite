@@ -1,110 +1,87 @@
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getOngoingWar } from "../../helpers/GameFlow.ts";
 import {
-    PointerEventType,
-    type PointerUnifiedEventData,
-} from "../../helpers/PointerInput.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getBgmSfxName } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../Constants.ts";
-import {
-    setMainVolume,
-    setMainVolumeToStore,
-    playShortSfx,
-    setIsMainMute,
-    getIsMainMute,
-    setIsMainMuteToStore,
-    setBgmVolume,
-    setBgmVolumeToStore,
-    setIsBgmMute,
-    getIsBgmMute,
-    setIsBgmMuteToStore,
-    setEffectVolume,
-    setEffectVolumeToStore,
-    setIsEffectMute,
-    getIsEffectMute,
-    setIsEffectMuteToStore,
-    getPlayingBgmCode,
-    playBgm,
-    getMainVolume,
-    getBgmVolume,
-    getEffectVolume,
-} from "../SoundPlayer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../egret/Egret.ts";
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    Helpers_GameFlow,
+    Users_Model,
+    GamePanels_Manager,
+    Helpers_PointerInput,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutContent!        : IUiLayout;
-    private readonly _layoutMain!           : IUiLayout;
-    private readonly _labelMainTitle!       : IUiLabel;
-    private readonly _imgMainMute!          : IUiImage;
-    private readonly _groupMainVolume!      : IUiContainer;
-    private readonly _imgMainBar!           : IUiImage;
-    private readonly _imgMainPoint!         : IUiImage;
-    private readonly _labelMainVolume!      : IUiLabel;
+    private readonly _layoutContent!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutMain!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMainTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgMainMute!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupMainVolume!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgMainBar!           : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgMainPoint!         : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelMainVolume!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutBgm!            : IUiLayout;
-    private readonly _labelBgmTitle!        : IUiLabel;
-    private readonly _imgBgmMute!           : IUiImage;
-    private readonly _groupBgmVolume!       : IUiContainer;
-    private readonly _imgBgmBar!            : IUiImage;
-    private readonly _imgBgmPoint!          : IUiImage;
-    private readonly _labelBgmVolume!       : IUiLabel;
+    private readonly _layoutBgm!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelBgmTitle!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgBgmMute!           : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupBgmVolume!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBgmBar!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgBgmPoint!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelBgmVolume!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutEffect!         : IUiLayout;
-    private readonly _labelEffectTitle!     : IUiLabel;
-    private readonly _imgEffectMute!        : IUiImage;
-    private readonly _groupEffectVolume!    : IUiContainer;
-    private readonly _imgEffectBar!         : IUiImage;
-    private readonly _imgEffectPoint!       : IUiImage;
-    private readonly _labelEffectVolume!    : IUiLabel;
+    private readonly _layoutEffect!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelEffectTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgEffectMute!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupEffectVolume!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgEffectBar!         : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgEffectPoint!       : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelEffectVolume!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutCoBgm!          : IUiLayout;
-    private readonly _labelSwitchBgm!       : IUiLabel;
-    private readonly _btnSwitchBgm!         : IUiButton;
+    private readonly _layoutCoBgm!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSwitchBgm!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSwitchBgm!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutSwitchBgm!      : IUiLayout;
-    private readonly _labelCoBgmSettings!   : IUiLabel;
-    private readonly _btnCoBgmSettings!     : IUiButton;
-    private readonly _btnSceneBgmSettings!  : IUiButton;
+    private readonly _layoutSwitchBgm!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCoBgmSettings!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCoBgmSettings!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSceneBgmSettings!  : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
 
             { ui: this._groupMainVolume,        callback: this._onTouchedGroupMainVolume },
-            { ui: this._groupMainVolume,        callback: this._onTouchMoveGroupMainVolume,             eventType: PointerEventType.PressMove },
-            { ui: this._groupMainVolume,        callback: this._onTouchEndGroupMainVolume,              eventType: PointerEventType.ReleaseIn },
-            { ui: this._groupMainVolume,        callback: this._onTouchReleaseOutsideGroupMainVolume,   eventType: PointerEventType.ReleaseOut },
+            { ui: this._groupMainVolume,        callback: this._onTouchMoveGroupMainVolume,             eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui: this._groupMainVolume,        callback: this._onTouchEndGroupMainVolume,              eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui: this._groupMainVolume,        callback: this._onTouchReleaseOutsideGroupMainVolume,   eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
             { ui: this._imgMainMute,            callback: this._onTouchedGroupMainMute },
 
             { ui: this._groupBgmVolume,         callback: this._onTouchedGroupBgmVolume },
-            { ui: this._groupBgmVolume,         callback: this._onTouchMoveGroupBgmVolume,              eventType: PointerEventType.PressMove },
+            { ui: this._groupBgmVolume,         callback: this._onTouchMoveGroupBgmVolume,              eventType: Helpers_PointerInput.PointerEventType.PressMove },
             { ui: this._imgBgmMute,             callback: this._onTouchedGroupBgmMute },
 
             { ui: this._groupEffectVolume,      callback: this._onTouchedGroupEffectVolume },
-            { ui: this._groupEffectVolume,      callback: this._onTouchMoveGroupEffectVolume,           eventType: PointerEventType.PressMove },
-            { ui: this._groupEffectVolume,      callback: this._onTouchEndGroupEffectVolume,            eventType: PointerEventType.ReleaseIn },
-            { ui: this._groupEffectVolume,      callback: this._onTouchReleaseOutsideGroupEffectVolume, eventType: PointerEventType.ReleaseOut },
+            { ui: this._groupEffectVolume,      callback: this._onTouchMoveGroupEffectVolume,           eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui: this._groupEffectVolume,      callback: this._onTouchEndGroupEffectVolume,            eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui: this._groupEffectVolume,      callback: this._onTouchReleaseOutsideGroupEffectVolume, eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
             { ui: this._imgEffectMute,          callback: this._onTouchedGroupEffectMute },
 
             { ui: this._btnSwitchBgm,           callback: this._onTouchedBtnSwitchBgm },
@@ -135,81 +112,81 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnSwitchBgm();
     }
 
-    private _onTouchedGroupMainVolume(e: Event): void {
+    private _onTouchedGroupMainVolume(e: Egret_Egret.Event): void {
         const width = this._groupMainVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupMainVolume.globalToLocal(data.stageX, data.stageY);
-        setMainVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setMainVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupMainVolume();
     }
-    private _onTouchMoveGroupMainVolume(e: Event): void {
+    private _onTouchMoveGroupMainVolume(e: Egret_Egret.Event): void {
         const width = this._groupMainVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupMainVolume.globalToLocal(data.stageX, data.stageY);
-        setMainVolume(Math.max(0, Math.min(point.x, width)) / width);
-        setMainVolumeToStore();
+        Sounds_SoundPlayer.setMainVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setMainVolumeToStore();
         this._updateGroupMainVolume();
     }
     private _onTouchEndGroupMainVolume(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchReleaseOutsideGroupMainVolume(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupMainMute(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
-        setIsMainMute(!getIsMainMute());
-        setIsMainMuteToStore();
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.setIsMainMute(!Sounds_SoundPlayer.getIsMainMute());
+        Sounds_SoundPlayer.setIsMainMuteToStore();
         this._updateGroupMainMute();
     }
 
-    private _onTouchedGroupBgmVolume(e: Event): void {
+    private _onTouchedGroupBgmVolume(e: Egret_Egret.Event): void {
         const width = this._groupBgmVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupBgmVolume.globalToLocal(data.stageX, data.stageY);
-        setBgmVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setBgmVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupBgmVolume();
     }
-    private _onTouchMoveGroupBgmVolume(e: Event): void {
+    private _onTouchMoveGroupBgmVolume(e: Egret_Egret.Event): void {
         const width = this._groupBgmVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupBgmVolume.globalToLocal(data.stageX, data.stageY);
-        setBgmVolume(Math.max(0, Math.min(point.x, width)) / width);
-        setBgmVolumeToStore();
+        Sounds_SoundPlayer.setBgmVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setBgmVolumeToStore();
         this._updateGroupBgmVolume();
     }
     private _onTouchedGroupBgmMute(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
-        setIsBgmMute(!getIsBgmMute());
-        setIsBgmMuteToStore();
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.setIsBgmMute(!Sounds_SoundPlayer.getIsBgmMute());
+        Sounds_SoundPlayer.setIsBgmMuteToStore();
         this._updateGroupBgmMute();
     }
 
-    private _onTouchedGroupEffectVolume(e: Event): void {
+    private _onTouchedGroupEffectVolume(e: Egret_Egret.Event): void {
         const width = this._groupEffectVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupEffectVolume.globalToLocal(data.stageX, data.stageY);
-        setEffectVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setEffectVolume(Math.max(0, Math.min(point.x, width)) / width);
         this._updateGroupEffectVolume();
     }
-    private _onTouchMoveGroupEffectVolume(e: Event): void {
+    private _onTouchMoveGroupEffectVolume(e: Egret_Egret.Event): void {
         const width = this._groupEffectVolume.getScaledWidth();
-        const data  = e.data as PointerUnifiedEventData;
+        const data  = e.data as Helpers_PointerInput.PointerUnifiedEventData;
         const point = this._groupEffectVolume.globalToLocal(data.stageX, data.stageY);
-        setEffectVolume(Math.max(0, Math.min(point.x, width)) / width);
-        setEffectVolumeToStore();
+        Sounds_SoundPlayer.setEffectVolume(Math.max(0, Math.min(point.x, width)) / width);
+        Sounds_SoundPlayer.setEffectVolumeToStore();
         this._updateGroupEffectVolume();
     }
     private _onTouchEndGroupEffectVolume(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchReleaseOutsideGroupEffectVolume(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupEffectMute(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
-        setIsEffectMute(!getIsEffectMute());
-        setIsEffectMuteToStore();
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.setIsEffectMute(!Sounds_SoundPlayer.getIsEffectMute());
+        Sounds_SoundPlayer.setIsEffectMuteToStore();
         this._updateGroupEffectMute();
     }
 
@@ -217,28 +194,28 @@ export class Panel extends UiPanel<OpenData> {
         // await SoundManager.playPreviousBgm();
         // this._updateLabelBgmName();
 
-        const currentBgmCode = getPlayingBgmCode();
-        openPanel(getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : await getLatestGameConfig(),
+        const currentBgmCode = Sounds_SoundPlayer.getPlayingBgmCode();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
+            gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
             currentBgmCode      : currentBgmCode,
             callbackOnConfirm   : code => {
-                getOngoingWar()?.setOverridingBgmCode(code);
+                Helpers_GameFlow.getOngoingWar()?.setOverridingBgmCode(code);
             },
             callbackOnCancel    : () => {
-                playBgm(currentBgmCode);
+                Sounds_SoundPlayer.playBgm(currentBgmCode);
             }
         });
     }
 
     private async _onTouchedBtnCoBgmSettings(): Promise<void> {
-        openPanel(getDict().UserSetCoBgmSettingsPanel, {
-            gameConfig  : await getLatestGameConfig(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetCoBgmSettingsPanel, {
+            gameConfig  : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
 
     private async _onTouchedBtnSceneBgmSettings(): Promise<void> {
-        openPanel(getDict().UserSceneBgmSettingsPanel, {
-            gameConfig  : await getLatestGameConfig(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSceneBgmSettingsPanel, {
+            gameConfig  : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
 
@@ -255,14 +232,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0540);
-        this._labelMainTitle.setLangText(TextType.B1325);
-        this._labelBgmTitle.setLangText(TextType.B0541);
-        this._labelEffectTitle.setLangText(TextType.B0542);
-        this._labelSwitchBgm.setLangText(TextType.B1281);
-        this._labelCoBgmSettings.setLangText(TextType.B1286);
-        this._btnCoBgmSettings.setLangText(TextType.B0425);
-        this._btnSceneBgmSettings.setLangText(TextType.B1287);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0540);
+        this._labelMainTitle.setLangText(Lang_Constants.TextType.B1325);
+        this._labelBgmTitle.setLangText(Lang_Constants.TextType.B0541);
+        this._labelEffectTitle.setLangText(Lang_Constants.TextType.B0542);
+        this._labelSwitchBgm.setLangText(Lang_Constants.TextType.B1281);
+        this._labelCoBgmSettings.setLangText(Lang_Constants.TextType.B1286);
+        this._btnCoBgmSettings.setLangText(Lang_Constants.TextType.B0425);
+        this._btnSceneBgmSettings.setLangText(Lang_Constants.TextType.B1287);
 
         this._layoutMain.arrangeItems();
         this._layoutBgm.arrangeItems();
@@ -274,30 +251,30 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateGroupMainMute(): void {
-        this._imgMainMute.loadSource(getIsMainMute() ? "commonIconSound0001" : "commonIconSound0000");
+        this._imgMainMute.loadSource(Sounds_SoundPlayer.getIsMainMute() ? "commonIconSound0001" : "commonIconSound0000");
     }
     private _updateGroupBgmMute(): void {
-        this._imgBgmMute.loadSource(getIsBgmMute() ? "commonIconSound0001" : "commonIconSound0000");
+        this._imgBgmMute.loadSource(Sounds_SoundPlayer.getIsBgmMute() ? "commonIconSound0001" : "commonIconSound0000");
     }
     private _updateGroupEffectMute(): void {
-        this._imgEffectMute.loadSource(getIsEffectMute() ? "commonIconSound0001" : "commonIconSound0000");
+        this._imgEffectMute.loadSource(Sounds_SoundPlayer.getIsEffectMute() ? "commonIconSound0001" : "commonIconSound0000");
     }
     private _updateGroupMainVolume(): void {
-        const volume    = getMainVolume();
+        const volume    = Sounds_SoundPlayer.getMainVolume();
         const pos       = this._groupMainVolume.getScaledWidth() * volume;
         this._imgMainPoint.setX(pos);
         this._imgMainBar.setUnscaledManualWidth(pos);
         this._labelMainVolume.setText(`${Math.floor(volume * 100)}`);
     }
     private _updateGroupBgmVolume(): void {
-        const volume    = getBgmVolume();
+        const volume    = Sounds_SoundPlayer.getBgmVolume();
         const pos       = this._groupBgmVolume.getScaledWidth() * volume;
         this._imgBgmPoint.setX(pos);
         this._imgBgmBar.setUnscaledManualWidth(pos);
         this._labelBgmVolume.setText(`${Math.floor(volume * 100)}`);
     }
     private _updateGroupEffectVolume(): void {
-        const volume    = getEffectVolume();
+        const volume    = Sounds_SoundPlayer.getEffectVolume();
         const pos       = this._groupEffectVolume.getScaledWidth() * volume;
         this._imgEffectPoint.setX(pos);
         this._imgEffectBar.setUnscaledManualWidth(pos);
@@ -305,9 +282,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateBtnCoBgmSettings(): void {
-        this._btnCoBgmSettings.setIsVisible(getSelfUserId() != null);
+        this._btnCoBgmSettings.setIsVisible(Users_Model.getSelfUserId() != null);
     }
     private async _updateBtnSwitchBgm(): Promise<void> {
-        this._btnSwitchBgm.setText(getBgmSfxName(getPlayingBgmCode(), await getLatestGameConfig()) ?? `--`);
+        this._btnSwitchBgm.setText(Lang_Utils.getBgmSfxName(Sounds_SoundPlayer.getPlayingBgmCode(), await GameConfigs_Provider.getLatestGameConfig()) ?? `--`);
     }
 }

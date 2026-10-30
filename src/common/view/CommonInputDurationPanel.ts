@@ -1,15 +1,17 @@
-import { newError } from "../../helpers/Misc.ts";
-import { format } from "../../helpers/Text.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getTimeDurationText2 } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import {
+    Helpers_Text,
+    Lang_Utils,
+    Numbers_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = {
     title           : string;
@@ -20,45 +22,45 @@ export type OpenData = {
     getHelpText?    : () => string;
     callback        : (value: number) => any;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _labelTips!        : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
-    private readonly _btnSwitch!        : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSwitch!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutValue!      : IUiLayout;
-    private readonly _labelValue!       : IUiLabel;
-    private readonly _labelValueInDay!  : IUiLabel;
+    private readonly _layoutValue!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelValue!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValueInDay!  : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _group1Btn!        : IUiContainer;
-    private readonly _btnAdd1s!         : IUiButton;
-    private readonly _btnAdd1m!         : IUiButton;
-    private readonly _btnAdd1h!         : IUiButton;
-    private readonly _btnAdd1d!         : IUiButton;
-    private readonly _btnSub1s!         : IUiButton;
-    private readonly _btnSub1m!         : IUiButton;
-    private readonly _btnSub1h!         : IUiButton;
-    private readonly _btnSub1d!         : IUiButton;
+    private readonly _group1Btn!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnAdd1s!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd1m!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd1h!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd1d!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub1s!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub1m!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub1h!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub1d!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupBtn2!        : IUiContainer;
-    private readonly _btnAdd10s!        : IUiButton;
-    private readonly _btnAdd10m!        : IUiButton;
-    private readonly _btnAdd10h!        : IUiButton;
-    private readonly _btnAdd10d!        : IUiButton;
-    private readonly _btnSub10s!        : IUiButton;
-    private readonly _btnSub10m!        : IUiButton;
-    private readonly _btnSub10h!        : IUiButton;
-    private readonly _btnSub10d!        : IUiButton;
+    private readonly _groupBtn2!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnAdd10s!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd10m!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd10h!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd10d!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub10s!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub10m!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub10h!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSub10d!        : Ui_Interfaces_IUiButton.IUiButton;
 
     private _value                      = 0;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel, },
@@ -111,7 +113,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
         if (openData.minValue < 0) {
-            throw newError(`Invalid minValue: ${openData.minValue}.`);
+            throw Helpers_Misc.newError(`Invalid minValue: ${openData.minValue}.`);
         }
 
         this._value = openData.currentValue;
@@ -197,14 +199,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnClose.setLangText(TextType.B0154);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
     }
 
     private _updateLabelValue(): void {
         const value                 = this._value;
-        this._labelValue.setText(`${getTimeDurationText2(value)}`);
-        this._labelValueInDay.setText(`${format(`%.2f`, value / 3600 / 24)}d`);
+        this._labelValue.setText(`${Lang_Utils.getTimeDurationText2(value)}`);
+        this._labelValueInDay.setText(`${Helpers_Text.format(`%.2f`, value / 3600 / 24)}d`);
         this._layoutValue.arrangeItems();
     }
 
@@ -214,7 +216,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._value = getValueInRange({
+        this._value = Numbers_Utils.getValueInRange({
             minValue    : openData.minValue,
             maxValue    : openData.maxValue,
             rawValue    : this._value + deltaValue,

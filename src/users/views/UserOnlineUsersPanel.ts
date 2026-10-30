@@ -1,54 +1,50 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    getMedal,
-    getUserAvatar,
-} from "../../helpers/ImageSource.ts";
-import { newError } from "../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    Helpers_ImageSource,
+    Users_Model,
+    Helpers_Misc,
+    GamePanels_Manager,
+    Users_Proxy,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { S as UserGetOnlineUserIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUserBriefInfo } from "../Model.ts";
-import { reqUserGetOnlineUserIdArray } from "../Proxy.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutTitle!          : IUiLayout;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _labelUsersCount!      : IUiLabel;
+    private readonly _layoutTitle!          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUsersCount!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelNameTitle1!      : IUiLabel;
-    private readonly _labelNameTitle2!      : IUiLabel;
-    private readonly _listUser!             : IUiScrollList<DataForUserRenderer>;
-    private readonly _labelLoading!         : IUiLabel;
+    private readonly _labelNameTitle1!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNameTitle2!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listUser!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUserRenderer>;
+    private readonly _labelLoading!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _msg        : UserGetOnlineUserIdArrayResponse | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserGetOnlineUserIdArray, callback: this._onNotifySUserGetOnlineUsers },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserGetOnlineUserIdArray, callback: this._onNotifySUserGetOnlineUsers },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
@@ -64,7 +60,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     protected async _onOpened(): Promise<void> {
-        reqUserGetOnlineUserIdArray();
+        Users_Proxy.reqUserGetOnlineUserIdArray();
         await super._onOpened();
     }
     protected override async _onClosed(): Promise<void> {
@@ -80,9 +76,9 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifySUserGetOnlineUsers(e: Event): void {
+    private _onNotifySUserGetOnlineUsers(e: Egret_Egret.Event): void {
         if (!(e.data instanceof UserGetOnlineUserIdArrayResponse)) {
-            throw newError("Invalid online user list notification.");
+            throw Helpers_Misc.newError("Invalid online user list notification.");
         }
         this._msg = e.data;
         this._updateView();
@@ -105,7 +101,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _createDataForList(): Promise<DataForUserRenderer[]> {
-        const gameConfig    = await getLatestGameConfig();
+        const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
         const dataArray     : DataForUserRenderer[] = [];
         for (const userId of this._msg?.getUserIdArray() ?? []) {
             dataArray.push({
@@ -138,31 +134,31 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0236);
-        this._labelLoading.setLangText(TextType.A0040);
-        this._labelNameTitle1.setLangText(TextType.B0175);
-        this._labelNameTitle2.setLangText(TextType.B0175);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0236);
+        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
+        this._labelNameTitle1.setLangText(Lang_Constants.TextType.B0175);
+        this._labelNameTitle2.setLangText(Lang_Constants.TextType.B0175);
         this._layoutTitle.arrangeItems();
     }
 }
 
-interface DataForUserRenderer extends UiListItemData {
+interface DataForUserRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
-    userId      : Undefinable<number>;
-    gameConfig  : GameConfig;
+    userId      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     isBottom    : boolean;
 }
 class UserRenderer
-    extends     UiListItemRenderer<DataForUserRenderer>
-    implements  IUiListItemRenderer<DataForUserRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUserRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForUserRenderer>
 {
-    private readonly _imgBg!        : IUiImage;
-    private readonly _imgAvatar!    : IUiImage;
-    private readonly _imgBottom!    : IUiImage;
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgAvatar!    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgBottom!    : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelName!    : IUiLabel;
-    private readonly _imgMedal!     : IUiImage;
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgMedal!     : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -175,7 +171,7 @@ class UserRenderer
     public onItemTapEvent(): void {
         const userId = this.getOpenData()?.userId;
         if (userId != null) {
-            openPanel(getDict().UserPanel, { userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId });
         }
     }
 
@@ -199,16 +195,16 @@ class UserRenderer
             return;
         }
 
-        const userBriefInfo = await getUserBriefInfo(userId);
+        const userBriefInfo = await Users_Model.getUserBriefInfo(userId);
         if ((userBriefInfo == null) || (userId !== this.getOpenData()?.userId)) {
             return;
         }
 
         const showMedalIdArray  = userBriefInfo.getShowMedalIdArray();
         const medalId           = showMedalIdArray ? showMedalIdArray[0] : null;
-        imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        imgAvatar.loadSource(getUserAvatar(userBriefInfo.getAvatarId() ?? 1));
-        labelName.setText(userBriefInfo.getNickname() ?? UndefinedError);
+        imgMedal.loadSource(medalId == null ? `` : Helpers_ImageSource.getMedal(medalId));
+        imgAvatar.loadSource(Helpers_ImageSource.getUserAvatar(userBriefInfo.getAvatarId() ?? 1));
+        labelName.setText(userBriefInfo.getNickname() ?? Lang_Constants.UndefinedError);
 
         this._layoutName.arrangeItems();
     }

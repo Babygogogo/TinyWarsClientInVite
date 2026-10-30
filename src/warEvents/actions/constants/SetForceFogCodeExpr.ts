@@ -1,27 +1,26 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ForceFogCode    : EpExpressionInfo;
-    TurnsCount      : EpExpressionInfo;
+    ForceFogCode    : ExpressionParsers_Types.EpExpressionInfo;
+    TurnsCount      : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ForceFogCode       : {
-        contextType     : ContextType.War,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.War,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.B1185),
-        getHelpText     : () => getText(TextType.A0584),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1185),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0584),
     },
     TurnsCount : {
-        contextType     : ContextType.War,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.War,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.Turns),
-        getHelpText     : () => getText(TextType.A0585),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0585),
     },
 };

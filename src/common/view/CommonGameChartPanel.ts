@@ -1,47 +1,49 @@
-import { CategoryId } from "../../cos/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import {
+    Cos_Constants,
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = {
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _group!                : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _layoutContent!        : IUiLayout;
-    private readonly _layoutLeaderboard!    : IUiLayout;
-    private readonly _labelLeaderboard!     : IUiLabel;
-    private readonly _btnLbMrw!             : IUiButton;
-    private readonly _btnLbSpmOverall!      : IUiButton;
+    private readonly _layoutContent!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutLeaderboard!    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelLeaderboard!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnLbMrw!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnLbSpmOverall!      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutNumerical!      : IUiLayout;
-    private readonly _labelNumerical!       : IUiLabel;
-    private readonly _btnUnit!              : IUiButton;
-    private readonly _btnTile!              : IUiButton;
-    private readonly _btnCo!                : IUiButton;
-    private readonly _btnCoStatistics!      : IUiButton;
+    private readonly _layoutNumerical!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelNumerical!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnUnit!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnTile!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCo!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCoStatistics!      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutMisc!           : IUiLayout;
-    private readonly _labelMisc!            : IUiLabel;
-    private readonly _btnOnlineUsers!       : IUiButton;
-    private readonly _btnServerStatus!      : IUiButton;
-    private readonly _btnChangeLog!         : IUiButton;
-    private readonly _btnTutorial!          : IUiButton;
+    private readonly _layoutMisc!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMisc!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnOnlineUsers!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnServerStatus!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChangeLog!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnTutorial!          : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -69,50 +71,50 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onTouchedBtnLbMrw(): void {
-        openPanel(getDict().LbMrwListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LbMrwListPanel, void 0);
     }
     private _onTouchedBtnLbSpmOverall(): void {
-        openPanel(getDict().LbSpmOverallListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LbSpmOverallListPanel, void 0);
     }
     private async _onTouchedBtnUnit(): Promise<void> {
-        openPanel(getDict().CommonDamageChartPanel, {
-            gameConfig: await getLatestGameConfig(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageChartPanel, {
+            gameConfig: await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
     private async _onTouchedBtnTile(): Promise<void> {
-        openPanel(getDict().CommonTileChartPanel, {
-            gameConfig: await getLatestGameConfig(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonTileChartPanel, {
+            gameConfig: await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
     private async _onTouchedBtnCo(): Promise<void> {
-        const gameConfig = await getLatestGameConfig();
-        openPanel(getDict().CommonShowCoIdPanel, {
+        const gameConfig = await GameConfigs_Provider.getLatestGameConfig();
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowCoIdPanel, {
             gameConfig          : gameConfig,
             currentCoIdArray    : [],
             isBan               : false,
             getTitleText        : null,
             availableCoIdArray  : gameConfig.getAllEnabledCoArray()
-                .filter(v => (v.getCoCategoryId() !== CategoryId.Empty) && (v.getCoCategoryId() !== CategoryId.Random))
+                .filter(v => (v.getCoCategoryId() !== Cos_Constants.CategoryId.Empty) && (v.getCoCategoryId() !== Cos_Constants.CategoryId.Random))
                 .map(v => v.getCoId()),
         });
     }
     private _onTouchedBtnCoStatistics(): void {
-        openPanel(getDict().CommonCoStatisticsPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoStatisticsPanel, {
             filter              : undefined,
             usePreviousFilter   : true,
         });
     }
     private _onTouchedBtnTutorial(): void {
-        openPanel(getDict().CommonTutorialPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonTutorialPanel, void 0);
     }
     private _onTouchedBtnOnlineUsers(): void {
-        openPanel(getDict().UserOnlineUsersPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserOnlineUsersPanel, void 0);
     }
     private _onTouchedBtnChangeLog(): void {
-        openPanel(getDict().ChangeLogPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChangeLogPanel, void 0);
     }
     private _onTouchedBtnServerStatus(): void {
-        openPanel(getDict().CommonServerStatusPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonServerStatusPanel, void 0);
     }
 
     private async _updateView(): Promise<void> {
@@ -120,20 +122,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0900);
-        this._labelLeaderboard.setLangText(TextType.B0436);
-        this._labelNumerical.setLangText(TextType.B0840);
-        this._labelMisc.setLangText(TextType.B1279);
-        this._btnLbMrw.setLangText(TextType.B0404);
-        this._btnLbSpmOverall.setLangText(TextType.B0614);
-        this._btnUnit.setLangText(TextType.Units);
-        this._btnTile.setLangText(TextType.B0899);
-        this._btnCo.setLangText(TextType.B0425);
-        this._btnCoStatistics.setLangText(TextType.B1076);
-        this._btnTutorial.setLangText(TextType.B0978);
-        this._btnOnlineUsers.setLangText(TextType.B0151);
-        this._btnChangeLog.setLangText(TextType.B0457);
-        this._btnServerStatus.setLangText(TextType.B0327);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0900);
+        this._labelLeaderboard.setLangText(Lang_Constants.TextType.B0436);
+        this._labelNumerical.setLangText(Lang_Constants.TextType.B0840);
+        this._labelMisc.setLangText(Lang_Constants.TextType.B1279);
+        this._btnLbMrw.setLangText(Lang_Constants.TextType.B0404);
+        this._btnLbSpmOverall.setLangText(Lang_Constants.TextType.B0614);
+        this._btnUnit.setLangText(Lang_Constants.TextType.Units);
+        this._btnTile.setLangText(Lang_Constants.TextType.B0899);
+        this._btnCo.setLangText(Lang_Constants.TextType.B0425);
+        this._btnCoStatistics.setLangText(Lang_Constants.TextType.B1076);
+        this._btnTutorial.setLangText(Lang_Constants.TextType.B0978);
+        this._btnOnlineUsers.setLangText(Lang_Constants.TextType.B0151);
+        this._btnChangeLog.setLangText(Lang_Constants.TextType.B0457);
+        this._btnServerStatus.setLangText(Lang_Constants.TextType.B0327);
 
         this._layoutLeaderboard.arrangeItems();
         this._layoutNumerical.arrangeItems();

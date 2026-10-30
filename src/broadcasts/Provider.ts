@@ -1,14 +1,16 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
-import { reqBroadcastGetMessageData } from "./Gateway.ts";
-import { getNonNullElements } from "../helpers/Collection.ts";
+import {
+    AuxiliaryTypes_CachedDataAccessor,
+    Helpers_Collection,
+    Timer_TimerModel,
+    Broadcasts_Gateway,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { BroadcastMessage } from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
 import type { S as BroadcastGetMessageDataResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
-import { getServerTimestamp } from "../timer/TimerModel.ts";
 
 const _allMessageIdArray    : number[] = [];
-const _messageDataAccessor  = new CachedDataAccessor<number, BroadcastMessage>({
-    reqData : (messageId: number) => reqBroadcastGetMessageData(messageId),
+const _messageDataAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, BroadcastMessage>({
+    reqData : (messageId: number) => Broadcasts_Gateway.reqBroadcastGetMessageData(messageId),
 });
 
 export function setAllMessageIdArray(messageIdArray: number[]): void {
@@ -19,15 +21,15 @@ export function getAllMessageIdArray(): number[] {
     return _allMessageIdArray;
 }
 
-export function getMessageData(messageId: number): Promise<Undefinable<BroadcastMessage>> {
+export function getMessageData(messageId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<BroadcastMessage>> {
     return _messageDataAccessor.getData(messageId);
 }
-function setMessageData(messageId: number, messageData: Undefinable<BroadcastMessage>): void {
+function setMessageData(messageId: number, messageData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BroadcastMessage>): void {
     _messageDataAccessor.setData(messageId, messageData);
 }
 
 export async function getOngoingMessageIdArray(): Promise<number[]> {
-    const currTime      = getServerTimestamp();
+    const currTime      = Timer_TimerModel.getServerTimestamp();
     const promiseArray  : Promise<number | null>[] = [];
     for (const messageId of getAllMessageIdArray()) {
         promiseArray.push((async () => {
@@ -42,7 +44,7 @@ export async function getOngoingMessageIdArray(): Promise<number[]> {
             }
         })());
     }
-    return getNonNullElements(await Promise.all(promiseArray));
+    return Helpers_Collection.getNonNullElements(await Promise.all(promiseArray));
 }
 
 export function updateOnMsgBroadcastGetMessageData(data: BroadcastGetMessageDataResponse): void {

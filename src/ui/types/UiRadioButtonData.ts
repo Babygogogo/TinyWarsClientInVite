@@ -1,14 +1,13 @@
-import type {
-    TextType,
-    LanguageType,
-} from "../../lang/Constants.ts";
+import {
+    type Lang_Constants,
+} from "../../internal.ts";
 
 export interface UiRadioButtonData {
-    titleTextType           : TextType;
-    leftTextType            : TextType;
-    leftLangType?           : LanguageType;
-    rightTextType           : TextType;
-    rightLangType?          : LanguageType;
+    titleTextType           : Lang_Constants.TextType;
+    leftTextType            : Lang_Constants.TextType;
+    leftLangType?           : Lang_Constants.LanguageType;
+    rightTextType           : Lang_Constants.TextType;
+    rightLangType?          : Lang_Constants.LanguageType;
     callbackOnLeft          : () => void;
     callbackOnRight         : () => void;
     checkerForLeftOn        : () => boolean;

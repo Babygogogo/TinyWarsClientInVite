@@ -1,14 +1,16 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
 export interface UiTileViewData {
-    gameConfig              : GameConfig;
-    tileBaseType            : Undefinable<number>;
-    tileBaseShapeId         : Undefinable<number>;
-    tileDecorationType      : Undefinable<number>;
-    tileDecorationShapeId   : Undefinable<number>;
-    tileObjectType          : Undefinable<number>;
-    tileObjectShapeId       : Undefinable<number>;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
+    tileBaseType            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    tileBaseShapeId         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    tileDecorationType      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    tileDecorationShapeId   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    tileObjectType          : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    tileObjectShapeId       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     skinId                  : number;
-    overridingSkinId        : Undefinable<number>;
+    overridingSkinId        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 }

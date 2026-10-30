@@ -1,15 +1,13 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType } from "../../../lang/Constants.ts";
 import {
-    getWeatherName,
-    getFormattedText,
-    getText,
-} from "../../../lang/Utils.ts";
+    Lang_Utils,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
 
-export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): boolean {
     if (action == null) {
         return false;
     }
@@ -20,38 +18,38 @@ export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfi
         && (action.getWeatherTurnsCount() != null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     if (data == null) {
         return null;
     }
 
     const weatherTurnsCount = data.getWeatherTurnsCount();
-    const weatherName       = getWeatherName(data.getWeatherType(), gameConfig);
+    const weatherName       = Lang_Utils.getWeatherName(data.getWeatherType(), gameConfig);
     return (weatherTurnsCount == 0)
-        ? getFormattedText(TextType.F0077, weatherName)
-        : getFormattedText(TextType.F0076, weatherName, weatherTurnsCount);
+        ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0077, weatherName)
+        : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0076, weatherName, weatherTurnsCount);
 }
-export function getDetailDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
-export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfig): string | null {
+export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     const weatherType = data.getWeatherType();
     if ((weatherType == null) || (!gameConfig.checkIsValidWeatherType(weatherType))) {
-        return getText(TextType.A0252);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0252);
     }
 
     if (data.getWeatherTurnsCount() == null) {
-        return getText(TextType.A0253);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0253);
     }
 
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const weatherManager = war.getWeatherManager();
     weatherManager.setForceWeatherType(action.getWeatherType());
 

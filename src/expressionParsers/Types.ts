@@ -1,26 +1,25 @@
-import type {
-    ContextType,
-    ResultType,
-} from "./Enums.ts";
-import type { FunctionInfo } from "./FunctionInfo.ts";
-import type { TextType } from "../lang/Constants.ts";
+import {
+    type ExpressionParsers_Enums,
+    type ExpressionParsers_FunctionInfo,
+    type Lang_Constants,
+} from "../internal.ts";
 
 export interface EpExpressionInfo {
-    contextType     : ContextType;
-    resultTypes     : ResultType[];
+    contextType     : ExpressionParsers_Enums.ContextType;
+    resultTypes     : ExpressionParsers_Enums.ResultType[];
     isRequired      : boolean;
     getTitleText    : () => string;
     getHelpText     : () => string;
 }
 
 export interface EpVariableInfo {
-    desc            : TextType;
-    resultType      : ResultType;
+    desc            : Lang_Constants.TextType;
+    resultType      : ExpressionParsers_Enums.ResultType;
     isExtension     : boolean;
     isHidden?       : boolean;
 }
 
-export type EpFunctionInfoDict = Map<string, FunctionInfo>;
+export type EpFunctionInfoDict = Map<string, ExpressionParsers_FunctionInfo.FunctionInfo>;
 
 export type EpVariableInfoDict = Map<string, EpVariableInfo>;
 

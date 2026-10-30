@@ -1,17 +1,16 @@
-import { isPc } from "../../helpers/Compatibility.ts";
-import { UiContainer } from "./UiContainer.ts";
-import type { IUiLabel } from "../interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../interfaces/IUiPromptedInput.ts";
-import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
-import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import {
-    commonLoadSkinAttrsForSizer,
-    getRevisedAttrValue,
-} from "../utils/UiSkinHelpers.ts";
+    Ui_Utils_UiSkinHelpers,
+    Helpers_Compatibility,
+    Ui_Components_UiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+    type Ui_Interfaces_IUiTextInput,
+    type Ui_Types_UiSkinAttrs,
+} from "../../internal.ts";
 
-export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
-    private readonly _textInput?    : IUiTextInput;
-    private readonly _labelPrompt?  : IUiLabel;
+export class UiPromptedInput extends Ui_Components_UiContainer.UiContainer implements Ui_Interfaces_IUiPromptedInput.IUiPromptedInput {
+    private readonly _textInput?    : Ui_Interfaces_IUiTextInput.IUiTextInput;
+    private readonly _labelPrompt?  : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public constructor() {
         super();
@@ -26,17 +25,17 @@ export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
         this._updateLabelPrompt();
     }
 
-    public loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
+    public loadSkinAttrs(oldSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined, newSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void {
+        Ui_Utils_UiSkinHelpers.commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
 
         const input = this.getInputComponent();
         if (input == null) {
             return;
         }
 
-        const restrict          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
-        const maxChars          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
-        const displayAsPassword = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
+        const restrict          = Ui_Utils_UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
+        const maxChars          = Ui_Utils_UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
+        const displayAsPassword = Ui_Utils_UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
         // const multiline         = Utils.UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "multiline");
 
         (restrict.needChange)           && (input.setRestrict(restrict.value));
@@ -46,7 +45,7 @@ export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
     }
 
     // GETTERS & SETTERS
-    public getPromptComponent(): IUiLabel | undefined {
+    public getPromptComponent(): Ui_Interfaces_IUiLabel.IUiLabel | undefined {
         return this._labelPrompt;
     }
     public getPromptText(): string | undefined {
@@ -57,7 +56,7 @@ export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
         this.getInputComponent()?.setDomPlaceholder(text);
     }
 
-    public getInputComponent(): IUiTextInput | undefined {
+    public getInputComponent(): Ui_Interfaces_IUiTextInput.IUiTextInput | undefined {
         return this._textInput;
     }
     public getInputText(): string | undefined {
@@ -97,6 +96,6 @@ export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
 
     // INPUT SUBSTITUTION
     private _updateLabelPrompt(): void {
-        this.getPromptComponent()?.setIsVisible((isPc) && (!this.getInputComponent()?.getText().length));
+        this.getPromptComponent()?.setIsVisible((Helpers_Compatibility.isPc) && (!this.getInputComponent()?.getText().length));
     }
 }

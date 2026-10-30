@@ -1,45 +1,29 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { SkillTypeId } from "../../../coSkills/Constants.ts";
-import { generate } from "../../../coSkills/utils/DataGeneratorForUseCoSkill.ts";
-import { executeInstantSkill } from "../../../coSkills/utils/Executor.ts";
 import {
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarBaseClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { createRange } from "../../../helpers/Collection.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../../players/Constants.ts";
-import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ActionStateId } from "../../../units/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import {
-    handleCommonExtraData,
-    handlePostOperationPlunder,
-} from "./Common.ts";
+    CoSkills_Utils_Executor,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    MapEditor_Model_MeWar,
+    AuxiliaryTypes_MovePath,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    CoSkills_Constants,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Constants,
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Collection,
+    Helpers_Misc,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+} from "../../../internal.ts";
 
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoUnitUseCoSkill, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitUseCoSkill(war, action);
     } else {
@@ -47,19 +31,19 @@ export async function execute(war: IBwWar, action: WoUnitUseCoSkill, isFast: boo
     }
 }
 
-function fastExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): void {
+function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): void {
     const playerInTurn      = war.getPlayerInTurn();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
-        const skillType: Undefinable<SkillTypeId> = actionExtraData.getSkillType();
+        const skillType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CoSkills_Constants.SkillTypeId> = actionExtraData.getSkillType();
         if (skillType != null) {
             const skillIdArray      = playerInTurn.getCoSkills(skillType);
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkill({
                     player              : playerInTurn,
                     skillId             : skillIdArray[skillIndex],
-                    skillData           : getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01),
+                    skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01),
                     targetGridIndexes   : action.getTargetGridIndexArray(),
                     hasExtraData        : true,
                     isFastExecute       : true,
@@ -67,38 +51,38 @@ function fastExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): void {
             }
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_02),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_02),
             isFastExecute   : true,
         });
 
     } else {
         const unitMap           = war.getUnitMap();
         const playerManager     = war.getPlayerManager();
-        const playerIndexArray  = createRange(PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+        const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
-        const revisedPath       = MovePath.create(getExisted(action.getPath()));
+        const revisedPath       = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const pathNodes         = revisedPath.nodes;
         const launchUnitId      = action.getLaunchUnitId();
-        const focusUnit         = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_03);
+        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_03);
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         if (!revisedPath.isBlocked) {
-            const skillType = getExisted(action.getSkillType());
+            const skillType = Helpers_Misc.getExisted(action.getSkillType());
             playerInTurn.updateOnUseCoSkill(skillType);
 
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                const dataForUseCoSkill = generate({
+                const dataForUseCoSkill = CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                     war         : war,
                     player      : playerInTurn,
                     skillType   : skillType,
                     skillIndex  : skillIndex,
                 });
-                executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkill({
                     player              : playerInTurn,
                     skillId             : skillIdArray[skillIndex],
                     skillData           : dataForUseCoSkill,
@@ -123,40 +107,40 @@ function fastExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): void {
                 }
 
                 const player = playerManager.getPlayer(playerIndex);
-                if ((player.getAliveState() != AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
-                    player.setAliveState(AliveStateId.Dying);
+                if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
+                    player.setAliveState(Players_Constants.AliveStateId.Dying);
                 }
             }
         }
 
-        handlePostOperationPlunder(focusUnit, true);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): Promise<void> {
+async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): Promise<void> {
     const unitMap           = war.getUnitMap();
     const gridVisualEffect  = war.getGridVisualEffect();
     const playerInTurn      = war.getPlayerInTurn();
     const playerIndex       = playerInTurn.getPlayerIndex();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_00);
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_00);
         await war.moveExtraUnit({
             movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
             aiming                  : null,
             deleteViewAfterMoving   : true,
         });
 
-        const skillType: Undefinable<SkillTypeId> = actionExtraData.getSkillType();
+        const skillType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CoSkills_Constants.SkillTypeId> = actionExtraData.getSkillType();
         if (skillType != null) {
             const skillIdArray      = playerInTurn.getCoSkills(skillType);
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkill({
                     player              : playerInTurn,
                     skillId             : skillIdArray[skillIndex],
-                    skillData           : getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
+                    skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
                     targetGridIndexes   : action.getTargetGridIndexArray(),
                     hasExtraData        : true,
                     isFastExecute       : false,
@@ -164,7 +148,7 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
             }
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
             isFastExecute   : false,
@@ -175,7 +159,7 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
                 if (unit.getPlayerIndex() === playerIndex) {
                     unit.updateView();
 
-                    if (skillType === SkillTypeId.Power) {
+                    if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                         gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                     } else {
                         gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
@@ -185,13 +169,13 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
         }
 
     } else {
-        const revisedPath       = MovePath.create(getExisted(action.getPath()));
+        const revisedPath       = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const pathNodes         = revisedPath.nodes;
         const launchUnitId      = action.getLaunchUnitId();
-        const focusUnit         = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
+        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
         war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
-        focusUnit.setActionState(ActionStateId.Acted);
+        focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         await focusUnit.moveViewAlongPath({
             pathNodes           : pathNodes,
@@ -203,17 +187,17 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
 
         if (!revisedPath.isBlocked) {
             const playerManager     = war.getPlayerManager();
-            const playerIndexArray  = createRange(PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+            const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
             const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
-            const skillType         = getExisted(action.getSkillType());
+            const skillType         = Helpers_Misc.getExisted(action.getSkillType());
             playerInTurn.updateOnUseCoSkill(skillType);
 
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                executeInstantSkill({
+                CoSkills_Utils_Executor.executeInstantSkill({
                     player              : playerInTurn,
                     skillId             : skillIdArray[skillIndex],
-                    skillData           : generate({
+                    skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                         war         : war,
                         player      : playerInTurn,
                         skillType   : skillType,
@@ -239,8 +223,8 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
                 }
 
                 const player = playerManager.getPlayer(i);
-                if ((player.getAliveState() != AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
-                    player.setAliveState(AliveStateId.Dying);
+                if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
+                    player.setAliveState(Players_Constants.AliveStateId.Dying);
                 }
             }
 
@@ -248,7 +232,7 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
                 if (unit.getPlayerIndex() === playerIndex) {
                     unit.updateView();
 
-                    if (skillType === SkillTypeId.Power) {
+                    if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                         gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                     } else {
                         gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
@@ -257,29 +241,24 @@ async function normalExeUnitUseCoSkill(war: IBwWar, action: WoUnitUseCoSkill): P
             }
         }
 
-        handlePostOperationPlunder(focusUnit, false);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoUnitUseCoSkill): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitUseCoSkill): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0142)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0142)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

@@ -1,59 +1,53 @@
-import type { Rectangle as AuxiliaryTypesRectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { newError } from "../../helpers/Misc.ts";
 import {
-    MouseStyleType,
-    getMouseExpectedStyleType,
-    setMouseExpectedStyleType,
-} from "../../helpers/PointerInput.ts";
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiContainerBase } from "../interfaces/IUiContainerBase.ts";
-import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
-import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-import { UiAabbCache } from "../utils/UiAabbCache.ts";
-import { UiEventAgent } from "../utils/UiEventAgent.ts";
-import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
-import { UiSizerInfo } from "../utils/UiSizerInfo.ts";
-import { commonLoadSkinAttrsForSizer } from "../utils/UiSkinHelpers.ts";
-import { UiSkinInfo } from "../utils/UiSkinInfo.ts";
-import {
-    DisplayObjectContainer,
-    DisplayObject,
-    Rectangle as EgretRectangle,
-} from "../../egret/Egret.ts";
+    Egret_Egret,
+    Helpers_PointerInput,
+    Ui_Utils_UiAabbCache,
+    Ui_Utils_UiEventAgent,
+    Ui_Utils_UiSizerInfo,
+    Ui_Utils_UiSkinInfo,
+    Ui_Utils_UiSizerHelpers,
+    Ui_Utils_UiSkinHelpers,
+    Helpers_Misc,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiContainerBase,
+    type Ui_Interfaces_IUiEventAgent,
+    type Ui_Types_UiSkinAttrs,
+} from "../../internal.ts";
 
 // const con = new egret.DisplayObjectContainer();
 // con.touchChildren;
 
-export abstract class UiContainerBase extends DisplayObjectContainer implements IUiContainerBase {
+export abstract class UiContainerBase extends Egret_Egret.DisplayObjectContainer implements Ui_Interfaces_IUiContainerBase.IUiContainerBase {
     private _unscaledManualWidth?   : number;
     private _unscaledManualHeight?  : number;
 
-    private _eventAgent?            : IUiEventAgent;
-    private _skinInfo?              : UiSkinInfo;
-    private _sizerInfo?             : UiSizerInfo;
-    private _aabbCache?             : UiAabbCache;
+    private _eventAgent?            : Ui_Interfaces_IUiEventAgent.IUiEventAgent;
+    private _skinInfo?              : Ui_Utils_UiSkinInfo.UiSkinInfo;
+    private _sizerInfo?             : Ui_Utils_UiSizerInfo.UiSizerInfo;
+    private _aabbCache?             : Ui_Utils_UiAabbCache.UiAabbCache;
 
-    private _callbackOnAppliedSizeFromSizerInfo?        : (component: IUiComponent, width: number | undefined, height: number | undefined) => void;
-    private _callbackOnAppliedPositionFromSizerInfo?    : (component: IUiComponent, x: number | undefined, y: number | undefined) => void;
+    private _callbackOnAppliedSizeFromSizerInfo?        : (component: Ui_Interfaces_IUiComponent.IUiComponent, width: number | undefined, height: number | undefined) => void;
+    private _callbackOnAppliedPositionFromSizerInfo?    : (component: Ui_Interfaces_IUiComponent.IUiComponent, x: number | undefined, y: number | undefined) => void;
 
-    public getEventAgent(): IUiEventAgent {
-        return this._eventAgent ??= new UiEventAgent(this);
+    public getEventAgent(): Ui_Interfaces_IUiEventAgent.IUiEventAgent {
+        return this._eventAgent ??= new Ui_Utils_UiEventAgent.UiEventAgent(this);
     }
 
-    public checkAndInitSkinInfo(): UiSkinInfo {
-        return this._skinInfo ??= new UiSkinInfo(this);
+    public checkAndInitSkinInfo(): Ui_Utils_UiSkinInfo.UiSkinInfo {
+        return this._skinInfo ??= new Ui_Utils_UiSkinInfo.UiSkinInfo(this);
     }
-    public getSkinInfo(): UiSkinInfo | undefined {
+    public getSkinInfo(): Ui_Utils_UiSkinInfo.UiSkinInfo | undefined {
         return this._skinInfo;
     }
-    public loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
+    public loadSkinAttrs(oldSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined, newSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void {
+        Ui_Utils_UiSkinHelpers.commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
     }
 
-    public checkAndInitSizerInfo(): UiSizerInfo {
-        return this._sizerInfo ??= new UiSizerInfo(this);
+    public checkAndInitSizerInfo(): Ui_Utils_UiSizerInfo.UiSizerInfo {
+        return this._sizerInfo ??= new Ui_Utils_UiSizerInfo.UiSizerInfo(this);
     }
-    public getSizerInfo(): UiSizerInfo | undefined {
+    public getSizerInfo(): Ui_Utils_UiSizerInfo.UiSizerInfo | undefined {
         return this._sizerInfo;
     }
     public destroySizerInfo(): void {
@@ -90,10 +84,10 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         this._callbackOnAppliedPositionFromSizerInfo?.(this, x, y);
     }
 
-    public setCallbackOnAppliedSizeFromSizerInfo(callback: (component: IUiComponent, width: number | undefined, height: number | undefined) => void): void {
+    public setCallbackOnAppliedSizeFromSizerInfo(callback: (component: Ui_Interfaces_IUiComponent.IUiComponent, width: number | undefined, height: number | undefined) => void): void {
         this._callbackOnAppliedSizeFromSizerInfo = callback;
     }
-    public setCallbackOnAppliedPositionFromSizerInfo(callback: (component: IUiComponent, x: number | undefined, y: number | undefined) => void): void {
+    public setCallbackOnAppliedPositionFromSizerInfo(callback: (component: Ui_Interfaces_IUiComponent.IUiComponent, x: number | undefined, y: number | undefined) => void): void {
         this._callbackOnAppliedPositionFromSizerInfo = callback;
     }
 
@@ -109,17 +103,17 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
     public setIsTouchChildrenEnabled(enabled: boolean): void {
         this.touchChildren = enabled;
     }
-    public getMouseStyle(): MouseStyleType | undefined {
-        return getMouseExpectedStyleType(this);
+    public getMouseStyle(): Helpers_PointerInput.MouseStyleType | undefined {
+        return Helpers_PointerInput.getMouseExpectedStyleType(this);
     }
-    public setMouseStyle(style: MouseStyleType): void {
-        setMouseExpectedStyleType(this, style);
+    public setMouseStyle(style: Helpers_PointerInput.MouseStyleType): void {
+        Helpers_PointerInput.setMouseExpectedStyleType(this, style);
     }
-    public getParent(): DisplayObjectContainer | undefined {
+    public getParent(): Egret_Egret.DisplayObjectContainer | undefined {
         return this.parent ?? undefined;
     }
-    public getAabbToParent(): AuxiliaryTypesRectangle {
-        return (this._aabbCache ??= new UiAabbCache()).getAabb({
+    public getAabbToParent(): AuxiliaryTypes_AuxiliaryTypes.Rectangle {
+        return (this._aabbCache ??= new Ui_Utils_UiAabbCache.UiAabbCache()).getAabb({
             unscaledWidth       : this.width,
             unscaledHeight      : this.height,
             scaleX              : this.scaleX,
@@ -137,7 +131,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getX() !== x) {
             this.x = x;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getY(): number {
@@ -147,7 +141,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getY() !== y) {
             this.y = y;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getAnchorOffsetX(): number {
@@ -157,7 +151,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getAnchorOffsetX() !== anchorOffsetX) {
             this.anchorOffsetX = anchorOffsetX;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getAnchorOffsetY(): number {
@@ -167,7 +161,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getAnchorOffsetY() !== anchorOffsetY) {
             this.anchorOffsetY = anchorOffsetY;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getScaleX(): number {
@@ -177,7 +171,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getScaleX() !== scaleX) {
             this.scaleX = scaleX;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getScaleY(): number {
@@ -187,7 +181,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getScaleY() !== scaleY) {
             this.scaleY = scaleY;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getRotationInDegree(): number {
@@ -197,7 +191,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         if (this.getRotationInDegree() !== rotation) {
             this.rotation = rotation;
 
-            checkAndAddAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getIsVisible(): boolean {
@@ -229,7 +223,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
     }
     public setUnscaledManualWidth(width: number | undefined): boolean {
         if ((width != null) && (width < 0)) {
-            throw newError(`Invalid width: ${width}`);
+            throw Helpers_Misc.newError(`Invalid width: ${width}`);
         }
 
         if (this.getUnscaledManualWidth() == width) {
@@ -247,7 +241,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
     }
     public setUnscaledManualHeight(height: number | undefined): boolean {
         if ((height != null) && (height < 0)) {
-            throw newError(`Invalid height: ${height}`);
+            throw Helpers_Misc.newError(`Invalid height: ${height}`);
         }
 
         if (this.getUnscaledManualHeight() == height) {
@@ -261,23 +255,23 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
         return true;
     }
 
-    public checkIsSameOrAncestor(target: IUiComponent): boolean {
-        return this.contains(target as unknown as DisplayObject);
+    public checkIsSameOrAncestor(target: Ui_Interfaces_IUiComponent.IUiComponent): boolean {
+        return this.contains(target as unknown as Egret_Egret.DisplayObject);
     }
 
     protected _checkAndAddAutoSizerInfo(): void {
-        checkAndAddAutoSizerInfo(this, true);
+        Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
     }
 
     /** 修改egret内部计算bounds的方式，若不这么做，会出问题 */
-    public override $measureContentBounds(bounds: EgretRectangle): void {
+    public override $measureContentBounds(bounds: Egret_Egret.Rectangle): void {
         const width = this.getUnscaledManualWidth();
         (width != null) && (bounds.width = width);
 
         const height = this.getUnscaledManualHeight();
         (height != null) && (bounds.height = height);
     }
-    public override $measureChildBounds(bounds: EgretRectangle): void {
+    public override $measureChildBounds(bounds: Egret_Egret.Rectangle): void {
         if ((this.getUnscaledManualWidth() == null) || (this.getUnscaledManualHeight() == null)) {
             super.$measureChildBounds(bounds);
         }

@@ -1,157 +1,132 @@
 import {
-    StateId,
-    StateIdsForExecuting,
-    StateIdsForRequesting,
-} from "./Constants.ts";
-import type { IActionPlanner } from "./IActionPlanner.ts";
-import type { IActionPlannerView } from "./IActionPlannerView.ts";
-import { ChoosingCoActiveSkillTarget } from "./states/ChoosingCoActiveSkillTarget.ts";
-import { ChoosingTileProductionTarget } from "./states/ChoosingTileProductionTarget.ts";
-import { ChoosingUnitAction } from "./states/ChoosingUnitAction.ts";
-import { ChoosingUnitAttackTarget } from "./states/ChoosingUnitAttackTarget.ts";
-import { ChoosingUnitCrushTarget } from "./states/ChoosingUnitCrushTarget.ts";
-import { ChoosingUnitDropDestination } from "./states/ChoosingUnitDropDestination.ts";
-import { ChoosingUnitFlareDestination } from "./states/ChoosingUnitFlareDestination.ts";
-import { ChoosingUnitMovePath } from "./states/ChoosingUnitMovePath.ts";
-import { ChoosingUnitRepairTarget } from "./states/ChoosingUnitRepairTarget.ts";
-import { ChoosingUnitSiloDestination } from "./states/ChoosingUnitSiloDestination.ts";
-import { ExecutingAction } from "./states/ExecutingAction.ts";
-import { Idle } from "./states/Idle.ts";
-import type { IState } from "./states/IState.ts";
-import { PreviewingTileAttackableArea } from "./states/PreviewingTileAttackableArea.ts";
-import { PreviewingUnitAttackableArea } from "./states/PreviewingUnitAttackableArea.ts";
-import { PreviewingUnitMovableArea } from "./states/PreviewingUnitMovableArea.ts";
-import { PreviewingUnitVisibleArea } from "./states/PreviewingUnitVisibleArea.ts";
-import { RequestingPlayerDeleteUnit } from "./states/RequestingPlayerDeleteUnit.ts";
-import { RequestingPlayerEndTurn } from "./states/RequestingPlayerEndTurn.ts";
-import { RequestingPlayerProduceUnit } from "./states/RequestingPlayerProduceUnit.ts";
-import { RequestingPlayerSurrender } from "./states/RequestingPlayerSurrender.ts";
-import { RequestingPlayerUseCoActiveSkill } from "./states/RequestingPlayerUseCoActiveSkill.ts";
-import { RequestingPlayerVoteForDraw } from "./states/RequestingPlayerVoteForDraw.ts";
-import { RequestingUnitAttackTile } from "./states/RequestingUnitAttackTile.ts";
-import { RequestingUnitAttackUnit } from "./states/RequestingUnitAttackUnit.ts";
-import { RequestingUnitBeLoaded } from "./states/RequestingUnitBeLoaded.ts";
-import { RequestingUnitBoardedByCo } from "./states/RequestingUnitBoardedByCo.ts";
-import { RequestingUnitBuildTile } from "./states/RequestingUnitBuildTile.ts";
-import { RequestingUnitCaptureTile } from "./states/RequestingUnitCaptureTile.ts";
-import { RequestingUnitCrushUnit } from "./states/RequestingUnitCrushUnit.ts";
-import { RequestingUnitDive } from "./states/RequestingUnitDive.ts";
-import { RequestingUnitDrop } from "./states/RequestingUnitDrop.ts";
-import { RequestingUnitJoin } from "./states/RequestingUnitJoin.ts";
-import { RequestingUnitLaunchFlare } from "./states/RequestingUnitLaunchFlare.ts";
-import { RequestingUnitLaunchSilo } from "./states/RequestingUnitLaunchSilo.ts";
-import { RequestingUnitProduceUnit } from "./states/RequestingUnitProduceUnit.ts";
-import { RequestingUnitRepairUnit } from "./states/RequestingUnitRepairUnit.ts";
-import { RequestingUnitSelfDetonate } from "./states/RequestingUnitSelfDetonate.ts";
-import { RequestingUnitSupply } from "./states/RequestingUnitSupply.ts";
-import { RequestingUnitSurface } from "./states/RequestingUnitSurface.ts";
-import { RequestingUnitUseCoActiveSkill } from "./states/RequestingUnitUseCoActiveSkill.ts";
-import { RequestingUnitWait } from "./states/RequestingUnitWait.ts";
-import type { ChosenUnitForDrop } from "./Types.ts";
-import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
-import { MovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { DataForUnitAction } from "../baseWar/model/BwTypes.ts";
-import type { OpenData } from "../baseWar/view/BwUnitActionsPanel.ts";
-import { SkillTypeId } from "../coSkills/Constants.ts";
-import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
-import { show } from "../FloatText.ts";
-import {
-    getActionPlannerViewClass,
-    getMpwWarClass,
-    getHrwWarClass,
-    getMeWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../gameHelpers/GhFactory.ts";
-import { getDict } from "../gamePanels/Dict.ts";
-import {
-    openPanel,
-    closePanel,
-} from "../gamePanels/Manager.ts";
-import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-} from "../lang/Utils.ts";
-import { log } from "../Logger.ts";
-import type { BwCursorDragged } from "../notifications/DataTypes.ts";
-import {
-    addEventListeners,
-    removeEventListeners,
-    dispatch,
-} from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { Listener } from "../notifications/Types.ts";
+    ActionPlanners_ActionPlannerView,
+    AuxiliaryTypes_AttackableArea,
+    ActionPlanners_States_ChoosingCoActiveSkillTarget,
+    ActionPlanners_States_ChoosingTileProductionTarget,
+    ActionPlanners_States_ChoosingUnitAction,
+    ActionPlanners_States_ChoosingUnitAttackTarget,
+    ActionPlanners_States_ChoosingUnitCrushTarget,
+    ActionPlanners_States_ChoosingUnitDropDestination,
+    ActionPlanners_States_ChoosingUnitFlareDestination,
+    ActionPlanners_States_ChoosingUnitMovePath,
+    ActionPlanners_States_ChoosingUnitRepairTarget,
+    ActionPlanners_States_ChoosingUnitSiloDestination,
+    ActionPlanners_States_ExecutingAction,
+    CoSkills_Utils_Common,
+    HalfwayReplayWar_Model_HrwWar,
+    ActionPlanners_States_Idle,
+    MapEditor_Model_MeWar,
+    AuxiliaryTypes_MovableArea,
+    AuxiliaryTypes_MovePathNode,
+    MultiPlayerWar_Model_MpwWar,
+    ActionPlanners_States_PreviewingTileAttackableArea,
+    ActionPlanners_States_PreviewingUnitAttackableArea,
+    ActionPlanners_States_PreviewingUnitMovableArea,
+    ActionPlanners_States_PreviewingUnitVisibleArea,
+    ActionPlanners_States_RequestingPlayerDeleteUnit,
+    ActionPlanners_States_RequestingPlayerEndTurn,
+    ActionPlanners_States_RequestingPlayerProduceUnit,
+    ActionPlanners_States_RequestingPlayerSurrender,
+    ActionPlanners_States_RequestingPlayerUseCoActiveSkill,
+    ActionPlanners_States_RequestingPlayerVoteForDraw,
+    ActionPlanners_States_RequestingUnitAttackTile,
+    ActionPlanners_States_RequestingUnitAttackUnit,
+    ActionPlanners_States_RequestingUnitBeLoaded,
+    ActionPlanners_States_RequestingUnitBoardedByCo,
+    ActionPlanners_States_RequestingUnitBuildTile,
+    ActionPlanners_States_RequestingUnitCaptureTile,
+    ActionPlanners_States_RequestingUnitCrushUnit,
+    ActionPlanners_States_RequestingUnitDive,
+    ActionPlanners_States_RequestingUnitDrop,
+    ActionPlanners_States_RequestingUnitJoin,
+    ActionPlanners_States_RequestingUnitLaunchFlare,
+    ActionPlanners_States_RequestingUnitLaunchSilo,
+    ActionPlanners_States_RequestingUnitProduceUnit,
+    ActionPlanners_States_RequestingUnitRepairUnit,
+    ActionPlanners_States_RequestingUnitSelfDetonate,
+    ActionPlanners_States_RequestingUnitSupply,
+    ActionPlanners_States_RequestingUnitSurface,
+    ActionPlanners_States_RequestingUnitUseCoActiveSkill,
+    ActionPlanners_States_RequestingUnitWait,
+    ReplayWar_Model_RwWar,
+    FloatText,
+    CoSkills_Constants,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type ActionPlanners_Types,
+    type BaseWar_Model_BwTypes,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_IActionPlannerView,
+    type BaseWar_Interface_IBwWar,
+    type ActionPlanners_States_IState,
+    type BaseWar_View_BwUnitActionsPanel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Constants,
+    Notifications_Dispatcher,
+    Visibilities_Utils,
+    Utils_ClientErrorCode,
+    GamePanels_Manager,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Users_Model,
+    Logger,
+    Lang_Constants,
+    Notifications_TypeId,
+    type Notifications_DataTypes,
+    type Egret_Egret,
+    type Tiles_ITile,
+    type Units_IUnit,
+    type Notifications_Types,
+    type AuxiliaryTypes_MapSize,
+} from "../internal.ts";
+
 import { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
-import type { ITile } from "../tiles/ITile.ts";
-import {
-    ActionTypeId,
-    ActionStateId,
-} from "../units/Constants.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import {
-    getSelfUserId,
-    getSelfSettingsIsAutoScrollMap,
-} from "../users/Model.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { Event } from "../egret/Egret.ts";
-import {
-    checkIsUnitOnMapVisibleToTeam,
-    checkIsUnitOnMapVisibleToTeams,
-} from "../visibilities/Utils.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
-export class ActionPlanner implements IActionPlanner {
-    private readonly _view                      = new (getActionPlannerViewClass())();
+export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlanner {
+    private readonly _view                      = new ActionPlanners_ActionPlannerView.ActionPlannerView();
 
-    private _war?                               : IBwWar;
-    private _mapSize?                           : MapSize;
+    private _war?                               : BaseWar_Interface_IBwWar.IBwWar;
+    private _mapSize?                           : AuxiliaryTypes_MapSize.MapSize;
 
-    private _stateId                            = StateId.Idle;
-    private _prevStateId                        = StateId.Idle;
+    private _stateId                            = ActionPlanners_Constants.StateId.Idle;
+    private _prevStateId                        = ActionPlanners_Constants.StateId.Idle;
 
-    private _focusUnitOnMap                     : IUnit | null = null;
-    private _focusUnitLoaded                    : IUnit | null = null;
-    private _choosingUnitForDrop                : IUnit | null = null;
-    private _chosenUnitsForDrop                 : ChosenUnitForDrop[] = [];
-    private _availableDropDestinations          : GridIndex[] | null = null;
-    private _movableArea                        : MovableArea | null = null;
-    private _attackableArea                     : AttackableArea | null = null;
-    private _attackableGridsForUnitWeapon       : GridIndex[] | null = null;
-    private _movePath                           : MovePathNode[] = [];
-    private _coActiveSkillSkillType             : SkillTypeId | null = null;
-    private _coActiveSkillTargetGridIndexArray  : GridIndex[] | null = null;
-    private _unitCrushTargetGridIndex           : GridIndex | null = null;
-    private _unitRepairTargetGridIndex          : GridIndex | null = null;
+    private _focusUnitOnMap                     : Units_IUnit.IUnit | null = null;
+    private _focusUnitLoaded                    : Units_IUnit.IUnit | null = null;
+    private _choosingUnitForDrop                : Units_IUnit.IUnit | null = null;
+    private _chosenUnitsForDrop                 : ActionPlanners_Types.ChosenUnitForDrop[] = [];
+    private _availableDropDestinations          : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
+    private _movableArea                        : AuxiliaryTypes_MovableArea.MovableArea | null = null;
+    private _attackableArea                     : AuxiliaryTypes_AttackableArea.AttackableArea | null = null;
+    private _attackableGridsForUnitWeapon       : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
+    private _movePath                           : AuxiliaryTypes_MovePathNode.MovePathNode[] = [];
+    private _coActiveSkillSkillType             : CoSkills_Constants.SkillTypeId | null = null;
+    private _coActiveSkillTargetGridIndexArray  : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
+    private _unitCrushTargetGridIndex           : AuxiliaryTypes_GridIndex.GridIndex | null = null;
+    private _unitRepairTargetGridIndex          : AuxiliaryTypes_GridIndex.GridIndex | null = null;
 
-    private _unitsForPreviewAttack              = new Map<number, IUnit>();
-    private _tilesForPreviewAttack              = new Set<ITile>();
-    private _areaForPreviewAttack               = new AttackableArea([]);
-    private _unitForPreviewMove                 : IUnit | null = null;
-    private _areaForPreviewMove                 : MovableArea | null = null;
-    private _unitForPreviewVisible              : IUnit | null = null;
-    private _areaForPreviewVisible              : GridIndex[] | null = null;
+    private _unitsForPreviewAttack              = new Map<number, Units_IUnit.IUnit>();
+    private _tilesForPreviewAttack              = new Set<Tiles_ITile.ITile>();
+    private _areaForPreviewAttack               = new AuxiliaryTypes_AttackableArea.AttackableArea([]);
+    private _unitForPreviewMove                 : Units_IUnit.IUnit | null = null;
+    private _areaForPreviewMove                 : AuxiliaryTypes_MovableArea.MovableArea | null = null;
+    private _unitForPreviewVisible              : Units_IUnit.IUnit | null = null;
+    private _areaForPreviewVisible              : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
 
     private _isIgnoreAllyForPreviewAttack       = true;
     private _isIgnoreEnemyForPreviewAttack      = true;
     private _isIgnoreEnemyForPreviewMove        = true;
 
-    private _notifyListeners: Listener[] = [
-        { type: TypeId.BwCursorTapped,      callback: this._onNotifyBwCursorTapped },
-        { type: TypeId.BwCursorDragged,     callback: this._onNotifyBwCursorDragged },
-        { type: TypeId.BwCursorDragEnded,   callback: this._onNotifyBwCursorDragEnded },
+    private _notifyListeners: Notifications_Types.Listener[] = [
+        { type: Notifications_TypeId.TypeId.BwCursorTapped,      callback: this._onNotifyBwCursorTapped },
+        { type: Notifications_TypeId.TypeId.BwCursorDragged,     callback: this._onNotifyBwCursorDragged },
+        { type: Notifications_TypeId.TypeId.BwCursorDragEnded,   callback: this._onNotifyBwCursorDragEnded },
     ];
 
-    public init(mapSize: MapSize): void {
+    public init(mapSize: AuxiliaryTypes_MapSize.MapSize): void {
         this._setMapSize(mapSize.clone());
 
         this.getView().init(this);
@@ -160,28 +135,28 @@ export class ActionPlanner implements IActionPlanner {
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
 
-        Idle.getInstance().apply(this);
-        addEventListeners(this._notifyListeners, this);
+        ActionPlanners_States_Idle.Idle.getInstance().apply(this);
+        Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
     }
     public startRunningView(): void {
         this.getView().startRunningView();
     }
     public stopRunning(): void {
-        removeEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
 
         this.getView().stopRunningView();
     }
 
-    public getWar(): IBwWar {
-        return getExisted(this._war, ClientErrorCode.ActionPlanner_GetWar_00);
+    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.ActionPlanner_GetWar_00);
     }
 
-    public getPlayerIndexLoggedIn(): Undefinable<number> {
+    public getPlayerIndexLoggedIn(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         const war = this.getWar();
-        if (war instanceof getMpwWarClass()) {
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             return war.getPlayerIndexLoggedIn();
         } else {
             return undefined;
@@ -189,20 +164,20 @@ export class ActionPlanner implements IActionPlanner {
     }
     public getSelfPlayerIndexSet(): Set<number> {
         const war = this.getWar();
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             return new Set();
 
-        } else if (war instanceof getMeWarClass()) {
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
             return new Set();
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             const playerIndex = this.getPlayerIndexLoggedIn();
             return playerIndex == null ? new Set() : new Set([playerIndex]);
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return new Set();
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const playerIndexSet = new Set<number>();
             for (const [playerIndex, player] of this.getWar().getPlayerManager().getAllPlayersDict()) {
                 if ((!player.checkIsNeutral()) && (player.getUserId() != null)) {
@@ -212,39 +187,39 @@ export class ActionPlanner implements IActionPlanner {
 
             return playerIndexSet;
 
-        } else if (war instanceof getTwWarClass()) {
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
             return new Set();
 
         } else {
-            throw newError(`Invalid war.`);
+            throw Helpers_Misc.newError(`Invalid war.`);
         }
     }
-    public checkCanControlUnit(unit: IUnit): boolean {
+    public checkCanControlUnit(unit: Units_IUnit.IUnit): boolean {
         const war = this.getWar();
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             return false;
 
-        } else if (war instanceof getMeWarClass()) {
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
             return false;
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             const playerInTurn = war.getPlayerInTurn();
-            return (playerInTurn.getUserId() === getSelfUserId())
+            return (playerInTurn.getUserId() === Users_Model.getSelfUserId())
                 && (playerInTurn.getPlayerIndex() === unit.getPlayerIndex());
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return false;
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const playerInTurn = war.getPlayerInTurn();
             return (unit.getPlayerIndex() === playerInTurn.getPlayerIndex())
                 && (playerInTurn.getUserId() != null);
 
-        } else if (war instanceof getTwWarClass()) {
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
             return false;
 
         } else {
-            throw newError(`Invalid war.`);
+            throw Helpers_Misc.newError(`Invalid war.`);
         }
     }
 
@@ -272,7 +247,7 @@ export class ActionPlanner implements IActionPlanner {
     private _onNotifyBwCursorTapped(): void {
         const war       = this.getWar();
         const gridIndex = war.getCursor().getGridIndex();
-        if (getSelfSettingsIsAutoScrollMap()) {
+        if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
             war.getView().tweenGridToCentralArea(gridIndex);
         }
 
@@ -289,10 +264,10 @@ export class ActionPlanner implements IActionPlanner {
         getState(nextStateId).doApplyOnTap(this, gridIndex);
     }
 
-    private _onNotifyBwCursorDragged(e: Event): void {
+    private _onNotifyBwCursorDragged(e: Egret_Egret.Event): void {
         const war = this.getWar();
-        if (getSelfSettingsIsAutoScrollMap()) {
-            war.getView().tweenGridToCentralArea((e.data as BwCursorDragged).draggedTo);
+        if (Users_Model.getSelfSettingsIsAutoScrollMap()) {
+            war.getView().tweenGridToCentralArea((e.data as Notifications_DataTypes.BwCursorDragged).draggedTo);
         }
 
         const currStateId = this.getStateId();
@@ -320,20 +295,20 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for setting common state.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getStateId(): StateId {
+    public getStateId(): ActionPlanners_Constants.StateId {
         return this._stateId;
     }
-    public getPreviousStateId(): StateId {
+    public getPreviousStateId(): ActionPlanners_Constants.StateId {
         return this._prevStateId;
     }
-    public setStateId(stateId: StateId): void {
+    public setStateId(stateId: ActionPlanners_Constants.StateId): void {
         const isChanged = this._stateId !== stateId;
         this._prevStateId = this._stateId;
         this._stateId     = stateId;
 
-        log(`ActionPlanner.setStateId() ${stateId}`);
-        dispatch(TypeId.ActionPlannerStateSet);
-        (isChanged) && (dispatch(TypeId.ActionPlannerStateChanged));
+        Logger.log(`ActionPlanner.setStateId() ${stateId}`);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerStateSet);
+        (isChanged) && (Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerStateChanged));
     }
 
     public cancelCurrentState(): void {
@@ -343,122 +318,122 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): IActionPlannerView {
+    public getView(): ActionPlanners_IActionPlannerView.IActionPlannerView {
         return this._view;
     }
     public updateView(): void {
         const war = this.getWar();
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             this.getView().updateView();
 
             const currState = this.getStateId();
-            if (currState === StateId.ChoosingUnitAction) {
-                openPanel(
-                    getDict().BwUnitActionsPanel,
+            if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+                GamePanels_Manager.openPanel(
+                    GamePanels_Dict.getDict().BwUnitActionsPanel,
                     generateOpenDataForUnitActionsPanel(this),
                 );
             } else {
-                closePanel(getDict().BwUnitActionsPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
-            if ((currState === StateId.ChoosingUnitMovePath) || (currState === StateId.ChoosingUnitAttackTarget)) {
-                openPanel(getDict().BwDamagePreviewPanel, { war: this.getWar() });
+            if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
             } else {
-                closePanel(getDict().BwDamagePreviewPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
 
-        } else if (war instanceof getMeWarClass()) {
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
             // nothing to do
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             this.getView().updateView();
 
             const currState = this.getStateId();
-            if (currState === StateId.ChoosingUnitAction) {
-                openPanel(
-                    getDict().BwUnitActionsPanel,
+            if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+                GamePanels_Manager.openPanel(
+                    GamePanels_Dict.getDict().BwUnitActionsPanel,
                     generateOpenDataForUnitActionsPanel(this),
                 );
             } else {
-                closePanel(getDict().BwUnitActionsPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
-            if ((currState === StateId.ChoosingUnitMovePath) || (currState === StateId.ChoosingUnitAttackTarget)) {
-                openPanel(getDict().BwDamagePreviewPanel, { war: this.getWar() });
+            if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
             } else {
-                closePanel(getDict().BwDamagePreviewPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             this.getView().updateView();
 
             const currState = this.getStateId();
-            if (currState === StateId.ChoosingUnitAction) {
-                openPanel(
-                    getDict().BwUnitActionsPanel,
+            if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+                GamePanels_Manager.openPanel(
+                    GamePanels_Dict.getDict().BwUnitActionsPanel,
                     generateOpenDataForUnitActionsPanel(this),
                 );
             } else {
-                closePanel(getDict().BwUnitActionsPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
-            if ((currState === StateId.ChoosingUnitMovePath) || (currState === StateId.ChoosingUnitAttackTarget)) {
-                openPanel(getDict().BwDamagePreviewPanel, { war: this.getWar() });
+            if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
             } else {
-                closePanel(getDict().BwDamagePreviewPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             this.getView().updateView();
 
             const currState = this.getStateId();
-            if (currState === StateId.ChoosingUnitAction) {
-                openPanel(
-                    getDict().BwUnitActionsPanel,
+            if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+                GamePanels_Manager.openPanel(
+                    GamePanels_Dict.getDict().BwUnitActionsPanel,
                     generateOpenDataForUnitActionsPanel(this),
                 );
             } else {
-                closePanel(getDict().BwUnitActionsPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
-            if ((currState === StateId.ChoosingUnitMovePath) || (currState === StateId.ChoosingUnitAttackTarget)) {
-                openPanel(getDict().BwDamagePreviewPanel, { war: this.getWar() });
+            if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
             } else {
-                closePanel(getDict().BwDamagePreviewPanel);
+                GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
 
-        } else if (war instanceof getTwWarClass()) {
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
             // nothing to do
 
         } else {
-            throw newError(`Invalid war.`);
+            throw Helpers_Misc.newError(`Invalid war.`);
         }
     }
 
-    private _setMapSize(size: MapSize): void {
+    private _setMapSize(size: AuxiliaryTypes_MapSize.MapSize): void {
         this._mapSize = size;
     }
-    public getMapSize(): MapSize {
-        return getExisted(this._mapSize);
+    public getMapSize(): AuxiliaryTypes_MapSize.MapSize {
+        return Helpers_Misc.getExisted(this._mapSize);
     }
 
     public checkIsStateRequesting(): boolean {
         return checkIsRequesting(this.getStateId());
     }
 
-    public getFocusUnit(): IUnit | null {
+    public getFocusUnit(): Units_IUnit.IUnit | null {
         return this.getFocusUnitLoaded() || this.getFocusUnitOnMap();
     }
-    public getFocusUnitOnMap(): IUnit | null {
+    public getFocusUnitOnMap(): Units_IUnit.IUnit | null {
         return this._focusUnitOnMap;
     }
-    public setFocusUnitOnMap(unit: IUnit): void {
+    public setFocusUnitOnMap(unit: Units_IUnit.IUnit): void {
         this._focusUnitOnMap = unit;
     }
     public clearFocusUnitOnMap(): void {
         this._focusUnitOnMap = null;
     }
 
-    public getFocusUnitLoaded(): IUnit | null {
+    public getFocusUnitLoaded(): Units_IUnit.IUnit | null {
         return this._focusUnitLoaded;
     }
-    public setFocusUnitLoaded(unit: IUnit): void {
+    public setFocusUnitLoaded(unit: Units_IUnit.IUnit): void {
         this._focusUnitLoaded = unit;
     }
     public clearFocusUnitLoaded(): void {
@@ -468,52 +443,52 @@ export class ActionPlanner implements IActionPlanner {
         return this.getFocusUnitLoaded()?.getUnitId() ?? null;
     }
 
-    public getAvailableDropDestinations(): GridIndex[] | null {
+    public getAvailableDropDestinations(): AuxiliaryTypes_GridIndex.GridIndex[] | null {
         return this._availableDropDestinations;
     }
-    public setAvailableDropDestinations(destinations: GridIndex[]): void {
+    public setAvailableDropDestinations(destinations: AuxiliaryTypes_GridIndex.GridIndex[]): void {
         this._availableDropDestinations = destinations;
     }
     public clearAvailableDropDestinations(): void {
         this._availableDropDestinations = null;
     }
 
-    public getChoosingUnitForDrop(): IUnit | null {
+    public getChoosingUnitForDrop(): Units_IUnit.IUnit | null {
         return this._choosingUnitForDrop;
     }
-    public setChoosingUnitForDrop(unit: IUnit): void {
+    public setChoosingUnitForDrop(unit: Units_IUnit.IUnit): void {
         this._choosingUnitForDrop = unit;
     }
     public clearChoosingUnitForDrop(): void {
         this._choosingUnitForDrop = null;
     }
 
-    public getChosenUnitsForDrop(): ChosenUnitForDrop[] {
+    public getChosenUnitsForDrop(): ActionPlanners_Types.ChosenUnitForDrop[] {
         return this._chosenUnitsForDrop;
     }
-    public pushBackChosenUnitForDrop(data: ChosenUnitForDrop): void {
+    public pushBackChosenUnitForDrop(data: ActionPlanners_Types.ChosenUnitForDrop): void {
         this._chosenUnitsForDrop.push(data);
     }
-    public popBackChosenUnitForDrop(): ChosenUnitForDrop {
-        return getExisted(this.getChosenUnitsForDrop().pop());
+    public popBackChosenUnitForDrop(): ActionPlanners_Types.ChosenUnitForDrop {
+        return Helpers_Misc.getExisted(this.getChosenUnitsForDrop().pop());
     }
     public clearChosenUnitsForDrop(): void {
         this._chosenUnitsForDrop.length = 0;
     }
-    public getChosenDropDestinations(): GridIndex[] {
-        const destinations: GridIndex[] = [];
+    public getChosenDropDestinations(): AuxiliaryTypes_GridIndex.GridIndex[] {
+        const destinations: AuxiliaryTypes_GridIndex.GridIndex[] = [];
         for (const data of this.getChosenUnitsForDrop()) {
             destinations.push(data.destination);
         }
         return destinations;
     }
 
-    public getMovableArea(): MovableArea | null {
+    public getMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null {
         return this._movableArea;
     }
     public resetMovableArea(): void {
-        const unit = getExisted(this.getFocusUnit());
-        this._movableArea = MovableArea.create({
+        const unit = Helpers_Misc.getExisted(this.getFocusUnit());
+        this._movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
             gridIndex       : unit.getGridIndex(),
             maxMoveCost     : unit.getFinalMoveRange(),
             mapSize         : this.getMapSize(),
@@ -524,18 +499,18 @@ export class ActionPlanner implements IActionPlanner {
         this._movableArea = null;
     }
 
-    public getAttackableArea(): AttackableArea | null {
+    public getAttackableArea(): AuxiliaryTypes_AttackableArea.AttackableArea | null {
         return this._attackableArea;
     }
     public resetAttackableArea(): void {
-        const focusUnit             = getExisted(this.getFocusUnit());
+        const focusUnit             = Helpers_Misc.getExisted(this.getFocusUnit());
         const canAttackAfterMoving  = focusUnit.getFinalCanAttackAfterMoving();
         const isLoaded              = focusUnit.getLoaderUnitId() != null;
         const beginningGridIndex    = focusUnit.getGridIndex();
         const hasAmmo               = (!!focusUnit.getPrimaryWeaponCurrentAmmo()) || (focusUnit.checkHasSecondaryWeapon());
         const unitMap               = this.getWar().getUnitMap();
-        this._setAttackableArea(AttackableArea.create({
-            movableArea         : getExisted(this.getMovableArea()),
+        this._setAttackableArea(AuxiliaryTypes_AttackableArea.AttackableArea.create({
+            movableArea         : Helpers_Misc.getExisted(this.getMovableArea()),
             mapSize             : this.getMapSize(),
             minAttackRange      : focusUnit.getMinAttackRange(),
             maxAttackRange      : focusUnit.getFinalMaxAttackRange(),
@@ -555,29 +530,29 @@ export class ActionPlanner implements IActionPlanner {
             }
         }));
     }
-    private _setAttackableArea(area: AttackableArea): void {
+    private _setAttackableArea(area: AuxiliaryTypes_AttackableArea.AttackableArea): void {
         this._attackableArea = area;
     }
     private _clearAttackableArea(): void {
-        this._setAttackableArea(new AttackableArea([]));
+        this._setAttackableArea(new AuxiliaryTypes_AttackableArea.AttackableArea([]));
     }
 
-    public getAttackableGridsForUnitWeapon(): GridIndex[] | null {
+    public getAttackableGridsForUnitWeapon(): AuxiliaryTypes_GridIndex.GridIndex[] | null {
         return this._attackableGridsForUnitWeapon;
     }
-    public setAttackableGridsForUnitWeapon(grids: GridIndex[]): void {
+    public setAttackableGridsForUnitWeapon(grids: AuxiliaryTypes_GridIndex.GridIndex[]): void {
         this._attackableGridsForUnitWeapon = grids;
     }
-    public checkHasAttackableGridForUnitWeapon(gridIndex: GridIndex): boolean {
-        for (const grid of getExisted(this.getAttackableGridsForUnitWeapon())) {
+    public checkHasAttackableGridForUnitWeapon(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
+        for (const grid of Helpers_Misc.getExisted(this.getAttackableGridsForUnitWeapon())) {
             if (grid.checkIsEqual(gridIndex)) {
                 return true;
             }
         }
         return false;
     }
-    public createAttackableGridsForUnitWeapon(): GridIndex[] {
-        const unit              = getExisted(this.getFocusUnit());
+    public createAttackableGridsForUnitWeapon(): AuxiliaryTypes_GridIndex.GridIndex[] {
+        const unit              = Helpers_Misc.getExisted(this.getFocusUnit());
         const minAttackRange    = unit.getMinAttackRange();
         if (minAttackRange == null) {
             return [];
@@ -614,19 +589,19 @@ export class ActionPlanner implements IActionPlanner {
         const cfg = this.getFocusUnitOnMap()?.getPlayer().getCoBasicCfg();
         return (cfg == null)
             ? null
-            : getPowerSkillTargetsCount(cfg, skillType);
+            : CoSkills_Utils_Common.getPowerSkillTargetsCount(cfg, skillType);
     }
 
-    public getCoActiveSkillTargetGridIndexArray(): GridIndex[] | null {
+    public getCoActiveSkillTargetGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[] | null {
         return this._coActiveSkillTargetGridIndexArray;
     }
-    public checkHasCoActiveSkillTargetGridIndex(gridIndex: GridIndex): boolean {
+    public checkHasCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
         return this.getCoActiveSkillTargetGridIndexArray()?.some(v => v.checkIsEqual(gridIndex)) ?? false;
     }
-    public addCoActiveSkillTargetGridIndex(gridIndex: GridIndex): void {
+    public addCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         (this._coActiveSkillTargetGridIndexArray ??= []).push(gridIndex);
     }
-    public deleteCoActiveSkillTargetGridIndex(gridIndex: GridIndex): void {
+    public deleteCoActiveSkillTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const arr = this._coActiveSkillTargetGridIndexArray;
         if (arr) {
             for (let i = 0; i < arr.length; ++i) {
@@ -643,16 +618,16 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for crush.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitCrushTargetGridIndex(): GridIndex | null {
+    public getUnitCrushTargetGridIndex(): AuxiliaryTypes_GridIndex.GridIndex | null {
         return this._unitCrushTargetGridIndex;
     }
-    public setUnitCrushTargetGridIndex(gridIndex: GridIndex): void {
+    public setUnitCrushTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._unitCrushTargetGridIndex = gridIndex.clone();
     }
     public clearUnitCrushTargetGridIndex(): void {
         this._unitCrushTargetGridIndex = null;
     }
-    public getUnitCrushCandidateGridIndexArray(): GridIndex[] {
+    public getUnitCrushCandidateGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[] {
         const focusUnit = this.getFocusUnit();
         if ((!focusUnit)                                                    ||
             (!focusUnit.getTemplateCfg().getCanCrushAdjacentTargetUnit())   ||
@@ -680,16 +655,16 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for repair.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitRepairTargetGridIndex(): GridIndex | null {
+    public getUnitRepairTargetGridIndex(): AuxiliaryTypes_GridIndex.GridIndex | null {
         return this._unitRepairTargetGridIndex;
     }
-    public setUnitRepairTargetGridIndex(gridIndex: GridIndex): void {
+    public setUnitRepairTargetGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._unitRepairTargetGridIndex = gridIndex.clone();
     }
     public clearUnitRepairTargetGridIndex(): void {
         this._unitRepairTargetGridIndex = null;
     }
-    public getUnitRepairCandidateGridIndexArray(): GridIndex[] {
+    public getUnitRepairCandidateGridIndexArray(): AuxiliaryTypes_GridIndex.GridIndex[] {
         const focusUnit = this.getFocusUnit();
         if (!focusUnit?.getTemplateCfg().getCanRepairAdjacentTargetUnit()) {
             return [];
@@ -712,28 +687,28 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for move path.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public resetMovePathAsShortest(destination: GridIndex): void {
-        this.setMovePath(getExisted(this.getMovableArea()).createShortestMovePath(destination));
+    public resetMovePathAsShortest(destination: AuxiliaryTypes_GridIndex.GridIndex): void {
+        this.setMovePath(Helpers_Misc.getExisted(this.getMovableArea()).createShortestMovePath(destination));
     }
-    public setMovePath(movePath: MovePathNode[]): void {
+    public setMovePath(movePath: AuxiliaryTypes_MovePathNode.MovePathNode[]): void {
         this._movePath = movePath;
-        dispatch(TypeId.ActionPlannerMovePathChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.ActionPlannerMovePathChanged);
     }
-    public getMovePath(): MovePathNode[] {
+    public getMovePath(): AuxiliaryTypes_MovePathNode.MovePathNode[] {
         return this._movePath;
     }
-    public getFocusUnitDestination(): GridIndex {
+    public getFocusUnitDestination(): AuxiliaryTypes_GridIndex.GridIndex {
         const movePath  = this.getMovePath();
         const length    = movePath.length;
-        return length ? movePath[length - 1].getGridIndex() : getExisted(this.getFocusUnitOnMap()).getGridIndex();
+        return length ? movePath[length - 1].getGridIndex() : Helpers_Misc.getExisted(this.getFocusUnitOnMap()).getGridIndex();
     }
-    public getMovePathDestination(): MovePathNode {
+    public getMovePathDestination(): AuxiliaryTypes_MovePathNode.MovePathNode {
         const movePath = this.getMovePath();
         return movePath[movePath.length - 1];
     }
-    public updateMovePathByDestination(destination: GridIndex): void {
+    public updateMovePathByDestination(destination: AuxiliaryTypes_GridIndex.GridIndex): void {
         const { x, y }      = destination.getXY();
-        const movableArea   = getExisted(this.getMovableArea());
+        const movableArea   = Helpers_Misc.getExisted(this.getMovableArea());
         const currPath      = this.getMovePath();
         if ((movableArea.checkHasGrid(x, y)) && (!currPath[currPath.length - 1].getGridIndex().checkIsEqual(destination))) {
             if ((!this._checkAndTruncateMovePath(destination)) && (!this._checkAndExtendMovePath(destination))) {
@@ -741,7 +716,7 @@ export class ActionPlanner implements IActionPlanner {
             }
         }
     }
-    private _checkAndTruncateMovePath(destination: GridIndex): boolean {
+    private _checkAndTruncateMovePath(destination: AuxiliaryTypes_GridIndex.GridIndex): boolean {
         const path      = this.getMovePath();
         const length    = path.length;
         for (let i = 0; i < length; ++i) {
@@ -752,19 +727,19 @@ export class ActionPlanner implements IActionPlanner {
         }
         return false;
     }
-    private _checkAndExtendMovePath(destination: GridIndex): boolean {
+    private _checkAndExtendMovePath(destination: AuxiliaryTypes_GridIndex.GridIndex): boolean {
         const path      = this.getMovePath();
         const length    = path.length;
         const prevGrid  = path[length - 1];
         if (!prevGrid.getGridIndex().checkIsAdjacent(destination)) {
             return false;
         } else {
-            const focusUnit     = getExisted(this.getFocusUnit());
-            const totalMoveCost = getExisted(this._getMoveCost(destination, focusUnit)) + prevGrid.getTotalMoveCost();
+            const focusUnit     = Helpers_Misc.getExisted(this.getFocusUnit());
+            const totalMoveCost = Helpers_Misc.getExisted(this._getMoveCost(destination, focusUnit)) + prevGrid.getTotalMoveCost();
             if (totalMoveCost > focusUnit.getFinalMoveRange()) {
                 return false;
             } else {
-                path.push(new MovePathNode(
+                path.push(new AuxiliaryTypes_MovePathNode.MovePathNode(
                     destination.clone(),
                     totalMoveCost,
                 ));
@@ -785,14 +760,14 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitsForPreviewingAttackableArea(): Map<number, IUnit> {
+    public getUnitsForPreviewingAttackableArea(): Map<number, Units_IUnit.IUnit> {
         return this._unitsForPreviewAttack;
     }
-    public getTilesForPreviewingAttackableArea(): Set<ITile> {
+    public getTilesForPreviewingAttackableArea(): Set<Tiles_ITile.ITile> {
         return this._tilesForPreviewAttack;
     }
 
-    public getAreaForPreviewingAttackableArea(): AttackableArea {
+    public getAreaForPreviewingAttackableArea(): AuxiliaryTypes_AttackableArea.AttackableArea {
         return this._areaForPreviewAttack;
     }
     public clearDataForPreviewingAttackableArea(): void {
@@ -800,17 +775,17 @@ export class ActionPlanner implements IActionPlanner {
         this.getTilesForPreviewingAttackableArea().clear();
         this.getAreaForPreviewingAttackableArea().clear();
     }
-    public addUnitForPreviewAttackableArea(unit: IUnit): void {
+    public addUnitForPreviewAttackableArea(unit: Units_IUnit.IUnit): void {
         this.getUnitsForPreviewingAttackableArea().set(unit.getUnitId(), unit);
     }
-    public addTileForPreviewAttackableArea(tile: ITile): void {
+    public addTileForPreviewAttackableArea(tile: Tiles_ITile.ITile): void {
         this.getTilesForPreviewingAttackableArea().add(tile);
 
         const mapSize = this.getMapSize();
-        this.getAreaForPreviewingAttackableArea().mergeFrom(AttackableArea.createForTile(tile, mapSize), mapSize);
+        this.getAreaForPreviewingAttackableArea().mergeFrom(AuxiliaryTypes_AttackableArea.AttackableArea.createForTile(tile, mapSize), mapSize);
     }
 
-    public updateAreaForPreviewingAttackableArea(unit: IUnit): void {
+    public updateAreaForPreviewingAttackableArea(unit: Units_IUnit.IUnit): void {
         const canAttackAfterMoving  = unit.getFinalCanAttackAfterMoving();
         const beginningGridIndex    = unit.getGridIndex();
         const hasAmmo               = (!!unit.getPrimaryWeaponCurrentAmmo()) || (unit.checkHasSecondaryWeapon());
@@ -822,8 +797,8 @@ export class ActionPlanner implements IActionPlanner {
         const isIgnoreEnemy         = this.getIsIgnoreEnemyForPreviewingAttackableArea();
         const isIgnoreAlly          = this.getIsIgnoreAllyForPreviewingAttackableArea();
         const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
-        const newArea               = AttackableArea.create({
-            movableArea: MovableArea.create({
+        const newArea               = AuxiliaryTypes_AttackableArea.AttackableArea.create({
+            movableArea: AuxiliaryTypes_MovableArea.MovableArea.create({
                 gridIndex       : beginningGridIndex,
                 maxMoveCost     : unit.getFinalMoveRange(),
                 mapSize         : mapSize,
@@ -879,8 +854,8 @@ export class ActionPlanner implements IActionPlanner {
             const beginningGridIndex    = unit.getGridIndex();
             const hasAmmo               = (!!unit.getPrimaryWeaponCurrentAmmo()) || (unit.checkHasSecondaryWeapon());
             const teamIndex             = unit.getTeamIndex();
-            const newArea               = AttackableArea.create({
-                movableArea: MovableArea.create({
+            const newArea               = AuxiliaryTypes_AttackableArea.AttackableArea.create({
+                movableArea: AuxiliaryTypes_MovableArea.MovableArea.create({
                     gridIndex       : beginningGridIndex,
                     maxMoveCost     : unit.getFinalMoveRange(),
                     mapSize         : mapSize,
@@ -926,7 +901,7 @@ export class ActionPlanner implements IActionPlanner {
     public setIsIgnoreAllyForPreviewingAttackableArea(isIgnore: boolean): void {
         this._isIgnoreAllyForPreviewAttack = isIgnore;
 
-        if (this.getStateId() === StateId.PreviewingUnitAttackableArea) {
+        if (this.getStateId() === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             this._resetAreaForPreviewingAttackableArea();
             this.updateView();
         }
@@ -938,7 +913,7 @@ export class ActionPlanner implements IActionPlanner {
     public setIsIgnoreEnemyForPreviewingAttackableArea(isIgnore: boolean): void {
         this._isIgnoreEnemyForPreviewAttack = isIgnore;
 
-        if (this.getStateId() === StateId.PreviewingUnitAttackableArea) {
+        if (this.getStateId() === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             this._resetAreaForPreviewingAttackableArea();
             this.updateView();
         }
@@ -947,16 +922,16 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing movable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitForPreviewingMovableArea(): IUnit | null {
+    public getUnitForPreviewingMovableArea(): Units_IUnit.IUnit | null {
         return this._unitForPreviewMove;
     }
-    public getAreaForPreviewingMovableArea(): MovableArea | null {
+    public getAreaForPreviewingMovableArea(): AuxiliaryTypes_MovableArea.MovableArea | null {
         return this._areaForPreviewMove;
     }
-    private _setAreaForPreviewingMovableArea(area: MovableArea | null): void {
+    private _setAreaForPreviewingMovableArea(area: AuxiliaryTypes_MovableArea.MovableArea | null): void {
         this._areaForPreviewMove = area;
     }
-    public setUnitForPreviewingMovableArea(unit: IUnit): void {
+    public setUnitForPreviewingMovableArea(unit: Units_IUnit.IUnit): void {
         this._unitForPreviewMove = unit;
     }
     public clearDataForPreviewingMovableArea(): void {
@@ -974,7 +949,7 @@ export class ActionPlanner implements IActionPlanner {
             const tileMap               = war.getTileMap();
             const unitMap               = war.getUnitMap();
             const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
-            this._setAreaForPreviewingMovableArea(MovableArea.create({
+            this._setAreaForPreviewingMovableArea(AuxiliaryTypes_MovableArea.MovableArea.create({
                 gridIndex       : movingUnit.getGridIndex(),
                 maxMoveCost     : movingUnit.getFinalMoveRange(),
                 mapSize         : this.getMapSize(),
@@ -1000,7 +975,7 @@ export class ActionPlanner implements IActionPlanner {
     public setIsIgnoreEnemyForPreviewingMovableArea(isIgnore: boolean): void {
         this._isIgnoreEnemyForPreviewMove = isIgnore;
 
-        if (this.getStateId() === StateId.PreviewingUnitMovableArea) {
+        if (this.getStateId() === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             this.resetAreaForPreviewingMovableArea();
             this.updateView();
         }
@@ -1009,17 +984,17 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing visible area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getUnitForPreviewingVisibleArea(): IUnit | null {
+    public getUnitForPreviewingVisibleArea(): Units_IUnit.IUnit | null {
         return this._unitForPreviewVisible;
     }
-    public getAreaForPreviewingVisible(): GridIndex[] | null {
+    public getAreaForPreviewingVisible(): AuxiliaryTypes_GridIndex.GridIndex[] | null {
         return this._areaForPreviewVisible;
     }
     public clearDataForPreviewingVisibleArea(): void {
         this._unitForPreviewVisible = null;
         this._areaForPreviewVisible = null;
     }
-    public setUnitForPreviewingVisibleArea(unit: IUnit): void {
+    public setUnitForPreviewingVisibleArea(unit: Units_IUnit.IUnit): void {
         const gridIndex = unit.getGridIndex();
         this._unitForPreviewVisible = unit;
         this._areaForPreviewVisible = gridIndex.getGridsWithinDistance({
@@ -1032,7 +1007,7 @@ export class ActionPlanner implements IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _getMoveCost(targetGridIndex: GridIndex, movingUnit: IUnit): Undefinable<number> {
+    private _getMoveCost(targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex, movingUnit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
         const war = this.getWar();
         if (!targetGridIndex.checkIsInsideMap(this.getMapSize())) {
             return null;
@@ -1042,7 +1017,7 @@ export class ActionPlanner implements IActionPlanner {
         const teamIndex     = movingUnit.getTeamIndex();
         if ((existingUnit)                                      &&
             (existingUnit.getTeamIndex() !== teamIndex)         &&
-            (checkIsUnitOnMapVisibleToTeam({
+            (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war                 : war,
                 gridIndex           : targetGridIndex,
                 unitType            : existingUnit.getUnitType(),
@@ -1058,30 +1033,30 @@ export class ActionPlanner implements IActionPlanner {
         }
     }
 
-    public checkCanFocusUnitOnMapAttackTarget(gridIndex: GridIndex): boolean {
-        const attackableArea = getExisted(this.getAttackableArea());
+    public checkCanFocusUnitOnMapAttackTarget(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
+        const attackableArea = Helpers_Misc.getExisted(this.getAttackableArea());
         if (!attackableArea.checkHasGridByGridIndex(gridIndex)) {
             return false;
         } else {
-            const focusUnit = getExisted(this.getFocusUnit());
+            const focusUnit = Helpers_Misc.getExisted(this.getFocusUnit());
             if (focusUnit.checkCanAttackTargetAfterMovePath(this.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
                 return true;
             } else {
                 return focusUnit.checkCanAttackTargetAfterMovePath(
-                    getExisted(this.getMovableArea()).createShortestMovePath(getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination)).map(v => v.getGridIndex()),
+                    Helpers_Misc.getExisted(this.getMovableArea()).createShortestMovePath(Helpers_Misc.getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination)).map(v => v.getGridIndex()),
                     gridIndex
                 );
             }
         }
     }
 
-    public calculateAvailableDropDestination(unitForDrop: IUnit, chosenDropDestinations: GridIndex[]): GridIndex[] {
+    public calculateAvailableDropDestination(unitForDrop: Units_IUnit.IUnit, chosenDropDestinations: AuxiliaryTypes_GridIndex.GridIndex[]): AuxiliaryTypes_GridIndex.GridIndex[] {
         const loader                = this.getFocusUnit();
         const loaderEndingGridIndex = this.getMovePathDestination().getGridIndex();
         const war                   = this.getWar();
         const tileMap               = war.getTileMap();
         const unitMap               = war.getUnitMap();
-        const destinations          = new Array<GridIndex>();
+        const destinations          = new Array<AuxiliaryTypes_GridIndex.GridIndex>();
         if (tileMap.getTile(loaderEndingGridIndex).getMoveCostByUnit(unitForDrop) != null) {
             for (const gridIndex of loaderEndingGridIndex.getAdjacentGrids(this.getMapSize())) {
                 const existingUnit = unitMap.getVisibleUnitOnMap(gridIndex);
@@ -1097,15 +1072,15 @@ export class ActionPlanner implements IActionPlanner {
     }
 }
 
-function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: IUnit) => boolean {
-    const unitVisibleDict = new Map<IUnit, boolean>();
-    return (unit: IUnit): boolean => {
+function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: Units_IUnit.IUnit) => boolean {
+    const unitVisibleDict = new Map<Units_IUnit.IUnit, boolean>();
+    return (unit: Units_IUnit.IUnit): boolean => {
         if (unitVisibleDict.has(unit)) {
             return !!unitVisibleDict.get(unit);
         }
 
         const gridIndex = unit.getGridIndex();
-        const isVisible = checkIsUnitOnMapVisibleToTeams({
+        const isVisible = Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
            war                 : unit.getWar(),
            gridIndex           : gridIndex,
            unitType            : unit.getUnitType(),
@@ -1119,65 +1094,65 @@ function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: 
     };
 }
 
-function getState(stateId: StateId): IState {
+function getState(stateId: ActionPlanners_Constants.StateId): ActionPlanners_States_IState.IState {
     switch (stateId) {
-        case StateId.Idle                             : return Idle.getInstance();
-        case StateId.ExecutingAction                  : return ExecutingAction.getInstance();
+        case ActionPlanners_Constants.StateId.Idle                             : return ActionPlanners_States_Idle.Idle.getInstance();
+        case ActionPlanners_Constants.StateId.ExecutingAction                  : return ActionPlanners_States_ExecutingAction.ExecutingAction.getInstance();
 
-        case StateId.ChoosingCoActiveSkillTarget      : return ChoosingCoActiveSkillTarget.getInstance();
-        case StateId.ChoosingTileProductionTarget     : return ChoosingTileProductionTarget.getInstance();
-        case StateId.ChoosingUnitAction               : return ChoosingUnitAction.getInstance();
-        case StateId.ChoosingUnitAttackTarget         : return ChoosingUnitAttackTarget.getInstance();
-        case StateId.ChoosingUnitCrushTarget          : return ChoosingUnitCrushTarget.getInstance();
-        case StateId.ChoosingUnitDropDestination      : return ChoosingUnitDropDestination.getInstance();
-        case StateId.ChoosingUnitFlareDestination     : return ChoosingUnitFlareDestination.getInstance();
-        case StateId.ChoosingUnitMovePath             : return ChoosingUnitMovePath.getInstance();
-        case StateId.ChoosingUnitRepairTarget         : return ChoosingUnitRepairTarget.getInstance();
-        case StateId.ChoosingUnitSiloDestination      : return ChoosingUnitSiloDestination.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingCoActiveSkillTarget      : return ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingTileProductionTarget     : return ActionPlanners_States_ChoosingTileProductionTarget.ChoosingTileProductionTarget.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitAction               : return ActionPlanners_States_ChoosingUnitAction.ChoosingUnitAction.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget         : return ActionPlanners_States_ChoosingUnitAttackTarget.ChoosingUnitAttackTarget.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget          : return ActionPlanners_States_ChoosingUnitCrushTarget.ChoosingUnitCrushTarget.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitDropDestination      : return ActionPlanners_States_ChoosingUnitDropDestination.ChoosingUnitDropDestination.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitFlareDestination     : return ActionPlanners_States_ChoosingUnitFlareDestination.ChoosingUnitFlareDestination.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitMovePath             : return ActionPlanners_States_ChoosingUnitMovePath.ChoosingUnitMovePath.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitRepairTarget         : return ActionPlanners_States_ChoosingUnitRepairTarget.ChoosingUnitRepairTarget.getInstance();
+        case ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination      : return ActionPlanners_States_ChoosingUnitSiloDestination.ChoosingUnitSiloDestination.getInstance();
 
-        case StateId.PreviewingTileAttackableArea     : return PreviewingTileAttackableArea.getInstance();
-        case StateId.PreviewingUnitAttackableArea     : return PreviewingUnitAttackableArea.getInstance();
-        case StateId.PreviewingUnitMovableArea        : return PreviewingUnitMovableArea.getInstance();
-        case StateId.PreviewingUnitVisibleArea        : return PreviewingUnitVisibleArea.getInstance();
+        case ActionPlanners_Constants.StateId.PreviewingTileAttackableArea     : return ActionPlanners_States_PreviewingTileAttackableArea.PreviewingTileAttackableArea.getInstance();
+        case ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea     : return ActionPlanners_States_PreviewingUnitAttackableArea.PreviewingUnitAttackableArea.getInstance();
+        case ActionPlanners_Constants.StateId.PreviewingUnitMovableArea        : return ActionPlanners_States_PreviewingUnitMovableArea.PreviewingUnitMovableArea.getInstance();
+        case ActionPlanners_Constants.StateId.PreviewingUnitVisibleArea        : return ActionPlanners_States_PreviewingUnitVisibleArea.PreviewingUnitVisibleArea.getInstance();
 
-        case StateId.RequestingPlayerDeleteUnit       : return RequestingPlayerDeleteUnit.getInstance();
-        case StateId.RequestingPlayerEndTurn          : return RequestingPlayerEndTurn.getInstance();
-        case StateId.RequestingPlayerProduceUnit      : return RequestingPlayerProduceUnit.getInstance();
-        case StateId.RequestingPlayerSurrender        : return RequestingPlayerSurrender.getInstance();
-        case StateId.RequestingPlayerUseCoActiveSkill : return RequestingPlayerUseCoActiveSkill.getInstance();
-        case StateId.RequestingPlayerVoteForDraw      : return RequestingPlayerVoteForDraw.getInstance();
-        case StateId.RequestingUnitAttackTile         : return RequestingUnitAttackTile.getInstance();
-        case StateId.RequestingUnitAttackUnit         : return RequestingUnitAttackUnit.getInstance();
-        case StateId.RequestingUnitBeLoaded           : return RequestingUnitBeLoaded.getInstance();
-        case StateId.RequestingUnitBoardedByCo        : return RequestingUnitBoardedByCo.getInstance();
-        case StateId.RequestingUnitBuildTile          : return RequestingUnitBuildTile.getInstance();
-        case StateId.RequestingUnitCaptureTile        : return RequestingUnitCaptureTile.getInstance();
-        case StateId.RequestingUnitCrushUnit          : return RequestingUnitCrushUnit.getInstance();
-        case StateId.RequestingUnitDive               : return RequestingUnitDive.getInstance();
-        case StateId.RequestingUnitDrop               : return RequestingUnitDrop.getInstance();
-        case StateId.RequestingUnitJoin               : return RequestingUnitJoin.getInstance();
-        case StateId.RequestingUnitLaunchFlare        : return RequestingUnitLaunchFlare.getInstance();
-        case StateId.RequestingUnitLaunchSilo         : return RequestingUnitLaunchSilo.getInstance();
-        case StateId.RequestingUnitProduceUnit        : return RequestingUnitProduceUnit.getInstance();
-        case StateId.RequestingUnitRepairUnit         : return RequestingUnitRepairUnit.getInstance();
-        case StateId.RequestingUnitSelfDetonate       : return RequestingUnitSelfDetonate.getInstance();
-        case StateId.RequestingUnitSupply             : return RequestingUnitSupply.getInstance();
-        case StateId.RequestingUnitSurface            : return RequestingUnitSurface.getInstance();
-        case StateId.RequestingUnitUseCoActiveSkill   : return RequestingUnitUseCoActiveSkill.getInstance();
-        case StateId.RequestingUnitWait               : return RequestingUnitWait.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerDeleteUnit       : return ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerEndTurn          : return ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerProduceUnit      : return ActionPlanners_States_RequestingPlayerProduceUnit.RequestingPlayerProduceUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerSurrender        : return ActionPlanners_States_RequestingPlayerSurrender.RequestingPlayerSurrender.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerUseCoActiveSkill : return ActionPlanners_States_RequestingPlayerUseCoActiveSkill.RequestingPlayerUseCoActiveSkill.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingPlayerVoteForDraw      : return ActionPlanners_States_RequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitAttackTile         : return ActionPlanners_States_RequestingUnitAttackTile.RequestingUnitAttackTile.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitAttackUnit         : return ActionPlanners_States_RequestingUnitAttackUnit.RequestingUnitAttackUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitBeLoaded           : return ActionPlanners_States_RequestingUnitBeLoaded.RequestingUnitBeLoaded.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitBoardedByCo        : return ActionPlanners_States_RequestingUnitBoardedByCo.RequestingUnitBoardedByCo.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitBuildTile          : return ActionPlanners_States_RequestingUnitBuildTile.RequestingUnitBuildTile.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitCaptureTile        : return ActionPlanners_States_RequestingUnitCaptureTile.RequestingUnitCaptureTile.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitCrushUnit          : return ActionPlanners_States_RequestingUnitCrushUnit.RequestingUnitCrushUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitDive               : return ActionPlanners_States_RequestingUnitDive.RequestingUnitDive.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitDrop               : return ActionPlanners_States_RequestingUnitDrop.RequestingUnitDrop.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitJoin               : return ActionPlanners_States_RequestingUnitJoin.RequestingUnitJoin.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitLaunchFlare        : return ActionPlanners_States_RequestingUnitLaunchFlare.RequestingUnitLaunchFlare.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo         : return ActionPlanners_States_RequestingUnitLaunchSilo.RequestingUnitLaunchSilo.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitProduceUnit        : return ActionPlanners_States_RequestingUnitProduceUnit.RequestingUnitProduceUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitRepairUnit         : return ActionPlanners_States_RequestingUnitRepairUnit.RequestingUnitRepairUnit.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitSelfDetonate       : return ActionPlanners_States_RequestingUnitSelfDetonate.RequestingUnitSelfDetonate.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitSupply             : return ActionPlanners_States_RequestingUnitSupply.RequestingUnitSupply.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitSurface            : return ActionPlanners_States_RequestingUnitSurface.RequestingUnitSurface.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitUseCoActiveSkill   : return ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance();
+        case ActionPlanners_Constants.StateId.RequestingUnitWait               : return ActionPlanners_States_RequestingUnitWait.RequestingUnitWait.getInstance();
 
-        default                                         : throw newError(`ActionPlanner.getState() invalid stateId: ${stateId}`);
+        default                                         : throw Helpers_Misc.newError(`ActionPlanner.getState() invalid stateId: ${stateId}`);
     }
 }
 
-function checkIsExecuting(stateId: StateId): boolean {
-    return StateIdsForExecuting.has(stateId);
+function checkIsExecuting(stateId: ActionPlanners_Constants.StateId): boolean {
+    return ActionPlanners_Constants.StateIdsForExecuting.has(stateId);
 }
-function checkIsRequesting(stateId: StateId): boolean {
-    return StateIdsForRequesting.has(stateId);
+function checkIsRequesting(stateId: ActionPlanners_Constants.StateId): boolean {
+    return ActionPlanners_Constants.StateIdsForRequesting.has(stateId);
 }
 
-function generateOpenDataForUnitActionsPanel(actionPlanner: IActionPlanner): OpenData {
+function generateOpenDataForUnitActionsPanel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_View_BwUnitActionsPanel.OpenData {
     const war                   = actionPlanner.getWar();
     const destination           = actionPlanner.getMovePathDestination();
     const actionUnitBeLoaded    = getActionUnitBeLoaded(actionPlanner);
@@ -1198,7 +1173,7 @@ function generateOpenDataForUnitActionsPanel(actionPlanner: IActionPlanner): Ope
         };
     }
 
-    const dataList              : DataForUnitAction[] = [];
+    const dataList              : BaseWar_Model_BwTypes.DataForUnitAction[] = [];
     const actionsForDropUnit    = getActionsUnitDropUnit(actionPlanner);
     const canDropUnits          = actionsForDropUnit.length > 0;
     dataList.push(...getActionUnitUseCoSuperPower(actionPlanner));
@@ -1221,7 +1196,7 @@ function generateOpenDataForUnitActionsPanel(actionPlanner: IActionPlanner): Ope
     dataList.push(...getActionUnitWait(actionPlanner, dataList.length > 0));
 
     if (!dataList.length) {
-        throw newError(`No actions available?!`);
+        throw Helpers_Misc.newError(`No actions available?!`);
     }
 
     return {
@@ -1230,38 +1205,38 @@ function generateOpenDataForUnitActionsPanel(actionPlanner: IActionPlanner): Ope
         actionList  : dataList,
     };
 }
-function getActionUnitBeLoaded(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitBeLoaded(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     const destination   = actionPlanner.getMovePathDestination().getGridIndex();
-    const focusUnit     = getExisted(actionPlanner.getFocusUnit());
+    const focusUnit     = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
     if (focusUnit.getGridIndex().checkIsEqual(destination)) {
         return [];
     } else {
         const loader = actionPlanner.getWar().getUnitMap().getUnitOnMap(destination);
         return (loader) && (loader.checkCanLoadUnit(focusUnit))
             ? [{
-                actionType  : ActionTypeId.BeLoaded,
-                callback    : () => RequestingUnitBeLoaded.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType  : Units_Constants.ActionTypeId.BeLoaded,
+                callback    : () => ActionPlanners_States_RequestingUnitBeLoaded.RequestingUnitBeLoaded.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
 }
-function getActionUnitJoin(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitJoin(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     const destination   = actionPlanner.getMovePathDestination().getGridIndex();
-    const focusUnit     = getExisted(actionPlanner.getFocusUnit());
+    const focusUnit     = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
     if (focusUnit.getGridIndex().checkIsEqual(destination)) {
         return [];
     } else {
         const target = actionPlanner.getWar().getUnitMap().getUnitOnMap(destination);
         return (target) && (focusUnit.checkCanJoinUnit(target))
             ? [{
-                actionType  : ActionTypeId.Join,
+                actionType  : Units_Constants.ActionTypeId.Join,
                 callback    : () => {
-                    const cb = () => RequestingUnitJoin.getInstance().doApplyOnChooseAction(actionPlanner);
-                    if (target.getActionState() === ActionStateId.Acted) {
+                    const cb = () => ActionPlanners_States_RequestingUnitJoin.RequestingUnitJoin.getInstance().doApplyOnChooseAction(actionPlanner);
+                    if (target.getActionState() === Units_Constants.ActionStateId.Acted) {
                         cb();
                     } else {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent  : () => getText(TextType.A0885),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0885),
                             callback    : cb,
                         });
                     }
@@ -1270,19 +1245,19 @@ function getActionUnitJoin(actionPlanner: IActionPlanner): DataForUnitAction[] {
             : [];
     }
 }
-function getActionsUnitDropUnit(actionPlanner: IActionPlanner): DataForUnitAction[] {
-    const focusUnit                 = getExisted(actionPlanner.getFocusUnit());
+function getActionsUnitDropUnit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
+    const focusUnit                 = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
     const destination               = actionPlanner.getMovePathDestination();
     const loadedUnits               = focusUnit.getLoadedUnits();
     const chosenUnits               = actionPlanner.getChosenUnitsForDrop();
     const chosenDropDestinations    = actionPlanner.getChosenDropDestinations();
-    const actions                   : DataForUnitAction[] = [];
+    const actions                   : BaseWar_Model_BwTypes.DataForUnitAction[] = [];
     if ((loadedUnits.length > chosenUnits.length) && (focusUnit.checkCanDropLoadedUnit(actionPlanner.getWar().getTileMap().getTile(destination.getGridIndex()).getTileTypeId()))) {
         for (const unit of loadedUnits) {
             if ((chosenUnits.every(value => value.unit !== unit)) && (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length)) {
                 actions.push({
-                    actionType  : ActionTypeId.DropUnit,
-                    callback    : () => ChoosingUnitDropDestination.getInstance().doApplyOnChooseAction(actionPlanner, unit),
+                    actionType  : Units_Constants.ActionTypeId.DropUnit,
+                    callback    : () => ActionPlanners_States_ChoosingUnitDropDestination.ChoosingUnitDropDestination.getInstance().doApplyOnChooseAction(actionPlanner, unit),
                     unitForDrop : unit,
                 });
             }
@@ -1290,147 +1265,147 @@ function getActionsUnitDropUnit(actionPlanner: IActionPlanner): DataForUnitActio
     }
     return actions;
 }
-function getActionUnitUseCoSuperPower(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitUseCoSuperPower(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        const focusUnit = getExisted(actionPlanner.getFocusUnit());
-        const skillType = SkillTypeId.SuperPower;
+        const focusUnit = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
+        const skillType = CoSkills_Constants.SkillTypeId.SuperPower;
         return !focusUnit.checkCanUseCoSkill(skillType)
             ? []
             : [{
-                actionType  : ActionTypeId.UseCoSuperPower,
+                actionType  : Units_Constants.ActionTypeId.UseCoSuperPower,
                 callback    : () => {
-                    const targetsCount = getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
+                    const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent : () => getText(TextType.A0058),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0058),
                             callback: () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
-                                RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
+                                ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
                             },
                         });
                     } else {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent  : () => getFormattedText(TextType.F0205, targetsCount),
-                            callback    : () => ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
                 },
             }];
     }
 }
-function getActionUnitUseCoPower(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitUseCoPower(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        const focusUnit = getExisted(actionPlanner.getFocusUnit());
-        const skillType = SkillTypeId.Power;
+        const focusUnit = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
+        const skillType = CoSkills_Constants.SkillTypeId.Power;
         return !focusUnit.checkCanUseCoSkill(skillType)
             ? []
             : [{
-                actionType  : ActionTypeId.UseCoPower,
+                actionType  : Units_Constants.ActionTypeId.UseCoPower,
                 callback    : () => {
-                    const targetsCount = getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
+                    const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent : () => getText(TextType.A0054),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0054),
                             callback: () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
-                                RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
+                                ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
                             },
                         });
                     } else {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent  : () => getFormattedText(TextType.F0205, targetsCount),
-                            callback    : () => ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
                 },
             }];
     }
 }
-function getActionUnitBoardedByCo(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitBoardedByCo(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        return getExisted(actionPlanner.getFocusUnit()).checkCanCoBoardAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()))
+        return Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanCoBoardAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()))
             ? [{
-                actionType  : ActionTypeId.CoBoard,
-                callback    : () => RequestingUnitBoardedByCo.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType  : Units_Constants.ActionTypeId.CoBoard,
+                callback    : () => ActionPlanners_States_RequestingUnitBoardedByCo.RequestingUnitBoardedByCo.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
 }
-function getActionUnitAttack(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitAttack(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     return actionPlanner.createAttackableGridsForUnitWeapon().length
         ? [{
-            actionType  : ActionTypeId.Attack,
-            callback    : () => ChoosingUnitAttackTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType  : Units_Constants.ActionTypeId.Attack,
+            callback    : () => ActionPlanners_States_ChoosingUnitAttackTarget.ChoosingUnitAttackTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }]
         : [];
 }
-function getActionUnitCapture(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitCapture(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        return (getExisted(actionPlanner.getFocusUnit()).checkCanCaptureTile(actionPlanner.getWar().getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex())))
+        return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanCaptureTile(actionPlanner.getWar().getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex())))
             ? [{
-                actionType: ActionTypeId.CaptureTile,
-                callback: () => RequestingUnitCaptureTile.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType: Units_Constants.ActionTypeId.CaptureTile,
+                callback: () => ActionPlanners_States_RequestingUnitCaptureTile.RequestingUnitCaptureTile.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
 }
-function getActionUnitCrushUnit(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitCrushUnit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if ((actionPlanner.getChosenUnitsForDrop().length)                  ||
         (!actionPlanner.getUnitCrushCandidateGridIndexArray().length)
     ) {
         return [];
     } else {
         return [{
-            actionType  : ActionTypeId.CrushUnit,
-            callback    : () => ChoosingUnitCrushTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType  : Units_Constants.ActionTypeId.CrushUnit,
+            callback    : () => ActionPlanners_States_ChoosingUnitCrushTarget.ChoosingUnitCrushTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }];
     }
 }
-function getActionUnitDive(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitDive(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        return (getExisted(actionPlanner.getFocusUnit()).checkCanDive())
+        return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanDive())
             ? [{
-                actionType: ActionTypeId.Dive,
-                callback: () => RequestingUnitDive.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType: Units_Constants.ActionTypeId.Dive,
+                callback: () => ActionPlanners_States_RequestingUnitDive.RequestingUnitDive.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
 }
-function getActionUnitSurface(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitSurface(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        return (getExisted(actionPlanner.getFocusUnit()).checkCanSurface())
+        return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanSurface())
             ? [{
-                actionType  : ActionTypeId.Surface,
-                callback    : () => openPanel(getDict().CommonConfirmPanel, {
-                    getContent  : () => getText(TextType.AreYouSureYouWantToContinue),
-                    callback    : () => RequestingUnitSurface.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType  : Units_Constants.ActionTypeId.Surface,
+                callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                    callback    : () => ActionPlanners_States_RequestingUnitSurface.RequestingUnitSurface.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }]
             : [];
     }
 }
-function getActionsUnitLaunchUnit(actionPlanner: IActionPlanner): DataForUnitAction[] {
-    const dataList  : DataForUnitAction[] = [];
-    const focusUnit = getExisted(actionPlanner.getFocusUnit());
+function getActionsUnitLaunchUnit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
+    const dataList  : BaseWar_Model_BwTypes.DataForUnitAction[] = [];
+    const focusUnit = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
     if ((focusUnit !== actionPlanner.getFocusUnitLoaded()) && (actionPlanner.getMovePath().length === 1) && (focusUnit.checkCanLaunchLoadedUnit())) {
         const tile = actionPlanner.getWar().getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex());
         for (const unit of focusUnit.getLoadedUnits()) {
-            if ((unit.getActionState() === ActionStateId.Idle) && (tile.getMoveCostByUnit(unit) != null)) {
+            if ((unit.getActionState() === Units_Constants.ActionStateId.Idle) && (tile.getMoveCostByUnit(unit) != null)) {
                 dataList.push({
-                    actionType      : ActionTypeId.LaunchUnit,
-                    callback        : () => ChoosingUnitMovePath.getInstance().doApplyOnChooseAction(actionPlanner, unit),
+                    actionType      : Units_Constants.ActionTypeId.LaunchUnit,
+                    callback        : () => ActionPlanners_States_ChoosingUnitMovePath.ChoosingUnitMovePath.getInstance().doApplyOnChooseAction(actionPlanner, unit),
                     unitForLaunch   : unit,
                 });
             }
@@ -1438,53 +1413,53 @@ function getActionsUnitLaunchUnit(actionPlanner: IActionPlanner): DataForUnitAct
     }
     return dataList;
 }
-function getActionUnitRepairUnit(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitRepairUnit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if ((actionPlanner.getChosenUnitsForDrop().length)                  ||
         (!actionPlanner.getUnitRepairCandidateGridIndexArray().length)
     ) {
         return [];
     } else {
         return [{
-            actionType  : ActionTypeId.RepairUnit,
-            callback    : () => ChoosingUnitRepairTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType  : Units_Constants.ActionTypeId.RepairUnit,
+            callback    : () => ActionPlanners_States_ChoosingUnitRepairTarget.ChoosingUnitRepairTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }];
     }
 }
-function getActionUnitSelfDetonate(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitSelfDetonate(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        const selfDetonateCfg = getExisted(actionPlanner.getFocusUnit()).getTemplateCfg().getSelfDetonateCfg();
+        const selfDetonateCfg = Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getTemplateCfg().getSelfDetonateCfg();
         if (selfDetonateCfg) {
             return [{
-                actionType  : ActionTypeId.SelfDetonate,
-                callback    : () => openPanel(getDict().CommonConfirmPanel, {
-                    getContent  : () => getFormattedText(TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
-                    callback    : () => RequestingUnitSelfDetonate.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType  : Units_Constants.ActionTypeId.SelfDetonate,
+                callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
+                    callback    : () => ActionPlanners_States_RequestingUnitSelfDetonate.RequestingUnitSelfDetonate.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }];
         }
         return [];
     }
 }
-function getActionUnitSupply(actionPlanner: IActionPlanner, canDropUnits: boolean): DataForUnitAction[] {
+function getActionUnitSupply(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, canDropUnits: boolean): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        const focusUnit     = getExisted(actionPlanner.getFocusUnit());
+        const focusUnit     = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
         const playerIndex   = focusUnit.getPlayerIndex();
         const unitMap       = actionPlanner.getWar().getUnitMap();
         if (focusUnit.checkIsAdjacentUnitSupplier()) {
             for (const gridIndex of actionPlanner.getMovePathDestination().getGridIndex().getAdjacentGrids(actionPlanner.getMapSize())) {
                 const unit = unitMap.getUnitOnMap(gridIndex);
                 if ((unit) && (unit !== focusUnit) && (unit.getPlayerIndex() === playerIndex) && (unit.checkCanBeSupplied())) {
-                    const cb = () => RequestingUnitSupply.getInstance().doApplyOnChooseAction(actionPlanner);
+                    const cb = () => ActionPlanners_States_RequestingUnitSupply.RequestingUnitSupply.getInstance().doApplyOnChooseAction(actionPlanner);
                     return [{
-                        actionType  : ActionTypeId.Supply,
+                        actionType  : Units_Constants.ActionTypeId.Supply,
                         callback    : !canDropUnits
                             ? cb
-                            : () => openPanel(getDict().CommonConfirmPanel, {
-                                getContent  : () => getText(TextType.A0055),
+                            : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                                getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
                                 callback    : cb,
                             }),
                     }];
@@ -1494,30 +1469,30 @@ function getActionUnitSupply(actionPlanner: IActionPlanner, canDropUnits: boolea
         return [];
     }
 }
-function getActionUnitBuildTile(actionPlanner: IActionPlanner, canDropUnits: boolean): DataForUnitAction[] {
+function getActionUnitBuildTile(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, canDropUnits: boolean): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
         const destination   = actionPlanner.getMovePathDestination().getGridIndex();
         const tile          = actionPlanner.getWar().getTileMap().getTile(destination);
-        if (!getExisted(actionPlanner.getFocusUnit()).checkCanBuildOnTile(tile)) {
+        if (!Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanBuildOnTile(tile)) {
             return [];
         } else {
-            const cb = () => RequestingUnitBuildTile.getInstance().doApplyOnChooseAction(actionPlanner);
+            const cb = () => ActionPlanners_States_RequestingUnitBuildTile.RequestingUnitBuildTile.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : ActionTypeId.BuildTile,
+                actionType  : Units_Constants.ActionTypeId.BuildTile,
                 callback    : !canDropUnits
                     ? cb
-                    : () => openPanel(getDict().CommonConfirmPanel, {
-                        getContent  : () => getText(TextType.A0055),
+                    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
                         callback    : cb,
                     }),
             }];
         }
     }
 }
-function getActionUnitLaunchFlare(actionPlanner: IActionPlanner): DataForUnitAction[] {
-    const focusUnit = getExisted(actionPlanner.getFocusUnit());
+function getActionUnitLaunchFlare(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
+    const focusUnit = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
     const movePath  = actionPlanner.getMovePath();
     if ((!actionPlanner.getWar().getFogMap().checkHasFogCurrently())    ||
         (movePath.length !== 1)                                 ||
@@ -1526,32 +1501,32 @@ function getActionUnitLaunchFlare(actionPlanner: IActionPlanner): DataForUnitAct
         return [];
     } else {
         return [{
-            actionType  : ActionTypeId.LaunchFlare,
-            callback    : () => ChoosingUnitFlareDestination.getInstance().doApplyOnChooseAction(
+            actionType  : Units_Constants.ActionTypeId.LaunchFlare,
+            callback    : () => ActionPlanners_States_ChoosingUnitFlareDestination.ChoosingUnitFlareDestination.getInstance().doApplyOnChooseAction(
                 actionPlanner,
-                getExisted(focusUnit.getFlareRadius(movePath[movePath.length - 1].getGridIndex()))
+                Helpers_Misc.getExisted(focusUnit.getFlareRadius(movePath[movePath.length - 1].getGridIndex()))
             ),
         }];
     }
 }
-function getActionUnitLaunchSilo(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitLaunchSilo(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     const war   = actionPlanner.getWar();
     const tile  = war.getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex());
-    return (getExisted(actionPlanner.getFocusUnit()).checkCanLaunchSiloOnTile(tile))
+    return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanLaunchSiloOnTile(tile))
         ? [{
-            actionType  : ActionTypeId.LaunchSilo,
-            callback    : () => ChoosingUnitSiloDestination.getInstance().doApplyOnChooseAction(
+            actionType  : Units_Constants.ActionTypeId.LaunchSilo,
+            callback    : () => ActionPlanners_States_ChoosingUnitSiloDestination.ChoosingUnitSiloDestination.getInstance().doApplyOnChooseAction(
                 actionPlanner,
                 tile.getTemplateCfg().getLaunchSiloParams()[2]
             ),
         }]
         : [];
 }
-function getActionUnitProduceUnit(actionPlanner: IActionPlanner): DataForUnitAction[] {
+function getActionUnitProduceUnit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     if (actionPlanner.getChosenUnitsForDrop().length) {
         return [];
     } else {
-        const focusUnit         = getExisted(actionPlanner.getFocusUnit());
+        const focusUnit         = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
         const produceUnitType   = focusUnit.getProduceUnitTypeId();
         const playerIndex       = focusUnit.getPlayerIndex();
         const war               = focusUnit.getWar();
@@ -1587,66 +1562,66 @@ function getActionUnitProduceUnit(actionPlanner: IActionPlanner): DataForUnitAct
 
         if (focusUnit.getCurrentProduceMaterial() < 1) {
             return [{
-                actionType          : ActionTypeId.ProduceUnit,
-                callback            : () => show(getText(TextType.B0051)),
+                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
+                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0051)),
                 costForProduceUnit  : costForProduceUnit,
                 produceUnitType     : produceUnitType,
             }];
-        } else if (focusUnit.getLoadedUnitsCount() >= getExisted(focusUnit.getMaxLoadUnitsCount())) {
+        } else if (focusUnit.getLoadedUnitsCount() >= Helpers_Misc.getExisted(focusUnit.getMaxLoadUnitsCount())) {
             return [{
-                actionType          : ActionTypeId.ProduceUnit,
-                callback            : () => show(getText(TextType.B0052)),
+                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
+                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0052)),
                 costForProduceUnit  : costForProduceUnit,
                 produceUnitType     : produceUnitType,
             }];
         } else if (player.getFund() < costForProduceUnit) {
             return [{
-                actionType          : ActionTypeId.ProduceUnit,
-                callback            : () => show(getText(TextType.B0053)),
+                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
+                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0053)),
                 costForProduceUnit  : costForProduceUnit,
                 produceUnitType     : produceUnitType,
             }];
         } else if ((maxUnitsCount != null) && (currentUnitsCount >= maxUnitsCount)) {
             return [{
-                actionType          : ActionTypeId.ProduceUnit,
-                callback            : () => show(getFormattedText(TextType.F0266, currentUnitsCount, maxUnitsCount)),
+                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
+                callback            : () => FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0266, currentUnitsCount, maxUnitsCount)),
                 costForProduceUnit  : costForProduceUnit,
                 produceUnitType     : produceUnitType,
             }];
         } else {
             return [{
-                actionType          : ActionTypeId.ProduceUnit,
-                callback            : () => RequestingUnitProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
+                callback            : () => ActionPlanners_States_RequestingUnitProduceUnit.RequestingUnitProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner),
                 costForProduceUnit  : costForProduceUnit,
                 produceUnitType     : produceUnitType,
             }];
         }
     }
 }
-function getActionUnitWait(actionPlanner: IActionPlanner, hasOtherAction: boolean): DataForUnitAction[] {
+function getActionUnitWait(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, hasOtherAction: boolean): BaseWar_Model_BwTypes.DataForUnitAction[] {
     const existingUnit = actionPlanner.getWar().getUnitMap().getVisibleUnitOnMap(actionPlanner.getMovePathDestination().getGridIndex());
     if ((existingUnit) && (existingUnit !== actionPlanner.getFocusUnit())) {
         return [];
     } else {
         if (actionPlanner.getChosenUnitsForDrop().length) {
-            const cb = () => RequestingUnitDrop.getInstance().doApplyOnChooseAction(actionPlanner);
+            const cb = () => ActionPlanners_States_RequestingUnitDrop.RequestingUnitDrop.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : ActionTypeId.Wait,
+                actionType  : Units_Constants.ActionTypeId.Wait,
                 callback    : !hasOtherAction
                     ? cb
-                    : () => openPanel(getDict().CommonConfirmPanel, {
-                        getContent  : () => getText(TextType.A0055),
+                    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
                         callback    : cb,
                     }),
             }];
         } else {
-            const cb = () => RequestingUnitWait.getInstance().doApplyOnChooseAction(actionPlanner);
+            const cb = () => ActionPlanners_States_RequestingUnitWait.RequestingUnitWait.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : ActionTypeId.Wait,
+                actionType  : Units_Constants.ActionTypeId.Wait,
                 callback    : !hasOtherAction
                     ? cb
-                    : () => openPanel(getDict().CommonConfirmPanel, {
-                        getContent  : () => getText(TextType.A0055),
+                    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
                         callback    : cb,
                     }),
             }];

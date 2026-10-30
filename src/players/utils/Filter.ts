@@ -1,68 +1,53 @@
-import { checkIsValidSkillTypeIdSubset } from "../../coSkills/utils/Common.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getPlayerTeamName,
-    getPlayerAliveStateName,
-    getCoSkillTypeName,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import type { IPlayer } from "../IPlayer.ts";
-import {
-    checkIsValidPlayerIndexSubset,
-    checkIsValidAliveStateIdSubset,
-} from "./Common.ts";
+    ValueAndComparators_Utils,
+    ValueArrayAndPredicates_Utils,
+    Players_Utils_Common,
+    CoSkills_Utils_Common,
+    Teams_Utils,
+    Lang_Utils,
+    Helpers_Collection,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type Players_IPlayer,
+} from "../../internal.ts";
 import type { PlayerFilter } from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
-import {
-    checkIsMeet as checkIsMeetValueAndComparator,
-    getDesc as getValueAndComparatorsDesc,
-    checkIsValid as checkIsValidValueAndComparator,
-} from "../../valueAndComparators/Utils.ts";
-import {
-    checkIsMeet as checkIsMeetValueArrayAndPredicate,
-    getDesc as getValueArrayAndPredicatesDesc,
-    checkIsValid as checkIsValidValueArrayAndPredicate,
-} from "../../valueArrayAndPredicates/Utils.ts";
 
-export function checkIsValid(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfig): boolean {
+export function checkIsValid(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): boolean {
     return getErrorTip(data, playersCountUnneutral, gameConfig) == null;
 }
 
-export function checkIsMeet(data: PlayerFilter, player: IPlayer): boolean {
+export function checkIsMeet(data: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     {
         const con = data.getConPlayerIndex();
-        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, player.getPlayerIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getPlayerIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTeamIndex();
-        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, player.getTeamIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getTeamIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConAliveState();
-        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, player.getAliveState()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getAliveState()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoUsingSkillType();
-        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, player.getCoUsingSkillType()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getCoUsingSkillType()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoCategoryId();
-        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, player.getCoCategoryId()))) {
+        if ((con != null) && (!ValueArrayAndPredicates_Utils.checkIsMeet(con, player.getCoCategoryId()))) {
             return false;
         }
     }
@@ -83,14 +68,14 @@ export function checkIsMeet(data: PlayerFilter, player: IPlayer): boolean {
 
     {
         const con = data.getConFund();
-        if ((con != null) && (!checkIsMeetValueAndComparator(con, player.getFund()))) {
+        if ((con != null) && (!ValueAndComparators_Utils.checkIsMeet(con, player.getFund()))) {
             return false;
         }
     }
 
     {
         const con = data.getConCoEnergy();
-        if ((con != null) && (!checkIsMeetValueAndComparator(con, player.getCoCurrentEnergy()))) {
+        if ((con != null) && (!ValueAndComparators_Utils.checkIsMeet(con, player.getCoCurrentEnergy()))) {
             return false;
         }
     }
@@ -110,53 +95,53 @@ export function checkIsEmpty(data: PlayerFilter): boolean {
         && (data.getConCoEnergy() == null);
 }
 
-export function getDesc(data: PlayerFilter, gameConfig: GameConfig): string {
+export function getDesc(data: PlayerFilter, gameConfig: GameConfigs_GameConfig.GameConfig): string {
     const conPlayerIndex        = data.getConPlayerIndex();
     const textForConPlayerIndex = conPlayerIndex == null
         ? null
-        : getValueArrayAndPredicatesDesc(conPlayerIndex, getText(TextType.PlayerIndex), v => `P${v}`);
+        : ValueArrayAndPredicates_Utils.getDesc(conPlayerIndex, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex), v => `P${v}`);
 
     const conTeamIndex          = data.getConTeamIndex();
     const textForConTeamIndex   = conTeamIndex == null
         ? null
-        : getValueArrayAndPredicatesDesc(conTeamIndex, getText(TextType.B0019), v => getPlayerTeamName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conTeamIndex, Lang_Utils.getText(Lang_Constants.TextType.B0019), v => Lang_Utils.getPlayerTeamName(v));
 
     const conAliveState         = data.getConAliveState();
     const textForConAliveState  = conAliveState == null
         ? null
-        : getValueArrayAndPredicatesDesc(conAliveState, getText(TextType.PlayerAliveState), v => getPlayerAliveStateName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conAliveState, Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState), v => Lang_Utils.getPlayerAliveStateName(v));
 
     const conCoUsingSkillType           = data.getConCoUsingSkillType();
     const textForConCoUsingSkillType    = conCoUsingSkillType == null
         ? null
-        : getValueArrayAndPredicatesDesc(conCoUsingSkillType, getText(TextType.ActivatingCoSkillType), v => getCoSkillTypeName(v));
+        : ValueArrayAndPredicates_Utils.getDesc(conCoUsingSkillType, Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType), v => Lang_Utils.getCoSkillTypeName(v));
 
     const conCoCategoryId           = data.getConCoCategoryId();
     const textForConCoCategoryId    = conCoCategoryId == null
         ? null
-        : getValueArrayAndPredicatesDesc(conCoCategoryId, getText(TextType.B0394), v => gameConfig.getCoCategoryCfg(v)?.getName());
+        : ValueArrayAndPredicates_Utils.getDesc(conCoCategoryId, Lang_Utils.getText(Lang_Constants.TextType.B0394), v => gameConfig.getCoCategoryCfg(v)?.getName());
 
     const isInTurn          = data.getConIsInTurn();
     const textForIsInTurn   = isInTurn == null
         ? null
-        : getText(isInTurn ? TextType.A0831 : TextType.A0832);
+        : Lang_Utils.getText(isInTurn ? Lang_Constants.TextType.A0831 : Lang_Constants.TextType.A0832);
 
     const isSkipTurn        = data.getConIsSkipTurn();
     const textForIsSkipTurn = isSkipTurn == null
         ? null
-        : getText(isSkipTurn ? TextType.A0945 : TextType.A0946);
+        : Lang_Utils.getText(isSkipTurn ? Lang_Constants.TextType.A0945 : Lang_Constants.TextType.A0946);
 
     const fund          = data.getConFund();
     const textForFund   = fund == null
         ? null
-        : getValueAndComparatorsDesc(fund, getText(TextType.Fund));
+        : ValueAndComparators_Utils.getDesc(fund, Lang_Utils.getText(Lang_Constants.TextType.Fund));
 
     const coEnergy           = data.getConCoEnergy();
     const textForCoEnergy    = coEnergy == null
         ? null
-        : getValueAndComparatorsDesc(coEnergy, getText(TextType.CoEnergy));
+        : ValueAndComparators_Utils.getDesc(coEnergy, Lang_Utils.getText(Lang_Constants.TextType.CoEnergy));
 
-    const textArrayForSubConditions = getNonNullElements([
+    const textArrayForSubConditions = Helpers_Collection.getNonNullElements([
         textForConPlayerIndex,
         textForConTeamIndex,
         textForConAliveState,
@@ -167,43 +152,43 @@ export function getDesc(data: PlayerFilter, gameConfig: GameConfig): string {
         textForFund,
         textForCoEnergy,
     ]);
-    return getFormattedText(
-        TextType.F0230,
-        getText(TextType.B0031),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0230,
+        Lang_Utils.getText(Lang_Constants.TextType.B0031),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : getText(TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944)
     );
 }
 export function getDescForEmbed(data: PlayerFilter): string | null {
-    const textArrayForSubConditions = getNonNullElements([
-        data.getConPlayerIndex() == null         ? null : getText(TextType.PlayerIndex),
-        data.getConTeamIndex() == null           ? null : getText(TextType.B0019),
-        data.getConAliveState() == null          ? null : getText(TextType.PlayerAliveState),
-        data.getConCoUsingSkillType() == null    ? null : getText(TextType.ActivatingCoSkillType),
-        data.getConCoCategoryId() == null        ? null : getText(TextType.B0394),
-        data.getConIsInTurn() == null            ? null : getText(TextType.B1401),
-        data.getConIsSkipTurn() == null          ? null : getText(TextType.B1402),
-        data.getConFund() == null                ? null : getText(TextType.Fund),
-        data.getConCoEnergy() == null            ? null : getText(TextType.CoEnergy),
+    const textArrayForSubConditions = Helpers_Collection.getNonNullElements([
+        data.getConPlayerIndex() == null         ? null : Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex),
+        data.getConTeamIndex() == null           ? null : Lang_Utils.getText(Lang_Constants.TextType.B0019),
+        data.getConAliveState() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState),
+        data.getConCoUsingSkillType() == null    ? null : Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType),
+        data.getConCoCategoryId() == null        ? null : Lang_Utils.getText(Lang_Constants.TextType.B0394),
+        data.getConIsInTurn() == null            ? null : Lang_Utils.getText(Lang_Constants.TextType.B1401),
+        data.getConIsSkipTurn() == null          ? null : Lang_Utils.getText(Lang_Constants.TextType.B1402),
+        data.getConFund() == null                ? null : Lang_Utils.getText(Lang_Constants.TextType.Fund),
+        data.getConCoEnergy() == null            ? null : Lang_Utils.getText(Lang_Constants.TextType.CoEnergy),
     ]);
     return !textArrayForSubConditions.length
         ? null
-        : getFormattedText(
-            TextType.F0231,
-            getText(TextType.B0031),
+        : Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0231,
+            Lang_Utils.getText(Lang_Constants.TextType.B0031),
             textArrayForSubConditions.join(`, `)
         );
 }
 
-export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
+export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                                               ||
-                (!checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                               ||
+                (!Players_Utils_Common.checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
             }
         }
     }
@@ -211,10 +196,10 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                                                   ||
-                (!checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                                                   ||
+                (!Teams_Utils.checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.B0019));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0019));
             }
         }
     }
@@ -222,10 +207,10 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConAliveState();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                               ||
-                (!checkIsValidAliveStateIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                               ||
+                (!Players_Utils_Common.checkIsValidAliveStateIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.PlayerAliveState));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState));
             }
         }
     }
@@ -233,10 +218,10 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConCoUsingSkillType();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                               ||
-                (!checkIsValidSkillTypeIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                               ||
+                (!CoSkills_Utils_Common.checkIsValidSkillTypeIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.ActivatingCoSkillType));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType));
             }
         }
     }
@@ -244,10 +229,10 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConCoCategoryId();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                       ||
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                       ||
                 (!gameConfig.checkIsValidCoCategoryIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.B0394));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0394));
             }
         }
     }
@@ -265,8 +250,8 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConFund();
         if (con != null) {
-            if (!checkIsValidValueAndComparator(con)) {
-                return getFormattedText(TextType.F0091, getText(TextType.Fund));
+            if (!ValueAndComparators_Utils.checkIsValid(con)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Fund));
             }
         }
     }
@@ -274,8 +259,8 @@ export function getErrorTip(data: PlayerFilter, playersCountUnneutral: number, g
     {
         const con = data.getConCoEnergy();
         if (con != null) {
-            if (!checkIsValidValueAndComparator(con)) {
-                return getFormattedText(TextType.F0091, getText(TextType.CoEnergy));
+            if (!ValueAndComparators_Utils.checkIsValid(con)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CoEnergy));
             }
         }
     }

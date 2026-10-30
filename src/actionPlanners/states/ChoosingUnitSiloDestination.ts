@@ -1,124 +1,124 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getHrwWarClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+} from "../../internal.ts";
 
-export class ChoosingUnitSiloDestination implements IState {
+export class ChoosingUnitSiloDestination implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ChoosingUnitSiloDestination();
 
     public static getInstance(): ChoosingUnitSiloDestination {
         return ChoosingUnitSiloDestination._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ChoosingUnitSiloDestination;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof getHrwWarClass()) {
-            return StateId.ChoosingUnitSiloDestination;
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+            return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
 
-        } else if (war instanceof getMeWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             const previousGridIndex = war.getCursor().getPreviousGridIndex();
             if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
-                return StateId.RequestingUnitLaunchSilo;
+                return ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo;
             } else {
-                return StateId.ChoosingUnitSiloDestination;
+                return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
             }
 
-        } else if (war instanceof getRwWarClass()) {
-            return StateId.ChoosingUnitSiloDestination;
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
+            return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const previousGridIndex = war.getCursor().getPreviousGridIndex();
             if ((previousGridIndex != null) && (gridIndex.checkIsEqual(previousGridIndex))) {
-                return StateId.RequestingUnitLaunchSilo;
+                return ActionPlanners_Constants.StateId.RequestingUnitLaunchSilo;
             } else {
-                return StateId.ChoosingUnitSiloDestination;
+                return ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination;
             }
 
-        } else if (war instanceof getTwWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
         } else {
-            throw newError(`Unknown actionPlanner.`);
+            throw Helpers_Misc.newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.ButtonCancel01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId === StateId.ChoosingUnitSiloDestination) {
+        if (currStateId === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             // Nothing to do.
 
         } else {
-            throw newError(`Invalid currState: ${currStateId}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitSiloDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitSiloDestination) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination) {
             // Nothing to do.
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitSiloDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`ChoosingUnitSiloDestinationState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`ChoosingUnitSiloDestinationState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner, siloRadius: number): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, siloRadius: number): void {
         const currState = actionPlanner.getStateId();
-        if (currState !== StateId.ChoosingUnitAction) {
-            throw newError(`Invalid currState: ${currState}`);
+        if (currState !== ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         } else {
             // Nothing to do.
         }
 
         actionPlanner.getWar().getCursor().getView().setTargetAreaRadius(siloRadius);
-        actionPlanner.setStateId(StateId.ChoosingUnitSiloDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitSiloDestination);
         actionPlanner.updateView();
     }
 }

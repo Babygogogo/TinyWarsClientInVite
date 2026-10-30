@@ -1,34 +1,30 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { NumArray } from "../../../expressionParsers/contexts/NumArray.ts";
-import { Player } from "../../../expressionParsers/contexts/Player.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
-import { NumArray as ResultsNumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { getMpwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-    getTextForYesOrNo,
-} from "../../../lang/Utils.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
-import type { WeaPersistentModifyPlayerAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
-import { ExpressionInfoDict } from "../constants/PersistentModifyPlayerAttribute.ts";
+    MultiPlayerWar_Model_MpwWar,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Contexts_NumArray,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Contexts_Player,
+    ExpressionParsers_Results_NumArray,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    WarEvents_Actions_Constants_PersistentModifyPlayerAttribute,
+    Lang_Utils,
+    Lang_Constants,
+    type Players_IPlayer,
+} from "../../../internal.ts";
 
-export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttribute>, customCounterNameSet: Set<string>): boolean {
+import type { WeaPersistentModifyPlayerAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
+
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentModifyPlayerAttribute>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getConPlayerFilter(),
-            expressionInfo          : ExpressionInfoDict.ConPlayerFilter,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ConPlayerFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -36,9 +32,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActBannedUnitTypeArray(),
-            expressionInfo          : ExpressionInfoDict.ActBannedUnitTypeArray,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -46,9 +42,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActUnbannedUnitTypeArray(),
-            expressionInfo          : ExpressionInfoDict.ActUnbannedUnitTypeArray,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -56,9 +52,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCanActivateCoSkill(),
-            expressionInfo          : ExpressionInfoDict.ActCanActivateCoSkill,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -66,9 +62,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActEnergyGrowthMultiplierModifier(),
-            expressionInfo          : ExpressionInfoDict.ActEnergyGrowthMultiplierModifier,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActEnergyGrowthMultiplierModifier,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -76,9 +72,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCoZoneRadiusModifier(),
-            expressionInfo          : ExpressionInfoDict.ActCoZoneRadiusModifier,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCoZoneRadiusModifier,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -86,9 +82,9 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActAiUnitProductionBonusScore(),
-            expressionInfo          : ExpressionInfoDict.ActAiUnitProductionBonusScore,
+            expressionInfo          : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -98,133 +94,133 @@ export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttrib
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaPersistentModifyPlayerAttribute>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentModifyPlayerAttribute>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(TextType.F0043, data.getConPlayerFilter() ?? UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError);
 }
-export function getDetailDesc(data: Undefinable<WeaPersistentModifyPlayerAttribute>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentModifyPlayerAttribute>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        `${getText(TextType.B1170)}: ${getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
-        data.getActBannedUnitTypeArray()             ? `${ExpressionInfoDict.ActBannedUnitTypeArray.getTitleText()}: ${data.getActBannedUnitTypeArray()}`                         : null,
-        data.getActUnbannedUnitTypeArray()           ? `${ExpressionInfoDict.ActUnbannedUnitTypeArray.getTitleText()}: ${data.getActUnbannedUnitTypeArray()}`                     : null,
-        data.getActCanActivateCoSkill()              ? `${ExpressionInfoDict.ActCanActivateCoSkill.getTitleText()}: ${data.getActCanActivateCoSkill()}`                           : null,
-        data.getActEnergyGrowthMultiplierModifier()  ? `${ExpressionInfoDict.ActEnergyGrowthMultiplierModifier.getTitleText()}: ${data.getActEnergyGrowthMultiplierModifier()}`   : null,
-        data.getActCoZoneRadiusModifier()            ? `${ExpressionInfoDict.ActCoZoneRadiusModifier.getTitleText()}: ${data.getActCoZoneRadiusModifier()}`                       : null,
-        data.getActAiUnitProductionBonusScore()      ? `${ExpressionInfoDict.ActAiUnitProductionBonusScore.getTitleText()}: ${data.getActAiUnitProductionBonusScore()}`           : null,
+        `${Lang_Utils.getText(Lang_Constants.TextType.B1170)}: ${Lang_Utils.getTextForYesOrNo(data.getIsEffectiveInMpw())}`,
+        data.getActBannedUnitTypeArray()             ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray.getTitleText()}: ${data.getActBannedUnitTypeArray()}`                         : null,
+        data.getActUnbannedUnitTypeArray()           ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray.getTitleText()}: ${data.getActUnbannedUnitTypeArray()}`                     : null,
+        data.getActCanActivateCoSkill()              ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill.getTitleText()}: ${data.getActCanActivateCoSkill()}`                           : null,
+        data.getActEnergyGrowthMultiplierModifier()  ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActEnergyGrowthMultiplierModifier.getTitleText()}: ${data.getActEnergyGrowthMultiplierModifier()}`   : null,
+        data.getActCoZoneRadiusModifier()            ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCoZoneRadiusModifier.getTitleText()}: ${data.getActCoZoneRadiusModifier()}`                       : null,
+        data.getActAiUnitProductionBonusScore()      ? `${WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore.getTitleText()}: ${data.getActAiUnitProductionBonusScore()}`           : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${getFormattedText(TextType.F0043, data.getConPlayerFilter() ?? UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0043, data.getConPlayerFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaPersistentModifyPlayerAttribute, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = ExpressionInfoDict.ConPlayerFilter;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ConPlayerFilter;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getConPlayerFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActBannedUnitTypeArray;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActBannedUnitTypeArray(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActUnbannedUnitTypeArray;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActUnbannedUnitTypeArray(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCanActivateCoSkill;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCanActivateCoSkill(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActEnergyGrowthMultiplierModifier;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActEnergyGrowthMultiplierModifier;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActEnergyGrowthMultiplierModifier(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCoZoneRadiusModifier;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCoZoneRadiusModifier;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCoZoneRadiusModifier(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActAiUnitProductionBonusScore;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActAiUnitProductionBonusScore(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-function checkIsMeetConditionForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: IBwWar): boolean {
-    if ((!action.getIsEffectiveInMpw()) && (war instanceof getMpwWarClass())) {
+function checkIsMeetConditionForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
+    if ((!action.getIsEffectiveInMpw()) && (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar)) {
         return false;
     }
 
     try {
-        const epResult = Parser.getParseResult(action.getConPlayerFilter() ?? ``).eval(new Player(war.getPlayer(playerIndex)), true);
-        return (epResult instanceof Num) && (epResult.num != 0);
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(action.getConPlayerFilter() ?? ``).eval(new ExpressionParsers_Contexts_Player.Player(war.getPlayer(playerIndex)), true);
+        return (epResult instanceof ExpressionParsers_Results_Num.Num) && (epResult.num != 0);
     } catch {
         return false;
     }
 }
 
-export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: IBwWar): boolean | null {
+export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean | null {
     const actCanActivate = action.getActCanActivateCoSkill();
     if (!actCanActivate) {
         return null;
@@ -235,8 +231,8 @@ export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlay
     }
 
     try {
-        const epResult = Parser.getParseResult(actCanActivate).eval(new Player(war.getPlayer(playerIndex)), true);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(actCanActivate).eval(new ExpressionParsers_Contexts_Player.Player(war.getPlayer(playerIndex)), true);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num !== 0;
         } else {
             return null;
@@ -246,7 +242,7 @@ export function checkCanActivateCoSkillForPlayer(action: WeaPersistentModifyPlay
     }
 }
 
-export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, unitType: number, war: IBwWar): boolean | null {
+export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, unitType: number, war: BaseWar_Interface_IBwWar.IBwWar): boolean | null {
     const actBannedUnitTypeArray    = action.getActBannedUnitTypeArray();
     const actUnbannedUnitTypeArray  = action.getActUnbannedUnitTypeArray();
     if ((!actBannedUnitTypeArray) && (!actUnbannedUnitTypeArray)) {
@@ -266,7 +262,7 @@ export function checkCanProduceUnitForPlayer(action: WeaPersistentModifyPlayerAt
         );
 }
 
-export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: IBwWar): number {
+export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): number {
     const exp = action.getActEnergyGrowthMultiplierModifier();
     if (!exp) {
         return 0;
@@ -277,8 +273,8 @@ export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersist
     }
 
     try {
-        const epResult = Parser.getParseResult(exp).eval(new Player(war.getPlayer(playerIndex)), true);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(exp).eval(new ExpressionParsers_Contexts_Player.Player(war.getPlayer(playerIndex)), true);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num;
         } else {
             return 0;
@@ -288,7 +284,7 @@ export function getActEnergyGrowthMultiplierModifierForPlayer(action: WeaPersist
     }
 }
 
-export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: IBwWar): number {
+export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyPlayerAttribute, playerIndex: number, war: BaseWar_Interface_IBwWar.IBwWar): number {
     const exp = action.getActCoZoneRadiusModifier();
     if (!exp) {
         return 0;
@@ -299,8 +295,8 @@ export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyP
     }
 
     try {
-        const epResult = Parser.getParseResult(exp).eval(new Player(war.getPlayer(playerIndex)), true);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(exp).eval(new ExpressionParsers_Contexts_Player.Player(war.getPlayer(playerIndex)), true);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num;
         } else {
             return 0;
@@ -313,9 +309,9 @@ export function getActCoZoneRadiusModifierForPlayer(action: WeaPersistentModifyP
 export function getActAiUnitProductionBonusScore({ action, playerIndex, war, unitTypeId, gridIndex }: {
     action      : WeaPersistentModifyPlayerAttribute;
     playerIndex : number;
-    war         : IBwWar;
+    war         : BaseWar_Interface_IBwWar.IBwWar;
     unitTypeId  : number;
-    gridIndex   : GridIndex;
+    gridIndex   : AuxiliaryTypes_GridIndex.GridIndex;
  }): number {
     const exp = action.getActAiUnitProductionBonusScore();
     if (!exp) {
@@ -327,9 +323,9 @@ export function getActAiUnitProductionBonusScore({ action, playerIndex, war, uni
     }
 
     try {
-        const temp      = new ResultsNumArray(war, [unitTypeId, gridIndex.getX(), gridIndex.getY()]);
-        const epResult  = Parser.getParseResult(exp).eval(new NumArray(temp), true);
-        if (epResult instanceof Num) {
+        const temp      = new ExpressionParsers_Results_NumArray.NumArray(war, [unitTypeId, gridIndex.getX(), gridIndex.getY()]);
+        const epResult  = ExpressionParsers_Parser.Parser.getParseResult(exp).eval(new ExpressionParsers_Contexts_NumArray.NumArray(temp), true);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num;
         } else {
             return 0;
@@ -339,16 +335,16 @@ export function getActAiUnitProductionBonusScore({ action, playerIndex, war, uni
     }
 }
 
-function getEpResultNumberArray(str: Undefinable<string>, player: IPlayer): number[] {
+function getEpResultNumberArray(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, player: Players_IPlayer.IPlayer): number[] {
     if (!str) {
         return [];
     }
 
     try {
-        const epResult = Parser.getParseResult(str).eval(new Player(player), true);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(str).eval(new ExpressionParsers_Contexts_Player.Player(player), true);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return [epResult.num];
-        } else if (epResult instanceof ResultsNumArray) {
+        } else if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             return epResult.numberArray;
         } else {
             return [];
@@ -358,9 +354,9 @@ function getEpResultNumberArray(str: Undefinable<string>, player: IPlayer): numb
     }
 }
 
-export function applyWithExtraData(_action: WeaPersistentModifyPlayerAttribute, war: IBwWar, actionId: number): void {
+export function applyWithExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentModifyPlayerAttribute, war: IBwWar, actionId: number): void {
+export function applyWithoutExtraData(_action: WeaPersistentModifyPlayerAttribute, war: BaseWar_Interface_IBwWar.IBwWar, actionId: number): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

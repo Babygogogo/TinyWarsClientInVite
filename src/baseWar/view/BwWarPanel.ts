@@ -1,14 +1,16 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import {
+    Tween_Executor,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiContainer,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war: IBwWar;
+    war: BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupAll! : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupAll! : Ui_Interfaces_IUiContainer.IUiContainer;
 
     protected override async _doApplyOpenData(): Promise<void> {
         const openData = this.getOpenData();
@@ -27,22 +29,22 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupAll,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
             tweenTime   : 1000,
         });
 
-        await wait(1000);
+        await Timer_TimerModel.wait(1000);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupAll,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }

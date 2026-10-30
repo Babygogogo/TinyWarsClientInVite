@@ -1,25 +1,15 @@
-import type {
-    Undefinable,
-    MapSorter,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { SortType } from "../../maps/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getLanguageText } from "../../lang/Utils.ts";
 import {
-    StoreNormalMapBriefData,
-    StoreNormalMapRawData,
-} from "../../localData/Storage.ts";
-import {
-    reqMapGetMapTag,
-    reqMmGetReviewingMaps,
-    reqNormalMapGetAllEnabledBriefDataVersions,
-    reqNormalMapGetBriefDataVersion,
-    reqNormalMapGetBriefData,
-    reqGetMapRawData,
-    reqNormalMapGetBriefDataArray,
-} from "./NormalMapProxy.ts";
+    AuxiliaryTypes_CachedDataAccessor,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Users_Model,
+    Lang_Utils,
+    NormalMap_Model_NormalMapProxy,
+    Maps_Constants,
+    LocalData_Storage,
+    type AuxiliaryTypes_MapFilter,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MapTag } from "../../proto/schema/CommonProto/Map/MapTag.ts";
@@ -36,34 +26,29 @@ import type { S as NormalMapGetAllEnabledBriefDataVersionsResponse } from "../..
 import type { S as NormalMapGetBriefDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
 import type { S as NormalMapGetBriefDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
 import type { S as NormalMapGetBriefDataVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
-import {
-    getMapRating,
-    getIsSelfMapCommittee,
-} from "../../users/Model.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-const _mapTagAccessor   = new CachedDataAccessor<null, MapTag>({
-    reqData : () => reqMapGetMapTag(),
+const _mapTagAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, MapTag>({
+    reqData : () => NormalMap_Model_NormalMapProxy.reqMapGetMapTag(),
 });
-const _reviewingMapsAccessor = new CachedDataAccessor<null, MapEditorData[]>({
-    reqData         : () => reqMmGetReviewingMaps(),
+const _reviewingMapsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, MapEditorData[]>({
+    reqData         : () => NormalMap_Model_NormalMapProxy.reqMmGetReviewingMaps(),
     dataExpireTime  : 60,
 });
-const _enabledNormalMapIdSetAccessor = new CachedDataAccessor<null, Set<number>>({
-    reqData : () => reqNormalMapGetAllEnabledBriefDataVersions(),
+const _enabledNormalMapIdSetAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, Set<number>>({
+    reqData : () => NormalMap_Model_NormalMapProxy.reqNormalMapGetAllEnabledBriefDataVersions(),
 });
-const _briefDataVersionAccessor = new CachedDataAccessor<number, number>({
-    reqData : (normalMapId: number) => reqNormalMapGetBriefDataVersion(normalMapId),
+const _briefDataVersionAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number>({
+    reqData : (normalMapId: number) => NormalMap_Model_NormalMapProxy.reqNormalMapGetBriefDataVersion(normalMapId),
 });
 /** 只用于保证收到过消息 */
-const _briefDataArrayAccessor = new CachedDataAccessor<null, boolean>({
+const _briefDataArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */ },
 });
-const _briefDataAccessor = new CachedDataAccessor<number, NormalMapBriefData>({
-    reqData : (normalMapId: number) => reqNormalMapGetBriefData(normalMapId),
+const _briefDataAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, NormalMapBriefData>({
+    reqData : (normalMapId: number) => NormalMap_Model_NormalMapProxy.reqNormalMapGetBriefData(normalMapId),
 });
-const _rawDataAccessor = new CachedDataAccessor<number, MapRawData>({
-    reqData : (normalMapId: number) => reqGetMapRawData(normalMapId),
+const _rawDataAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, MapRawData>({
+    reqData : (normalMapId: number) => NormalMap_Model_NormalMapProxy.reqGetMapRawData(normalMapId),
 });
 
 export function init(): void {
@@ -71,7 +56,7 @@ export function init(): void {
 }
 
 export async function getEnabledNormalMapIdSet(): Promise<Set<number>> {
-    return getExisted(await _enabledNormalMapIdSetAccessor.getData(null));
+    return Helpers_Misc.getExisted(await _enabledNormalMapIdSetAccessor.getData(null));
 }
 export async function getNormalMapIdArrayForRankedMatch(hasFog: boolean): Promise<number[]> {
     const normalMapIdArray  : number[] = [];
@@ -99,7 +84,7 @@ export async function getNormalMapIdArrayForRankedMatch(hasFog: boolean): Promis
     return normalMapIdArray;
 }
 
-export async function getBriefDataVersion(normalMapId: number): Promise<Undefinable<number>> {
+export async function getBriefDataVersion(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>> {
     await getEnabledNormalMapIdSet();
 
     return _briefDataVersionAccessor.getData(normalMapId);
@@ -108,13 +93,13 @@ function setBriefDataVersion(normalMapId: number, dataVersion: number): void {
     _briefDataVersionAccessor.setData(normalMapId, dataVersion);
 }
 
-export async function getBriefData(normalMapId: number): Promise<Undefinable<NormalMapBriefData>> {
+export async function getBriefData(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<NormalMapBriefData>> {
     const dataVersion = await getBriefDataVersion(normalMapId);
     if (dataVersion == null) {
         return null;
     }
 
-    const cachedData = await StoreNormalMapBriefData.getData(normalMapId);
+    const cachedData = await LocalData_Storage.StoreNormalMapBriefData.getData(normalMapId);
     if (cachedData != null) {
         if ((cachedData.getDataVersion()) === dataVersion) {
             return cachedData;
@@ -126,16 +111,16 @@ export async function getBriefData(normalMapId: number): Promise<Undefinable<Nor
 }
 function setBriefData(normalMapId: number, data: NormalMapBriefData | null): Promise<void> {
     _briefDataAccessor.setData(normalMapId, data);
-    return StoreNormalMapBriefData.setData(normalMapId, data);
+    return LocalData_Storage.StoreNormalMapBriefData.setData(normalMapId, data);
 }
 
-export async function getRawData(normalMapId: number): Promise<Undefinable<MapRawData>> {
+export async function getRawData(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>> {
     const mapBriefData = await getBriefData(normalMapId);
     if (mapBriefData == null) {
         return null;
     }
 
-    const cachedData = await StoreNormalMapRawData.getData(normalMapId);
+    const cachedData = await LocalData_Storage.StoreNormalMapRawData.getData(normalMapId);
     if (cachedData != null) {
         if ((cachedData.getModifiedTime()) === (mapBriefData.getMapModifiedTime())) {
             return cachedData;
@@ -147,11 +132,11 @@ export async function getRawData(normalMapId: number): Promise<Undefinable<MapRa
 }
 function setRawData(normalMapId: number, mapRawData: MapRawData | null): Promise<void> {
     _rawDataAccessor.setData(normalMapId, mapRawData);
-    return StoreNormalMapRawData.setData(normalMapId, mapRawData);
+    return LocalData_Storage.StoreNormalMapRawData.setData(normalMapId, mapRawData);
 }
 
 export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: NormalMapGetAllEnabledBriefDataVersionsResponse): Promise<void> {
-    const existingDataDict      = await StoreNormalMapBriefData.getAllDataDict();
+    const existingDataDict      = await LocalData_Storage.StoreNormalMapBriefData.getAllDataDict();
     const neededNormalMapIdSet  = new Set<number>();
     const infoArray             = data.getInfoArray();
     for (const info of infoArray) {
@@ -166,7 +151,7 @@ export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: N
         }
     }
 
-    reqNormalMapGetBriefDataArray([...neededNormalMapIdSet]);
+    NormalMap_Model_NormalMapProxy.reqNormalMapGetBriefDataArray([...neededNormalMapIdSet]);
     await _briefDataArrayAccessor.getData(null);
 
     _enabledNormalMapIdSetAccessor.setData(null, new Set(infoArray.map(v => v.getNormalMapId() ?? 0)));
@@ -229,7 +214,7 @@ export function updateOnFailedMsgMapGetRawData(data: MapGetRawDataResponse): voi
 }
 
 export async function updateOnMsgMmSetMapName(data: MmSetMapNameResponse): Promise<void> {
-    const normalMapId   = getExisted(data.getNormalMapId(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
+    const normalMapId   = Helpers_Misc.getExisted(data.getNormalMapId(), Utils_ClientErrorCode.ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
     const mapNameArray  = data.getMapNameArray();
     const mapBriefData  = await getBriefData(normalMapId);
     (mapBriefData) && (mapBriefData.setMapNameArray(mapNameArray));
@@ -238,14 +223,14 @@ export async function updateOnMsgMmSetMapName(data: MmSetMapNameResponse): Promi
     (mapRawData) && (mapRawData.setMapNameArray(mapNameArray));
 }
 export async function updateOnMsgMmAddWarRule(data: MmAddWarRuleResponse): Promise<void> {
-    const normalMapId       = getExisted(data.getNormalMapId());
-    const templateWarRule   = getExisted(data.getTemplateWarRule());
-    getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray()).push(templateWarRule);
+    const normalMapId       = Helpers_Misc.getExisted(data.getNormalMapId());
+    const templateWarRule   = Helpers_Misc.getExisted(data.getTemplateWarRule());
+    Helpers_Misc.getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray()).push(templateWarRule);
 }
 export async function updateOnMsgMmDeleteWarRule(data: MmDeleteWarRuleResponse): Promise<void> {
-    const normalMapId           = getExisted(data.getNormalMapId());
-    const ruleId                = getExisted(data.getRuleId());
-    const templateWarRuleArray  = getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray());
+    const normalMapId           = Helpers_Misc.getExisted(data.getNormalMapId());
+    const ruleId                = Helpers_Misc.getExisted(data.getRuleId());
+    const templateWarRuleArray  = Helpers_Misc.getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray());
     const index                 = templateWarRuleArray.findIndex(v => v.getRuleId() === ruleId);
     (index >= 0) && (templateWarRuleArray.splice(index, 1));
 }
@@ -260,11 +245,11 @@ export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: MmSetWarRuleFi
     (templateWarRule) && (templateWarRule.createIfNotExistsWarRuleCommonData().setFixedTileTheme(data.getTileTheme()));
 }
 export async function updateOnMsgMmSetWarRuleAvailability(data: MmSetWarRuleAvailabilityResponse): Promise<void> {
-    const templateWarRule = getExisted((await getRawData(getExisted(data.getNormalMapId())))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === data.getRuleId()));
+    const templateWarRule = Helpers_Misc.getExisted((await getRawData(Helpers_Misc.getExisted(data.getNormalMapId())))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === data.getRuleId()));
     templateWarRule.setRuleAvailability(data.getAvailability());
 }
 export async function updateOnMsgMmSetMapTagIdFlags(data: MmSetMapTagIdFlagsResponse): Promise<void> {
-    getExisted(await getRawData(getExisted(data.getNormalMapId()))).setMapTagIdFlags(data.getMapTagIdFlags());
+    Helpers_Misc.getExisted(await getRawData(Helpers_Misc.getExisted(data.getNormalMapId()))).setMapTagIdFlags(data.getMapTagIdFlags());
 }
 
 export async function getMapNameInCurrentLanguage(normalMapId: number): Promise<string | null> {
@@ -272,14 +257,14 @@ export async function getMapNameInCurrentLanguage(normalMapId: number): Promise<
     if (!mapBriefData) {
         return null;
     } else {
-        return getLanguageText({ textArray: mapBriefData.getMapNameArray() });
+        return Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() });
     }
 }
-export async function getDesignerName(normalMapId: number): Promise<Undefinable<string>> {
+export async function getDesignerName(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>> {
     return (await getRawData(normalMapId))?.getDesignerName();
 }
 export async function getTotalPlayedTimes(normalMapId: number): Promise<number> {
-    const mapBriefData  = getExisted(await getBriefData(normalMapId));
+    const mapBriefData  = Helpers_Misc.getExisted(await getBriefData(normalMapId));
     let totalTimes      = 0;
     for (const statisticsForRule of mapBriefData.getNormalMapExtraData()?.getMapWarStatistics()?.getStatisticsForRuleArray() ?? []) {
         for (const info of statisticsForRule.getStatisticsForTurnArray()) {
@@ -305,18 +290,18 @@ export async function getTotalRatersCount(normalMapId: number): Promise<number |
 export function setMapTag(mapTag: MapTag): void {
     _mapTagAccessor.setData(null, mapTag);
 }
-export function getMapTag(): Promise<Undefinable<MapTag>> {
+export function getMapTag(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapTag>> {
     return _mapTagAccessor.getData(null);
 }
 
-export async function sortMapArray<T>(dataArray: { normalMapId: number, extraData: T }[], sorter: MapSorter | null): Promise<{ normalMapId: number, extraData: T }[]> {
+export async function sortMapArray<T>(dataArray: { normalMapId: number, extraData: T }[], sorter: AuxiliaryTypes_AuxiliaryTypes.MapSorter | null): Promise<{ normalMapId: number, extraData: T }[]> {
     if (dataArray.length <= 1) {
         return dataArray.concat();
     }
 
-    const sortType      = sorter?.sortType ?? SortType.MapName;
+    const sortType      = sorter?.sortType ?? Maps_Constants.SortType.MapName;
     const isAscending   = sorter?.isAscending ?? true;
-    if (sortType === SortType.MapName) {
+    if (sortType === Maps_Constants.SortType.MapName) {
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -328,12 +313,12 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.NormalMapId) {
+    } else if (sortType === Maps_Constants.SortType.NormalMapId) {
         return isAscending
             ? dataArray.concat().sort((v1, v2) => v1.normalMapId - v2.normalMapId)
             : dataArray.concat().sort((v1, v2) => v2.normalMapId - v1.normalMapId);
 
-    } else if (sortType === SortType.DesignerName) {
+    } else if (sortType === Maps_Constants.SortType.DesignerName) {
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -345,7 +330,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.Popularity) {
+    } else if (sortType === Maps_Constants.SortType.Popularity) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -357,7 +342,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.GlobalRating) {
+    } else if (sortType === Maps_Constants.SortType.GlobalRating) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -369,19 +354,19 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.MyRating) {
+    } else if (sortType === Maps_Constants.SortType.MyRating) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
                 normalMapId       : data.normalMapId,
                 extraData   : data.extraData,
-                num         : getMapRating(data.normalMapId) ?? 0,
+                num         : Users_Model.getMapRating(data.normalMapId) ?? 0,
             });
         }
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.PlayersCountUnneutral) {
+    } else if (sortType === Maps_Constants.SortType.PlayersCountUnneutral) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -393,7 +378,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === SortType.GridsCount) {
+    } else if (sortType === Maps_Constants.SortType.GridsCount) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             const info = await getBriefData(data.normalMapId);
@@ -411,7 +396,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
     }
 }
 
-export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable<MapFilter>): Promise<boolean> {
+export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_MapFilter.MapFilter>): Promise<boolean> {
     const mapBriefData = await getBriefData(normalMapId);
     if (mapBriefData == null) {
         return false;
@@ -475,7 +460,7 @@ export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable
     {
         const filterMapName = filter.mapName?.trim().toLocaleLowerCase();
         if (filterMapName) {
-            const realMapName = getExisted(await getMapNameInCurrentLanguage(normalMapId)).toLocaleLowerCase();
+            const realMapName = Helpers_Misc.getExisted(await getMapNameInCurrentLanguage(normalMapId)).toLocaleLowerCase();
             if (realMapName.indexOf(filterMapName) < 0) {
                 return false;
             }
@@ -506,7 +491,7 @@ export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable
 }
 
 export async function getMmReviewingMaps(): Promise<MapEditorData[]> {
-    if (!getIsSelfMapCommittee()) {
+    if (!Users_Model.getIsSelfMapCommittee()) {
         return [];
     } else {
         return await _reviewingMapsAccessor.getData(null) ?? [];

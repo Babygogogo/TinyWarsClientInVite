@@ -1,107 +1,106 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConUnitFilter               : EpExpressionInfo;
-    ActAttackPowerModifier      : EpExpressionInfo;
-    ActDefenseModifier          : EpExpressionInfo;
-    ActMaxAttackRangeModifier   : EpExpressionInfo;
-    ActCanAttackAfterMoving     : EpExpressionInfo;
-    ActMoveRangeModifier        : EpExpressionInfo;
-    ActLuckLowerLimitModifier   : EpExpressionInfo;
-    ActLuckUpperLimitModifier   : EpExpressionInfo;
-    ActVisionRangeModifier      : EpExpressionInfo;
-    ActIsPenetratingVision      : EpExpressionInfo;
-    ActFlareRangeModifier       : EpExpressionInfo;
-    ActFlareRadiusModifier      : EpExpressionInfo;
+    ConUnitFilter               : ExpressionParsers_Types.EpExpressionInfo;
+    ActAttackPowerModifier      : ExpressionParsers_Types.EpExpressionInfo;
+    ActDefenseModifier          : ExpressionParsers_Types.EpExpressionInfo;
+    ActMaxAttackRangeModifier   : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanAttackAfterMoving     : ExpressionParsers_Types.EpExpressionInfo;
+    ActMoveRangeModifier        : ExpressionParsers_Types.EpExpressionInfo;
+    ActLuckLowerLimitModifier   : ExpressionParsers_Types.EpExpressionInfo;
+    ActLuckUpperLimitModifier   : ExpressionParsers_Types.EpExpressionInfo;
+    ActVisionRangeModifier      : ExpressionParsers_Types.EpExpressionInfo;
+    ActIsPenetratingVision      : ExpressionParsers_Types.EpExpressionInfo;
+    ActFlareRangeModifier       : ExpressionParsers_Types.EpExpressionInfo;
+    ActFlareRadiusModifier      : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConUnitFilter: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.UnitFilter),
-        getHelpText     : () => getText(TextType.A0539),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.UnitFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0539),
     },
     ActAttackPowerModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B0183),
-        getHelpText     : () => getText(TextType.A0540),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0183),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0540),
     },
     ActDefenseModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.DefBonus$),
-        getHelpText     : () => getText(TextType.A0541),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.DefBonus$),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0541),
     },
     ActMaxAttackRangeModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1077),
-        getHelpText     : () => getText(TextType.A0543),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1077),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0543),
     },
     ActCanAttackAfterMoving: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B0346),
-        getHelpText     : () => getText(TextType.A0548),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0346),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0548),
     },
     ActMoveRangeModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1078),
-        getHelpText     : () => getText(TextType.A0542),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1078),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0542),
     },
     ActLuckLowerLimitModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1085),
-        getHelpText     : () => getText(TextType.A0544),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1085),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0544),
     },
     ActLuckUpperLimitModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1086),
-        getHelpText     : () => getText(TextType.A0545),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1086),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0545),
     },
     ActVisionRangeModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1084),
-        getHelpText     : () => getText(TextType.A0643),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1084),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0643),
     },
     ActIsPenetratingVision: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1195),
-        getHelpText     : () => getText(TextType.A0644),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1195),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0644),
     },
     ActFlareRangeModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1087),
-        getHelpText     : () => getText(TextType.A0546),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1087),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0546),
     },
     ActFlareRadiusModifier: {
-        contextType     : ContextType.Unit,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Unit,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1088),
-        getHelpText     : () => getText(TextType.A0547),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1088),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0547),
     },
 };

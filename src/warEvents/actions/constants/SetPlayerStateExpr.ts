@@ -1,75 +1,74 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConPlayerFilter         : EpExpressionInfo;
-    ActAliveState           : EpExpressionInfo;
-    ActFund                 : EpExpressionInfo;
-    ActCoId                 : EpExpressionInfo;
-    ActCoEnergy             : EpExpressionInfo;
-    ActSkipTurn             : EpExpressionInfo;
-    ActCoUsingSkillType     : EpExpressionInfo;
-    ActActivateCoSkillType  : EpExpressionInfo;
+    ConPlayerFilter         : ExpressionParsers_Types.EpExpressionInfo;
+    ActAliveState           : ExpressionParsers_Types.EpExpressionInfo;
+    ActFund                 : ExpressionParsers_Types.EpExpressionInfo;
+    ActCoId                 : ExpressionParsers_Types.EpExpressionInfo;
+    ActCoEnergy             : ExpressionParsers_Types.EpExpressionInfo;
+    ActSkipTurn             : ExpressionParsers_Types.EpExpressionInfo;
+    ActCoUsingSkillType     : ExpressionParsers_Types.EpExpressionInfo;
+    ActActivateCoSkillType  : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConPlayerFilter     : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.PlayerFilter),
-        getHelpText     : () => getText(TextType.A0549),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0549),
     },
     ActAliveState       : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.PlayerAliveState),
-        getHelpText     : () => getText(TextType.A0552),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.PlayerAliveState),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0552),
     },
     ActFund             : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.Fund),
-        getHelpText     : () => getText(TextType.A0550),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Fund),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0550),
     },
     ActCoId             : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
         getTitleText    : () => `CO ID`,
-        getHelpText     : () => getText(TextType.A0995),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0995),
     },
     ActCoEnergy         : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.CoEnergy),
-        getHelpText     : () => getText(TextType.A0551),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.CoEnergy),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0551),
     },
     ActSkipTurn         : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.SkipATurn),
-        getHelpText     : () => getText(TextType.A0553),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.SkipATurn),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0553),
     },
     ActCoUsingSkillType : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.ActivatingCoSkillType),
-        getHelpText     : () => getText(TextType.A0852),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.ActivatingCoSkillType),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0852),
     },
     ActActivateCoSkillType   : {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.TriggerCoSkillType),
-        getHelpText     : () => getText(TextType.A0853),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.TriggerCoSkillType),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0853),
     },
 };

@@ -1,54 +1,30 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
-import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
-import { Unit } from "../../../expressionParsers/contexts/Unit.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
 import {
-    getExisted,
-    newError,
-} from "../../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import { getFormattedText } from "../../../lang/Utils.ts";
-import {
-    getAutoBridgeShapeId,
-    getAutoPipeShapeId,
-    getAutoPlasmaShapeId,
-    getAutoRoadShapeId,
-    getAutoTileBaseShapeId,
-    getAutoTileDecorationTypeAndShapeId,
-} from "../../../mapEditor/model/MeHelpers.ts";
-import { PlayerIndex } from "../../../players/Constants.ts";
+    TileBases_Utils,
+    TileDecorations_Utils,
+    TileObjects_Utils,
+    Tiles_Utils_Serialization,
+    Destructions_Utils,
+    WarEvents_Actions_Constants_SetTileTypeExpr,
+    MapEditor_Model_MeHelpers,
+    Helpers_Misc,
+    Lang_Utils,
+    ExpressionParsers_Results_NullableUnit,
+    ExpressionParsers_Results_Num,
+    Tiles_Constants_Common,
+    ExpressionParsers_Parser,
+    Players_Constants,
+    Lang_Constants,
+    ExpressionParsers_Contexts_Tile,
+    ExpressionParsers_Contexts_Unit,
+    type BaseWar_Interface_IBwWar,
+    type Tiles_ITile,
+    type Tiles_ITileMap,
+    type Units_IUnit,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { TileTemplateCfg } from "../../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { WeaSetTileTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
 import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import {
-    checkIsUsableTileBaseType,
-    checkIsValidTileBaseShapeId,
-} from "../../../tileBases/Utils.ts";
-import {
-    checkIsValidTileDecorationShapeId,
-    checkIsValidTileDecorationType,
-} from "../../../tileDecorations/Utils.ts";
-import {
-    checkIsValidTileObjectShapeId,
-    checkIsValidTileObjectType,
-    getTileObjectCfg,
-} from "../../../tileObjects/Utils.ts";
-import {
-    ObjectTypeId,
-    TileTypeId,
-} from "../../../tiles/constants/Common.ts";
-import type { ITile } from "../../../tiles/ITile.ts";
-import type { ITileMap } from "../../../tiles/ITileMap.ts";
-import { create } from "../../../tiles/utils/Serialization.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import { ExpressionInfoDict } from "../constants/SetTileTypeExpr.ts";
 
 type NewTileData = {
     serialTile              : SerialTile | null;
@@ -65,47 +41,47 @@ const enum UnitHandler {
     DestroyAlways           = 3,
 }
 const RoadConnectTileTypeArray = [
-    TileTypeId.Road,
-    TileTypeId.BridgeOnBeach,
-    TileTypeId.BridgeOnPlain,
-    TileTypeId.BridgeOnRiver,
-    TileTypeId.BridgeOnSea,
-    TileTypeId.Headquarters,
-    TileTypeId.City,
-    TileTypeId.CommandTower,
-    TileTypeId.Radar,
-    TileTypeId.Factory,
-    TileTypeId.Airport,
-    TileTypeId.Seaport,
-    TileTypeId.TempAirport,
-    TileTypeId.TempSeaport,
+    Tiles_Constants_Common.TileTypeId.Road,
+    Tiles_Constants_Common.TileTypeId.BridgeOnBeach,
+    Tiles_Constants_Common.TileTypeId.BridgeOnPlain,
+    Tiles_Constants_Common.TileTypeId.BridgeOnRiver,
+    Tiles_Constants_Common.TileTypeId.BridgeOnSea,
+    Tiles_Constants_Common.TileTypeId.Headquarters,
+    Tiles_Constants_Common.TileTypeId.City,
+    Tiles_Constants_Common.TileTypeId.CommandTower,
+    Tiles_Constants_Common.TileTypeId.Radar,
+    Tiles_Constants_Common.TileTypeId.Factory,
+    Tiles_Constants_Common.TileTypeId.Airport,
+    Tiles_Constants_Common.TileTypeId.Seaport,
+    Tiles_Constants_Common.TileTypeId.TempAirport,
+    Tiles_Constants_Common.TileTypeId.TempSeaport,
 ];
 const BridgeConnectTileTypeArray = [
-    TileTypeId.Road,
-    TileTypeId.BridgeOnBeach,
-    TileTypeId.BridgeOnPlain,
-    TileTypeId.BridgeOnRiver,
-    TileTypeId.BridgeOnSea,
-    TileTypeId.Headquarters,
-    TileTypeId.City,
-    TileTypeId.CommandTower,
-    TileTypeId.Radar,
-    TileTypeId.Factory,
-    TileTypeId.Airport,
-    TileTypeId.Seaport,
-    TileTypeId.TempAirport,
-    TileTypeId.TempSeaport,
+    Tiles_Constants_Common.TileTypeId.Road,
+    Tiles_Constants_Common.TileTypeId.BridgeOnBeach,
+    Tiles_Constants_Common.TileTypeId.BridgeOnPlain,
+    Tiles_Constants_Common.TileTypeId.BridgeOnRiver,
+    Tiles_Constants_Common.TileTypeId.BridgeOnSea,
+    Tiles_Constants_Common.TileTypeId.Headquarters,
+    Tiles_Constants_Common.TileTypeId.City,
+    Tiles_Constants_Common.TileTypeId.CommandTower,
+    Tiles_Constants_Common.TileTypeId.Radar,
+    Tiles_Constants_Common.TileTypeId.Factory,
+    Tiles_Constants_Common.TileTypeId.Airport,
+    Tiles_Constants_Common.TileTypeId.Seaport,
+    Tiles_Constants_Common.TileTypeId.TempAirport,
+    Tiles_Constants_Common.TileTypeId.TempSeaport,
 ];
 
-export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileTypeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getConTileFilter(),
-            expressionInfo       : ExpressionInfoDict.ConTileFilter,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ConTileFilter,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -113,9 +89,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActBaseType(),
-            expressionInfo       : ExpressionInfoDict.ActBaseType,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseType,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -123,9 +99,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActBaseShapeId(),
-            expressionInfo       : ExpressionInfoDict.ActBaseShapeId,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -133,9 +109,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActObjectType(),
-            expressionInfo       : ExpressionInfoDict.ActObjectType,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectType,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -143,9 +119,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActObjectShapeId(),
-            expressionInfo       : ExpressionInfoDict.ActObjectShapeId,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -153,9 +129,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActDecorationType(),
-            expressionInfo       : ExpressionInfoDict.ActDecorationType,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationType,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -163,9 +139,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActDecorationShapeId(),
-            expressionInfo       : ExpressionInfoDict.ActDecorationShapeId,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -173,9 +149,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActUnitHandler(),
-            expressionInfo       : ExpressionInfoDict.ActUnitHandler,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitHandler,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -183,9 +159,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                  : action.getActUnitFilter(),
-            expressionInfo       : ExpressionInfoDict.ActUnitFilter,
+            expressionInfo       : WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitFilter,
             customCounterNameSet : customCounterNameSet,
         })) {
             return false;
@@ -195,152 +171,152 @@ export function checkIsValid(action: Undefinable<WeaSetTileTypeExpr>, customCoun
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetTileTypeExpr>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileTypeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(TextType.F0055, data.getConTileFilter() ?? UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0055, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
-export function getDetailDesc(data: Undefinable<WeaSetTileTypeExpr>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileTypeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActBaseType()            ? `${ExpressionInfoDict.ActBaseType.getTitleText()}: ${data.getActBaseType()}`                   : null,
-        data.getActBaseShapeId()         ? `${ExpressionInfoDict.ActBaseShapeId.getTitleText()}: ${data.getActBaseShapeId()}`             : null,
-        data.getActObjectType()          ? `${ExpressionInfoDict.ActObjectType.getTitleText()}: ${data.getActObjectType()}`               : null,
-        data.getActObjectShapeId()       ? `${ExpressionInfoDict.ActObjectShapeId.getTitleText()}: ${data.getActObjectShapeId()}`         : null,
-        data.getActDecorationType()      ? `${ExpressionInfoDict.ActDecorationType.getTitleText()}: ${data.getActDecorationType()}`       : null,
-        data.getActDecorationShapeId()   ? `${ExpressionInfoDict.ActDecorationShapeId.getTitleText()}: ${data.getActDecorationShapeId()}` : null,
-        data.getActUnitHandler()         ? `${ExpressionInfoDict.ActUnitHandler.getTitleText()}: ${data.getActUnitHandler()}`             : null,
-        data.getActUnitFilter()          ? `${ExpressionInfoDict.ActUnitFilter.getTitleText()}: ${data.getActUnitFilter()}`               : null,
+        data.getActBaseType()            ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseType.getTitleText()}: ${data.getActBaseType()}`                   : null,
+        data.getActBaseShapeId()         ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId.getTitleText()}: ${data.getActBaseShapeId()}`             : null,
+        data.getActObjectType()          ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectType.getTitleText()}: ${data.getActObjectType()}`               : null,
+        data.getActObjectShapeId()       ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId.getTitleText()}: ${data.getActObjectShapeId()}`         : null,
+        data.getActDecorationType()      ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationType.getTitleText()}: ${data.getActDecorationType()}`       : null,
+        data.getActDecorationShapeId()   ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId.getTitleText()}: ${data.getActDecorationShapeId()}` : null,
+        data.getActUnitHandler()         ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitHandler.getTitleText()}: ${data.getActUnitHandler()}`             : null,
+        data.getActUnitFilter()          ? `${WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitFilter.getTitleText()}: ${data.getActUnitFilter()}`               : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${getFormattedText(TextType.F0055, data.getConTileFilter() ?? UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0055, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaSetTileTypeExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = ExpressionInfoDict.ConTileFilter;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ConTileFilter;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getConTileFilter(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActBaseType;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseType;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActBaseType(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActBaseShapeId;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActBaseShapeId(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActObjectType;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectType;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActObjectType(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActObjectShapeId;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActObjectShapeId(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActDecorationType;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationType;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActDecorationType(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActDecorationShapeId;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActDecorationShapeId(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActUnitHandler;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitHandler;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActUnitHandler(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActUnitFilter;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetTileTypeExpr.ExpressionInfoDict.ActUnitFilter;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                  : data.getActUnitFilter(),
             expressionInfo       : info,
             customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): boolean {
     try {
-        const result = Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new Tile(tile), false);
-        return (result instanceof Num) && (result.num !== 0);
+        const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
     } catch {
         return false;
     }
 }
-function evalActBaseType(action: WeaSetTileTypeExpr, tile: ITile): number {
+function evalActBaseType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getBaseType();
     const act           = action.getActBaseType();
     if (!act) {
@@ -348,10 +324,10 @@ function evalActBaseType(action: WeaSetTileTypeExpr, tile: ITile): number {
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newBaseType = Math.floor(epResult.num);
-            return (checkIsUsableTileBaseType(newBaseType)) ? newBaseType : defaultValue;
+            return (TileBases_Utils.checkIsUsableTileBaseType(newBaseType)) ? newBaseType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -359,19 +335,19 @@ function evalActBaseType(action: WeaSetTileTypeExpr, tile: ITile): number {
         return defaultValue;
     }
 }
-function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: ITile, newBaseType: number): number {
+function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newBaseType: number): number {
     const oldBaseShapeId    = tile.getBaseShapeId();
-    const defaultValue      = checkIsValidTileBaseShapeId(newBaseType, oldBaseShapeId) ? oldBaseShapeId : 0;
+    const defaultValue      = TileBases_Utils.checkIsValidTileBaseShapeId(newBaseType, oldBaseShapeId) ? oldBaseShapeId : 0;
     const act               = action.getActBaseShapeId();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newBaseShapeId = Math.floor(epResult.num);
-            return (newBaseShapeId < 0) || (checkIsValidTileBaseShapeId(newBaseType, newBaseShapeId))
+            return (newBaseShapeId < 0) || (TileBases_Utils.checkIsValidTileBaseShapeId(newBaseType, newBaseShapeId))
                 ? newBaseShapeId
                 : defaultValue;
         } else {
@@ -381,7 +357,7 @@ function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: ITile, newBaseType
         return defaultValue;
     }
 }
-function evalActObjectType(action: WeaSetTileTypeExpr, tile: ITile): number {
+function evalActObjectType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getObjectType();
     const act           = action.getActObjectType();
     if (!act) {
@@ -389,10 +365,10 @@ function evalActObjectType(action: WeaSetTileTypeExpr, tile: ITile): number {
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newObjectType = Math.floor(epResult.num);
-            return (checkIsValidTileObjectType(newObjectType)) ? newObjectType : defaultValue;
+            return (TileObjects_Utils.checkIsValidTileObjectType(newObjectType)) ? newObjectType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -400,19 +376,19 @@ function evalActObjectType(action: WeaSetTileTypeExpr, tile: ITile): number {
         return defaultValue;
     }
 }
-function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: ITile, newObjectType: number): number {
+function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newObjectType: number): number {
     const oldObjectShapeId    = tile.getObjectShapeId();
-    const defaultValue      = checkIsValidTileObjectShapeId(newObjectType, oldObjectShapeId) ? oldObjectShapeId : 0;
+    const defaultValue      = TileObjects_Utils.checkIsValidTileObjectShapeId(newObjectType, oldObjectShapeId) ? oldObjectShapeId : 0;
     const act               = action.getActObjectShapeId();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newObjectShapeId = Math.floor(epResult.num);
-            return (newObjectShapeId < 0) || (checkIsValidTileObjectShapeId(newObjectType, newObjectShapeId))
+            return (newObjectShapeId < 0) || (TileObjects_Utils.checkIsValidTileObjectShapeId(newObjectType, newObjectShapeId))
                 ? newObjectShapeId
                 : defaultValue;
         } else {
@@ -422,7 +398,7 @@ function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: ITile, newObject
         return defaultValue;
     }
 }
-function evalActDecorationType(action: WeaSetTileTypeExpr, tile: ITile): number {
+function evalActDecorationType(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getDecorationType();
     const act           = action.getActDecorationType();
     if (!act) {
@@ -430,10 +406,10 @@ function evalActDecorationType(action: WeaSetTileTypeExpr, tile: ITile): number 
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newDecorationType = Math.floor(epResult.num);
-            return (checkIsValidTileDecorationType(newDecorationType)) ? newDecorationType : defaultValue;
+            return (TileDecorations_Utils.checkIsValidTileDecorationType(newDecorationType)) ? newDecorationType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -441,19 +417,19 @@ function evalActDecorationType(action: WeaSetTileTypeExpr, tile: ITile): number 
         return defaultValue;
     }
 }
-function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: ITile, newDecorationType: number): number {
+function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile, newDecorationType: number): number {
     const oldDecorationShapeId    = tile.getDecorationShapeId();
-    const defaultValue      = checkIsValidTileDecorationShapeId(newDecorationType, oldDecorationShapeId) ? oldDecorationShapeId : 0;
+    const defaultValue      = TileDecorations_Utils.checkIsValidTileDecorationShapeId(newDecorationType, oldDecorationShapeId) ? oldDecorationShapeId : 0;
     const act               = action.getActDecorationShapeId();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const newDecorationShapeId = Math.floor(epResult.num);
-            return (newDecorationShapeId < 0) || (checkIsValidTileDecorationShapeId(newDecorationType, newDecorationShapeId))
+            return (newDecorationShapeId < 0) || (TileDecorations_Utils.checkIsValidTileDecorationShapeId(newDecorationType, newDecorationShapeId))
                 ? newDecorationShapeId
                 : defaultValue;
         } else {
@@ -463,7 +439,7 @@ function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: ITile, newDe
         return defaultValue;
     }
 }
-function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: ITile): UnitHandler {
+function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): UnitHandler {
     const defaultValue  = UnitHandler.NoAction;
     const act           = action.getActUnitHandler();
     if ((!act) || (tile.getWar().getUnitMap().getUnitOnMap(tile.getGridIndex()) == null)) {
@@ -471,8 +447,8 @@ function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: ITile): UnitHandle
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const unitHandler = Math.floor(epResult.num);
             return (
                 (unitHandler === UnitHandler.DestroyAlways)             ||
@@ -489,7 +465,7 @@ function evalActUnitHandler(action: WeaSetTileTypeExpr, tile: ITile): UnitHandle
         return defaultValue;
     }
 }
-function evalActUnitFilter(action: WeaSetTileTypeExpr, unit: IUnit): boolean {
+function evalActUnitFilter(action: WeaSetTileTypeExpr, unit: Units_IUnit.IUnit): boolean {
     const defaultValue  = true;
     const act           = action.getActUnitFilter();
     if (!act) {
@@ -497,8 +473,8 @@ function evalActUnitFilter(action: WeaSetTileTypeExpr, unit: IUnit): boolean {
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Unit.Unit(new ExpressionParsers_Results_NullableUnit.NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -511,7 +487,7 @@ function checkShouldDestroyUnit(
     action      : WeaSetTileTypeExpr,
     unitHandler : UnitHandler,
     cfg         : TileTemplateCfg,
-    unit        : IUnit | null
+    unit        : Units_IUnit.IUnit | null
 ): boolean {
     if (unit == null) {
         return false;
@@ -522,17 +498,17 @@ function checkShouldDestroyUnit(
         case UnitHandler.DestroyAlways           : return evalActUnitFilter(action, unit);
         case UnitHandler.DestroyIfTileAttackable : return (cfg.getMaxHp() != null) && (evalActUnitFilter(action, unit));
         case UnitHandler.DestroyIfUnitCantMove   : return ((unit.getGcData().getMoveCostCfg(cfg.getTileTypeId()) ?? {})[unit.getMoveTypeId()]?.getCost() == null) && (evalActUnitFilter(action, unit));
-        default                                  : throw newError(`Invalid unitHandler: ${unitHandler}`);
+        default                                  : throw Helpers_Misc.newError(`Invalid unitHandler: ${unitHandler}`);
     }
 }
 
-function getAutoTileObjectShapeId(tileMap: ITileMap, tile: ITile): number | null {
+function getAutoTileObjectShapeId(tileMap: Tiles_ITileMap.ITileMap, tile: Tiles_ITile.ITile): number | null {
     const gridIndex = tile.getGridIndex();
     switch (tile.getObjectType()) {
-        case ObjectTypeId.Bridge    : return getAutoBridgeShapeId(tileMap, gridIndex, BridgeConnectTileTypeArray);
-        case ObjectTypeId.Road      : return getAutoRoadShapeId(tileMap, gridIndex, RoadConnectTileTypeArray);
-        case ObjectTypeId.Plasma    : return getAutoPlasmaShapeId(tileMap, gridIndex);
-        case ObjectTypeId.Pipe      : return getAutoPipeShapeId(tileMap, gridIndex);
+        case Tiles_Constants_Common.ObjectTypeId.Bridge    : return MapEditor_Model_MeHelpers.getAutoBridgeShapeId(tileMap, gridIndex, BridgeConnectTileTypeArray);
+        case Tiles_Constants_Common.ObjectTypeId.Road      : return MapEditor_Model_MeHelpers.getAutoRoadShapeId(tileMap, gridIndex, RoadConnectTileTypeArray);
+        case Tiles_Constants_Common.ObjectTypeId.Plasma    : return MapEditor_Model_MeHelpers.getAutoPlasmaShapeId(tileMap, gridIndex);
+        case Tiles_Constants_Common.ObjectTypeId.Pipe      : return MapEditor_Model_MeHelpers.getAutoPipeShapeId(tileMap, gridIndex);
         default                         : return null;
     }
 }
@@ -541,8 +517,8 @@ function getAutoTileObjectShapeId(tileMap: ITileMap, tile: ITile): number | null
 export async function applyWithExtraData(_action: WeaSetTileTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: boolean, war: IBwWar): Promise<void> {
-    const newTileDataDict = new Map<ITile, NewTileData>();
+export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+    const newTileDataDict = new Map<Tiles_ITile.ITile, NewTileData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!checkIsMeetConditionForTile(action, tile)) {
             continue;
@@ -556,7 +532,7 @@ export async function applyWithoutExtraData(action: WeaSetTileTypeExpr, isFast: 
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileData(action: WeaSetTileTypeExpr, tile: ITile): NewTileData | null {
+function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile): NewTileData | null {
     const newBaseType           = evalActBaseType(action, tile);
     const newBaseShapeId        = evalActBaseShapeId(action, tile, newBaseType);
     const newObjectType         = evalActObjectType(action, tile);
@@ -565,8 +541,8 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: ITile): NewTileData
     const war                   = tile.getWar();
     const gameConfig            = war.getGcData();
     const unit                  = war.getUnitMap().getUnitOnMap(gridIndex);
-    const newTileType           = getExisted(gameConfig.getTileType(newBaseType, newObjectType));
-    const newCfg                = getExisted(gameConfig.getTileTemplateCfg(newTileType));
+    const newTileType           = Helpers_Misc.getExisted(gameConfig.getTileType(newBaseType, newObjectType));
+    const newCfg                = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(newTileType));
     const unitHandler           = evalActUnitHandler(action, tile);
     const shouldDestroyUnit     = checkShouldDestroyUnit(action, unitHandler, newCfg, unit);
     const newDecorationType     = evalActDecorationType(action, tile);
@@ -593,15 +569,15 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: ITile): NewTileData
     const maxCapturePoint  = newCfg.getMaxCapturePoint() ?? 0;
     const maxHp            = newCfg.getMaxHp() ?? 0;
 
-    const serialTile        = create({
+    const serialTile        = Tiles_Utils_Serialization.create({
         baseType          : newBaseType,
         baseShapeId       : Math.max(0, newBaseShapeId),
         objectType        : newObjectType,
         objectShapeId     : Math.max(0, newObjectShapeId),
         decorationType    : newDecorationType,
         decorationShapeId : Math.max(0, newDecorationShapeId),
-        playerIndex       : getTileObjectCfg(newObjectType)?.isNeutralOnly
-            ? PlayerIndex.Neutral
+        playerIndex       : TileObjects_Utils.getTileObjectCfg(newObjectType)?.isNeutralOnly
+            ? Players_Constants.PlayerIndex.Neutral
             : tile.getPlayerIndex(),
 
         gridIndex              : gridIndex.toProto().toJson(),
@@ -628,15 +604,15 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: ITile): NewTileData
         destroyUnit          : shouldDestroyUnit
     };
 }
-function applyNewTileDataDict(dict: Map<ITile, NewTileData>, war: IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, NewTileData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
-    const affectedTiles = new Set<ITile>();
+    const affectedTiles = new Set<Tiles_ITile.ITile>();
     for (const [tile, newTileData] of dict) {
         if (newTileData.destroyUnit) {
             const gridIndex = tile.getGridIndex();
             if (unitMap.getUnitOnMap(gridIndex) != null) {
-                destroyUnitOnMap(war, gridIndex, !isFast);
+                Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFast);
                 affectedTiles.add(tile);
             }
         }
@@ -652,7 +628,7 @@ function applyNewTileDataDict(dict: Map<ITile, NewTileData>, war: IBwWar, isFast
     const tileMap = war.getTileMap();
     for (const [tile, newTileData] of dict) {
         if (newTileData.autoAdjustBase) {
-            const shapeId = getAutoTileBaseShapeId(tileMap, tile);
+            const shapeId = MapEditor_Model_MeHelpers.getAutoTileBaseShapeId(tileMap, tile);
             if ((shapeId != null) && (shapeId != tile.getBaseShapeId())) {
                 tile.setBaseShapeId(shapeId);
                 affectedTiles.add(tile);
@@ -672,7 +648,7 @@ function applyNewTileDataDict(dict: Map<ITile, NewTileData>, war: IBwWar, isFast
             continue;
         }
 
-        const { decorationType, shapeId } = getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
+        const { decorationType, shapeId } = MapEditor_Model_MeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
         if ((tile.getDecorationType() == decorationType) && (tile.getDecorationShapeId() == shapeId)) {
             continue;
         }

@@ -1,57 +1,53 @@
-import { reqCmSetCampaignMapRawData } from "../../campaigns/managements/Gateway.ts";
 import {
-    showLang,
-    show,
-} from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType } from "../../lang/Constants.ts";
-import {
-    getText,
-    getErrorText,
-} from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
-import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
-import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import { getErrorCode } from "../../maps/utils/MapRawData.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Utils_ClientErrorCode,
+    Graphics_Constants,
+    MapEditor_Model_MeHelpers,
+    GamePanels_Dict,
+    Maps_Utils_MapRawData,
+    Lang_Utils,
+    MapEditor_Model_MeModel,
+    GamePanels_Manager,
+    Campaigns_Managements_Gateway,
+    MapEditor_Model_MeProxy,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export type OpenData = {
-    war : IMeWar;
+    war : MapEditor_Interface_IMeWar.IMeWar;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelReviewDescTitle!     : IUiLabel;
-    private readonly _labelReviewDesc!          : IUiLabel;
-    private readonly _groupCommand!             : IUiLayout;
+    private readonly _labelReviewDescTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelReviewDesc!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupCommand!             : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupSave!                : IUiContainer;
-    private readonly _btnSave!                  : IUiButton;
-    private readonly _btnHelpSave!              : IUiButton;
-    private readonly _btnSubmit!                : IUiButton;
-    private readonly _btnHelpSubmit!            : IUiButton;
+    private readonly _groupSave!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSave!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelpSave!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSubmit!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelpSubmit!            : Ui_Interfaces_IUiButton.IUiButton;
 
     private _mapRawData         : MapRawData | null = null;
-    private _mapErrorCode       = ClientErrorCode.NoError;
+    private _mapErrorCode       = Utils_ClientErrorCode.ClientErrorCode.NoError;
     private _canSubmit = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel, },
@@ -76,7 +72,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnSave(): Promise<void> {
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -87,12 +83,12 @@ export class Panel extends UiPanel<OpenData> {
 
         const slotIndex                 = war.getMapSlotIndex();
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
-        const reviewingSlotIndex        = await getReviewingMapSlotIndex();
+        const reviewingSlotIndex        = await MapEditor_Model_MeModel.getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0245),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
                 callback: () => {
-                    reqMeSubmitNormalMap({
+                    MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                         slotIndex                   : slotIndex,
                         mapRawData                  : mapRawData,
                         needReview                  : false,
@@ -103,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
                 },
             });
         } else {
-            reqMeSubmitNormalMap({
+            MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                 slotIndex                   : slotIndex,
                 mapRawData                  : mapRawData,
                 needReview                  : false,
@@ -115,30 +111,30 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelpSave(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0104),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0104),
         });
     }
 
     private _onTouchedBtnSubmit(): void {
         if (!this._canSubmit) {
-            show(getText(TextType.A0053));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0053));
             return;
         }
 
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0108),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0108),
             callback: () => {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                     callback    : () => {
-                        reqCmSetCampaignMapRawData(mapRawData);
+                        Campaigns_Managements_Gateway.reqCmSetCampaignMapRawData(mapRawData);
                         this.closePanel();
                     },
                 });
@@ -146,8 +142,8 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnHelpSubmit(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0108),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0108),
         });
     }
 
@@ -156,14 +152,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setLangText(TextType.B0844);
-        this._btnSubmit.setLangText(TextType.B1139);
+        this._btnSave.setLangText(Lang_Constants.TextType.B0844);
+        this._btnSubmit.setLangText(Lang_Constants.TextType.B1139);
         this._updateLabelTitle();
     }
 
     private _updateLabelTitle(): void {
         const campaignMapData = this._mapRawData?.getCampaignMapData() ?? this.getOpenData()?.war.getCampaignMapData();
-        this._labelTitle.setText(`${getText(TextType.B1135)} ${campaignMapData?.getCampaignId()}-${campaignMapData?.getCampaignMapId()}`);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1135)} ${campaignMapData?.getCampaignId()}-${campaignMapData?.getCampaignMapId()}`);
     }
 
     private async _initDataAndUpdateGroupCommand(): Promise<void> {
@@ -177,20 +173,20 @@ export class Panel extends UiPanel<OpenData> {
         groupCommand.addItem(this._groupSave, false);
 
         const mapRawData            = await war.serializeForMap();
-        const criticalErrorCode     = await getCriticalErrorCodeForMapRawData(mapRawData);
+        const criticalErrorCode     = await MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData);
         const labelReviewDescTitle  = this._labelReviewDescTitle;
         const labelReviewDesc       = this._labelReviewDesc;
         if (criticalErrorCode) {
             this._canSubmit                 = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setLangText(TextType.A0433);
-            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getErrorText(criticalErrorCode));
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0433);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelReviewDesc.setText(Lang_Utils.getErrorText(criticalErrorCode));
             return;
         }
 
-        const errorCode     = await getErrorCode({
+        const errorCode     = await Maps_Utils_MapRawData.getErrorCode({
             mapRawData                          : mapRawData,
             allowRedundantMapSimpleDialogues    : false,
             allowRedundantWarEvents             : false,
@@ -200,13 +196,13 @@ export class Panel extends UiPanel<OpenData> {
 
         if (errorCode) {
             this._canSubmit                 = false;
-            labelReviewDescTitle.setLangText(TextType.A0083);
-            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getErrorText(errorCode));
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0083);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelReviewDesc.setText(Lang_Utils.getErrorText(errorCode));
         } else {
             this._canSubmit                 = true;
-            labelReviewDescTitle.setLangText(TextType.A0786);
-            labelReviewDescTitle.setTextColor(ColorValue.Green);
+            labelReviewDescTitle.setLangText(Lang_Constants.TextType.A0786);
+            labelReviewDescTitle.setTextColor(Graphics_Constants.ColorValue.Green);
             labelReviewDesc.setText(``);
         }
 

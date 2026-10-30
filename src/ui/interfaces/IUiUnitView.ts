@@ -1,10 +1,12 @@
-import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { UiUnitViewData } from "../types/UiUnitViewData.ts";
+import {
+    type Ui_Interfaces_IUiContainerBase,
+    type Ui_Types_UiUnitViewData,
+} from "../../internal.ts";
 
-export interface IUiUnitView extends IUiContainerBase {
-    update(viewData: UiUnitViewData, tickCount?: number): void;
+export interface IUiUnitView extends Ui_Interfaces_IUiContainerBase.IUiContainerBase {
+    update(viewData: Ui_Types_UiUnitViewData.UiUnitViewData, tickCount?: number): void;
 
-    getViewData(): UiUnitViewData | null;
+    getViewData(): Ui_Types_UiUnitViewData.UiUnitViewData | null;
 
     updateOnAnimationTick(tickCount: number): void;
 

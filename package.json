@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "node --experimental-vm-modules --test tests/*.test.mjs",
     "testEgretCircleRef": "node --experimental-vm-modules --test tests/egret-modules.test.mjs",
     "check": "tsc --noEmit",
     "build": "tsc && vite build",

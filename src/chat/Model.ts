@@ -1,26 +1,18 @@
 import {
-    ToCategoryId,
-    MainCategoryId,
-} from "./Constants.ts";
-import { show } from "../FloatText.ts";
-import { getDict } from "../gamePanels/Dict.ts";
-import { getRunningPanel } from "../gamePanels/Manager.ts";
-import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { warn } from "../Logger.ts";
+    Users_Model,
+    GamePanels_Dict,
+    Helpers_Misc,
+    GamePanels_Manager,
+    Chat_Constants,
+    FloatText,
+    Logger,
+} from "../internal.ts";
 import type { ChatMessage } from "../proto/schema/CommonProto/Chat/ChatMessage.ts";
 import type { ChatReadProgress } from "../proto/schema/CommonProto/Chat/ChatReadProgress.ts";
-import {
-    getSelfUserId,
-    getUserNickname,
-    checkIsFollowingUser,
-} from "../users/Model.ts";
 
 type MessageDict                    = Map<number, ChatMessage[]>;
-const _allMessageDict               = new Map<ToCategoryId, MessageDict>();
-const _allProgressDict              = new Map<ToCategoryId, Map<number, number>>();
+const _allMessageDict               = new Map<Chat_Constants.ToCategoryId, MessageDict>();
+const _allProgressDict              = new Map<Chat_Constants.ToCategoryId, Map<number, number>>();
 let _timestampForNextSetAllMessages = 0;
 
 export function setAllMessages(msgList: ChatMessage[]): void {
@@ -54,61 +46,61 @@ export function getTimestampForNextReqAllMessages(): number {
 export function updateOnAddMessage(msg: ChatMessage, showFloatText: boolean): void {
     const fromUserId = msg.getFromUserId();
     if (fromUserId == null) {
-        warn(`ChatModel.updateOnAddMessage() invalid msg!`, msg);
+        Logger.warn(`ChatModel.updateOnAddMessage() invalid msg!`, msg);
     } else {
         const msgToCategory = msg.getToCategory();
         const msgToTarget   = msg.getToTarget();
         const msgContent    = msg.getContent();
-        const isSentBySelf  = getSelfUserId() === fromUserId;
+        const isSentBySelf  = Users_Model.getSelfUserId() === fromUserId;
 
-        if (msgToCategory === ToCategoryId.PublicChannel) {
-            addMessage(ToCategoryId.PublicChannel, msg, msgToTarget);
+        if (msgToCategory === Chat_Constants.ToCategoryId.PublicChannel) {
+            addMessage(Chat_Constants.ToCategoryId.PublicChannel, msg, msgToTarget);
 
-        } else if (msgToCategory === ToCategoryId.WarAndTeam) {
-            addMessage(ToCategoryId.WarAndTeam, msg, msgToTarget);
-            if ((!isSentBySelf) && (showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.WarAndTeam) {
+            addMessage(Chat_Constants.ToCategoryId.WarAndTeam, msg, msgToTarget);
+            if ((!isSentBySelf) && (showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
             }
 
-        } else if (msgToCategory === ToCategoryId.WarAndSelf) {
-            addMessage(ToCategoryId.WarAndSelf, msg, msgToTarget);
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.WarAndSelf) {
+            addMessage(Chat_Constants.ToCategoryId.WarAndSelf, msg, msgToTarget);
 
-        } else if (msgToCategory === ToCategoryId.Private) {
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.Private) {
             if (isSentBySelf) {
-                addMessage(ToCategoryId.Private, msg, msgToTarget);
+                addMessage(Chat_Constants.ToCategoryId.Private, msg, msgToTarget);
             } else {
-                addMessage(ToCategoryId.Private, msg, fromUserId);
-                if ((showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                    getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+                addMessage(Chat_Constants.ToCategoryId.Private, msg, fromUserId);
+                if ((showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                    Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
                 }
             }
 
-        } else if (msgToCategory === ToCategoryId.McrRoom) {
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.McrRoom) {
             addMessage(msgToCategory, msg, msgToTarget);
-            if ((!isSentBySelf) && (showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+            if ((!isSentBySelf) && (showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
             }
 
-        } else if (msgToCategory === ToCategoryId.MfrRoom) {
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.MfrRoom) {
             addMessage(msgToCategory, msg, msgToTarget);
-            if ((!isSentBySelf) && (showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+            if ((!isSentBySelf) && (showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
             }
 
-        } else if (msgToCategory === ToCategoryId.CcrRoom) {
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.CcrRoom) {
             addMessage(msgToCategory, msg, msgToTarget);
-            if ((!isSentBySelf) && (showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+            if ((!isSentBySelf) && (showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
             }
 
-        } else if (msgToCategory === ToCategoryId.MapReview) {
+        } else if (msgToCategory === Chat_Constants.ToCategoryId.MapReview) {
             addMessage(msgToCategory, msg, msgToTarget);
-            if ((!isSentBySelf) && (showFloatText) && (!getRunningPanel(getDict().ChatPanel))) {
-                getUserNickname(fromUserId).then(name => show(`💬${name}: ${msgContent}`));
+            if ((!isSentBySelf) && (showFloatText) && (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel))) {
+                Users_Model.getUserNickname(fromUserId).then(name => FloatText.show(`💬${name}: ${msgContent}`));
             }
 
         } else {
-            warn(`ChatModel.updateOnAddMessage() invalid msg!`, msg);
+            Logger.warn(`ChatModel.updateOnAddMessage() invalid msg!`, msg);
         }
     }
 }
@@ -122,13 +114,13 @@ export function updateOnDeleteMessage(messageId: number): void {
     }
 }
 
-export function getMessagesForCategory(toCategory: ToCategoryId): MessageDict {
+export function getMessagesForCategory(toCategory: Chat_Constants.ToCategoryId): MessageDict {
     if (!_allMessageDict.has(toCategory)) {
         _allMessageDict.set(toCategory, new Map());
     }
-    return getExisted(_allMessageDict.get(toCategory));
+    return Helpers_Misc.getExisted(_allMessageDict.get(toCategory));
 }
-export function getLatestMessageTimestamp(toCategory: ToCategoryId, toTarget: number): number {
+export function getLatestMessageTimestamp(toCategory: Chat_Constants.ToCategoryId, toTarget: number): number {
     const messageList = getMessagesForCategory(toCategory).get(toTarget) || [];
     return messageList[messageList.length - 1]?.getTimestamp() ?? 0;
 }
@@ -150,7 +142,7 @@ export function setReadProgress(progress: ChatReadProgress): void {
         _allProgressDict.set(toCategory, new Map<number, number>([[toTarget, timestamp]]));
     }
 }
-export function getReadProgressTimestamp(toCategory: ToCategoryId, toTarget: number): number {
+export function getReadProgressTimestamp(toCategory: Chat_Constants.ToCategoryId, toTarget: number): number {
     const subDict = _allProgressDict.get(toCategory);
     return subDict
         ? subDict.get(toTarget) || 0
@@ -167,7 +159,7 @@ export function checkHasUnreadMessage(): boolean {
     }
     return false;
 }
-export function checkHasUnreadMessageForTarget(toCategory: ToCategoryId, toTarget: number): boolean {
+export function checkHasUnreadMessageForTarget(toCategory: Chat_Constants.ToCategoryId, toTarget: number): boolean {
     const messages  = getMessagesForCategory(toCategory).get(toTarget) || [];
     const length    = messages.length;
     if (!length) {
@@ -176,32 +168,32 @@ export function checkHasUnreadMessageForTarget(toCategory: ToCategoryId, toTarge
         return getReadProgressTimestamp(toCategory, toTarget) < messages[length - 1].getTimestamp();
     }
 }
-export function checkHasUnreadMessageForMainCategory(mainCategory: MainCategoryId): boolean {
-    if (mainCategory === MainCategoryId.PublicChannel) {
-        return checkHasUnreadMessageForChatCategory(ToCategoryId.PublicChannel, null);
+export function checkHasUnreadMessageForMainCategory(mainCategory: Chat_Constants.MainCategoryId): boolean {
+    if (mainCategory === Chat_Constants.MainCategoryId.PublicChannel) {
+        return checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.PublicChannel, null);
 
-    } else if (mainCategory === MainCategoryId.War) {
-        return checkHasUnreadMessageForChatCategory(ToCategoryId.WarAndTeam, null);
+    } else if (mainCategory === Chat_Constants.MainCategoryId.War) {
+        return checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.WarAndTeam, null);
 
-    } else if (mainCategory === MainCategoryId.Room) {
-        return (checkHasUnreadMessageForChatCategory(ToCategoryId.CcrRoom, null))
-            || (checkHasUnreadMessageForChatCategory(ToCategoryId.McrRoom, null))
-            || (checkHasUnreadMessageForChatCategory(ToCategoryId.MfrRoom, null));
+    } else if (mainCategory === Chat_Constants.MainCategoryId.Room) {
+        return (checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.CcrRoom, null))
+            || (checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.McrRoom, null))
+            || (checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.MfrRoom, null));
 
-    } else if (mainCategory === MainCategoryId.Following) {
-        return checkHasUnreadMessageForChatCategory(ToCategoryId.Private, toTarget => checkIsFollowingUser(toTarget));
+    } else if (mainCategory === Chat_Constants.MainCategoryId.Following) {
+        return checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.Private, toTarget => Users_Model.checkIsFollowingUser(toTarget));
 
-    } else if (mainCategory === MainCategoryId.Stranger) {
-        return checkHasUnreadMessageForChatCategory(ToCategoryId.Private, toTarget => !checkIsFollowingUser(toTarget));
+    } else if (mainCategory === Chat_Constants.MainCategoryId.Stranger) {
+        return checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.Private, toTarget => !Users_Model.checkIsFollowingUser(toTarget));
 
-    } else if (mainCategory === MainCategoryId.MapReview) {
-        return checkHasUnreadMessageForChatCategory(ToCategoryId.MapReview, null);
+    } else if (mainCategory === Chat_Constants.MainCategoryId.MapReview) {
+        return checkHasUnreadMessageForChatCategory(Chat_Constants.ToCategoryId.MapReview, null);
 
     } else {
-        throw newError(`Invalid mainCategory: ${mainCategory}`);
+        throw Helpers_Misc.newError(`Invalid mainCategory: ${mainCategory}`);
     }
 }
-function checkHasUnreadMessageForChatCategory(category: ToCategoryId, predicate: ((toTarget: number) => boolean) | null): boolean {
+function checkHasUnreadMessageForChatCategory(category: Chat_Constants.ToCategoryId, predicate: ((toTarget: number) => boolean) | null): boolean {
     for (const [toTarget] of getMessagesForCategory(category)) {
         if (((predicate == null) || (predicate(toTarget)))      &&
             (checkHasUnreadMessageForTarget(category, toTarget))
@@ -213,13 +205,13 @@ function checkHasUnreadMessageForChatCategory(category: ToCategoryId, predicate:
     return false;
 }
 
-function addMessage(toCategory: ToCategoryId, msg: ChatMessage, toTarget: number): void {
+function addMessage(toCategory: Chat_Constants.ToCategoryId, msg: ChatMessage, toTarget: number): void {
     const dict = _allMessageDict.get(toCategory);
     if (!dict) {
         _allMessageDict.set(toCategory, new Map<number, ChatMessage[]>([[toTarget, [msg]]]));
     } else {
         if (dict.has(toTarget)) {
-            getExisted(dict.get(toTarget)).push(msg);
+            Helpers_Misc.getExisted(dict.get(toTarget)).push(msg);
         } else {
             dict.set(toTarget, [msg]);
         }

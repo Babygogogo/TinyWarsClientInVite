@@ -1,14 +1,13 @@
-import type {
-    MouseStyleType,
-    PointerEventType,
-} from "../../helpers/PointerInput.ts";
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { Event } from "../../egret/Egret.ts";
+import {
+    type Egret_Egret,
+    type Ui_Interfaces_IUiComponent,
+    type Helpers_PointerInput,
+} from "../../internal.ts";
 
 export interface UiPointerEventListener {
-    ui              : IUiComponent;
-    callback        : (e: Event) => void;
-    mouseStyle?     : MouseStyleType;
-    eventType?      : PointerEventType;
+    ui              : Ui_Interfaces_IUiComponent.IUiComponent;
+    callback        : (e: Egret_Egret.Event) => void;
+    mouseStyle?     : Helpers_PointerInput.MouseStyleType;
+    eventType?      : Helpers_PointerInput.PointerEventType;
     thisObject?     : any;
 }

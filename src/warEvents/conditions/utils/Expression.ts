@@ -1,69 +1,61 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { War } from "../../../expressionParsers/contexts/War.ts";
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-    getErrorText,
-} from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    WarEvents_Constants,
+    Lang_Utils,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Parser,
+    Lang_Constants,
+    ExpressionParsers_Contexts_War,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WecExpression } from "../../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
-import { Event } from "../../Constants.ts";
 
-export function getBriefDesc(data: Undefinable<WecExpression>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecExpression>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getText(TextType.A0830);
+    return Lang_Utils.getText(Lang_Constants.TextType.A0830);
 }
-export function getDetailedDesc(data: Undefinable<WecExpression>): string | null {
+export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecExpression>): string | null {
     if (data == null) {
         return null;
     }
 
     return [
-        getText(TextType.A0830),
-        `${data.getExpression() ?? UndefinedError}`
+        Lang_Utils.getText(Lang_Constants.TextType.A0830),
+        `${data.getExpression() ?? Lang_Constants.UndefinedError}`
     ].join(`\n`);
 }
 export function getErrorTip(data: WecExpression, customCounterNameSet: Set<string>): string | null {
     const expression = data.getExpression() ?? "";
     if (expression !== expression.trim()) {
-        return getText(TextType.A0495);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0495);
     }
 
     if (!expression) {
-        return getFormattedText(TextType.F0091, getText(TextType.B0129));
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0129));
     }
 
-    if (expression.length > Event.MaxExpressionLength) {
-        return getText(TextType.A0476);
+    if (expression.length > WarEvents_Constants.Event.MaxExpressionLength) {
+        return Lang_Utils.getText(Lang_Constants.TextType.A0476);
     }
 
-    const errorData = Parser.getErrorDataForString({
+    const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString({
         str                     : expression,
-        contextType             : ContextType.War,
-        resultTypes             : [ResultType.Number],
+        contextType             : ExpressionParsers_Enums.ContextType.War,
+        resultTypes             : [ExpressionParsers_Enums.ResultType.Number],
         customCounterNameSet    : customCounterNameSet,
     });
     if (errorData.errorCode) {
-        return errorData.errorText ?? getErrorText(errorData.errorCode);
+        return errorData.errorText ?? Lang_Utils.getErrorText(errorData.errorCode);
     }
 
     return null;
 }
 
-export function checkIsValid(condition: Undefinable<WecExpression>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecExpression>, customCounterNameSet: Set<string>): boolean {
     if (condition == null) {
         return false;
     }
@@ -71,23 +63,23 @@ export function checkIsValid(condition: Undefinable<WecExpression>, customCounte
     const expression = condition.getExpression() ?? "";
     if ((!expression)                                                                           ||
         (expression !== expression.trim())                                                      ||
-        (expression.length > Event.MaxExpressionLength)
+        (expression.length > WarEvents_Constants.Event.MaxExpressionLength)
     ) {
         return false;
     }
 
-    return Parser.checkIsValidString({
+    return ExpressionParsers_Parser.Parser.checkIsValidString({
         str                     : expression,
-        contextType             : ContextType.War,
-        resultTypes             : [ResultType.Number],
+        contextType             : ExpressionParsers_Enums.ContextType.War,
+        resultTypes             : [ExpressionParsers_Enums.ResultType.Number],
         customCounterNameSet    : customCounterNameSet,
     });
 }
 
-export function checkIsMeet(condition: WecExpression, war: IBwWar): boolean {
+export function checkIsMeet(condition: WecExpression, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
     try {
-        const value = Parser.getParseResult(condition.getExpression() ?? "").eval(new War(war), false);
-        return (value instanceof Num) && (value.num !== 0);
+        const value = ExpressionParsers_Parser.Parser.getParseResult(condition.getExpression() ?? "").eval(new ExpressionParsers_Contexts_War.War(war), false);
+        return (value instanceof ExpressionParsers_Results_Num.Num) && (value.num !== 0);
     } catch {
         return false;
     }

@@ -1,11 +1,13 @@
-import type { GridIndex } from "./GridIndex.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+} from "../internal.ts";
 import { DropDestination as ProtoDropDestination } from "../proto/schema/CommonProto/Structure/DropDestination.ts";
 
 export class DropDestination {
-    private _gridIndex  : GridIndex;
+    private _gridIndex  : AuxiliaryTypes_GridIndex.GridIndex;
     private _unitId     : number;
 
-    public constructor(gridIndex: GridIndex, unitId: number) {
+    public constructor(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitId: number) {
         this._gridIndex = gridIndex;
         this._unitId    = unitId;
     }

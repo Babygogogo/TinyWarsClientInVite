@@ -1,54 +1,49 @@
-import type { DrawerMode } from "../../mapEditors/Constants.ts";
-import type { SymmetryTypeId } from "../../geometries/Constants.ts";
-import type { IMeWar } from "./IMeWar.ts";
-import type {
-    DataForDrawTileObject,
-    DataForDrawTileBase,
-    DataForDrawTileDecoration,
-    DataForDrawUnit,
-    DataForAddTileToLocation,
-    DataForDeleteTileFromLocation,
-} from "../model/MeTypes.ts";
+import {
+    type MapEditor_Model_MeTypes,
+    type MapEditors_Constants,
+    type MapEditor_Interface_IMeWar,
+    type Units_IUnit,
+    type Geometries_Constants,
+} from "../../internal.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
 export interface IMeDrawer {
     init(): IMeDrawer;
 
-    startRunning(war: IMeWar): void;
+    startRunning(war: MapEditor_Interface_IMeWar.IMeWar): void;
     stopRunning(): void;
 
     setModeDeleteUnit(): void;
     setModeDeleteTileDecoration(): void;
     setModeDeleteTileObject(): void;
     setModePreview(): void;
-    getMode(): DrawerMode;
+    getMode(): MapEditors_Constants.DrawerMode;
 
-    setModeDrawTileObject(data: DataForDrawTileObject): void;
-    setModeDrawTileBase(data: DataForDrawTileBase): void;
-    setModeDrawTileDecoration(data: DataForDrawTileDecoration): void;
-    getDrawTargetTileObjectData(): DataForDrawTileObject | null;
-    getDrawTargetTileBaseData(): DataForDrawTileBase | null;
-    getDrawTargetTileDecorationData(): DataForDrawTileDecoration | null;
+    setModeDrawTileObject(data: MapEditor_Model_MeTypes.DataForDrawTileObject): void;
+    setModeDrawTileBase(data: MapEditor_Model_MeTypes.DataForDrawTileBase): void;
+    setModeDrawTileDecoration(data: MapEditor_Model_MeTypes.DataForDrawTileDecoration): void;
+    getDrawTargetTileObjectData(): MapEditor_Model_MeTypes.DataForDrawTileObject | null;
+    getDrawTargetTileBaseData(): MapEditor_Model_MeTypes.DataForDrawTileBase | null;
+    getDrawTargetTileDecorationData(): MapEditor_Model_MeTypes.DataForDrawTileDecoration | null;
     setDataForPasteTile(data: SerialTile): void;
     getDataForPasteTile(): SerialTile | null;
-    setDataForPasteUnit(data: IUnit[]): void;
-    getDataForPasteUnit(): IUnit[] | null;
+    setDataForPasteUnit(data: Units_IUnit.IUnit[]): void;
+    getDataForPasteUnit(): Units_IUnit.IUnit[] | null;
 
-    setModeDrawUnit(data: DataForDrawUnit): void;
-    getDrawTargetUnit(): IUnit | null;
+    setModeDrawUnit(data: MapEditor_Model_MeTypes.DataForDrawUnit): void;
+    getDrawTargetUnit(): Units_IUnit.IUnit | null;
 
-    setModeAddTileToLocation(data: DataForAddTileToLocation): void;
-    getDataForAddTileToLocation(): DataForAddTileToLocation | null;
+    setModeAddTileToLocation(data: MapEditor_Model_MeTypes.DataForAddTileToLocation): void;
+    getDataForAddTileToLocation(): MapEditor_Model_MeTypes.DataForAddTileToLocation | null;
 
-    setModeDeleteTileFromLocation(data: DataForDeleteTileFromLocation): void;
-    getDataForDeleteTileFromLocation(): DataForDeleteTileFromLocation | null;
+    setModeDeleteTileFromLocation(data: MapEditor_Model_MeTypes.DataForDeleteTileFromLocation): void;
+    getDataForDeleteTileFromLocation(): MapEditor_Model_MeTypes.DataForDeleteTileFromLocation | null;
 
     setModePasteTile(): void;
     setModePasteUnit(): void;
 
-    getSymmetricalDrawType(): SymmetryTypeId;
-    setSymmetricalDrawType(type: SymmetryTypeId): void;
+    getSymmetricalDrawType(): Geometries_Constants.SymmetryTypeId;
+    setSymmetricalDrawType(type: Geometries_Constants.SymmetryTypeId): void;
 
     getSymmetricalPlayerIndex(playerIndex: number): number;
     setSymmetricalPlayerIndex(srcPlayerIndex: number, dstPlayerIndex: number): void;

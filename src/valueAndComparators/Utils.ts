@@ -1,21 +1,20 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { UndefinedError } from "../lang/Constants.ts";
-import { getComparatorName } from "../lang/Utils.ts";
-import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 import {
-    AllComparatorIdArray,
-    ComparatorId,
-} from "./Constants.ts";
+    ValueAndComparators_Constants,
+    Lang_Utils,
+    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
+import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 
 export function getDesc(data: ValueAndComparator, valueName: string): string {
     const value         = data.getValue();
     const comparator    = data.getComparator();
-    return `${valueName} ${getComparatorName(comparator) ?? UndefinedError} ${value}`;
+    return `${valueName} ${Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError} ${value}`;
 }
 export function getBriefDesc(data: ValueAndComparator): string {
     const value         = data.getValue();
     const comparator    = data.getComparator();
-    return `${getComparatorName(comparator) ?? UndefinedError} ${value}`;
+    return `${Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError} ${value}`;
 }
 
 export function tickComparator(data: ValueAndComparator): void {
@@ -34,30 +33,30 @@ export function checkIsMeet(data: ValueAndComparator, value: number): boolean {
     });
 }
 
-export function checkIsValidValueComparatorId(comparator: Undefinable<number>): boolean {
+export function checkIsValidValueComparatorId(comparator: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
     return (comparator != null)
-        && (AllComparatorIdArray.includes(comparator));
+        && (ValueAndComparators_Constants.AllComparatorIdArray.includes(comparator));
 }
 
 export function checkIsMeet1({ comparator, actualValue, targetValue }: {
-    comparator  : ComparatorId;
+    comparator  : ValueAndComparators_Constants.ComparatorId;
     actualValue : number;
     targetValue : number;
 }): boolean {
-    return ((comparator === ComparatorId.EqualTo)          && (actualValue === targetValue))
-        || ((comparator === ComparatorId.NotEqualTo)       && (actualValue !== targetValue))
-        || ((comparator === ComparatorId.GreaterThan)      && (actualValue > targetValue))
-        || ((comparator === ComparatorId.NotGreaterThan)   && (actualValue <= targetValue))
-        || ((comparator === ComparatorId.LessThan)         && (actualValue < targetValue))
-        || ((comparator === ComparatorId.NotLessThan)      && (actualValue >= targetValue));
+    return ((comparator === ValueAndComparators_Constants.ComparatorId.EqualTo)          && (actualValue === targetValue))
+        || ((comparator === ValueAndComparators_Constants.ComparatorId.NotEqualTo)       && (actualValue !== targetValue))
+        || ((comparator === ValueAndComparators_Constants.ComparatorId.GreaterThan)      && (actualValue > targetValue))
+        || ((comparator === ValueAndComparators_Constants.ComparatorId.NotGreaterThan)   && (actualValue <= targetValue))
+        || ((comparator === ValueAndComparators_Constants.ComparatorId.LessThan)         && (actualValue < targetValue))
+        || ((comparator === ValueAndComparators_Constants.ComparatorId.NotLessThan)      && (actualValue >= targetValue));
 }
-export function getNextComparatorId(comparatorId: Undefinable<ComparatorId>): ComparatorId {
+export function getNextComparatorId(comparatorId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueAndComparators_Constants.ComparatorId>): ValueAndComparators_Constants.ComparatorId {
     switch (comparatorId) {
-        case ComparatorId.EqualTo          : return ComparatorId.NotEqualTo;
-        case ComparatorId.NotEqualTo       : return ComparatorId.GreaterThan;
-        case ComparatorId.GreaterThan      : return ComparatorId.NotLessThan;
-        case ComparatorId.NotLessThan      : return ComparatorId.LessThan;
-        case ComparatorId.LessThan         : return ComparatorId.NotGreaterThan;
-        default                                 : return ComparatorId.EqualTo;
+        case ValueAndComparators_Constants.ComparatorId.EqualTo          : return ValueAndComparators_Constants.ComparatorId.NotEqualTo;
+        case ValueAndComparators_Constants.ComparatorId.NotEqualTo       : return ValueAndComparators_Constants.ComparatorId.GreaterThan;
+        case ValueAndComparators_Constants.ComparatorId.GreaterThan      : return ValueAndComparators_Constants.ComparatorId.NotLessThan;
+        case ValueAndComparators_Constants.ComparatorId.NotLessThan      : return ValueAndComparators_Constants.ComparatorId.LessThan;
+        case ValueAndComparators_Constants.ComparatorId.LessThan         : return ValueAndComparators_Constants.ComparatorId.NotGreaterThan;
+        default                                 : return ValueAndComparators_Constants.ComparatorId.EqualTo;
     }
 }

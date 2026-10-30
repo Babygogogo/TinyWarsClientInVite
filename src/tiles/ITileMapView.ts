@@ -1,9 +1,11 @@
-import type { ITileMap } from "./ITileMap.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import {
+    type Tiles_ITileMap,
+    type Ui_Interfaces_IUiContainer,
+} from "../internal.ts";
 
-export interface ITileMapView extends IUiContainer {
-    init(tileMap: ITileMap): void;
-    fastInit(tileMap: ITileMap): void;
+export interface ITileMapView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(tileMap: Tiles_ITileMap.ITileMap): void;
+    fastInit(tileMap: Tiles_ITileMap.ITileMap): void;
 
     startRunningView(): void;
     stopRunningView(): void;

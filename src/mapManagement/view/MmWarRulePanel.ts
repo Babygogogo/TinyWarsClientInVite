@@ -1,107 +1,94 @@
-import { showLang } from "../../FloatText.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { ModeId } from "../../gameModes/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getWeatherFullDesc,
-    getFormattedText,
-    getGameModeName,
-    getGameModeHelpText,
-    getJoinedShortLanguageText,
-    getWeatherName,
-    getTileThemeName,
-} from "../../lang/Utils.ts";
-import { reqMmAddWarRule } from "../../normalMap/model/NormalMapProxy.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    WarRules_Constants,
+    WarRules_Utils_CommonData,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Users_Model,
+    Tiles_Utils_Common,
+    Helpers_Collection,
+    GameModes_Constants,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    NormalMap_Model_NormalMapProxy,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getNextThemeId } from "../../tiles/utils/Common.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { getIsSelfMapCommittee } from "../../users/Model.ts";
-import { Constants } from "../../warRules/Constants.ts";
-import {
-    tickDefaultWeatherType,
-    getDefaultWeatherType,
-} from "../../warRules/utils/CommonData.ts";
 
 export interface OpenData {
-    gcData          : GameConfig;
+    gcData          : GameConfigs_GameConfig.GameConfig;
     mapRawData      : MapRawData;
     templateWarRule : TemplateWarRule;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnAddRule!                   : IUiButton;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnAddRule!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelRuleNameTitle!           : IUiLabel;
-    private readonly _groupModifyRuleName!          : IUiContainer;
-    private readonly _labelRuleName!                : IUiLabel;
+    private readonly _labelRuleNameTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyRuleName!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelRuleName!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpHasFog!              : IUiContainer;
-    private readonly _labelHasFogTitle!             : IUiLabel;
-    private readonly _groupModifyHasFog!            : IUiContainer;
-    private readonly _imgHasFog!                    : IUiImage;
+    private readonly _groupHelpHasFog!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelHasFogTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyHasFog!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgHasFog!                    : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupHelpWeather!             : IUiContainer;
-    private readonly _labelWeatherTitle!            : IUiLabel;
-    private readonly _groupModifyWeather!           : IUiContainer;
-    private readonly _labelWeather!                 : IUiLabel;
+    private readonly _groupHelpWeather!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelWeatherTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyWeather!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelWeather!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpTileTheme!           : IUiContainer;
-    private readonly _labelTileThemeTitle!          : IUiLabel;
-    private readonly _groupModifyTileTheme!         : IUiContainer;
-    private readonly _labelTileTheme!               : IUiLabel;
+    private readonly _groupHelpTileTheme!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTileThemeTitle!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyTileTheme!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTileTheme!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpRuleAvailability!    : IUiContainer;
-    private readonly _labelRuleAvailabilityTitle!   : IUiLabel;
-    private readonly _groupModifyRuleAvailability!  : IUiContainer;
-    private readonly _labelRuleAvailability!        : IUiLabel;
+    private readonly _groupHelpRuleAvailability!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelRuleAvailabilityTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyRuleAvailability!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelRuleAvailability!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpPlayerRule!          : IUiContainer;
-    private readonly _labelPlayerRuleTitle!         : IUiLabel;
-    private readonly _groupModifyPlayerRule!        : IUiContainer;
-    private readonly _labelPlayerRule!              : IUiLabel;
+    private readonly _groupHelpPlayerRule!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelPlayerRuleTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyPlayerRule!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelPlayerRule!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpWarEvent!            : IUiContainer;
-    private readonly _labelWarEventTitle!           : IUiLabel;
-    private readonly _groupModifyWarEvent!          : IUiContainer;
-    private readonly _labelWarEvent!                : IUiLabel;
+    private readonly _groupHelpWarEvent!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelWarEventTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyWarEvent!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelWarEvent!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpTaskObjective!       : IUiContainer;
-    private readonly _labelTaskObjectiveTitle!      : IUiLabel;
-    private readonly _groupModifyTaskObjective!     : IUiContainer;
-    private readonly _labelTaskObjective!           : IUiLabel;
+    private readonly _groupHelpTaskObjective!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTaskObjectiveTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyTaskObjective!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTaskObjective!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupHelpMapSimpleDialogue!   : IUiContainer;
-    private readonly _labelMapSimpleDialogueTitle!  : IUiLabel;
-    private readonly _groupModifyMapSimpleDialogue! : IUiContainer;
-    private readonly _labelMapSimpleDialogue!       : IUiLabel;
+    private readonly _groupHelpMapSimpleDialogue!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelMapSimpleDialogueTitle!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupModifyMapSimpleDialogue! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelMapSimpleDialogue!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MeWarRuleWarEventIdArrayChanged,             callback: this._onNotifyMeWarRuleWarEventIdArrayChanged },
-            { type: TypeId.MeWarRuleTaskObjectiveIdArrayChanged,        callback: this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
-            { type: TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleSimpleDialogueIdArrayChanged },
-            { type: TypeId.MsgMmAddWarRule,                             callback: this._onNotifyMsgMmAddWarRule },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged,             callback: this._onNotifyMeWarRuleWarEventIdArrayChanged },
+            { type: Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged,        callback: this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
+            { type: Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleSimpleDialogueIdArrayChanged },
+            { type: Notifications_TypeId.TypeId.MsgMmAddWarRule,                             callback: this._onNotifyMsgMmAddWarRule },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                       callback: this.closePanel },
@@ -164,7 +151,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMmAddWarRule(): void {
-        showLang(TextType.OperationSucceeded);
+        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
         this.closePanel();
     }
 
@@ -174,19 +161,18 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent  : () => getText(TextType.A0282),
-            callback    : () => reqMmAddWarRule(openData.mapRawData.getNormalMapId(), openData.templateWarRule),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0282),
+            callback    : () => NormalMap_Model_NormalMapProxy.reqMmAddWarRule(openData.mapRawData.getNormalMapId(), openData.templateWarRule),
         });
     }
 
-
     private _onTouchedGroupHelpHasFog(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle  : () => getText(TextType.B0020),
-            getContent: () => getText(TextType.R0002),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle  : () => Lang_Utils.getText(Lang_Constants.TextType.B0020),
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.R0002),
         });
     }
 
@@ -196,9 +182,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        const warRuleCommonData = getExisted(templateWarRule.getWarRuleCommonData());
+        const warRuleCommonData = Helpers_Misc.getExisted(templateWarRule.getWarRuleCommonData());
         warRuleCommonData.setHasFogByDefault(!warRuleCommonData.getHasFogByDefault());
         this._updateImgHasFog();
     }
@@ -209,10 +195,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getWeatherFullDesc(gcData),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getWeatherFullDesc(gcData),
         });
     }
     private _onTouchedGroupModifyWeather(): void {
@@ -221,20 +207,20 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        tickDefaultWeatherType(
-            getExisted(openData.templateWarRule.getWarRuleCommonData()),
+        WarRules_Utils_CommonData.tickDefaultWeatherType(
+            Helpers_Misc.getExisted(openData.templateWarRule.getWarRuleCommonData()),
             openData.gcData
         );
         this._updateLabelWeather();
     }
 
     private _onTouchedGroupHelpTileTheme(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0794),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0794),
         });
     }
     private _onTouchedGroupModifyTileTheme(): void {
@@ -243,18 +229,18 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const ruleForGlobalParams = openData.templateWarRule.createIfNotExistsWarRuleCommonData();
-        ruleForGlobalParams.setFixedTileTheme(getNextThemeId(ruleForGlobalParams.getFixedTileTheme()));
+        ruleForGlobalParams.setFixedTileTheme(Tiles_Utils_Common.getNextThemeId(ruleForGlobalParams.getFixedTileTheme()));
         this._updateLabelTileTheme();
     }
 
     private _onTouchedGroupHelpRuleAvailability(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0796),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0796),
         });
     }
     private _onTouchedGroupModifyRuleAvailability(): void {
@@ -263,42 +249,42 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (openData.mapRawData.getCampaignMapData()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const availableGameModeArray = [
-            ModeId.Versus,
-            ModeId.Coop,
-            ModeId.WarRoom,
+            GameModes_Constants.ModeId.Versus,
+            GameModes_Constants.ModeId.Coop,
+            GameModes_Constants.ModeId.WarRoom,
         ];
-        if (getIsSelfMapCommittee()) {
-            availableGameModeArray.push(ModeId.RankedMatch);
+        if (Users_Model.getIsSelfMapCommittee()) {
+            availableGameModeArray.push(GameModes_Constants.ModeId.RankedMatch);
         }
 
         const templateWarRule   = openData.templateWarRule;
         const ruleAvailability  = templateWarRule.createIfNotExistsRuleAvailability();
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : getNonNullElements([
-                ruleAvailability.getCanCcw() ? ModeId.Coop : null,
-                ruleAvailability.getCanMcw() ? ModeId.Versus : null,
-                ruleAvailability.getCanMrw() ? ModeId.RankedMatch : null,
-                ruleAvailability.getCanSrw() ? ModeId.WarRoom : null,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
+            currentNumberArray      : Helpers_Collection.getNonNullElements([
+                ruleAvailability.getCanCcw() ? GameModes_Constants.ModeId.Coop : null,
+                ruleAvailability.getCanMcw() ? GameModes_Constants.ModeId.Versus : null,
+                ruleAvailability.getCanMrw() ? GameModes_Constants.ModeId.RankedMatch : null,
+                ruleAvailability.getCanSrw() ? GameModes_Constants.ModeId.WarRoom : null,
             ]),
             availableNumberArray    : availableGameModeArray,
-            getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B1013)),
-            getNumberMainText       : gameMode => getGameModeName(gameMode) ?? UndefinedError,
-            callbackOnHelp          : gameMode => openPanel(getDict().CommonHelpPanel, {
-                getContent : () => getGameModeHelpText(gameMode) ?? UndefinedError,
+            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B1013)),
+            getNumberMainText       : gameMode => Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError,
+            callbackOnHelp          : gameMode => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getContent : () => Lang_Utils.getGameModeHelpText(gameMode) ?? Lang_Constants.UndefinedError,
             }),
             callbackOnConfirm       : gameModeArray => {
-                const canCcw    = gameModeArray.indexOf(ModeId.Coop) >= 0;
-                const canMcw    = gameModeArray.indexOf(ModeId.Versus) >= 0;
-                const canMrw    = gameModeArray.indexOf(ModeId.RankedMatch) >= 0;
-                const canSrw    = gameModeArray.indexOf(ModeId.WarRoom) >= 0;
+                const canCcw    = gameModeArray.indexOf(GameModes_Constants.ModeId.Coop) >= 0;
+                const canMcw    = gameModeArray.indexOf(GameModes_Constants.ModeId.Versus) >= 0;
+                const canMrw    = gameModeArray.indexOf(GameModes_Constants.ModeId.RankedMatch) >= 0;
+                const canSrw    = gameModeArray.indexOf(GameModes_Constants.ModeId.WarRoom) >= 0;
                 templateWarRule.setRuleAvailability(RuleAvailability.fromJson({
                     canCcw  : canCcw,
                     canMcw  : canMcw,
@@ -312,10 +298,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedGroupHelpPlayerRule(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0804),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0804),
         });
     }
     private _onTouchedGroupModifyPlayerRule(): void {
@@ -324,9 +310,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().MmWarRulePlayerRulePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmWarRulePlayerRulePanel, {
             gcData          : openData.gcData,
             mapRawData      : openData.mapRawData,
             templateWarRule : openData.templateWarRule,
@@ -334,10 +320,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedGroupHelpWarEvent(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0793),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0793),
         });
     }
     private _onTouchedGroupModifyWarEvent(): void {
@@ -346,19 +332,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().MmWarRuleWarEventPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmWarRuleWarEventPanel, {
             warEventArray   : openData.mapRawData.getWarEventFullData()?.getEventArray() ?? [],
             templateWarRule : openData.templateWarRule,
         });
     }
 
     private _onTouchedGroupHelpTaskObjective(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0713),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0713),
         });
     }
     private _onTouchedGroupModifyTaskObjective(): void {
@@ -367,19 +353,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().MmWarRuleTaskObjectivePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmWarRuleTaskObjectivePanel, {
             mapRawData      : openData.mapRawData,
             templateWarRule : openData.templateWarRule,
         });
     }
 
     private _onTouchedGroupHelpMapSimpleDialogue(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0788),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0788),
         });
     }
     private _onTouchedGroupModifyMapSimpleDialogue(): void {
@@ -388,9 +374,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().MmWarRuleMapSimpleDialoguePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmWarRuleMapSimpleDialoguePanel, {
             mapRawData      : openData.mapRawData,
             templateWarRule : openData.templateWarRule,
         });
@@ -402,12 +388,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const templateWarRule = openData.templateWarRule;
-        openPanel(getDict().CommonInputShortLangTextPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
             currentTextArray    : templateWarRule.getRuleNameArray(),
-            maxTextLength       : Constants.MaxNameLength,
+            maxTextLength       : WarRules_Constants.Constants.MaxNameLength,
             callback            : nameArray => {
                 templateWarRule.setRuleNameArray(nameArray);
                 this._updateLabelRuleName();
@@ -419,17 +405,17 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0320);
-        this._btnAddRule.setLangText(TextType.B0026);
-        this._labelRuleNameTitle.setLangText(TextType.B0315);
-        this._labelHasFogTitle.setText(`${getText(TextType.B0549)} ?`);
-        this._labelWeatherTitle.setText(`${getText(TextType.Weather)} ?`);
-        this._labelTileThemeTitle.setText(`${getText(TextType.B1113)} ?`);
-        this._labelRuleAvailabilityTitle.setText(`${getText(TextType.B1013)} ?`);
-        this._labelPlayerRuleTitle.setText(`${getText(TextType.B0407)} ?`);
-        this._labelWarEventTitle.setText(`${getText(TextType.B0461)} ?`);
-        this._labelTaskObjectiveTitle.setText(`${getText(TextType.B1214)} ?`);
-        this._labelMapSimpleDialogueTitle.setText(`${getText(TextType.B1095)} ?`);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0320);
+        this._btnAddRule.setLangText(Lang_Constants.TextType.B0026);
+        this._labelRuleNameTitle.setLangText(Lang_Constants.TextType.B0315);
+        this._labelHasFogTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0549)} ?`);
+        this._labelWeatherTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.Weather)} ?`);
+        this._labelTileThemeTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1113)} ?`);
+        this._labelRuleAvailabilityTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1013)} ?`);
+        this._labelPlayerRuleTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0407)} ?`);
+        this._labelWarEventTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0461)} ?`);
+        this._labelTaskObjectiveTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1214)} ?`);
+        this._labelMapSimpleDialogueTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1095)} ?`);
     }
 
     private _updateComponentsForRule(): void {
@@ -445,7 +431,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelRuleName(): void {
-        this._labelRuleName.setText(getJoinedShortLanguageText(this.getOpenData()?.templateWarRule.getRuleNameArray(), 30));
+        this._labelRuleName.setText(Lang_Utils.getJoinedShortLanguageText(this.getOpenData()?.templateWarRule.getRuleNameArray(), 30));
     }
     private _updateLabelWeather(): void {
         const openData = this.getOpenData();
@@ -454,13 +440,13 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const gcData = openData.gcData;
-        this._labelWeather.setText(getWeatherName(
-            getDefaultWeatherType(
-                getExisted(openData.templateWarRule.getWarRuleCommonData()),
+        this._labelWeather.setText(Lang_Utils.getWeatherName(
+            WarRules_Utils_CommonData.getDefaultWeatherType(
+                Helpers_Misc.getExisted(openData.templateWarRule.getWarRuleCommonData()),
                 gcData
             ),
             gcData
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
     }
     private _updateImgHasFog(): void {
         this._imgHasFog.setIsVisible(!!this.getOpenData()?.templateWarRule.getWarRuleCommonData()?.getHasFogByDefault());
@@ -469,9 +455,9 @@ export class Panel extends UiPanel<OpenData> {
         const fixedTileTheme    = this.getOpenData()?.templateWarRule.getWarRuleCommonData()?.getFixedTileTheme();
         const label             = this._labelTileTheme;
         if (fixedTileTheme == null) {
-            label.setLangText(TextType.B0890);
+            label.setLangText(Lang_Constants.TextType.B0890);
         } else {
-            label.setText(getTileThemeName(fixedTileTheme) ?? UndefinedError);
+            label.setText(Lang_Utils.getTileThemeName(fixedTileTheme) ?? Lang_Constants.UndefinedError);
         }
     }
     private _updateLabelRuleAvailability(): void {
@@ -482,7 +468,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const label = this._labelRuleAvailability;
         if (openData.mapRawData.getCampaignMapData()) {
-            label.setLangText(TextType.B1135);
+            label.setLangText(Lang_Constants.TextType.B1135);
         } else {
             const availability = openData.templateWarRule.getRuleAvailability();
             let count           = 0;

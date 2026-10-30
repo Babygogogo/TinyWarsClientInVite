@@ -1,56 +1,49 @@
-import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
-import type { MovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { getScoreAndActionUnitAttack } from "./actions/UnitAttack.ts";
-import { getScoreAndActionUnitBeLoaded } from "./actions/UnitBeLoaded.ts";
-import { getScoreAndActionUnitBoardedByCo } from "./actions/UnitBoardedByCo.ts";
-import { getScoreAndActionUnitCaptureTile } from "./actions/UnitCaptureTile.ts";
-import { getScoreAndActionUnitCrushUnit } from "./actions/UnitCrushUnit.ts";
-import { getScoreAndActionUnitDive } from "./actions/UnitDive.ts";
-import { getScoreAndActionUnitDropUnit } from "./actions/UnitDropUnit.ts";
-import { getScoreAndActionUnitJoin } from "./actions/UnitJoin.ts";
-import { getScoreAndActionUnitLaunchFlare } from "./actions/UnitLaunchFlare.ts";
-import { getScoreAndActionUnitLaunchSilo } from "./actions/UnitLaunchSilo.ts";
-import { getScoreAndActionUnitProduceUnit } from "./actions/UnitProduceUnit.ts";
-import { getScoreAndActionUnitRepairUnit } from "./actions/UnitRepairUnit.ts";
-import { getScoreAndActionUnitSelfDetonate } from "./actions/UnitSelfDetonate.ts";
-import { getScoreAndActionUnitSurface } from "./actions/UnitSurface.ts";
-import { getScoreAndActionUnitUseCoSkill } from "./actions/UnitUseCoSkill.ts";
-import { getScoreAndActionUnitWait } from "./actions/UnitWait.ts";
-import { CommonParams } from "./CommonParams.ts";
-import { getActionForPhase01 } from "./phases/Phase01.ts";
-import { getActionForPhase08 } from "./phases/Phase08.ts";
-import { getActionForPhase09 } from "./phases/Phase09.ts";
-import { getActionForPhase11 } from "./phases/Phase11.ts";
-import { getActionForPhase12 } from "./phases/Phase12.ts";
-import type { ScoreAndAction } from "./Types.ts";
-import type { SkillTypeId } from "../coSkills/Constants.ts";
-import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
-import { getDamageMultiplierForDefenseBonus } from "../damageCalculators/Utils.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { createEmptyMap } from "../helpers/Collection.ts";
 import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { PlayerIndex } from "../players/Constants.ts";
-import type { IPlayer } from "../players/IPlayer.ts";
+    Units_Constants,
+    AuxiliaryTypes_AttackableArea,
+    Timer_TimerModel,
+    Utils_ClientErrorCode,
+    Bots_CommonParams,
+    Helpers_Collection,
+    Bots_Phases_Phase01,
+    Bots_Phases_Phase08,
+    Bots_Phases_Phase09,
+    Bots_Phases_Phase11,
+    Bots_Phases_Phase12,
+    DamageCalculators_Utils,
+    Visibilities_Utils,
+    Helpers_Misc,
+    Units_Utils_Common,
+    CoSkills_Utils_Common,
+    Bots_Actions_UnitAttack,
+    Bots_Actions_UnitBeLoaded,
+    Bots_Actions_UnitBoardedByCo,
+    Bots_Actions_UnitCaptureTile,
+    Bots_Actions_UnitCrushUnit,
+    Bots_Actions_UnitDive,
+    Bots_Actions_UnitDropUnit,
+    Bots_Actions_UnitJoin,
+    Bots_Actions_UnitLaunchFlare,
+    Bots_Actions_UnitLaunchSilo,
+    Bots_Actions_UnitProduceUnit,
+    Bots_Actions_UnitRepairUnit,
+    Bots_Actions_UnitSelfDetonate,
+    Bots_Actions_UnitSurface,
+    Bots_Actions_UnitUseCoSkill,
+    Bots_Actions_UnitWait,
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_MovableArea,
+    Players_Constants,
+    Teams_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+    type CoSkills_Constants,
+} from "../internal.ts";
 import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { TeamIndex } from "../teams/Constants.ts";
-import { checkAndCallLater } from "../timer/TimerModel.ts";
-import {
-    ActionStateId,
-    WeaponTypeId,
-    Hp,
-    AiModeId,
-    LoadedStateId,
-} from "../units/Constants.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import { getNormalizedHp } from "../units/utils/Common.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { getDiscoveredUnitsByPath } from "../visibilities/Utils.ts";
 
 interface AttackInfo {
     baseDamage          : number | null | undefined;
@@ -70,8 +63,8 @@ export const IsNeedVisibility = true;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function checkCanUnitWaitOnGrid(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex): Promise<boolean> {
-    await checkAndCallLater();
+async function checkCanUnitWaitOnGrid(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<boolean> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
     return (unitGridIndex.checkIsEqual(gridIndex))
@@ -79,7 +72,7 @@ async function checkCanUnitWaitOnGrid(commonParams: CommonParams, unit: IUnit, g
         : (!commonParams.getWar().getUnitMap().getUnitOnMap(gridIndex));
 }
 
-export function getBetterScoreAndAction(data1: ScoreAndAction | null | undefined, data2: ScoreAndAction, commonParams: CommonParams): ScoreAndAction {
+export function getBetterScoreAndAction(data1: Bots_Types.ScoreAndAction | null | undefined, data2: Bots_Types.ScoreAndAction, commonParams: Bots_CommonParams.CommonParams): Bots_Types.ScoreAndAction {
     if (data1 == null) {
         return data2;
     } else {
@@ -93,8 +86,8 @@ export function getBetterScoreAndAction(data1: ScoreAndAction | null | undefined
         }
     }
 }
-export function getBestScoreAndAction(dataArray: (ScoreAndAction | null)[], commonParams: CommonParams): ScoreAndAction | null {
-    let bestData: ScoreAndAction | null = null;
+export function getBestScoreAndAction(dataArray: (Bots_Types.ScoreAndAction | null)[], commonParams: Bots_CommonParams.CommonParams): Bots_Types.ScoreAndAction | null {
+    let bestData: Bots_Types.ScoreAndAction | null = null;
     for (const newData of dataArray) {
         if (newData != null) {
             bestData = getBetterScoreAndAction(bestData, newData, commonParams);
@@ -104,12 +97,12 @@ export function getBestScoreAndAction(dataArray: (ScoreAndAction | null)[], comm
 }
 
 async function getReachableArea({ commonParams, unit, passableGridIndex, blockedGridIndex }: {
-    commonParams        : CommonParams;
-    unit                : IUnit;
-    passableGridIndex   : GridIndex | null;
-    blockedGridIndex    : GridIndex | null;
-}): Promise<MovableArea> {
-    await checkAndCallLater();
+    commonParams        : Bots_CommonParams.CommonParams;
+    unit                : Units_IUnit.IUnit;
+    passableGridIndex   : AuxiliaryTypes_GridIndex.GridIndex | null;
+    blockedGridIndex    : AuxiliaryTypes_GridIndex.GridIndex | null;
+}): Promise<AuxiliaryTypes_MovableArea.MovableArea> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const moveRange         = unit.getFinalMoveRange();
     const currentFuel       = unit.getCurrentFuel();
@@ -118,7 +111,7 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
     const mapSize           = commonParams.getMapSize();
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
-    return MovableArea.create({
+    return AuxiliaryTypes_MovableArea.MovableArea.create({
         gridIndex       : unitGridIndex,
         maxMoveCost     : Math.min(moveRange, currentFuel),
         mapSize         : mapSize,
@@ -144,11 +137,11 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
     });
 }
 
-export function getUnitTypeSetForCoSkillSetUnitIdle(player: IPlayer, coSkillType: SkillTypeId, gameConfig: GameConfig): Set<number> {
+export function getUnitTypeSetForCoSkillSetUnitIdle(player: Players_IPlayer.IPlayer, coSkillType: CoSkills_Constants.SkillTypeId, gameConfig: GameConfigs_GameConfig.GameConfig): Set<number> {
     const unitTypeSet = new Set<number>();
     for (const skillId of player.getCoSkills(coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getInstantManual()?.getSelfUnitActionState();
-        if ((cfg) && (cfg.getUnitActionStateId() === ActionStateId.Idle)) {
+        if ((cfg) && (cfg.getUnitActionStateId() === Units_Constants.ActionStateId.Idle)) {
             for (const unitType of gameConfig.getUnitTypesByCategory(cfg.getUnitCategoryId()) ?? []) {
                 unitTypeSet.add(unitType);
             }
@@ -158,8 +151,8 @@ export function getUnitTypeSetForCoSkillSetUnitIdle(player: IPlayer, coSkillType
     return unitTypeSet;
 }
 
-export function getCoPowerSkillTargetGridIndexArray(commonParams: CommonParams, player: IPlayer, coSkillType: SkillTypeId): GridIndex[] | null {
-    const count = getPowerSkillTargetsCount(player.getCoBasicCfg(), coSkillType);
+export function getCoPowerSkillTargetGridIndexArray(commonParams: Bots_CommonParams.CommonParams, player: Players_IPlayer.IPlayer, coSkillType: CoSkills_Constants.SkillTypeId): AuxiliaryTypes_GridIndex.GridIndex[] | null {
+    const count = CoSkills_Utils_Common.getPowerSkillTargetsCount(player.getCoBasicCfg(), coSkillType);
     if (count <= 0) {
         return null;
     }
@@ -182,7 +175,7 @@ export function getCoPowerSkillTargetGridIndexArray(commonParams: CommonParams, 
     let gridId      = 0;
     const mapSize   = commonParams.getMapSize();
     while (gridIndexArray.length < count) {
-        const gridIndex = GridIndex.getGridIndexByGridId(gridId++, mapSize);
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.getGridIndexByGridId(gridId++, mapSize);
         if (!gridIndexArray.some(v => v.checkIsEqual(gridIndex))) {
             gridIndexArray.push(gridIndex);
         }
@@ -218,12 +211,12 @@ export function getCoPowerSkillTargetGridIndexArray(commonParams: CommonParams, 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Damage map generators.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, targetUnit: IUnit): Promise<AttackInfo> {
-    await checkAndCallLater();
+async function getAttackInfo(commonParams: Bots_CommonParams.CommonParams, attacker: Units_IUnit.IUnit, targetUnit: Units_IUnit.IUnit): Promise<AttackInfo> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const attackerGridIndex             = attacker.getGridIndex();
     const attackerPlayerIndex           = attacker.getPlayerIndex();
-    const settingsLuckValue             = getExisted(commonParams.getSettingsLuckValueDict().get(attackerPlayerIndex), ClientErrorCode.SpwRobot_GetAttackInfo_00);
+    const settingsLuckValue             = Helpers_Misc.getExisted(commonParams.getSettingsLuckValueDict().get(attackerPlayerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetAttackInfo_00);
     const targetArmorType               = targetUnit.getArmorType();
     const attackerCurrentHp             = attacker.getCurrentHp();
     const attackerMaxFuel               = attacker.getMaxFuel();
@@ -231,8 +224,8 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, target
     const mapSize                       = commonParams.getMapSize();
     const war                           = commonParams.getWar();
     const unitMap                       = war.getUnitMap();
-    const attackerNormalizedCurrentHp   = getNormalizedHp(attackerCurrentHp);
-    const baseDamageWithAmmo            = attacker.getCfgBaseDamage(targetArmorType, attacker.checkHasPrimaryWeapon() ? WeaponTypeId.Primary : WeaponTypeId.Secondary);
+    const attackerNormalizedCurrentHp   = Units_Utils_Common.getNormalizedHp(attackerCurrentHp);
+    const baseDamageWithAmmo            = attacker.getCfgBaseDamage(targetArmorType, attacker.checkHasPrimaryWeapon() ? Units_Constants.WeaponTypeId.Primary : Units_Constants.WeaponTypeId.Secondary);
     const baseDamageForCurrentAmmo      = attacker.getBaseDamage(targetArmorType);
     const loaderUnitId                  = attacker.getLoaderUnitId();
 
@@ -242,7 +235,7 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, target
         if (repairInfo) {
             return {
                 baseDamage          : baseDamageWithAmmo,
-                normalizedHp        : getNormalizedHp(attackerCurrentHp + repairInfo.hp),
+                normalizedHp        : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
                 fuel                : attackerMaxFuel,
                 settingsLuckValue   : settingsLuckValue,
             };
@@ -267,7 +260,7 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, target
     } else {
         const loaderUnit = unitMap.getUnitOnMap(attackerGridIndex);
         if ((loaderUnit == null) || (loaderUnit === attacker)) {
-            throw newError(`Invalid loaderUnit.`, ClientErrorCode.SpwRobot_GetAttackInfo_01);
+            throw Helpers_Misc.newError(`Invalid loaderUnit.`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetAttackInfo_01);
         }
 
         if ((!commonParams.getCanAttackAfterMoving(attacker))   ||
@@ -285,7 +278,7 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, target
             if (repairInfo) {
                 return {
                     baseDamage          : baseDamageWithAmmo,
-                    normalizedHp        : getNormalizedHp(attackerCurrentHp + repairInfo.hp),
+                    normalizedHp        : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
                     fuel                : attackerMaxFuel,
                     settingsLuckValue   : settingsLuckValue,
                 };
@@ -310,11 +303,11 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, target
     }
 }
 
-async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, isDiving: boolean, targetUnitMovableArea: MovableArea): Promise<DamageMapData[][]> {
-    await checkAndCallLater();
+async function createDamageMap(commonParams: Bots_CommonParams.CommonParams, targetUnit: Units_IUnit.IUnit, isDiving: boolean, targetUnitMovableArea: AuxiliaryTypes_MovableArea.MovableArea): Promise<DamageMapData[][]> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const targetPlayerIndex                                 = targetUnit.getPlayerIndex();
-    const globalDefenseBonus                                = getExisted(commonParams.getGlobalDefenseBonuses().get(targetPlayerIndex), ClientErrorCode.SpwRobot_CreateDamageMap_00);
+    const globalDefenseBonus                                = Helpers_Misc.getExisted(commonParams.getGlobalDefenseBonuses().get(targetPlayerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_CreateDamageMap_00);
     const globalOffenseBonuses                              = commonParams.getGlobalOffenseBonuses();
     const mapSize                                           = commonParams.getMapSize();
     const { width: mapWidth, height: mapHeight }            = mapSize.getWH();
@@ -322,16 +315,16 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, is
     const gcData                                            = war.getGcData();
     const unitMap                                           = war.getUnitMap();
     const tileMap                                           = war.getTileMap();
-    const damageMap                                         = createEmptyMap<DamageMapData>(mapWidth);
+    const damageMap                                         = Helpers_Collection.createEmptyMap<DamageMapData>(mapWidth);
     const targetTeamIndex                                   = targetUnit.getTeamIndex();
     const targetUnitCanBeAttackedByUnitTypeArrayWhenDived   = targetUnit.getTemplateCfg().getDiveCfg()?.getCanBeAttackedByUnitTypeArray() ?? [];
 
     for (const attacker of unitMap.getAllUnits()) {
-        await checkAndCallLater();
+        await Timer_TimerModel.checkAndCallLater();
 
         const beginningGridIndex        = attacker.getGridIndex();
         const attackerPlayerIndex       = attacker.getPlayerIndex();
-        const globalOffenseBonus        = getExisted(globalOffenseBonuses.get(attackerPlayerIndex), ClientErrorCode.SpwRobot_CreateDamageMap_01);
+        const globalOffenseBonus        = Helpers_Misc.getExisted(globalOffenseBonuses.get(attackerPlayerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_CreateDamageMap_01);
         const promotionAttackBonus      = attacker.getPromotionAttackBonus();
         const attackerFinalMoveRange    = attacker.getFinalMoveRange();
         const minAttackRange            = attacker.getMinAttackRange();
@@ -352,8 +345,8 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, is
             continue;
         }
 
-        await checkAndCallLater();
-        const movableArea = MovableArea.create({
+        await Timer_TimerModel.checkAndCallLater();
+        const movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
             gridIndex       : beginningGridIndex,
             maxMoveCost     : Math.min(attackerFinalMoveRange, fuel),
             mapSize         : mapSize,
@@ -371,20 +364,20 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, is
             },
         });
 
-        await checkAndCallLater();
-        const attackableArea = AttackableArea.create({
+        await Timer_TimerModel.checkAndCallLater();
+        const attackableArea = AuxiliaryTypes_AttackableArea.AttackableArea.create({
             movableArea         : movableArea,
             mapSize             : mapSize,
             minAttackRange      : minAttackRange,
             maxAttackRange      : maxAttackRange,
-            checkCanAttack      : (moveGridIndex: GridIndex): boolean => {
+            checkCanAttack      : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
                 const hasMoved = !moveGridIndex.checkIsEqual(beginningGridIndex);
                 return ((attacker.getLoaderUnitId() == null) || (hasMoved))
                     && ((canAttackAfterMoving) || (!hasMoved));
             }
         }).getArea();
 
-        await checkAndCallLater();
+        await Timer_TimerModel.checkAndCallLater();
         const attackBonus = globalOffenseBonus + promotionAttackBonus;
         for (let x = 0; x < mapWidth; ++x) {
             const movableColumn = targetUnitMovableArea.getColumn(x);
@@ -407,16 +400,16 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, is
                     continue;
                 }
 
-                const targetGridIndex   = new GridIndex(x, y);
+                const targetGridIndex   = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                 const isDirect          = attackableGridData.movePathDestination.getDistance(targetGridIndex) <= 1;
                 const damage            = Math.floor(
                     (baseDamage * Math.max(0, 1 + attackBonus / 100) + settingsLuckValue)
                     * normalizedHp
-                    * getDamageMultiplierForDefenseBonus(
+                    * DamageCalculators_Utils.getDamageMultiplierForDefenseBonus(
                         gcData,
                         globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus()
                     )
-                    / Hp.Normalizer
+                    / Units_Constants.Hp.Normalizer
                 );
                 if (!damageMap[x][y]) {
                     damageMap[x][y] = {
@@ -443,7 +436,7 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, is
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Score calculators.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getScoreForBeThreatened(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, damageMap: DamageMapData[][] | null | undefined): Promise<number> {
+async function getScoreForBeThreatened(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, damageMap: DamageMapData[][] | null | undefined): Promise<number> {
     // const hp            = unit.getCurrentHp();
     // const data          = damageMap[gridIndex.x][gridIndex.y];
     // const maxDamage     = Math.min(data ? data.max : 0, hp);
@@ -452,7 +445,7 @@ async function getScoreForBeThreatened(commonParams: CommonParams, unit: IUnit, 
     //     * (unit.getProductionFinalCost() / 6000 / Math.max(1, _unitValueRatio))
     //     * (unit.getHasLoadedCo() ? 2 : 1);
 
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     const data = damageMap ? damageMap[gridIndex.getX()][gridIndex.getY()] : null;
     if (data == null) {
@@ -476,8 +469,8 @@ async function getScoreForBeThreatened(commonParams: CommonParams, unit: IUnit, 
     return score;
 }
 
-async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit: IUnit, gridIndex: GridIndex, scoreDictForThreatEnemy: Map<IUnit, number>): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForThreatEnemies(commonParams: Bots_CommonParams.CommonParams, attackerUnit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, scoreDictForThreatEnemy: Map<Units_IUnit.IUnit, number>): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war           = commonParams.getWar();
     const unitMap       = war.getUnitMap();
@@ -494,8 +487,8 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
     const attackerTeamIndex     = attackerUnit.getTeamIndex();
     const canAttackAfterMoving  = commonParams.getCanAttackAfterMoving(attackerUnit);
 
-    await checkAndCallLater();
-    const movableArea = MovableArea.create({
+    await Timer_TimerModel.checkAndCallLater();
+    const movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
         gridIndex       : gridIndex,
         maxMoveCost     : attackerUnit.getFinalMoveRange(),
         mapSize         : mapSize,
@@ -514,27 +507,27 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
         },
     });
 
-    await checkAndCallLater();
-    const attackableArea = AttackableArea.create({
+    await Timer_TimerModel.checkAndCallLater();
+    const attackableArea = AuxiliaryTypes_AttackableArea.AttackableArea.create({
         movableArea         : movableArea,
         mapSize             : mapSize,
         minAttackRange      : attackerUnit.getMinAttackRange(),
         maxAttackRange      : attackerUnit.getFinalMaxAttackRange(),
-        checkCanAttack      : (moveGridIndex: GridIndex): boolean => {
+        checkCanAttack      : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const hasMoved = !moveGridIndex.checkIsEqual(gridIndex);
             return ((canAttackAfterMoving) || (!hasMoved));
         }
     }).getArea();
 
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
     const scalerForUnitValueRatio   = Math.pow(Math.max(1, commonParams.getUnitValueRatio()), 1);
     const mapWidth                  = mapSize.getWidth();
     const mapHeight                 = mapSize.getHeight();
     const normalizedHp              = attackerUnit.getNormalizedCurrentHp();
     const attackerPlayerIndex       = attackerUnit.getPlayerIndex();
     const gcData                    = war.getGcData();
-    const settingsLuckValue         = getExisted(commonParams.getSettingsLuckValueDict().get(attackerPlayerIndex), ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_00);
-    const globalOffenseBonus        = getExisted(commonParams.getGlobalOffenseBonuses().get(attackerPlayerIndex), ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_01);
+    const settingsLuckValue         = Helpers_Misc.getExisted(commonParams.getSettingsLuckValueDict().get(attackerPlayerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_00);
+    const globalOffenseBonus        = Helpers_Misc.getExisted(commonParams.getGlobalOffenseBonuses().get(attackerPlayerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_01);
     const globalDefenseBonuses      = commonParams.getGlobalDefenseBonuses();
     const attackBonus               = globalOffenseBonus + attackerUnit.getPromotionAttackBonus();
     let totalScore                  = 0;
@@ -550,14 +543,14 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
                 continue;
             }
 
-            const targetGridIndex   = new GridIndex(x, y);
+            const targetGridIndex   = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
             const targetUnit        = unitMap.getUnitOnMap(targetGridIndex);
             if (targetUnit == null) {
                 continue;
             }
 
             if (scoreDictForThreatEnemy.has(targetUnit)) {
-                totalScore += getExisted(scoreDictForThreatEnemy.get(targetUnit), ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_02);
+                totalScore += Helpers_Misc.getExisted(scoreDictForThreatEnemy.get(targetUnit), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_02);
                 continue;
             }
 
@@ -572,15 +565,15 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
                 continue;
             }
 
-            const globalDefenseBonus    = getExisted(globalDefenseBonuses.get(targetUnit.getPlayerIndex()), ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_03);
+            const globalDefenseBonus    = Helpers_Misc.getExisted(globalDefenseBonuses.get(targetUnit.getPlayerIndex()), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForThreatEnemies_03);
             const damage                = Math.floor(
                 (baseDamage * Math.max(0, 1 + attackBonus / 100) + settingsLuckValue)
                 * normalizedHp
-                * getDamageMultiplierForDefenseBonus(
+                * DamageCalculators_Utils.getDamageMultiplierForDefenseBonus(
                     gcData,
                     globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus()
                 )
-                / Hp.Normalizer
+                / Units_Constants.Hp.Normalizer
             );
             const canDestroy    = damage >= targetUnit.getCurrentHp();
             let score           = (damage + (canDestroy ? 30 : 0)) * targetUnit.getProductionCfgCost() / 1000 * scalerForUnitValueRatio * (targetUnit.getIsCoOnboard() ? 2 : 1);
@@ -598,8 +591,8 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
     return totalScore;
 }
 
-async function getScoreForDistanceToCapturableBuildings(commonParams: CommonParams, unit: IUnit, movableArea: MovableArea): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForDistanceToCapturableBuildings(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, movableArea: AuxiliaryTypes_MovableArea.MovableArea): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war                                       = commonParams.getWar();
     const { width: mapWidth, height: mapHeight }    = commonParams.getMapSize().getWH();
@@ -620,7 +613,7 @@ async function getScoreForDistanceToCapturableBuildings(commonParams: CommonPara
             }
 
             const distance      = info.totalMoveCost;
-            const gridIndex     = new GridIndex(x, y);
+            const gridIndex     = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
             const tile          = tileMap.getTile(gridIndex);
             const existingUnit  = unitMap.getUnitOnMap(gridIndex);
             if (((tile.getMaxCapturePoint() != null) && (tile.getTeamIndex() !== teamIndex))    ||
@@ -692,7 +685,6 @@ async function getScoreForDistanceToCapturableBuildings(commonParams: CommonPara
     //     return score / tilesCount / (maxDistance || 1) * 2 * unit.getProductionCfgCost() / 1000 / maxHp * currentHp;
     // }
 
-
     // method 1
     // const tileMap                                   = war.getTileMap();
     // const { width: mapWidth, height: mapHeight }    = tileMap.getMapSize();
@@ -714,8 +706,8 @@ async function getScoreForDistanceToCapturableBuildings(commonParams: CommonPara
     // return maxScore > Number.MIN_VALUE ? maxScore : 0;
 }
 
-async function getScoreForAiWeightedDestination(unit: IUnit, movableArea: MovableArea): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForAiWeightedDestination(unit: Units_IUnit.IUnit, movableArea: AuxiliaryTypes_MovableArea.MovableArea): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const aiWeightedDestination = unit.getAiWeightedDestination();
     if (aiWeightedDestination == null) {
@@ -736,13 +728,13 @@ async function getScoreForAiWeightedDestination(unit: IUnit, movableArea: Movabl
 }
 
 async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, scoreDictForThreatEnemy }: {
-    commonParams            : CommonParams;
-    unit                    : IUnit;
-    gridIndex               : GridIndex;
+    commonParams            : Bots_CommonParams.CommonParams;
+    unit                    : Units_IUnit.IUnit;
+    gridIndex               : AuxiliaryTypes_GridIndex.GridIndex;
     damageMap               : DamageMapData[][] | null | undefined;
-    scoreDictForThreatEnemy : Map<IUnit, number>;
+    scoreDictForThreatEnemy : Map<Units_IUnit.IUnit, number>;
 }): Promise<number> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     const [scoreForBeThreatened, scoreForThreatEnemies] = await Promise.all([
         getScoreForBeThreatened(commonParams, unit, gridIndex, damageMap),
@@ -785,14 +777,14 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
     if (aiScoreArrayForStay) {
         if (tileTeamIndex === unitTeamIndex) {
             totalScore += aiScoreArrayForStay[0] ?? 0;
-        } else if (tileTeamIndex !== TeamIndex.Neutral) {
+        } else if (tileTeamIndex !== Teams_Constants.TeamIndex.Neutral) {
             totalScore += aiScoreArrayForStay[1] ?? 0;
         }
     }
 
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
-    const movableArea   = MovableArea.create({
+    const movableArea   = AuxiliaryTypes_MovableArea.MovableArea.create({
         gridIndex       : gridIndex,
         maxMoveCost     : Number.MAX_SAFE_INTEGER,
         mapSize         : commonParams.getMapSize(),
@@ -806,14 +798,14 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
     return totalScore;
 }
 
-async function getScoreForMovePath(commonParams: CommonParams, movingUnit: IUnit, movePath: MovePathNode[]): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForMovePath(commonParams: Bots_CommonParams.CommonParams, movingUnit: Units_IUnit.IUnit, movePath: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if (!IsNeedVisibility) {
         return 0;
     }
 
-    const discoveredUnits = getDiscoveredUnitsByPath({
+    const discoveredUnits = Visibilities_Utils.getDiscoveredUnitsByPath({
         war             : commonParams.getWar(),
         path            : movePath.map(v => v.getGridIndex()),
         movingUnit      : movingUnit,
@@ -832,15 +824,15 @@ async function getScoreForMovePath(commonParams: CommonParams, movingUnit: IUnit
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // The available action generators for units.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getBestScoreAndActionForUnitAndPath(commonParams: CommonParams, unit: IUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+async function getBestScoreAndActionForUnitAndPath(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
-    const scoreAndActionForUnitBeLoaded = await getScoreAndActionUnitBeLoaded(commonParams, unit, destination, pathNodes);
+    const scoreAndActionForUnitBeLoaded = await Bots_Actions_UnitBeLoaded.getScoreAndActionUnitBeLoaded(commonParams, unit, destination, pathNodes);
     if (scoreAndActionForUnitBeLoaded) {
         return scoreAndActionForUnitBeLoaded;
     }
 
-    const scoreAndActionForUnitJoin = await getScoreAndActionUnitJoin(commonParams, unit, destination, pathNodes);
+    const scoreAndActionForUnitJoin = await Bots_Actions_UnitJoin.getScoreAndActionUnitJoin(commonParams, unit, destination, pathNodes);
     if (scoreAndActionForUnitJoin) {
         return scoreAndActionForUnitJoin;
     }
@@ -850,25 +842,25 @@ async function getBestScoreAndActionForUnitAndPath(commonParams: CommonParams, u
     }
 
     return getBestScoreAndAction(await Promise.all([
-        getScoreAndActionUnitAttack(commonParams, unit, pathNodes),
-        getScoreAndActionUnitCaptureTile(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitCrushUnit(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitDive(unit, pathNodes),
-        getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex: destination, pathNodes }),
-        getScoreAndActionUnitLaunchSilo(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitLaunchFlare(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitProduceUnit(commonParams, unit, pathNodes),
-        getScoreAndActionUnitRepairUnit(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitSelfDetonate(commonParams, unit, destination, pathNodes),
-        getScoreAndActionUnitSurface(unit, pathNodes),
-        getScoreAndActionUnitWait(unit, pathNodes),
-        getScoreAndActionUnitBoardedByCo(unit, pathNodes),
-        getScoreAndActionUnitUseCoSkill(commonParams, unit, pathNodes),
+        Bots_Actions_UnitAttack.getScoreAndActionUnitAttack(commonParams, unit, pathNodes),
+        Bots_Actions_UnitCaptureTile.getScoreAndActionUnitCaptureTile(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitCrushUnit.getScoreAndActionUnitCrushUnit(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitDive.getScoreAndActionUnitDive(unit, pathNodes),
+        Bots_Actions_UnitDropUnit.getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex: destination, pathNodes }),
+        Bots_Actions_UnitLaunchSilo.getScoreAndActionUnitLaunchSilo(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitLaunchFlare.getScoreAndActionUnitLaunchFlare(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitProduceUnit.getScoreAndActionUnitProduceUnit(commonParams, unit, pathNodes),
+        Bots_Actions_UnitRepairUnit.getScoreAndActionUnitRepairUnit(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitSelfDetonate.getScoreAndActionUnitSelfDetonate(commonParams, unit, destination, pathNodes),
+        Bots_Actions_UnitSurface.getScoreAndActionUnitSurface(unit, pathNodes),
+        Bots_Actions_UnitWait.getScoreAndActionUnitWait(unit, pathNodes),
+        Bots_Actions_UnitBoardedByCo.getScoreAndActionUnitBoardedByCo(unit, pathNodes),
+        Bots_Actions_UnitUseCoSkill.getScoreAndActionUnitUseCoSkill(commonParams, unit, pathNodes),
     ]), commonParams);
 }
 
-export async function getBestScoreAndActionForCandidateUnit(commonParams: CommonParams, candidateUnit: IUnit): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getBestScoreAndActionForCandidateUnit(commonParams: Bots_CommonParams.CommonParams, candidateUnit: Units_IUnit.IUnit): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if (!candidateUnit.checkCanAiDoAction()) {
         return null;
@@ -886,11 +878,11 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
     const damageMapForSurface       = await createDamageMap(commonParams, candidateUnit, false, reachableArea);
     const damageMapForDive          = candidateUnit.checkIsDiver() ? await createDamageMap(commonParams, candidateUnit, true, reachableArea) : null;
     const originGridIndex           = candidateUnit.getGridIndex();
-    const scoreDictForThreatEnemy   = new Map<IUnit, number>();
-    const canLaunchUnit             = (candidateUnit.checkCanLaunchLoadedUnit()) && (candidateUnit.getLoadedUnits().some(v => ((v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction()) && (v.getFinalMoveRange() > 0))));
+    const scoreDictForThreatEnemy   = new Map<Units_IUnit.IUnit, number>();
+    const canLaunchUnit             = (candidateUnit.checkCanLaunchLoadedUnit()) && (candidateUnit.getLoadedUnits().some(v => ((v.getActionState() === Units_Constants.ActionStateId.Idle) && (v.checkCanAiDoAction()) && (v.getFinalMoveRange() > 0))));
     // const scoreMapForDistance       = await _createScoreMapForDistance(candidateUnit);
     const { width: mapWidth, height: mapHeight }    = commonParams.getMapSize().getWH();
-    const promiseArray                              : Promise<ScoreAndAction | null>[] = [];
+    const promiseArray                              : Promise<Bots_Types.ScoreAndAction | null>[] = [];
     for (let x = 0; x < mapWidth; ++x) {
         const column = reachableArea.getColumn(x);
         if (!column) {
@@ -902,15 +894,15 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
                 continue;
             }
 
-            const destination = new GridIndex(x, y);
-            promiseArray.push((async (): Promise<ScoreAndAction | null> => {
+            const destination = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
+            promiseArray.push((async (): Promise<Bots_Types.ScoreAndAction | null> => {
                 if (destination.checkIsEqual(originGridIndex)) {
                     if (candidateUnit.getLoaderUnitId() != null) {
                         return null;
                     }
                 } else {
                     const aiMode = candidateUnit.getAiMode();
-                    if (aiMode === AiModeId.NoMove) {
+                    if (aiMode === Units_Constants.AiModeId.NoMove) {
                         return null;
                     }
                 }
@@ -949,10 +941,10 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Phases.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function candidateUnitSorter(v1: IUnit, v2: IUnit): number {
+export function candidateUnitSorter(v1: Units_IUnit.IUnit, v2: Units_IUnit.IUnit): number {
     {
-        const isLoaded1 = v1.checkIsMeetLoadedState(LoadedStateId.IsLoaded);
-        if (isLoaded1 != v2.checkIsMeetLoadedState(LoadedStateId.IsLoaded)) {
+        const isLoaded1 = v1.checkIsMeetLoadedState(Units_Constants.LoadedStateId.IsLoaded);
+        if (isLoaded1 != v2.checkIsMeetLoadedState(Units_Constants.LoadedStateId.IsLoaded)) {
             return isLoaded1 ? -1 : 1;
         }
     }
@@ -981,18 +973,18 @@ export function candidateUnitSorter(v1: IUnit, v2: IUnit): number {
 }
 
 const funcArray = [
-    getActionForPhase01,
-    getActionForPhase08,
-    getActionForPhase09,
-    getActionForPhase11,
-    getActionForPhase12,
+    Bots_Phases_Phase01.getActionForPhase01,
+    Bots_Phases_Phase08.getActionForPhase08,
+    Bots_Phases_Phase09.getActionForPhase09,
+    Bots_Phases_Phase11.getActionForPhase11,
+    Bots_Phases_Phase12.getActionForPhase12,
 ];
-export async function doGetNextOperation(war: IBwWar): Promise<WoContainer> {
-    if (war.getPlayerIndexInTurn() === PlayerIndex.Neutral) {
-        throw newError(`Invalid playerIndexInTurn.`, ClientErrorCode.SpwRobot_DoGetNextAction_00);
+export async function doGetNextOperation(war: BaseWar_Interface_IBwWar.IBwWar): Promise<WoContainer> {
+    if (war.getPlayerIndexInTurn() === Players_Constants.PlayerIndex.Neutral) {
+        throw Helpers_Misc.newError(`Invalid playerIndexInTurn.`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_DoGetNextAction_00);
     }
 
-    const commonParams = await CommonParams.create(war);
+    const commonParams = await Bots_CommonParams.CommonParams.create(war);
     for (const func of funcArray) {
         const actionForPhase = await func(commonParams);
         if (actionForPhase) {
@@ -1000,5 +992,5 @@ export async function doGetNextOperation(war: IBwWar): Promise<WoContainer> {
         }
     }
 
-    throw newError(`No available action?!`, ClientErrorCode.SpwRobot_DoGetNextAction_01);
+    throw Helpers_Misc.newError(`No available action?!`, Utils_ClientErrorCode.ClientErrorCode.SpwRobot_DoGetNextAction_01);
 }

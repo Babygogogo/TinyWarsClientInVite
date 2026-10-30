@@ -1,44 +1,43 @@
-import { show } from "../../FloatText.ts";
-import { AutoSaveConstants } from "../Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    gotoLobby,
-    gotoMyWarListPanel,
-} from "../../helpers/GameFlow.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    MapEditors_Constants,
+    GamePanels_Dict,
+    Users_Model,
+    Lang_Utils,
+    Helpers_GameFlow,
+    GamePanels_Manager,
+    Users_Proxy,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    WarTypes_Constants,
+    type Egret_Egret,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { getSelfMapEditorAutoSaveTime } from "../../users/Model.ts";
-import { reqSetMapEditorAutoSaveTime } from "../../users/Proxy.ts";
-import type { Event } from "../../egret/Egret.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export interface OpenData {
-    war     : IMeWar;
+    war     : MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _labelTitle!           : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnAutoSave!          : IUiButton;
-    private readonly _btnGameSettings!      : IUiButton;
-    private readonly _btnGotoLobby!         : IUiButton;
-    private readonly _btnGotoMapList!       : IUiButton;
+    private readonly _btnAutoSave!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnGameSettings!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnGotoLobby!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnGotoMapList!       : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserSetMapEditorAutoSaveTime,     callback: this._onNotifyMsgUserSetMapEditorAutoSaveTime },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback: this._onNotifyMsgUserSetMapEditorAutoSaveTime },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -60,47 +59,47 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnAutoSave(): void {
-        const currValue = getSelfMapEditorAutoSaveTime();
-        const minValue  = AutoSaveConstants.MinAutoSaveTime;
-        const maxValue  = AutoSaveConstants.MaxAutoSaveTime;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0709),
+        const currValue = Users_Model.getSelfMapEditorAutoSaveTime();
+        const minValue  = MapEditors_Constants.AutoSaveConstants.MinAutoSaveTime;
+        const maxValue  = MapEditors_Constants.AutoSaveConstants.MaxAutoSaveTime;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0709),
             currentValue    : currValue ?? maxValue,
             minValue        : minValue,
             maxValue        : maxValue,
-            getHelpText     : () => getText(TextType.A0246),
+            getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0246),
             callback        : value => {
                 if (value != currValue) {
-                    reqSetMapEditorAutoSaveTime(value);
+                    Users_Proxy.reqSetMapEditorAutoSaveTime(value);
                 }
             },
         });
     }
     private _onTouchedBtnGameSettings(): void {
-        openPanel(getDict().UserSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSettingsPanel, void 0);
     }
     private _onTouchedBtnGotoLobby(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle   : () => getText(TextType.B0054),
-            getContent : () => this.getOpenData()?.war.getIsMapModified() ? getText(TextType.A0143) : getText(TextType.A0025),
-            callback: () => gotoLobby(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
+            getContent : () => this.getOpenData()?.war.getIsMapModified() ? Lang_Utils.getText(Lang_Constants.TextType.A0143) : Lang_Utils.getText(Lang_Constants.TextType.A0025),
+            callback: () => Helpers_GameFlow.gotoLobby(),
         });
     }
     private _onTouchedBtnGotoMapList(): void {
         if (this.getOpenData()?.war.getIsReviewingMap()) {
-            openPanel(getDict().MmReviewListPanel, void 0);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmReviewListPanel, void 0);
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getTitle       : () => getText(TextType.B1275),
-                getContent     : () => getText(TextType.A0072),
-                callback    : () => gotoMyWarListPanel(WarTypeId.Me),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1275),
+                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+                callback    : () => Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me),
             });
         }
     }
 
-    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Event): void {
+    private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
         const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
-        show(getText(data.getTime() == null ? TextType.A0248 : TextType.A0247));
+        FloatText.show(Lang_Utils.getText(data.getTime() == null ? Lang_Constants.TextType.A0248 : Lang_Constants.TextType.A0247));
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -115,10 +114,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0155);
-        this._btnAutoSave.setLangText(TextType.B0709);
-        this._btnGameSettings.setLangText(TextType.B0604);
-        this._btnGotoLobby.setLangText(TextType.B0054);
-        this._btnGotoMapList.setLangText(TextType.B1275);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0155);
+        this._btnAutoSave.setLangText(Lang_Constants.TextType.B0709);
+        this._btnGameSettings.setLangText(Lang_Constants.TextType.B0604);
+        this._btnGotoLobby.setLangText(Lang_Constants.TextType.B0054);
+        this._btnGotoMapList.setLangText(Lang_Constants.TextType.B1275);
     }
 }

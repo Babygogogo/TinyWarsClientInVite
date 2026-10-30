@@ -1,32 +1,31 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
-import { GameConfig } from "./GameConfig.ts";
-import { reqCommonLatestConfigVersion } from "./Gateway.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { getNumText } from "../helpers/Text.ts";
-import { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
 import {
-    getResByUrl,
-    ResourceItemHelper,
-} from "../egret/Res.ts";
+    AuxiliaryTypes_CachedDataAccessor,
+    GameConfigs_GameConfig,
+    Helpers_Misc,
+    Helpers_Text,
+    Egret_Res,
+    GameConfigs_Gateway,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
+import { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
 
-const _latestVersionAccessor    = new CachedDataAccessor<null, string>({
-    reqData : () => reqCommonLatestConfigVersion(),
+const _latestVersionAccessor    = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, string>({
+    reqData : () => GameConfigs_Gateway.reqCommonLatestConfigVersion(),
 });
-const _gameConfigAccessor       = new CachedDataAccessor<string, GameConfig>({
+const _gameConfigAccessor       = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<string, GameConfigs_GameConfig.GameConfig>({
     reqData : async (version: string) => {
-        const configBin : Undefinable<ArrayBuffer> = await getResByUrl(
+        const configBin : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ArrayBuffer> = await Egret_Res.getResByUrl(
             `resource/config/FullConfig${version}.bin`,
             void 0,
             null,
-            ResourceItemHelper.TYPE_BIN
+            Egret_Res.ResourceItemHelper.TYPE_BIN
         );
         const rawConfig = configBin ? FullConfig.decode(new Uint8Array(configBin)) : null;
 
         if (rawConfig == null) {
             _gameConfigAccessor.setData(version, null);
         } else {
-            _gameConfigAccessor.setData(version, new GameConfig(version, rawConfig));
+            _gameConfigAccessor.setData(version, new GameConfigs_GameConfig.GameConfig(version, rawConfig));
         }
     },
 });
@@ -39,7 +38,7 @@ export function init(): void {
 }
 
 export async function getLatestConfigVersion(): Promise<string> {
-    return getExisted(await _latestVersionAccessor.getData(null));
+    return Helpers_Misc.getExisted(await _latestVersionAccessor.getData(null));
 }
 export function setLatestConfigVersion(version: string): void {
     _latestVersionAccessor.setData(null, version);
@@ -62,7 +61,7 @@ export async function getPreviousConfigVersion(version: string): Promise<string 
         return null;
     }
 
-    return `${version[0]}${getNumText(num, 7)}`;
+    return `${version[0]}${Helpers_Text.getNumText(num, 7)}`;
 }
 export async function getNextConfigVersion(version: string): Promise<string | null> {
     if (version.length != 8) {
@@ -79,12 +78,12 @@ export async function getNextConfigVersion(version: string): Promise<string | nu
         return null;
     }
 
-    return `${version[0]}${getNumText(num, 7)}`;
+    return `${version[0]}${Helpers_Text.getNumText(num, 7)}`;
 }
 
-export async function getGameConfig(version: string): Promise<GameConfig> {
-    return getExisted(await _gameConfigAccessor.getData(version));
+export async function getGameConfig(version: string): Promise<GameConfigs_GameConfig.GameConfig> {
+    return Helpers_Misc.getExisted(await _gameConfigAccessor.getData(version));
 }
-export async function getLatestGameConfig(): Promise<GameConfig> {
+export async function getLatestGameConfig(): Promise<GameConfigs_GameConfig.GameConfig> {
     return await getGameConfig(await getLatestConfigVersion());
 }

@@ -1,29 +1,31 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import { newError } from "../../helpers/Misc.ts";
+import {
+    Helpers_Misc,
+    ActionPlanners_Constants,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+} from "../../internal.ts";
 
-export class ExecutingAction implements IState {
+export class ExecutingAction implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ExecutingAction();
 
     public static getInstance(): ExecutingAction {
         return ExecutingAction._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ExecutingAction;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ExecutingAction;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -34,22 +36,22 @@ export class ExecutingAction implements IState {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public doApplyOnTap(): void {
-        throw newError(`Not expected to apply on tap!`);
+        throw Helpers_Misc.newError(`Not expected to apply on tap!`);
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`ExecutingActionState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`ExecutingActionState: Not expected to apply on drag ended!`);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public apply(actionPlanner: IActionPlanner): void {
+    public apply(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         actionPlanner.clearAllDataForStates();
 
-        actionPlanner.setStateId(StateId.ExecutingAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ExecutingAction);
         actionPlanner.updateView();
     }
 }

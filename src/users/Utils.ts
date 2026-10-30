@@ -1,21 +1,23 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { Common } from "./Constants.ts";
+import {
+    Users_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
-export function checkIsAccountValid(str: Undefinable<string>): boolean {
+export function checkIsAccountValid(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): boolean {
     return (typeof str === "string")
         && (str.length >= 6)
         && (str.length <= 20)
         && (str.search(/\W/) < 0);
 }
 
-export function checkIsPasswordValid(str: Undefinable<string>): boolean {
+export function checkIsPasswordValid(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): boolean {
     return (typeof str === "string")
         && (str.length >= 6)
         && (str.length <= 20)
         && (str.search(/\W/) < 0);
 }
 
-export function checkIsNicknameValid(str: Undefinable<string>): boolean {
+export function checkIsNicknameValid(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): boolean {
     return (typeof str === "string")
         && (str.length >= 4)
         && (str.length <= 20);
@@ -26,8 +28,8 @@ export function checkIsDiscordIdValid(str: string): boolean {
         || ((str.length > 0) && (str.length <= 25));
 }
 
-export function checkIsDummy(userId: Undefinable<number>): boolean {
+export function checkIsDummy(userId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
     return (userId != null)
-        && (userId >= Common.MinDummyUserId)
-        && (userId <  Common.MinDummyUserId + Common.DummyUsersCount);
+        && (userId >= Users_Constants.Common.MinDummyUserId)
+        && (userId <  Users_Constants.Common.MinDummyUserId + Users_Constants.Common.DummyUsersCount);
 }

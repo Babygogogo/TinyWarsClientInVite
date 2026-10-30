@@ -1,8 +1,10 @@
-import type { IUiComponent } from "./IUiComponent.ts";
-import type { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import {
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Types_UiHorizontalAlign,
+    type Ui_Types_UiVerticalAlign,
+} from "../../internal.ts";
 
-export interface IUiTextInput extends IUiComponent {
+export interface IUiTextInput extends Ui_Interfaces_IUiComponent.IUiComponent {
     getText(): string;
     setText(text: string): void;
     getFontFamily(): string;
@@ -21,10 +23,10 @@ export interface IUiTextInput extends IUiComponent {
     setStrokeWidth(width: number): void;
     getStrokeColor(): number;
     setStrokeColor(color: number): void;
-    getHorizontalAlign(): UiHorizontalAlign;
-    setHorizontalAlign(align: UiHorizontalAlign): void;
-    getVerticalAlign(): UiVerticalAlign;
-    setVerticalAlign(align: UiVerticalAlign): void;
+    getHorizontalAlign(): Ui_Types_UiHorizontalAlign.UiHorizontalAlign;
+    setHorizontalAlign(align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign): void;
+    getVerticalAlign(): Ui_Types_UiVerticalAlign.UiVerticalAlign;
+    setVerticalAlign(align: Ui_Types_UiVerticalAlign.UiVerticalAlign): void;
 
     focus(): void;
     blur(): void;

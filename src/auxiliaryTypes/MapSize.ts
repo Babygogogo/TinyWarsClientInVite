@@ -1,7 +1,9 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
-import { GridIndex } from "./GridIndex.ts";
-import { Common } from "../maps/Constants.ts";
-import { getExisted } from "../helpers/Misc.ts";
+import {
+    Maps_Constants,
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { GridIndex as ProtoGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
@@ -15,14 +17,14 @@ export class MapSize {
         let width   = 0;
         let height  = 0;
         for (const tile of tileDataArray) {
-            const gridIndex = getExisted(GridIndex.convertGridIndex(tile.getGridIndex()));
+            const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tile.getGridIndex()));
             width           = Math.max(gridIndex.getX() + 1, width);
             height          = Math.max(gridIndex.getY() + 1, height);
         }
 
         return new MapSize(width, height);
     }
-    public static createWithSerialTileMap(serialTileMap: Undefinable<SerialTileMap>): MapSize {
+    public static createWithSerialTileMap(serialTileMap: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>): MapSize {
         return this.createWithTileArray(serialTileMap?.getTiles() ?? []);
     }
     public static createWithMapRawData(mapRawData: MapRawData): MapSize | null {
@@ -83,13 +85,13 @@ export class MapSize {
         const { width, height } = this.getWH();
         return (width > 0)
             && (height > 0)
-            && (width * height <= Common.MaxGridsCount);
+            && (width * height <= Maps_Constants.Common.MaxGridsCount);
     }
 
     public checkIsValidGridIndexSubset(gridIndexArray: ProtoGridIndex[]): boolean {
         const gridIdSet = new Set<number>();
         for (const g of gridIndexArray) {
-            const gridIndex = GridIndex.convertGridIndex(g);
+            const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(g);
             if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(this))) {
                 return false;
             }

@@ -1,16 +1,14 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    DefaultParams,
-    TimerTypeId,
-    Incremental,
-} from "../bootTimers/Constants.ts";
-import { CoId } from "../cos/Constants.ts";
-import { SkinId } from "../forceSkins/Constants.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import { PlayerIndex } from "../players/Constants.ts";
+    Cos_Constants,
+    BootTimers_Constants,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Players_Constants,
+    ForceSkins_Constants,
+    Notifications_TypeId,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { SettingsForCommon } from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 
@@ -22,32 +20,32 @@ const REGULAR_TIME_LIMITS = [
 ];
 
 export abstract class RoomCreatorBase {
-    private readonly _gcData            : GameConfig;
+    private readonly _gcData            : GameConfigs_GameConfig.GameConfig;
     private readonly _settingsForCommon : SettingsForCommon;
 
-    private _selfCoId                   = CoId.Empty;
-    private _selfPlayerIndex            = PlayerIndex.First;
-    private _selfUnitAndTileSkinId      = SkinId.First;
+    private _selfCoId                   = Cos_Constants.CoId.Empty;
+    private _selfPlayerIndex            = Players_Constants.PlayerIndex.First;
+    private _selfUnitAndTileSkinId      = ForceSkins_Constants.SkinId.First;
 
-    private _warName                    : Undefinable<string>;
-    private _warPassword                : Undefinable<string>;
-    private _warComment                 : Undefinable<string>;
+    private _warName                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+    private _warPassword                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+    private _warComment                 : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
 
-    private readonly _bootTimerParams   = DefaultParams.concat();
+    private readonly _bootTimerParams   = BootTimers_Constants.DefaultParams.concat();
 
-    public constructor(gcData: GameConfig, settingsForCommon: SettingsForCommon) {
+    public constructor(gcData: GameConfigs_GameConfig.GameConfig, settingsForCommon: SettingsForCommon) {
         this._gcData            = gcData;
         this._settingsForCommon = settingsForCommon;
     }
 
-    public getGcData(): GameConfig {
+    public getGcData(): GameConfigs_GameConfig.GameConfig {
         return this._gcData;
     }
     public getSettingsForCommon(): SettingsForCommon {
         return this._settingsForCommon;
     }
     public getInstanceWarRule(): InstanceWarRule {
-        return getExisted(this.getSettingsForCommon().getInstanceWarRule());
+        return Helpers_Misc.getExisted(this.getSettingsForCommon().getInstanceWarRule());
     }
 
     public getSelfPlayerIndex(): number {
@@ -56,7 +54,7 @@ export abstract class RoomCreatorBase {
     public setSelfPlayerIndex(playerIndex: number): void {
         if (playerIndex !== this.getSelfPlayerIndex()) {
             this._selfPlayerIndex = playerIndex;
-            dispatch(TypeId.RoomCreator_SelfPlayerIndexChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfPlayerIndexChanged);
         }
     }
 
@@ -66,7 +64,7 @@ export abstract class RoomCreatorBase {
     public setSelfCoId(coId: number): void {
         if (this.getSelfCoId() !== coId) {
             this._selfCoId = coId;
-            dispatch(TypeId.RoomCreator_SelfCoIdChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfCoIdChanged);
         }
     }
 
@@ -76,28 +74,28 @@ export abstract class RoomCreatorBase {
     public setSelfUnitAndTileSkinId(skinId: number): void {
         if (skinId !== this.getSelfUnitAndTileSkinId()) {
             this._selfUnitAndTileSkinId = skinId;
-            dispatch(TypeId.RoomCreator_SelfSkinIdChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.RoomCreator_SelfSkinIdChanged);
         }
     }
 
-    public getWarName(): Undefinable<string> {
+    public getWarName(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string> {
         return this._warName;
     }
-    public setWarName(name: Undefinable<string>): void {
+    public setWarName(name: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): void {
         this._warName = name;
     }
 
-    public getWarPassword(): Undefinable<string> {
+    public getWarPassword(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string> {
         return this._warPassword;
     }
-    public setWarPassword(password: Undefinable<string>): void {
+    public setWarPassword(password: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): void {
         this._warPassword = password;
     }
 
-    public getWarComment(): Undefinable<string> {
+    public getWarComment(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string> {
         return this._warComment;
     }
-    public setWarComment(comment: Undefinable<string>): void {
+    public setWarComment(comment: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): void {
         this._warComment = comment;
     }
 
@@ -110,15 +108,15 @@ export abstract class RoomCreatorBase {
     }
     public tickBootTimerType(): void {
         const params = this.getBootTimerParams();
-        if ((params) && (params[0] === TimerTypeId.Regular)) {
-            this.setBootTimerParams(Incremental.DefaultParams.concat());
+        if ((params) && (params[0] === BootTimers_Constants.TimerTypeId.Regular)) {
+            this.setBootTimerParams(BootTimers_Constants.Incremental.DefaultParams.concat());
         } else {
-            this.setBootTimerParams(DefaultParams.concat());
+            this.setBootTimerParams(BootTimers_Constants.DefaultParams.concat());
         }
     }
     public tickTimerRegularTime(): void {
         const params = this.getBootTimerParams();
-        if (params[0] !== TimerTypeId.Regular) {
+        if (params[0] !== BootTimers_Constants.TimerTypeId.Regular) {
             this.tickBootTimerType();
         } else {
             const index = REGULAR_TIME_LIMITS.indexOf(params[1]);

@@ -1,12 +1,14 @@
-import type {
-    Undefinable,
-    RepairHpAndCost,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import type { LanguageType } from "../lang/Constants.ts";
-import type { IPlayer } from "../players/IPlayer.ts";
+import {
+    type Utils_ClientErrorCode,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Tiles_ITileView,
+    type Units_IUnit,
+    type Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { SelfTileEnabledForUnitProduction } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -15,27 +17,24 @@ import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSeri
 import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
 import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
 import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import type { ITileView } from "./ITileView.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export interface ITile {
-    init(data: SerialTile, gameConfig: GameConfig): void;
-    fastInit(data: SerialTile, gameConfig: GameConfig): void;
+    init(data: SerialTile, gameConfig: GameConfigs_GameConfig.GameConfig): void;
+    fastInit(data: SerialTile, gameConfig: GameConfigs_GameConfig.GameConfig): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
 
-    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode;
-    deserialize(data: SerialTile, gameConfig: GameConfig): void;
+    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode;
+    deserialize(data: SerialTile, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     serialize(): SerialTile;
     serializeForCreateSfw(): SerialTile;
     serializeForCreateMfr(): SerialTile;
     serializeForTeamIndexes(teamIndexes: Set<number>): SerialTile;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
-    getGameConfig(): GameConfig;
+    getGameConfig(): GameConfigs_GameConfig.GameConfig;
 
     getTemplateCfg(): TileTemplateCfg;
 
@@ -44,7 +43,7 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    getView(): ITileView;
+    getView(): Tiles_ITileView.ITileView;
     flushDataToView(): void;
 
     setBaseType(baseType: number): void;
@@ -70,19 +69,19 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for hp and armor.
     ////////////////////////////////////////////////////////////////////////////////
-    getMaxHp(): Undefinable<number>;
+    getMaxHp(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getCurrentHp(): number;
     setCurrentHp(hp: number): void;
 
-    getArmorType(): Undefinable<number>;
+    getArmorType(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     checkIsArmorAffectByLuck(): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for build.
     ////////////////////////////////////////////////////////////////////////////////
-    getMaxBuildPoint(): Undefinable<number>;
+    getMaxBuildPoint(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getCurrentBuildPoint(): number;
     setCurrentBuildPoint(point: number): void;
@@ -90,12 +89,12 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for capture.
     ////////////////////////////////////////////////////////////////////////////////
-    getMaxCapturePoint(): Undefinable<number>;
+    getMaxCapturePoint(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getCurrentCapturePoint(): number;
     setCurrentCapturePoint(point: number): void;
 
-    getRemainingCapturePoint(): Undefinable<number>;
+    getRemainingCapturePoint(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getIsDefeatedOnCapture(): boolean;
 
@@ -136,10 +135,10 @@ export interface ITile {
     // Functions for defense amount for units.
     ////////////////////////////////////////////////////////////////////////////////
     getDefenseAmount(): number;
-    getDefenseAmountForUnit(unit: IUnit, observerTeamIndexSet: Undefinable<Set<number>>, useDamagePreviewSettings: boolean): number;
+    getDefenseAmountForUnit(unit: Units_IUnit.IUnit, observerTeamIndexSet: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Set<number>>, useDamagePreviewSettings: boolean): number;
 
-    getDefenseUnitTypeArray(): Undefinable<number[]>;
-    checkCanDefendUnit(unit: IUnit): boolean;
+    getDefenseUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
+    checkCanDefendUnit(unit: Units_IUnit.IUnit): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for grid position.
@@ -148,7 +147,7 @@ export interface ITile {
 
     getGridY(): number;
 
-    getGridIndex(): GridIndex;
+    getGridIndex(): AuxiliaryTypes_GridIndex.GridIndex;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for type.
@@ -177,7 +176,7 @@ export interface ITile {
     setPlayerIndex(index: number): void;
     getPlayerIndex(): number;
 
-    getPlayer(): IPlayer;
+    getPlayer(): Players_IPlayer.IPlayer;
 
     getTeamIndex(): number;
 
@@ -185,43 +184,43 @@ export interface ITile {
     // Functions for move cost.
     ////////////////////////////////////////////////////////////////////////////////
     checkCanBlockEnemyUnitType(unitType: number): boolean;
-    getBlockEnemyUnitTypeArray(): Undefinable<number[]>;
+    getBlockEnemyUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
-    getMoveCostByMoveType(moveType: number): Undefinable<number>;
-    getMoveCostByUnit(unit: IUnit): Undefinable<number>;
+    getMoveCostByMoveType(moveType: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    getMoveCostByUnit(unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for repair/supply unit.
     ////////////////////////////////////////////////////////////////////////////////
-    getRepairNormalizedHp(): Undefinable<number>;
+    getRepairNormalizedHp(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getNormalizedRepairAmountAndCostModifier(): { amountModifier: number, costMultiplierPct: number };
 
     checkCanRepairOrSupplyUnitType(unitType: number): boolean;
-    getRepairUnitTypeArray(): Undefinable<number[]>;
+    getRepairUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
-    getRepairHpAndCostForUnit(unit: IUnit): Undefinable<RepairHpAndCost>;
+    getRepairHpAndCostForUnit(unit: Units_IUnit.IUnit): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for hide unit.
     ////////////////////////////////////////////////////////////////////////////////
     checkCanHideUnitType(unitType: number): boolean;
     checkIsUnitHider(): boolean;
-    getHideUnitTypeArray(): Undefinable<number[]>;
+    getHideUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for produce unit.
     ////////////////////////////////////////////////////////////////////////////////
-    getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): Undefinable<SelfTileEnabledForUnitProduction>;
+    getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<SelfTileEnabledForUnitProduction>;
 
     /** 把co技能，事件，规则，buff全都考虑了进去 */
     checkIsUnitProducerForPlayer(playerIndex: number): boolean;
 
     /** 把co技能，事件，规则，buff全都考虑了进去 */
-    getProducibleUnitTypeArrayForPlayer(playerIndex: number): Undefinable<number[]>;
+    getProducibleUnitTypeArrayForPlayer(playerIndex: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
     /** 只考虑地形本身属性，不考虑co技能、事件、规则、buff */
-    getRegularProducibleUnitTypeArray(): Undefinable<number[]>;
+    getRegularProducibleUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for vision.
@@ -240,28 +239,28 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for load co.
     ////////////////////////////////////////////////////////////////////////////////
-    getCoBoardUnitTypeArray(): Undefinable<number[]>;
+    getCoBoardUnitTypeArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // custom name
     ////////////////////////////////////////////////////////////////////////////////
-    getCustomNameId(): Undefinable<number>;
-    setCustomNameId(nameId: Undefinable<number>): void;
+    getCustomNameId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
 
-    getCustomName(languageType?: LanguageType): Undefinable<string>;
+    getCustomName(languageType?: Lang_Constants.LanguageType): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for map weapon.
     ////////////////////////////////////////////////////////////////////////////////
-    getMapWeaponType(): Undefinable<number>;
+    getMapWeaponType(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     checkIsMapWeapon(): boolean;
     checkIsCustomMapWeapon(): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for crystal data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalCrystalData(): Undefinable<TileCustomCrystalData>;
-    getCustomCrystalData(): Undefinable<TileCustomCrystalData>;
+    getFinalCrystalData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomCrystalData>;
+    getCustomCrystalData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomCrystalData>;
 
     checkIsNormalCrystal(): boolean;
     setCustomCrystalRadius(radius: number): void;
@@ -279,8 +278,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalCannonData(): Undefinable<TileCustomCannonData>;
-    getCustomCannonData(): Undefinable<TileCustomCannonData>;
+    getFinalCannonData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomCannonData>;
+    getCustomCannonData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomCannonData>;
 
     checkIsNormalCannon(): boolean;
 
@@ -304,8 +303,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalLaserTurretData(): Undefinable<TileCustomLaserTurretData>;
-    getCustomLaserTurretData(): Undefinable<TileCustomLaserTurretData>;
+    getFinalLaserTurretData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomLaserTurretData>;
+    getCustomLaserTurretData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomLaserTurretData>;
 
     checkIsNormalLaserTurret(): boolean;
 
@@ -328,8 +327,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for custom building data.
     ////////////////////////////////////////////////////////////////////////////////
-    setCustomBuildingData(data: Undefinable<TileCustomBuildingData>): void;
-    getCustomBuildingData(): Undefinable<TileCustomBuildingData>;
+    setCustomBuildingData(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomBuildingData>): void;
+    getCustomBuildingData(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomBuildingData>;
 
     getIsCustomizableBuilding(): boolean;
 

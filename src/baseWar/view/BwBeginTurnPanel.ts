@@ -1,33 +1,23 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getCoHeadFrame,
-    getCoHead,
-} from "../../helpers/ImageSource.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getPlayerForceName,
-    getPlayerTeamName,
-} from "../../lang/Utils.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiPanel } from "../../ui/interfaces/IUiPanel.ts";
-import {
-    setTimeout,
-    clearTimeout,
-} from "../../egret/Egret.ts";
+    Egret_Egret,
+    Tween_Executor,
+    Helpers_ImageSource,
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiPanel,
+} from "../../internal.ts";
 
 export interface OpenData {
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     playerIndex         : number;
     teamIndex           : number;
     nickname            : string;
@@ -35,22 +25,22 @@ export interface OpenData {
     unitAndTileSkinId   : number;
     callbackOnFinish    : () => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgSkin!          : IUiImage;
-    private readonly _imgCo!            : IUiImage;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSkin!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo!            : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelPlayerIndex! : IUiLabel;
-    private readonly _labelNickname!    : IUiLabel;
-    private readonly _labelTurnStart!   : IUiLabel;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPlayerIndex! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNickname!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurnStart!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _timeoutIdForClose  : number | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             this._clearTimeoutForClose();
             this.closePanel();
         });
@@ -67,11 +57,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelPlayerIndex.setText(`${getPlayerForceName(openData.playerIndex)} (${getPlayerTeamName(openData.teamIndex)})`);
+        this._labelPlayerIndex.setText(`${Lang_Utils.getPlayerForceName(openData.playerIndex)} (${Lang_Utils.getPlayerTeamName(openData.teamIndex)})`);
         this._labelNickname.setText(openData.nickname);
-        this._labelTurnStart.setLangText(TextType.B0679);
-        this._imgSkin.loadSource(getCoHeadFrame(openData.unitAndTileSkinId));
-        this._imgCo.loadSource(getCoHead(openData.gameConfig, openData.coId) ?? UndefinedError);
+        this._labelTurnStart.setLangText(Lang_Constants.TextType.B0679);
+        this._imgSkin.loadSource(Helpers_ImageSource.getCoHeadFrame(openData.unitAndTileSkinId));
+        this._imgCo.loadSource(Helpers_ImageSource.getCoHead(openData.gameConfig, openData.coId) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
     protected override async _onClosed(): Promise<void> {
@@ -83,31 +73,31 @@ export class Panel extends UiPanel<OpenData> {
 
     private _resetTimeoutForClose(): void {
         this._clearTimeoutForClose();
-        this._timeoutIdForClose = setTimeout(() => {
+        this._timeoutIdForClose = Egret_Egret.setTimeout(() => {
             this._clearTimeoutForClose();
             this.closePanel();
         }, null, 1500);
     }
     private _clearTimeoutForClose(): void {
         if (this._timeoutIdForClose != null) {
-            clearTimeout(this._timeoutIdForClose);
+            Egret_Egret.clearTimeout(this._timeoutIdForClose);
             this._timeoutIdForClose = null;
         }
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         this.setAlpha(0);
-        Executor.get(this as IUiPanel<OpenData>)
+        Tween_Executor.Executor.get(this as Ui_Interfaces_IUiPanel.IUiPanel<OpenData>)
             .to({ customAlpha: 1 }, 150);
 
-        await wait(250);
+        await Timer_TimerModel.wait(250);
 
         this._resetTimeoutForClose();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.get(this as IUiPanel<OpenData>)
+        Tween_Executor.Executor.get(this as Ui_Interfaces_IUiPanel.IUiPanel<OpenData>)
             .to({ customAlpha: 0 }, 150);
 
-        await wait(250);
+        await Timer_TimerModel.wait(250);
     }
 }

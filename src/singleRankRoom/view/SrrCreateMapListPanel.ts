@@ -1,107 +1,85 @@
-import type {
-    Undefinable,
-    MapSorter,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
 import {
-    type OpenData as CommonWarMapInfoPageOpenData,
-    Page as CommonWarMapInfoPage,
-} from "../../common/view/CommonWarMapInfoPage.ts";
-import { showLang } from "../../FloatText.ts";
-import { SortType } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import {
-    getRawData,
-    getEnabledNormalMapIdSet,
-    getBriefData,
-    checkIsMeetFilter,
-    sortMapArray,
-} from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { getAvailableSlotIndex } from "../../singlePlayerMode/model/SpmModel.ts";
-import {
-    type OpenData as SpmRankPageOpenData,
-    Page as SpmRankPage,
-} from "../../singlePlayerMode/view/SpmRankPage.ts";
-import { SrrWarCreator } from "../model/SrrWarCreator.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    callLater,
-    Event,
-} from "../../egret/Egret.ts";
+    Common_View_CommonWarMapInfoPage,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Interfaces_IUiTab,
+    type AuxiliaryTypes_MapFilter,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    SinglePlayerMode_View_SpmRankPage,
+    type Ui_Types_UiListItemData,
+    Egret_Egret,
+    NormalMap_Model_NormalMapModel,
+    Tween_Executor,
+    SinglePlayerMode_Model_SpmModel,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    GameConfigs_Provider,
+    Numbers_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Maps_Constants,
+    SingleRankRoom_Model_SrrWarCreator,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    Timer_TimerModel,
+} from "../../internal.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;
-let _selectedNormalMapId    : Undefinable<number>;
-let _previousFilter         : MapFilter | null = null;
-let _mapSorter              : MapSorter = {
-    sortType    : SortType.MapName,
+let _selectedNormalMapId    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+let _previousFilter         : AuxiliaryTypes_MapFilter.MapFilter | null = null;
+let _mapSorter              : AuxiliaryTypes_AuxiliaryTypes.MapSorter = {
+    sortType    : Maps_Constants.SortType.MapName,
     isAscending : true,
 };
 
 export interface OpenData {
-    mapFilter               : MapFilter | null;
-    mapSorter               : MapSorter | null;
+    mapFilter               : AuxiliaryTypes_MapFilter.MapFilter | null;
+    mapSorter               : AuxiliaryTypes_AuxiliaryTypes.MapSorter | null;
     usePreviousFilter       : boolean;
     usePreviousPageIndex    : boolean;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupTab!                 : IUiContainer;
-    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | SpmRankPageOpenData>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupTab!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _tabSettings!              : Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, Common_View_CommonWarMapInfoPage.OpenData | SinglePlayerMode_View_SpmRankPage.OpenData>;
 
-    private readonly _groupNavigator!           : IUiLayout;
-    private readonly _layoutNavName!            : IUiLayout;
-    private readonly _labelSinglePlayer!        : IUiLabel;
-    private readonly _labelWarRoomMode!         : IUiLabel;
-    private readonly _labelChooseMap!           : IUiLabel;
+    private readonly _groupNavigator!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutNavName!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSinglePlayer!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelWarRoomMode!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelChooseMap!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupTopRightButtons!     : IUiContainer;
-    private readonly _btnSwitch!                : IUiButton;
-    private readonly _btnHelp!                  : IUiButton;
-    private readonly _btnBack!                  : IUiButton;
-    private readonly _btnNextStep!              : IUiButton;
+    private readonly _groupTopRightButtons!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSwitch!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnBack!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextStep!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnSearch!                : IUiButton;
-    private readonly _btnSort!                  : IUiButton;
+    private readonly _btnSearch!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSort!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupSearch!              : IUiContainer;
-    private readonly _btnPrevPage!              : IUiButton;
-    private readonly _btnNextPage!              : IUiButton;
-    private readonly _layoutPage!               : IUiLayout;
-    private readonly _labelPageTitle!           : IUiLabel;
-    private readonly _labelPage!                : IUiLabel;
+    private readonly _groupSearch!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnPrevPage!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextPage!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutPage!               : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelPageTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPage!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupMapList!             : IUiContainer;
-    private readonly _listMap!                  : IUiScrollList<DataForMapNameRenderer>;
-    private readonly _labelNoMap!               : IUiLabel;
+    private readonly _groupMapList!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listMap!                  : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMapNameRenderer>;
+    private readonly _labelNoMap!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _isTabInitialized                   = false;
-    private _mapFilter                          : MapFilter | null = null;
+    private _mapFilter                          : AuxiliaryTypes_MapFilter.MapFilter | null = null;
     private _cachedListDataArray                : DataForMapNameRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
@@ -116,10 +94,10 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -154,7 +132,7 @@ export class Panel extends UiPanel<OpenData> {
         const index     = listMap.getRevisedFirstIndex(v => v?.normalMapId === newNormalMapId);
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
-            callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
+            Egret_Egret.callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
         }
 
         this._updateBtnNextStep();
@@ -168,10 +146,10 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchTapBtnSearch(): void {
-        openPanel(getDict().CommonMapFilterPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonMapFilterPanel, {
             mapFilter           : this._mapFilter,
             callbackOnConfirm   : mapFilter => {
-                openPanel(getDict().SrrCreateMapListPanel, {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
                     mapFilter               : mapFilter,
                     mapSorter               : _mapSorter,
                     usePreviousFilter       : false,
@@ -182,10 +160,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSort(): void {
-        openPanel(getDict().CommonChooseMapSorterPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMapSorterPanel, {
             currentSorter       : _mapSorter,
-            callbackOnConfirm   : (mapSorter: MapSorter) => {
-                openPanel(getDict().SrrCreateMapListPanel, {
+            callbackOnConfirm   : (mapSorter: AuxiliaryTypes_AuxiliaryTypes.MapSorter) => {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
                     mapFilter               : null,
                     mapSorter               : mapSorter,
                     usePreviousFilter       : true,
@@ -197,9 +175,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        openPanel(getDict().SpmMainMenuPanel, void 0);
-        openPanel(getDict().LobbyTopPanel, void 0);
-        openPanel(getDict().LobbyBottomPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBottomPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -207,32 +185,32 @@ export class Panel extends UiPanel<OpenData> {
         if (selectedNormalMapId != null) {
             this.closePanel();
 
-            const warCreator = new SrrWarCreator(
-                await getLatestGameConfig(),
-                getExisted(await getRawData(selectedNormalMapId)),
-                await getAvailableSlotIndex()
+            const warCreator = new SingleRankRoom_Model_SrrWarCreator.SrrWarCreator(
+                await GameConfigs_Provider.getLatestGameConfig(),
+                Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(selectedNormalMapId)),
+                await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex()
             );
-            openPanel(getDict().SrrCreateSettingsPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateSettingsPanel, {
                 warCreator: warCreator,
             });
-            openPanel(getDict().SrrCreateQuickSettingsPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateQuickSettingsPanel, {
                 warCreator: warCreator,
             });
         }
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.B0614),
-            getContent : () => getText(TextType.R0011),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0614),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0011),
         });
     }
 
     private async _onTouchedBtnSwitch(): Promise<void> {
-        showLang(TextType.A0939);
+        FloatText.showLang(Lang_Constants.TextType.A0939);
 
         this.closePanel();
-        openPanel(getDict().ScrCreateMapListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ScrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -241,7 +219,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnPrevPage(): Promise<void> {
-        const newPageIndex = getValueInRange({
+        const newPageIndex = Numbers_Utils.getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex - 1,
@@ -252,7 +230,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
-        const newPageIndex = getValueInRange({
+        const newPageIndex = Numbers_Utils.getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex + 1,
@@ -295,16 +273,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setLangText(TextType.B0614);
-        this._labelWarRoomMode.setLangText(TextType.B1372);
-        this._labelChooseMap.setLangText(TextType.B0227);
-        this._labelNoMap.setLangText(TextType.A0010);
-        this._btnBack.setLangText(TextType.B0146);
-        this._btnSearch.setLangText(TextType.B0228);
-        this._btnSort.setLangText(TextType.B1049);
-        this._btnNextStep.setLangText(TextType.B1383);
-        this._btnPrevPage.setLangText(TextType.B1384);
-        this._btnNextPage.setLangText(TextType.B1385);
+        this._labelSinglePlayer.setLangText(Lang_Constants.TextType.B0614);
+        this._labelWarRoomMode.setLangText(Lang_Constants.TextType.B1372);
+        this._labelChooseMap.setLangText(Lang_Constants.TextType.B0227);
+        this._labelNoMap.setLangText(Lang_Constants.TextType.A0010);
+        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
+        this._btnSort.setLangText(Lang_Constants.TextType.B1049);
+        this._btnNextStep.setLangText(Lang_Constants.TextType.B1383);
+        this._btnPrevPage.setLangText(Lang_Constants.TextType.B1384);
+        this._btnNextPage.setLangText(Lang_Constants.TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -328,10 +306,10 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setLangText(TextType.B1386);
+            label.setLangText(Lang_Constants.TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);
+            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1386)}(${Lang_Utils.getText(Lang_Constants.TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }
@@ -340,13 +318,13 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonWarMapInfoPage,
+                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : SpmRankPage,
+                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                pageClass   : SinglePlayerMode_View_SpmRankPage.Page,
                 pageData    : null,
             },
         ]);
@@ -357,12 +335,12 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter     = this._mapFilter;
         const dataArray     : DataForMapNameRenderer[] = [];
         const promiseArray  : Promise<void>[] = [];
-        for (const normalMapId of await getEnabledNormalMapIdSet()) {
+        for (const normalMapId of await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()) {
             promiseArray.push((async () => {
-                const mapBriefData = await getBriefData(normalMapId);
+                const mapBriefData = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
                 if ((mapBriefData == null)                                                      ||
                     (!mapBriefData.getRuleAvailability()?.getCanSrw())                          ||
-                    (!await checkIsMeetFilter(normalMapId, mapFilter))
+                    (!await NormalMap_Model_NormalMapModel.checkIsMeetFilter(normalMapId, mapFilter))
                 ) {
                     return;
                 }
@@ -375,7 +353,7 @@ export class Panel extends UiPanel<OpenData> {
         }
         await Promise.all(promiseArray);
 
-        this._cachedListDataArray = (await sortMapArray(
+        this._cachedListDataArray = (await NormalMap_Model_NormalMapModel.sortMapArray(
             dataArray.map(v => ({ normalMapId: v.normalMapId, extraData: v })),
             _mapSorter,
         )).map(v => v.extraData);
@@ -400,116 +378,116 @@ export class Panel extends UiPanel<OpenData> {
         this._btnNextStep.setIsVisible(this._getSelectedNormalMapId() != null);
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<Common_View_CommonWarMapInfoPage.OpenData> {
         const normalMapId = this._listMap.getFirstSelectedData()?.normalMapId;
         return normalMapId == null
             ? null
             : {
                 mapInfo : {
                     hasFog              : null,
-                    gameConfig          : await getLatestGameConfig(),
-                    mapRawData          : getExisted(await getRawData(normalMapId)),
+                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
+                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
                     overridingPlayers   : null,
                 },
             };
     }
 
-    private _createDataForCommonWarPlayerInfoPage(): SpmRankPageOpenData {
+    private _createDataForCommonWarPlayerInfoPage(): SinglePlayerMode_View_SpmRankPage.OpenData {
         return { normalMapId: this._listMap.getFirstSelectedData()?.normalMapId ?? null };
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 0, customY: 16 - 40 },
             endProps    : { customAlpha: 1, customY: 16 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 0, customY: 30 },
             endProps    : { customAlpha: 1, customY: 70 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 1, customY: 16 },
             endProps    : { customAlpha: 0, customY: 16 - 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 1, customY: 70 },
             endProps    : { customAlpha: 0, customY: 30 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 
-interface DataForMapNameRenderer extends UiListItemData {
+interface DataForMapNameRenderer extends Ui_Types_UiListItemData.UiListItemData {
     normalMapId : number;
     panel       : Panel;
 }
-class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
-    private readonly _btnHelp!          : IUiButton;
+class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer> {
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupName!        : IUiContainer;
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelName!        : IUiLabel;
-    private readonly _labelId!          : IUiLabel;
-    private readonly _labelDesigner!    : IUiLabel;
+    private readonly _groupName!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelId!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDesigner!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -526,13 +504,13 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
             return;
         }
 
-        const hasDescription = !!(await getBriefData(normalMapId))?.getHasDescription();
+        const hasDescription = !!(await NormalMap_Model_NormalMapModel.getBriefData(normalMapId))?.getHasDescription();
         if (normalMapId === this.getOpenData()?.normalMapId) {
             this._btnHelp.setIsVisible(hasDescription);
         }
     }
 
-    private async _onTouchedBtnHelp(e: Event): Promise<void> {
+    private async _onTouchedBtnHelp(e: Egret_Egret.Event): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -543,14 +521,14 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
         const normalMapId = openData.normalMapId;
         openData.panel.setAndReviseSelectedNormalMapId(normalMapId, false);
 
-        const mapRawData = await getRawData(normalMapId);
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? UndefinedError,
+        const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
         });
     }
 
     private _onTouchedGroupName(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const openData = this.getOpenData();
         openData?.panel.setAndReviseSelectedNormalMapId(openData.normalMapId, false);
@@ -566,24 +544,24 @@ class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
         this._labelId.setText(`#${normalMapId}`);
         labelName.setText(``);
 
-        const mapBriefData = await getBriefData(normalMapId);
+        const mapBriefData = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
         if ((normalMapId !== this.getOpenData()?.normalMapId) || (mapBriefData == null)) {
             return;
         }
 
-        labelName.setText(getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? UndefinedError);
-        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? UndefinedError);
+        labelName.setText(Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 }
 
-interface DataForTabItemRenderer extends UiListItemData {
+interface DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : IUiLabel;
+class TabItemRenderer extends Ui_Components_UiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? Lang_Constants.UndefinedError);
     }
 }

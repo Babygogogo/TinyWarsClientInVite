@@ -1,64 +1,58 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import {
-    encodeTeamIndex,
-    decodeTeamIndex,
-} from "../../helpers/Team.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { checkIsValidPlayerIndex } from "../../players/utils/Common.ts";
+    MapEditor_Model_MeWar,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarStatisticsManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    WarStatistics_Utils,
+    Players_Utils_Common,
+    Teams_Utils,
+    Utils_ClientErrorCode,
+    Helpers_Team,
+    Helpers_Misc,
+    Visibilities_Utils,
+    Players_Constants,
+    Turns_Constants,
+} from "../../internal.ts";
+
 import { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
 import { SerialWarStatisticsManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
 import { WsPlayerStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsPlayerStatistics.ts";
 import { WsPlayerTurnStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsPlayerTurnStatistics.ts";
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
-import {
-    checkCanMerge,
-    checkAndMergeTo,
-} from "../../warStatistics/Utils.ts";
 
-export class BwWarStatisticsManager implements IBwWarStatisticsManager {
+export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager {
     private _playerStatisticsArray?     : WsPlayerStatistics[];
     private _unitStatisticsArray?       : WsUnitStatistics[];
-    private _war?                       : IBwWar;
+    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
     private _hasHandledPreDeployedUnits = false;
 
     public init({ data, playersCountUnneutral, currentTurnIndex, gameConfiguration }: {
-        data                    : Undefinable<SerialWarStatisticsManager>;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarStatisticsManager>;
         playersCountUnneutral   : number;
         currentTurnIndex        : number;
-        gameConfiguration       : GameConfig;
+        gameConfiguration       : GameConfigs_GameConfig.GameConfig;
     }): void {
         this._hasHandledPreDeployedUnits = data?.getHasHandledPreDeployedUnits() ?? false;
         this._initPlayerStatisticsArray(data?.getPlayerStatisticsArray() ?? [], playersCountUnneutral, currentTurnIndex);
         this._initUnitStatisticsArray(data?.getUnitStatisticsArray() ?? [], playersCountUnneutral, gameConfiguration);
     }
-    public fastInit(data: Undefinable<SerialWarStatisticsManager>): void {
+    public fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarStatisticsManager>): void {
         this._hasHandledPreDeployedUnits = data?.getHasHandledPreDeployedUnits() ?? false;
         this._setPlayerStatisticsArray(data?.getPlayerStatisticsArray() ?? []);
         this._setUnitStatisticsArray(data?.getUnitStatisticsArray() ?? []);
     }
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
         this._checkAndHandlePreDeployedUnits();
     }
 
-    private _getWar(): IBwWar {
-        return getExisted(this._war, ClientErrorCode.BwWarStatisticsManager_GetWar_00);
+    private _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_GetWar_00);
     }
 
     public serialize(): SerialWarStatisticsManager {
-        if (this._getWar() instanceof getMeWarClass()) {
+        if (this._getWar() instanceof MapEditor_Model_MeWar.MeWar) {
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
@@ -69,7 +63,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         }
     }
     public serializeForCreateSfw(): SerialWarStatisticsManager {
-        if (this._getWar() instanceof getMeWarClass()) {
+        if (this._getWar() instanceof MapEditor_Model_MeWar.MeWar) {
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
@@ -80,7 +74,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         }
     }
     public serializeForCreateMfr(): SerialWarStatisticsManager {
-        if (this._getWar() instanceof getMeWarClass()) {
+        if (this._getWar() instanceof MapEditor_Model_MeWar.MeWar) {
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
@@ -101,10 +95,10 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         const war       = this._getWar();
         const unitMap   = war.getUnitMap();
         for (const unit of unitMap.getAllUnitsOnMap()) {
-            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
             if (observerTeamIndexes != null) {
                 const playerIndex                   = unit.getPlayerIndex();
-                const groupedObserverTeamIndexes    = encodeTeamIndex(observerTeamIndexes);
+                const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
                 this.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unit.getUnitType(),
                     dstPlayerIndex              : playerIndex,
@@ -133,30 +127,30 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         this._playerStatisticsArray = actions;
     }
     private _getPlayerStatisticsArray(): WsPlayerStatistics[] {
-        return getExisted(this._playerStatisticsArray, ClientErrorCode.BwWarStatisticsManager_GetPlayerTurnStatisticsArray_00);
+        return Helpers_Misc.getExisted(this._playerStatisticsArray, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_GetPlayerTurnStatisticsArray_00);
     }
     private _initPlayerStatisticsArray(playerStatisticsArray: WsPlayerStatistics[], playersCountUnneutral: number, currentTurnIndex: number): void {
         const playerIndexSet = new Set<number>();
         for (const playerStatisticsData of playerStatisticsArray) {
-            const playerIndex = getExisted(playerStatisticsData.getPlayerIndex(), ClientErrorCode.BwWarStatisticsManager_Init_00);
-            if ((playerIndex < PlayerIndex.Neutral) || (playerIndex > playersCountUnneutral)) {
-                throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwWarStatisticsManager_Init_01);
+            const playerIndex = Helpers_Misc.getExisted(playerStatisticsData.getPlayerIndex(), Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_00);
+            if ((playerIndex < Players_Constants.PlayerIndex.Neutral) || (playerIndex > playersCountUnneutral)) {
+                throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_01);
             }
 
             if (playerIndexSet.has(playerIndex)) {
-                throw newError(`Duplicated playerIndex: ${playerIndex}`, ClientErrorCode.BwWarStatisticsManager_Init_02);
+                throw Helpers_Misc.newError(`Duplicated playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_02);
             }
             playerIndexSet.add(playerIndex);
 
             const turnIndexSet = new Set<number>();
             for (const playerTurnStatisticsData of playerStatisticsData.getPlayerTurnStatisticsArray()) {
-                const turnIndex = getExisted(playerTurnStatisticsData.getTurnIndex(), ClientErrorCode.BwWarStatisticsManager_Init_03);
-                if ((turnIndex < TurnIndex.FirstIndex) || (turnIndex > currentTurnIndex)) {
-                    throw newError(`Invalid turnIndex: ${turnIndex}`, ClientErrorCode.BwWarStatisticsManager_Init_04);
+                const turnIndex = Helpers_Misc.getExisted(playerTurnStatisticsData.getTurnIndex(), Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_03);
+                if ((turnIndex < Turns_Constants.TurnIndex.FirstIndex) || (turnIndex > currentTurnIndex)) {
+                    throw Helpers_Misc.newError(`Invalid turnIndex: ${turnIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_04);
                 }
 
                 if (turnIndexSet.has(turnIndex)) {
-                    throw newError(`Duplicated turnIndex: ${turnIndex}`, ClientErrorCode.BwWarStatisticsManager_Init_05);
+                    throw Helpers_Misc.newError(`Duplicated turnIndex: ${turnIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_Init_05);
                 }
                 turnIndexSet.add(turnIndex);
             }
@@ -169,7 +163,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         this._unitStatisticsArray = arr;
     }
     public getUnitStatisticsArray(): WsUnitStatistics[] {
-        return getExisted(this._unitStatisticsArray);
+        return Helpers_Misc.getExisted(this._unitStatisticsArray);
     }
     public getUnitStatisticsInfoArrayForFullReplay(): Info[] {
         const resultArray: Info[] = [];
@@ -200,14 +194,14 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         }
         return resultArray;
     }
-    private _initUnitStatisticsArray(unitStatisticsArray: WsUnitStatistics[], playersCountUnneutral: number, gameConfiguration: GameConfig): void {
+    private _initUnitStatisticsArray(unitStatisticsArray: WsUnitStatistics[], playersCountUnneutral: number, gameConfiguration: GameConfigs_GameConfig.GameConfig): void {
         const length = unitStatisticsArray.length;
         for (let i = 0; i < length; ++i) {
             const unitStatistics = unitStatisticsArray[i];
             {
                 const unitType = unitStatistics.getUnitType();
                 if (!gameConfiguration.checkIsValidUnitType(unitType)) {
-                    throw newError(`Invalid unitType: ${unitType}`);
+                    throw Helpers_Misc.newError(`Invalid unitType: ${unitType}`);
                 }
             }
             // {
@@ -218,8 +212,8 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
             // }
             {
                 const dstPlayerIndex = unitStatistics.getDstPlayerIndex();
-                if (!checkIsValidPlayerIndex(dstPlayerIndex, playersCountUnneutral)) {
-                    throw newError(`Invalid dstPlayerIndex: ${dstPlayerIndex}`);
+                if (!Players_Utils_Common.checkIsValidPlayerIndex(dstPlayerIndex, playersCountUnneutral)) {
+                    throw Helpers_Misc.newError(`Invalid dstPlayerIndex: ${dstPlayerIndex}`);
                 }
             }
             {
@@ -232,7 +226,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
                     (normalizedHpGain === 0)    &&
                     (normalizedHpLoss === 0)
                 ) {
-                    throw newError(`Invalid unitGain/Loss normalizedHpGain/Loss: ${unitGain}/${unitLoss}, ${normalizedHpGain}/${normalizedHpLoss}`);
+                    throw Helpers_Misc.newError(`Invalid unitGain/Loss normalizedHpGain/Loss: ${unitGain}/${unitLoss}, ${normalizedHpGain}/${normalizedHpLoss}`);
                 }
             }
             // {
@@ -241,13 +235,13 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
             //         throw Helpers.newError(`Invalid reasonType: ${reasonType}`);
             //     }
             // }
-            if (!checkIsValidTeamIndexSubset(decodeTeamIndex(unitStatistics.getGroupedObserverTeamIndexes()), playersCountUnneutral)) {
-                throw newError(`Invalid observerPlayerIndexArray.`);
+            if (!Teams_Utils.checkIsValidTeamIndexSubset(Helpers_Team.decodeTeamIndex(unitStatistics.getGroupedObserverTeamIndexes()), playersCountUnneutral)) {
+                throw Helpers_Misc.newError(`Invalid observerPlayerIndexArray.`);
             }
 
             for (let j = i + 1; j < length; ++j) {
-                if (checkCanMerge(unitStatistics, unitStatisticsArray[j])) {
-                    throw newError(`Duplicated data.`);
+                if (WarStatistics_Utils.checkCanMerge(unitStatistics, unitStatisticsArray[j])) {
+                    throw Helpers_Misc.newError(`Duplicated data.`);
                 }
             }
         }
@@ -257,7 +251,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
     public addUnitStatistics(data: WsUnitStatistics): void {
         const array = this.getUnitStatisticsArray();
         for (const existingData of array) {
-            if (checkAndMergeTo(data, existingData)) {
+            if (WarStatistics_Utils.checkAndMergeTo(data, existingData)) {
                 return;
             }
         }
@@ -299,25 +293,25 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         const turnManager = this._getWar().getTurnManager();
         return this.getManualActionsCount(turnManager.getTurnIndex(), turnManager.getPlayerIndexInTurn());
     }
-    public getManualActionsCountForPlayersInRecentTurns(playerIndexSet: Set<number>, recentTurnsCount: Undefinable<number>): number {
+    public getManualActionsCountForPlayersInRecentTurns(playerIndexSet: Set<number>, recentTurnsCount: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): number {
         const currentTurnIndex  = this._getWar().getTurnManager().getTurnIndex();
         const maxTurnIndex      = currentTurnIndex;
         const minTurnIndex      = recentTurnsCount == null
-            ? TurnIndex.FirstIndex
-            : Math.max(TurnIndex.FirstIndex, currentTurnIndex - recentTurnsCount + 1);
+            ? Turns_Constants.TurnIndex.FirstIndex
+            : Math.max(Turns_Constants.TurnIndex.FirstIndex, currentTurnIndex - recentTurnsCount + 1);
         if (minTurnIndex > maxTurnIndex) {
             return 0;
         }
 
         let manualActionsCount  = 0;
         for (const playerData of this._getPlayerStatisticsArray()) {
-            const playerIndex = getExisted(playerData.getPlayerIndex(), ClientErrorCode.BwWarStatisticsManager_GetManualActionsCountForPlayersInRecentTurns_00);
+            const playerIndex = Helpers_Misc.getExisted(playerData.getPlayerIndex(), Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_GetManualActionsCountForPlayersInRecentTurns_00);
             if (!playerIndexSet.has(playerIndex)) {
                 continue;
             }
 
             for (const playerTurnData of playerData.getPlayerTurnStatisticsArray()) {
-                const turnIndex = getExisted(playerTurnData.getTurnIndex(), ClientErrorCode.BwWarStatisticsManager_GetManualActionsCountForPlayersInRecentTurns_01);
+                const turnIndex = Helpers_Misc.getExisted(playerTurnData.getTurnIndex(), Utils_ClientErrorCode.ClientErrorCode.BwWarStatisticsManager_GetManualActionsCountForPlayersInRecentTurns_01);
                 if ((turnIndex >= minTurnIndex) && (turnIndex <= maxTurnIndex)) {
                     manualActionsCount += playerTurnData.getManualActionsCount() ?? 0;
                 }

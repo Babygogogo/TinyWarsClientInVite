@@ -1,19 +1,10 @@
-import { PhaseId } from "../Constants.ts";
 import {
-    reqAtGetGlobalSettings,
-    reqAtGetPhaseInfo,
-    reqAtGetRegistrationInfo,
-    reqAtGetTourneyInfo,
-    reqAtGetFullMapInfo,
-    reqAtGetFullBracketInfo,
-    reqAtGetUserArray,
-} from "./Gateway.ts";
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import {
-    getIsAutoTourneyNotified,
-    setIsAutoTourneyNotified,
-} from "../../localData/Storage.ts";
+    AuxiliaryTypes_CachedDataAccessor,
+    LocalData_Storage,
+    AutoTourneys_Constants,
+    AutoTourneys_Mains_Gateway,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { FullBracketInfo } from "../../proto/schema/CommonProto/AutoTourney/FullBracketInfo.ts";
 import type { FullMapInfo } from "../../proto/schema/CommonProto/AutoTourney/FullMapInfo.ts";
 import type { SinglePhaseInfo } from "../../proto/schema/CommonProto/AutoTourney/SinglePhaseInfo.ts";
@@ -39,34 +30,34 @@ type RegistrationInfo = {
     endTimestamp    : number;
 };
 
-const _globalSettingsAccessor = new CachedDataAccessor<null, GlobalSettings>({
-    reqData     : () => reqAtGetGlobalSettings(),
+const _globalSettingsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, GlobalSettings>({
+    reqData     : () => AutoTourneys_Mains_Gateway.reqAtGetGlobalSettings(),
 });
-const _phaseInfoAccessor = new CachedDataAccessor<null, PhaseInfo>({
-    reqData     : () => reqAtGetPhaseInfo(),
+const _phaseInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, PhaseInfo>({
+    reqData     : () => AutoTourneys_Mains_Gateway.reqAtGetPhaseInfo(),
 });
-const _registrationInfoAccessor = new CachedDataAccessor<number, RegistrationInfo>({
-    reqData     : tourneyId => reqAtGetRegistrationInfo(tourneyId),
+const _registrationInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, RegistrationInfo>({
+    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetRegistrationInfo(tourneyId),
 });
-const _tourneyInfoAccessor = new CachedDataAccessor<number, TourneyInfo>({
-    reqData     : tourneyId => reqAtGetTourneyInfo(tourneyId),
+const _tourneyInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, TourneyInfo>({
+    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetTourneyInfo(tourneyId),
 });
-const _fullMapInfoAccessor = new CachedDataAccessor<number, FullMapInfo>({
-    reqData     : tourneyId => reqAtGetFullMapInfo(tourneyId),
+const _fullMapInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, FullMapInfo>({
+    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullMapInfo(tourneyId),
 });
-const _fullBracketInfoAccessor = new CachedDataAccessor<number, FullBracketInfo>({
-    reqData     : tourneyId => reqAtGetFullBracketInfo(tourneyId),
+const _fullBracketInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, FullBracketInfo>({
+    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullBracketInfo(tourneyId),
 });
-const _userArrayAccessor = new CachedDataAccessor<number, number[]>({
-    reqData         : tourneyId => reqAtGetUserArray(tourneyId),
+const _userArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number[]>({
+    reqData         : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetUserArray(tourneyId),
     dataExpireTime  : 30,
 });
 
-export function getGlobalSettings(): Promise<Undefinable<GlobalSettings>> {
+export function getGlobalSettings(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<GlobalSettings>> {
     return _globalSettingsAccessor.getData(null);
 }
 
-export function getAtPhaseInfo(): Promise<Undefinable<PhaseInfo>> {
+export function getAtPhaseInfo(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<PhaseInfo>> {
     return _phaseInfoAccessor.getData(null);
 }
 export async function getSinglePhaseInfoArrayForPhase(phase: number): Promise<SinglePhaseInfo[]> {
@@ -83,32 +74,32 @@ export async function getLastTourneyId(): Promise<number | null> {
         : (tourneyIdArray[0] ?? null);
 }
 
-export function getAtRegistrationInfo(tourneyId: number): Promise<Undefinable<RegistrationInfo>> {
+export function getAtRegistrationInfo(tourneyId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<RegistrationInfo>> {
     return _registrationInfoAccessor.getData(tourneyId);
 }
 
-export function getAtTourneyInfo(tourneyId: number): Promise<Undefinable<TourneyInfo>> {
+export function getAtTourneyInfo(tourneyId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<TourneyInfo>> {
     return _tourneyInfoAccessor.getData(tourneyId);
 }
 export function setAtTourneyInfo(tourneyId: number, info: TourneyInfo | null): void {
     _tourneyInfoAccessor.setData(tourneyId, info);
 }
 
-export function getAtFullMapInfo(tourneyId: number): Promise<Undefinable<FullMapInfo>> {
+export function getAtFullMapInfo(tourneyId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<FullMapInfo>> {
     return _fullMapInfoAccessor.getData(tourneyId);
 }
 export function setAtFullMapInfo(tourneyId: number, info: FullMapInfo | null): void {
     _fullMapInfoAccessor.setData(tourneyId, info);
 }
 
-export function getAtFullBracketInfo(tourneyId: number): Promise<Undefinable<FullBracketInfo>> {
+export function getAtFullBracketInfo(tourneyId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<FullBracketInfo>> {
     return _fullBracketInfoAccessor.getData(tourneyId);
 }
 export function setAtFullBracketInfo(tourneyId: number, info: FullBracketInfo | null): void {
     _fullBracketInfoAccessor.setData(tourneyId, info);
 }
 
-export function getAtUserArray(tourneyId: number): Promise<Undefinable<number[]>> {
+export function getAtUserArray(tourneyId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>> {
     return _userArrayAccessor.getData(tourneyId);
 }
 export function setAtUserArray(tourneyId: number, userIdArray: number[] | null): void {
@@ -116,10 +107,10 @@ export function setAtUserArray(tourneyId: number, userIdArray: number[] | null):
 }
 
 export function getIsNotifiedForRegistration(tourneyId: number): boolean {
-    return getIsAutoTourneyNotified(tourneyId);
+    return LocalData_Storage.getIsAutoTourneyNotified(tourneyId);
 }
 export function setIsNotifiedForRegistration(tourneyId: number, isNotified: boolean): void {
-    setIsAutoTourneyNotified(tourneyId, isNotified);
+    LocalData_Storage.setIsAutoTourneyNotified(tourneyId, isNotified);
 }
 
 export function updateOnMsgAtGetGlobalSettings(msg: AtGetGlobalSettingsResponse): void {
@@ -163,17 +154,17 @@ export function checkHasFog(tourneyId: number): boolean {
 
 export function getTourneyInfoPhase(tourneyInfo: TourneyInfo): number {
     if (tourneyInfo.getEndTimestamp() != null) {
-        return PhaseId.End;
+        return AutoTourneys_Constants.PhaseId.End;
     } else if (tourneyInfo.getBattleTimestamp() != null) {
-        return PhaseId.Battle;
+        return AutoTourneys_Constants.PhaseId.Battle;
     } else if (tourneyInfo.getAdjustmentTimestamp() != null) {
-        return PhaseId.Adjustment;
+        return AutoTourneys_Constants.PhaseId.Adjustment;
     } else {
-        return PhaseId.Registration;
+        return AutoTourneys_Constants.PhaseId.Registration;
     }
 }
 
 export async function checkIsRedForRegistration(): Promise<boolean> {
-    const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.filter(v => v.getPhase() === PhaseId.Registration).map(v => v.getTourneyId()) ?? [];
+    const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.filter(v => v.getPhase() === AutoTourneys_Constants.PhaseId.Registration).map(v => v.getTourneyId()) ?? [];
     return tourneyIdArray.some(v => !getIsNotifiedForRegistration(v));
 }

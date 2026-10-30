@@ -1,44 +1,40 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
-    newError,
-    getExisted,
-} from "../../../helpers/Misc.ts";
-import { AliveStateId } from "../../../players/Constants.ts";
+    Players_Constants,
+    WarOperations_Revisers_Utils_Common,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    AuxiliaryTypes_GridIndex,
+    Turns_Constants,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+    type Units_IUnitMap,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import type { IUnitMap } from "../../../units/IUnitMap.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import {
-    getRevisedPath,
-    checkIsPathDestinationOccupiedByOtherVisibleUnit,
-} from "./Common.ts";
 
-export function revise(war: IBwWar, rawAction: WoUnitSupplyUnit, requesterUserId: Undefinable<number>): WoContainer {
-    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_00);
+export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitSupplyUnit, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
-    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== AliveStateId.Alive)) {
-        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_01);
+    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== Players_Constants.AliveStateId.Alive)) {
+        throw Helpers_Misc.newError(`Invalid aliveState.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_01);
     }
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
-    const rawPathNodes  = rawPath?.getNodes().map(v => getExisted(GridIndex.convertGridIndex(v))) ?? [];
-    if (checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
-        throw newError(`Destination occupied.`, ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_02);
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
+        throw Helpers_Misc.newError(`Destination occupied.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_02);
     }
 
     const unitMap   = war.getUnitMap();
-    const focusUnit = getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId),ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_03);
+    const focusUnit = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId),Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_03);
     if (!checkCanDoSupply(unitMap, focusUnit, rawPathNodes[rawPathNodes.length - 1])) {
-        throw newError(`Can not supply.`, ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_04);
+        throw Helpers_Misc.newError(`Can not supply.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitSupplyUnit_04);
     }
 
     return WoContainer.fromJson({
@@ -49,7 +45,7 @@ export function revise(war: IBwWar, rawAction: WoUnitSupplyUnit, requesterUserId
     });
 }
 
-function checkCanDoSupply(unitMap: IUnitMap, focusUnit: IUnit, destination: GridIndex): boolean {
+function checkCanDoSupply(unitMap: Units_IUnitMap.IUnitMap, focusUnit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (focusUnit.checkIsAdjacentUnitSupplier()) {
         const mapSize = unitMap.getMapSize();
         if (mapSize == null) {

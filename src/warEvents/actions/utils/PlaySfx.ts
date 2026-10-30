@@ -1,40 +1,36 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    getText,
-    getBgmSfxName,
-} from "../../../lang/Utils.ts";
+    Sounds_Utils,
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WeaPlaySfx } from "../../../proto/schema/CommonProto/WarEvent/WeaPlaySfx.ts";
-import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
-import { checkIsSfx } from "../../../sounds/Utils.ts";
 
-export function checkIsValid(action: Undefinable<WeaPlaySfx>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlaySfx>): boolean {
     if (action == null) {
         return false;
     }
 
-    return checkIsSfx(action.getSfxCode() ?? 0);
+    return Sounds_Utils.checkIsSfx(action.getSfxCode() ?? 0);
 }
 
-export function getBriefDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GameConfig): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlaySfx>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     if (data == null) {
         return null;
     }
 
     const sfxCode = data.getSfxCode() ?? 0;
-    return `${getText(TextType.B1164)}: ${getBgmSfxName(sfxCode, gameConfig) ?? UndefinedError}`;
+    return `${Lang_Utils.getText(Lang_Constants.TextType.B1164)}: ${Lang_Utils.getBgmSfxName(sfxCode, gameConfig) ?? Lang_Constants.UndefinedError}`;
 }
-export function getDetailDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GameConfig): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPlaySfx>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
 export function getErrorTip(data: WeaPlaySfx): string | null {
-    return !checkIsSfx(data.getSfxCode() ?? 0)
-        ? getText(TextType.A0497)
+    return !Sounds_Utils.checkIsSfx(data.getSfxCode() ?? 0)
+        ? Lang_Utils.getText(Lang_Constants.TextType.A0497)
         : null;
 }
 
@@ -46,5 +42,5 @@ export async function applyWithoutExtraData(action: WeaPlaySfx, isFast: boolean)
         return;
     }
 
-    playShortSfx(action.getSfxCode() ?? 0);
+    Sounds_SoundPlayer.playShortSfx(action.getSfxCode() ?? 0);
 }

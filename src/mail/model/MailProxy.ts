@@ -1,67 +1,61 @@
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    resetAllMailDataArray,
-    updateOnMsgMailGetMail,
-    updateOnMsgMailDeleteMail,
-    updateOnMsgMailSetIsNew,
-} from "./MailModel.ts";
-import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Networks_MessageCodes,
+    Mail_Model_MailModel,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as MailDeleteMailResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailDeleteMail/S.ts";
 import type { S as MailGetAllMailArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailGetAllMailArray/S.ts";
 import type { S as MailGetMailResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailGetMail/S.ts";
 import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgMailGetAllMailArray,  callback: _onMsgMailGetAllMailArray },
-        { msgCode: MessageCodes.MsgMailGetMail,          callback: _onMsgMailGetMail },
-        { msgCode: MessageCodes.MsgMailDeleteMail,       callback: _onMsgMailDeleteMail },
-        { msgCode: MessageCodes.MsgMailSetIsNew,         callback: _onMsgMailSetIsNew },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailGetAllMailArray,  callback: _onMsgMailGetAllMailArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailGetMail,          callback: _onMsgMailGetMail },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailDeleteMail,       callback: _onMsgMailDeleteMail },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailSetIsNew,         callback: _onMsgMailSetIsNew },
     ], null);
 }
 
-function _onMsgMailGetAllMailArray(e: Event): void {
+function _onMsgMailGetAllMailArray(e: Egret_Egret.Event): void {
     const data = e.data as MailGetAllMailArrayResponse;
-    resetAllMailDataArray(data.getMailFullDataArray());
-    dispatch(TypeId.MsgMailGetAllMailArray, data);
+    Mail_Model_MailModel.resetAllMailDataArray(data.getMailFullDataArray());
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailGetAllMailArray, data);
 }
 
-function _onMsgMailGetMail(e: Event): void {
+function _onMsgMailGetMail(e: Egret_Egret.Event): void {
     const data = e.data as MailGetMailResponse;
-    updateOnMsgMailGetMail(getExisted(data.getMailFullData()));
-    dispatch(TypeId.MsgMailGetMail, data);
+    Mail_Model_MailModel.updateOnMsgMailGetMail(Helpers_Misc.getExisted(data.getMailFullData()));
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailGetMail, data);
 }
 
 export function reqMailDeleteMail(mailId: number): void {
-    send({ MsgMailDeleteMail: { c: {
+    Networks_Manager.send({ MsgMailDeleteMail: { c: {
         mailId  : mailId,
     } }, });
 }
-function _onMsgMailDeleteMail(e: Event): void {
+function _onMsgMailDeleteMail(e: Egret_Egret.Event): void {
     const data = e.data as MailDeleteMailResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMailDeleteMail(getExisted(data.getMailId()));
-        dispatch(TypeId.MsgMailDeleteMail, data);
+        Mail_Model_MailModel.updateOnMsgMailDeleteMail(Helpers_Misc.getExisted(data.getMailId()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailDeleteMail, data);
     }
 }
 
 export function reqMailSetIsNew(mailId: number, isNew: boolean): void {
-    send({ MsgMailSetIsNew: { c: {
+    Networks_Manager.send({ MsgMailSetIsNew: { c: {
         mailId  : mailId,
         isNew   : isNew,
     }}});
 }
-function _onMsgMailSetIsNew(e: Event): void {
+function _onMsgMailSetIsNew(e: Egret_Egret.Event): void {
     const data = e.data as MailSetIsNewResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMailSetIsNew(data);
-        dispatch(TypeId.MsgMailSetIsNew, data);
+        Mail_Model_MailModel.updateOnMsgMailSetIsNew(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMailSetIsNew, data);
     }
 }

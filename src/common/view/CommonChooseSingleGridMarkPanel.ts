@@ -1,38 +1,37 @@
-import { getDict } from "../../gamePanels/Dict.ts";
 import {
-    openPanel,
-    closePanel,
-} from "../../gamePanels/Manager.ts";
-import { AllGridMarkTypeId } from "../../gridMarks/Constants.ts";
-import { getGridMark } from "../../helpers/ImageSource.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import type { Event } from "../../egret/Egret.ts";
+    GridMarks_Constants,
+    GamePanels_Manager,
+    GamePanels_Dict,
+    Helpers_ImageSource,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
     currentMarkTypeId       : number | null;
     getHelpText?            : () => string;
     callback                : (skinId: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
-    private readonly _btnClose!         : IUiButton;
-    private readonly _labelTips!        : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTips!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _list!             : IUiScrollList<DataForItemRenderer>;
+    private readonly _list!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForItemRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -40,7 +39,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -65,7 +64,7 @@ export class Panel extends UiPanel<OpenData> {
         const func = this.getOpenData()?.getHelpText;
         const text  = func ? func() : null;
         if (text) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
@@ -96,8 +95,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0914);
-        this._labelTips.setLangText(TextType.B1249);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0914);
+        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
     }
 
     private _createDataForList(): DataForItemRenderer[] {
@@ -108,7 +107,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const callback  = openData.callback;
         const dataArray : DataForItemRenderer[] = [];
-        for (const markTypeId of AllGridMarkTypeId) {
+        for (const markTypeId of GridMarks_Constants.AllGridMarkTypeId) {
             dataArray.push({
                 markTypeId  : markTypeId,
                 callback    : callback,
@@ -119,14 +118,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForItemRenderer extends UiListItemData {
+interface DataForItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     markTypeId  : number;
     callback    : (skinId: number) => void;
 }
-class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
-    private readonly _group!        : IUiContainer;
-    private readonly _imgBg!        : IUiImage;
-    private readonly _imgSelected!  : IUiImage;
+class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForItemRenderer> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -141,7 +140,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
         this._updateView();
     }
 
-    private _onTouchedImgSelected(e: Event): void {
+    private _onTouchedImgSelected(e: Egret_Egret.Event): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -149,9 +148,9 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonConfirm01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
         openData.callback(openData.markTypeId);
-        closePanel(getDict().CommonChooseSingleSkinIdPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +162,6 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
             return;
         }
 
-        this._imgBg.loadSource(getGridMark(markTypeId));
+        this._imgBg.loadSource(Helpers_ImageSource.getGridMark(markTypeId));
     }
 }

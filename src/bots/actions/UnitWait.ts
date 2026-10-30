@@ -1,11 +1,13 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-export async function getScoreAndActionUnitWait(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitWait(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const score = await getScoreForActionUnitWait();
     return {
@@ -22,7 +24,7 @@ export async function getScoreAndActionUnitWait(unit: IUnit, pathNodes: MovePath
 }
 
 async function getScoreForActionUnitWait(): Promise<number> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     // const tile = war.getTileMap().getTile(gridIndex);
     // if ((tile.getMaxCapturePoint()) && (tile.getTeamIndex() !== unit.getTeamIndex())) {

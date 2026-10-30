@@ -1,28 +1,22 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    checkIsValidLanguageTextArray,
-    getLanguageText,
-    getFormattedText,
-    getText,
-} from "../../../lang/Utils.ts";
+    Lang_Utils,
+    WarEvents_Actions_Constants_PersistentShowText,
+    Lang_Constants,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WeaPersistentShowText } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
-import { Common } from "../constants/PersistentShowText.ts";
 
-export function checkIsValid(action: Undefinable<WeaPersistentShowText>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentShowText>): boolean {
     if (action == null) {
         return false;
     }
 
-    if (!checkIsValidLanguageTextArray({
+    if (!Lang_Utils.checkIsValidLanguageTextArray({
         list            : action.getTextArray(),
         minTextCount    : 1,
         minTextLength   : 1,
-        maxTextLength   : Common.MaxLength,
+        maxTextLength   : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
     })) {
         return false;
     }
@@ -30,38 +24,38 @@ export function checkIsValid(action: Undefinable<WeaPersistentShowText>): boolea
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaPersistentShowText>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentShowText>): string | null {
     if (data == null) {
         return null;
     }
 
-    const rawText = getLanguageText({ textArray: data.getTextArray() });
+    const rawText = Lang_Utils.getLanguageText({ textArray: data.getTextArray() });
     if (rawText == null) {
-        return getFormattedText(TextType.F0131, UndefinedError);
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0131, Lang_Constants.UndefinedError);
     } else {
-        return getFormattedText(TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
     }
 }
-export function getDetailDesc(data: Undefinable<WeaPersistentShowText>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentShowText>): string | null {
     return getBriefDesc(data);
 }
 
 export function getErrorTip(data: WeaPersistentShowText): string | null {
-    if (!checkIsValidLanguageTextArray({
+    if (!Lang_Utils.checkIsValidLanguageTextArray({
         list            : data.getTextArray(),
         minTextCount    : 1,
         minTextLength   : 1,
-        maxTextLength   : Common.MaxLength
+        maxTextLength   : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength
     })) {
-        return getText(TextType.A0308);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0308);
     }
 
     return null;
 }
 
-export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: IBwWar): void {
+export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: IBwWar): void {
+export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWar_Interface_IBwWar.IBwWar): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

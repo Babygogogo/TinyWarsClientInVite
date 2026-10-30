@@ -1,9 +1,11 @@
-import { MaxExtraLinkLength } from "./Constants.ts";
-import { checkIsValidHttp } from "../urls/Utils.ts";
+import {
+    Urls_Utils,
+    Campaigns_Constants,
+} from "../internal.ts";
 
 export function checkIsValidExtraLink(extraLink: string): boolean {
     return (extraLink !== "")
         && (extraLink === extraLink.trim())
-        && (extraLink.length <= MaxExtraLinkLength)
-        && (checkIsValidHttp(extraLink));
+        && (extraLink.length <= Campaigns_Constants.MaxExtraLinkLength)
+        && (Urls_Utils.checkIsValidHttp(extraLink));
 }

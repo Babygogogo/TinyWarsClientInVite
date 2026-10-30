@@ -1,29 +1,31 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Tiles_ITile,
+    type Tiles_ITileMapView,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
 import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-import type { ITile } from "./ITile.ts";
-import type { ITileMapView } from "./ITileMapView.ts";
 
 export interface ITileMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
@@ -31,31 +33,31 @@ export interface ITileMap {
     serializeForCreateSfw(): SerialTileMap;
     serializeForCreateMfr(): SerialTileMap;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
-    getMap(): ITile[][];
+    getMap(): Tiles_ITile.ITile[][];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): ITileMapView;
+    getView(): Tiles_ITileMapView.ITileMapView;
 
-    forEachTile(func: (t: ITile) => any): void;
-    getTile(gridIndex: GridIndex): ITile;
-    getTileWithGridId(gridId: number): ITile;
-    getAllTiles(): ITile[];
-    getTiles(predicate: (tile: ITile) => boolean): ITile[];
-    getGridIndexListWithAnyLocationId(locationIdArray: number[]): GridIndex[];
+    forEachTile(func: (t: Tiles_ITile.ITile) => any): void;
+    getTile(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Tiles_ITile.ITile;
+    getTileWithGridId(gridId: number): Tiles_ITile.ITile;
+    getAllTiles(): Tiles_ITile.ITile[];
+    getTiles(predicate: (tile: Tiles_ITile.ITile) => boolean): Tiles_ITile.ITile[];
+    getGridIndexListWithAnyLocationId(locationIdArray: number[]): AuxiliaryTypes_GridIndex.GridIndex[];
 
-    getConnectedGridIndexArrayWithTileType(origin: GridIndex, tileType: number): GridIndex[];
+    getConnectedGridIndexArrayWithTileType(origin: AuxiliaryTypes_GridIndex.GridIndex, tileType: number): AuxiliaryTypes_GridIndex.GridIndex[];
 
-    getMapSize(): MapSize;
+    getMapSize(): AuxiliaryTypes_MapSize.MapSize;
 
-    getTileCustomNameArray(): Undefinable<TileCustomName[]>;
-    setTileCustomNameArray(arr: Undefinable<TileCustomName[]>): void;
+    getTileCustomNameArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>;
+    setTileCustomNameArray(arr: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomName[]>): void;
 
     getTilesCountForPlayer(playerIndex: number): number;
-    getTilesCount(func: (t: ITile) => boolean): number;
+    getTilesCount(func: (t: Tiles_ITile.ITile) => boolean): number;
 
     getTotalIncomeForPlayer(playerIndex: number): number;
 

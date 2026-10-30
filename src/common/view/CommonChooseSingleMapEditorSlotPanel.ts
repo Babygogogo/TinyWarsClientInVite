@@ -1,46 +1,32 @@
-import { showLang } from "../../FloatText.ts";
-import { ReviewStatus } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
 import {
-    closePanel,
-    openPanel,
-} from "../../gamePanels/Manager.ts";
-import {
-    checkAndCreateSimulation,
-    checkAndCreateMultiFreeWar,
-} from "../../helpers/GameFlow.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getLanguageText,
-    getMapReviewStatusText,
-} from "../../lang/Utils.ts";
-import {
-    getMapEditorData,
-    getMaxSlotsCount,
-} from "../../mapEditor/model/MeModel.ts";
-import { getErrorCode } from "../../maps/utils/MapRawData.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import type { Event } from "../../egret/Egret.ts";
+    Helpers_GameFlow,
+    GamePanels_Manager,
+    Tween_Executor,
+    GamePanels_Dict,
+    Maps_Utils_MapRawData,
+    Lang_Utils,
+    GameConfigs_Provider,
+    MapEditor_Model_MeModel,
+    Helpers_PointerInput,
+    Helpers_Misc,
+    Sounds_SoundPlayer,
+    Maps_Constants,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Interfaces_IUiZoomableMap,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
     currentSlotIndex        : number;
@@ -51,25 +37,25 @@ export interface OpenData {
     getHelpText             : (() => string) | null;
     callback                : (slotIndex: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
-    private readonly _btnClose!         : IUiButton;
-    private readonly _labelTips!        : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTips!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listSlot!         : IUiScrollList<DataForSlotRenderer>;
-    private readonly _labelNoData!      : IUiLabel;
+    private readonly _listSlot!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSlotRenderer>;
+    private readonly _labelNoData!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupZoomMap!     : IUiContainer;
-    private readonly _zoomMap!          : IUiZoomableMap;
+    private readonly _groupZoomMap!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _zoomMap!          : Ui_Interfaces_IUiZoomableMap.IUiZoomableMap;
 
     private _slotIndexForShowMap        = -1;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -101,7 +87,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const zoomMap       = this._zoomMap;
         const labelNoData   = this._labelNoData;
-        const mapData       = slotIndex == null ? null : (await getMapEditorData(slotIndex))?.mapRawData;
+        const mapData       = slotIndex == null ? null : (await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData;
         if (!mapData) {
             labelNoData.setIsVisible(true);
             zoomMap.setIsVisible(false);
@@ -112,7 +98,7 @@ export class Panel extends UiPanel<OpenData> {
             zoomMap.setIsVisible(true);
             zoomMap.showMapByMapData({
                 mapRawData          : mapData,
-                gameConfig          : await getLatestGameConfig(),
+                gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
                 overridingPlayers   : null,
             });
         }
@@ -124,21 +110,21 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const isEmptySlot = (await getMapEditorData(slotIndex))?.mapRawData == null;
+        const isEmptySlot = (await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData == null;
         if ((openData.needNonEmptySlot) && (isEmptySlot)) {
-            showLang(TextType.A0442);
+            FloatText.showLang(Lang_Constants.TextType.A0442);
             return;
         }
 
         const callback  = () => {
             openData.callback(slotIndex);
-            closePanel(getDict().CommonChooseSingleMapEditorSlotPanel);
+            GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel);
         };
         if ((!openData.needConfirmOverwrite) || (isEmptySlot)) {
             callback();
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent     : () => getText(TextType.A0070),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
                 callback    : callback,
             });
         }
@@ -154,23 +140,23 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const callback = this.getOpenData()?.getHelpText;
         if (callback) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => callback(),
             });
         }
     }
 
     private async _onTouchedGroupZoomMap(): Promise<void> {
-        const mapRawData = (await getMapEditorData(this._slotIndexForShowMap))?.mapRawData;
+        const mapRawData = (await MapEditor_Model_MeModel.getMapEditorData(this._slotIndexForShowMap))?.mapRawData;
         if (mapRawData) {
-            openPanel(getDict().CommonShowMapPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
                     mapRawData          : mapRawData,
-                    gameConfig          : await getLatestGameConfig(),
+                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
                     overridingPlayers   : null,
                 },
             });
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
 
@@ -197,13 +183,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? getText(TextType.B1256));
-        this._labelNoData.setLangText(TextType.B0278);
-        this._labelTips.setLangText(TextType.B1249);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? Lang_Utils.getText(Lang_Constants.TextType.B1256));
+        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelTips.setLangText(Lang_Constants.TextType.B1249);
     }
 
     private async _createDataForList(): Promise<DataForSlotRenderer[]> {
-        const maxSlotsCount = getMaxSlotsCount();
+        const maxSlotsCount = MapEditor_Model_MeModel.getMaxSlotsCount();
         const allowPlay     = !!this.getOpenData()?.allowPlay;
         const dataArray     : DataForSlotRenderer[] = [];
         for (let slotIndex = 0; slotIndex < maxSlotsCount; ++slotIndex) {
@@ -218,41 +204,41 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForSlotRenderer extends UiListItemData {
+interface DataForSlotRenderer extends Ui_Types_UiListItemData.UiListItemData {
     slotIndex   : number;
     allowPlay   : boolean;
     panel       : Panel;
 }
-class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgSelected!      : IUiImage;
-    private readonly _btnPlay!          : IUiButton;
+class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSlotRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgSelected!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnPlay!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelSlotIndex!   : IUiLabel;
-    private readonly _labelMapName!     : IUiLabel;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelSlotIndex!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._imgSelected,    callback: this._onTouchedImgSelected },
             { ui: this._btnPlay,        callback: this._onTouchedBtnPlay },
         ]);
-        this._setShortSfxCode(ShortSfxCode.ButtonNeutral01);
+        this._setShortSfxCode(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         this.setIsTouchEnabled(true);
-        this.setMouseStyle(MouseStyleType.Pointer);
+        this.setMouseStyle(Helpers_PointerInput.MouseStyleType.Pointer);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -264,7 +250,7 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectedData(openData.slotIndex);
     }
-    private async _onTouchedBtnPlay(e: Event): Promise<void> {
+    private async _onTouchedBtnPlay(e: Egret_Egret.Event): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -272,28 +258,28 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
             return;
         }
 
-        const mapEditorData = await getMapEditorData(openData.slotIndex);
+        const mapEditorData = await MapEditor_Model_MeModel.getMapEditorData(openData.slotIndex);
         const mapRawData    = mapEditorData?.mapRawData;
         if (mapRawData == null) {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             availableNumberArray    : [1, 2],
             currentNumber           : 1,
-            getTitleText            : () => getText(TextType.B0401),
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0401),
             getNumberMainText       : num => {
                 switch (num) {
-                    case 1  : return getText(TextType.B0325);
-                    case 2  : return getText(TextType.B0557);
-                    default : throw newError(`Invalid num: ${num}`);
+                    case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0325);
+                    case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0557);
+                    default : throw Helpers_Misc.newError(`Invalid num: ${num}`);
                 }
             },
             callbackOnConfirm       : num => {
                 switch (num) {
-                    case 1  : return checkAndCreateSimulation(mapRawData, mapEditorData?.gridMarkData);
-                    case 2  : return checkAndCreateMultiFreeWar(mapRawData);
-                    default : throw newError(`Invalid num: ${num}`);
+                    case 1  : return Helpers_GameFlow.checkAndCreateSimulation(mapRawData, mapEditorData?.gridMarkData);
+                    case 2  : return Helpers_GameFlow.checkAndCreateMultiFreeWar(mapRawData);
+                    default : throw Helpers_Misc.newError(`Invalid num: ${num}`);
                 }
             },
         });
@@ -317,14 +303,14 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
         }
 
         const slotIndex     = openData.slotIndex;
-        const mapEditorData = await getMapEditorData(slotIndex);
+        const mapEditorData = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
         if (slotIndex !== this.getOpenData()?.slotIndex) {
             return;
         }
 
         const mapRawData = mapEditorData?.mapRawData;
         if ((mapRawData) && (openData.allowPlay)) {
-            const errorCode = await getErrorCode({
+            const errorCode = await Maps_Utils_MapRawData.getErrorCode({
                 mapRawData                          : mapRawData,
                 allowRedundantWarEvents             : false,
                 allowRedundantMapSimpleDialogues    : false,
@@ -339,29 +325,29 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
         const status            = mapEditorData?.reviewStatus ?? 0;
         const labelSlotIndex    = this._labelSlotIndex;
         labelSlotIndex.setTextColor(getReviewStatusTextColor(status));
-        this._labelMapName.setText(getLanguageText({ textArray: mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${getText(TextType.B0277)})`);
+        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray: mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
 
         const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent;
         if (srcNormalMapIdForAddEvent != null) {
-            labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
+            labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
         } else {
             const campaignMapData = mapRawData?.getCampaignMapData();
             if (campaignMapData == null) {
-                labelSlotIndex.setText(`#${slotIndex} ${getMapReviewStatusText(status) ?? UndefinedError}`);
+                labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getMapReviewStatusText(status) ?? Lang_Constants.UndefinedError}`);
             } else {
-                labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1135)} ${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()}`);
+                labelSlotIndex.setText(`#${slotIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B1135)} ${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()}`);
             }
         }
         this._layoutName.arrangeItems();
     }
 }
 
-function getReviewStatusTextColor(status: ReviewStatus): number {
+function getReviewStatusTextColor(status: Maps_Constants.ReviewStatus): number {
     switch (status) {
-        case ReviewStatus.None       : return 0xc9d3df;
-        case ReviewStatus.Reviewing  : return 0xffff00;
-        case ReviewStatus.Rejected   : return 0xff0000;
-        case ReviewStatus.Accepted   : return 0x00ff00;
+        case Maps_Constants.ReviewStatus.None       : return 0xc9d3df;
+        case Maps_Constants.ReviewStatus.Reviewing  : return 0xffff00;
+        case Maps_Constants.ReviewStatus.Rejected   : return 0xff0000;
+        case Maps_Constants.ReviewStatus.Accepted   : return 0x00ff00;
         default                         : return 0xffffff;
     }
 }

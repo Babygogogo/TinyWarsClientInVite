@@ -1,74 +1,60 @@
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { Tween } from "../../graphics/Constants.ts";
-import { enable } from "../../helpers/NoSleep.ts";
-import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import {
-    getIsRememberPassword,
-    getAccount,
-    getPassword,
-    setAccount,
-    setPassword,
-    setIsRememberPassword,
-} from "../../localData/Storage.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import {
-    init,
-    playShortSfx,
-} from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import {
-    setSelfAccount,
-    setSelfPassword,
-} from "../Model.ts";
-import { reqLogin } from "../Proxy.ts";
-import {
-    checkIsAccountValid,
-    checkIsPasswordValid,
-} from "../Utils.ts";
+    Users_Utils,
+    Helpers_NoSleep,
+    Tween_Executor,
+    LocalData_Storage,
+    GamePanels_Dict,
+    Lang_Utils,
+    Sounds_SoundPlayer,
+    Helpers_PointerInput,
+    GamePanels_Manager,
+    Users_Proxy,
+    Users_Model,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Graphics_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgTitle!                 : IUiImage;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgTitle!                 : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupLogin!               : IUiContainer;
-    private readonly _groupAccount!             : IUiContainer;
-    private readonly _labelAccount!             : IUiLabel;
-    private readonly _inputAccount!             : IUiPromptedInput;
+    private readonly _groupLogin!               : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupAccount!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelAccount!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputAccount!             : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
-    private readonly _groupPassword!            : IUiContainer;
-    private readonly _labelPassword!            : IUiLabel;
-    private readonly _inputPassword!            : IUiPromptedInput;
+    private readonly _groupPassword!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelPassword!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputPassword!            : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
-    private readonly _groupPasswordCommand!     : IUiContainer;
-    private readonly _groupRememberPassword!    : IUiContainer;
-    private readonly _labelRememberPassword!    : IUiLabel;
-    private readonly _imgRememberPasswordCheck! : IUiImage;
-    private readonly _btnForgetPassword!        : IUiButton;
+    private readonly _groupPasswordCommand!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupRememberPassword!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelRememberPassword!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgRememberPasswordCheck! : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnForgetPassword!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupButton!              : IUiContainer;
-    private readonly _btnRegister!              : IUiButton;
-    private readonly _btnLogin!                 : IUiButton;
+    private readonly _groupButton!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnRegister!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnLogin!                 : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserLogin,        callback: this._onMsgUserLogin },
-            { type: TypeId.MsgUserLoginAsGuest, callback: this._onMsgUserLoginAsGuest },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserLogin,        callback: this._onMsgUserLogin },
+            { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest, callback: this._onMsgUserLoginAsGuest },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupLogin,             callback: this._onTouchedGroupLogin,            mouseStyle: MouseStyleType.Default },
+            { ui: this._groupLogin,             callback: this._onTouchedGroupLogin,            mouseStyle: Helpers_PointerInput.MouseStyleType.Default },
             { ui: this._btnLogin,               callback: this._onTouchedBtnLogin },
             { ui: this._btnRegister,            callback: this._onTouchedBtnRegister },
             { ui: this._btnForgetPassword,      callback: this._onTouchedBtnForgetPassword },
@@ -93,11 +79,11 @@ export class Panel extends UiPanel<OpenData> {
             // }, },
         ]);
 
-        const isRememberPassword = getIsRememberPassword();
-        this._inputAccount.setInputText(getAccount());
-        this._inputPassword.setInputText(isRememberPassword ? getPassword() : ``);
+        const isRememberPassword = LocalData_Storage.getIsRememberPassword();
+        this._inputAccount.setInputText(LocalData_Storage.getAccount());
+        this._inputPassword.setInputText(isRememberPassword ? LocalData_Storage.getPassword() : ``);
         this._imgRememberPasswordCheck.setIsVisible(isRememberPassword);
-        this._btnLogin.setShortSfxCode(ShortSfxCode.ButtonConfirm01);
+        this._btnLogin.setShortSfxCode(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
         this._updateComponentsForLanguage();
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -105,7 +91,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onMsgUserLogin(): void {
-        show(getText(TextType.A0000));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0000));
         this._btnLogin.setIsTouchEnabled(false);
     }
     private _onMsgUserLoginAsGuest(): void {
@@ -116,119 +102,119 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedGroupLogin(): void {
-        init();
+        Sounds_SoundPlayer.init();
     }
 
     private _onTouchedBtnLogin(): void {
-        enable();
+        Helpers_NoSleep.enable();
 
         const account  = this._inputAccount.getInputText() ?? ``;
         const password = this._inputPassword.getInputText() ?? ``;
-        if (!checkIsAccountValid(account)) {
-            show(getText(TextType.A0001));
+        if (!Users_Utils.checkIsAccountValid(account)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0001));
         } else {
-            if (!checkIsPasswordValid(password)) {
-                show(getText(TextType.A0003));
+            if (!Users_Utils.checkIsPasswordValid(password)) {
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0003));
             } else {
-                setAccount(account);
-                setPassword(password);
-                setSelfAccount(account);
-                setSelfPassword(password);
-                reqLogin(account, password, false);
+                LocalData_Storage.setAccount(account);
+                LocalData_Storage.setPassword(password);
+                Users_Model.setSelfAccount(account);
+                Users_Model.setSelfPassword(password);
+                Users_Proxy.reqLogin(account, password, false);
             }
         }
     }
 
     private _onTouchedBtnRegister(): void {
-        enable();
+        Helpers_NoSleep.enable();
 
-        openPanel(getDict().UserRegisterPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserRegisterPanel, void 0);
     }
 
     private _onTouchedBtnForgetPassword(): void {
-        openPanel(getDict().UserSetPasswordWithEmailPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetPasswordWithEmailPanel, {
             account : this._inputAccount.getInputText(),
         });
     }
 
     private _onTouchedGroupRememberPassword(): void {
-        const isRemember = getIsRememberPassword();
-        setIsRememberPassword(!isRemember);
-        playShortSfx(isRemember ? ShortSfxCode.ButtonCancel01 : ShortSfxCode.ButtonConfirm01);
+        const isRemember = LocalData_Storage.getIsRememberPassword();
+        LocalData_Storage.setIsRememberPassword(!isRemember);
+        Sounds_SoundPlayer.playShortSfx(isRemember ? Sounds_Constants.ShortSfxCode.ButtonCancel01 : Sounds_Constants.ShortSfxCode.ButtonConfirm01);
         this._imgRememberPasswordCheck.setIsVisible(!isRemember);
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnLogin.setLangText(TextType.B0173);
-        this._btnRegister.setText(`${getText(TextType.B0174)}*`);
-        this._btnForgetPassword.setLangText(TextType.B0626);
-        this._labelRememberPassword.setLangText(TextType.B0172);
-        this._labelAccount.setText(`${getText(TextType.B0170)}:`);
-        this._labelPassword.setText(`${getText(TextType.B0171)}:`);
+        this._btnLogin.setLangText(Lang_Constants.TextType.B0173);
+        this._btnRegister.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0174)}*`);
+        this._btnForgetPassword.setLangText(Lang_Constants.TextType.B0626);
+        this._labelRememberPassword.setLangText(Lang_Constants.TextType.B0172);
+        this._labelAccount.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0170)}:`);
+        this._labelPassword.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0171)}:`);
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._imgTitle,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
             tweenTime   : 1000,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupAccount,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 800,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupPassword,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 900,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupPasswordCommand,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 1000,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupButton,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 1100,
         });
 
-        await wait(1100 + Tween.DefaultDuration);
+        await Timer_TimerModel.wait(1100 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._imgTitle,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupAccount,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupPassword,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupPasswordCommand,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupButton,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 

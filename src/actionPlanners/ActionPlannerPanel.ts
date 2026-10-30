@@ -1,33 +1,35 @@
-import { StateId } from "./Constants.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { TextType } from "../lang/Constants.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import { ShortSfxCode } from "../sounds/Constants.ts";
-import { playShortSfx } from "../sounds/SoundPlayer.ts";
-import { UiPanel } from "../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../ui/interfaces/IUiLabel.ts";
+import {
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    ActionPlanners_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../internal.ts";
 
 export interface OpenData {
-    war: IBwWar;
+    war: BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupIgnoreObstructiveUnits!      : IUiContainer;
-    private readonly _labelTitleIgnoreObstructiveUnits! : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupIgnoreObstructiveUnits!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitleIgnoreObstructiveUnits! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupAlly!                        : IUiContainer;
-    private readonly _labelIgnoreAlliedUnits!           : IUiLabel;
-    private readonly _imgAlly!                          : IUiImage;
+    private readonly _groupAlly!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelIgnoreAlliedUnits!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgAlly!                          : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupEnemy!                       : IUiContainer;
-    private readonly _labelIgnoreEnemyUnits!            : IUiLabel;
-    private readonly _imgEnemy!                         : IUiImage;
+    private readonly _groupEnemy!                       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelIgnoreEnemyUnits!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgEnemy!                         : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.ActionPlannerStateChanged,       callback: this._onNotifyActionPlannerStateChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback: this._onNotifyActionPlannerStateChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupAlly,                              callback: this._onTouchedGroupAlly },
@@ -53,18 +55,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-
         const img   = this._imgAlly;
         const state = actionPlanner.getStateId();
         const isOn  = !img.getIsVisible();
-        if (state === StateId.PreviewingUnitAttackableArea) {
+        if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             actionPlanner.setIsIgnoreAllyForPreviewingAttackableArea(isOn);
         }
         img.setIsVisible(isOn);
 
-        playShortSfx(isOn
-            ? ShortSfxCode.CursorConfirm01
-            : ShortSfxCode.ButtonCancel01
+        Sounds_SoundPlayer.playShortSfx(isOn
+            ? Sounds_Constants.ShortSfxCode.CursorConfirm01
+            : Sounds_Constants.ShortSfxCode.ButtonCancel01
         );
     }
 
@@ -77,23 +78,23 @@ export class Panel extends UiPanel<OpenData> {
         const img   = this._imgEnemy;
         const state = actionPlanner.getStateId();
         const isOn  = !img.getIsVisible();
-        if (state === StateId.PreviewingUnitAttackableArea) {
+        if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             actionPlanner.setIsIgnoreEnemyForPreviewingAttackableArea(isOn);
-        } else if (state === StateId.PreviewingUnitMovableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             actionPlanner.setIsIgnoreEnemyForPreviewingMovableArea(isOn);
         }
         img.setIsVisible(isOn);
 
-        playShortSfx(isOn
-            ? ShortSfxCode.CursorConfirm01
-            : ShortSfxCode.ButtonCancel01
+        Sounds_SoundPlayer.playShortSfx(isOn
+            ? Sounds_Constants.ShortSfxCode.CursorConfirm01
+            : Sounds_Constants.ShortSfxCode.ButtonCancel01
         );
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitleIgnoreObstructiveUnits.setLangText(TextType.B1297);
-        this._labelIgnoreAlliedUnits.setLangText(TextType.B1298);
-        this._labelIgnoreEnemyUnits.setLangText(TextType.B1299);
+        this._labelTitleIgnoreObstructiveUnits.setLangText(Lang_Constants.TextType.B1297);
+        this._labelIgnoreAlliedUnits.setLangText(Lang_Constants.TextType.B1298);
+        this._labelIgnoreEnemyUnits.setLangText(Lang_Constants.TextType.B1299);
     }
 
     private _updateGroupIgnoreObstructiveUnits(): void {
@@ -107,13 +108,13 @@ export class Panel extends UiPanel<OpenData> {
         const groupAlly = this._groupAlly;
         const imgAlly   = this._imgAlly;
         const imgEnemy  = this._imgEnemy;
-        if (state === StateId.PreviewingUnitAttackableArea) {
+        if (state === ActionPlanners_Constants.StateId.PreviewingUnitAttackableArea) {
             group.setIsVisible(true);
             groupAlly.setIsVisible(true);
             imgAlly.setIsVisible(actionPlanner.getIsIgnoreAllyForPreviewingAttackableArea());
             imgEnemy.setIsVisible(actionPlanner.getIsIgnoreEnemyForPreviewingAttackableArea());
 
-        } else if (state === StateId.PreviewingUnitMovableArea) {
+        } else if (state === ActionPlanners_Constants.StateId.PreviewingUnitMovableArea) {
             group.setIsVisible(true);
             groupAlly.setIsVisible(false);
             imgEnemy.setIsVisible(actionPlanner.getIsIgnoreEnemyForPreviewingMovableArea());

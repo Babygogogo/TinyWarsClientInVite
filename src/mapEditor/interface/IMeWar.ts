@@ -1,8 +1,10 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import type { IMeDrawer } from "./IMeDrawer.ts";
+import {
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarEventManager,
+    type MapEditor_Interface_IMeDrawer,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
@@ -12,14 +14,14 @@ import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskO
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export interface IMeWar extends IBwWar {
-    init(data: SerialWar, gameConfig: GameConfig): void;
+export interface IMeWar extends BaseWar_Interface_IBwWar.IBwWar {
+    init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
     initWithMapRawData({ mapRawData, slotIndex, gameConfig, srcNormalMapIdForAddEvent, gridMarkData }: {
         mapRawData                  : MapRawData;
         slotIndex                   : number;
-        gameConfig                  : GameConfig;
+        gameConfig                  : GameConfigs_GameConfig.GameConfig;
         srcNormalMapIdForAddEvent   : number | null;
-        gridMarkData                : Undefinable<GridMarkData>;
+        gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
     }): Promise<void>;
 
     startRunning(): IMeWar;
@@ -39,13 +41,13 @@ export interface IMeWar extends IBwWar {
     getBootRestTime(): number | null;
     getSettingsBootTimerParams(): number[];
 
-    getWarEventManager(): IBwWarEventManager;
+    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
 
     getIsExecuteActionsWithExtraData(): boolean;
 
     updateTilesAndUnitsOnVisibilityChanged(): void;
 
-    getDrawer(): IMeDrawer;
+    getDrawer(): MapEditor_Interface_IMeDrawer.IMeDrawer;
 
     setMapModifiedTime(time: number): void;
     getMapModifiedTime(): number;

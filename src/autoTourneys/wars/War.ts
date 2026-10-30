@@ -1,17 +1,19 @@
-import type { IWar } from "./IWar.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
+import {
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MultiPlayerWar_Model_MpwWar,
+    type GameConfigs_GameConfig,
+    type AutoTourneys_Wars_IWar,
+} from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-export class War extends MpwWar implements IWar {
+export class War extends MultiPlayerWar_Model_MpwWar.MpwWar implements AutoTourneys_Wars_IWar.IWar {
     private _settingsForAtw?    : SettingsForAtw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForAtw(getExisted(data.getSettingsForAtw()));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForAtw(Helpers_Misc.getExisted(data.getSettingsForAtw()));
 
         this._initView();
     }
@@ -37,7 +39,7 @@ export class War extends MpwWar implements IWar {
         this._settingsForAtw = settings;
     }
     public getSettingsForAtw(): SettingsForAtw {
-        return getExisted(this._settingsForAtw);
+        return Helpers_Misc.getExisted(this._settingsForAtw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

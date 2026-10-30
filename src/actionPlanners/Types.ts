@@ -1,7 +1,9 @@
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IUnit } from "../units/IUnit.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+} from "../internal.ts";
 
 export interface ChosenUnitForDrop {
-    unit        : IUnit;
-    destination : GridIndex;
+    unit        : Units_IUnit.IUnit;
+    destination : AuxiliaryTypes_GridIndex.GridIndex;
 }

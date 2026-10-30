@@ -1,27 +1,20 @@
-import { Base } from "./Base.ts";
-import { War } from "./War.ts";
 import {
-    ResultType,
-    ContextType,
-} from "../Enums.ts";
-import type { Base as ResultsBase } from "../results/Base.ts";
-import { Num } from "../results/Num.ts";
-import { NumArray } from "../results/NumArray.ts";
-import { Tile } from "../results/Tile.ts";
-import { War as ResultsWar } from "../results/War.ts";
-import type {
-    EpVariableInfoDict,
-    EpFunctionInfoDict,
-} from "../Types.ts";
-import {
-    extendVariableInfoDict,
-    extendFunctionInfoDict,
-} from "../Utils.ts";
-import { TextType } from "../../lang/Constants.ts";
+    ExpressionParsers_Contexts_Base,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Utils,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_NumArray,
+    ExpressionParsers_Results_War,
+    Lang_Constants,
+    ExpressionParsers_Results_Tile,
+    ExpressionParsers_Contexts_War,
+    type ExpressionParsers_Types,
+    type Tiles_ITile,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 import type { TileBuff as ProtoTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type { ITile } from "../../tiles/ITile.ts";
 
-export class TileBuff extends Base {
+export class TileBuff extends ExpressionParsers_Contexts_Base.Base {
     private static readonly VnType                      = "type";
     private static readonly VnExpiringPlayerIndex       = "expiringPlayerIndex";
     private static readonly VnExpiringTurnIndex         = "expiringTurnIndex";
@@ -31,58 +24,58 @@ export class TileBuff extends Base {
 
     public static readonly Variables    = TileBuff.generateVariables();
     public static readonly Functions    = TileBuff.generateFunctions();
-    private static generateVariables(): EpVariableInfoDict {
-        const variables = extendVariableInfoDict(War.Variables);
-        variables.set(TileBuff.VnType,                 { desc: TextType.A0748, resultType: ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExpiringPlayerIndex,  { desc: TextType.A0749, resultType: ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExpiringTurnIndex,    { desc: TextType.A0750, resultType: ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExtraParams,          { desc: TextType.A0751, resultType: ResultType.NumberArray, isExtension: false });
-        variables.set(TileBuff.VnTile,                 { desc: TextType.A0752, resultType: ResultType.Tile,        isExtension: false });
-        variables.set(TileBuff.VnWar,                  { desc: TextType.A0384, resultType: ResultType.War,         isExtension: false });
+    private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
+        const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
+        variables.set(TileBuff.VnType,                 { desc: Lang_Constants.TextType.A0748, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
+        variables.set(TileBuff.VnExpiringPlayerIndex,  { desc: Lang_Constants.TextType.A0749, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
+        variables.set(TileBuff.VnExpiringTurnIndex,    { desc: Lang_Constants.TextType.A0750, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
+        variables.set(TileBuff.VnExtraParams,          { desc: Lang_Constants.TextType.A0751, resultType: ExpressionParsers_Enums.ResultType.NumberArray, isExtension: false });
+        variables.set(TileBuff.VnTile,                 { desc: Lang_Constants.TextType.A0752, resultType: ExpressionParsers_Enums.ResultType.Tile,        isExtension: false });
+        variables.set(TileBuff.VnWar,                  { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,         isExtension: false });
 
         return variables;
     }
-    private static generateFunctions(): EpFunctionInfoDict {
-        const functions = extendFunctionInfoDict(War.Functions);
+    private static generateFunctions(): ExpressionParsers_Types.EpFunctionInfoDict {
+        const functions = ExpressionParsers_Utils.extendFunctionInfoDict(ExpressionParsers_Contexts_War.War.Functions);
         return functions;
     }
 
     private readonly _buff  : ProtoTileBuff;
-    private readonly _tile  : ITile;
-    private _contextWar     : War | null = null;
+    private readonly _tile  : Tiles_ITile.ITile;
+    private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(buff: ProtoTileBuff, tile: ITile) {
+    public constructor(buff: ProtoTileBuff, tile: Tiles_ITile.ITile) {
         super(tile.getWar());
 
         this._buff  = buff;
         this._tile  = tile;
     }
 
-    public getContextType(): ContextType {
-        return ContextType.TileBuff;
+    public getContextType(): ExpressionParsers_Enums.ContextType {
+        return ExpressionParsers_Enums.ContextType.TileBuff;
     }
 
-    public override resolveVariable(identifierName: string): ResultsBase {
+    public override resolveVariable(identifierName: string): ExpressionParsers_Results_Base.Base {
         const war   = this.getWar();
         const buff  = this._buff;
         if (identifierName == TileBuff.VnType) {
-            return new Num(war, buff.getBuffTypeId());
+            return new ExpressionParsers_Results_Num.Num(war, buff.getBuffTypeId());
         } else if (identifierName == TileBuff.VnExpiringPlayerIndex) {
-            return new Num(war, buff.getExpiringPlayerIndex() ?? -1);
+            return new ExpressionParsers_Results_Num.Num(war, buff.getExpiringPlayerIndex() ?? -1);
         } else if (identifierName == TileBuff.VnExpiringTurnIndex) {
-            return new Num(war, buff.getExpiringTurnIndex() ?? -1);
+            return new ExpressionParsers_Results_Num.Num(war, buff.getExpiringTurnIndex() ?? -1);
         } else if (identifierName == TileBuff.VnExtraParams) {
-            return new NumArray(war, buff.getExtraParamArray());
+            return new ExpressionParsers_Results_NumArray.NumArray(war, buff.getExtraParamArray());
         } else if (identifierName == TileBuff.VnTile) {
-            return new Tile(this._tile);
+            return new ExpressionParsers_Results_Tile.Tile(this._tile);
         } else if (identifierName == TileBuff.VnWar) {
-            return new ResultsWar(war);
+            return new ExpressionParsers_Results_War.War(war);
         }
 
-        return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
+        return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(war)).resolveVariable(identifierName);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
-        return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+    public override callFunction(identifierName: string, argumentArray: ExpressionParsers_Results_Base.Base[], rootCtx: ExpressionParsers_Contexts_Base.Base, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
+        return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
     }
 }

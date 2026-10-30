@@ -1,5 +1,7 @@
+import {
+    WarTypes_Constants,
+} from "../../internal.ts";
 import type { MpwWarSettings } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettings): number | null {
     const settings = warSettings.getSettingsForAtw()
@@ -10,26 +12,26 @@ export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettings): nu
     return settings ? settings.getNormalMapId() : null;
 }
 
-export function getWarTypeByMpwWarSettings(warInfo: MpwWarSettings): WarTypeId {
+export function getWarTypeByMpwWarSettings(warInfo: MpwWarSettings): WarTypes_Constants.WarTypeId {
     const instanceWarRule   = warInfo.getSettingsForCommon()?.getInstanceWarRule();
     const hasFog            = instanceWarRule?.getWarRuleCommonData()?.getHasFogByDefault();
     if (hasFog == null) {
-        return WarTypeId.Undefined;
+        return WarTypes_Constants.WarTypeId.Undefined;
     }
 
     if (warInfo.getSettingsForMcw()) {
-        return hasFog ? WarTypeId.McwFog : WarTypeId.McwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.McwFog : WarTypes_Constants.WarTypeId.McwStd;
     } else if (warInfo.getSettingsForMfw()) {
-        return hasFog ? WarTypeId.MfwFog : WarTypeId.MfwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.MfwFog : WarTypes_Constants.WarTypeId.MfwStd;
     } else if (warInfo.getSettingsForMrw()) {
-        return hasFog ? WarTypeId.MrwFog : WarTypeId.MrwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.MrwFog : WarTypes_Constants.WarTypeId.MrwStd;
     } else if (warInfo.getSettingsForMmw()) {
-        return hasFog ? WarTypeId.MmwFog : WarTypeId.MmwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.MmwFog : WarTypes_Constants.WarTypeId.MmwStd;
     } else if (warInfo.getSettingsForAtw()) {
-        return hasFog ? WarTypeId.AtwFog : WarTypeId.AtwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.AtwFog : WarTypes_Constants.WarTypeId.AtwStd;
     } else if (warInfo.getSettingsForCcw()) {
-        return hasFog ? WarTypeId.CcwFog : WarTypeId.CcwStd;
+        return hasFog ? WarTypes_Constants.WarTypeId.CcwFog : WarTypes_Constants.WarTypeId.CcwStd;
     } else {
-        return WarTypeId.Undefined;
+        return WarTypes_Constants.WarTypeId.Undefined;
     }
 }

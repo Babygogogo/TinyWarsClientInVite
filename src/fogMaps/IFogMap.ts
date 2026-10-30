@@ -1,24 +1,26 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { ForcedFogCode } from "./Constants.ts";
+import {
+    Visibilities_Constants,
+    type FogMaps_Constants,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_UnitVisionInfo,
+} from "../internal.ts";
 import type { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
-import type { IUnit } from "../units/IUnit.ts";
-import { VisibilityTypeId } from "../visibilities/Constants.ts";
 
 export interface IFogMap {
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
 
     init({ data, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialFogMap>;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialFogMap>;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
     fastInit({ data, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialFogMap>;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialFogMap>;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
 
@@ -26,50 +28,50 @@ export interface IFogMap {
     serializeForCreateSfw(): SerialFogMap;
     serializeForCreateMfr(): SerialFogMap;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getMapSize(): MapSize;
+    getMapSize(): AuxiliaryTypes_MapSize.MapSize;
 
-    setForceFogCode(code: ForcedFogCode): void;
-    getForceFogCode(): ForcedFogCode;
+    setForceFogCode(code: FogMaps_Constants.ForcedFogCode): void;
+    getForceFogCode(): FogMaps_Constants.ForcedFogCode;
 
     checkHasFogByDefault(): boolean;
     checkHasFogCurrently(): boolean;
 
-    setForceExpireTurnIndex(index: Undefinable<number>): void;
-    getForceExpireTurnIndex(): Undefinable<number>;
+    setForceExpireTurnIndex(index: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
+    getForceExpireTurnIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
-    setForceExpirePlayerIndex(index: Undefinable<number>): void;
-    getForceExpirePlayerIndex(): Undefinable<number>;
+    setForceExpirePlayerIndex(index: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
+    getForceExpirePlayerIndex(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     updateOnPlayerTurnSwitched(): void;
 
     resetAllMapsForPlayer(playerIndex: number): void;
 
-    resetMapFromPathsForPlayer(playerIndex: number, visibilityList: VisibilityTypeId[] | null): void;
+    resetMapFromPathsForPlayer(playerIndex: number, visibilityList: Visibilities_Constants.VisibilityTypeId[] | null): void;
     resetMapFromPathsForPlayerWithEncodedData(playerIndex: number, encodedData?: string): void;
     updateMapFromPathsByUnitAndPath({ unit, unitVisionInfo, path }: {
-        unit            : IUnit;
-        unitVisionInfo  : UnitVisionInfo;
-        path            : GridIndex[];
+        unit            : Units_IUnit.IUnit;
+        unitVisionInfo  : AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo;
+        path            : AuxiliaryTypes_GridIndex.GridIndex[];
     }): void;
-    updateMapFromPathsByVisibilityArray(playerIndex: number, visibilityArray: Undefinable<number[]>): void;
+    updateMapFromPathsByVisibilityArray(playerIndex: number, visibilityArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>): void;
     updateMapFromPathsByUnitMovePathVisibilityArrayForWarEvent(array: number[]): void;
-    updateMapFromPathsByFlare(playerIndex: number, flareGridIndex: GridIndex, flareRadius: number): void;
+    updateMapFromPathsByFlare(playerIndex: number, flareGridIndex: AuxiliaryTypes_GridIndex.GridIndex, flareRadius: number): void;
 
-    getVisibilityFromPathsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
-    getVisibilityMapFromPathsForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
-    getRawVisibilityFromPathsForAllPlayers(gridIndex: GridIndex): VisibilityTypeId[];
-    updateRawVisibilityFromPathsForAllPlayers(gridIndex: GridIndex, visibilityArray: number[]): void;
+    getVisibilityFromPathsForPlayer(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, playerIndex: number): Visibilities_Constants.VisibilityTypeId;
+    getVisibilityMapFromPathsForTeams(teamIndexes: Set<number>): Visibilities_Constants.VisibilityTypeId[][];
+    getRawVisibilityFromPathsForAllPlayers(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Visibilities_Constants.VisibilityTypeId[];
+    updateRawVisibilityFromPathsForAllPlayers(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, visibilityArray: number[]): void;
 
-    getVisibilityFromTilesForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
-    getVisibilityMapFromTilesForTeam(teamIndex: number): VisibilityTypeId[][];
-    getVisibilityMapFromTilesForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
+    getVisibilityFromTilesForPlayer(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, playerIndex: number): Visibilities_Constants.VisibilityTypeId;
+    getVisibilityMapFromTilesForTeam(teamIndex: number): Visibilities_Constants.VisibilityTypeId[][];
+    getVisibilityMapFromTilesForTeams(teamIndexes: Set<number>): Visibilities_Constants.VisibilityTypeId[][];
 
-    getVisibilityFromUnitsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
-    getVisibilityMapFromUnitsForTeam(teamIndex: number): VisibilityTypeId[][];
-    getVisibilityMapFromUnitsForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
+    getVisibilityFromUnitsForPlayer(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, playerIndex: number): Visibilities_Constants.VisibilityTypeId;
+    getVisibilityMapFromUnitsForTeam(teamIndex: number): Visibilities_Constants.VisibilityTypeId[][];
+    getVisibilityMapFromUnitsForTeams(teamIndexes: Set<number>): Visibilities_Constants.VisibilityTypeId[][];
 }

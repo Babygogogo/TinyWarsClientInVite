@@ -1,52 +1,43 @@
-import { getDict } from "../../gamePanels/Dict.ts";
 import {
-    closePanel,
-    openPanel,
-} from "../../gamePanels/Manager.ts";
-import {
-    getUserAvatar,
-    getMedal,
-} from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { UndefinedError } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import {
-    getSelfUserId,
-    getSelfNickname,
-    getSelfAvatarId,
-    getSelfShowMedalIdArray,
-} from "../../users/Model.ts";
+    GamePanels_Manager,
+    Tween_Executor,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Helpers_ImageSource,
+    Users_Model,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Lang_Constants,
+    Timer_TimerModel,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!            : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupUserInfo!    : IUiContainer;
-    private readonly _imgAvatar!        : IUiImage;
-    private readonly _labelUserId!      : IUiLabel;
+    private readonly _groupUserInfo!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgAvatar!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelUserId!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutNickname!   : IUiLayout;
-    private readonly _imgMedal!         : IUiImage;
-    private readonly _labelNickname!    : IUiLabel;
+    private readonly _layoutNickname!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgMedal!         : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelNickname!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserLogin,                callback: this._onMsgUserLogin },
-            { type: TypeId.MsgUserLoginAsGuest,         callback: this._onMsgUserLoginAsGuest },
-            { type: TypeId.MsgUserLogout,               callback: this._onMsgUserLogout },
-            { type: TypeId.MsgUserSetNickname,          callback: this._onMsgUserSetNickname },
-            { type: TypeId.MsgUserSetAvatarId,          callback: this._onNotifyMsgUserSetAvatarId },
-            { type: TypeId.MsgUserSetShowMedalIdArray,  callback: this._onNotifyMsgUserSetShowMEdalIdArray },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserLogin,                callback: this._onMsgUserLogin },
+            { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest,         callback: this._onMsgUserLoginAsGuest },
+            { type: Notifications_TypeId.TypeId.MsgUserLogout,               callback: this._onMsgUserLogout },
+            { type: Notifications_TypeId.TypeId.MsgUserSetNickname,          callback: this._onMsgUserSetNickname },
+            { type: Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback: this._onNotifyMsgUserSetAvatarId },
+            { type: Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,  callback: this._onNotifyMsgUserSetShowMEdalIdArray },
         ]);
         this._setUiListenerArray([
             { ui: this._groupUserInfo,  callback: this._onTouchedGroupUserInfo },
@@ -84,57 +75,57 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedGroupUserInfo(): void {
-        closePanel(getDict().UserOnlineUsersPanel);
-        closePanel(getDict().ChatPanel);
-        openPanel(getDict().UserPanel, {
-            userId: getExisted(getSelfUserId()),
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().UserOnlineUsersPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().ChatPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
+            userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 0, customY: -40 },
             endProps    : { customAlpha: 1, customY: 0 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: -40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 
     private _updateView(): void {
         this._updateLabelNickname();
         this._updateImgAvatar();
         this._updateImgMedal();
-        this._labelUserId.setText(`ID: ${getSelfUserId()}`);
+        this._labelUserId.setText(`ID: ${Users_Model.getSelfUserId()}`);
     }
 
     private _updateLabelNickname(): void {
-        this._labelNickname.setText(getSelfNickname() ?? UndefinedError);
+        this._labelNickname.setText(Users_Model.getSelfNickname() ?? Lang_Constants.UndefinedError);
         this._layoutNickname.arrangeItems();
     }
 
     private _updateImgAvatar(): void {
-        this._imgAvatar.loadSource(getUserAvatar(getSelfAvatarId() ?? 1));
+        this._imgAvatar.loadSource(Helpers_ImageSource.getUserAvatar(Users_Model.getSelfAvatarId() ?? 1));
     }
 
     private async _updateImgMedal(): Promise<void> {
-        const medalId   = getSelfShowMedalIdArray()[0];
+        const medalId   = Users_Model.getSelfShowMedalIdArray()[0];
         const img       = this._imgMedal;
         if (medalId == null) {
             img.setIsVisible(false);
         } else {
             img.setIsVisible(true);
-            await img.loadSource(getMedal(medalId));
+            await img.loadSource(Helpers_ImageSource.getMedal(medalId));
         }
         this._layoutNickname.arrangeItems();
     }

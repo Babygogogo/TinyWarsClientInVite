@@ -1,10 +1,12 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export function checkIsCharInRange(char: string, minChar: string, maxChar: string): boolean {
     return (char >= minChar) && (char <= maxChar);
 }
 
-export function format(...args: (Undefinable<number | string>)[]): string {
+export function format(...args: (AuxiliaryTypes_AuxiliaryTypes.Undefinable<number | string>)[]): string {
     let i = 0, a: any, f = args[i++] as string, m: any[] | null, p, c, x;
     const o = [], s = '';
 
@@ -83,7 +85,7 @@ export function getSignedNumText(num: number): string {
     return num >= 0 ? `+${num}` : `${num}`;
 }
 
-export function getSuffixForRankIndex(rank: Undefinable<number>): string | null {
+export function getSuffixForRankIndex(rank: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): string | null {
     if (rank == null) {
         return null;
     } else {

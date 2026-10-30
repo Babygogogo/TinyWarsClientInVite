@@ -1,55 +1,54 @@
-import { getDict } from "../../gamePanels/Dict.ts";
 import {
-    openPanel,
-    closePanel,
-} from "../../gamePanels/Manager.ts";
-import { Tween } from "../../graphics/Constants.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getSecondaryLanguageType } from "../../lang/Utils.ts";
-import { checkIsRedForMultiPlayer } from "../../lobby/model/LobbyModel.ts";
-import { checkIsRedForMyMrwWars } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed } from "../../multiRankRoom/model/MrrModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+    MultiRankRoom_Model_MrrModel,
+    Lobby_Model_LobbyModel,
+    MultiPlayerWar_Model_MpwModel,
+    GamePanels_Manager,
+    Tween_Executor,
+    GamePanels_Dict,
+    Lang_Utils,
+    Lang_Constants,
+    Graphics_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupLeft!                : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupLeft!                : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupCampaign!            : IUiContainer;
-    private readonly _btnCampaign!              : IUiButton;
-    private readonly _layoutCampaign!           : IUiLayout;
-    private readonly _labelCampaign1!           : IUiLabel;
-    private readonly _labelCampaign2!           : IUiLabel;
+    private readonly _groupCampaign!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCampaign!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutCampaign!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCampaign1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCampaign2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupCreateWarRoom!       : IUiContainer;
-    private readonly _btnCreateWarRoom!         : IUiButton;
-    private readonly _layoutCreateWarRoom!      : IUiLayout;
-    private readonly _labelCreateWarRoom1!      : IUiLabel;
-    private readonly _labelCreateWarRoom2!      : IUiLabel;
+    private readonly _groupCreateWarRoom!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCreateWarRoom!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutCreateWarRoom!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCreateWarRoom1!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCreateWarRoom2!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupCreateCustomWar!     : IUiContainer;
-    private readonly _btnCreateCustomWar!       : IUiButton;
-    private readonly _layoutCreateCustomWar!    : IUiLayout;
-    private readonly _labelCreateCustomWar1!    : IUiLabel;
-    private readonly _labelCreateCustomWar2!    : IUiLabel;
+    private readonly _groupCreateCustomWar!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCreateCustomWar!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutCreateCustomWar!    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelCreateCustomWar1!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCreateCustomWar2!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupContinueWar!         : IUiContainer;
-    private readonly _btnContinueWar!           : IUiButton;
-    private readonly _layoutContinueWar!        : IUiLayout;
-    private readonly _labelContinueWar1!        : IUiLabel;
-    private readonly _labelContinueWar2!        : IUiLabel;
+    private readonly _groupContinueWar!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnContinueWar!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _layoutContinueWar!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelContinueWar1!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelContinueWar2!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _group!                    : IUiContainer;
-    private readonly _btnMultiPlayer!           : IUiButton;
-    private readonly _btnRanking!               : IUiButton;
-    private readonly _btnSinglePlayer!          : IUiButton;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnMultiPlayer!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRanking!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSinglePlayer!          : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -61,14 +60,14 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnContinueWar,     callback: this._onTouchedBtnContinueWar },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserLogout,                       callback: this._onMsgUserLogout },
-            { type: TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type: TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type: TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onMsgMrrGetCreateCustomWarPublicInfoList },
-            { type: TypeId.MsgMpwCommonGetWarProgressInfo,      callback: this._onMsgMpwCommonGetWarProgressInfo },
-            { type: TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onMsgMpwWatchGetRequestedWarIdArray },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserLogout,                       callback: this._onMsgUserLogout },
+            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type: Notifications_TypeId.TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onMsgMrrGetCreateCustomWarPublicInfoList },
+            { type: Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback: this._onMsgMpwCommonGetWarProgressInfo },
+            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onMsgMpwWatchGetRequestedWarIdArray },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -88,23 +87,23 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnMultiPlayer(): void {
         this.closePanel();
-        openPanel(getDict().McrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrMainMenuPanel, void 0);
     }
     private _onTouchedBtnRanking(): void {
         this.closePanel();
-        openPanel(getDict().MrrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrMainMenuPanel, void 0);
     }
     private _onTouchedBtnCampaign(): void {
         this.closePanel();
-        closePanel(getDict().LobbyTopPanel);
-        closePanel(getDict().LobbyBottomPanel);
-        openPanel(getDict().CampaignCreateCampaignsPanel, void 0);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyTopPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyBottomPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateCampaignsPanel, void 0);
     }
     private _onTouchedBtnCreateWarRoom(): void {
         this.closePanel();
-        closePanel(getDict().LobbyTopPanel);
-        closePanel(getDict().LobbyBottomPanel);
-        openPanel(getDict().SrrCreateMapListPanel, {
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyTopPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyBottomPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -113,9 +112,9 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnCreateCustomWar(): void {
         this.closePanel();
-        closePanel(getDict().LobbyTopPanel);
-        closePanel(getDict().LobbyBottomPanel);
-        openPanel(getDict().ScrCreateMapListPanel, {
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyTopPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyBottomPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ScrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -124,9 +123,9 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnContinueWar(): void {
         this.closePanel();
-        closePanel(getDict().LobbyTopPanel);
-        closePanel(getDict().LobbyBottomPanel);
-        openPanel(getDict().SpmWarListPanel, void 0);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyTopPanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyBottomPanel);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmWarListPanel, void 0);
     }
 
     private _onNotifyMsgMcrGetRoomPlayerInfo(): void {
@@ -159,15 +158,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        const languageType2 = getSecondaryLanguageType();
-        this._labelCampaign1.setLangText(TextType.B1135);
-        this._labelCampaign2.setLangText(TextType.B1135, languageType2);
-        this._labelCreateWarRoom1.setLangText(TextType.B0614);
-        this._labelCreateWarRoom2.setLangText(TextType.B0614, languageType2);
-        this._labelCreateCustomWar1.setLangText(TextType.B0603);
-        this._labelCreateCustomWar2.setLangText(TextType.B0603, languageType2);
-        this._labelContinueWar1.setLangText(TextType.B0024);
-        this._labelContinueWar2.setLangText(TextType.B0024, languageType2);
+        const languageType2 = Lang_Utils.getSecondaryLanguageType();
+        this._labelCampaign1.setLangText(Lang_Constants.TextType.B1135);
+        this._labelCampaign2.setLangText(Lang_Constants.TextType.B1135, languageType2);
+        this._labelCreateWarRoom1.setLangText(Lang_Constants.TextType.B0614);
+        this._labelCreateWarRoom2.setLangText(Lang_Constants.TextType.B0614, languageType2);
+        this._labelCreateCustomWar1.setLangText(Lang_Constants.TextType.B0603);
+        this._labelCreateCustomWar2.setLangText(Lang_Constants.TextType.B0603, languageType2);
+        this._labelContinueWar1.setLangText(Lang_Constants.TextType.B0024);
+        this._labelContinueWar2.setLangText(Lang_Constants.TextType.B0024, languageType2);
 
         this._layoutCampaign.arrangeItems();
         this._layoutCreateWarRoom.arrangeItems();
@@ -176,99 +175,99 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _updateBtnMultiPlayer(): Promise<void> {
-        this._btnMultiPlayer.setRedVisible(await checkIsRedForMultiPlayer());
+        this._btnMultiPlayer.setRedVisible(await Lobby_Model_LobbyModel.checkIsRedForMultiPlayer());
     }
 
     private async _updateBtnRanking(): Promise<void> {
         this._btnRanking.setRedVisible(
-            (await checkIsRedForMyMrwWars())   ||
-            (await checkIsRed())
+            (await MultiPlayerWar_Model_MpwModel.checkIsRedForMyMrwWars())   ||
+            (await MultiRankRoom_Model_MrrModel.checkIsRed())
         );
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnMultiPlayer,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnRanking,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 100,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSinglePlayer,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 200,
         });
 
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCampaign,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCreateWarRoom,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 66,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCreateCustomWar,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 133,
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupContinueWar,
             beginProps  : { customAlpha: 0, customX: -40 },
             endProps    : { customAlpha: 1, customX: 0 },
             waitTime    : 200,
         });
 
-        await wait(200 + Tween.DefaultDuration);
+        await Timer_TimerModel.wait(200 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnMultiPlayer,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnRanking,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSinglePlayer,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
 
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCampaign,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCreateWarRoom,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupCreateCustomWar,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupContinueWar,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: -40 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }

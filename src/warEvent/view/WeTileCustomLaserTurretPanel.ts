@@ -1,45 +1,47 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { TileCustomLaserTurretData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export interface OpenData {
-    currentData             : Undefinable<TileCustomLaserTurretData>;
+    currentData             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileCustomLaserTurretData>;
     callback                : ((customData: TileCustomLaserTurretData | null) => void) | null;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnClear!                                 : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
-    private readonly _labelError!                               : IUiLabel;
-    private readonly _imgInnerTouchMask!                        : IUiImage;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClear!                                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgInnerTouchMask!                        : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _btnCanAffectSelf!                         : IUiButton;
-    private readonly _labelCanAffectSelf!                       : IUiLabel;
-    private readonly _btnCanAffectAlly!                         : IUiButton;
-    private readonly _labelCanAffectAlly!                       : IUiLabel;
-    private readonly _btnCanAffectEnemy!                        : IUiButton;
-    private readonly _labelCanAffectEnemy!                      : IUiLabel;
+    private readonly _btnCanAffectSelf!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCanAffectSelf!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCanAffectAlly!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCanAffectAlly!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCanAffectEnemy!                        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCanAffectEnemy!                      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelPriority!                            : IUiLabel;
-    private readonly _inputPriority!                            : IUiPromptedInput;
-    private readonly _labelDeltaHp!                             : IUiLabel;
-    private readonly _inputDeltaHp!                             : IUiPromptedInput;
-    private readonly _labelDeltaFuelPercentage!                 : IUiLabel;
-    private readonly _inputDeltaFuelPercentage!                 : IUiPromptedInput;
-    private readonly _labelDeltaPrimaryAmmoPercentage!          : IUiLabel;
-    private readonly _inputDeltaPrimaryAmmoPercentage!          : IUiPromptedInput;
-    private readonly _labelRangeForUp!                          : IUiLabel;
-    private readonly _inputRangeForUp!                          : IUiPromptedInput;
-    private readonly _labelRangeForDown!                        : IUiLabel;
-    private readonly _inputRangeForDown!                        : IUiPromptedInput;
-    private readonly _labelRangeForLeft!                        : IUiLabel;
-    private readonly _inputRangeForLeft!                        : IUiPromptedInput;
-    private readonly _labelRangeForRight!                       : IUiLabel;
-    private readonly _inputRangeForRight!                       : IUiPromptedInput;
+    private readonly _labelPriority!                            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputPriority!                            : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelDeltaHp!                             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputDeltaHp!                             : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelDeltaFuelPercentage!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputDeltaFuelPercentage!                 : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelDeltaPrimaryAmmoPercentage!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputDeltaPrimaryAmmoPercentage!          : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelRangeForUp!                          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputRangeForUp!                          : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelRangeForDown!                        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputRangeForDown!                        : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelRangeForLeft!                        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputRangeForLeft!                        : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelRangeForRight!                       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputRangeForRight!                       : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
     private _customData = new TileCustomLaserTurretData();
 

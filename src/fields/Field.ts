@@ -1,49 +1,50 @@
-import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwCursor } from "../baseWar/interface/IBwCursor.ts";
-import type { IBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { IField } from "./IField.ts";
-import type { IFieldView } from "./IFieldView.ts";
-import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import {
-    getBwCursorClass,
-    getBwGridVisualEffectClass,
-    getFieldViewClass,
-    getActionPlannerClass,
-    getFogMapClass,
-    getTileMapClass,
-    getUnitMapClass,
-} from "../gameHelpers/GhFactory.ts";
-import { newError } from "../helpers/Misc.ts";
-import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type { ITileMap } from "../tiles/ITileMap.ts";
-import type { IUnitMap } from "../units/IUnitMap.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+    ActionPlanners_ActionPlanner,
+    BaseWar_Model_BwCursor,
+    BaseWar_Model_BwGridVisualEffect,
+    Fields_FieldView,
+    FogMaps_FogMap,
+    AuxiliaryTypes_MapSize,
+    Tiles_TileMap,
+    Units_UnitMap,
+    type GameConfigs_GameConfig,
+    type ActionPlanners_IActionPlanner,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Interface_IBwWar,
+    type Fields_IField,
+    type Fields_IFieldView,
+    type FogMaps_IFogMap,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type Tiles_ITileMap,
+    type Units_IUnitMap,
+} from "../internal.ts";
 
-export class Field implements IField {
-    private readonly _cursor            = new (getBwCursorClass())();
-    private readonly _gridVisualEffect  = new (getBwGridVisualEffectClass())();
-    private readonly _view              = new (getFieldViewClass())();
-    private readonly _actionPlanner     = new (getActionPlannerClass())();
-    private readonly _fogMap            = new (getFogMapClass())();
-    private readonly _tileMap           = new (getTileMapClass())();
-    private readonly _unitMap           = new (getUnitMapClass())();
+import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
+
+export class Field implements Fields_IField.IField {
+    private readonly _cursor            = new BaseWar_Model_BwCursor.BwCursor();
+    private readonly _gridVisualEffect  = new BaseWar_Model_BwGridVisualEffect.BwGridVisualEffect();
+    private readonly _view              = new Fields_FieldView.FieldView();
+    private readonly _actionPlanner     = new ActionPlanners_ActionPlanner.ActionPlanner();
+    private readonly _fogMap            = new FogMaps_FogMap.FogMap();
+    private readonly _tileMap           = new Tiles_TileMap.TileMap();
+    private readonly _unitMap           = new Units_UnitMap.UnitMap();
 
     public init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : Undefinable<SerialField>;
-        gameConfig              : GameConfig;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialField>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void {
         if (data == null) {
-            throw newError(`Empty data.`, ClientErrorCode.BwField_Init_00);
+            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwField_Init_00);
         }
 
-        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         if (!mapSize.checkIsValid()) {
-            throw newError(`Invalid mapSize.`, ClientErrorCode.BwField_Init_01);
+            throw Helpers_Misc.newError(`Invalid mapSize.`, Utils_ClientErrorCode.ClientErrorCode.BwField_Init_01);
         }
 
         this.getFogMap().init({
@@ -86,10 +87,10 @@ export class Field implements IField {
     }
     public fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
-        gameConfig              : GameConfig;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void {
-        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         this.getFogMap().fastInit({
             data                    : data.getFogMap(),
             mapSize                 : mapSize,
@@ -114,7 +115,7 @@ export class Field implements IField {
         this.getView().fastInit(this);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this.getTileMap().startRunning(war);
         this.getUnitMap().startRunning(war);
         this.getFogMap().startRunning(war);
@@ -164,31 +165,31 @@ export class Field implements IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): IFieldView {
+    public getView(): Fields_IFieldView.IFieldView {
         return this._view;
     }
 
-    public getCursor(): IBwCursor {
+    public getCursor(): BaseWar_Interface_IBwCursor.IBwCursor {
         return this._cursor;
     }
 
-    public getGridVisualEffect(): IBwGridVisualEffect {
+    public getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
         return this._gridVisualEffect;
     }
 
-    public getActionPlanner(): IActionPlanner {
+    public getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner {
         return this._actionPlanner;
     }
 
-    public getFogMap(): IFogMap {
+    public getFogMap(): FogMaps_IFogMap.IFogMap {
         return this._fogMap;
     }
 
-    public getTileMap(): ITileMap {
+    public getTileMap(): Tiles_ITileMap.ITileMap {
         return this._tileMap;
     }
 
-    public getUnitMap(): IUnitMap {
+    public getUnitMap(): Units_IUnitMap.IUnitMap {
         return this._unitMap;
     }
 

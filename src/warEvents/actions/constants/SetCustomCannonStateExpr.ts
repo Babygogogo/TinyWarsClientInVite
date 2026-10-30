@@ -1,123 +1,122 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter                   : EpExpressionInfo;
-    ActRangeForUp                   : EpExpressionInfo;
-    ActRangeForDown                 : EpExpressionInfo;
-    ActRangeForLeft                 : EpExpressionInfo;
-    ActRangeForRight                : EpExpressionInfo;
-    ActPriority                     : EpExpressionInfo;
-    ActCanAffectSelf                : EpExpressionInfo;
-    ActCanAffectAlly                : EpExpressionInfo;
-    ActCanAffectEnemy               : EpExpressionInfo;
-    ActMaxTargetCount               : EpExpressionInfo;
-    ActOffsetHp                     : EpExpressionInfo;
-    ActCanBeFatal                   : EpExpressionInfo;
-    ActOffsetFuelPercentage         : EpExpressionInfo;
-    ActOffsetPrimaryAmmoPercentage  : EpExpressionInfo;
+    ConTileFilter                   : ExpressionParsers_Types.EpExpressionInfo;
+    ActRangeForUp                   : ExpressionParsers_Types.EpExpressionInfo;
+    ActRangeForDown                 : ExpressionParsers_Types.EpExpressionInfo;
+    ActRangeForLeft                 : ExpressionParsers_Types.EpExpressionInfo;
+    ActRangeForRight                : ExpressionParsers_Types.EpExpressionInfo;
+    ActPriority                     : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanAffectSelf                : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanAffectAlly                : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanAffectEnemy               : ExpressionParsers_Types.EpExpressionInfo;
+    ActMaxTargetCount               : ExpressionParsers_Types.EpExpressionInfo;
+    ActOffsetHp                     : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanBeFatal                   : ExpressionParsers_Types.EpExpressionInfo;
+    ActOffsetFuelPercentage         : ExpressionParsers_Types.EpExpressionInfo;
+    ActOffsetPrimaryAmmoPercentage  : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConTileFilter: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.TileFilter),
-        getHelpText     : () => getText(TextType.A0662),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.TileFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0662),
     },
     ActRangeForUp: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RangeUp),
-        getHelpText     : () => getText(TextType.A0680),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RangeUp),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0680),
     },
     ActRangeForDown: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RangeDown),
-        getHelpText     : () => getText(TextType.A0681),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RangeDown),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0681),
     },
     ActRangeForLeft: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RangeLeft),
-        getHelpText     : () => getText(TextType.A0682),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RangeLeft),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0682),
     },
     ActRangeForRight: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.RangeRight),
-        getHelpText     : () => getText(TextType.A0683),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.RangeRight),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0683),
     },
     ActPriority: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.Priority),
-        getHelpText     : () => getText(TextType.A0671),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.Priority),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0671),
     },
     ActCanAffectSelf: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.AffectOwner),
-        getHelpText     : () => getText(TextType.A0672),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.AffectOwner),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0672),
     },
     ActCanAffectAlly: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.AffectAlly),
-        getHelpText     : () => getText(TextType.A0673),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.AffectAlly),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0673),
     },
     ActCanAffectEnemy: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.AffectEnemy),
-        getHelpText     : () => getText(TextType.A0674),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.AffectEnemy),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0674),
     },
     ActMaxTargetCount: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.MaxTargets),
-        getHelpText     : () => getText(TextType.A0684),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.MaxTargets),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0684),
     },
     ActOffsetHp: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.UnitsHpOffset),
-        getHelpText     : () => getText(TextType.A0677),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsHpOffset),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0677),
     },
     ActCanBeFatal: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.CanBeFatal),
-        getHelpText     : () => getText(TextType.A0967),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.CanBeFatal),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0967),
     },
     ActOffsetFuelPercentage: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.UnitsFuelOffset$),
-        getHelpText     : () => getText(TextType.A0678),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsFuelOffset$),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0678),
     },
     ActOffsetPrimaryAmmoPercentage: {
-        contextType     : ContextType.Tile,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Tile,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.UnitsPriAmmoOffset$),
-        getHelpText     : () => getText(TextType.A0679),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.UnitsPriAmmoOffset$),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0679),
     },
 };

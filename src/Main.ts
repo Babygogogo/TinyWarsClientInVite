@@ -1,17 +1,14 @@
-
 import loadingIcon from './assets/resource/assets/texture/index/loadingIcon.png';
 import {
-    DisplayObjectContainer,
-    Event,
-    runEgret,
-} from './egret/Egret.ts';
-import { startGame } from './helpers/GameFlow.ts';
+    Egret_Egret,
+    Helpers_GameFlow,
+} from "./internal.ts";
 
-class Main extends DisplayObjectContainer {
+class Main extends Egret_Egret.DisplayObjectContainer {
     public constructor() {
         super();
 
-        this.once(Event.ADDED_TO_STAGE, this._onAddedToStage, this);
+        this.once(Egret_Egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
     }
 
     private _onAddedToStage(): void {
@@ -28,13 +25,13 @@ class Main extends DisplayObjectContainer {
         //     // egret.ticker.resume();
         // };
 
-        startGame(this.stage!);
+        Helpers_GameFlow.startGame(this.stage!);
     }
 }
 
 document.getElementById("logoCon")!.style.backgroundImage = "url(" + loadingIcon + ")";
 
-runEgret({
+Egret_Egret.runEgret({
     renderMode                 : "webgl",
     audioType                  : 0,
     entryClass                 : Main,

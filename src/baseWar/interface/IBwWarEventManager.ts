@@ -1,23 +1,25 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "./IBwWar.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type WarEvents_Types,
+} from "../../internal.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 import type { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import type { WarEventIdAndDataIndex } from "../../warEvents/Types.ts";
 
 export interface IBwWarEventManager {
-    init(data: Undefinable<SerialWarEventManager>, warEventFullData: Undefinable<WarEventFullData>): void;
+    init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWarEventManager>, warEventFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>): void;
     fastInit(data: SerialWarEventManager): void;
 
     serialize(): SerialWarEventManager;
     serializeForCreateSfw(): SerialWarEventManager;
     serializeForCreateMfr(): SerialWarEventManager;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
 
     getWarEventFullData(): WarEventFullData | null;
     setWarEventFullData(data: WarEventFullData | null): void;
@@ -53,19 +55,19 @@ export interface IBwWarEventManager {
     checkOpaCanProduceUnit(playerIndex: number, unitType: number): boolean | null;
 
     getOpaEnergyGrowthMultiplierModifier(playerIndex: number): number;
-    getOpaAiUnitProductionBonusScore(playerIndex: number, unitTypeId: number, gridIndex: GridIndex): number;
+    getOpaAiUnitProductionBonusScore(playerIndex: number, unitTypeId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
     getOpaCoZoneRadiusModifier(playerIndex: number): number;
-    getOpaAttackPowerModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaDefenseModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaMoveRangeModifier(unit: IUnit): number;
-    getOpaMaxAttackRangeModifier(unit: IUnit): number;
-    getOpaCanAttackAfterMoving(unit: IUnit): boolean | null;
-    getOpaUnitVisionRangeModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaIsPenetratingVision(unit: IUnit): boolean | null;
-    getOpaLuckLowerLimitModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaLuckUpperLimitModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaFlareRadiusModifier(unit: IUnit, gridIndex: GridIndex): number;
-    getOpaFlareRangeModifier(unit: IUnit, gridIndex: GridIndex): number;
+    getOpaAttackPowerModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaDefenseModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaMoveRangeModifier(unit: Units_IUnit.IUnit): number;
+    getOpaMaxAttackRangeModifier(unit: Units_IUnit.IUnit): number;
+    getOpaCanAttackAfterMoving(unit: Units_IUnit.IUnit): boolean | null;
+    getOpaUnitVisionRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaIsPenetratingVision(unit: Units_IUnit.IUnit): boolean | null;
+    getOpaLuckLowerLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaLuckUpperLimitModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaFlareRadiusModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getOpaFlareRangeModifier(unit: Units_IUnit.IUnit, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
 
     getOpaBgmCode(): number | null;
 
@@ -74,7 +76,7 @@ export interface IBwWarEventManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     callWarEvent(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void>;
 
-    getCallableWarEventIdAndDataIndex(): WarEventIdAndDataIndex | null;
+    getCallableWarEventIdAndDataIndex(): WarEvents_Types.WarEventIdAndDataIndex | null;
 
     getWarEvent(warEventId: number): WarEvent;
     getWarEventAction(actionId: number): WarEventAction;

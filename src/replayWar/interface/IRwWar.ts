@@ -1,14 +1,16 @@
-import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IRwWarBase } from "./IRwWarBase.ts";
+import {
+    type ReplayWar_Interface_IRwWarBase,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 
-export interface IRwWar extends IRwWarBase {
+export interface IRwWar extends ReplayWar_Interface_IRwWarBase.IRwWarBase {
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
     getIsNeedSeedRandom(): boolean;
     getIsExecuteActionsWithExtraData(): boolean;
 
     updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
-    serializeForCheckpoint(): ReplayCheckpointData;
+    serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.

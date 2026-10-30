@@ -1,12 +1,14 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+import {
+    type GameConfigs_GameConfig,
+    Helpers_Misc,
+} from "../../internal.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-    type SerialTileJson as ProtoSerialTileJson,
+type SerialTileJson as ProtoSerialTileJson,
     SerialTile,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 
-export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GameConfig): void {
+export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GameConfigs_GameConfig.GameConfig): void {
     const cfg = gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileData.getBaseType(), tileData.getObjectType());
     if (!cfg) {
         return;
@@ -23,9 +25,9 @@ export function createDefault({ tileBaseTypeId, tileObjectTypeId, gridIndex, gcD
     tileBaseTypeId      : number;
     tileObjectTypeId    : number;
     gridIndex           : Required<GridIndexJson>;
-    gcData              : GameConfig;
+    gcData              : GameConfigs_GameConfig.GameConfig;
 }): SerialTile {
-    const cfg = getExisted(gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseTypeId, tileObjectTypeId));
+    const cfg = Helpers_Misc.getExisted(gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseTypeId, tileObjectTypeId));
     return create({
         baseType                : tileBaseTypeId,
         objectType              : tileObjectTypeId,

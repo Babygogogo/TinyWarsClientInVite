@@ -1,11 +1,13 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-export async function getScoreAndActionUnitBoardedByCo(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitBoardedByCo(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if (!unit.checkCanCoBoardAfterMovePath(pathNodes.map(v => v.getGridIndex()))) {
         return null;
@@ -24,8 +26,8 @@ export async function getScoreAndActionUnitBoardedByCo(unit: IUnit, pathNodes: M
     };
 }
 
-async function getScoreForActionUnitBoardedByCo(unit: IUnit): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForActionUnitBoardedByCo(unit: Units_IUnit.IUnit): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     let totalScore      = unit.getCurrentHp() * 100;
     const scoreArray    = unit.getGcData().getCoBasicCfg(unit.getPlayer().getCoId())?.getAiBoardUnitTypeAndScore();

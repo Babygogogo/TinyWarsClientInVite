@@ -1,11 +1,13 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TextType } from "../lang/Constants.ts";
-import { getFormattedText } from "../lang/Utils.ts";
+import {
+    Lang_Utils,
+    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { ValueArrayAndPredicate } from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 
-export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => Undefinable<string>): string {
-    return getFormattedText(
-        data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
+export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): string {
+    return Lang_Utils.getFormattedText(
+        data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
         valueName,
         data.getValueArray()?.map(v => getValueText(v)).join(`, `)
     );

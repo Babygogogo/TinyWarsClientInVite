@@ -1,20 +1,22 @@
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { IFogMap } from "../../fogMaps/IFogMap.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type FogMaps_IFogMap,
+} from "../../internal.ts";
 
-export class FogMap extends Base {
-    public readonly fogMap: IFogMap;
+export class FogMap extends ExpressionParsers_Results_Base.Base {
+    public readonly fogMap: FogMaps_IFogMap.IFogMap;
 
-    public constructor(fogMap: IFogMap) {
+    public constructor(fogMap: FogMaps_IFogMap.IFogMap) {
         super(fogMap.getWar());
 
         this.fogMap = fogMap;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.Fog;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.Fog;
     }
-    public checkIsEqual(rhs: Base): boolean {
+    public checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         return (rhs instanceof FogMap)
             && (this.fogMap === rhs.fogMap);
     }

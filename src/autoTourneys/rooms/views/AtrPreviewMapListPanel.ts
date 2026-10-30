@@ -1,95 +1,72 @@
 import {
-    getAtPhaseInfo,
-    getAtFullMapInfo,
-    getAtTourneyInfo,
-} from "../../mains/Provider.ts";
-import { TimerTypeId } from "../../../bootTimers/Constants.ts";
-import {
-    type OpenData as CommonWarAdvancedSettingsPageOpenData,
-    Page as CommonWarAdvancedSettingsPage,
-} from "../../../common/view/CommonWarAdvancedSettingsPage.ts";
-import {
-    type OpenData as CommonWarBasicSettingsPageOpenData,
-    Page as CommonWarBasicSettingsPage,
-} from "../../../common/view/CommonWarBasicSettingsPage.ts";
-import {
-    type OpenData as CommonWarMapInfoPageOpenData,
-    Page as CommonWarMapInfoPage,
-} from "../../../common/view/CommonWarMapInfoPage.ts";
-import { showLang } from "../../../FloatText.ts";
-import { getLatestGameConfig } from "../../../gameConfigs/Provider.ts";
-import { ModeId } from "../../../gameModes/Constants.ts";
-import { getDict } from "../../../gamePanels/Dict.ts";
-import { openPanel } from "../../../gamePanels/Manager.ts";
-import {
-    getExisted,
-    newError,
-} from "../../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    getText,
-    getLanguageText,
-} from "../../../lang/Utils.ts";
-import {
-    getRawData,
-    getBriefData,
-} from "../../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../../sounds/Constants.ts";
-import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
-import { wait } from "../../../timer/TimerModel.ts";
-import { TurnIndex } from "../../../turns/Constants.ts";
-import { Executor } from "../../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../../ui/components/UiPanel.ts";
-import { UiTabItemRenderer } from "../../../ui/components/UiTabItemRenderer.ts";
-import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
-import type { IUiListItemRenderer } from "../../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
-import type { IUiTab } from "../../../ui/interfaces/IUiTab.ts";
-import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
-import { Common } from "../../../warOperations/Constants.ts";
-import { BasicSettingsTypeId } from "../../../wars/Constants.ts";
+    Common_View_CommonWarAdvancedSettingsPage,
+    Common_View_CommonWarBasicSettingsPage,
+    Common_View_CommonWarMapInfoPage,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Interfaces_IUiTab,
+    type Ui_Types_UiListItemData,
+    Wars_Constants,
+    WarOperations_Constants,
+    Tween_Executor,
+    AutoTourneys_Mains_Provider,
+    NormalMap_Model_NormalMapModel,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    GameConfigs_Provider,
+    GameModes_Constants,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    BootTimers_Constants,
+    Turns_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    Timer_TimerModel,
+} from "../../../internal.ts";
 
 export interface OpenData {
     tourneyId   : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupTab!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _tabSettings!          : Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, Common_View_CommonWarMapInfoPage.OpenData | Common_View_CommonWarBasicSettingsPage.OpenData | Common_View_CommonWarAdvancedSettingsPage.OpenData>;
 
-    private readonly _groupNavigator!       : IUiLayout;
-    private readonly _layoutNavName!        : IUiLayout;
-    private readonly _labelRankMatch!       : IUiLabel;
-    private readonly _labelPreviewMap!      : IUiLabel;
-    private readonly _labelMapType!         : IUiLabel;
+    private readonly _groupNavigator!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _layoutNavName!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelRankMatch!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPreviewMap!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapType!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnBack!              : IUiButton;
-    private readonly _btnSwitch!            : IUiButton;
+    private readonly _btnBack!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSwitch!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupMapList!         : IUiContainer;
-    private readonly _listMap!              : IUiScrollList<DataForMapNameRenderer>;
-    private readonly _labelNoMap!           : IUiLabel;
-    private readonly _labelLoading!         : IUiLabel;
+    private readonly _groupMapList!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listMap!              : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMapNameRenderer>;
+    private readonly _labelNoMap!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLoading!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _isTabInitialized = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBack,        callback: this._onTouchedBtnBack },
             { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -137,16 +114,16 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        openPanel(getDict().AtrMainMenuPanel, void 0);
-        openPanel(getDict().LobbyTopPanel, void 0);
-        openPanel(getDict().LobbyBottomPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBottomPanel, void 0);
     }
 
     private async _onTouchedBtnSwitch(): Promise<void> {
-        const info          = await getAtPhaseInfo();
+        const info          = await AutoTourneys_Mains_Provider.getAtPhaseInfo();
         const tourneyIdSet  = new Set(info?.infoArray.map(v => v.getTourneyId()));
         if (tourneyIdSet.size <= 1) {
-            showLang(TextType.B0278);
+            FloatText.showLang(Lang_Constants.TextType.B0278);
             return;
         }
 
@@ -157,15 +134,15 @@ export class Panel extends UiPanel<OpenData> {
 
         const minTourneyId  = Math.min(...tourneyIdSet);
         const maxTourneyId  = Math.max(...tourneyIdSet);
-        openPanel(getDict().CommonInputIntegerPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
             minValue        : minTourneyId,
             maxValue        : maxTourneyId,
             currentValue    : currentTourneyId,
-            getTitle           : () => getText(TextType.B1026),
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1026),
             callback        : tourneyId => {
                 if (tourneyId != currentTourneyId) {
                     this.closePanel();
-                    openPanel(getDict().AtrPreviewMapListPanel, {
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrPreviewMapListPanel, {
                         tourneyId   : tourneyId,
                     });
                 }
@@ -180,18 +157,18 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonWarMapInfoPage,
+                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonWarBasicSettingsPage,
+                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : CommonWarAdvancedSettingsPage,
+                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
         ]);
@@ -206,13 +183,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(TextType.A0040);
-        this._labelRankMatch.setLangText(TextType.B1022);
-        this._labelPreviewMap.setLangText(TextType.B0594);
+        this._labelLoading.setLangText(Lang_Constants.TextType.A0040);
+        this._labelRankMatch.setLangText(Lang_Constants.TextType.B1022);
+        this._labelPreviewMap.setLangText(Lang_Constants.TextType.B0594);
         this._labelMapType.setText(`#${this.getOpenData()?.tourneyId}`);
-        this._btnBack.setLangText(TextType.B0146);
-        this._labelNoMap.setLangText(TextType.B0582);
-        this._btnSwitch.setLangText(TextType.B0520);
+        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
+        this._labelNoMap.setLangText(Lang_Constants.TextType.B0582);
+        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();
@@ -267,7 +244,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForMapNameRenderer[] = [];
-        for (const mapInfo of (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
+        for (const mapInfo of (await AutoTourneys_Mains_Provider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
             dataArray.push({
                 normalMapId : mapInfo.getNormalMapId(),
                 hasFog      : !!mapInfo.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
@@ -278,21 +255,21 @@ export class Panel extends UiPanel<OpenData> {
         return dataArray;
     }
 
-    private async _createDataForCommonMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonMapInfoPage(): Promise<Common_View_CommonWarMapInfoPage.OpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         return normalMapId == null
             ? null
             : {
                 mapInfo : {
-                    gameConfig          : await getLatestGameConfig(),
+                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
                     hasFog              : !!this._listMap.getFirstSelectedData()?.hasFog,
-                    mapRawData          : getExisted(await getRawData(normalMapId)),
+                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
                     overridingPlayers   : null,
                 },
             };
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<Common_View_CommonWarBasicSettingsPage.OpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;
@@ -303,25 +280,25 @@ export class Panel extends UiPanel<OpenData> {
             return null;
         }
 
-        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
+        const mapInfo = (await AutoTourneys_Mains_Provider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
         if (mapInfo == null) {
             return null;
         }
 
-        const tourneyInfo = await getAtTourneyInfo(tourneyId);
+        const tourneyInfo = await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId);
         if (tourneyInfo == null) {
             return null;
         }
 
-        const instanceWarRule   = getExisted(mapInfo.getInstanceWarRule());
+        const instanceWarRule   = Helpers_Misc.getExisted(mapInfo.getInstanceWarRule());
         const bootTimerParams   = tourneyInfo.getBootTimerParams();
-        const timerType         = bootTimerParams[0] as TimerTypeId;
-        const gameConfig        = await getLatestGameConfig();
+        const timerType         = bootTimerParams[0] as BootTimers_Constants.TimerTypeId;
+        const gameConfig        = await GameConfigs_Provider.getLatestGameConfig();
         const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
-        const openData          : CommonWarBasicSettingsPageOpenData = {
+        const openData          : Common_View_CommonWarBasicSettingsPage.OpenData = {
             dataArrayForListSettings    : [
                 {
-                    settingsType    : BasicSettingsTypeId.NormalMapId,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.NormalMapId,
                     currentValue    : normalMapId,
                     instanceWarRule,
                     gameConfig,
@@ -329,7 +306,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.WarRuleTitle,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -337,7 +314,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.HasFog,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.HasFog,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -345,7 +322,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.Weather,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.Weather,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -353,7 +330,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType        : BasicSettingsTypeId.TileTheme,
+                    settingsType        : Wars_Constants.BasicSettingsTypeId.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -361,7 +338,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.WarEvent,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarEvent,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -369,15 +346,15 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
-                    currentValue    : `${TurnIndex.DefaultLimit}, ${Common.DefaultLimit}`,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                    currentValue    : `${Turns_Constants.TurnIndex.DefaultLimit}, ${WarOperations_Constants.Common.DefaultLimit}`,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsTypeId.TimerType,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.TimerType,
                     currentValue    : timerType,
                     instanceWarRule,
                     gameConfig,
@@ -386,19 +363,19 @@ export class Panel extends UiPanel<OpenData> {
                 },
             ],
         };
-        if (timerType === TimerTypeId.Regular) {
+        if (timerType === BootTimers_Constants.TimerTypeId.Regular) {
             openData.dataArrayForListSettings.push({
-                settingsType    : BasicSettingsTypeId.TimerRegularParam,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
                 currentValue    : bootTimerParams[1],
                 instanceWarRule,
                 gameConfig,
                 warEventFullData,
                 callbackOnModify: null,
             });
-        } else if (timerType === TimerTypeId.Incremental) {
+        } else if (timerType === BootTimers_Constants.TimerTypeId.Incremental) {
             openData.dataArrayForListSettings.push(
                 {
-                    settingsType    : BasicSettingsTypeId.TimerIncrementalParams,
+                    settingsType    : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
                     currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule,
                     gameConfig,
@@ -407,13 +384,13 @@ export class Panel extends UiPanel<OpenData> {
                 },
             );
         } else {
-            throw newError(`Invalid timerType: ${timerType}`);
+            throw Helpers_Misc.newError(`Invalid timerType: ${timerType}`);
         }
 
         return openData;
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<Common_View_CommonWarAdvancedSettingsPage.OpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;
@@ -424,16 +401,16 @@ export class Panel extends UiPanel<OpenData> {
             return null;
         }
 
-        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
+        const mapInfo = (await AutoTourneys_Mains_Provider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
         if (mapInfo == null) {
             return null;
         }
 
         return {
             canModify       : false,
-            gcData          : await getLatestGameConfig(),
-            instanceWarRule : getExisted(mapInfo.getInstanceWarRule()),
-            gameModeId      : ModeId.AutoTourney,
+            gcData          : await GameConfigs_Provider.getLatestGameConfig(),
+            instanceWarRule : Helpers_Misc.getExisted(mapInfo.getInstanceWarRule()),
+            gameModeId      : GameModes_Constants.ModeId.AutoTourney,
         };
     }
 
@@ -442,89 +419,89 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSwitch,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._btnSwitch,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiListItemData {
+interface DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : IUiLabel;
+class TabItemRenderer extends Ui_Components_UiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? Lang_Constants.UndefinedError);
     }
 }
 
-interface DataForMapNameRenderer extends UiListItemData {
+interface DataForMapNameRenderer extends Ui_Types_UiListItemData.UiListItemData {
     normalMapId : number;
     hasFog      : boolean;
     panel       : Panel;
 }
 class MapNameRenderer
-    extends     UiListItemRenderer<DataForMapNameRenderer>
-    implements  IUiListItemRenderer<DataForMapNameRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMapNameRenderer>
 {
-    private readonly _layoutName!       : IUiLayout;
-    private readonly _labelName!        : IUiLabel;
-    private readonly _labelId!          : IUiLabel;
-    private readonly _labelDesigner!    : IUiLabel;
+    private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelId!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDesigner!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -545,14 +522,14 @@ class MapNameRenderer
             return;
         }
 
-        const mapBriefData = await getBriefData(normalMapId);
+        const mapBriefData = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
         if ((mapBriefData == null) || (normalMapId !== this.getOpenData()?.normalMapId)) {
             return;
         }
 
-        this._labelName.setText(getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
         this._labelId.setText(`#${normalMapId}`);
-        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? UndefinedError);
+        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 }

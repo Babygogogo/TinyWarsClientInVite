@@ -1,30 +1,29 @@
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
-import { UiCommonEventType } from "../types/UiCommonEventType.ts";
-import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
 import {
-    checkAndAddAutoSizerInfo,
-    addAutoSizerInfo,
-} from "./UiSizerHelpers.ts";
+    Ui_Utils_UiSizerHelpers,
+    Ui_Types_UiCommonEventType,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiSizerInfo,
+    type Ui_Types_UiSizerOptions,
+} from "../../internal.ts";
 
-export class UiSizerInfo implements IUiSizerInfo {
-    private _target             : IUiComponent;
+export class UiSizerInfo implements Ui_Interfaces_IUiSizerInfo.IUiSizerInfo {
+    private _target             : Ui_Interfaces_IUiComponent.IUiComponent;
     private _isEnabled          = true;
-    private _sizerOptions?      : UiSizerOptions;
+    private _sizerOptions?      : Ui_Types_UiSizerOptions.UiSizerOptions;
     private _hasEverApplied     = false;
 
-    public constructor(target: IUiComponent) {
+    public constructor(target: Ui_Interfaces_IUiComponent.IUiComponent) {
         this._target = target;
 
-        checkAndAddAutoSizerInfo(target, false);
-        target.getEventAgent().addUiCommonEventListener(UiCommonEventType.AddedToParent, this._onAddedToParent, this);
+        Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(target, false);
+        target.getEventAgent().addUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.AddedToParent, this._onAddedToParent, this);
     }
 
     private _onAddedToParent(): void {
-        checkAndAddAutoSizerInfo(this._target, false);
+        Ui_Utils_UiSizerHelpers.checkAndAddAutoSizerInfo(this._target, false);
     }
 
-    public getSizer(): IUiComponent {
+    public getSizer(): Ui_Interfaces_IUiComponent.IUiComponent {
         return this._target;
     }
 
@@ -36,24 +35,24 @@ export class UiSizerInfo implements IUiSizerInfo {
             this._isEnabled = isEnabled;
 
             if (isEnabled) {
-                addAutoSizerInfo(this, false);
+                Ui_Utils_UiSizerHelpers.addAutoSizerInfo(this, false);
             }
         }
     }
 
     /** 如果需要修改sizerOptions，需要重新调用setSizerOptions()，以便自动sizer正常运作 */
-    public getSizerOptions(): UiSizerOptions | undefined {
+    public getSizerOptions(): Ui_Types_UiSizerOptions.UiSizerOptions | undefined {
         return this._sizerOptions;
     }
-    public setSizerOptions(options: UiSizerOptions | undefined): void {
+    public setSizerOptions(options: Ui_Types_UiSizerOptions.UiSizerOptions | undefined): void {
         this._sizerOptions = options;
         this.setHasEverApplied(false);
 
         if (options != null) {
-            addAutoSizerInfo(this, false);
+            Ui_Utils_UiSizerHelpers.addAutoSizerInfo(this, false);
         }
     }
-    public addSizerOptions(options: UiSizerOptions): void {
+    public addSizerOptions(options: Ui_Types_UiSizerOptions.UiSizerOptions): void {
         const oldOptions = this.getSizerOptions() ?? {};
 
         {
@@ -137,6 +136,6 @@ export class UiSizerInfo implements IUiSizerInfo {
 
     public destroy(): void {
         this.setIsEnabled(false);
-        this._target.getEventAgent().removeUiCommonEventListener(UiCommonEventType.AddedToParent, this._onAddedToParent, this);
+        this._target.getEventAgent().removeUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.AddedToParent, this._onAddedToParent, this);
     }
 }

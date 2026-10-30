@@ -1,126 +1,113 @@
-import type {
-    CustomError,
-    Undefinable,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    Token,
-    ContextType,
-    ResultType,
-} from "./Enums.ts";
-import { Assignment } from "./nodes/Assignment.ts";
-import type { Base } from "./nodes/Base.ts";
-import { Collection } from "./nodes/Collection.ts";
-import { FunctionCall } from "./nodes/FunctionCall.ts";
-import { Lambda } from "./nodes/Lambda.ts";
-import { MemberFunctionCall } from "./nodes/MemberFunctionCall.ts";
-import { MemberVariable } from "./nodes/MemberVariable.ts";
-import { Num } from "./nodes/Num.ts";
-import { OperatorAdd } from "./nodes/OperatorAdd.ts";
-import { OperatorDivide } from "./nodes/OperatorDivide.ts";
-import { OperatorEqual } from "./nodes/OperatorEqual.ts";
-import { OperatorGreater } from "./nodes/OperatorGreater.ts";
-import { OperatorGreaterEqual } from "./nodes/OperatorGreaterEqual.ts";
-import { OperatorLess } from "./nodes/OperatorLess.ts";
-import { OperatorLessEqual } from "./nodes/OperatorLessEqual.ts";
-import { OperatorLogicalAnd } from "./nodes/OperatorLogicalAnd.ts";
-import { OperatorLogicalOr } from "./nodes/OperatorLogicalOr.ts";
-import { OperatorMod } from "./nodes/OperatorMod.ts";
-import { OperatorMultiply } from "./nodes/OperatorMultiply.ts";
-import { OperatorNegate } from "./nodes/OperatorNegate.ts";
-import { OperatorNot } from "./nodes/OperatorNot.ts";
-import { OperatorSubtract } from "./nodes/OperatorSubtract.ts";
-import { OperatorTernary } from "./nodes/OperatorTernary.ts";
-import { OperatorUnequal } from "./nodes/OperatorUnequal.ts";
-import { Variable } from "./nodes/Variable.ts";
-import { TextReader } from "./TextReader.ts";
-import { Tokenizer } from "./Tokenizer.ts";
-import type { EpExpressionInfo } from "./Types.ts";
-import {
-    newError,
-    getExisted,
-} from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-    getErrorText,
-    getExpressionParserResultTypeName,
-} from "../lang/Utils.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { Event } from "../warEvents/Constants.ts";
+    ExpressionParsers_Nodes_Assignment,
+    Utils_ClientErrorCode,
+    ExpressionParsers_Nodes_Collection,
+    ExpressionParsers_Enums,
+    WarEvents_Constants,
+    ExpressionParsers_Nodes_FunctionCall,
+    Lang_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Nodes_Lambda,
+    ExpressionParsers_Nodes_MemberFunctionCall,
+    ExpressionParsers_Nodes_MemberVariable,
+    ExpressionParsers_Nodes_Num,
+    ExpressionParsers_Nodes_OperatorAdd,
+    ExpressionParsers_Nodes_OperatorDivide,
+    ExpressionParsers_Nodes_OperatorEqual,
+    ExpressionParsers_Nodes_OperatorGreater,
+    ExpressionParsers_Nodes_OperatorGreaterEqual,
+    ExpressionParsers_Nodes_OperatorLess,
+    ExpressionParsers_Nodes_OperatorLessEqual,
+    ExpressionParsers_Nodes_OperatorLogicalAnd,
+    ExpressionParsers_Nodes_OperatorLogicalOr,
+    ExpressionParsers_Nodes_OperatorMod,
+    ExpressionParsers_Nodes_OperatorMultiply,
+    ExpressionParsers_Nodes_OperatorNegate,
+    ExpressionParsers_Nodes_OperatorNot,
+    ExpressionParsers_Nodes_OperatorSubtract,
+    ExpressionParsers_Nodes_OperatorTernary,
+    ExpressionParsers_Nodes_OperatorUnequal,
+    ExpressionParsers_TextReader,
+    Lang_Constants,
+    ExpressionParsers_Tokenizer,
+    ExpressionParsers_Nodes_Variable,
+    type ExpressionParsers_Nodes_Base,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type ExpressionParsers_Types,
+} from "../internal.ts";
 
-const CachedNodeDict            = new Map<string, Base>();
-const CachedNodeCollectionDict  = new Map<string, Collection>();
+const CachedNodeDict            = new Map<string, ExpressionParsers_Nodes_Base.Base>();
+const CachedNodeCollectionDict  = new Map<string, ExpressionParsers_Nodes_Collection.Collection>();
 
 export class Parser {
-    private _tokenizer: Tokenizer;
+    private _tokenizer: ExpressionParsers_Tokenizer.Tokenizer;
 
     // Constructor - just store the tokenizer
-    public constructor(tokenizer: Tokenizer) {
+    public constructor(tokenizer: ExpressionParsers_Tokenizer.Tokenizer) {
         this._tokenizer = tokenizer;
     }
 
     // Parse an entire expression and check EOF was reached
-    private parseExpression(): Base {
+    private parseExpression(): ExpressionParsers_Nodes_Base.Base {
         // For the moment, all we understand is add and subtract
         const expr = this.parseLowestPriorityOperator(null, true);
 
         // Check everything was consumed
-        if (this._tokenizer.getToken() !== Token.EOF) {
-            throw newError(``, ClientErrorCode.ExpressionParser_Parser_ParseExpression_00);
+        if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.EOF) {
+            throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_Parser_ParseExpression_00);
         }
 
         return expr;
     }
 
     // 解析优先级最低的运算符
-    private parseLowestPriorityOperator(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseLowestPriorityOperator(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         return this.parseTernary(lambdaArgumentNames, allowAssign);
     }
 
     // ?:
-    private parseTernary(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseTernary(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let condition = this.parseLogicalOr(lambdaArgumentNames, allowAssign);
 
         const token = this._tokenizer.getToken();
-        if (token === Token.QuestionMark) {
+        if (token === ExpressionParsers_Enums.Token.QuestionMark) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             const lhs = this.parseLowestPriorityOperator(lambdaArgumentNames, false);
 
-            if (this._tokenizer.getToken() !== Token.Colon) {
-                throw newError(
-                    getFormattedText(TextType.F0039, this._tokenizer.getToken()),
-                    ClientErrorCode.ExpressionParser_Parser_ParseTernary_01
+            if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.Colon) {
+                throw Helpers_Misc.newError(
+                    Lang_Utils.getFormattedText(Lang_Constants.TextType.F0039, this._tokenizer.getToken()),
+                    Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_Parser_ParseTernary_01
                 );
             }
             this._tokenizer.tickToken();
 
             const rhs = this.parseLowestPriorityOperator(lambdaArgumentNames, false);
 
-            condition = new OperatorTernary(condition, lhs, rhs);
+            condition = new ExpressionParsers_Nodes_OperatorTernary.OperatorTernary(condition, lhs, rhs);
         }
 
         return condition;
     }
 
     // ||
-    private parseLogicalOr(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseLogicalOr(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.parseLogicalAnd(lambdaArgumentNames, allowAssign);
 
         for (;;) {
             const token = this._tokenizer.getToken();
-            if (token === Token.LogicalOr) {
+            if (token === ExpressionParsers_Enums.Token.LogicalOr) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
                 const rhs = this.parseLogicalAnd(lambdaArgumentNames, false);
-                lhs = new OperatorLogicalOr(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorLogicalOr.OperatorLogicalOr(lhs, rhs);
 
             } else {
                 return lhs;
@@ -129,20 +116,20 @@ export class Parser {
     }
 
     // &&
-    private parseLogicalAnd(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseLogicalAnd(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.parseEquality(lambdaArgumentNames, allowAssign);
 
         for (;;) {
             const token = this._tokenizer.getToken();
-            if (token === Token.LogicalAnd) {
+            if (token === ExpressionParsers_Enums.Token.LogicalAnd) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
                 const rhs = this.parseEquality(lambdaArgumentNames, false);
-                lhs = new OperatorLogicalAnd(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorLogicalAnd.OperatorLogicalAnd(lhs, rhs);
 
             } else {
                 return lhs;
@@ -151,103 +138,103 @@ export class Parser {
     }
 
     // == !=
-    private parseEquality(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseEquality(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.parseComparator(lambdaArgumentNames, allowAssign);
 
         const token = this._tokenizer.getToken();
-        if (token === Token.Equal) {
+        if (token === ExpressionParsers_Enums.Token.Equal) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseComparator(lambdaArgumentNames, false);
-            lhs = new OperatorEqual(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorEqual.OperatorEqual(lhs, rhs);
 
-        } else if (token === Token.Unequal) {
+        } else if (token === ExpressionParsers_Enums.Token.Unequal) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseComparator(lambdaArgumentNames, false);
-            lhs = new OperatorUnequal(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorUnequal.OperatorUnequal(lhs, rhs);
         }
 
         return lhs;
     }
 
     // > >= < <=
-    private parseComparator(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseComparator(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.parseAddSubtract(lambdaArgumentNames, allowAssign);
 
         const token = this._tokenizer.getToken();
-        if (token === Token.Greater) {
+        if (token === ExpressionParsers_Enums.Token.Greater) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseAddSubtract(lambdaArgumentNames, false);
-            lhs = new OperatorGreater(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorGreater.OperatorGreater(lhs, rhs);
 
-        } else if (token === Token.GreaterEqual) {
+        } else if (token === ExpressionParsers_Enums.Token.GreaterEqual) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseAddSubtract(lambdaArgumentNames, false);
-            lhs = new OperatorGreaterEqual(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorGreaterEqual.OperatorGreaterEqual(lhs, rhs);
 
-        } else if (token === Token.Less) {
+        } else if (token === ExpressionParsers_Enums.Token.Less) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseAddSubtract(lambdaArgumentNames, false);
-            lhs = new OperatorLess(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorLess.OperatorLess(lhs, rhs);
 
-        } else if (token === Token.LessEqual) {
+        } else if (token === ExpressionParsers_Enums.Token.LessEqual) {
             // Skip the operator
             this._tokenizer.tickToken();
 
             // Parse the right hand side of the expression
             // Create a binary node and use it as the left-hand side from now on
             const rhs = this.parseAddSubtract(lambdaArgumentNames, false);
-            lhs = new OperatorLessEqual(lhs, rhs);
+            lhs = new ExpressionParsers_Nodes_OperatorLessEqual.OperatorLessEqual(lhs, rhs);
         }
 
         return lhs;
     }
 
     // + -
-    private parseAddSubtract(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseAddSubtract(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.parseMultiplyDivideMod(lambdaArgumentNames, allowAssign);
 
         for (;;) {
             const token = this._tokenizer.getToken();
-            if (token === Token.Add) {
+            if (token === ExpressionParsers_Enums.Token.Add) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
                 const rhs = this.parseMultiplyDivideMod(lambdaArgumentNames, false);
-                lhs = new OperatorAdd(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorAdd.OperatorAdd(lhs, rhs);
 
-            } else if (token === Token.Subtract) {
+            } else if (token === ExpressionParsers_Enums.Token.Subtract) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 const rhs = this.parseMultiplyDivideMod(lambdaArgumentNames, false);
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
-                lhs = new OperatorSubtract(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorSubtract.OperatorSubtract(lhs, rhs);
 
             } else {
                 return lhs;
@@ -256,38 +243,38 @@ export class Parser {
     }
 
     // * / %
-    private parseMultiplyDivideMod(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseMultiplyDivideMod(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         // Parse the left hand side
         let lhs = this.ParseUnary(lambdaArgumentNames, allowAssign);
 
         for (;;) {
             const token = this._tokenizer.getToken();
-            if (token === Token.Multiply) {
+            if (token === ExpressionParsers_Enums.Token.Multiply) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
                 const rhs = this.ParseUnary(lambdaArgumentNames, false);
-                lhs = new OperatorMultiply(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorMultiply.OperatorMultiply(lhs, rhs);
 
-            } else if (token === Token.Divide) {
+            } else if (token === ExpressionParsers_Enums.Token.Divide) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 const rhs = this.ParseUnary(lambdaArgumentNames, false);
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
-                lhs = new OperatorDivide(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorDivide.OperatorDivide(lhs, rhs);
 
-            } else if (token === Token.PercentageSign) {
+            } else if (token === ExpressionParsers_Enums.Token.PercentageSign) {
                 // Skip the operator
                 this._tokenizer.tickToken();
 
                 const rhs = this.ParseUnary(lambdaArgumentNames, false);
                 // Parse the right hand side of the expression
                 // Create a binary node and use it as the left-hand side from now on
-                lhs = new OperatorMod(lhs, rhs);
+                lhs = new ExpressionParsers_Nodes_OperatorMod.OperatorMod(lhs, rhs);
 
             } else {
                 return lhs;
@@ -296,19 +283,19 @@ export class Parser {
     }
 
     // Parse a unary operator (eg: negative/positive)
-    private ParseUnary(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private ParseUnary(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         for (;;) {
             const token = this._tokenizer.getToken();
 
             // Positive operator is a no-op so just skip it
-            if (token === Token.Add) {
+            if (token === ExpressionParsers_Enums.Token.Add) {
                 // Skip
                 this._tokenizer.tickToken();
                 continue;
             }
 
             // Negative operator
-            if (token === Token.Subtract) {
+            if (token === ExpressionParsers_Enums.Token.Subtract) {
                 // Skip
                 this._tokenizer.tickToken();
 
@@ -316,11 +303,11 @@ export class Parser {
                 // Note this recurses to self to support negative of a negative
                 // Create unary node
                 const rhs = this.ParseUnary(lambdaArgumentNames, false);
-                return new OperatorNegate(rhs);
+                return new ExpressionParsers_Nodes_OperatorNegate.OperatorNegate(rhs);
             }
 
             // Not operator
-            if (token === Token.ExclamationMark) {
+            if (token === ExpressionParsers_Enums.Token.ExclamationMark) {
                 // Skip
                 this._tokenizer.tickToken();
 
@@ -328,7 +315,7 @@ export class Parser {
                 // Note this recurses to self to support negative of a negative
                 // Create unary node
                 const rhs = this.ParseUnary(lambdaArgumentNames, false);
-                return new OperatorNot(rhs);
+                return new ExpressionParsers_Nodes_OperatorNot.OperatorNot(rhs);
             }
 
             // No positive/negative operator so parse a leaf node
@@ -337,17 +324,17 @@ export class Parser {
     }
 
     // Parse a leaf node
-    private parseLeaf(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): Base {
+    private parseLeaf(lambdaArgumentNames: Set<string> | null, allowAssign: boolean): ExpressionParsers_Nodes_Base.Base {
         const token = this._tokenizer.getToken();
         // Is it a number?
-        if (token === Token.Number) {
-            const node = new Num(this._tokenizer.getNumber());
+        if (token === ExpressionParsers_Enums.Token.Number) {
+            const node = new ExpressionParsers_Nodes_Num.Num(this._tokenizer.getNumber());
             this._tokenizer.tickToken();
             return this.parseMember(node, lambdaArgumentNames);
         }
 
         // Parenthesis?
-        if (token === Token.OpenParens) {
+        if (token === ExpressionParsers_Enums.Token.OpenParens) {
             // Skip '('
             this._tokenizer.tickToken();
 
@@ -355,8 +342,8 @@ export class Parser {
             const node = this.parseLowestPriorityOperator(lambdaArgumentNames, false);
 
             // Check and skip ')'
-            if (this._tokenizer.getToken() !== Token.CloseParens) {
-                throw newError(``, ClientErrorCode.EpParser_ParseLeaf_00);
+            if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.CloseParens) {
+                throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_00);
             }
             this._tokenizer.tickToken();
 
@@ -365,53 +352,53 @@ export class Parser {
         }
 
         // Variable
-        if (token === Token.Identifier) {
+        if (token === ExpressionParsers_Enums.Token.Identifier) {
             // Capture the name and skip it
             const identifierName = this._tokenizer.getIdentifier();
             this._tokenizer.tickToken();
 
-            if (this._tokenizer.getToken() === Token.Lambda) {
+            if (this._tokenizer.getToken() === ExpressionParsers_Enums.Token.Lambda) {
                 if (lambdaArgumentNames != null) {
-                    throw newError(``, ClientErrorCode.EpParser_ParseLeaf_01);
+                    throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_01);
                 }
 
                 this._tokenizer.tickToken();
 
                 const lambdaExpression = this.parseLowestPriorityOperator(new Set([identifierName]), false);
-                return this.parseMember(new Lambda([identifierName], lambdaExpression), lambdaArgumentNames);
+                return this.parseMember(new ExpressionParsers_Nodes_Lambda.Lambda([identifierName], lambdaExpression), lambdaArgumentNames);
 
-            } else if (this._tokenizer.getToken() === Token.Assign) {
+            } else if (this._tokenizer.getToken() === ExpressionParsers_Enums.Token.Assign) {
                 if (!allowAssign) {
-                    throw newError(``, ClientErrorCode.EpParser_ParseLeaf_02);
+                    throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_02);
                 }
 
                 this._tokenizer.tickToken();
 
                 const assignmentExpression = this.parseLowestPriorityOperator(lambdaArgumentNames, allowAssign);
-                if (assignmentExpression instanceof Lambda) {
-                    throw newError(``, ClientErrorCode.EpParser_ParseLeaf_03);
+                if (assignmentExpression instanceof ExpressionParsers_Nodes_Lambda.Lambda) {
+                    throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_03);
                 }
 
-                return this.parseMember(new Assignment(identifierName, assignmentExpression), lambdaArgumentNames);
+                return this.parseMember(new ExpressionParsers_Nodes_Assignment.Assignment(identifierName, assignmentExpression), lambdaArgumentNames);
 
             } else {
                 // Parens indicate a function call, otherwise just a variable
                 const newToken = this._tokenizer.getToken();
-                if (newToken === Token.OpenParens) {
+                if (newToken === ExpressionParsers_Enums.Token.OpenParens) {
                     // Function call
 
                     // Skip parens
                     this._tokenizer.tickToken();
 
                     // Parse arguments
-                    const argumentList = new Array<Base>();
-                    if (this._tokenizer.getToken() !== Token.CloseParens) {
+                    const argumentList = new Array<ExpressionParsers_Nodes_Base.Base>();
+                    if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.CloseParens) {
                         for (;;) {
                             // Parse argument and add to list
                             argumentList.push(this.parseLowestPriorityOperator(lambdaArgumentNames, false));
 
                             // Is there another argument?
-                            if (this._tokenizer.getToken() === Token.Comma) {
+                            if (this._tokenizer.getToken() === ExpressionParsers_Enums.Token.Comma) {
                                 this._tokenizer.tickToken();
                                 continue;
                             }
@@ -422,37 +409,37 @@ export class Parser {
                     }
 
                     // Check and skip ')'
-                    if (this._tokenizer.getToken() !== Token.CloseParens) {
-                        throw newError(``, ClientErrorCode.EpParser_ParseLeaf_04);
+                    if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.CloseParens) {
+                        throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_04);
                     }
                     this._tokenizer.tickToken();
 
                     // Create the function call node
-                    return this.parseMember(new FunctionCall(identifierName, argumentList), lambdaArgumentNames);
+                    return this.parseMember(new ExpressionParsers_Nodes_FunctionCall.FunctionCall(identifierName, argumentList), lambdaArgumentNames);
 
                 } else {
                     // Variable
-                    return this.parseMember(new Variable(identifierName), lambdaArgumentNames);
+                    return this.parseMember(new ExpressionParsers_Nodes_Variable.Variable(identifierName), lambdaArgumentNames);
                 }
             }
         }
 
         // Don't Understand
-        throw newError(
-            getFormattedText(TextType.F0040, token),
-            ClientErrorCode.EpParser_ParseLeaf_06
+        throw Helpers_Misc.newError(
+            Lang_Utils.getFormattedText(Lang_Constants.TextType.F0040, token),
+            Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_06
         );
     }
 
-    private parseMember(lhs: Base, lambdaArgumentNames: Set<string> | null): Base {
-        while (this._tokenizer.getToken() === Token.Dot) {
+    private parseMember(lhs: ExpressionParsers_Nodes_Base.Base, lambdaArgumentNames: Set<string> | null): ExpressionParsers_Nodes_Base.Base {
+        while (this._tokenizer.getToken() === ExpressionParsers_Enums.Token.Dot) {
             this._tokenizer.tickToken();
             {
                 const token = this._tokenizer.getToken();
-                if (token !== Token.Identifier) {
-                    throw newError(
-                        getFormattedText(TextType.F0041, token),
-                        ClientErrorCode.EpParser_ParseMember_00
+                if (token !== ExpressionParsers_Enums.Token.Identifier) {
+                    throw Helpers_Misc.newError(
+                        Lang_Utils.getFormattedText(Lang_Constants.TextType.F0041, token),
+                        Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseMember_00
                     );
                 }
             }
@@ -463,21 +450,21 @@ export class Parser {
 
             // Parens indicate a function call, otherwise just a variable
             const newToken = this._tokenizer.getToken();
-            if (newToken === Token.OpenParens) {
+            if (newToken === ExpressionParsers_Enums.Token.OpenParens) {
                 // Function call
 
                 // Skip parens
                 this._tokenizer.tickToken();
 
                 // Parse arguments
-                const argumentList = new Array<Base>();
-                if (this._tokenizer.getToken() !== Token.CloseParens) {
+                const argumentList = new Array<ExpressionParsers_Nodes_Base.Base>();
+                if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.CloseParens) {
                     for (;;) {
                         // Parse argument and add to list
                         argumentList.push(this.parseLowestPriorityOperator(lambdaArgumentNames, false));
 
                         // Is there another argument?
-                        if (this._tokenizer.getToken() === Token.Comma) {
+                        if (this._tokenizer.getToken() === ExpressionParsers_Enums.Token.Comma) {
                             this._tokenizer.tickToken();
                             continue;
                         }
@@ -488,43 +475,42 @@ export class Parser {
                 }
 
                 // Check and skip ')'
-                if (this._tokenizer.getToken() !== Token.CloseParens) {
-                    throw newError(``, ClientErrorCode.EpParser_ParseMember_05);
+                if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.CloseParens) {
+                    throw Helpers_Misc.newError(``, Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseMember_05);
                 }
                 this._tokenizer.tickToken();
 
                 // Create the function call node
-                lhs = new MemberFunctionCall(lhs, identifierName, argumentList);
+                lhs = new ExpressionParsers_Nodes_MemberFunctionCall.MemberFunctionCall(lhs, identifierName, argumentList);
 
             } else {
                 // Variable
-                lhs = new MemberVariable(lhs, identifierName);
+                lhs = new ExpressionParsers_Nodes_MemberVariable.MemberVariable(lhs, identifierName);
             }
         }
 
         return lhs;
     }
 
-
     // Static helper to parse a string
-    private static parseString(str: string): Base {
-        return new Parser(new Tokenizer(new TextReader(str))).parseExpression();
+    private static parseString(str: string): ExpressionParsers_Nodes_Base.Base {
+        return new Parser(new ExpressionParsers_Tokenizer.Tokenizer(new ExpressionParsers_TextReader.TextReader(str))).parseExpression();
     }
-    public static getParseResult(str: string): Collection {
+    public static getParseResult(str: string): ExpressionParsers_Nodes_Collection.Collection {
         if (!CachedNodeCollectionDict.has(str)) {
-            const nodeArray: Base[] = [];
+            const nodeArray: ExpressionParsers_Nodes_Base.Base[] = [];
             for (const subString of str.split(";").map(v => v.trim())) {
                 if (!CachedNodeDict.has(subString)) {
                     CachedNodeDict.set(subString, Parser.parseString(subString));
                 }
 
-                nodeArray.push(getExisted(CachedNodeDict.get(subString)));
+                nodeArray.push(Helpers_Misc.getExisted(CachedNodeDict.get(subString)));
             }
 
-            CachedNodeCollectionDict.set(str, new Collection(nodeArray));
+            CachedNodeCollectionDict.set(str, new ExpressionParsers_Nodes_Collection.Collection(nodeArray));
         }
 
-        return getExisted(CachedNodeCollectionDict.get(str));
+        return Helpers_Misc.getExisted(CachedNodeCollectionDict.get(str));
     }
 
     private static trimString(str: string): string {
@@ -755,83 +741,83 @@ export class Parser {
 
     public static getErrorDataForString({ str, contextType, resultTypes, customCounterNameSet }: {
         str                     : string;
-        contextType             : ContextType;
-        resultTypes             : ResultType[];
+        contextType             : ExpressionParsers_Enums.ContextType;
+        resultTypes             : ExpressionParsers_Enums.ResultType[];
         customCounterNameSet    : Set<string>;
-    }): { errorCode: ClientErrorCode, errorText?: string } {
-        if (str.length > Event.MaxExpressionLength) {
-            return { errorCode: ClientErrorCode.EpParser_GetErrorDataForString_00 };
+    }): { errorCode: Utils_ClientErrorCode.ClientErrorCode, errorText?: string } {
+        if (str.length > WarEvents_Constants.Event.MaxExpressionLength) {
+            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_00 };
         }
         if (str !== str.trim()) {
-            return { errorCode: ClientErrorCode.EpParser_GetErrorDataForString_01 };
+            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_01 };
         }
 
-        let nodeCollection  : Collection | null = null;
+        let nodeCollection  : ExpressionParsers_Nodes_Collection.Collection | null = null;
         str                 = Parser.trimString(str);
         try {
             nodeCollection = Parser.getParseResult(str);
         } catch (e) {
-            const error     = e as CustomError;
+            const error     = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
             const errorCode = error.errorCode;
             if (errorCode == null) {
                 return {
-                    errorCode   : ClientErrorCode.EpParser_GetErrorDataForString_02,
+                    errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_02,
                 };
             } else {
                 return {
                     errorCode   : errorCode,
                     errorText   : error.message
-                        ? `${getText(TextType.B0452)} ${errorCode}: ${error.message}`
-                        : getErrorText(errorCode),
+                        ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
+                        : Lang_Utils.getErrorText(errorCode),
                 };
             }
         }
 
-        if (nodeCollection.getTokensCount() > Event.MaxExpressionTokensCount) {
+        if (nodeCollection.getTokensCount() > WarEvents_Constants.Event.MaxExpressionTokensCount) {
             return {
-                errorCode   : ClientErrorCode.EpParser_GetErrorDataForString_03,
+                errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_03,
             };
         }
 
         try {
             const actualResultType = nodeCollection.getResultType(contextType, customCounterNameSet);
             if (resultTypes.indexOf(actualResultType) >= 0) {
-                return { errorCode: ClientErrorCode.NoError };
+                return { errorCode: Utils_ClientErrorCode.ClientErrorCode.NoError };
             } else {
-                const errorCode = ClientErrorCode.EpParser_GetErrorDataForString_04;
+                const errorCode = Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_04;
                 return {
                     errorCode   : errorCode,
-                    errorText   : `${getText(TextType.B0452)} ${errorCode}: ${getFormattedText(
-                        TextType.F0016,
-                        resultTypes.map(v => getExpressionParserResultTypeName(v)).join(` / `),
-                        getExpressionParserResultTypeName(actualResultType)
+                    errorText   : `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${Lang_Utils.getFormattedText(
+                        Lang_Constants.TextType.F0016,
+                        resultTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(` / `),
+                        Lang_Utils.getExpressionParserResultTypeName(actualResultType)
                     )}`,
                 };
             }
         } catch (e) {
-            const error     = e as CustomError;
+            const error     = e as AuxiliaryTypes_AuxiliaryTypes.CustomError;
             const errorCode = error.errorCode;
             if (errorCode == null) {
                 return {
-                    errorCode   : ClientErrorCode.EpParser_GetErrorDataForString_05,
+                    errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_05,
                 };
             } else {
                 return {
                     errorCode   : errorCode,
                     errorText   : error.message
-                        ? `${getText(TextType.B0452)} ${errorCode}: ${error.message}`
-                        : getErrorText(errorCode),
+                        ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
+                        : Lang_Utils.getErrorText(errorCode),
                 };
             }
         }
     }
     public static getErrorDataForString2({ str, expressionInfo, customCounterNameSet }: {
-        str                     : Undefinable<string>;
-        expressionInfo          : EpExpressionInfo;
+        str                     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+        expressionInfo          : ExpressionParsers_Types.EpExpressionInfo;
         customCounterNameSet    : Set<string>;
-    }): { errorCode: ClientErrorCode, errorText?: string } {
+    }): { errorCode: Utils_ClientErrorCode.ClientErrorCode, errorText?: string } {
         if ((!str) && (!expressionInfo.isRequired)) {
-            return { errorCode: ClientErrorCode.NoError };
+            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.NoError };
         }
 
         return this.getErrorDataForString({
@@ -843,21 +829,21 @@ export class Parser {
     }
     public static checkIsValidString({ str, contextType, resultTypes, customCounterNameSet }: {
         str                     : string;
-        contextType             : ContextType;
-        resultTypes             : ResultType[];
+        contextType             : ExpressionParsers_Enums.ContextType;
+        resultTypes             : ExpressionParsers_Enums.ResultType[];
         customCounterNameSet    : Set<string>;
     }): boolean {
-        return Parser.getErrorDataForString({ str, contextType, resultTypes, customCounterNameSet }).errorCode === ClientErrorCode.NoError;
+        return Parser.getErrorDataForString({ str, contextType, resultTypes, customCounterNameSet }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
     public static checkIsValidString2({ str, expressionInfo, customCounterNameSet }: {
-        str                     : Undefinable<string>;
-        expressionInfo          : EpExpressionInfo;
+        str                     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
+        expressionInfo          : ExpressionParsers_Types.EpExpressionInfo;
         customCounterNameSet    : Set<string>;
     }): boolean {
         return Parser.getErrorDataForString2({
             str                     : str,
             expressionInfo          : expressionInfo,
             customCounterNameSet    : customCounterNameSet,
-        }).errorCode === ClientErrorCode.NoError;
+        }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 }

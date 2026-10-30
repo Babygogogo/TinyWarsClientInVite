@@ -1,36 +1,24 @@
-import type {
-    Undefinable,
-    UserOnlineState,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import { TextureVersionId } from "../graphics/Constants.ts";
 import {
-    newError,
-    getExisted,
-    createLazyFunc,
-} from "./Misc.ts";
-import { getNumText } from "./Text.ts";
-import { PlayerIndex } from "../players/Constants.ts";
-import {
-    BaseCfgDict,
-    DecorationCfgDict,
-    ObjectCfgDict,
-} from "../tiles/constants/Common.ts";
-import { getServerTimestamp } from "../timer/TimerModel.ts";
-import type { BuffTypeId } from "../unitBuffs/Constants.ts";
-import type {
-    CornerStateIconTypeId,
-    AnimationTypeId,
-} from "../units/Constants.ts";
+    Tiles_Constants_Common,
+    Helpers_Misc,
+    GameVersions_Utils,
+    Helpers_Text,
+    Timer_TimerModel,
+    Players_Constants,
+    Graphics_Constants,
+    type Units_Constants,
+    type UnitBuffs_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
-export function getCoBust(gcData: GameConfig, coId: number): string | null {
+export function getCoBust(gcData: GameConfigs_GameConfig.GameConfig, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
-    return (imgNumber != null) ? `coBust${getNumText(imgNumber, 4)}` : null;
+    return (imgNumber != null) ? `coBust${Helpers_Text.getNumText(imgNumber, 4)}` : null;
 }
 export function getCoEyeBackground(skinId: number): string {
     switch (skinId) {
-        case PlayerIndex.Neutral    : return ``;
+        case Players_Constants.PlayerIndex.Neutral    : return ``;
         case 1                                          : return `uncompressedTriangle0001`;
         case 2                                          : return `uncompressedTriangle0002`;
         case 3                                          : return `uncompressedTriangle0003`;
@@ -39,10 +27,10 @@ export function getCoEyeBackground(skinId: number): string {
         case 6                                          : return `uncompressedTriangle0007`;
         case 7                                          : return `uncompressedTriangle0008`;
         case 8                                          : return `uncompressedTriangle0009`;
-        default                                         : throw newError(`Invalid skinId: ${skinId}`);
+        default                                         : throw Helpers_Misc.newError(`Invalid skinId: ${skinId}`);
     }
 }
-export function getCoEyeBackgroundByCoId(gcData: GameConfig, coId: number): string | null {
+export function getCoEyeBackgroundByCoId(gcData: GameConfigs_GameConfig.GameConfig, coId: number): string | null {
     switch (gcData.getCoBasicCfg(coId)?.getForce()) {
         case 1  : return `uncompressedTriangle0001`;
         case 2  : return `uncompressedTriangle0002`;
@@ -55,11 +43,11 @@ export function getCoEyeBackgroundByCoId(gcData: GameConfig, coId: number): stri
         default : return null;
     }
 }
-export function getCoEye(gcData: GameConfig, coId: number, isAlive: boolean): string | null {
+export function getCoEye(gcData: GameConfigs_GameConfig.GameConfig, coId: number, isAlive: boolean): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
-    return (imgNumber != null) ? `coEye${isAlive ? `Normal` : `Grey`}${getNumText(imgNumber, 4)}` : null;
+    return (imgNumber != null) ? `coEye${isAlive ? `Normal` : `Grey`}${Helpers_Text.getNumText(imgNumber, 4)}` : null;
 }
-export function getCoHeadFrame(skinId: Undefinable<number>): string {
+export function getCoHeadFrame(skinId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): string {
     switch (skinId) {
         case 1  : return `uncompressedRectangle0002`;
         case 2  : return `uncompressedRectangle0003`;
@@ -72,7 +60,7 @@ export function getCoHeadFrame(skinId: Undefinable<number>): string {
         default : return `uncompressedRectangle0006`;
     }
 }
-export function getCoHeadBackgroundByCoId(gcData: GameConfig, coId: number): string | null {
+export function getCoHeadBackgroundByCoId(gcData: GameConfigs_GameConfig.GameConfig, coId: number): string | null {
     switch (gcData.getCoBasicCfg(coId)?.getForce()) {
         case 1      : return `uncompressedColorRed0001`;
         case 2      : return `uncompressedColorBlue0000`;
@@ -83,9 +71,9 @@ export function getCoHeadBackgroundByCoId(gcData: GameConfig, coId: number): str
         default     : return null;
     }
 }
-export function getCoHead(gcData: GameConfig, coId: number): string | null {
+export function getCoHead(gcData: GameConfigs_GameConfig.GameConfig, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
-    return (imgNumber != null) ? `coHead${getNumText(imgNumber, 4)}` : null;
+    return (imgNumber != null) ? `coHead${Helpers_Text.getNumText(imgNumber, 4)}` : null;
 }
 
 export function getSkinCircle(skinId: number, isSelected: boolean): string {
@@ -125,7 +113,7 @@ export function getSkinButtonBackground(skinId: number): string {
 }
 
 export function getTileBase({ version, themeType, skinId, baseType, isDark, shapeId, tickCount }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     themeType   : number;
     skinId      : number;
     baseType    : number;
@@ -133,23 +121,23 @@ export function getTileBase({ version, themeType, skinId, baseType, isDark, shap
     shapeId     : number;
     tickCount   : number;
 }): string {
-    const cfg               = getExisted(BaseCfgDict.get(baseType));
-    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfg               = Helpers_Misc.getExisted(Tiles_Constants_Common.BaseCfgDict.get(baseType));
+    const cfgForFrame       = (version === Graphics_Constants.TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
-    const textForTheme      = `theme${getNumText(themeType)}`;
-    const textForShapeId    = `shape${getNumText(shapeId || 0)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
-    const textForType       = `type${getNumText(baseType)}`;
+    const textForTheme      = `theme${Helpers_Text.getNumText(themeType)}`;
+    const textForShapeId    = `shape${Helpers_Text.getNumText(shapeId || 0)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
+    const textForType       = `type${Helpers_Text.getNumText(baseType)}`;
     const textForFrame      = ticksPerFrame < 999999
-        ? `frame${getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
+        ? `frame${Helpers_Text.getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
         : `frame00`;
     return `tileBase_${textForResolution}_${textForVersion}_${textForTheme}_${textForType}_${textForDark}_${textForShapeId}_${textForSkin}_${textForFrame}`;
 }
 export function getTileDecoration({version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount}: {
-    version             : TextureVersionId;
+    version             : Graphics_Constants.TextureVersionId;
     themeType           : number;
     skinId              : number;
     tileDecorationType  : number | null;
@@ -161,23 +149,23 @@ export function getTileDecoration({version, themeType, skinId, tileDecorationTyp
         return ``;
     }
 
-    const cfg               = getExisted(DecorationCfgDict.get(tileDecorationType));
-    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfg               = Helpers_Misc.getExisted(Tiles_Constants_Common.DecorationCfgDict.get(tileDecorationType));
+    const cfgForFrame       = (version === Graphics_Constants.TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
-    const textForTheme      = `theme${getNumText(themeType)}`;
-    const textForShapeId    = `shape${getNumText(shapeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
-    const textForType       = `type${getNumText(tileDecorationType)}`;
+    const textForTheme      = `theme${Helpers_Text.getNumText(themeType)}`;
+    const textForShapeId    = `shape${Helpers_Text.getNumText(shapeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
+    const textForType       = `type${Helpers_Text.getNumText(tileDecorationType)}`;
     const textForFrame      = ticksPerFrame < 999999
-        ? `frame${getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
+        ? `frame${Helpers_Text.getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
         : `frame00`;
     return `tileDecoration_${textForResolution}_${textForVersion}_${textForTheme}_${textForType}_${textForDark}_${textForShapeId}_${textForSkin}_${textForFrame}`;
 }
 export function getTileObject({ version, themeType, skinId, objectType, isDark, shapeId, tickCount }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     themeType   : number;
     skinId      : number;
     objectType  : number;
@@ -185,189 +173,189 @@ export function getTileObject({ version, themeType, skinId, objectType, isDark, 
     shapeId     : number;
     tickCount   : number;
 }): string {
-    const cfg               = getExisted(ObjectCfgDict.get(objectType));
-    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfg               = Helpers_Misc.getExisted(Tiles_Constants_Common.ObjectCfgDict.get(objectType));
+    const cfgForFrame       = (version === Graphics_Constants.TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
-    const textForTheme      = `theme${getNumText(themeType)}`;
-    const textForShapeId    = `shape${getNumText(shapeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
-    const textForType       = `type${getNumText(objectType)}`;
+    const textForTheme      = `theme${Helpers_Text.getNumText(themeType)}`;
+    const textForShapeId    = `shape${Helpers_Text.getNumText(shapeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
+    const textForType       = `type${Helpers_Text.getNumText(objectType)}`;
     const textForFrame      = ticksPerFrame < 999999
-        ? `frame${getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
+        ? `frame${Helpers_Text.getNumText(Math.floor((tickCount % (cfgForFrame[0] * ticksPerFrame)) / ticksPerFrame))}`
         : `frame00`;
     return `tileObject_${textForResolution}_${textForVersion}_${textForTheme}_${textForType}_${textForDark}_${textForShapeId}_${textForSkin}_${textForFrame}`;
 }
 export function getTileBuff({ version, buffType, isDark }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     buffType    : number;
     isDark      : boolean;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(buffType, 4)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(buffType, 4)}`;
     const textForDark       = `state${isDark ? `01` : `00`}`;
     return `tileBuff_${textForResolution}_${textForVersion}_${textForType}_${textForDark}`;
 }
 
 export function getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GameConfig;
-    version         : TextureVersionId;
+    gcData          : GameConfigs_GameConfig.GameConfig;
+    version         : Graphics_Constants.TextureVersionId;
     skinId          : number;
     unitType        : number;
     isDark          : boolean;
-    animationType   : AnimationTypeId;
+    animationType   : Units_Constants.AnimationTypeId;
     tickCount       : number;
 }): string {
-    const cfg               = getExisted(gcData.getUnitTemplateCfg(unitType)?.getAnimParams());
+    const cfg               = Helpers_Misc.getExisted(gcData.getUnitTemplateCfg(unitType)?.getAnimParams());
     const index             = version * 4 + (animationType ? 2 : 0);
     const ticksPerFrame     = cfg[index + 1];
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
-    const textForMoving     = `act${getNumText(animationType)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
-    const textForType       = `type${getNumText(unitType)}`;
-    const textForFrame      = `frame${getNumText(Math.floor((tickCount % (cfg[index] * ticksPerFrame)) / ticksPerFrame))}`;
+    const textForMoving     = `act${Helpers_Text.getNumText(animationType)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
+    const textForType       = `type${Helpers_Text.getNumText(unitType)}`;
+    const textForFrame      = `frame${Helpers_Text.getNumText(Math.floor((tickCount % (cfg[index] * ticksPerFrame)) / ticksPerFrame))}`;
     return `unit_${textForResolution}_${textForVersion}_${textForType}_${textForDark}_${textForMoving}_${textForSkin}_${textForFrame}`;
 }
 export function getUnitFlash({ version, skinId, unitType }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     skinId      : number;
     unitType    : number;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(unitType)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(unitType)}`;
     const textForDark       = `state99`;
     const textForMoving     = `act00`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
     const textForFrame      = `frame00`;
     return `unit_${textForResolution}_${textForVersion}_${textForType}_${textForDark}_${textForMoving}_${textForSkin}_${textForFrame}`;
 }
 export function getUnitHp({ version, hp, isDark }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     hp          : number;
     isDark      : boolean;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(hp)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(hp)}`;
     const textForState      = `state${isDark ? `01` : `00`}`;
     return `unitHp_${textForResolution}_${textForVersion}_${textForType}_${textForState}`;
 }
 export function getUnitCornerStateIcon({ version, iconTypeId, isDark, skinId }: {
-    version         : TextureVersionId;
+    version         : Graphics_Constants.TextureVersionId;
     isDark          : boolean;
-    iconTypeId      : CornerStateIconTypeId;
+    iconTypeId      : Units_Constants.CornerStateIconTypeId;
     skinId          : number;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(iconTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(iconTypeId)}`;
     const textForState      = `state${isDark ? `01` : `00`}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
     return `unitState_${textForResolution}_${textForVersion}_${textForType}_${textForState}_${textForSkin}`;
 }
 export function getUnitPromotion({ version, promotion, isDark, skinId }: {
-    version     : TextureVersionId;
+    version     : Graphics_Constants.TextureVersionId;
     promotion   : number;
     isDark      : boolean;
     skinId      : number;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(promotion)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(promotion)}`;
     const textForState      = `state${isDark ? `01` : `00`}`;
-    const textForSkin       = `skin${getNumText(skinId)}`;
+    const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
     return `unitPromotion_${textForResolution}_${textForVersion}_${textForType}_${textForState}_${textForSkin}`;
 }
 export function getUnitBuff({ version, buffTypeId, isDark }: {
-    version         : TextureVersionId;
+    version         : Graphics_Constants.TextureVersionId;
     isDark          : boolean;
-    buffTypeId      : BuffTypeId;
+    buffTypeId      : UnitBuffs_Constants.BuffTypeId;
 }): string {
-    const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
-    const textForVersion    = `ver${getNumText(version)}`;
-    const textForType       = `type${getNumText(buffTypeId)}`;
+    const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
+    const textForType       = `type${Helpers_Text.getNumText(buffTypeId)}`;
     const textForState      = `state${isDark ? `01` : `00`}`;
     return `unitBuff_${textForResolution}_${textForVersion}_${textForType}_${textForState}`;
 }
 export function getUnitBlock(): string {
-    return `unitBlock_res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    return `unitBlock_res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
 }
 export function getUnitRepair(): string {
-    return `unitRepair_res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    return `unitRepair_res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
 }
 export function getUnitSupply(): string {
-    return `unitSupply_res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    return `unitSupply_res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
 }
 
 export function getArrayUnitCop(): string[] {
     return doGetArrayUnitCop();
 }
-const doGetArrayUnitCop = createLazyFunc(() => {
+const doGetArrayUnitCop = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 27; ++i) {
-        arr.push(`unitCop_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitCop_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getArrayUnitScop(): string[] {
     return doGetArrayUnitScop();
 }
-const doGetArrayUnitScop = createLazyFunc(() => {
+const doGetArrayUnitScop = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 34; ++i) {
-        arr.push(`unitScop_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitScop_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getArrayUnitDamage(): string[] {
     return doGetArrayUnitDamage();
 }
-const doGetArrayUnitDamage = createLazyFunc(() => {
+const doGetArrayUnitDamage = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 8; ++i) {
-        arr.push(`unitDamage_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitDamage_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getArrayUnitExplosion(): string[] {
     return doGetArrayUnitExplosion();
 }
-const doGetArrayUnitExplosion = createLazyFunc(() => {
+const doGetArrayUnitExplosion = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 9; ++i) {
-        arr.push(`unitExplosion_res${resText}_type01_frame${getNumText(i)}`);
+        arr.push(`unitExplosion_res${resText}_type01_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getArrayUnitDive(): string[] {
     return doGetArrayUnitDive();
 }
-const doGetArrayUnitDive = createLazyFunc(() => {
+const doGetArrayUnitDive = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 7; ++i) {
-        arr.push(`unitDive_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitDive_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getArrayUnitSurface(): string[] {
     return doGetArrayUnitSurface();
 }
-const doGetArrayUnitSurface = createLazyFunc(() => {
+const doGetArrayUnitSurface = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 5; ++i) {
-        arr.push(`unitSurface_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitSurface_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
@@ -375,33 +363,33 @@ const doGetArrayUnitSurface = createLazyFunc(() => {
 export function getArrayTileCharge(): string[] {
     return doGetArrayTileCharge();
 }
-const doGetArrayTileCharge = createLazyFunc(() => {
+const doGetArrayTileCharge = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 11; i < 25; ++i) {
-        arr.push(`unitScop_res${resText}_frame${getNumText(i)}`);
+        arr.push(`unitScop_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 
 export function getMedal(medalId: number): string {
-    return `medal${getNumText(medalId, 6)}`;
+    return `medal${Helpers_Text.getNumText(medalId, 6)}`;
 }
 
 export function getCursorArea2(): string {
-    return `cursorArea_res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}_radius02`;
+    return `cursorArea_res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}_radius02`;
 }
 export function getCursorCorner(): string {
-    return `cursorCorner_res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
+    return `cursorCorner_res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
 }
 export function getArrayCursorAiming(): string[] {
     return doGetArrayCursorAiming();
 }
-const doGetArrayCursorAiming = createLazyFunc(() => {
+const doGetArrayCursorAiming = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 4; ++i) {
-        arr.push(`cursorAim_res${resText}_frame${getNumText(i)}`);
+        arr.push(`cursorAim_res${resText}_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
@@ -413,11 +401,11 @@ export function getMovableAreaByTick(tick: number): string {
     const arr = getArrayMovableArea();
     return arr[tick % arr.length];
 }
-const doGetArrayMovableArea = createLazyFunc(() => {
+const doGetArrayMovableArea = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 15; ++i) {
-        arr.push(`grid_res${resText}_color00_frame${getNumText(i)}`);
+        arr.push(`grid_res${resText}_color00_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
@@ -428,11 +416,11 @@ export function getAttackableAreaByTick(tick: number): string {
     const arr = getArrayAttackableArea();
     return arr[tick % arr.length];
 }
-const doGetArrayAttackableArea = createLazyFunc(() => {
+const doGetArrayAttackableArea = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 15; ++i) {
-        arr.push(`grid_res${resText}_color01_frame${getNumText(i)}`);
+        arr.push(`grid_res${resText}_color01_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
@@ -443,36 +431,36 @@ export function getVisibleAreaByTick(tick: number): string {
     const arr = getArrayVisibleArea();
     return arr[tick % arr.length];
 }
-const doGetArrayVisibleArea = createLazyFunc(() => {
+const doGetArrayVisibleArea = Helpers_Misc.createLazyFunc(() => {
     const arr       : string[] = [];
-    const resText   = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
+    const resText   = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
     for (let i = 0; i < 15; ++i) {
-        arr.push(`grid_res${resText}_color02_frame${getNumText(i)}`);
+        arr.push(`grid_res${resText}_color02_frame${Helpers_Text.getNumText(i)}`);
     }
     return arr;
 });
 export function getMovePath(shapeId: number): string {
-    const resText = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
-    return `movePath_res${resText}_shape${getNumText(shapeId)}`;
+    const resText = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
+    return `movePath_res${resText}_shape${Helpers_Text.getNumText(shapeId)}`;
 }
 
 export function getGridMark(markTypeId: number): string {
-    const resText = getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId);
-    return `gridMark_res${resText}_type${getNumText(markTypeId)}`;
+    const resText = Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId);
+    return `gridMark_res${resText}_type${Helpers_Text.getNumText(markTypeId)}`;
 }
 
 export function getBigDialogueBackgroundImage(backgroundId: number): string {
-    return `resource/assets/texture/background/dialogueBackground${getNumText(backgroundId, 4)}.png`;
+    return `resource/assets/texture/background/dialogueBackground${Helpers_Text.getNumText(backgroundId, 4)}.png`;
 }
 
 export function getUserAvatar(avatarId: number): string {
-    return `userAvatar${getNumText(avatarId, 4)}`;
+    return `userAvatar${Helpers_Text.getNumText(avatarId, 4)}`;
 }
-export function getUserOnlineState(state: Undefinable<UserOnlineState>): string {
+export function getUserOnlineState(state: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_AuxiliaryTypes.UserOnlineState>): string {
     if ((state == null) || (!state.isOnline)) {
         return `uncompressedColorRed0000`;
     } else {
-        return (getServerTimestamp() - (state.lastActivityTimestamp) > 60)
+        return (Timer_TimerModel.getServerTimestamp() - (state.lastActivityTimestamp) > 60)
             ? `uncompressedColorYellow0000`
             : `uncompressedColorGreen0000`;
     }

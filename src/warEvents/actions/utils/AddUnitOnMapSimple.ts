@@ -1,58 +1,51 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import {
-    getExisted,
-    newError,
-} from "../../../helpers/Misc.ts";
-import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import {
-    getUnitName,
-    getFormattedText,
-    getText,
-} from "../../../lang/Utils.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../../players/Constants.ts";
+    AuxiliaryTypes_GridIndex,
+    Units_Unit,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Players_Constants,
+    WarEvents_Actions_Constants_AddUnitOnMapSimple,
+    Helpers_Team,
+    Units_Utils_Serialization,
+    Helpers_Misc,
+    Lang_Utils,
+    Visibilities_Utils,
+    Lang_Constants,
+    type Tiles_ITileMap,
+    type Units_IUnitMap,
+} from "../../../internal.ts";
+
 import type { WeaAddUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
 import type { DataForAddUnit } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple/DataForAddUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { ITileMap } from "../../../tiles/ITileMap.ts";
-import type { IUnitMap } from "../../../units/IUnitMap.ts";
-import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { Common } from "../constants/AddUnitOnMapSimple.ts";
 
-export function getBriefDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfig): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     if (!data) {
         return null;
     } else {
         const unitCountDict = new Map<number, number>();
         for (const unitData of data.getUnitArray()) {
-            const unitType = getExisted(unitData.getUnitData()).getUnitType();
+            const unitType = Helpers_Misc.getExisted(unitData.getUnitData()).getUnitType();
             unitCountDict.set(unitType, (unitCountDict.get(unitType) || 0) + 1);
         }
 
         const unitNameArray: string[] = [];
         for (const [unitType, count] of unitCountDict) {
-            unitNameArray.push(`${getUnitName(unitType, gameConfig)} * ${count}`);
+            unitNameArray.push(`${Lang_Utils.getUnitName(unitType, gameConfig)} * ${count}`);
         }
-        return getFormattedText(TextType.F0059, unitNameArray.join(", "));
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0059, unitNameArray.join(", "));
     }
 }
-export function getDetailDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfig): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
 export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutral }: {
-    action                  : Undefinable<WeaAddUnitOnMapSimple>;
-    gameConfig              : GameConfig;
-    mapSize                 : MapSize;
+    action                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitOnMapSimple>;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize;
     playersCountUnneutral   : number;
 }): boolean {
     if (action == null) {
@@ -62,7 +55,7 @@ export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutra
     const unitArray = action.getUnitArray();
     if ((unitArray == null)                                              ||
         (unitArray.length <= 0)                                          ||
-        (unitArray.length > Common.MaxCount)
+        (unitArray.length > WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount)
     ) {
         return false;
     }
@@ -79,7 +72,7 @@ export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutra
             return false;
         }
 
-        if (getErrorCodeForUnitDataIgnoringUnitId({
+        if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
             unitData,
             playersCountUnneutral,
             gameConfig,
@@ -92,21 +85,21 @@ export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutra
     return true;
 }
 
-export function getErrorTip(data: WeaAddUnitOnMapSimple, war: IBwWar): string | null {
+export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
     const unitArray     = data.getUnitArray();
     const unitsCount    = unitArray.length;
-    if ((unitsCount <= 0) || (unitsCount > Common.MaxCount)) {
-        return `${getText(TextType.A0191)} (${unitsCount} / ${Common.MaxCount})`;
+    if ((unitsCount <= 0) || (unitsCount > WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount)) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.A0191)} (${unitsCount} / ${WarEvents_Actions_Constants_AddUnitOnMapSimple.Common.MaxCount})`;
     }
 
     const mapSize               = war.getTileMap().getMapSize();
     const playersCountUnneutral = war.getPlayersCountUnneutral();
     const validator             = (v: DataForAddUnit) => {
-        const unitData = getExisted(v.getUnitData());
+        const unitData = Helpers_Misc.getExisted(v.getUnitData());
         return (v.getCanBeBlockedByUnit() != null)
             && (v.getNeedMovableTile() != null)
             && (unitData.getLoaderUnitId() == null)
-            && (!getErrorCodeForUnitDataIgnoringUnitId({
+            && (!Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
                 unitData,
                 mapSize,
                 playersCountUnneutral,
@@ -114,7 +107,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: IBwWar): string | 
             }));
     };
     if (!unitArray.every(validator)) {
-        return getText(TextType.A0169);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0169);
     }
 
     return null;
@@ -124,10 +117,10 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: IBwWar): string | 
 export async function applyWithExtraData(action: WeaAddUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const unitArray = action.getUnitArray();
     if ((unitArray == null) || (!unitArray.length)) {
-        throw newError(`Empty unitArray.`);
+        throw Helpers_Misc.newError(`Empty unitArray.`);
     }
 
     const unitMap               = war.getUnitMap();
@@ -137,24 +130,24 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
     const warStatisticsManager  = war.getWarStatisticsManager();
     const mapSize               = unitMap.getMapSize();
     for (const data of unitArray) {
-        const unitData = getExisted(data.getUnitData());
+        const unitData = Helpers_Misc.getExisted(data.getUnitData());
         if (unitData.getLoaderUnitId() != null) {
-            throw newError(`unitData.loaderUnitId != null: ${unitData.getLoaderUnitId()}`);
+            throw Helpers_Misc.newError(`unitData.loaderUnitId != null: ${unitData.getLoaderUnitId()}`);
         }
 
-        const canBeBlockedByUnit    = getExisted(data.getCanBeBlockedByUnit());
-        const needMovableTile       = getExisted(data.getNeedMovableTile());
+        const canBeBlockedByUnit    = Helpers_Misc.getExisted(data.getCanBeBlockedByUnit());
+        const needMovableTile       = Helpers_Misc.getExisted(data.getNeedMovableTile());
         const unitId                = unitMap.getNextUnitId();
         const unitType              = unitData.getUnitType();
-        const moveType              = getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId());
-        const rawGridIndex          = getExisted(GridIndex.convertGridIndex(unitData.getGridIndex()));
-        if (getErrorCodeForUnitDataIgnoringUnitId({
+        const moveType              = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId());
+        const rawGridIndex          = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex()));
+        if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
             unitData,
             mapSize,
             gameConfig,
-            playersCountUnneutral   : PlayerIndex.Max,
+            playersCountUnneutral   : Players_Constants.PlayerIndex.Max,
         })) {
-            throw newError(`Invalid unitData: ${JSON.stringify(unitData)}`);
+            throw Helpers_Misc.newError(`Invalid unitData: ${JSON.stringify(unitData)}`);
         }
 
         const playerIndex   = unitData.getPlayerIndex();
@@ -162,7 +155,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         if (player == null) {
             continue;
         }
-        if (player.getAliveState() === AliveStateId.Dead) {
+        if (player.getAliveState() === Players_Constants.AliveStateId.Dead) {
             continue;
         }
 
@@ -182,7 +175,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         revisedUnitData.setGridIndex(gridIndex.toProto());
         revisedUnitData.setUnitId(unitId);
 
-        const unit = new (getUnitClass())();
+        const unit = new Units_Unit.Unit();
         unit.init(revisedUnitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();
@@ -191,7 +184,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         (!isFastExecute) && (unit.updateView());
 
         {
-            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unitType,
@@ -200,20 +193,20 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
                     unitLoss                    : 0,
                     normalizedHpGain            : unit.getNormalizedCurrentHp(),
                     normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }
     }
 }
 function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovableTile, canBeBlockedByUnit }: {
-    origin              : GridIndex;
-    unitMap             : IUnitMap;
-    tileMap             : ITileMap;
+    origin              : AuxiliaryTypes_GridIndex.GridIndex;
+    unitMap             : Units_IUnitMap.IUnitMap;
+    tileMap             : Tiles_ITileMap.ITileMap;
     moveType            : number;
     needMovableTile     : boolean;
     canBeBlockedByUnit  : boolean;
-}): GridIndex | null {
+}): AuxiliaryTypes_GridIndex.GridIndex | null {
     const mapSize = tileMap.getMapSize();
     if ((canBeBlockedByUnit) && (unitMap.getUnitOnMap(origin))) {
         return null;
@@ -221,10 +214,10 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
 
     const { width, height } = mapSize.getWH();
     const maxDistance = Math.max(
-        origin.getDistance(new GridIndex(0,         0           )),
-        origin.getDistance(new GridIndex(0,         height - 1  )),
-        origin.getDistance(new GridIndex(width - 1, 0           )),
-        origin.getDistance(new GridIndex(width - 1, height - 1  )),
+        origin.getDistance(new AuxiliaryTypes_GridIndex.GridIndex(0,         0           )),
+        origin.getDistance(new AuxiliaryTypes_GridIndex.GridIndex(0,         height - 1  )),
+        origin.getDistance(new AuxiliaryTypes_GridIndex.GridIndex(width - 1, 0           )),
+        origin.getDistance(new AuxiliaryTypes_GridIndex.GridIndex(width - 1, height - 1  )),
     );
 
     for (let distance = 0; distance <= maxDistance; ++distance) {

@@ -1,32 +1,22 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { show } from "../../../FloatText.ts";
 import {
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarBaseClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    FloatText,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+} from "../../../internal.ts";
 
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerVoteForDraw(war, action);
     } else {
@@ -34,12 +24,12 @@ export async function execute(war: IBwWar, action: WoPlayerVoteForDraw, isFast: 
     }
 }
 
-function fastExePlayerVoteForDraw(war: IBwWar, action: WoPlayerVoteForDraw): void {
+function fastExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExePlayerVoteForDraw_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerVoteForDraw_00),
             isFastExecute   : true,
         });
     }
@@ -50,20 +40,20 @@ function fastExePlayerVoteForDraw(war: IBwWar, action: WoPlayerVoteForDraw): voi
     );
 }
 
-async function normalExePlayerVoteForDraw(war: IBwWar, action: WoPlayerVoteForDraw): Promise<void> {
+async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (show(desc));
+    (desc) && (FloatText.show(desc));
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
         await war.moveExtraUnit({
             movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
             aiming                  : null,
             deleteViewAfterMoving   : true,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
             commonExtraData : commonExtraData,
             isFastExecute   : false,
@@ -77,59 +67,54 @@ async function normalExePlayerVoteForDraw(war: IBwWar, action: WoPlayerVoteForDr
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerVoteForDraw): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const extraData     = action.getExtraData();
         const playerIndex   = (extraData ? extraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn();
         const nickname      = await war.getPlayer(playerIndex).getNickname();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return getFormattedText(TextType.F0017, playerIndex, nickname);
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname);
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return getFormattedText(TextType.F0018, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname);
             } else {
-                return getFormattedText(TextType.F0019, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname);
             }
         }
-    } else if (war instanceof _rwWarBaseClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         const extraData     = action.getExtraData();
         const playerIndex   = (extraData ? extraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn();
         const nickname      = await war.getPlayer(playerIndex).getNickname();
         const suffix        = war.getWarOperationDescSuffix();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return `${getFormattedText(TextType.F0017, playerIndex, nickname)} ${suffix}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname)} ${suffix}`;
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return `${getFormattedText(TextType.F0018, playerIndex, nickname)} ${suffix}`;
+                return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname)} ${suffix}`;
             } else {
-                return `${getFormattedText(TextType.F0019, playerIndex, nickname)} ${suffix}`;
+                return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname)} ${suffix}`;
             }
         }
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         const extraData     = action.getExtraData();
         const playerIndex   = (extraData ? extraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn();
         const nickname      = await war.getPlayer(playerIndex).getNickname();
 
         if (!(extraData ? extraData.getIsAgree() : action.getIsAgree())) {
-            return getFormattedText(TextType.F0017, playerIndex, nickname);
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0017, playerIndex, nickname);
         } else {
             if (war.getDrawVoteManager().checkHasOngoingVote()) {
-                return getFormattedText(TextType.F0018, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0018, playerIndex, nickname);
             } else {
-                return getFormattedText(TextType.F0019, playerIndex, nickname);
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0019, playerIndex, nickname);
             }
         }
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

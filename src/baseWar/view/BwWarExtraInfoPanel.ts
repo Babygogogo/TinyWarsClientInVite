@@ -1,58 +1,57 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getLanguageText } from "../../lang/Utils.ts";
-import { getBriefData } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { Dimension } from "../../stages/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+    SinglePlayerWar_Model_SpwWar,
+    type BaseWar_Interface_IBwWar,
+    Stages_Constants,
+    NormalMap_Model_NormalMapModel,
+    Lang_Utils,
+    Numbers_Utils,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war     : IBwWar;
+    war     : BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _btnClose!                 : IUiButton;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _labelTips!                : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTips!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _scrContent!               : IUiScroller<IUiLayout>;
-    private readonly _layoutContent!            : IUiLayout;
+    private readonly _scrContent!               : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _layoutContent!            : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _layoutMapName!            : IUiLayout;
-    private readonly _labelMapNameTitle!        : IUiLabel;
-    private readonly _labelMapName!             : IUiLabel;
+    private readonly _layoutMapName!            : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMapNameTitle!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutMapDesigner!        : IUiLayout;
-    private readonly _labelMapDesignerTitle!    : IUiLabel;
-    private readonly _labelMapDesigner!         : IUiLabel;
+    private readonly _layoutMapDesigner!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMapDesignerTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapDesigner!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutTurns!              : IUiLayout;
-    private readonly _labelTurnsTitle!          : IUiLabel;
-    private readonly _labelTurns!               : IUiLabel;
+    private readonly _layoutTurns!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTurnsTitle!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurns!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutOperations!         : IUiLayout;
-    private readonly _labelOperationsTitle!     : IUiLabel;
-    private readonly _labelOperations!          : IUiLabel;
+    private readonly _layoutOperations!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelOperationsTitle!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOperations!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutScorePreview!       : IUiLayout;
-    private readonly _labelScorePreviewTitle!   : IUiLabel;
-    private readonly _labelScorePreview!        : IUiLabel;
+    private readonly _layoutScorePreview!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelScorePreviewTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelScorePreview!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -73,13 +72,13 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _updateView(): Promise<void> {
         {
-            this._labelTitle.setLangText(TextType.B0223);
-            this._labelMapNameTitle.setLangText(TextType.B0225);
-            this._labelMapDesignerTitle.setLangText(TextType.B0163);
-            this._labelTurnsTitle.setLangText(TextType.Turns);
-            this._labelOperationsTitle.setLangText(TextType.B1292);
-            this._labelScorePreviewTitle.setLangText(TextType.B1450);
-            this._labelTips.setLangText(TextType.A0379);
+            this._labelTitle.setLangText(Lang_Constants.TextType.B0223);
+            this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
+            this._labelMapDesignerTitle.setLangText(Lang_Constants.TextType.B0163);
+            this._labelTurnsTitle.setLangText(Lang_Constants.TextType.Turns);
+            this._labelOperationsTitle.setLangText(Lang_Constants.TextType.B1292);
+            this._labelScorePreviewTitle.setLangText(Lang_Constants.TextType.B1450);
+            this._labelTips.setLangText(Lang_Constants.TextType.A0379);
         }
 
         const war = this.getOpenData()?.war;
@@ -104,9 +103,9 @@ export class Panel extends UiPanel<OpenData> {
                 labelMapName.setText(`--`);
                 labelMapDesigner.setText(`--`);
             } else {
-                const briefInfo         = await getBriefData(normalMapId);
-                labelMapName.setText(`#${normalMapId} ${getLanguageText({ textArray: briefInfo?.getMapNameArray() }) ?? UndefinedError}`);
-                labelMapDesigner.setText(`${briefInfo?.getDesignerName() ?? UndefinedError}`);
+                const briefInfo         = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
+                labelMapName.setText(`#${normalMapId} ${Lang_Utils.getLanguageText({ textArray: briefInfo?.getMapNameArray() }) ?? Lang_Constants.UndefinedError}`);
+                labelMapDesigner.setText(`${briefInfo?.getDesignerName() ?? Lang_Constants.UndefinedError}`);
             }
             this._layoutMapName.arrangeItems();
             this._layoutMapDesigner.arrangeItems();
@@ -117,7 +116,7 @@ export class Panel extends UiPanel<OpenData> {
             const layoutScorePreview    = this._layoutScorePreview;
             layoutContent.removeItem(layoutScorePreview, false);
 
-            if (war instanceof getSpwWarClass()) {
+            if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
                 layoutContent.addItem(layoutScorePreview, false);
                 this._labelScorePreview.setText(`${war.calculateTotalScore()}`);
                 layoutScorePreview.arrangeItems();
@@ -130,10 +129,10 @@ export class Panel extends UiPanel<OpenData> {
 
             const scrContent        = this._scrContent;
             const contentHeight     = layoutContent.getScaledHeight();
-            const scrollerHeight    = getValueInRange({
+            const scrollerHeight    = Numbers_Utils.getValueInRange({
                 rawValue    : contentHeight,
                 minValue    : 160,
-                maxValue    : Dimension.DesignMinHeight - 80,
+                maxValue    : Stages_Constants.Dimension.DesignMinHeight - 80,
             });
             scrContent.setUnscaledManualHeight(scrollerHeight);
             scrContent.updateOnItemsChanged();

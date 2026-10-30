@@ -1,28 +1,23 @@
-import { show } from "../FloatText.ts";
-import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import { newError } from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
 import {
-    getErrorText,
-    getText,
-} from "../lang/Utils.ts";
-import { log } from "../Logger.ts";
-import { MessageCodes } from "./MessageCodes.ts";
-import { WebsocketConnection } from "./WebsocketConnection.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
+    Egret_Egret,
+    Utils_ClientErrorCode,
+    Notifications_Dispatcher,
+    GameVersions_Utils,
+    Lang_Utils,
+    Logger,
+    Networks_MessageCodes,
+    Helpers_Misc,
+    Utils_ServerErrorCode,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Networks_WebsocketConnection,
+} from "../internal.ts";
 import {
-    type MessageContainerJson as ProtoMessageContainerJson,
+type MessageContainerJson as ProtoMessageContainerJson,
     MessageContainer,
 } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 import { MsgMpwCommonHandleBoot } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { ServerErrorCode } from "../utils/ServerErrorCode.ts";
-import {
-    Event,
-    EventDispatcher,
-    ByteArray,
-} from "../egret/Egret.ts";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
@@ -36,7 +31,7 @@ export function checkAndOverrideGameVersion(): void {
     }
 }
 function getFullUrl(): string {
-    return getCurrentGameEssentialConfig()?.serverUrl;
+    return GameVersions_Utils.getCurrentGameEssentialConfig()?.serverUrl;
     // return "ws://localhost:4000";
 }
 
@@ -44,16 +39,16 @@ function getFullUrl(): string {
 // Type definitions.
 ////////////////////////////////////////////////////////////////////////////////
 export type MsgListener = {
-    msgCode     : MessageCodes;
-    callback    : (e: Event) => void;
+    msgCode     : Networks_MessageCodes.MessageCodes;
+    callback    : (e: Egret_Egret.Event) => void;
     thisObject? : unknown;
 };
 
-class NetMessageDispatcher extends EventDispatcher {
+class NetMessageDispatcher extends Egret_Egret.EventDispatcher {
     public dispatchWithContainer(container: MessageContainer): void {
         const msgData = container.getMessageData();
         if (msgData == null) {
-            throw newError(`Empty messageData?!`, ClientErrorCode.NetManager_NetMessageDispatcher_DispatchWithContainer_00);
+            throw Helpers_Misc.newError(`Empty messageData?!`, Utils_ClientErrorCode.ClientErrorCode.NetManager_NetMessageDispatcher_DispatchWithContainer_00);
         }
 
         const sData = msgData.getS();
@@ -62,10 +57,10 @@ class NetMessageDispatcher extends EventDispatcher {
         } else {
             const errorCode = (sData?.toJson() as any)?.errorCode;
             if (errorCode) {
-                if (errorCode === ServerErrorCode.Common_RequestTooFrequent_0001) {
+                if (errorCode === Utils_ServerErrorCode.ServerErrorCode.Common_RequestTooFrequent_0001) {
                     // Logger.warn(`Request too frequent: ${errorCode}`);
                 } else {
-                    show(getErrorText(errorCode));
+                    FloatText.show(Lang_Utils.getErrorText(errorCode));
                 }
             }
         }
@@ -76,7 +71,7 @@ class NetMessageDispatcher extends EventDispatcher {
 ////////////////////////////////////////////////////////////////////////////////
 // Local variables.
 ////////////////////////////////////////////////////////////////////////////////
-let _webSocketConnection    : WebsocketConnection | null = null;
+let _webSocketConnection    : Networks_WebsocketConnection.WebsocketConnection | null = null;
 // let _signalRConnection      : signalR.HubConnection | null = null;
 let _canAutoReconnect       = true;
 
@@ -92,14 +87,14 @@ export function init(): void {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function addListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
-        dispatcher.addEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.addEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function removeListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
-        dispatcher.removeEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.removeEventListener(Networks_MessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }
 }
 
@@ -118,12 +113,12 @@ export function send(containerJson: ProtoMessageContainerJson): void {
     } else {
         const connection = _webSocketConnection;
         if ((!connection) || (!connection.connected)) {
-            show(getText(TextType.A0014));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0014));
         } else {
             const messageName = getMessageName(containerJson);
             const encodedData = MessageContainer.fromJson(containerJson).encode();
-            log("%cNetManager send: ", "background:#97FF4F;", messageName, ", length: ", encodedData.byteLength, "\n", containerJson[messageName]);
-            connection.writeBytes(new ByteArray(encodedData));
+            Logger.log("%cNetManager send: ", "background:#97FF4F;", messageName, ", length: ", encodedData.byteLength, "\n", containerJson[messageName]);
+            connection.writeBytes(new Egret_Egret.ByteArray(encodedData));
             connection.flush();
         }
     }
@@ -164,7 +159,7 @@ function initConnection(): void {
 
     } else {
         if (_webSocketConnection == null) {
-            const connection = new WebsocketConnection({
+            const connection = new Networks_WebsocketConnection.WebsocketConnection({
                 callbackOnConnectionOpened  : c => _onConnectionOpened(c),
                 callbackOnConnectionClosed  : c => _onConnectionClosed(c),
                 callbackOnConnectionErrored : c => _onConnectionErrored(c),
@@ -191,31 +186,31 @@ function destroyConnection(): void {
     // }
 }
 
-function _onConnectionOpened(connection: WebsocketConnection): void {
+function _onConnectionOpened(connection: Networks_WebsocketConnection.WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        show(getText(TextType.A0007));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0007));
 
-        dispatch(TypeId.NetworkConnected);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.NetworkConnected);
     }
 }
-function _onConnectionClosed(connection: WebsocketConnection): void {
+function _onConnectionClosed(connection: Networks_WebsocketConnection.WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        dispatch(TypeId.NetworkDisconnected);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.NetworkDisconnected);
 
         if (!checkCanAutoReconnect()) {
             // FloatText.show(Lang.getText(Lang.Type.A0013));
         } else {
-            show(getText(TextType.A0008));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0008));
             resetConnection();
         }
     }
 }
-function _onConnectionErrored(connection: WebsocketConnection): void {
+function _onConnectionErrored(connection: Networks_WebsocketConnection.WebsocketConnection): void {
     if (connection === _webSocketConnection) {
         resetConnection();
     }
 }
-function _onConnectionData(connection: WebsocketConnection, container: MessageContainer): void {
+function _onConnectionData(connection: Networks_WebsocketConnection.WebsocketConnection, container: MessageContainer): void {
     if (connection !== _webSocketConnection) {
         return;
     }
@@ -273,5 +268,5 @@ function getMessageName(container: ProtoMessageContainerJson): keyof ProtoMessag
     for (const k in container) {
         return k as keyof ProtoMessageContainerJson;
     }
-    throw newError(`Invalid container.`, ClientErrorCode.Helpers_GetMessageName_00);
+    throw Helpers_Misc.newError(`Invalid container.`, Utils_ClientErrorCode.ClientErrorCode.Helpers_GetMessageName_00);
 }

@@ -1,27 +1,15 @@
-import type {
-    DecodedSpmWarSaveSlotData,
-    DecodedMapEditorData,
-    Undefinable,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    setValue as setCookiesValue,
-    getInt as getCookiesInt,
-    getFloat as getCookiesFloat,
-    getString as getCookiesString,
-} from "../helpers/Cookies.ts";
-import {
-    compress,
-    decompress,
-} from "../helpers/Gzip.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { LanguageType } from "../lang/Constants.ts";
-import { checkIsValidLanguageType } from "../lang/Utils.ts";
-import {
-    KeyPrefix,
-    NewDatabaseName,
-    NewDatabaseVersion,
-} from "./Constants.ts";
-import { warn } from "../Logger.ts";
+    Lang_Utils,
+    Helpers_Gzip,
+    Helpers_Cookies,
+    Helpers_Misc,
+    Egret_LocalStorage,
+    LocalData_Constants,
+    Lang_Constants,
+    Stages_Constants,
+    Logger,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import { CcrRoomStaticInfo } from "../proto/schema/CommonProto/CoopCustomRoom/CcrRoomStaticInfo.ts";
 import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -35,13 +23,8 @@ import { ReplayInfo } from "../proto/schema/CommonProto/Replay/ReplayInfo.ts";
 import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { SpmWarSaveSlotFullData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotFullData.ts";
 import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { Scale } from "../stages/Constants.ts";
-import {
-    setItem,
-    getItem,
-} from "../egret/LocalStorage.ts";
 
-const KEY_PREFIX                                = KeyPrefix;
+const KEY_PREFIX                                = LocalData_Constants.KeyPrefix;
 const KEY_ACCOUNT                               = KEY_PREFIX + "Account";
 const KEY_PASSWORD                              = KEY_PREFIX + "Password";
 const KEY_REMEMBER_PASSWORD                     = KEY_PREFIX + "RememberPassword";
@@ -70,14 +53,14 @@ const VALUE_TRUE                    = "1";
 const VALUE_FALSE                   = "0";
 
 namespace IndexedDb {
-    const DatabaseName      = NewDatabaseName;
-    const DatabaseVersion   = NewDatabaseVersion;
+    const DatabaseName      = LocalData_Constants.NewDatabaseName;
+    const DatabaseVersion   = LocalData_Constants.NewDatabaseVersion;
 
     export function initDatabase(): Promise<void> {
         return new Promise<void>(resolve => {
             const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
             request.onsuccess   = () => {
-                warn(`IndexedDB init successfully.`);
+                Logger.warn(`IndexedDB init successfully.`);
 
                 const database = request.result;
                 StoreNormalMapBriefData.setDatabase(database);
@@ -101,7 +84,7 @@ namespace IndexedDb {
                 resolve();
             };
             request.onupgradeneeded = () => {
-                warn(`IndexedDB upgrade successfully.`);
+                Logger.warn(`IndexedDB upgrade successfully.`);
 
                 const database = request.result;
                 StoreNormalMapBriefData.initStore(database);
@@ -123,7 +106,7 @@ namespace IndexedDb {
                 StoreMpwUnitStatistics.initStore(database);
             };
             request.onerror     = () => {
-                warn(`IndexedDB failed to init.`);
+                Logger.warn(`IndexedDB failed to init.`);
 
                 resolve();
             };
@@ -253,7 +236,7 @@ namespace IndexedDb {
             });
         }
 
-        public setData(key: KeyType, value: Undefinable<ValueType>): Promise<void> {
+        public setData(key: KeyType, value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueType>): Promise<void> {
             return new Promise<void>(resolve => {
                 const store = this._database?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
                 if (store == null) {
@@ -453,7 +436,7 @@ namespace IndexedDb {
             });
         }
 
-        public setData(key1: number, key2: number, value: Undefinable<ValueType>): Promise<void> {
+        public setData(key1: number, key2: number, value: AuxiliaryTypes_AuxiliaryTypes.Undefinable<ValueType>): Promise<void> {
             return new Promise<void>(resolve => {
                 const store = this._database?.transaction(this._storeName, "readwrite").objectStore(this._storeName);
                 if (store == null) {
@@ -520,15 +503,15 @@ export function getIsRememberPassword(): boolean {
     return (value == null) || (value === VALUE_TRUE);
 }
 
-export function setLanguageType(language: LanguageType): void {
+export function setLanguageType(language: Lang_Constants.LanguageType): void {
     setValue(KEY_LANGUAGE, "" + language);
 }
-export function getLanguageType(): LanguageType {
+export function getLanguageType(): Lang_Constants.LanguageType {
     const t = getInt(KEY_LANGUAGE);
-    if ((t != null) && (checkIsValidLanguageType(t))) {
+    if ((t != null) && (Lang_Utils.checkIsValidLanguageType(t))) {
         return t;
     } else {
-        return LanguageType.English;
+        return Lang_Constants.LanguageType.English;
     }
 }
 
@@ -628,7 +611,7 @@ export function setStageScale(scale: number): void {
     setValue(KEY_STAGE_SCALE, `${scale}`);
 }
 export function getStageScale(): number {
-    return getInt(KEY_STAGE_SCALE) || Scale.MinScale;
+    return getInt(KEY_STAGE_SCALE) || Stages_Constants.Scale.MinScale;
 }
 
 export function setIsAutoTourneyNotified(tourneyId: number, isNotified: boolean): void {
@@ -649,7 +632,7 @@ export function getMpwOverridingSkinIdArray(warId: number): number[] | undefined
     const str = getString(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: Undefinable<number[]>): void {
+export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>): void {
     setValue(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`, skinIdArray?.join(`,`) ?? ``);
 }
 
@@ -657,7 +640,7 @@ export function getRwOverridingSkinIdArray(replayId: number): number[] | undefin
     const str = getString(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: Undefinable<number[]>): void {
+export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>): void {
     setValue(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`, skinIdArray?.join(`,`) ?? ``);
 }
 
@@ -671,81 +654,81 @@ export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: Undefi
 
 export const StoreNormalMapBriefData = new IndexedDb.Store1<number, NormalMapBriefData, Uint8Array>({
     storeName           : "NormalMapBriefData",
-    encode              : mapBriefData  => compress(mapBriefData.encode()),
-    decode              : encodedData   => NormalMapBriefData.decode(decompress(encodedData))
+    encode              : mapBriefData  => Helpers_Gzip.compress(mapBriefData.encode()),
+    decode              : encodedData   => NormalMapBriefData.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreNormalMapRawData = new IndexedDb.Store1<number, MapRawData, Uint8Array>({
     storeName           : "NormalMapRawData",
-    encode              : mapRawData    => compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
+    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreMpmFullReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
     storeName           : "MpmFullReplayData",
-    encode              : replayData    => compress(replayData.encode()),
-    decode              : encodedData   => SerialWar.decode(decompress(encodedData))
+    encode              : replayData    => Helpers_Gzip.compress(replayData.encode()),
+    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreMpmFullReplayInfo = new IndexedDb.Store1<number, ReplayInfo, Uint8Array>({
     storeName           : "MpmFullReplayInfo",
-    encode              : replayInfo    => compress(replayInfo.encode()),
-    decode              : encodedData   => ReplayInfo.decode(decompress(encodedData))
+    encode              : replayInfo    => Helpers_Gzip.compress(replayInfo.encode()),
+    decode              : encodedData   => ReplayInfo.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreSpmReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
     storeName           : "SpmReplayData",
-    encode              : replayData    => compress(replayData.encode()),
-    decode              : encodedData   => SerialWar.decode(decompress(encodedData))
+    encode              : replayData    => Helpers_Gzip.compress(replayData.encode()),
+    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreMcrRoomStaticInfo = new IndexedDb.Store1<number, McrRoomStaticInfo, Uint8Array>({
     storeName           : "McrRoomStaticInfo",
-    encode              : info          => compress(info.encode()),
-    decode              : encodedData   => McrRoomStaticInfo.decode(decompress(encodedData)),
+    encode              : info          => Helpers_Gzip.compress(info.encode()),
+    decode              : encodedData   => McrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreCcrRoomStaticInfo = new IndexedDb.Store1<number, CcrRoomStaticInfo, Uint8Array>({
     storeName           : "CcrRoomStaticInfo",
-    encode              : info          => compress(info.encode()),
-    decode              : encodedData   => CcrRoomStaticInfo.decode(decompress(encodedData)),
+    encode              : info          => Helpers_Gzip.compress(info.encode()),
+    decode              : encodedData   => CcrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMfrRoomStaticInfo = new IndexedDb.Store1<number, MfrRoomStaticInfo, Uint8Array>({
     storeName           : "MfrRoomStaticInfo",
-    encode              : info          => compress(info.encode()),
-    decode              : encodedData   => MfrRoomStaticInfo.decode(decompress(encodedData)),
+    encode              : info          => Helpers_Gzip.compress(info.encode()),
+    decode              : encodedData   => MfrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWarSettings = new IndexedDb.Store1<number, MpwWarSettings, Uint8Array>({
     storeName           : "MpwWarSettings",
-    encode              : info          => compress(info.encode()),
-    decode              : encodedData   => MpwWarSettings.decode(decompress(encodedData)),
+    encode              : info          => Helpers_Gzip.compress(info.encode()),
+    decode              : encodedData   => MpwWarSettings.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWarProgressInfo = new IndexedDb.Store1<number, MpwWarProgressInfo, Uint8Array>({
     storeName           : "MpwWarProgressInfo",
-    encode              : info          => compress(info.encode()),
-    decode              : encodedData   => MpwWarProgressInfo.decode(decompress(encodedData)),
+    encode              : info          => Helpers_Gzip.compress(info.encode()),
+    decode              : encodedData   => MpwWarProgressInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
-export const StoreSpmWarSaveSlotFullData = new IndexedDb.Store2<DecodedSpmWarSaveSlotData, Uint8Array>({   // userId, slotIndex
+export const StoreSpmWarSaveSlotFullData = new IndexedDb.Store2<AuxiliaryTypes_AuxiliaryTypes.DecodedSpmWarSaveSlotData, Uint8Array>({   // userId, slotIndex
     storeName           : "SpmWarSaveSlotFullData",
-    encode              : data => compress(SpmWarSaveSlotFullData.fromJson({
+    encode              : data => Helpers_Gzip.compress(SpmWarSaveSlotFullData.fromJson({
         slotIndex           : data.slotIndex,
-        compressedWarData   : compress(data.warData.encode()),
+        compressedWarData   : Helpers_Gzip.compress(data.warData.encode()),
         encodedExtraData    : data.extraData.encode(),
     }).encode()),
     decode              : encodedData => {
-        const data              = SpmWarSaveSlotFullData.decode(decompress(encodedData));
-        const compressedWarData = getExisted(data.getCompressedWarData());
+        const data              = SpmWarSaveSlotFullData.decode(Helpers_Gzip.decompress(encodedData));
+        const compressedWarData = Helpers_Misc.getExisted(data.getCompressedWarData());
         let encodedWarData      = compressedWarData;
         // compressedWarData 在早期代码版本是未经压缩的，此处做个兼容
         try {
-            encodedWarData = decompress(compressedWarData);
+            encodedWarData = Helpers_Gzip.decompress(compressedWarData);
         } catch {
             encodedWarData = compressedWarData;
         }
         return {
             slotIndex   : data.getSlotIndex() ?? 0,
             warData     : SerialWar.decode(encodedWarData),
-            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(data.getEncodedExtraData())),
+            extraData   : SpmWarSaveSlotExtraData.decode(Helpers_Misc.getExisted(data.getEncodedExtraData())),
         };
     }
 });
-export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
+export const StoreMeFullData = new IndexedDb.Store2<AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
     storeName           : "MeFullData",
-    encode              : data => compress(MapEditorData.fromJson({
+    encode              : data => Helpers_Gzip.compress(MapEditorData.fromJson({
         slotIndex                   : data.slotIndex,
         reviewComment               : data.reviewComment,
         reviewStatus                : data.reviewStatus,
@@ -755,7 +738,7 @@ export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8A
         gridMarkData                : data.gridMarkData?.toJson(),
     }).encode()),
     decode              : encodedData => {
-        const data              = MapEditorData.decode(decompress(encodedData));
+        const data              = MapEditorData.decode(Helpers_Gzip.decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
             slotIndex                   : data.getSlotIndex(),
@@ -770,59 +753,59 @@ export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8A
 });
 export const StoreCampaignMapRawData = new IndexedDb.Store2<MapRawData, Uint8Array>({
     storeName           : "CampaignMapRawData",
-    encode              : mapRawData    => compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
+    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
 });
 export const StoreMpwHalfwayReplayData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwHalfwayReplayData",
-    encode              : warData       => compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
+    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWatchWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwWatchWarData",
-    encode              : warData       => compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
+    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwOngoingWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwOngoingWarData",
-    encode              : warData       => compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
+    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwUnitStatistics = new IndexedDb.Store2<MpwCommonGetUnitStatisticsResponse, Uint8Array>({   // userId, warId
     storeName           : "MpwUnitStatistics",
-    encode              : warData       => compress(warData.encode()),
-    decode              : encodedData   => MpwCommonGetUnitStatisticsResponse.decode(decompress(encodedData)),
+    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode              : encodedData   => MpwCommonGetUnitStatisticsResponse.decode(Helpers_Gzip.decompress(encodedData)),
 });
 
 function setValue(key: string, value: string): void {
     try {
-        setItem(key, value);
+        Egret_LocalStorage.setItem(key, value);
     } catch {
-        setCookiesValue(key, value);
+        Helpers_Cookies.setValue(key, value);
     }
 }
 function getInt(key: string): number | null {
     try {
-        const value = getItem(key);
+        const value = Egret_LocalStorage.getItem(key);
         const i = value == null ? NaN : parseInt(value);
         return isNaN(i) ? null : i;
     } catch {
-        return getCookiesInt(key);
+        return Helpers_Cookies.getInt(key);
     }
 }
 function getFloat(key: string): number | null {
     try {
-        const value = getItem(key);
+        const value = Egret_LocalStorage.getItem(key);
         const f = value == null ? NaN : parseFloat(value);
         return isNaN(f) ? null : f;
     } catch {
-        return getCookiesFloat(key);
+        return Helpers_Cookies.getFloat(key);
     }
 }
 function getString(key: string): string | null {
     try {
-        return getItem(key);
+        return Egret_LocalStorage.getItem(key);
     } catch {
-        return getCookiesString(key);
+        return Helpers_Cookies.getString(key);
     }
 }

@@ -1,61 +1,49 @@
-import { showLang } from "../../FloatText.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getLanguageText,
-    getTextForYesOrNo,
-    getWarEventConditionNodeDesc,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Graphics_Constants,
+    WarEvents_Constants,
+    WarEvents_Actions_Utils_Common,
+    WarEvents_Conditions_Utils_Common,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    getDetailDescForAction,
-    getBriefDescForAction,
-} from "../../warEvents/actions/utils/Common.ts";
-import {
-    getDetailedDescForCondition,
-    getBriefDescForCondition,
-} from "../../warEvents/conditions/utils/Common.ts";
-import { DescType } from "../../warEvents/Constants.ts";
 
 let _isShowDetail           = false;
 
 export interface OpenData {
     warEventFullData    : WarEventFullData;
     warEventIdArray     : number[];
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _btnShowDetail!        : IUiButton;
-    private readonly _btnShowBrief!         : IUiButton;
-    private readonly _btnHelp!              : IUiButton;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _labelTitle!           : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnShowDetail!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnShowBrief!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _listWarEventId!       : IUiScrollList<DataForWarEventIdRenderer>;
-    private readonly _listWarEventDetail!   : IUiScrollList<DataForWarEventDetailRenderer>;
-    private readonly _labelNoEvent!         : IUiLabel;
+    private readonly _listWarEventId!       : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForWarEventIdRenderer>;
+    private readonly _listWarEventDetail!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForWarEventDetailRenderer>;
+    private readonly _labelNoEvent!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -65,8 +53,8 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnClose,               callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,    callback: this._onNotifyMeWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback: this._onNotifyMeWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -112,8 +100,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0793),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0793),
         });
     }
 
@@ -123,7 +111,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnShowBrief();
         await this._updateListWarEventDetailAndLabelNoEvent();
 
-        showLang(TextType.A0845);
+        FloatText.showLang(Lang_Constants.TextType.A0845);
     }
     private async _onTouchedBtnIsShowBrief(): Promise<void> {
         _isShowDetail = false;
@@ -131,7 +119,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnShowBrief();
         await this._updateListWarEventDetailAndLabelNoEvent();
 
-        showLang(TextType.A0844);
+        FloatText.showLang(Lang_Constants.TextType.A0844);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -147,9 +135,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelNoEvent.setLangText(TextType.A0821);
-        this._labelTitle.setLangText(TextType.B0461);
-        this._btnClose.setLangText(TextType.B0146);
+        this._labelNoEvent.setLangText(Lang_Constants.TextType.A0821);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0461);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
     }
 
     private async _resetListWarEventId(eventId: number | null): Promise<void> {
@@ -197,13 +185,13 @@ export class Panel extends UiPanel<OpenData> {
 
 function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }: {
     fullData    : WarEventFullData;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     eventId     : number;
 }): DataForWarEventDetailRenderer[] {
     const prefixArray   = [`E${eventId}`];
     const dataArray     : DataForWarEventDetailRenderer[] = [{
         fullData        : fullData,
-        descType        : DescType.EventName,
+        descType        : WarEvents_Constants.DescType.EventName,
         gameConfig      : gameConfig,
         prefixArray     : prefixArray,
         eventId         : eventId,
@@ -217,14 +205,14 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
     dataArray.push(
         {
             fullData        : fullData,
-            descType        : DescType.EventMaxCallCountInPlayerTurn,
+            descType        : WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn,
             gameConfig      : gameConfig,
             prefixArray     : prefixArray,
             eventId         : eventId,
         },
         {
             fullData        : fullData,
-            descType        : DescType.EventMaxCallCountTotal,
+            descType        : WarEvents_Constants.DescType.EventMaxCallCountTotal,
             gameConfig      : gameConfig,
             prefixArray     : prefixArray,
             eventId         : eventId,
@@ -250,7 +238,7 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
         for (const actionId of rootNodeAndActionsArray.getActionIdArray()) {
             dataArray.push({
                 fullData        : fullData,
-                descType        : DescType.Action,
+                descType        : WarEvents_Constants.DescType.Action,
                 gameConfig      : gameConfig,
                 prefixArray     : prefixArray.concat(`A${actionId}`),
                 eventId         : eventId,
@@ -265,14 +253,14 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
 function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfig, parentNodeId, nodeIdAndFlags: nodeId, prefixArray }: {
     fullData        : WarEventFullData;
     eventId         : number;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     parentNodeId    : NodeIdAndFlags | null;
     nodeIdAndFlags  : NodeIdAndFlags;
     prefixArray     : string[];
 }): DataForWarEventDetailRenderer[] {
     const dataArray: DataForWarEventDetailRenderer[] = [{
         fullData                : fullData,
-        descType                : DescType.ConditionNode,
+        descType                : WarEvents_Constants.DescType.ConditionNode,
         gameConfig              : gameConfig,
         prefixArray             : prefixArray,
         eventId                 : eventId,
@@ -288,7 +276,7 @@ function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfi
     for (const conditionIdAndFlags of node.getConditionIdAndFlagsArray()) {
         dataArray.push({
             fullData                : fullData,
-            descType                : DescType.Condition,
+            descType                : WarEvents_Constants.DescType.Condition,
             gameConfig              : gameConfig,
             prefixArray             : prefixArray.concat([`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionIdAndFlags.getConditionId()}`]),
             eventId                 : eventId,
@@ -311,15 +299,15 @@ function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfi
     return dataArray;
 }
 
-interface DataForWarEventIdRenderer extends UiListItemData {
+interface DataForWarEventIdRenderer extends Ui_Types_UiListItemData.UiListItemData {
     eventId : number;
     panel   : Panel;
 }
 class WarEventIdRenderer
-    extends     UiListItemRenderer<DataForWarEventIdRenderer>
-    implements  IUiListItemRenderer<DataForWarEventIdRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarEventIdRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarEventIdRenderer>
 {
-    private readonly _labelId! : IUiLabel;
+    private readonly _labelId! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -335,10 +323,10 @@ class WarEventIdRenderer
     }
 }
 
-interface DataForWarEventDetailRenderer extends UiListItemData {
+interface DataForWarEventDetailRenderer extends Ui_Types_UiListItemData.UiListItemData {
     fullData                : WarEventFullData;
-    gameConfig              : GameConfig;
-    descType                : DescType;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
+    descType                : WarEvents_Constants.DescType;
     prefixArray             : string[];
     eventId                 : number;
     actionId?               : number;
@@ -347,14 +335,14 @@ interface DataForWarEventDetailRenderer extends UiListItemData {
     parentNodeIdAndFlags?   : NodeIdAndFlags;
     nodeId?                 : NodeIdAndFlags;
 }
-class WarEventDetailRenderer extends UiListItemRenderer<DataForWarEventDetailRenderer> {
-    private readonly _btnModify!        : IUiButton;
-    private readonly _groupDesc!        : IUiContainer;
-    private readonly _labelDesc!        : IUiLabel;
+class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarEventDetailRenderer> {
+    private readonly _btnModify!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupDesc!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelDesc!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._updateComponentsForLanguage();
 
@@ -380,97 +368,97 @@ class WarEventDetailRenderer extends UiListItemRenderer<DataForWarEventDetailRen
         }
 
         const descType = openData.descType;
-        if (descType === DescType.EventName) {
+        if (descType === WarEvents_Constants.DescType.EventName) {
             this._updateForEvent(openData);
-        } else if (descType === DescType.EventMaxCallCountInPlayerTurn) {
+        } else if (descType === WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn) {
             this._updateForEventCallCountInPlayerTurn(openData);
-        } else if (descType === DescType.EventMaxCallCountTotal) {
+        } else if (descType === WarEvents_Constants.DescType.EventMaxCallCountTotal) {
             this._updateForEventCallCountTotal(openData);
-        } else if (descType === DescType.ConditionNode) {
+        } else if (descType === WarEvents_Constants.DescType.ConditionNode) {
             this._updateForConditionNode(openData);
-        } else if (descType === DescType.Condition) {
+        } else if (descType === WarEvents_Constants.DescType.Condition) {
             this._updateForCondition(openData);
-        } else if (descType === DescType.Action) {
+        } else if (descType === WarEvents_Constants.DescType.Action) {
             this._updateForAction(openData);
         } else {
             const labelDesc                 = this._labelDesc;
             const prefixArray               = openData.prefixArray;
             // const prefix        = prefixArray.join(`.`);
             this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-            labelDesc.setTextColor(ColorValue.Yellow);
-            labelDesc.setLangText(TextType.A0166);
+            labelDesc.setTextColor(Graphics_Constants.ColorValue.Yellow);
+            labelDesc.setLangText(Lang_Constants.TextType.A0166);
             this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
         }
     }
     private _updateForEvent(data: DataForWarEventDetailRenderer): void {                      // DONE
         const fullData                  = data.fullData;
         const eventId                   = data.eventId;
-        const event                     = getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
+        const event                     = Helpers_Misc.getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-        this._labelDesc.setText(`${getLanguageText({ textArray: event.getEventNameArray() })}`);
+        this._labelDesc.setText(`${Lang_Utils.getLanguageText({ textArray: event.getEventNameArray() })}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForEventCallCountInPlayerTurn(data: DataForWarEventDetailRenderer): void { // DONE
         const eventId               = data.eventId;
-        const event                 = getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
+        const event                 = Helpers_Misc.getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray           = data.prefixArray;
-        const textForMaxCallCount   = `${getText(TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
-        const textForTrigger        = `${getText(TextType.B1400)}: ${getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
+        const textForMaxCallCount   = `${Lang_Utils.getText(Lang_Constants.TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
+        const textForTrigger        = `${Lang_Utils.getText(Lang_Constants.TextType.B1400)}: ${Lang_Utils.getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
         this._labelDesc.setText(`${textForMaxCallCount}, ${textForTrigger}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForEventCallCountTotal(data: DataForWarEventDetailRenderer): void {        // DONE
         const eventId                   = data.eventId;
-        const event                     = getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
+        const event                     = Helpers_Misc.getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-        this._labelDesc.setText(`${getText(TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
+        this._labelDesc.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0477)}: ${event.getMaxCallCountTotal()}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForConditionNode(data: DataForWarEventDetailRenderer): void {              // DONE
         const fullData                  = data.fullData;
         const nodeId                    = data.nodeId?.getNodeId();
-        const node                      = getExisted(fullData.getConditionNodeArray().find(v => v.getNodeId() === nodeId));
+        const node                      = Helpers_Misc.getExisted(fullData.getConditionNodeArray().find(v => v.getNodeId() === nodeId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
 
-        const desc                      = getWarEventConditionNodeDesc(node.getIsNeedAnd(), node.getIsNeedFalse());
+        const desc                      = Lang_Utils.getWarEventConditionNodeDesc(node.getIsNeedAnd(), node.getIsNeedFalse());
         this._labelDesc.setText((_isShowDetail
             ? desc
-            : (getLanguageText({ textArray: node.getNodeNameArray() }) ?? desc)
+            : (Lang_Utils.getLanguageText({ textArray: node.getNodeNameArray() }) ?? desc)
         ));
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForCondition(data: DataForWarEventDetailRenderer): void {                  // DONE
         const fullData                  = data.fullData;
-        const conditionId               = getExisted(data.conditionIdAndFlags?.getConditionId());
-        const condition                 = getExisted(fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === conditionId));
+        const conditionId               = Helpers_Misc.getExisted(data.conditionIdAndFlags?.getConditionId());
+        const condition                 = Helpers_Misc.getExisted(fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === conditionId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
         this._labelDesc.setText((_isShowDetail
-            ? getDetailedDescForCondition(condition, data.gameConfig)
+            ? WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, data.gameConfig)
             : (
-                getLanguageText({ textArray: condition.getWecCommonData()?.getConditionNameArray() })        ??
-                getBriefDescForCondition(condition, data.gameConfig)
+                Lang_Utils.getLanguageText({ textArray: condition.getWecCommonData()?.getConditionNameArray() })        ??
+                WarEvents_Conditions_Utils_Common.getBriefDescForCondition(condition, data.gameConfig)
             )
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForAction(data: DataForWarEventDetailRenderer): void {                     // DONE
         const fullData                  = data.fullData;
         const actionId                  = data.actionId;
-        const action                    = getExisted(fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === actionId));
+        const action                    = Helpers_Misc.getExisted(fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === actionId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
         this._labelDesc.setText((_isShowDetail
-            ? getDetailDescForAction(action, data.gameConfig)
+            ? WarEvents_Actions_Utils_Common.getDetailDescForAction(action, data.gameConfig)
             : (
-                getLanguageText({ textArray: action.getWeaCommonData()?.getActionNameArray() })      ??
-                getBriefDescForAction(action, data.gameConfig)
+                Lang_Utils.getLanguageText({ textArray: action.getWeaCommonData()?.getActionNameArray() })      ??
+                WarEvents_Actions_Utils_Common.getBriefDescForAction(action, data.gameConfig)
             )
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updatePositionForBtnModifyAndGroupDesc(prefixArrayLength: number): void {

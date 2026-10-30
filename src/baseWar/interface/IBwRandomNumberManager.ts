@@ -1,14 +1,16 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type {
-    SeedRandomState,
+SeedRandomState,
     SeedRandomStateJson,
 } from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 
 export interface IBwRandomNumberManager {
     init({ isNeedSeedRandom, initialState, currentState }: {
         isNeedSeedRandom: boolean;
-        initialState    : Undefinable<SeedRandomState>;
-        currentState    : Undefinable<SeedRandomState>;
+        initialState    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SeedRandomState>;
+        currentState    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SeedRandomState>;
     }): void;
 
     getIsNeedSeedRandom(): boolean;

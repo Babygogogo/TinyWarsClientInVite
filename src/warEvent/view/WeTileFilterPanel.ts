@@ -1,130 +1,113 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
 import {
-    createRange,
-    getNonNullElements,
-} from "../../helpers/Collection.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-    getPlayerTeamName,
-    getComparatorName,
-    getSetRelationName,
-    getTileBuffName,
-    getTextForYesOrNo,
-    getTileName,
-} from "../../lang/Utils.ts";
-import { AllLocationIdArray } from "../../locations/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    TileBuffs_Constants,
+    ValueAndComparators_Constants,
+    Locations_Constants,
+    ValueSetAndRelations_Constants,
+    Tiles_Utils_Filter,
+    Graphics_Constants,
+    Helpers_Collection,
+    Tiles_Constants_Common,
+    ValueAndComparators_Utils,
+    Lang_Utils,
+    GamePanels_Dict,
+    AuxiliaryTypes_GridIndex,
+    GamePanels_Manager,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Teams_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { TeamIndex } from "../../teams/Constants.ts";
-import { AllBuffTypeIdArray } from "../../tileBuffs/Constants.ts";
-import { CustomName } from "../../tiles/constants/Common.ts";
-import {
-    checkIsEmpty,
-    getErrorTip,
-    getDesc,
-} from "../../tiles/utils/Filter.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
-import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { AllSetRelationIdArray } from "../../valueSetAndRelations/Constants.ts";
 
 export interface OpenData {
-    gameConfig              : GameConfig;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
     playersCountUnneutral   : number;
-    mapSize                 : MapSize;
-    currentFilter           : Undefinable<TileFilter>;
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize;
+    currentFilter           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<TileFilter>;
     callback                : ((tileFilter: TileFilter | null) => void) | null;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnClear!                                 : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClear!                                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _scrDesc!                                  : IUiScroller<IUiLayout>;
-    private readonly _groupDesc!                                : IUiLayout;
-    private readonly _labelDesc!                                : IUiLabel;
-    private readonly _labelError!                               : IUiLabel;
+    private readonly _scrDesc!                                  : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupDesc!                                : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConPlayerIndexArray!                   : IUiButton;
-    private readonly _labelConPlayerIndexArray!                 : IUiLabel;
-    private readonly _btnConPlayerIndexPredicate!               : IUiButton;
-    private readonly _labelConPlayerIndexPredicate!             : IUiLabel;
+    private readonly _btnConPlayerIndexArray!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConPlayerIndexArray!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConPlayerIndexPredicate!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConPlayerIndexPredicate!             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConTeamIndexArray!                     : IUiButton;
-    private readonly _labelConTeamIndexArray!                   : IUiLabel;
-    private readonly _btnConTeamIndexPredicate!                 : IUiButton;
-    private readonly _labelConTeamIndexPredicate!               : IUiLabel;
+    private readonly _btnConTeamIndexArray!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTeamIndexArray!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConTeamIndexPredicate!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTeamIndexPredicate!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConTileTypeArray!                      : IUiButton;
-    private readonly _labelConTileTypeArray!                    : IUiLabel;
-    private readonly _btnConTileTypePredicate!                  : IUiButton;
-    private readonly _labelConTileTypePredicate!                : IUiLabel;
+    private readonly _btnConTileTypeArray!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileTypeArray!                    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConTileTypePredicate!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileTypePredicate!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConHp!                                 : IUiButton;
-    private readonly _labelConHp!                               : IUiLabel;
+    private readonly _btnConHp!                                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConHp!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConIsOwnerPlayerInTurn!                : IUiButton;
-    private readonly _labelConIsOwnerPlayerInTurn!              : IUiLabel;
+    private readonly _btnConIsOwnerPlayerInTurn!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConIsOwnerPlayerInTurn!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConIsHighlighted!                      : IUiButton;
-    private readonly _labelConIsHighlighted!                    : IUiLabel;
+    private readonly _btnConIsHighlighted!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConIsHighlighted!                    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConUnitsCount!                         : IUiButton;
-    private readonly _labelConUnitsCount!                       : IUiLabel;
+    private readonly _btnConUnitsCount!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConUnitsCount!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConCustomNameId!                       : IUiButton;
-    private readonly _labelConCustomNameId!                     : IUiLabel;
+    private readonly _btnConCustomNameId!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConCustomNameId!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConBuildPoint!                         : IUiButton;
-    private readonly _labelConBuildPoint!                       : IUiLabel;
+    private readonly _btnConBuildPoint!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConBuildPoint!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConCapturePoint!                       : IUiButton;
-    private readonly _labelConCapturePoint!                     : IUiLabel;
+    private readonly _btnConCapturePoint!                       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConCapturePoint!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConGridIndexArray!                     : IUiButton;
-    private readonly _labelConGridIndexArray!                   : IUiLabel;
-    private readonly _btnConGridIndexPredicate!                 : IUiButton;
-    private readonly _labelConGridIndexPredicate!               : IUiLabel;
+    private readonly _btnConGridIndexArray!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConGridIndexArray!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConGridIndexPredicate!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConGridIndexPredicate!               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConLocationIdArray!                    : IUiButton;
-    private readonly _labelConLocationIdArray!                  : IUiLabel;
-    private readonly _btnConLocationIdPredicate!                : IUiButton;
-    private readonly _labelConLocationIdPredicate!              : IUiLabel;
+    private readonly _btnConLocationIdArray!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConLocationIdArray!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConLocationIdPredicate!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConLocationIdPredicate!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConBuffTypeIdArray!                    : IUiButton;
-    private readonly _labelConBuffTypeIdArray!                  : IUiLabel;
-    private readonly _btnConBuffTypeIdPredicate!                : IUiButton;
-    private readonly _labelConBuffTypeIdPredicate!              : IUiLabel;
+    private readonly _btnConBuffTypeIdArray!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConBuffTypeIdArray!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnConBuffTypeIdPredicate!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConBuffTypeIdPredicate!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _tileFilter = new TileFilter();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
@@ -164,7 +147,7 @@ export class Panel extends UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -186,13 +169,13 @@ export class Panel extends UiPanel<OpenData> {
         if (callback == null) {
             this.closePanel();
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent             : () => getText(TextType.A0418),
-                getTextForConfirm      : () => getText(TextType.Yes),
-                getTextForCancel       : () => getText(TextType.No),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
+                getTextForConfirm      : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
+                getTextForCancel       : () => Lang_Utils.getText(Lang_Constants.TextType.No),
                 callback            : () => {
                     const tileFilter = this._getTileFilter();
-                    callback(checkIsEmpty(tileFilter) ? null : tileFilter);
+                    callback(Tiles_Utils_Filter.checkIsEmpty(tileFilter) ? null : tileFilter);
                     this.closePanel();
                 },
                 callbackOnCancel    : () => this.closePanel(),
@@ -201,8 +184,8 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnClear(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 this._tileFilter = new TileFilter();
                 this._updateView();
@@ -218,10 +201,10 @@ export class Panel extends UiPanel<OpenData> {
 
         const filter = this._getTileFilter();
         const oldCon = filter.getConPlayerIndex();
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray          : oldCon?.getValueArray() ?? [],
-            availableNumberArray        : createRange(PlayerIndex.Neutral, playersCountUnneutral + 1, 1),
-            getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B0031)),
+            availableNumberArray        : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, playersCountUnneutral + 1, 1),
+            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
             getNumberMainText           : num => `P${num}`,
             callbackOnConfirm           : valueArray => {
                 if (!valueArray.length) {
@@ -249,11 +232,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const filter = this._getTileFilter();
         const oldCon = filter.getConTeamIndex();
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray      : oldCon?.getValueArray() ?? [],
-            availableNumberArray    : createRange(TeamIndex.Neutral, playersCountUnneutral + 1, 1),
-            getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0019)),
-            getNumberMainText       : num => getPlayerTeamName(num) ?? UndefinedError,
+            availableNumberArray    : Helpers_Collection.createRange(Teams_Constants.TeamIndex.Neutral, playersCountUnneutral + 1, 1),
+            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0019)),
+            getNumberMainText       : num => Lang_Utils.getPlayerTeamName(num) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
                     filter.setConTeamIndex(null);
@@ -280,7 +263,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const filter = this._getTileFilter();
         const oldCon = filter.getConTileType();
-        openPanel(getDict().CommonChooseMultiTileTypePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiTileTypePanel, {
             gameConfig              : gameConfig,
             currentTileTypeArray    : oldCon?.getValueArray() ?? [],
             availableTileTypeArray  : gameConfig.getAllTileTypeArray(),
@@ -306,13 +289,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConHp();
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B0807),
-            availableNumberArray    : AllComparatorIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
+            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => getText(TextType.B0807),
+            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
                 minValue        : 0,
                 maxValue        : 100,
                 currentValue    : oldCon == null ? null : oldCon.getValue(),
@@ -367,13 +350,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConUnitsCount();
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B0773),
-            availableNumberArray    : AllComparatorIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
+            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => getText(TextType.B0773),
+            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
                 minValue        : 0,
                 maxValue        : 100,
                 currentValue    : oldCon == null ? null : oldCon.getValue(),
@@ -402,15 +385,15 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConCustomNameId();
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.CustomNameId),
-            availableNumberArray    : AllComparatorIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
+            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => getText(TextType.CustomNameId),
-                minValue        : CustomName.MinId,
-                maxValue        : CustomName.MaxId,
+            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
+                minValue        : Tiles_Constants_Common.CustomName.MinId,
+                maxValue        : Tiles_Constants_Common.CustomName.MaxId,
                 currentValue    : oldCon == null ? null : oldCon.getValue(),
                 callback        : value => {
                     if (value == null) {
@@ -437,13 +420,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConBuildPoint();
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.BuildPoint),
-            availableNumberArray    : AllComparatorIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
+            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => getText(TextType.BuildPoint),
+            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
                 minValue        : 0,
                 maxValue        : 100,
                 currentValue    : oldCon == null ? null : oldCon.getValue(),
@@ -472,13 +455,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConCapturePoint();
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.CapturePoint),
-            availableNumberArray    : AllComparatorIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
             currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
-            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => getText(TextType.CapturePoint),
+            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
                 minValue        : 0,
                 maxValue        : 100,
                 currentValue    : oldCon == null ? null : oldCon.getValue(),
@@ -510,8 +493,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const filter = this._getTileFilter();
-        openPanel(getDict().CommonChooseGridIndexPanel, {
-            currentGridIndexArray   : getNonNullElements(filter.getConGridIndex()?.getGridIndexArray().map(v => GridIndex.convertGridIndex(v)) ?? []),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseGridIndexPanel, {
+            currentGridIndexArray   : Helpers_Collection.getNonNullElements(filter.getConGridIndex()?.getGridIndexArray().map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v)) ?? []),
             mapSize                 : mapSize,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
@@ -533,10 +516,10 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnConLocationIdArray(): void {
         const filter = this._getTileFilter();
-        openPanel(getDict().CommonChooseMultiIntegerPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray     : filter.getConLocationId()?.getValueArray() ?? [],
-            availableIntegerArray   : AllLocationIdArray,
-            getTitleText            : () => getText(TextType.Location),
+            availableIntegerArray   : Locations_Constants.AllLocationIdArray,
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
                     filter.setConLocationId(null);
@@ -551,11 +534,11 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnConLocationIdPredicate(): void {
         const filter = this._getTileFilter();
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.Location),
-            availableNumberArray    : AllSetRelationIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
+            availableNumberArray    : ValueSetAndRelations_Constants.AllSetRelationIdArray,
             currentNumber           : filter.getConLocationId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num),
+            getNumberMainText       : num => Lang_Utils.getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConLocationId().setSetRelation(setRelation);
                 this._updateView();
@@ -565,11 +548,11 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnConBuffTypeIdArray(): void {
         const filter = this._getTileFilter();
-        openPanel(getDict().CommonChooseMultiNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray      : filter.getConBuffTypeId()?.getValueArray() ?? [],
-            availableNumberArray    : AllBuffTypeIdArray,
-            getTitleText            : () => getText(TextType.AbnormalStateTypeId),
-            getNumberMainText       : v => getTileBuffName(v) ?? UndefinedError,
+            availableNumberArray    : TileBuffs_Constants.AllBuffTypeIdArray,
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            getNumberMainText       : v => Lang_Utils.getTileBuffName(v) ?? Lang_Constants.UndefinedError,
             showNumber              : true,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
@@ -585,11 +568,11 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnConBuffTypeIdPredicate(): void {
         const filter = this._getTileFilter();
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.AbnormalStateTypeId),
-            availableNumberArray    : AllSetRelationIdArray,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            availableNumberArray    : ValueSetAndRelations_Constants.AllSetRelationIdArray,
             currentNumber           : filter.getConBuffTypeId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num),
+            getNumberMainText       : num => Lang_Utils.getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConBuffTypeId().setSetRelation(setRelation);
                 this._updateView();
@@ -605,29 +588,29 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.TileFilter);
-        this._btnClear.setLangText(TextType.B0391);
+        this._labelTitle.setLangText(Lang_Constants.TextType.TileFilter);
+        this._btnClear.setLangText(Lang_Constants.TextType.B0391);
 
-        this._btnConPlayerIndexArray.setLangText(TextType.PlayerIndex);
-        this._btnConTeamIndexArray.setLangText(TextType.B0019);
-        this._btnConTileTypeArray.setLangText(TextType.B0718);
-        this._btnConHp.setLangText(TextType.Hp);
-        this._btnConIsOwnerPlayerInTurn.setLangText(TextType.B0086);
-        this._btnConIsHighlighted.setLangText(TextType.IsHighlighted);
-        this._btnConUnitsCount.setLangText(TextType.B0773);
-        this._btnConCustomNameId.setLangText(TextType.CustomNameId);
-        this._btnConBuildPoint.setLangText(TextType.BuildPoint);
-        this._btnConCapturePoint.setLangText(TextType.CapturePoint);
-        this._btnConGridIndexArray.setLangText(TextType.B0531);
-        this._btnConLocationIdArray.setLangText(TextType.Location);
-        this._btnConBuffTypeIdArray.setLangText(TextType.AbnormalStateTypeId);
+        this._btnConPlayerIndexArray.setLangText(Lang_Constants.TextType.PlayerIndex);
+        this._btnConTeamIndexArray.setLangText(Lang_Constants.TextType.B0019);
+        this._btnConTileTypeArray.setLangText(Lang_Constants.TextType.B0718);
+        this._btnConHp.setLangText(Lang_Constants.TextType.Hp);
+        this._btnConIsOwnerPlayerInTurn.setLangText(Lang_Constants.TextType.B0086);
+        this._btnConIsHighlighted.setLangText(Lang_Constants.TextType.IsHighlighted);
+        this._btnConUnitsCount.setLangText(Lang_Constants.TextType.B0773);
+        this._btnConCustomNameId.setLangText(Lang_Constants.TextType.CustomNameId);
+        this._btnConBuildPoint.setLangText(Lang_Constants.TextType.BuildPoint);
+        this._btnConCapturePoint.setLangText(Lang_Constants.TextType.CapturePoint);
+        this._btnConGridIndexArray.setLangText(Lang_Constants.TextType.B0531);
+        this._btnConLocationIdArray.setLangText(Lang_Constants.TextType.Location);
+        this._btnConBuffTypeIdArray.setLangText(Lang_Constants.TextType.AbnormalStateTypeId);
 
-        this._btnConPlayerIndexPredicate.setLangText(TextType.B1403);
-        this._btnConTeamIndexPredicate.setLangText(TextType.B1403);
-        this._btnConTileTypePredicate.setLangText(TextType.B1403);
-        this._btnConGridIndexPredicate.setLangText(TextType.B1403);
-        this._btnConLocationIdPredicate.setLangText(TextType.B1417);
-        this._btnConBuffTypeIdPredicate.setLangText(TextType.B1417);
+        this._btnConPlayerIndexPredicate.setLangText(Lang_Constants.TextType.B1403);
+        this._btnConTeamIndexPredicate.setLangText(Lang_Constants.TextType.B1403);
+        this._btnConTileTypePredicate.setLangText(Lang_Constants.TextType.B1403);
+        this._btnConGridIndexPredicate.setLangText(Lang_Constants.TextType.B1403);
+        this._btnConLocationIdPredicate.setLangText(Lang_Constants.TextType.B1417);
+        this._btnConBuffTypeIdPredicate.setLangText(Lang_Constants.TextType.B1417);
 
         this._updateLabelDescAndLabelError();
 
@@ -654,11 +637,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const tileFilter        = this._getTileFilter();
         const gameConfig        = openData.gameConfig;
-        const errorTip          = getErrorTip(tileFilter, openData.playersCountUnneutral, openData.mapSize, gameConfig);
+        const errorTip          = Tiles_Utils_Filter.getErrorTip(tileFilter, openData.playersCountUnneutral, openData.mapSize, gameConfig);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
-        this._labelDesc.setText(getDesc(tileFilter, gameConfig));
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(Tiles_Utils_Filter.getDesc(tileFilter, gameConfig));
         this._groupDesc.arrangeItems();
         this._scrDesc.updateOnItemsChanged();
     }
@@ -666,13 +649,13 @@ export class Panel extends UiPanel<OpenData> {
         const con           = this._getTileFilter().getConPlayerIndex();
         const valueArray    = con == null ? null : con.getValueArray();
         this._labelConPlayerIndexArray.setText(valueArray?.map(v => `P${v}`).join(`, `) ?? ``);
-        this._labelConPlayerIndexPredicate.setText(con == null ? `` : getTextForYesOrNo(con.getIsOneOf()));
+        this._labelConPlayerIndexPredicate.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con.getIsOneOf()));
     }
     private _updateLabelsForConTeamIndex(): void {
         const con           = this._getTileFilter().getConTeamIndex();
         const valueArray    = con == null ? null : con.getValueArray();
-        this._labelConTeamIndexArray.setText(valueArray?.map(v => getPlayerTeamName(v)).join(`, `) ?? ``);
-        this._labelConTeamIndexPredicate.setText(con == null ? `` : getTextForYesOrNo(con.getIsOneOf()));
+        this._labelConTeamIndexArray.setText(valueArray?.map(v => Lang_Utils.getPlayerTeamName(v)).join(`, `) ?? ``);
+        this._labelConTeamIndexPredicate.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con.getIsOneOf()));
     }
     private _updateLabelsForConTileType(): void {
         const gameConfig = this.getOpenData()?.gameConfig;
@@ -682,51 +665,51 @@ export class Panel extends UiPanel<OpenData> {
 
         const con           = this._getTileFilter().getConTileType();
         const valueArray    = con == null ? null : con.getValueArray();
-        this._labelConTileTypeArray.setText(valueArray?.map(v => getTileName(v, gameConfig)).join(`, `) ?? ``);
-        this._labelConTileTypePredicate.setText(con == null ? `` : getTextForYesOrNo(con.getIsOneOf()));
+        this._labelConTileTypeArray.setText(valueArray?.map(v => Lang_Utils.getTileName(v, gameConfig)).join(`, `) ?? ``);
+        this._labelConTileTypePredicate.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con.getIsOneOf()));
     }
     private _updateLabelsForConHp(): void {
         const con = this._getTileFilter().getConHp();
-        this._labelConHp.setText(con == null ? `` : getBriefDesc(con));
+        this._labelConHp.setText(con == null ? `` : ValueAndComparators_Utils.getBriefDesc(con));
     }
     private _updateLabelsForConIsOwnerPlayerInTurn(): void {
         const con = this._getTileFilter().getConIsOwnerPlayerInTurn();
-        this._labelConIsOwnerPlayerInTurn.setText(con == null ? `` : getTextForYesOrNo(con));
+        this._labelConIsOwnerPlayerInTurn.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con));
     }
     private _updateLabelsForConIsHighlighted(): void {
         const con = this._getTileFilter().getConIsHighlighted();
-        this._labelConIsHighlighted.setText(con == null ? `` : getTextForYesOrNo(con));
+        this._labelConIsHighlighted.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con));
     }
     private _updateLabelsForConUnitsCount(): void {
         const con = this._getTileFilter().getConUnitsCount();
-        this._labelConUnitsCount.setText(con == null ? `` : getBriefDesc(con));
+        this._labelConUnitsCount.setText(con == null ? `` : ValueAndComparators_Utils.getBriefDesc(con));
     }
     private _updateLabelsForConCustomNameId(): void {
         const con = this._getTileFilter().getConCustomNameId();
-        this._labelConCustomNameId.setText(con == null ? `` : getBriefDesc(con));
+        this._labelConCustomNameId.setText(con == null ? `` : ValueAndComparators_Utils.getBriefDesc(con));
     }
     private _updateLabelsForConBuildPoint(): void {
         const con = this._getTileFilter().getConBuildPoint();
-        this._labelConBuildPoint.setText(con == null ? `` : getBriefDesc(con));
+        this._labelConBuildPoint.setText(con == null ? `` : ValueAndComparators_Utils.getBriefDesc(con));
     }
     private _updateLabelsForConCapturePoint(): void {
         const con = this._getTileFilter().getConCapturePoint();
-        this._labelConCapturePoint.setText(con == null ? `` : getBriefDesc(con));
+        this._labelConCapturePoint.setText(con == null ? `` : ValueAndComparators_Utils.getBriefDesc(con));
     }
     private _updateLabelsForConGridIndex() {
         const con = this._getTileFilter().getConGridIndex();
         this._labelConGridIndexArray.setText(con?.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `) ?? ``);
-        this._labelConGridIndexPredicate.setText(con == null ? `` : getTextForYesOrNo(con.getIsOneOf()));
+        this._labelConGridIndexPredicate.setText(con == null ? `` : Lang_Utils.getTextForYesOrNo(con.getIsOneOf()));
     }
     private _updateLabelsForConLocationId() {
         const con = this._getTileFilter().getConLocationId();
         this._labelConLocationIdArray.setText(con?.getValueArray()?.join(`, `) ?? ``);
-        this._labelConLocationIdPredicate.setText(con == null ? `` : getSetRelationName(con.getSetRelation()));
+        this._labelConLocationIdPredicate.setText(con == null ? `` : Lang_Utils.getSetRelationName(con.getSetRelation()));
     }
     private _updateLabelsForConBuffTypeId() {
         const con = this._getTileFilter().getConBuffTypeId();
-        this._labelConBuffTypeIdArray.setText(con?.getValueArray()?.map(v => getTileBuffName(v))?.join(`, `) ?? ``);
-        this._labelConBuffTypeIdPredicate.setText(con == null ? `` : getSetRelationName(con.getSetRelation()));
+        this._labelConBuffTypeIdArray.setText(con?.getValueArray()?.map(v => Lang_Utils.getTileBuffName(v))?.join(`, `) ?? ``);
+        this._labelConBuffTypeIdPredicate.setText(con == null ? `` : Lang_Utils.getSetRelationName(con.getSetRelation()));
     }
 
     private _getTileFilter(): TileFilter {

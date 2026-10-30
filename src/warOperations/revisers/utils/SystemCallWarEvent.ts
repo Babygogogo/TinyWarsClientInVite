@@ -1,13 +1,15 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError } from "../../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-export function revise(war: IBwWar, rawAction: WoSystemCallWarEvent, requesterUserId: Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystemCallWarEvent, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
-        throw newError(`Invalid requesterUserId.`, ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_00);
+        throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_00);
     }
 
     const warEventId = rawAction.getWarEventId();
@@ -18,7 +20,7 @@ export function revise(war: IBwWar, rawAction: WoSystemCallWarEvent, requesterUs
             (warEventId !== callableWarEventIdAndDataIndex.warEventId)  ||
             (dataIndex !== callableWarEventIdAndDataIndex.dataIndex)
         ) {
-            throw newError(`Invalid warEventId: ${warEventId}`, ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_03);
+            throw Helpers_Misc.newError(`Invalid warEventId: ${warEventId}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemCallWarEvent_03);
         }
     }
 

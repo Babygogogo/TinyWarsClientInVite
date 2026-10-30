@@ -1,11 +1,13 @@
-import type { GridIndex } from "./GridIndex.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+} from "../internal.ts";
 import { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 
 export class GridIndexAndWeight {
-    public  gridIndex: GridIndex;
+    public  gridIndex: AuxiliaryTypes_GridIndex.GridIndex;
     public  weight: number;
 
-    public constructor(gridIndex: GridIndex, weight: number) {
+    public constructor(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, weight: number) {
         this.gridIndex  = gridIndex;
         this.weight     = weight;
     }

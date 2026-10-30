@@ -1,24 +1,12 @@
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    setMaxConcurrentCount,
-    updateOnMsgMmrGetBootTimerDaysRange,
-    updateOnMsgMmrSetBootTimerDaysRange,
-    updateOnFailedMsgMmrGetRoomPublicInfo,
-    updateOnMsgMmrGetRoomPublicInfo,
-    setJoinedRoomIdArray,
-    updateOnMsgMmrSetBannedCoIdArray,
-    updateOnMsgMmrGetBannedNormalMapIdArray,
-    updateOnMsgMmrSetBannedNormalMapIdArray,
-    updateOnMsgMmrSetSelfSettings,
-    updateOnMsgMmrDeleteRoomByServer,
-} from "./MmrModel.ts";
-import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Networks_MessageCodes,
+    MultiMatchRoom_Model_MmrModel,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as MmrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrDeleteRoomByServer/S.ts";
 import type { S as MmrGetBannedNormalMapIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBannedNormalMapIdArray/S.ts";
 import type { S as MmrGetBootTimerDaysRangeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBootTimerDaysRange/S.ts";
@@ -30,158 +18,157 @@ import type { S as MmrSetBannedNormalMapIdArrayResponse } from "../../proto/sche
 import type { S as MmrSetBootTimerDaysRangeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBootTimerDaysRange/S.ts";
 import type { S as MmrSetMaxConcurrentCountResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetMaxConcurrentCount/S.ts";
 import type { S as MmrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgMmrGetMaxConcurrentCount,         callback: _onMsgMmrGetMaxConcurrentCount },
-        { msgCode: MessageCodes.MsgMmrGetRoomPublicInfo,             callback: _onMsgMmrGetRoomPublicInfo },
-        { msgCode: MessageCodes.MsgMmrGetJoinedRoomIdArray,          callback: _onMsgMmrGetJoinedRoomIdArray },
-        { msgCode: MessageCodes.MsgMmrSetBannedCoIdArray,            callback: _onMsgMmrSetBannedCoIdArray },
-        { msgCode: MessageCodes.MsgMmrSetMaxConcurrentCount,         callback: _onMsgMmrSetMaxConcurrentCount },
-        { msgCode: MessageCodes.MsgMmrGetBannedNormalMapIdArray,     callback: _onMsgMmrGetBannedNormalMapIdArray },
-        { msgCode: MessageCodes.MsgMmrSetBannedNormalMapIdArray,     callback: _onMsgMmrSetBannedNormalMapIdArray },
-        { msgCode: MessageCodes.MsgMmrGetBootTimerDaysRange,         callback: _onMsgMmrGetBootTimerDaysRange },
-        { msgCode: MessageCodes.MsgMmrSetBootTimerDaysRange,         callback: _onMsgMmrSetBootTimerDaysRange },
-        { msgCode: MessageCodes.MsgMmrSetSelfSettings,               callback: _onMsgMmrSetSelfSettings },
-        { msgCode: MessageCodes.MsgMmrDeleteRoomByServer,            callback: _onMsgMmrDeleteRoomByServer },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetMaxConcurrentCount,         callback: _onMsgMmrGetMaxConcurrentCount },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetRoomPublicInfo,             callback: _onMsgMmrGetRoomPublicInfo },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetJoinedRoomIdArray,          callback: _onMsgMmrGetJoinedRoomIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBannedCoIdArray,            callback: _onMsgMmrSetBannedCoIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetMaxConcurrentCount,         callback: _onMsgMmrSetMaxConcurrentCount },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetBannedNormalMapIdArray,     callback: _onMsgMmrGetBannedNormalMapIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBannedNormalMapIdArray,     callback: _onMsgMmrSetBannedNormalMapIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetBootTimerDaysRange,         callback: _onMsgMmrGetBootTimerDaysRange },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBootTimerDaysRange,         callback: _onMsgMmrSetBootTimerDaysRange },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetSelfSettings,               callback: _onMsgMmrSetSelfSettings },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrDeleteRoomByServer,            callback: _onMsgMmrDeleteRoomByServer },
     ]);
 }
 
 export function reqMmrGetMaxConcurrentCount(): void {
-    send({ MsgMmrGetMaxConcurrentCount: { c: {} } });
+    Networks_Manager.send({ MsgMmrGetMaxConcurrentCount: { c: {} } });
 }
-function _onMsgMmrGetMaxConcurrentCount(e: Event): void {
+function _onMsgMmrGetMaxConcurrentCount(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetMaxConcurrentCountResponse;
     if (!data.getErrorCode()) {
-        setMaxConcurrentCount(false, getExisted(data.getMaxCountForStd()));
-        setMaxConcurrentCount(true, getExisted(data.getMaxCountForFog()));
-        dispatch(TypeId.MsgMmrGetMaxConcurrentCount, data);
+        MultiMatchRoom_Model_MmrModel.setMaxConcurrentCount(false, Helpers_Misc.getExisted(data.getMaxCountForStd()));
+        MultiMatchRoom_Model_MmrModel.setMaxConcurrentCount(true, Helpers_Misc.getExisted(data.getMaxCountForFog()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrGetMaxConcurrentCount, data);
     }
 }
 
 export function reqMmrGetBootTimerDaysRange(): void {
-    send({ MsgMmrGetBootTimerDaysRange: { c: {} } });
+    Networks_Manager.send({ MsgMmrGetBootTimerDaysRange: { c: {} } });
 }
-function _onMsgMmrGetBootTimerDaysRange(e: Event): void {
+function _onMsgMmrGetBootTimerDaysRange(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetBootTimerDaysRangeResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMmrGetBootTimerDaysRange(data);
-        dispatch(TypeId.MsgMmrGetBootTimerDaysRange, data);
+        MultiMatchRoom_Model_MmrModel.updateOnMsgMmrGetBootTimerDaysRange(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrGetBootTimerDaysRange, data);
     }
 }
 
 export function reqMmrSetBootTimerDaysRange(rangeForStd: number[], rangeForFog: number[]): void {
-    send({ MsgMmrSetBootTimerDaysRange: { c: {
+    Networks_Manager.send({ MsgMmrSetBootTimerDaysRange: { c: {
         rangeForStd : rangeForStd,
         rangeForFog : rangeForFog,
     } } });
 }
-function _onMsgMmrSetBootTimerDaysRange(e: Event): void {
+function _onMsgMmrSetBootTimerDaysRange(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetBootTimerDaysRangeResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMmrSetBootTimerDaysRange(data);
-        dispatch(TypeId.MsgMmrSetBootTimerDaysRange, data);
+        MultiMatchRoom_Model_MmrModel.updateOnMsgMmrSetBootTimerDaysRange(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrSetBootTimerDaysRange, data);
     }
 }
 
 export function reqMmrGetRoomPublicInfo(roomId: number): void {
-    send({ MsgMmrGetRoomPublicInfo: { c: {
+    Networks_Manager.send({ MsgMmrGetRoomPublicInfo: { c: {
         roomId,
     } }, });
 }
-async function _onMsgMmrGetRoomPublicInfo(e: Event): Promise<void> {
+async function _onMsgMmrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrGetRoomPublicInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMsgMmrGetRoomPublicInfo(data);
+        MultiMatchRoom_Model_MmrModel.updateOnFailedMsgMmrGetRoomPublicInfo(data);
     } else {
-        await updateOnMsgMmrGetRoomPublicInfo(data);
-        dispatch(TypeId.MsgMmrGetRoomPublicInfo, data);
+        await MultiMatchRoom_Model_MmrModel.updateOnMsgMmrGetRoomPublicInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrGetRoomPublicInfo, data);
     }
 }
 
 export function reqMmrGetJoinedRoomIdArray(): void {
-    send({ MsgMmrGetJoinedRoomIdArray: { c: {
+    Networks_Manager.send({ MsgMmrGetJoinedRoomIdArray: { c: {
     }, }, });
 }
-function _onMsgMmrGetJoinedRoomIdArray(e: Event): void {
+function _onMsgMmrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetJoinedRoomIdArrayResponse;
-    setJoinedRoomIdArray(data.getRoomIdArray());
-    dispatch(TypeId.MsgMmrGetJoinedRoomIdArray, data);
+    MultiMatchRoom_Model_MmrModel.setJoinedRoomIdArray(data.getRoomIdArray());
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrGetJoinedRoomIdArray, data);
 }
 
 export function reqMmrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
-    send({ MsgMmrSetBannedCoIdArray: { c: {
+    Networks_Manager.send({ MsgMmrSetBannedCoIdArray: { c: {
         roomId          : roomId,
         bannedCoIdArray : bannedCoIdArray,
     } }, });
 }
-async function _onMsgMmrSetBannedCoIdArray(e: Event): Promise<void> {
+async function _onMsgMmrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrSetBannedCoIdArrayResponse;
     if (!data.getErrorCode()) {
-        await updateOnMsgMmrSetBannedCoIdArray(data);
-        dispatch(TypeId.MsgMmrSetBannedCoIdArray, data);
+        await MultiMatchRoom_Model_MmrModel.updateOnMsgMmrSetBannedCoIdArray(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrSetBannedCoIdArray, data);
     }
 }
 
 export function reqMmrSetMaxConcurrentCount(maxCountForStd: number, maxCountForFog: number): void {
-    send({ MsgMmrSetMaxConcurrentCount: { c: {
+    Networks_Manager.send({ MsgMmrSetMaxConcurrentCount: { c: {
         maxCountForStd,
         maxCountForFog,
     } }, });
 }
-function _onMsgMmrSetMaxConcurrentCount(e: Event): void {
+function _onMsgMmrSetMaxConcurrentCount(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetMaxConcurrentCountResponse;
     if (!data.getErrorCode()) {
-        setMaxConcurrentCount(false, getExisted(data.getMaxCountForStd()));
-        setMaxConcurrentCount(true, getExisted(data.getMaxCountForFog()));
-        dispatch(TypeId.MsgMmrSetMaxConcurrentCount, data);
+        MultiMatchRoom_Model_MmrModel.setMaxConcurrentCount(false, Helpers_Misc.getExisted(data.getMaxCountForStd()));
+        MultiMatchRoom_Model_MmrModel.setMaxConcurrentCount(true, Helpers_Misc.getExisted(data.getMaxCountForFog()));
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrSetMaxConcurrentCount, data);
     }
 }
 
 export function reqMmrGetBannedNormalMapIdArray(): void {
-    send({ MsgMmrGetBannedNormalMapIdArray: { c: {
+    Networks_Manager.send({ MsgMmrGetBannedNormalMapIdArray: { c: {
     } } });
 }
-function _onMsgMmrGetBannedNormalMapIdArray(e: Event): void {
+function _onMsgMmrGetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetBannedNormalMapIdArrayResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMmrGetBannedNormalMapIdArray(data);
-        dispatch(TypeId.MsgMmrGetBannedNormalMapIdArray, data);
+        MultiMatchRoom_Model_MmrModel.updateOnMsgMmrGetBannedNormalMapIdArray(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrGetBannedNormalMapIdArray, data);
     }
 }
 
 export function reqMmrSetBannedNormalMapIdArray(normalMapIdArrayForStd: number[], normalMapIdArrayForFog: number[]): void {
-    send({ MsgMmrSetBannedNormalMapIdArray: { c: {
+    Networks_Manager.send({ MsgMmrSetBannedNormalMapIdArray: { c: {
         bannedNormalMapIdArrayForStd  : normalMapIdArrayForStd,
         bannedNormalMapIdArrayForFog  : normalMapIdArrayForFog,
     } } });
 }
-function _onMsgMmrSetBannedNormalMapIdArray(e: Event): void {
+function _onMsgMmrSetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetBannedNormalMapIdArrayResponse;
     if (!data.getErrorCode()) {
-        updateOnMsgMmrSetBannedNormalMapIdArray(data);
-        dispatch(TypeId.MsgMmrSetBannedNormalMapIdArray, data);
+        MultiMatchRoom_Model_MmrModel.updateOnMsgMmrSetBannedNormalMapIdArray(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrSetBannedNormalMapIdArray, data);
     }
 }
 
 export function reqMmrSetSelfSettings(roomId: number, coId: number, unitAndTileSkinId: number): void {
-    send({ MsgMmrSetSelfSettings: { c: {
+    Networks_Manager.send({ MsgMmrSetSelfSettings: { c: {
         roomId,
         coId,
         unitAndTileSkinId,
     }, }, });
 }
-async function _onMsgMmrSetSelfSettings(e: Event): Promise<void> {
+async function _onMsgMmrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
-        await updateOnMsgMmrSetSelfSettings(data);
-        dispatch(TypeId.MsgMmrSetSelfSettings, data);
+        await MultiMatchRoom_Model_MmrModel.updateOnMsgMmrSetSelfSettings(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrSetSelfSettings, data);
     }
 }
 
-function _onMsgMmrDeleteRoomByServer(e: Event): void {
+function _onMsgMmrDeleteRoomByServer(e: Egret_Egret.Event): void {
     const data = e.data as MmrDeleteRoomByServerResponse;
-    updateOnMsgMmrDeleteRoomByServer(data);
-    dispatch(TypeId.MsgMmrDeleteRoomByServer, data);
+    MultiMatchRoom_Model_MmrModel.updateOnMsgMmrDeleteRoomByServer(data);
+    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMmrDeleteRoomByServer, data);
 }

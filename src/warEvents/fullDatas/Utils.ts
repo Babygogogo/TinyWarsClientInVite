@@ -1,47 +1,40 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import {
-    checkIsValidId,
-    checkIsValidName,
-} from "../../customCounters/Utils.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+    CustomCounters_Utils,
+    WarEvents_Events_Utils,
+    WarEvents_Actions_Utils_Common,
+    WarEvents_Conditions_Utils_Common,
+    WarEvents_ConditionNodes_Utils,
+    Utils_ClientErrorCode,
+    WarEvents_Constants,
+    Helpers_Collection,
+    Helpers_Misc,
+    WarEvents_Conditions_Constants,
+    WarEvents_Actions_Constants_Common,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { MaxCounts } from "../actions/constants/Common.ts";
-import {
-    checkIsValidWarEventActionId,
-    checkIsValidWarEventAction,
-} from "../actions/utils/Common.ts";
-import { checkIsValidWarEventConditionNode } from "../conditionNodes/Utils.ts";
-import { MaxCountPerMap } from "../conditions/Constants.ts";
-import { checkIsValidWarEventCondition } from "../conditions/utils/Common.ts";
-import {
-    ConditionNode,
-    Event,
-} from "../Constants.ts";
-import { checkIsValidWarEvent } from "../events/Utils.ts";
 
-export function getEvent(fullData: WarEventFullData, eventId: number): Undefinable<WarEvent> {
+export function getEvent(fullData: WarEventFullData, eventId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEvent> {
     return fullData.getEventArray().find(v => v.getEventId() === eventId);
 }
-export function getCondition(fullData: WarEventFullData, conditionId: number): Undefinable<WarEventCondition> {
+export function getCondition(fullData: WarEventFullData, conditionId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventCondition> {
     return fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === conditionId);
 }
-export function getNode(fullData: WarEventFullData, nodeId: number): Undefinable<WarEventConditionNode> {
+export function getNode(fullData: WarEventFullData, nodeId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventConditionNode> {
     return fullData.getConditionNodeArray().find(v => v.getNodeId() === nodeId);
 }
-export function getAction(fullData: WarEventFullData, actionId: number): Undefinable<WarEventAction> {
+export function getAction(fullData: WarEventFullData, actionId: number): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventAction> {
     return fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === actionId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getAllWarEventIdArray(fullData: Undefinable<WarEventFullData>): number[] {
+export function getAllWarEventIdArray(fullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>): number[] {
     const idArray: number[] = [];
     for (const event of fullData?.getEventArray() ?? []) {
         const eventId = event.getEventId();
@@ -52,7 +45,7 @@ export function getAllWarEventIdArray(fullData: Undefinable<WarEventFullData>): 
     return idArray;
 }
 
-export function checkIsEmptyWarEventFullData(warEventFullData: Undefinable<WarEventFullData>): boolean {
+export function checkIsEmptyWarEventFullData(warEventFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>): boolean {
     if (warEventFullData == null) {
         return true;
     }
@@ -63,7 +56,7 @@ export function checkIsEmptyWarEventFullData(warEventFullData: Undefinable<WarEv
         && (!warEventFullData.getConditionNodeArray().length);
 }
 
-export function trimWarEventFullData(fullData: Undefinable<WarEventFullData>, eventIdArray: Undefinable<number[]>, needClone: boolean): WarEventFullData {
+export function trimWarEventFullData(fullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>, eventIdArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, needClone: boolean): WarEventFullData {
     const trimmedData = new WarEventFullData();
     if ((fullData == null) || (eventIdArray == null)) {
         return trimmedData;
@@ -101,7 +94,7 @@ export function trimWarEventFullData(fullData: Undefinable<WarEventFullData>, ev
         }
 
         {
-            const nodeIdAndFlagsArray = event.getRootNodeAndActionsArray().map(v => getExisted(v.getNodeIdAndFlags()));
+            const nodeIdAndFlagsArray = event.getRootNodeAndActionsArray().map(v => Helpers_Misc.getExisted(v.getNodeIdAndFlags()));
             for (let i = 0; i < nodeIdAndFlagsArray.length; ++i) {
                 const nodeId    = nodeIdAndFlagsArray[i].getNodeId();
                 const node      = srcNodeArray.find(v => v.getNodeId() === nodeId);
@@ -136,13 +129,13 @@ type WarEventActionDict         = Map<number, WarEventAction>;
 type WarEventConditionDict      = Map<number, WarEventCondition>;
 type WarEventConditionNodeDict  = Map<number, WarEventConditionNode>;
 export function getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, mapSize, playersCountUnneutral }: {
-    warEventFullData        : Undefinable<WarEventFullData>;
-    gameConfig              : GameConfig;
-    mapSize                 : MapSize;
+    warEventFullData        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>;
+    gameConfig              : GameConfigs_GameConfig.GameConfig;
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize;
     playersCountUnneutral   : number;
-}): ClientErrorCode {   // DONE
+}): Utils_ClientErrorCode.ClientErrorCode {   // DONE
     if (warEventFullData == null) {
-        return ClientErrorCode.NoError;
+        return Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 
     const actionDict = new Map<number, WarEventAction>();
@@ -150,69 +143,69 @@ export function getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, 
         const actionId = action.getWeaCommonData()?.getActionId();
         if ((actionId == null)                                              ||
             (actionDict.has(actionId))                                      ||
-            (!checkIsValidWarEventActionId(actionId))
+            (!WarEvents_Actions_Utils_Common.checkIsValidWarEventActionId(actionId))
         ) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_00;
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_00;
         }
         actionDict.set(actionId, action);
     }
-    if (actionDict.size > MaxCounts.PerMap) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_01;
+    if (actionDict.size > WarEvents_Actions_Constants_Common.MaxCounts.PerMap) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_01;
     }
 
     const conditionDict = new Map<number, WarEventCondition>();
     for (const condition of warEventFullData.getConditionArray()) {
         const conditionId = condition.getWecCommonData()?.getConditionId();
         if ((conditionId == null) || (conditionDict.has(conditionId))) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_02;
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_02;
         }
         conditionDict.set(conditionId, condition);
     }
-    if (conditionDict.size > MaxCountPerMap) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_03;
+    if (conditionDict.size > WarEvents_Conditions_Constants.MaxCountPerMap) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_03;
     }
 
     const nodeDict = new Map<number, WarEventConditionNode>();
     for (const node of warEventFullData.getConditionNodeArray()) {
         const nodeId = node.getNodeId();
         if ((nodeId == null) || (nodeDict.has(nodeId))) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_04;
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_04;
         }
         nodeDict.set(nodeId, node);
     }
-    if (nodeDict.size > ConditionNode.MaxCountPerMap) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_05;
+    if (nodeDict.size > WarEvents_Constants.ConditionNode.MaxCountPerMap) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_05;
     }
 
     const eventDict = new Map<number, WarEvent>();
     for (const event of warEventFullData.getEventArray()) {
         const eventId = event.getEventId();
         if ((eventId == null) || (eventDict.has(eventId))) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_06;
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_06;
         }
         eventDict.set(eventId, event);
     }
-    if (eventDict.size > Event.MaxEventsPerMap) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_07;
+    if (eventDict.size > WarEvents_Constants.Event.MaxEventsPerMap) {
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_07;
     }
 
     const customCounterNameDict = new Map<number, string>();
     for (const idAndName of warEventFullData.getCustomCounterNameArray()) {
         const id = idAndName.getId() ?? 0;
-        if (!checkIsValidId(id)) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_08;
+        if (!CustomCounters_Utils.checkIsValidId(id)) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_08;
         }
         if (customCounterNameDict.has(id)) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_09;
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_09;
         }
 
         const name = idAndName.getName() ?? ``;
-        if (!checkIsValidName(name)) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_10;
+        if (!CustomCounters_Utils.checkIsValidName(name)) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_10;
         }
         for (const [, value] of customCounterNameDict) {
             if (name == value) {
-                return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_11;
+                return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_11;
             }
         }
 
@@ -220,38 +213,38 @@ export function getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, 
     }
 
     if (!checkIsEveryWarEventActionInUse(actionDict, eventDict)) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_12;
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_12;
     }
     if (!checkIsEveryWarEventConditionInUse(conditionDict, nodeDict)) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_13;
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_13;
     }
     if (!checkIsEveryWarEventConditionNodeInUse(nodeDict, eventDict)) {
-        return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_14;
+        return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_14;
     }
 
     const customCounterNameSet = new Set(customCounterNameDict.values());
     for (const [, action] of actionDict) {
-        if (!checkIsValidWarEventAction({ action, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_15;
+        if (!WarEvents_Actions_Utils_Common.checkIsValidWarEventAction({ action, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_15;
         }
     }
     for (const [, condition] of conditionDict) {
-        if (!checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_16;
+        if (!WarEvents_Conditions_Utils_Common.checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_16;
         }
     }
     for (const [, conditionNode] of nodeDict) {
-        if (!checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict })) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_17;
+        if (!WarEvents_ConditionNodes_Utils.checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict })) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_17;
         }
     }
     for (const [, warEvent] of eventDict) {
-        if (!checkIsValidWarEvent({ warEvent, nodeDict, actionDict })) {
-            return ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_18;
+        if (!WarEvents_Events_Utils.checkIsValidWarEvent({ warEvent, nodeDict, actionDict })) {
+            return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_18;
         }
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
 function checkIsEveryWarEventActionInUse(actionDict: WarEventActionDict, eventDict: WarEventDict): boolean {    // DONE
     for (const [actionId] of actionDict) {
@@ -324,12 +317,12 @@ export function checkAndDeleteUnusedComponents(fullData: WarEventFullData): {
 
     let deletedConditionsCount = 0;
     for (const condition of fullData.getConditionArray().concat()) {
-        deletedConditionsCount += checkAndDeleteUnusedCondition(fullData, getExisted(condition.getWecCommonData()?.getConditionId()));
+        deletedConditionsCount += checkAndDeleteUnusedCondition(fullData, Helpers_Misc.getExisted(condition.getWecCommonData()?.getConditionId()));
     }
 
     let deletedActionsCount = 0;
     for (const action of fullData.getActionArray().concat()) {
-        deletedActionsCount += checkAndDeleteUnusedAction(fullData, getExisted(action.getWeaCommonData()?.getActionId()));
+        deletedActionsCount += checkAndDeleteUnusedAction(fullData, Helpers_Misc.getExisted(action.getWeaCommonData()?.getActionId()));
     }
 
     return {
@@ -356,7 +349,7 @@ function checkAndDeleteUnusedNode(fullData: WarEventFullData, nodeId: number, is
         return deleteCount;
     }
 
-    deleteElementFromList(nodeArray, node);
+    Helpers_Collection.deleteElementFromList(nodeArray, node);
     ++deleteCount;
 
     if (isRecursive) {
@@ -382,7 +375,7 @@ function checkAndDeleteUnusedCondition(fullData: WarEventFullData, conditionId: 
         return 0;
     }
 
-    return deleteElementFromList(conditionArray, condition);
+    return Helpers_Collection.deleteElementFromList(conditionArray, condition);
 }
 function checkAndDeleteUnusedAction(fullData: WarEventFullData, actionId: number): number {
     const actionArray = fullData.getActionArray();
@@ -399,5 +392,5 @@ function checkAndDeleteUnusedAction(fullData: WarEventFullData, actionId: number
         return 0;
     }
 
-    return deleteElementFromList(actionArray, action);
+    return Helpers_Collection.deleteElementFromList(actionArray, action);
 }

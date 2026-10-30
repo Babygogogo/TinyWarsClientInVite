@@ -1,7 +1,9 @@
-import { TeamIndex } from "./Constants.ts";
+import {
+    Teams_Constants,
+} from "../internal.ts";
 
 export function checkIsValidTeamIndex(teamIndex: number, playersCountUnneutral: number): boolean {
-    return (teamIndex >= TeamIndex.Neutral)
+    return (teamIndex >= Teams_Constants.TeamIndex.Neutral)
         && (teamIndex <= playersCountUnneutral);
 }
 export function checkIsValidTeamIndexSubset(teamIndexArray: number[], playersCountUnneutral: number): boolean {

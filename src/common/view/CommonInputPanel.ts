@@ -1,13 +1,15 @@
-import { showLang } from "../../FloatText.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import {
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Types_UiInputEventType,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 
 export type OpenData = {
     title           : string;
@@ -21,18 +23,18 @@ export type OpenData = {
     isAutoClose?    : boolean;          // 留空=true
     callback        : (panel: Panel) => any;
 };
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _input!        : IUiPromptedInput;
-    private readonly _btnDelete!    : IUiButton;
-    private readonly _btnCancel!    : IUiButton;
-    private readonly _btnConfirm!   : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _input!        : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnDelete!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!   : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnDelete,  callback: this._onTouchedBtnDelete },
@@ -40,7 +42,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnConfirm, callback: this._onTouchedBtnConfirm, },
         ]);
         this._setInputListenerArray([
-            { ui: this._input,      callback: this._onFocusOutInput,    eventType: UiInputEventType.FocusOut },
+            { ui: this._input,      callback: this._onFocusOutInput,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -84,13 +86,13 @@ export class Panel extends UiPanel<OpenData> {
         const text          = this.getInputText();
         const textLength    = text.length;
         if ((!openData.canBeEmpty) && (!textLength)) {
-            showLang(TextType.A0787);
+            FloatText.showLang(Lang_Constants.TextType.A0787);
             return;
         }
 
         const minLength = openData.minLength;
         if ((minLength != null) && (textLength < minLength)) {
-            showLang(TextType.A0155);
+            FloatText.showLang(Lang_Constants.TextType.A0155);
             return;
         }
 
@@ -110,7 +112,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
     }
 }

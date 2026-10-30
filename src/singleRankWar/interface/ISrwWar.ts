@@ -1,7 +1,9 @@
+import {
+    type SinglePlayerWar_Interface_ISpwWar,
+} from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
 
-export interface ISrwWar extends ISpwWar {
+export interface ISrwWar extends SinglePlayerWar_Interface_ISpwWar.ISpwWar {
     serializeForValidation(): SerialWar;
 
     getIsNeedExecutedOperations(): boolean;

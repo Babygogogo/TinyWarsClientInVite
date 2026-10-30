@@ -1,19 +1,21 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError } from "../../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Turns_Constants,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
-import { PhaseCode } from "../../../turns/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function revise(war: IBwWar, rawAction: WoSystemBeginTurn, requesterUserId: Undefinable<number>): WoContainer {
+export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystemBeginTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
-        throw newError(`Invalid requesterUserId.`, ClientErrorCode.WarOperationReviser_ReviseSystemBeginTurn_00);
+        throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemBeginTurn_00);
     }
 
-    if (war.getTurnPhaseCode() !== PhaseCode.WaitBeginTurn) {
-        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseSystemBeginTurn_01);
+    if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.WaitBeginTurn) {
+        throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemBeginTurn_01);
     }
 
     return WoContainer.fromJson({

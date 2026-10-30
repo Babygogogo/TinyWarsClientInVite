@@ -1,105 +1,51 @@
 import assert from 'node:assert/strict'
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import vm from 'node:vm'
-import ts from 'typescript'
+import { loadInternalModules } from './helpers/load-modules.mjs'
 
-const vendorDirectory = fileURLToPath(new URL('../src/vendor/egret/', import.meta.url))
-const sources = new Map()
-
-function sourceFor(filename) {
-  if (!sources.has(filename)) {
-    sources.set(filename, ts.transpileModule(readFileSync(filename, 'utf8'), {
-      compilerOptions: {
-        target: ts.ScriptTarget.ES2023,
-        module: ts.ModuleKind.ESNext,
-        verbatimModuleSyntax: true,
-      },
-    }).outputText)
-  }
-  return sources.get(filename)
+const vendorDirectory = fileURLToPath(new URL('../src/egret/', import.meta.url))
+async function loadModules() {
+  const module = await loadInternalModules()
+  const internal = await module(path.join(vendorDirectory, '..', 'internal.ts'))
+  return name => internal[`Egret_${name}`]
 }
 
-async function loadModules(entry) {
-  const context = vm.createContext({
-    console,
-    window: { URL },
-    navigator: { userAgent: '', language: 'en-US' },
-    DOMParser: class DOMParser {},
-  })
-  const modules = new Map()
-  function getModule(filename) {
-    if (!modules.has(filename)) {
-      modules.set(filename, new vm.SourceTextModule(sourceFor(filename), {
-        context,
-        identifier: filename,
-      }))
-    }
-    return modules.get(filename)
+test('engine namespaces initialize through the internal entry without registration', async () => {
+  const module = await loadModules()
+  for (const name of ['Egret', 'Sys', 'Web', 'Lifecycle', 'Res', 'Processor', 'LocalStorage', 'Path']) {
+    assert.ok(Object.keys(await module(name)).length > 0)
   }
-  function resolve(specifier, parent) {
-    const filename = path.resolve(path.dirname(parent), specifier)
-    return filename.endsWith('.ts') ? filename : `${filename}.ts`
-  }
-  const root = getModule(path.join(vendorDirectory, `${entry}.ts`))
-  await root.link((specifier, parent) => getModule(resolve(specifier, parent.identifier)))
-  await root.evaluate()
-  return async name => {
-    const module = getModule(path.join(vendorDirectory, `${name}.ts`))
-    if (module.status === 'unlinked') {
-      await module.link((specifier, parent) => getModule(resolve(specifier, parent.identifier)))
-    }
-    if (module.status === 'linked') await module.evaluate()
-    return module.namespace
-  }
-}
-
-for (const entry of ['Egret', 'Sys', 'Web', 'Lifecycle', 'Res', 'Processor', 'LocalStorage', 'Path']) {
-  test(`${entry} can be the first imported module`, async () => {
-    const module = await loadModules(entry)
-    assert.ok(Object.keys(await module(entry)).length > 0)
-  })
-}
-
-test('internal core imports fail explicitly if platform initialization is bypassed', async () => {
-  const module = await loadModules('EgretCore')
-  const core = await module('EgretCore')
-  assert.throws(() => core.getHttpRequest(), /Egret runtime is not initialized/)
 })
 
-test('vendor runtime imports are acyclic', () => {
-  const edges = new Map()
+test('engine has no bootstrap, runtime registration, core facades, or deferred getter wrappers', async () => {
+  for (const name of ['Bootstrap', 'Runtime', 'EgretCore', 'SysCore', 'WebCore', 'ResCore', 'ProcessorCore']) {
+    assert.equal(existsSync(path.join(vendorDirectory, `${name}.ts`)), false)
+  }
   for (const name of readdirSync(vendorDirectory).filter(name => name.endsWith('.ts'))) {
     const filename = path.join(vendorDirectory, name)
-    const source = ts.createSourceFile(filename, sourceFor(filename), ts.ScriptTarget.Latest, true)
-    edges.set(filename, source.statements
-      .filter(node => (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
-      .map(node => path.resolve(vendorDirectory, `${node.moduleSpecifier.text.replace(/\.ts$/, '')}.ts`)))
+    assert.doesNotMatch(readFileSync(filename, 'utf8'), /initializeRuntime|\bruntime\.(web|sys|processor)\b|\.\/\w*Core/)
   }
-  const visited = new Set()
-  const stack = []
-  function visit(filename) {
-    assert.ok(!stack.includes(filename), `Circular import: ${[...stack, filename].map(file => path.basename(file)).join(' -> ')}`)
-    if (visited.has(filename)) return
-    stack.push(filename)
-    for (const dependency of edges.get(filename) ?? []) visit(dependency)
-    stack.pop()
-    visited.add(filename)
+  const module = await loadModules()
+  const egret = await module('Egret')
+  for (const name of ['getHttpRequest', 'getImageLoader', 'getStageText', 'getFpsDisplay', 'getVideo', 'getTicker', 'getFps']) {
+    assert.equal(name in egret, false)
   }
-  for (const filename of edges.keys()) visit(filename)
+  const res = await module('Res')
+  for (const name of ['getHost', 'getConfig', 'getQueue', 'ResHelper']) assert.equal(name in res, false)
+  assert.equal('getMap' in await module('Processor'), false)
 })
 
 test('platform constructors and shared engine state are wired', async () => {
-  const module = await loadModules('Egret')
+  const module = await loadModules()
   const egret = await module('Egret')
   const sys = await module('Sys')
   const web = await module('Web')
-  assert.equal(egret.getHttpRequest(), web.WebHttpRequest)
-  assert.equal(egret.getImageLoader(), web.WebImageLoader)
-  assert.equal(egret.getVideo(), web.WebVideo)
-  assert.equal(egret.getTicker(), sys.SystemTicker.instance)
+  for (const name of ['WebHttpRequest', 'WebImageLoader', 'WebVideo', 'HTML5StageText', 'WebFps']) {
+    assert.equal(typeof web[name], 'function')
+  }
+  assert.equal(sys.SystemTicker.instance, sys.SystemTicker.instance)
   assert.ok(new web.WebHttpRequest() instanceof egret.EventDispatcher)
   const shape = new egret.Shape()
   assert.ok(shape.graphics.$renderNode instanceof sys.GraphicsNode)
@@ -111,9 +57,13 @@ test('platform constructors and shared engine state are wired', async () => {
 })
 
 test('resource processors use the same registry as the resource host', async () => {
-  const module = await loadModules('Res')
+  const module = await loadModules()
   const res = await module('Res')
   const processor = await module('Processor')
+  assert.equal(res.host.resourceConfig, res.config)
+  assert.ok(res.queue instanceof res.ResourceLoader)
+  assert.equal(processor._map.image, processor.ResProcessorHelper.ImageProcessor)
+  assert.equal(processor._map.json, processor.ResProcessorHelper.JsonProcessor)
   const resource = { name: 'example', root: '', url: 'example', type: 'test' }
   const custom = {
     async onLoadStart() { return 'loaded' },
@@ -121,12 +71,13 @@ test('resource processors use the same registry as the resource host', async () 
   }
   processor.map('test', custom)
   assert.equal(processor.isSupport(resource), custom)
-  assert.equal(await res.getHost().load(resource), 'loaded')
-  assert.equal(await res.getHost().load({ ...resource, name: 'named' }, 'test'), 'loaded')
+  assert.equal(processor._map.test, custom)
+  assert.equal(await res.host.load(resource), 'loaded')
+  assert.equal(await res.host.load({ ...resource, name: 'named' }, 'test'), 'loaded')
 })
 
 test('display-object ancestry cursors preserve parent traversal', async () => {
-  const module = await loadModules('Egret')
+  const module = await loadModules()
   const egret = await module('Egret')
   const root = new egret.DisplayObjectContainer()
   const parent = new egret.DisplayObjectContainer()
@@ -165,7 +116,7 @@ test('display-object ancestry cursors preserve parent traversal', async () => {
 })
 
 test('graphics drawing handles absent fill and stroke paths', async () => {
-  const module = await loadModules('Egret')
+  const module = await loadModules()
   const egret = await module('Egret')
   const shape = new egret.Shape()
   const graphics = shape.graphics
@@ -182,7 +133,7 @@ test('graphics drawing handles absent fill and stroke paths', async () => {
 })
 
 test('pixel-read failures retain the original cause', async () => {
-  const module = await loadModules('Egret')
+  const module = await loadModules()
   const egret = await module('Egret')
   const shape = new egret.Shape()
   const cause = new Error('pixel read denied')

@@ -1,19 +1,21 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "./IBwWar.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiZoomableComponent } from "../../ui/interfaces/IUiZoomableComponent.ts";
+import {
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiZoomableComponent,
+} from "../../internal.ts";
 
-export interface IBwWarView extends IUiContainer {
-    init(war: IBwWar): void;
-    fastInit(war: IBwWar): void;
+export interface IBwWarView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(war: BaseWar_Interface_IBwWar.IBwWar): void;
+    fastInit(war: BaseWar_Interface_IBwWar.IBwWar): void;
 
     startRunningView(): void;
     stopRunning(): void;
 
-    getFieldContainer(): IUiZoomableComponent;
+    getFieldContainer(): Ui_Interfaces_IUiZoomableComponent.IUiZoomableComponent;
 
-    tweenGridToCentralArea(gridIndex: GridIndex): void;
-    moveGridToCenter(gridIndex: GridIndex): void;
+    tweenGridToCentralArea(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
+    moveGridToCenter(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
     showVibration(duration?: number, maxOffset?: number): void;
     stopVibration(): void;

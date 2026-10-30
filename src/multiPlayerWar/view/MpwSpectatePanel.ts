@@ -1,64 +1,48 @@
 import {
-    show,
-    showLang,
-} from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import type { IMpwWar } from "../interface/IMpwWar.ts";
-import { getWarSettings } from "../model/MpwModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import {
-    getSelfUserId,
-    getUserNickname,
-} from "../../users/Model.ts";
-import {
-    getWatchOutgoingInfo,
-    getWatchIncomingInfo,
-} from "../../watchWar/model/WwModel.ts";
-import {
-    reqWatchHandleRequest,
-    reqWatchDeleteWatcher,
-} from "../../watchWar/model/WwProxy.ts";
+    Graphics_Constants,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Users_Model,
+    MultiPlayerWar_Model_MpwModel,
+    WatchWar_Model_WwModel,
+    GamePanels_Manager,
+    WatchWar_Model_WwProxy,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MultiPlayerWar_Interface_IMpwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war: IMpwWar;
+    war: MultiPlayerWar_Interface_IMpwWar.IMpwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelGameSpectatorTitle!      : IUiLabel;
-    private readonly _labelGameSpectator!           : IUiLabel;
-    private readonly _labelOwnSpectatorTitle!       : IUiLabel;
-    private readonly _labelOwnSpectator!            : IUiLabel;
-    private readonly _labelIncomingRequestTitle!    : IUiLabel;
-    private readonly _labelIncomingRequest!         : IUiLabel;
-    private readonly _btnMakeRequest!               : IUiButton;
-    private readonly _btnHandleRequest!             : IUiButton;
-    private readonly _btnDeleteWatcher!             : IUiButton;
+    private readonly _labelGameSpectatorTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelGameSpectator!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOwnSpectatorTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOwnSpectator!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIncomingRequestTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIncomingRequest!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMakeRequest!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHandleRequest!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteWatcher!             : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMpwWatchGetOutgoingInfo,          callback: this._onNotifyMsgMpwWatchGetOutgoingInfo },
-            { type: TypeId.MsgMpwWatchGetIncomingInfo,          callback: this._onNotifyMsgMpwWatchGetIncomingInfo },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo,          callback: this._onNotifyMsgMpwWatchGetOutgoingInfo },
+            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback: this._onNotifyMsgMpwWatchGetIncomingInfo },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -102,8 +86,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const warId     = getExisted(war.getWarId());
-        const info      = await getWatchOutgoingInfo(warId);
+        const warId     = Helpers_Misc.getExisted(war.getWarId());
+        const info      = await WatchWar_Model_WwModel.getWatchOutgoingInfo(warId);
         const userIdSet = new Set<number>();
         for (const userId of info?.getOngoingDstUserIdArray() ?? []) {
             userIdSet.add(userId);
@@ -112,18 +96,18 @@ export class Panel extends UiPanel<OpenData> {
             userIdSet.add(userId);
         }
 
-        const selfUserId = getExisted(getSelfUserId());
+        const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         for (const [, player] of war.getPlayerManager().getAllPlayersDict()) {
             const userId = player.getUserId();
             if ((userId != null) && (userId !== selfUserId) && (!userIdSet.has(userId))) {
-                openPanel(getDict().WwMakeRequestDetailPanel, {
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestDetailPanel, {
                     warId,
                 });
                 return;
             }
         }
 
-        show(getText(TextType.A0299));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0299));
     }
 
     private async _onTouchedBtnHandleRequest(): Promise<void> {
@@ -132,43 +116,43 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const warId                 = getExisted(war.getWarId());
-        const watchIncomingInfo     = await getWatchIncomingInfo(warId);
-        const warPlayerInfoArray    = (await getWarSettings(warId))?.getPlayerInfoArray();
+        const warId                 = Helpers_Misc.getExisted(war.getWarId());
+        const watchIncomingInfo     = await WatchWar_Model_WwModel.getWatchIncomingInfo(warId);
+        const warPlayerInfoArray    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            showLang(TextType.A0300);
+            FloatText.showLang(Lang_Constants.TextType.A0300);
             return;
         }
 
         const requestSrcUserIdArray = watchIncomingInfo.getRequestSrcUserIdArray();
         if (!requestSrcUserIdArray.length) {
-            showLang(TextType.A0300);
+            FloatText.showLang(Lang_Constants.TextType.A0300);
         } else {
-            openPanel(getDict().CommonChooseMultiNumberPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray      : [],
                 availableNumberArray    : requestSrcUserIdArray,
                 showNumber              : true,
                 columnsCount            : 3,
-                getTitleText            : () => getText(TextType.B0208),
-                getHelpText             : () => getText(TextType.A0859),
-                getNumberMainText       : async userId => (await getUserNickname(userId)) ?? UndefinedError,
+                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
+                getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
+                getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
                 getNumberMainTextColor  : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
-                        return ColorValue.Yellow;
+                        return Graphics_Constants.ColorValue.Yellow;
                     }
 
                     const info = watchIncomingInfo.getSrcUserInfoArray().find(v => (v.getUserId() ?? 0) === userId);
                     return ((info?.getIsRequestingOthers()) || (info?.getIsWatchingOthers()))
-                        ? ColorValue.Yellow
-                        : ColorValue.White;
+                        ? Graphics_Constants.ColorValue.Yellow
+                        : Graphics_Constants.ColorValue.White;
                 },
-                callbackOnHelp          : userId => openPanel(getDict().UserPanel, { userId }),
+                callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
                 callbackOnConfirm       : acceptUserIdArray => {
                     const acceptUserIdSet       = new Set(acceptUserIdArray);
                     const declineUserIdArray    = requestSrcUserIdArray.filter(v => !acceptUserIdSet.has(v));
-                    openPanel(getDict().CommonConfirmPanel, {
-                        getContent : () => getFormattedText(TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
-                        callback: () => reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
+                        callback: () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
                     });
                 },
             });
@@ -181,39 +165,39 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const warId                 = getExisted(war.getWarId());
-        const watchIncomingInfo     = await getWatchIncomingInfo(warId);
-        const warPlayerInfoArray    = (await getWarSettings(warId))?.getPlayerInfoArray();
+        const warId                 = Helpers_Misc.getExisted(war.getWarId());
+        const watchIncomingInfo     = await WatchWar_Model_WwModel.getWatchIncomingInfo(warId);
+        const warPlayerInfoArray    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            showLang(TextType.A0301);
+            FloatText.showLang(Lang_Constants.TextType.A0301);
             return;
         }
 
         const ongoingUserIdArray = watchIncomingInfo.getOngoingSrcUserIdArray();
         if (!ongoingUserIdArray.length) {
-            showLang(TextType.A0301);
+            FloatText.showLang(Lang_Constants.TextType.A0301);
         } else {
-            openPanel(getDict().CommonChooseMultiNumberPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray      : [],
                 availableNumberArray    : ongoingUserIdArray,
                 showNumber              : true,
                 minChooseCount          : 1,
                 columnsCount            : 3,
-                getTitleText            : () => getText(TextType.B0219),
-                getHelpText             : () => getText(TextType.A0858),
-                getNumberMainText       : async userId => (await getUserNickname(userId)) ?? UndefinedError,
+                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0219),
+                getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0858),
+                getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
                 getNumberMainTextColor  : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
-                        return ColorValue.Yellow;
+                        return Graphics_Constants.ColorValue.Yellow;
                     }
 
                     const info = watchIncomingInfo.getSrcUserInfoArray().find(v => (v.getUserId() ?? 0) === userId);
                     return ((info?.getIsRequestingOthers()) || (info?.getIsWatchingOthers()))
-                        ? ColorValue.Yellow
-                        : ColorValue.White;
+                        ? Graphics_Constants.ColorValue.Yellow
+                        : Graphics_Constants.ColorValue.White;
                 },
-                callbackOnHelp          : userId => openPanel(getDict().UserPanel, { userId }),
-                callbackOnConfirm       : userIdArray => reqWatchDeleteWatcher(warId, userIdArray),
+                callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
+                callbackOnConfirm       : userIdArray => WatchWar_Model_WwProxy.reqWatchDeleteWatcher(warId, userIdArray),
             });
         }
     }
@@ -231,13 +215,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0872);
-        this._labelGameSpectatorTitle.setLangText(TextType.B0873);
-        this._labelOwnSpectatorTitle.setLangText(TextType.B0874);
-        this._labelIncomingRequestTitle.setLangText(TextType.B0875);
-        this._btnDeleteWatcher.setLangText(TextType.B0219);
-        this._btnHandleRequest.setLangText(TextType.B0208);
-        this._btnMakeRequest.setLangText(TextType.B0207);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0872);
+        this._labelGameSpectatorTitle.setLangText(Lang_Constants.TextType.B0873);
+        this._labelOwnSpectatorTitle.setLangText(Lang_Constants.TextType.B0874);
+        this._labelIncomingRequestTitle.setLangText(Lang_Constants.TextType.B0875);
+        this._btnDeleteWatcher.setLangText(Lang_Constants.TextType.B0219);
+        this._btnHandleRequest.setLangText(Lang_Constants.TextType.B0208);
+        this._btnMakeRequest.setLangText(Lang_Constants.TextType.B0207);
     }
 
     private async _updateBtnHandleRequest(): Promise<void> {
@@ -246,7 +230,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const info = await getWatchIncomingInfo(getExisted(war.getWarId()));
+        const info = await WatchWar_Model_WwModel.getWatchIncomingInfo(Helpers_Misc.getExisted(war.getWarId()));
         this._btnHandleRequest.setRedVisible(!!info?.getRequestSrcUserIdArray().length);
     }
 
@@ -275,7 +259,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const info = await getWatchIncomingInfo(getExisted(war.getWarId()));
+        const info = await WatchWar_Model_WwModel.getWatchIncomingInfo(Helpers_Misc.getExisted(war.getWarId()));
         this._labelIncomingRequest.setText(`${info?.getRequestSrcUserIdArray().length ?? 0}`);
     }
 }

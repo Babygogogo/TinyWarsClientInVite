@@ -1,31 +1,27 @@
-import type {
-    Size,
-    Rectangle,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    MaxValue,
-    DegToRad,
-} from "../../numbers/Constants.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
-import { getStage } from "../../stages/StageManager.ts";
-import { addTickCallback } from "../../timer/TimerModel.ts";
-import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
-import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiSizerDimensionOptions } from "../types/UiSizerDimensionOptions.ts";
-import type { UiSizerHorizontalAlignOptions } from "../types/UiSizerHorizontalAlignOptions.ts";
-import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
-import type { UiSizerVerticalAlignOptions } from "../types/UiSizerVerticalAlignOptions.ts";
-import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
-import { getUiContainerClass } from "./UiFactory.ts";
-import type { DisplayObjectContainer } from "../../egret/Egret.ts";
+    Timer_TimerModel,
+    Numbers_Constants,
+    Stages_StageManager,
+    Numbers_Utils,
+    Ui_Components_UiContainer,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Types_UiVerticalAlign,
+    type Ui_Interfaces_IUiComponent,
+    type Ui_Interfaces_IUiSizerInfo,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Ui_Types_UiSizerDimensionOptions,
+    type Ui_Types_UiSizerHorizontalAlignOptions,
+    type Ui_Types_UiSizerOptions,
+    type Ui_Types_UiSizerVerticalAlignOptions,
+    type Ui_Types_UiSkinAttrs,
+    type Egret_Egret,
+} from "../../internal.ts";
 
 export function init(): void {
-    addTickCallback(applyAutoSizerInfoDict, -1);
+    Timer_TimerModel.addTickCallback(applyAutoSizerInfoDict, -1);
 }
 
-export function loadSizerOptions(sizer: IUiComponent, skinAttrs: UiSkinAttrs): void {
+export function loadSizerOptions(sizer: Ui_Interfaces_IUiComponent.IUiComponent, skinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void {
     const options = createSizerOptions({
         left                : skinAttrs?.left,
         right               : skinAttrs?.right,
@@ -64,8 +60,8 @@ function createSizerOptions({
     maxWidth            : number | undefined;
     minHeight           : number | undefined;
     maxHeight           : number | undefined;
-}): UiSizerOptions | undefined {
-    let sizerWidth: UiSizerDimensionOptions | undefined = undefined;
+}): Ui_Types_UiSizerOptions.UiSizerOptions | undefined {
+    let sizerWidth: Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined = undefined;
     if ((left != null) && (right != null)) {
         sizerWidth = {
             percentage  : 100,
@@ -75,7 +71,7 @@ function createSizerOptions({
         };
     }
 
-    let sizerHeight: UiSizerDimensionOptions | undefined = undefined;
+    let sizerHeight: Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined = undefined;
     if ((top != null) && (bottom != null)) {
         sizerHeight = {
             percentage  : 100,
@@ -85,38 +81,38 @@ function createSizerOptions({
         };
     }
 
-    let horizontalAlign: UiSizerHorizontalAlignOptions | undefined = undefined;
+    let horizontalAlign: Ui_Types_UiSizerHorizontalAlignOptions.UiSizerHorizontalAlignOptions | undefined = undefined;
     if (left != null) {
         horizontalAlign = {
-            align   : UiHorizontalAlign.Left,
+            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left,
             offset  : left,
         };
     } else if (right != null) {
         horizontalAlign = {
-            align   : UiHorizontalAlign.Right,
+            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right,
             offset  : right,
         };
     } else if (horizontalCenter != null) {
         horizontalAlign = {
-            align   : UiHorizontalAlign.Center,
+            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center,
             offset  : horizontalCenter,
         };
     }
 
-    let verticalAlign: UiSizerVerticalAlignOptions | undefined = undefined;
+    let verticalAlign: Ui_Types_UiSizerVerticalAlignOptions.UiSizerVerticalAlignOptions | undefined = undefined;
     if (top != null) {
         verticalAlign = {
-            align   : UiVerticalAlign.Top,
+            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Top,
             offset  : top,
         };
     } else if (bottom != null) {
         verticalAlign = {
-            align   : UiVerticalAlign.Bottom,
+            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom,
             offset  : bottom,
         };
     } else if (verticalCenter != null) {
         verticalAlign = {
-            align   : UiVerticalAlign.Middle,
+            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle,
             offset  : verticalCenter,
         };
     }
@@ -133,7 +129,7 @@ function createSizerOptions({
     }
 }
 
-const AutoSizerInfoDict = new Map<IUiSizerInfo, boolean>();
+const AutoSizerInfoDict = new Map<Ui_Interfaces_IUiSizerInfo.IUiSizerInfo, boolean>();
 /**
  * bool值标记sizer是否被手动更改过尺寸。如果是，则无论自动sizer是否有真正改变尺寸，所有子项的自动sizer都会被应用一次。
  *
@@ -145,18 +141,18 @@ const AutoSizerInfoDict = new Map<IUiSizerInfo, boolean>();
  *
  * 如果传入的是false，则仅当自动sizer确实更改过尺寸时，才会自动更新所有子项。
  */
-export function addAutoSizerInfo(sizerInfo: IUiSizerInfo, isSizeChangedManually: boolean): void {
+export function addAutoSizerInfo(sizerInfo: Ui_Interfaces_IUiSizerInfo.IUiSizerInfo, isSizeChangedManually: boolean): void {
     if ((isSizeChangedManually) || (!AutoSizerInfoDict.has(sizerInfo))) {
         AutoSizerInfoDict.set(sizerInfo, isSizeChangedManually);
     }
 }
-export function checkAndAddAutoSizerInfo(sizer: IUiComponent, isSizeChangedManually: boolean): void {
+export function checkAndAddAutoSizerInfo(sizer: Ui_Interfaces_IUiComponent.IUiComponent, isSizeChangedManually: boolean): void {
     const sizerInfo = sizer.getSizerInfo();
     if (sizerInfo != null) {
         addAutoSizerInfo(sizerInfo, isSizeChangedManually);
     }
 }
-export function deleteAutoSizerInfo(sizerInfo: IUiSizerInfo): void {
+export function deleteAutoSizerInfo(sizerInfo: Ui_Interfaces_IUiSizerInfo.IUiSizerInfo): void {
     AutoSizerInfoDict.delete(sizerInfo);
 }
 function applyAutoSizerInfoDict(): void {
@@ -165,7 +161,7 @@ function applyAutoSizerInfoDict(): void {
     }
 
     const infoAndDepthArray: {
-        info                    : IUiSizerInfo;
+        info                    : Ui_Interfaces_IUiSizerInfo.IUiSizerInfo;
         isSizeChangedManually   : boolean;
         depth                   : number;
     }[] = [];
@@ -180,15 +176,15 @@ function applyAutoSizerInfoDict(): void {
         }
     }
 
-    const appliedInfoSet = new Set<IUiSizerInfo>();
+    const appliedInfoSet = new Set<Ui_Interfaces_IUiSizerInfo.IUiSizerInfo>();
     for (const data of infoAndDepthArray.sort((v1, v2) => v1.depth - v2.depth)) {
         applySizerInfo(appliedInfoSet, data.info, data.isSizeChangedManually);
     }
 
     AutoSizerInfoDict.clear();
 }
-function getNestedDepth(sizerInfo: IUiSizerInfo): number | null {
-    const stage = getStage();
+function getNestedDepth(sizerInfo: Ui_Interfaces_IUiSizerInfo.IUiSizerInfo): number | null {
+    const stage = Stages_StageManager.getStage();
     let depth   = 1;
     let parent  = sizerInfo.getSizer().getParent();
     for (;;) {
@@ -211,7 +207,7 @@ function getNestedDepth(sizerInfo: IUiSizerInfo): number | null {
     }
 }
 
-function applySizerInfo(appliedInfoSet: Set<IUiSizerInfo>, sizerInfo: IUiSizerInfo, isSizeChangedManually: boolean): void {
+function applySizerInfo(appliedInfoSet: Set<Ui_Interfaces_IUiSizerInfo.IUiSizerInfo>, sizerInfo: Ui_Interfaces_IUiSizerInfo.IUiSizerInfo, isSizeChangedManually: boolean): void {
     {
         if (appliedInfoSet.has(sizerInfo)) {
             return;
@@ -244,7 +240,7 @@ function applySizerInfo(appliedInfoSet: Set<IUiSizerInfo>, sizerInfo: IUiSizerIn
     }
 
     if (((isSizeUpdated) || (isSizeChangedManually))        &&
-        (sizer instanceof getUiContainerClass())
+        (sizer instanceof Ui_Components_UiContainer.UiContainer)
     ) {
         for (const child of sizer.getUiChildren()) {
             const childSizerInfo = child.getSizerInfo();
@@ -254,8 +250,8 @@ function applySizerInfo(appliedInfoSet: Set<IUiSizerInfo>, sizerInfo: IUiSizerIn
         }
     }
 }
-function getParentSize(parent: DisplayObjectContainer | null | undefined): Partial<Size> {
-    if (parent instanceof getUiContainerClass()) {
+function getParentSize(parent: Egret_Egret.DisplayObjectContainer | null | undefined): Partial<AuxiliaryTypes_AuxiliaryTypes.Size> {
+    if (parent instanceof Ui_Components_UiContainer.UiContainer) {
         return {
             width   : parent.getUnscaledManualWidth(),
             height  : parent.getUnscaledManualHeight(),
@@ -267,28 +263,28 @@ function getParentSize(parent: DisplayObjectContainer | null | undefined): Parti
     // return { width: parent?.width, height: parent?.height };
 }
 function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOptions }: {
-    sizer           : IUiComponent;
+    sizer           : Ui_Interfaces_IUiComponent.IUiComponent;
     parentWidth     : number | undefined;
-    widthOptions    : UiSizerDimensionOptions | undefined;
+    widthOptions    : Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined;
     parentHeight    : number | undefined;
-    heightOptions   : UiSizerDimensionOptions | undefined;
+    heightOptions   : Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined;
 }): boolean {
     const aabbWidth = ((widthOptions == null) || (parentWidth == null))
         ? undefined
-        : getValueInRange({
+        : Numbers_Utils.getValueInRange({
             rawValue    : parentWidth * (widthOptions.percentage ?? 0) / 100 + (widthOptions.extension ?? 0),
             minValue    : widthOptions.minValue ?? 0,
-            maxValue    : widthOptions.maxValue ?? MaxValue,
+            maxValue    : widthOptions.maxValue ?? Numbers_Constants.MaxValue,
         });
     const aabbHeight = ((heightOptions == null) || (parentHeight == null))
         ? undefined
-        : getValueInRange({
+        : Numbers_Utils.getValueInRange({
             rawValue    : parentHeight * (heightOptions.percentage ?? 0) / 100 + (heightOptions.extension ?? 0),
             minValue    : heightOptions.minValue ?? 0,
-            maxValue    : heightOptions.maxValue ?? MaxValue,
+            maxValue    : heightOptions.maxValue ?? Numbers_Constants.MaxValue,
         });
 
-    const rotationInRadian  = sizer.getRotationInDegree() * DegToRad;
+    const rotationInRadian  = sizer.getRotationInDegree() * Numbers_Constants.DegToRad;
     const cosValue          = Math.cos(rotationInRadian);
     const sinValue          = Math.sin(rotationInRadian);
     let maxWidth1 = aabbWidth == null  ? undefined : Math.abs(aabbWidth / cosValue);
@@ -328,24 +324,24 @@ function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOpti
     }
 }
 function updatePosition({ sizer, parentWidth, widthOptions, parentHeight, heightOptions }: {
-    sizer           : IUiComponent;
+    sizer           : Ui_Interfaces_IUiComponent.IUiComponent;
     parentWidth     : number | undefined;
-    widthOptions    : UiSizerHorizontalAlignOptions | undefined;
+    widthOptions    : Ui_Types_UiSizerHorizontalAlignOptions.UiSizerHorizontalAlignOptions | undefined;
     parentHeight    : number | undefined;
-    heightOptions   : UiSizerVerticalAlignOptions | undefined;
+    heightOptions   : Ui_Types_UiSizerVerticalAlignOptions.UiSizerVerticalAlignOptions | undefined;
 }): void {
-    let aabb: Rectangle;
+    let aabb: AuxiliaryTypes_AuxiliaryTypes.Rectangle;
 
     let x: number | undefined;
     if (widthOptions != null) {
         aabb            ??= sizer.getAabbToParent();
-        const align     = widthOptions.align ?? UiHorizontalAlign.Left;
+        const align     = widthOptions.align ?? Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left;
         const offset    = widthOptions.offset ?? 0;
-        if (align === UiHorizontalAlign.Left) {
+        if (align === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left) {
             x = offset - aabb.x;
         } else {
             if (parentWidth != null) {
-                if (align === UiHorizontalAlign.Center) {
+                if (align === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center) {
                     x = offset - aabb.x + (parentWidth - aabb.width) / 2;
                 } else {
                     x = - offset - aabb.x + (parentWidth - aabb.width);
@@ -357,13 +353,13 @@ function updatePosition({ sizer, parentWidth, widthOptions, parentHeight, height
     let y: number | undefined;
     if (heightOptions != null) {
         aabb            ??= sizer.getAabbToParent();
-        const align     = heightOptions.align ?? UiVerticalAlign.Top;
+        const align     = heightOptions.align ?? Ui_Types_UiVerticalAlign.UiVerticalAlign.Top;
         const offset    = heightOptions.offset ?? 0;
-        if (align === UiVerticalAlign.Top) {
+        if (align === Ui_Types_UiVerticalAlign.UiVerticalAlign.Top) {
             y = offset - aabb.y;
         } else {
             if (parentHeight != null) {
-                if (align === UiVerticalAlign.Middle) {
+                if (align === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle) {
                     y = offset - aabb.y + (parentHeight - aabb.height) / 2;
                 } else {
                     y = - offset - aabb.y + (parentHeight - aabb.height);

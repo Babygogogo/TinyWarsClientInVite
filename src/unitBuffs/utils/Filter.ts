@@ -1,26 +1,13 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getUnitBuffName,
-    getComparatorName,
-    getFormattedText,
-} from "../../lang/Utils.ts";
+    UnitBuffs_Utils_Common,
+    ValueAndComparators_Utils,
+    ValueArrayAndPredicates_Utils,
+    Lang_Utils,
+    Lang_Constants,
+    type BaseWar_Interface_IBwWar,
+} from "../../internal.ts";
 import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { UnitBuffFilter } from "../../proto/schema/CommonProto/Structure/UnitBuffFilter.ts";
-import {
-    checkIsEverlasting,
-    checkIsValidTypeIdSubset,
-} from "./Common.ts";
-import {
-    checkIsMeet as checkIsMeetValueAndComparator,
-    checkIsValid as checkIsValidValueAndComparator,
-} from "../../valueAndComparators/Utils.ts";
-import {
-    checkIsMeet as checkIsMeetValueArrayAndPredicate,
-    getDesc as getValueArrayAndPredicatesDesc,
-    checkIsValid as checkIsValidValueArrayAndPredicate,
-} from "../../valueArrayAndPredicates/Utils.ts";
 
 export function tickConIsEverlasting(data: UnitBuffFilter): boolean | null {
     const oldValue = data.getConIsEverlasting();
@@ -35,11 +22,11 @@ export function checkIsValid(data: UnitBuffFilter): boolean {
     return getErrorTip(data) == null;
 }
 
-export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: IBwWar): boolean {
+export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&
-            (!checkIsMeetValueArrayAndPredicate(con, buff.getBuffTypeId()))
+            (!ValueArrayAndPredicates_Utils.checkIsMeet(con, buff.getBuffTypeId()))
         ) {
             return false;
         }
@@ -47,7 +34,7 @@ export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: IBwWar): 
 
     {
         const con = data.getConIsEverlasting();
-        if ((con != null) && (con !== checkIsEverlasting(buff))) {
+        if ((con != null) && (con !== UnitBuffs_Utils_Common.checkIsEverlasting(buff))) {
             return false;
         }
     }
@@ -65,7 +52,7 @@ export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: IBwWar): 
                 const turnIndex = data.getConIsRelativeEndTurnIndex()
                     ? expiringTurnIndex - turnManager.getTurnIndex()
                     : expiringTurnIndex;
-                if (!checkIsMeetValueAndComparator(con, turnIndex)) {
+                if (!ValueAndComparators_Utils.checkIsMeet(con, turnIndex)) {
                     return false;
                 }
             }
@@ -82,7 +69,7 @@ export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: IBwWar): 
                 const playerIndex = data.getConIsRelativeEndPlayerIndex()
                     ? expiringPlayerIndex - turnManager.getPlayerIndexInTurn()
                     : expiringPlayerIndex;
-                if (!checkIsMeetValueAndComparator(con, playerIndex)) {
+                if (!ValueAndComparators_Utils.checkIsMeet(con, playerIndex)) {
                     return false;
                 }
             }
@@ -106,20 +93,20 @@ export function getDesc(data: UnitBuffFilter): string {
     {
         const conBuffTypeId = data.getConBuffTypeId();
         if (conBuffTypeId != null) {
-            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(
+            textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(
                 conBuffTypeId,
-                getText(TextType.AbnormalStateTypeId),
-                v => getUnitBuffName(v)
+                Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+                v => Lang_Utils.getUnitBuffName(v)
             ));
         }
     }
 
     const conIsEverlasting = data.getConIsEverlasting();
     if (conIsEverlasting) {
-        textArrayForSubConditions.push(`${getText(TextType.B1455)}: ${getText(TextType.Yes)}`);
+        textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.B1455)}: ${Lang_Utils.getText(Lang_Constants.TextType.Yes)}`);
     } else {
         if (conIsEverlasting != null) {
-            textArrayForSubConditions.push(`${getText(TextType.B1455)}: ${getText(TextType.No)}`);
+            textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.B1455)}: ${Lang_Utils.getText(Lang_Constants.TextType.No)}`);
         }
 
         {
@@ -128,9 +115,9 @@ export function getDesc(data: UnitBuffFilter): string {
                 const isRelative        = data.getConIsRelativeEndTurnIndex();
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
-                const textForComparator = getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${getText(TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${getText(TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForComparator = Lang_Utils.getComparatorName(comparator);
+                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_Constants.TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
 
@@ -140,26 +127,26 @@ export function getDesc(data: UnitBuffFilter): string {
                 const isRelative        = data.getConIsRelativeEndPlayerIndex();
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
-                const textForComparator = getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${getText(TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${getText(TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForComparator = Lang_Utils.getComparatorName(comparator);
+                const textForRelative   = isRelative ? `${Lang_Utils.getText(Lang_Constants.TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
     }
 
-    return getFormattedText(
-        TextType.F0230,
-        getText(TextType.AbnormalStates),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0230,
+        Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : getText(TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944)
     );
 }
 export function getDescForEmbed(data: UnitBuffFilter): string | null {
     const textArrayForSubConditions: string[] = [];
     {
         if (data.getConBuffTypeId() != null) {
-            textArrayForSubConditions.push(getText(TextType.AbnormalStateTypeId));
+            textArrayForSubConditions.push(Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
         }
     }
     {
@@ -167,15 +154,15 @@ export function getDescForEmbed(data: UnitBuffFilter): string | null {
             (data.getConEndTurnIndex() != null)   ||
             (data.getConEndPlayerIndex() != null)
         ) {
-            textArrayForSubConditions.push(getText(TextType.EndTime));
+            textArrayForSubConditions.push(Lang_Utils.getText(Lang_Constants.TextType.EndTime));
         }
     }
 
     return !textArrayForSubConditions.length
         ? null
-        : getFormattedText(
-            TextType.F0231,
-            getText(TextType.AbnormalStates),
+        : Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0231,
+            Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
             textArrayForSubConditions.join(`, `)
         );
 }
@@ -184,10 +171,10 @@ export function getErrorTip(data: UnitBuffFilter): string | null {
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            if ((!checkIsValidValueArrayAndPredicate(con))                     ||
-                (!checkIsValidTypeIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicates_Utils.checkIsValid(con))                     ||
+                (!UnitBuffs_Utils_Common.checkIsValidTypeIdSubset(con.getValueArray()))
             ) {
-                return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
             }
         }
     }
@@ -196,8 +183,8 @@ export function getErrorTip(data: UnitBuffFilter): string | null {
     {
         const con = data.getConEndTurnIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!checkIsValidValueAndComparator(con))) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+            if ((conIsEverlasting) || (!ValueAndComparators_Utils.checkIsValid(con))) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
             }
         }
     }
@@ -205,8 +192,8 @@ export function getErrorTip(data: UnitBuffFilter): string | null {
     {
         const con = data.getConEndPlayerIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!checkIsValidValueAndComparator(con))) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+            if ((conIsEverlasting) || (!ValueAndComparators_Utils.checkIsValid(con))) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
             }
         }
     }

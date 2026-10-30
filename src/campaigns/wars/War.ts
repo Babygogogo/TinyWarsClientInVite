@@ -1,22 +1,24 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { IWar } from "./IWar.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Numbers_Utils,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWars_Constants,
+    SinglePlayerWar_Model_SpwWar,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+    type Campaigns_Wars_IWar,
+} from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { PlayerScore } from "../../singlePlayerWars/Constants.ts";
 
-export class War extends SpwWar implements IWar {
+export class War extends SinglePlayerWar_Model_SpwWar.SpwWar implements Campaigns_Wars_IWar.IWar {
     private _settingsForCaw?    : SettingsForCaw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForCaw(getExisted(data.getSettingsForCaw(), ClientErrorCode.CawWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForCaw(Helpers_Misc.getExisted(data.getSettingsForCaw(), Utils_ClientErrorCode.ClientErrorCode.CawWar_Init_00));
 
         this._initView();
     }
@@ -29,7 +31,7 @@ export class War extends SpwWar implements IWar {
 
             warId                    : this.getWarId(),
             isEnded                  : this.getIsEnded(),
-            seedRandomInitialState   : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState   : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState   : randomNumberManager.getSeedRandomCurrentStateJson(),
             remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
             drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
@@ -52,7 +54,7 @@ export class War extends SpwWar implements IWar {
 
             warId                    : null,
             isEnded                  : null,
-            seedRandomInitialState   : getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState   : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState   : null,
             remainingVotesForDraw    : null,
             drawVoteManager          : new SerialDrawVoteManager().toJson(),
@@ -89,22 +91,22 @@ export class War extends SpwWar implements IWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForCaw(settings: SettingsForCaw): void {
         this._settingsForCaw = settings;
     }
     public getSettingsForCaw(): SettingsForCaw {
-        return getExisted(this._settingsForCaw);
+        return Helpers_Misc.getExisted(this._settingsForCaw);
     }
 
     public calculateTotalScore(): number {
-        return getValueInRange({
-            minValue : PlayerScore.MinScore,
-            maxValue : PlayerScore.MaxScore,
+        return Numbers_Utils.getValueInRange({
+            minValue : SinglePlayerWars_Constants.PlayerScore.MinScore,
+            maxValue : SinglePlayerWars_Constants.PlayerScore.MaxScore,
             rawValue : Math.floor(
-                PlayerScore.BaseScore
+                SinglePlayerWars_Constants.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
                 + this.getTaskObjectiveManager().getScore()

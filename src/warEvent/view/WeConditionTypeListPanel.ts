@@ -1,48 +1,41 @@
-import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getWarEventConditionTypeName } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    WarEvents_Conditions_Constants,
+    GamePanels_Manager,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Lang_Utils,
+    WarEvents_Conditions_Utils_Common,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    AvailableConditionTypeIdArray,
-    ConditionTypeId,
-} from "../../warEvents/conditions/Constants.ts";
-import {
-    resetCondition,
-    openConditionModifyPanel,
-} from "../../warEvents/conditions/utils/Common.ts";
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!      : IUiImage;
-    private readonly _group!        : IUiContainer;
-    private readonly _labelTitle!   : IUiLabel;
-    private readonly _btnClose!     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listType!     : IUiScrollList<DataForTypeRenderer>;
+    private readonly _listType!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTypeRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -74,8 +67,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0516);
-        this._btnClose.setLangText(TextType.B0146);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0516);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();
@@ -87,7 +80,7 @@ export class Panel extends UiPanel<OpenData> {
         const fullData  = openData.fullData;
         const war       = openData.war;
         const dataArray: DataForTypeRenderer[] = [];
-        for (const newConditionType of AvailableConditionTypeIdArray) {
+        for (const newConditionType of WarEvents_Conditions_Constants.AvailableConditionTypeIdArray) {
             dataArray.push({
                 war,
                 fullData,
@@ -99,19 +92,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTypeRenderer extends UiListItemData {
-    war             : IMeWar;
+interface DataForTypeRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war             : MapEditor_Interface_IMeWar.IMeWar;
     fullData        : WarEventFullData;
-    newConditionType: ConditionTypeId;
+    newConditionType: WarEvents_Conditions_Constants.ConditionTypeId;
     condition       : WarEventCondition;
 }
-class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
-    private readonly _labelType!    : IUiLabel;
-    private readonly _btnSwitch!    : IUiButton;
+class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTypeRenderer> {
+    private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSwitch!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnSwitch,              callback: this._onTouchedBtnSwitch },
@@ -135,11 +128,11 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         const condition     = openData.condition;
         const war           = openData.war;
         if (conditionType !== getConditionType(condition)) {
-            resetCondition(condition, conditionType);
-            openConditionModifyPanel({ fullData: openData.fullData, condition, war });
-            closePanel(getDict().WeConditionTypeListPanel);
+            WarEvents_Conditions_Utils_Common.resetCondition(condition, conditionType);
+            WarEvents_Conditions_Utils_Common.openConditionModifyPanel({ fullData: openData.fullData, condition, war });
+            GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionTypeListPanel);
 
-            dispatch(TypeId.WarEventFullDataChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
         }
     }
     private _onNotifyLanguageChanged(): void {        // DONE
@@ -147,7 +140,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSwitch.setLangText(TextType.B0520);
+        this._btnSwitch.setLangText(Lang_Constants.TextType.B0520);
 
         this._updateLabelType();
     }
@@ -158,7 +151,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         if (openData == null) {
             label.setText(``);
         } else {
-            label.setText(getWarEventConditionTypeName(openData.newConditionType) || UndefinedError);
+            label.setText(Lang_Utils.getWarEventConditionTypeName(openData.newConditionType) || Lang_Constants.UndefinedError);
         }
     }
     private _updateLabelUsingAndSwitch(): void {
@@ -172,16 +165,16 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     }
 }
 
-function getConditionType(condition: WarEventCondition): ConditionTypeId | null {
-    if      (condition.getWecPlayerPresence())                  { return ConditionTypeId.WecPlayerPresence; }
-    else if (condition.getWecTurnAndPlayer())                   { return ConditionTypeId.WecTurnAndPlayer; }
-    else if (condition.getWecEventCalledCount())                { return ConditionTypeId.WecEventCalledCount; }
-    else if (condition.getWecWeatherAndFog())                   { return ConditionTypeId.WecWeatherAndFog; }
-    else if (condition.getWecTilePresence())                    { return ConditionTypeId.WecTilePresence; }
-    else if (condition.getWecUnitPresence())                    { return ConditionTypeId.WecUnitPresence; }
-    else if (condition.getWecExpression())                      { return ConditionTypeId.WecExpression; }
-    else if (condition.getWecCustomCounter())                   { return ConditionTypeId.WecCustomCounter; }
-    else if (condition.getWecOngoingPersistentActionPresence()) { return ConditionTypeId.WecOngoingPersistentActionPresence; }
-    else if (condition.getWecManualActionStatistics())          { return ConditionTypeId.WecManualActionStatistics; }
+function getConditionType(condition: WarEventCondition): WarEvents_Conditions_Constants.ConditionTypeId | null {
+    if      (condition.getWecPlayerPresence())                  { return WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence; }
+    else if (condition.getWecTurnAndPlayer())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer; }
+    else if (condition.getWecEventCalledCount())                { return WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount; }
+    else if (condition.getWecWeatherAndFog())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog; }
+    else if (condition.getWecTilePresence())                    { return WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence; }
+    else if (condition.getWecUnitPresence())                    { return WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence; }
+    else if (condition.getWecExpression())                      { return WarEvents_Conditions_Constants.ConditionTypeId.WecExpression; }
+    else if (condition.getWecCustomCounter())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter; }
+    else if (condition.getWecOngoingPersistentActionPresence()) { return WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence; }
+    else if (condition.getWecManualActionStatistics())          { return WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics; }
     else                                                        { return null; }
 }

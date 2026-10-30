@@ -1,60 +1,53 @@
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { getDesigningCampaignIdArray } from "../../campaigns/managements/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getGameVersionName,
-} from "../../lang/Utils.ts";
-import { checkIsRed } from "../../mail/model/MailModel.ts";
-import { checkIsRedForMapManagement } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { Common } from "../Constants.ts";
-import {
-    getSelfUserId,
-    getIsSelfAdmin,
-    getIsSelfMapCommittee,
-    getIsSelfAutoTourneyCommittee,
-    getIsSelfCampaignManager,
-} from "../Model.ts";
-import { reqUserGetPublicInfo } from "../Proxy.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+    AuxiliaryTypes_ChatToTarget,
+    Mail_Model_MailModel,
+    NormalMap_Model_NormalMapModel,
+    Utils_ClientErrorCode,
+    Users_Constants,
+    Campaigns_Managements_Provider,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Users_Model,
+    GamePanels_Manager,
+    Users_Proxy,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnClose!                     : IUiButton;
-    private readonly _btnDamageCalculator!          : IUiButton;
-    private readonly _btnMail!                      : IUiButton;
-    private readonly _group!                        : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDamageCalculator!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMail!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupButtons!                 : IUiLayout;
-    private readonly _btnGraphicSettings!           : IUiButton;
-    private readonly _btnSoundSettings!             : IUiButton;
-    private readonly _btnMiscSettings!              : IUiButton;
-    private readonly _btnChangeGameVersion!         : IUiButton;
-    private readonly _btnComplaint!                 : IUiButton;
-    private readonly _btnGameChart!                 : IUiButton;
-    private readonly _btnGameManagement!            : IUiButton;
+    private readonly _groupButtons!                 : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnGraphicSettings!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSoundSettings!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMiscSettings!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChangeGameVersion!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnComplaint!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnGameChart!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnGameManagement!            : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserGetPublicInfo,    callback: this._onMsgUserGetPublicInfo },
-            { type: TypeId.MsgUserSetNickname,      callback: this._onMsgUserSetNickname },
-            { type: TypeId.MsgUserSetDiscordInfo,   callback: this._onMsgUserSetDiscordId },
-            { type: TypeId.MsgMailSetIsNew,         callback: this._onMsgMailSetIsNew },
-            { type: TypeId.MsgMailGetAllMailArray,  callback: this._onMsgMailGetAllMailArray },
-            { type: TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback: this._onMsgUserGetPublicInfo },
+            { type: Notifications_TypeId.TypeId.MsgUserSetNickname,      callback: this._onMsgUserSetNickname },
+            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,   callback: this._onMsgUserSetDiscordId },
+            { type: Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback: this._onMsgMailSetIsNew },
+            { type: Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback: this._onMsgMailGetAllMailArray },
+            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -73,8 +66,8 @@ export class Panel extends UiPanel<OpenData> {
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        const selfUserId = getExisted(getSelfUserId(), ClientErrorCode.UserSettingsPanel_OnOpened_00);
-        reqUserGetPublicInfo(selfUserId);
+        const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId(), Utils_ClientErrorCode.ClientErrorCode.UserSettingsPanel_OnOpened_00);
+        Users_Proxy.reqUserGetPublicInfo(selfUserId);
 
         this._updateView();
     }
@@ -86,12 +79,12 @@ export class Panel extends UiPanel<OpenData> {
         this._updateView();
     }
     private _onMsgUserSetNickname(): void {
-        const selfUserId = getExisted(getSelfUserId(), ClientErrorCode.UserSettingsPanel_OnMsgUserSetNickname_00);
-        reqUserGetPublicInfo(selfUserId);
+        const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId(), Utils_ClientErrorCode.ClientErrorCode.UserSettingsPanel_OnMsgUserSetNickname_00);
+        Users_Proxy.reqUserGetPublicInfo(selfUserId);
     }
     private _onMsgUserSetDiscordId(): void {
-        const selfUserId = getExisted(getSelfUserId(), ClientErrorCode.UserSettingsPanel_OnMsgUserSetDiscordId_00);
-        reqUserGetPublicInfo(selfUserId);
+        const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId(), Utils_ClientErrorCode.ClientErrorCode.UserSettingsPanel_OnMsgUserSetDiscordId_00);
+        Users_Proxy.reqUserGetPublicInfo(selfUserId);
     }
     private _onMsgMailSetIsNew(): void {
         this._updateRedForBtnMail();
@@ -104,39 +97,39 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnDamageCalculator(): void {
-        openPanel(getDict().CommonDamageCalculatorPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
             data                    : null,
             war                     : null,
             needReviseWeaponType    : true,
         });
     }
     private _onTouchedBtnGraphicSettings(): void {
-        openPanel(getDict().UserGraphicSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserGraphicSettingsPanel, void 0);
     }
     private _onTouchedBtnChangeGameVersion(): void {
-        openPanel(getDict().CommonChangeVersionPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChangeVersionPanel, void 0);
     }
     private _onTouchedBtnSoundSettings(): void {
-        openPanel(getDict().SoundsSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsSettingsPanel, void 0);
     }
     private _onTouchedBtnMiscSettings(): void {
-        openPanel(getDict().UserMiscSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserMiscSettingsPanel, void 0);
     }
     private _onTouchedBtnMail(): void {
         // this.closePanel();
-        openPanel(getDict().MailPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MailPanel, void 0);
     }
     private _onTouchedBtnComplaint(): void {
         // this.closePanel();
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({
-            toUserId: Common.AdminUserId,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({
+            toUserId: Users_Constants.Common.AdminUserId,
         }) });
     }
     private async _onTouchedBtnGameChart(): Promise<void> {
-        openPanel(getDict().CommonGameChartPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonGameChartPanel, void 0);
     }
     private _onTouchedBtnGameManagement(): void {
-        openPanel(getDict().UserGameManagementPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserGameManagementPanel, void 0);
     }
 
     private async _updateView(): Promise<void> {
@@ -147,14 +140,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0560);
-        this._btnSoundSettings.setLangText(TextType.B0540);
-        this._btnMiscSettings.setLangText(TextType.B1278);
-        this._btnGraphicSettings.setLangText(TextType.B0984);
-        this._btnChangeGameVersion.setText(`${getText(TextType.B1277)}: ${getGameVersionName(window.GAME_VERSION)}`);
-        this._btnGameChart.setLangText(TextType.B0900);
-        this._btnGameManagement.setLangText(TextType.B0878);
-        this._btnComplaint.setLangText(TextType.B0453);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
+        this._btnSoundSettings.setLangText(Lang_Constants.TextType.B0540);
+        this._btnMiscSettings.setLangText(Lang_Constants.TextType.B1278);
+        this._btnGraphicSettings.setLangText(Lang_Constants.TextType.B0984);
+        this._btnChangeGameVersion.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1277)}: ${Lang_Utils.getGameVersionName(window.GAME_VERSION)}`);
+        this._btnGameChart.setLangText(Lang_Constants.TextType.B0900);
+        this._btnGameManagement.setLangText(Lang_Constants.TextType.B0878);
+        this._btnComplaint.setLangText(Lang_Constants.TextType.B0453);
     }
     private async _updateGroupButtons(): Promise<void> {
         const group = this._groupButtons;
@@ -165,19 +158,19 @@ export class Panel extends UiPanel<OpenData> {
         group.addItem(this._btnGameChart, false);
         group.addItem(this._btnComplaint, false);
         group.addItem(this._btnChangeGameVersion, true);
-        if ((getIsSelfAdmin())                                           ||
-            (getIsSelfMapCommittee())                                    ||
-            (getIsSelfAutoTourneyCommittee())                            ||
-            (getIsSelfCampaignManager())                                 ||
-            ((await getDesigningCampaignIdArray())?.length)
+        if ((Users_Model.getIsSelfAdmin())                                           ||
+            (Users_Model.getIsSelfMapCommittee())                                    ||
+            (Users_Model.getIsSelfAutoTourneyCommittee())                            ||
+            (Users_Model.getIsSelfCampaignManager())                                 ||
+            ((await Campaigns_Managements_Provider.getDesigningCampaignIdArray())?.length)
         ) {
             group.addItem(this._btnGameManagement, true);
         }
     }
     private _updateRedForBtnMail(): void {
-        this._btnMail.setRedVisible(checkIsRed());
+        this._btnMail.setRedVisible(Mail_Model_MailModel.checkIsRed());
     }
     private async _updateRedForBtnGameManagement(): Promise<void> {
-        this._btnGameManagement.setRedVisible(await checkIsRedForMapManagement());
+        this._btnGameManagement.setRedVisible(await NormalMap_Model_NormalMapModel.checkIsRedForMapManagement());
     }
 }

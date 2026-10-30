@@ -1,68 +1,61 @@
-import type { Base as ContextsBase } from "../contexts/Base.ts";
-import { Fog } from "../contexts/Fog.ts";
-import { Num } from "../contexts/Num.ts";
-import { NumArray } from "../contexts/NumArray.ts";
-import { Player } from "../contexts/Player.ts";
-import { PlayerArray } from "../contexts/PlayerArray.ts";
-import { Position } from "../contexts/Position.ts";
-import { PositionArray } from "../contexts/PositionArray.ts";
-import { TaskObjective } from "../contexts/TaskObjective.ts";
-import { Tile } from "../contexts/Tile.ts";
-import { TileArray } from "../contexts/TileArray.ts";
-import { TileBuff } from "../contexts/TileBuff.ts";
-import { TileBuffArray } from "../contexts/TileBuffArray.ts";
-import { Turn } from "../contexts/Turn.ts";
-import { Unit } from "../contexts/Unit.ts";
-import { UnitArray } from "../contexts/UnitArray.ts";
-import { UnitStatistic } from "../contexts/UnitStatistic.ts";
-import { UnitStatisticArray } from "../contexts/UnitStatisticArray.ts";
-import { War as ContextsWar } from "../contexts/War.ts";
-import { WarOperation } from "../contexts/WarOperation.ts";
-import { Weather } from "../contexts/Weather.ts";
 import {
-    ContextType,
-    ResultType,
-} from "../Enums.ts";
-import { Base } from "./Base.ts";
-import type { Base as ResultsBase } from "../results/Base.ts";
-import { FogMap } from "../results/FogMap.ts";
-import { NullableUnit } from "../results/NullableUnit.ts";
-import { NullableUnitArray } from "../results/NullableUnitArray.ts";
-import { Num as ResultsNum } from "../results/Num.ts";
-import { NumArray as ResultsNumArray } from "../results/NumArray.ts";
-import { Player as ResultsPlayer } from "../results/Player.ts";
-import { PlayerArray as ResultsPlayerArray } from "../results/PlayerArray.ts";
-import { Position as ResultsPosition } from "../results/Position.ts";
-import { PositionArray as ResultsPositionArray } from "../results/PositionArray.ts";
-import { TaskObjective as ResultsTaskObjective } from "../results/TaskObjective.ts";
-import { Tile as ResultsTile } from "../results/Tile.ts";
-import { TileArray as ResultsTileArray } from "../results/TileArray.ts";
-import { TileBuff as ResultsTileBuff } from "../results/TileBuff.ts";
-import { TileBuffArray as ResultsTileBuffArray } from "../results/TileBuffArray.ts";
-import { TurnManager } from "../results/TurnManager.ts";
-import { UnitStatistic as ResultsUnitStatistic } from "../results/UnitStatistic.ts";
-import { UnitStatisticArray as ResultsUnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import { War as ResultsWar } from "../results/War.ts";
-import { WarOperation as ResultsWarOperation } from "../results/WarOperation.ts";
-import { WeatherManager } from "../results/WeatherManager.ts";
-import {
-    getContextType,
-    getFunctionInfoDict,
-} from "../Utils.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getExpressionParserContextName,
-} from "../../lang/Utils.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+    ExpressionParsers_Nodes_Base,
+    Utils_ClientErrorCode,
+    ExpressionParsers_Contexts_War,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Contexts_Fog,
+    ExpressionParsers_Results_FogMap,
+    ExpressionParsers_Utils,
+    Lang_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Results_NullableUnit,
+    ExpressionParsers_Results_NullableUnitArray,
+    ExpressionParsers_Contexts_Num,
+    ExpressionParsers_Contexts_NumArray,
+    ExpressionParsers_Contexts_Player,
+    ExpressionParsers_Contexts_PlayerArray,
+    ExpressionParsers_Contexts_Position,
+    ExpressionParsers_Contexts_PositionArray,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_NumArray,
+    ExpressionParsers_Results_Player,
+    ExpressionParsers_Results_PlayerArray,
+    ExpressionParsers_Results_Position,
+    ExpressionParsers_Results_PositionArray,
+    ExpressionParsers_Results_TaskObjective,
+    ExpressionParsers_Results_Tile,
+    ExpressionParsers_Results_TileArray,
+    ExpressionParsers_Results_TileBuff,
+    ExpressionParsers_Results_TileBuffArray,
+    ExpressionParsers_Results_UnitStatistic,
+    ExpressionParsers_Results_UnitStatisticArray,
+    ExpressionParsers_Results_War,
+    ExpressionParsers_Results_WarOperation,
+    ExpressionParsers_Contexts_TaskObjective,
+    Lang_Constants,
+    ExpressionParsers_Contexts_Tile,
+    ExpressionParsers_Contexts_TileArray,
+    ExpressionParsers_Contexts_TileBuff,
+    ExpressionParsers_Contexts_TileBuffArray,
+    ExpressionParsers_Contexts_Turn,
+    ExpressionParsers_Results_TurnManager,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Contexts_UnitArray,
+    ExpressionParsers_Contexts_UnitStatistic,
+    ExpressionParsers_Contexts_UnitStatisticArray,
+    ExpressionParsers_Contexts_WarOperation,
+    ExpressionParsers_Contexts_Weather,
+    ExpressionParsers_Results_WeatherManager,
+    type ExpressionParsers_Contexts_Base,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 
-export class MemberFunctionCall extends Base {
-    private _lhs            : Base;
+export class MemberFunctionCall extends ExpressionParsers_Nodes_Base.Base {
+    private _lhs            : ExpressionParsers_Nodes_Base.Base;
     private _identifierName : string;
-    private _argumentArray  : Base[];
+    private _argumentArray  : ExpressionParsers_Nodes_Base.Base[];
 
-    public constructor(lhs: Base, identifierName: string, argumentArray: Base[]) {
+    public constructor(lhs: ExpressionParsers_Nodes_Base.Base, identifierName: string, argumentArray: ExpressionParsers_Nodes_Base.Base[]) {
         super();
 
         this._lhs               = lhs;
@@ -70,9 +63,9 @@ export class MemberFunctionCall extends Base {
         this._argumentArray     = argumentArray;
     }
 
-    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+    public override eval(ctx: ExpressionParsers_Contexts_Base.Base, rootCtx: ExpressionParsers_Contexts_Base.Base, lambdaArgumentDict: Map<string, ExpressionParsers_Results_Base.Base> | null, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
         // Evaluate all arguments
-        const argArray = new Array<ResultsBase>(this._argumentArray.length);
+        const argArray = new Array<ExpressionParsers_Results_Base.Base>(this._argumentArray.length);
         for (let i = 0; i < this._argumentArray.length; i++) {
             argArray[i] = this._argumentArray[i].eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         }
@@ -80,71 +73,71 @@ export class MemberFunctionCall extends Base {
         // Call the function
         // TODO: add more context
         const lhsResult = this._lhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
-        if (lhsResult instanceof ResultsWar) {
-            return new ContextsWar(lhsResult.war).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof TurnManager) {
-            return new Turn(lhsResult.turnManager).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsPlayer) {
-            return new Player(lhsResult.player).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsPosition) {
-            return new Position(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsPositionArray) {
-            return new PositionArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsTile) {
-            return new Tile(lhsResult.tile).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof NullableUnit) {
-            return new Unit(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof NullableUnitArray) {
-            return new UnitArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsTileArray) {
-            return new TileArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsPlayerArray) {
-            return new PlayerArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsNum) {
-            return new Num(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsNumArray) {
-            return new NumArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof WeatherManager) {
-            return new Weather(lhsResult.weatherManager).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsTaskObjective) {
-            return new TaskObjective(lhsResult.war, lhsResult.objectiveId).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsTileBuff) {
-            return new TileBuff(lhsResult.buff, lhsResult.tile).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsTileBuffArray) {
-            return new TileBuffArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof FogMap) {
-            return new Fog(lhsResult.fogMap).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsWarOperation) {
-            return new WarOperation(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsUnitStatistic) {
-            return new UnitStatistic(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
-        } else if (lhsResult instanceof ResultsUnitStatisticArray) {
-            return new UnitStatisticArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        if (lhsResult instanceof ExpressionParsers_Results_War.War) {
+            return new ExpressionParsers_Contexts_War.War(lhsResult.war).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_TurnManager.TurnManager) {
+            return new ExpressionParsers_Contexts_Turn.Turn(lhsResult.turnManager).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_Player.Player) {
+            return new ExpressionParsers_Contexts_Player.Player(lhsResult.player).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_Position.Position) {
+            return new ExpressionParsers_Contexts_Position.Position(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_PositionArray.PositionArray) {
+            return new ExpressionParsers_Contexts_PositionArray.PositionArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_Tile.Tile) {
+            return new ExpressionParsers_Contexts_Tile.Tile(lhsResult.tile).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_NullableUnit.NullableUnit) {
+            return new ExpressionParsers_Contexts_Unit.Unit(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_NullableUnitArray.NullableUnitArray) {
+            return new ExpressionParsers_Contexts_UnitArray.UnitArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_TileArray.TileArray) {
+            return new ExpressionParsers_Contexts_TileArray.TileArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_PlayerArray.PlayerArray) {
+            return new ExpressionParsers_Contexts_PlayerArray.PlayerArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_Num.Num) {
+            return new ExpressionParsers_Contexts_Num.Num(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
+            return new ExpressionParsers_Contexts_NumArray.NumArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_WeatherManager.WeatherManager) {
+            return new ExpressionParsers_Contexts_Weather.Weather(lhsResult.weatherManager).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_TaskObjective.TaskObjective) {
+            return new ExpressionParsers_Contexts_TaskObjective.TaskObjective(lhsResult.war, lhsResult.objectiveId).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_TileBuff.TileBuff) {
+            return new ExpressionParsers_Contexts_TileBuff.TileBuff(lhsResult.buff, lhsResult.tile).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_TileBuffArray.TileBuffArray) {
+            return new ExpressionParsers_Contexts_TileBuffArray.TileBuffArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_FogMap.FogMap) {
+            return new ExpressionParsers_Contexts_Fog.Fog(lhsResult.fogMap).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_WarOperation.WarOperation) {
+            return new ExpressionParsers_Contexts_WarOperation.WarOperation(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_UnitStatistic.UnitStatistic) {
+            return new ExpressionParsers_Contexts_UnitStatistic.UnitStatistic(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
+        } else if (lhsResult instanceof ExpressionParsers_Results_UnitStatisticArray.UnitStatisticArray) {
+            return new ExpressionParsers_Contexts_UnitStatisticArray.UnitStatisticArray(lhsResult).callFunction(this._identifierName, argArray, rootCtx, localVariableDict, isRestricted);
         } else {
-            throw newError(`Unexpected lhsType: ${typeof lhsResult}`, ClientErrorCode.EpNodeMemberFunction_Eval_00);
+            throw Helpers_Misc.newError(`Unexpected lhsType: ${typeof lhsResult}`, Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberFunction_Eval_00);
         }
     }
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ContextType;
-        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
-        localVariableDict       : Map<string, ResultType> | null;
+        contextType             : ExpressionParsers_Enums.ContextType;
+        lambdaArgumentInfoDict  : Map<string, ExpressionParsers_Enums.ResultType> | null;
+        localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ResultType {
+    }): ExpressionParsers_Enums.ResultType {
         const lhsResultType     = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-        const newContextType    = getContextType(lhsResultType);
+        const newContextType    = ExpressionParsers_Utils.getContextType(lhsResultType);
         const identifierName    = this._identifierName;
-        if ((newContextType == null) || (newContextType === ContextType.Unknown)) {
-            throw newError(
-                getFormattedText(TextType.F0035, identifierName),
-                ClientErrorCode.EpNodeMemberFunction_GetResultType_00
+        if ((newContextType == null) || (newContextType === ExpressionParsers_Enums.ContextType.Unknown)) {
+            throw Helpers_Misc.newError(
+                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0035, identifierName),
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberFunction_GetResultType_00
             );
         }
 
-        const info = getFunctionInfoDict(newContextType).get(identifierName);
+        const info = ExpressionParsers_Utils.getFunctionInfoDict(newContextType).get(identifierName);
         if (info == null) {
-            throw newError(
-                getFormattedText(TextType.F0036, getExpressionParserContextName(newContextType), identifierName),
-                ClientErrorCode.EpNodeMemberFunction_GetResultType_01
+            throw Helpers_Misc.newError(
+                Lang_Utils.getFormattedText(Lang_Constants.TextType.F0036, Lang_Utils.getExpressionParserContextName(newContextType), identifierName),
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberFunction_GetResultType_01
             );
         }
 

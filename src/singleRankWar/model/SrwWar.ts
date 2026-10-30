@@ -1,20 +1,22 @@
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    SinglePlayerWar_Model_SpwWar,
+    BootTimers_Constants,
+    type GameConfigs_GameConfig,
+    type SingleRankWar_Interface_ISrwWar,
+} from "../../internal.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
-import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
-import type { ISrwWar } from "../interface/ISrwWar.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class SrwWar extends SpwWar implements ISrwWar {
+export class SrwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements SingleRankWar_Interface_ISrwWar.ISrwWar {
     private _settingsForSrw?    : SettingsForSrw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForSrw(getExisted(data.getSettingsForSrw(), ClientErrorCode.SrwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForSrw(Helpers_Misc.getExisted(data.getSettingsForSrw(), Utils_ClientErrorCode.ClientErrorCode.SrwWar_Init_00));
 
         this._initView();
     }
@@ -27,7 +29,7 @@ export class SrwWar extends SpwWar implements ISrwWar {
 
             warId                       : this.getWarId(),
             isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState      : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
             remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
             drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
@@ -51,7 +53,7 @@ export class SrwWar extends SpwWar implements ISrwWar {
 
             warId                       : null,
             isEnded                     : null,
-            seedRandomInitialState      : getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState      : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState      : null,
             remainingVotesForDraw       : null,
             drawVoteManager             : new SerialDrawVoteManager().toJson(),
@@ -88,13 +90,13 @@ export class SrwWar extends SpwWar implements ISrwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [TimerTypeId.NoBoot];
+        return [BootTimers_Constants.TimerTypeId.NoBoot];
     }
 
     private _setSettingsForSrw(settings: SettingsForSrw): void {
         this._settingsForSrw = settings;
     }
     private _getSettingsForSrw(): SettingsForSrw {
-        return getExisted(this._settingsForSrw);
+        return Helpers_Misc.getExisted(this._settingsForSrw);
     }
 }

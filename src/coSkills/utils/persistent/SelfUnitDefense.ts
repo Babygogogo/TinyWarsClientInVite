@@ -1,24 +1,26 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
+import {
+    Units_Utils_Common,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
-import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
-function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
+function getTotalPctFromOwnTiles(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return getOwnTilesCount(cfg[0]) * cfg[1];
     }
 }
-function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
+function getTotalPctFromTileDefense(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return ((canTileDefendUnit) || (!cfg[1])) ? cfg[0] / 100 * tileDefenseAmount : 0;
     }
 }
-function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GameConfig, cfg: Undefinable<number[]>, attackerUnitTypeId: number | null): number {
+function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GameConfigs_GameConfig.GameConfig, cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, attackerUnitTypeId: number | null): number {
     if ((!cfg) || (cfg.length !== 2) || (attackerUnitTypeId == null)) {
         return 0;
     }
@@ -47,16 +49,16 @@ export function getTotalDefensePercentOffset({
     canTileDefendUnit,
 }: {
     cfg                         : SelfUnitCommonAttributes | null | undefined;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId1                 : number | null;
     unitTypeId2                 : number;
     tileTypeId2                 : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
     isInCozByPreviewSettings    : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
     getOwnTilesCount            : (tileCategoryId: number) => number;
     fund                        : number;
     promotion                   : number;
@@ -103,7 +105,7 @@ export function getTotalDefensePercentOffset({
         + (defensePercentOffsets.getFundConversion()) * fund / 10000
         + ((defensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
         + getTotalPctFromTileDefense(defensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0)
         + getTotalPctFromOwnTiles(defensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsets.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
         + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsets.getOffsetPctAgainstSameEnemy());
@@ -124,7 +126,7 @@ export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
     getOwnTilesCount,
 }: {
     cfg                 : SelfUnitCommonAttributes | null | undefined;
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     unitTypeId1         : number;
     unitTypeId2         : number;
     tileTypeId2         : number;
@@ -164,7 +166,7 @@ export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
         + (defensePercentOffsets.getFundConversion()) * fund / 10000
         + ((defensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
         + getTotalPctFromTileDefense(defensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0)
         + getTotalPctFromOwnTiles(defensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsets.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
         + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsets.getOffsetPctAgainstSameEnemy());

@@ -1,16 +1,11 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import {
-    reqCampaignGetCampaignInfo,
-    reqCampaignGetEnabledCampaignIdArray,
-    reqCampaignGetCampaignLeaderboard,
-    reqCampaignGetAllMapTimestampArray,
-    reqCampaignGetMapRawDataArray,
-    reqCampaignGetCampaignMapLeaderboard,
-    reqCampaignGetMapRawData,
-} from "./Gateway.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { StoreCampaignMapRawData } from "../../localData/Storage.ts";
+    AuxiliaryTypes_CachedDataAccessor,
+    Helpers_Collection,
+    Users_Model,
+    Campaigns_Mains_Gateway,
+    LocalData_Storage,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { CampaignInfo } from "../../proto/schema/CommonProto/Campaign/CampaignInfo.ts";
 import type { SingleData as LeaderboardLbCampaignSingleData } from "../../proto/schema/CommonProto/Leaderboard/LbCampaign/SingleData.ts";
 import type { SingleData as LeaderboardLbCampaignMapSingleData } from "../../proto/schema/CommonProto/Leaderboard/LbCampaignMap/SingleData.ts";
@@ -34,73 +29,72 @@ import type { S as CmSetCampaignMapWarEventActionResponse } from "../../proto/sc
 import type { S as CmSetCampaignNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
 import type { S as CmSetExtraLinkResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmSetExtraLink/S.ts";
 import type { S as CmUpdateCampaignDesignersResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmUpdateCampaignDesigners/S.ts";
-import { getSelfUserId } from "../../users/Model.ts";
 
-const _campaignInfoAccessor = new CachedDataAccessor<number, CampaignInfo>({
-    reqData : (campaignId: number) => reqCampaignGetCampaignInfo(campaignId),
+const _campaignInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, CampaignInfo>({
+    reqData : (campaignId: number) => Campaigns_Mains_Gateway.reqCampaignGetCampaignInfo(campaignId),
 });
-const _enabledCampaignIdArrayAccessor = new CachedDataAccessor<null, number[]>({
-    reqData : () => reqCampaignGetEnabledCampaignIdArray(),
+const _enabledCampaignIdArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, number[]>({
+    reqData : () => Campaigns_Mains_Gateway.reqCampaignGetEnabledCampaignIdArray(),
 });
-const _campaignLeaderboardAccessor = new CachedDataAccessor<number, LeaderboardLbCampaignSingleData[]>({
-    reqData : (campaignId: number) => reqCampaignGetCampaignLeaderboard(campaignId),
+const _campaignLeaderboardAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, LeaderboardLbCampaignSingleData[]>({
+    reqData : (campaignId: number) => Campaigns_Mains_Gateway.reqCampaignGetCampaignLeaderboard(campaignId),
 });
 const _campaignMapLeaderboardAccessorArray = [
     createCampaignMapLeaderboardAccessor(0),
 ];
-const _campaignMapTimestampDictAccessor = new CachedDataAccessor<number, Map<number, Undefinable<number>>>({
-    reqData : (campaignId: number) => reqCampaignGetAllMapTimestampArray(campaignId),
+const _campaignMapTimestampDictAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, Map<number, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>>({
+    reqData : (campaignId: number) => Campaigns_Mains_Gateway.reqCampaignGetAllMapTimestampArray(campaignId),
 });
 /** 只用于保证收到过消息 */
-const _campaignMapRawDataArrayAccessor  = new CachedDataAccessor<number, boolean>({
+const _campaignMapRawDataArrayAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, boolean>({
     reqData : () => { /** nothing to do */},
 });
 const _campaignMapRawDataAccessorArray = [
     createCampaignMapRawDataAccessor(0),
 ];
 
-function setCampaignInfo(campaignId: number, campaignInfo: Undefinable<CampaignInfo>): void {
+function setCampaignInfo(campaignId: number, campaignInfo: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CampaignInfo>): void {
     _campaignInfoAccessor.setData(campaignId, campaignInfo);
 }
-export function getCampaignInfo(campaignId: number): Promise<Undefinable<CampaignInfo>> {
+export function getCampaignInfo(campaignId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<CampaignInfo>> {
     return _campaignInfoAccessor.getData(campaignId);
 }
 
 function setEnabledCampaignIdArray(campaignIdArray: number[]): void {
     _enabledCampaignIdArrayAccessor.setData(null, campaignIdArray.concat().sort((v1, v2) => v1 - v2));
 }
-export function getEnabledCampaignIdArray(): Promise<Undefinable<number[]>> {
+export function getEnabledCampaignIdArray(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>> {
     return _enabledCampaignIdArrayAccessor.getData(null);
 }
 
-function setCampaignLeaderboard(campaignId: number, dataArray: Undefinable<LeaderboardLbCampaignSingleData[]>): void {
+function setCampaignLeaderboard(campaignId: number, dataArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<LeaderboardLbCampaignSingleData[]>): void {
     _campaignLeaderboardAccessor.setData(campaignId, dataArray);
 }
-export function getCampaignLeaderboard(campaignId: number): Promise<Undefinable<LeaderboardLbCampaignSingleData[]>> {
+export function getCampaignLeaderboard(campaignId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<LeaderboardLbCampaignSingleData[]>> {
     return _campaignLeaderboardAccessor.getData(campaignId);
 }
 
-export function getCampaignMapLeaderboard(campaignId: number, campaignMapId: number): Promise<Undefinable<LeaderboardLbCampaignMapSingleData[]>> {
+export function getCampaignMapLeaderboard(campaignId: number, campaignMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<LeaderboardLbCampaignMapSingleData[]>> {
     return getCampaignMapLeaderboardAccessor(campaignId).getData(campaignMapId);
 }
 function setCampaignMapLeaderboard(campaignId: number, campaignMapId: number, dataArray: LeaderboardLbCampaignMapSingleData[]): void {
     getCampaignMapLeaderboardAccessor(campaignId).setData(campaignMapId, dataArray);
 }
 
-export function getAllMapTimestampDict(campaignId: number): Promise<Undefinable<Map<number, Undefinable<number>>>> {
+export function getAllMapTimestampDict(campaignId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<Map<number, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>>> {
     return _campaignMapTimestampDictAccessor.getData(campaignId);
 }
-function setAllMapTimestampDict(campaignId: number, dict: Map<number, Undefinable<number>>): void {
+function setAllMapTimestampDict(campaignId: number, dict: Map<number, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>): void {
     _campaignMapTimestampDictAccessor.setData(campaignId, dict);
 }
 
-export async function getCampaignMapRawData(campaignId: number, campaignMapId: number): Promise<Undefinable<MapRawData>> {
+export async function getCampaignMapRawData(campaignId: number, campaignMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>> {
     const timestamp = (await getAllMapTimestampDict(campaignId))?.get(campaignMapId);
     if (timestamp == null) {
         return null;
     }
 
-    const cachedData = await StoreCampaignMapRawData.getData(campaignId, campaignMapId);
+    const cachedData = await LocalData_Storage.StoreCampaignMapRawData.getData(campaignId, campaignMapId);
     if (cachedData != null) {
         if ((cachedData.getModifiedTime()) === timestamp) {
             return cachedData;
@@ -113,11 +107,11 @@ export async function getCampaignMapRawData(campaignId: number, campaignMapId: n
 function setCampaignMapRawData(campaignId: number, campaignMapId: number, mapRawData: MapRawData): Promise<void> {
     getCampaignMapRawDataAccessor(campaignId).setData(campaignMapId, mapRawData);
 
-    return StoreCampaignMapRawData.setData(campaignId, campaignMapId, mapRawData);
+    return LocalData_Storage.StoreCampaignMapRawData.setData(campaignId, campaignMapId, mapRawData);
 }
 
 export async function checkIsSelfDesigner(campaignId: number): Promise<boolean> {
-    const userId = getSelfUserId();
+    const userId = Users_Model.getSelfUserId();
     if (userId == null) {
         return false;
     } else {
@@ -127,7 +121,7 @@ export async function checkIsSelfDesigner(campaignId: number): Promise<boolean> 
 
 export async function updateOnMsgCampaignGetAllMapTimestampArray(data: CampaignGetAllMapTimestampArrayResponse): Promise<void> {
     const campaignId            = data.getCampaignId() ?? 0;
-    const existingDataDict      = await StoreCampaignMapRawData.getAllDataDictForKey1(campaignId);
+    const existingDataDict      = await LocalData_Storage.StoreCampaignMapRawData.getAllDataDictForKey1(campaignId);
     const infoArray             = data.getInfoArray();
     const neededSlotIndexSet    = new Set<number>();
     const resultDict            = new Map<number, number>();
@@ -145,7 +139,7 @@ export async function updateOnMsgCampaignGetAllMapTimestampArray(data: CampaignG
         }
     }
 
-    reqCampaignGetMapRawDataArray(campaignId, [...neededSlotIndexSet]);
+    Campaigns_Mains_Gateway.reqCampaignGetMapRawDataArray(campaignId, [...neededSlotIndexSet]);
     await _campaignMapRawDataArrayAccessor.getData(campaignId);
 
     setAllMapTimestampDict(campaignId, resultDict);
@@ -248,7 +242,7 @@ export async function updateOnMsgCmSetCampaignEnabled(data: CmSetCampaignEnabled
                 campaignIdArray.sort((v1, v2) => v1 - v2);
             }
         } else {
-            deleteElementFromList(campaignIdArray, campaignId);
+            Helpers_Collection.deleteElementFromList(campaignIdArray, campaignId);
         }
     }
 }
@@ -263,7 +257,7 @@ export async function updateOnMsgCmSetCampaignMapEnabled(data: CmSetCampaignMapE
                 enabledCampaignMapIdArray.push(campaignMapId);
             }
         } else {
-            deleteElementFromList(enabledCampaignMapIdArray, campaignMapId);
+            Helpers_Collection.deleteElementFromList(enabledCampaignMapIdArray, campaignMapId);
         }
     }
 }
@@ -279,7 +273,7 @@ export async function updateOnMsgCmSetCampaignMapRawData(data: CmSetCampaignMapR
     const campaignMapId     = campaignMapData?.getCampaignMapId() ?? 0;
     const campaignInfo      = await getCampaignInfo(campaignId);
     if (campaignInfo) {
-        deleteElementFromList(campaignInfo.getEnabledCampaignMapIdArray(), campaignMapId);
+        Helpers_Collection.deleteElementFromList(campaignInfo.getEnabledCampaignMapIdArray(), campaignMapId);
     }
 
     await setCampaignMapRawData(campaignId, campaignMapId, mapRawData);
@@ -344,8 +338,8 @@ export async function updateOnMsgCmSetExtraLink(data: CmSetExtraLinkResponse): P
 }
 
 function createCampaignMapLeaderboardAccessor(campaignId: number) {
-    return new CachedDataAccessor<number, LeaderboardLbCampaignMapSingleData[]>({
-        reqData : campaignMapId => reqCampaignGetCampaignMapLeaderboard(campaignId, campaignMapId),
+    return new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, LeaderboardLbCampaignMapSingleData[]>({
+        reqData : campaignMapId => Campaigns_Mains_Gateway.reqCampaignGetCampaignMapLeaderboard(campaignId, campaignMapId),
     });
 }
 function getCampaignMapLeaderboardAccessor(campaignId: number) {
@@ -353,8 +347,8 @@ function getCampaignMapLeaderboardAccessor(campaignId: number) {
 }
 
 function createCampaignMapRawDataAccessor(campaignId: number) {
-    return new CachedDataAccessor<number, MapRawData>({
-        reqData : campaignMapId => reqCampaignGetMapRawData(campaignId, campaignMapId),
+    return new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, MapRawData>({
+        reqData : campaignMapId => Campaigns_Mains_Gateway.reqCampaignGetMapRawData(campaignId, campaignMapId),
     });
 }
 function getCampaignMapRawDataAccessor(campaignId: number) {

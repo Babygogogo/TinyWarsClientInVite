@@ -1,45 +1,44 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import {
-    createRange,
-    getNonNullElements,
-} from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { AllTagIdArray } from "../../units/Constants.ts";
+    Units_Constants,
+    Helpers_Collection,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
     currentTagIdList    : number[];
-    war                 : IBwWar;
+    war                 : BaseWar_Interface_IBwWar.IBwWar;
     callback            : (tagIdList: number[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupSelectAll!   : IUiLayout;
-    private readonly _imgSelectAll!     : IUiImage;
-    private readonly _labelSelectAll!   : IUiLabel;
-    private readonly _listTag!          : IUiScrollList<DataForTagRenderer>;
+    private readonly _groupSelectAll!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _imgSelectAll!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelSelectAll!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listTag!          : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTagRenderer>;
 
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnCancel!        : IUiButton;
-    private readonly _labelTips!        : IUiLabel;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTips!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCancel,              callback: this._onTouchedBtnCancel },
@@ -48,11 +47,11 @@ export class Panel extends UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -74,12 +73,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedGroupSelectAll(): void {
         const isSelectAll   = !this._imgSelectAll.getIsVisible();
         const list          = this._listTag;
-        list.setSelectedItemIndexes(isSelectAll ? createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
+        list.setSelectedItemIndexes(isSelectAll ? Helpers_Collection.createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
         this.updateImgSelectAll();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedBtnConfirm(): void {
-        this.getOpenData()?.callback(getNonNullElements(this._listTag.getSelectedDataArray()?.map(v => v?.tagId) ?? []));
+        this.getOpenData()?.callback(Helpers_Collection.getNonNullElements(this._listTag.getSelectedDataArray()?.map(v => v?.tagId) ?? []));
         this.closePanel();
     }
     private _onTouchedBtnCancel(): void {
@@ -91,17 +90,17 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.Tags);
-        this._labelSelectAll.setLangText(TextType.B0761);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnCancel.setLangText(TextType.B0154);
-        this._labelTips.setLangText(TextType.A0983);
+        this._labelTitle.setLangText(Lang_Constants.TextType.Tags);
+        this._labelSelectAll.setLangText(Lang_Constants.TextType.B0761);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._labelTips.setLangText(Lang_Constants.TextType.A0983);
 
         this._groupSelectAll.arrangeItems();
     }
 
     public updateImgSelectAll(): void {
-        this._imgSelectAll.setIsVisible((this._listTag.getSelectedItems()?.length ?? 0) >= AllTagIdArray.length);
+        this._imgSelectAll.setIsVisible((this._listTag.getSelectedItems()?.length ?? 0) >= Units_Constants.AllTagIdArray.length);
     }
     private async _updateListTag(): Promise<void> {
         const openData = this.getOpenData();
@@ -119,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
         const selectedItemIndexes   : number[] = [];
         let index                   = 0;
         const dataArray             : DataForTagRenderer[] = [];
-        for (const tagId of AllTagIdArray) {
+        for (const tagId of Units_Constants.AllTagIdArray) {
             dataArray.push({
                 tagId       : tagId,
                 useCount    : inUseDict.get(tagId) ?? 0,
@@ -137,16 +136,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTagRenderer extends UiListItemData {
+interface DataForTagRenderer extends Ui_Types_UiListItemData.UiListItemData {
     tagId       : number;
     useCount    : number;
     panel       : Panel;
 }
-class TagRenderer extends UiListItemRenderer<DataForTagRenderer> {
-    private readonly _layoutInfo!   : IUiLayout;
-    private readonly _labelTagId!   : IUiLabel;
+class TagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTagRenderer> {
+    private readonly _layoutInfo!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTagId!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _labelInUse!   : IUiLabel;
+    private readonly _labelInUse!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();

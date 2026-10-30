@@ -1,11 +1,13 @@
-import { BgmSfxCfgDict } from "./Constants.ts";
-import type { BgmSfxCfg } from "./Types.ts";
+import {
+    Sounds_Constants,
+    type Sounds_Types,
+} from "../internal.ts";
 
 let _allBgmCodeArray    : number[] | undefined;
 let _allSfxCodeArray    : number[] | undefined;
 
-export function getBgmSfxCfg(code: number): BgmSfxCfg | null {
-    return BgmSfxCfgDict.get(code) ?? null;
+export function getBgmSfxCfg(code: number): Sounds_Types.BgmSfxCfg | null {
+    return Sounds_Constants.BgmSfxCfgDict.get(code) ?? null;
 }
 
 export function checkIsBgm(code: number): boolean {
@@ -20,8 +22,8 @@ export function getAllBgmCodeArray(): number[] {
     return _allBgmCodeArray ??= generateAllBgmCodeArray();
 }
 function generateAllBgmCodeArray(): number[] {
-    const cfgArray: BgmSfxCfg[] = [];
-    for (const [, cfg] of BgmSfxCfgDict) {
+    const cfgArray: Sounds_Types.BgmSfxCfg[] = [];
+    for (const [, cfg] of Sounds_Constants.BgmSfxCfgDict) {
         if (cfg.isBgm) {
             cfgArray.push(cfg);
         }
@@ -34,8 +36,8 @@ export function getAllSfxCodeArray(): number[] {
     return _allSfxCodeArray ??= generateAllSfxCodeArray();
 }
 function generateAllSfxCodeArray(): number[] {
-    const cfgArray: BgmSfxCfg[] = [];
-    for (const [, cfg] of BgmSfxCfgDict) {
+    const cfgArray: Sounds_Types.BgmSfxCfg[] = [];
+    for (const [, cfg] of Sounds_Constants.BgmSfxCfgDict) {
         if (!cfg.isBgm) {
             cfgArray.push(cfg);
         }

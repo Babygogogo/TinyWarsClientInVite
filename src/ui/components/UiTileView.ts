@@ -1,40 +1,34 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    getTileAnimationTickCount,
-    getCachedTileObjectImageSource,
-    getCachedTileBaseImageSource,
-    getCachedTileDecorationImageSource,
-} from "../../common/model/CommonModel.ts";
-import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import {
-    createLazyFunc,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import { ThemeTypeId } from "../../tiles/constants/Common.ts";
-import type { IUiImage } from "../interfaces/IUiImage.ts";
-import type { IUiTileView } from "../interfaces/IUiTileView.ts";
-import type { UiTileViewData } from "../types/UiTileViewData.ts";
-import { getUiImageClass } from "../utils/UiFactory.ts";
-import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
+    Helpers_Misc,
+    Common_Model_CommonModel,
+    Graphics_Utils,
+    ForceSkins_Constants,
+    Tiles_Constants_Common,
+    Ui_Components_UiImage,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiTileView,
+    type Ui_Types_UiTileViewData,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Users_Model,
+} from "../../internal.ts";
 
-const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class UiTileView implements IUiTileView {
-    private readonly _imgBase       = new (getUiImageClass())();
-    private readonly _imgDecoration = new (getUiImageClass())();
-    private readonly _imgObject     = new (getUiImageClass())();
+export class UiTileView implements Ui_Interfaces_IUiTileView.IUiTileView {
+    private readonly _imgBase       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgDecoration = new Ui_Components_UiImage.UiImage();
+    private readonly _imgObject     = new Ui_Components_UiImage.UiImage();
 
-    private _gameConfig         : GameConfig | null = null;
-    private _baseType           : Undefinable<number>;
-    private _baseShapeId        : Undefinable<number>;
-    private _decorationType     : Undefinable<number>;
-    private _decorationShapeId  : Undefinable<number>;
-    private _objectType         : Undefinable<number>;
-    private _objectShapeId      : Undefinable<number>;
-    private _skinId             : Undefinable<number>;
-    private _overridingSkinId   : Undefinable<number>;
+    private _gameConfig         : GameConfigs_GameConfig.GameConfig | null = null;
+    private _baseType           : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _baseShapeId        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _decorationType     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _decorationShapeId  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _objectType         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _objectShapeId      : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _skinId             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    private _overridingSkinId   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     public constructor() {
         {
@@ -56,7 +50,7 @@ export class UiTileView implements IUiTileView {
         }
     }
 
-    public init(data: UiTileViewData): IUiTileView {
+    public init(data: Ui_Types_UiTileViewData.UiTileViewData): Ui_Interfaces_IUiTileView.IUiTileView {
         this._gameConfig        = data.gameConfig;
         this._baseType          = data.tileBaseType;
         this._baseShapeId       = data.tileBaseShapeId;
@@ -78,13 +72,13 @@ export class UiTileView implements IUiTileView {
         this._updateImages();
     }
 
-    public getImgObject(): IUiImage {
+    public getImgObject(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgObject;
     }
-    public getImgBase(): IUiImage {
+    public getImgBase(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBase;
     }
-    public getImgDecoration(): IUiImage {
+    public getImgDecoration(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgDecoration;
     }
 
@@ -98,8 +92,8 @@ export class UiTileView implements IUiTileView {
             return;
         }
 
-        const version   = getSelfSettingsTextureVersion();
-        const tickCount = getTileAnimationTickCount();
+        const version   = Users_Model.getSelfSettingsTextureVersion();
+        const tickCount = Common_Model_CommonModel.getTileAnimationTickCount();
         {
             const objectType    = this._objectType;
             const imgObject     = this.getImgObject();
@@ -109,10 +103,10 @@ export class UiTileView implements IUiTileView {
                 imgObject.setIsVisible(true);
 
                 const overridingSkinId = this._overridingSkinId ?? -1;
-                imgObject.loadSource(getCachedTileObjectImageSource({
+                imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
                     version     : version,
-                    themeType   : ThemeTypeId.Normal,
-                    skinId      : overridingSkinId > 0 ? overridingSkinId : getExisted(this._skinId),
+                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId      : overridingSkinId > 0 ? overridingSkinId : Helpers_Misc.getExisted(this._skinId),
                     objectType  : objectType,
                     isDark      : false,
                     shapeId     : this._objectShapeId ?? 0,
@@ -128,13 +122,13 @@ export class UiTileView implements IUiTileView {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
-                imgBase.loadSource(getCachedTileBaseImageSource({
+                imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
                     version,
-                    themeType   : ThemeTypeId.Normal,
-                    skinId      : SkinId.Neutral,
+                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId      : ForceSkins_Constants.SkinId.Neutral,
                     baseType,
                     isDark      : false,
-                    shapeId     : getExisted(this._baseShapeId),
+                    shapeId     : Helpers_Misc.getExisted(this._baseShapeId),
                     tickCount,
                 }));
             }
@@ -147,13 +141,13 @@ export class UiTileView implements IUiTileView {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
-                imgDecoration.loadSource(getCachedTileDecorationImageSource({
+                imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
                     version,
-                    themeType   : ThemeTypeId.Normal,
-                    skinId      : SkinId.Neutral,
+                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId      : ForceSkins_Constants.SkinId.Neutral,
                     tileDecorationType: decorationType,
                     isDark      : false,
-                    shapeId     : getExisted(this._decorationShapeId),
+                    shapeId     : Helpers_Misc.getExisted(this._decorationShapeId),
                     tickCount,
                 }));
             }

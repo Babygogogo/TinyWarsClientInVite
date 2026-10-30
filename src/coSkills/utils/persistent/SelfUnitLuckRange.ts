@@ -1,5 +1,7 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
 import type { SelfUnitLuckRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
 
 export function getTotalOffset({
@@ -12,12 +14,12 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): { lower: number; upper: number } {
     if (cfg == null) {
         return { lower: 0, upper: 0 };
@@ -48,7 +50,7 @@ export function getTotalOffsetForDamageCalculatorPanel({
     unitTypeId,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
 }): { lower: number; upper: number } {
     if (cfg == null) {

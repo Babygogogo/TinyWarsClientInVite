@@ -1,49 +1,45 @@
-import { Constants } from "../../customCounters/Constants.ts";
-import { checkIsValidName } from "../../customCounters/Utils.ts";
 import {
-    show,
-    showLang,
-} from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
-import {
-    getText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    CustomCounters_Utils,
+    CustomCounters_Constants,
+    Notifications_Dispatcher,
+    Tween_Executor,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import { IdAndName } from "../../proto/schema/CommonProto/Structure/IdAndName.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
     isReviewingMap  : boolean;
     fullData        : WarEventFullData;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnHelp!              : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listName!             : IUiScrollList<DataForCustomCounterRenderer>;
-    private readonly _labelTips!            : IUiLabel;
+    private readonly _listName!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCustomCounterRenderer>;
+    private readonly _labelTips!            : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -72,8 +68,8 @@ export class Panel extends UiPanel<OpenData> {
         this._updateView();
     }
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0658),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0658),
         });
     }
 
@@ -84,8 +80,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1143);
-        this._labelTips.setLangText(TextType.A0785);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1143);
+        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
     }
     private async _updateListName(): Promise<void> {
         const openData = this.getOpenData();
@@ -96,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
         const fullData      = openData.fullData;
         const isReviewing   = openData.isReviewingMap;
         const dataArray     : DataForCustomCounterRenderer[] = [];
-        for (let id = Constants.MinId; id <= Constants.MaxId; ++id) {
+        for (let id = CustomCounters_Constants.Constants.MinId; id <= CustomCounters_Constants.Constants.MaxId; ++id) {
             dataArray.push({
                 fullData    : fullData,
                 id          : id,
@@ -108,17 +104,17 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForCustomCounterRenderer extends UiListItemData {
+interface DataForCustomCounterRenderer extends Ui_Types_UiListItemData.UiListItemData {
     isReviewing : boolean;
     id          : number;
     fullData    : WarEventFullData;
 }
-class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName!    : IUiLabel;
+class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCustomCounterRenderer> {
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgSelected!  : IUiImage;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -131,13 +127,13 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -159,19 +155,19 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
         const nameData      = index >= 0 ? dataArray[index] : null;
         const currentText   = nameData?.getName() ?? ``;
         if (openData.isReviewing) {
-            openPanel(getDict().CommonAlertPanel, {
-                getTitle   : () => `${getText(TextType.B1143)} #${id}`,
-                getContent : () => currentText || `(${getText(TextType.B0277)})`,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+                getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1143)} #${id}`,
+                getContent : () => currentText || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`,
             });
             return;
         }
 
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0162),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0162),
             currentValue    : currentText,
             charRestrict    : `a-zA-Z0-9`,
             maxChars        : 20,
-            tips            : getText(TextType.A0659),
+            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0659),
             canBeEmpty      : true,
             isMultiLine     : false,
             callback        : panel => {
@@ -181,16 +177,16 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
                 }
                 if (!text.length) {
                     dataArray.splice(index, 1);
-                    dispatch(TypeId.WarEventFullDataChanged, fullData);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged, fullData);
                     return;
                 }
 
-                if (!checkIsValidName(text)) {
-                    show(getFormattedText(TextType.F0091, getText(TextType.B0162)));
+                if (!CustomCounters_Utils.checkIsValidName(text)) {
+                    FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0162)));
                     return;
                 }
                 if (dataArray.some(v => v.getName() === text)) {
-                    showLang(TextType.A0660);
+                    FloatText.showLang(Lang_Constants.TextType.A0660);
                     return;
                 }
 
@@ -202,7 +198,7 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
                         name    : text,
                     }));
                 }
-                dispatch(TypeId.WarEventFullDataChanged, fullData);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged, fullData);
             },
         });
     }

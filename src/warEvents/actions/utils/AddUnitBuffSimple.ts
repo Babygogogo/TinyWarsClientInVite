@@ -1,63 +1,42 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType } from "../../../lang/Constants.ts";
 import {
-    getFormattedText,
-    getText,
-    getUnitBuffName,
-} from "../../../lang/Utils.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
-import {
-    getDescForEmbed as getPlayersDescForEmbed,
-    checkIsValid as checkIsValidPlayerFilter,
-    checkIsMeet as checkIsMeetPlayerFilter,
-} from "../../../players/utils/Filter.ts";
+    UnitBuffs_Utils_Common,
+    Players_Utils_Filter,
+    Tiles_Utils_Filter,
+    Units_Utils_Filter,
+    Lang_Utils,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Units_IUnit,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import { UnitBuff } from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { WeaAddUnitBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitBuffSimple.ts";
-import {
-    getDescForEmbed as getTilesDescForEmbed,
-    checkIsValid as checkIsValidTileFilter,
-    checkIsMeet as checkIsMeetTileFilter,
-} from "../../../tiles/utils/Filter.ts";
-import {
-    checkIsValidTypeId,
-    checkIsValidModificationEndTurnIndex,
-    checkIsValidModificationEndPlayerIndex,
-    checkIsValidExtraParams,
-    checkIsValid as checkIsValidUnitBuff,
-    checkIsExpired,
-} from "../../../unitBuffs/utils/Common.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import {
-    getDescForEmbed as getUnitsDescForEmbed,
-    checkIsValid as checkIsValidUnitFilter,
-    checkIsMeet as checkIsMeetUnitFilter,
-} from "../../../units/utils/Filter.ts";
 
 export function checkIsValid(
-    data                    : Undefinable<WeaAddUnitBuffSimple>,
-    gameConfig              : GameConfig,
-    mapSize                 : MapSize,
+    data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitBuffSimple>,
+    gameConfig              : GameConfigs_GameConfig.GameConfig,
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaAddUnitBuffSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitBuffSimple>): string | null {
     if (!data) {
         return null;
     }
 
-    return getFormattedText(
-        TextType.F0260,
-        getText(TextType.Units),
-        getUnitBuffName(data.getActBuffType())
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0260,
+        Lang_Utils.getText(Lang_Constants.TextType.Units),
+        Lang_Utils.getUnitBuffName(data.getActBuffType())
     );
 }
-export function getDetailDesc(data: Undefinable<WeaAddUnitBuffSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitBuffSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -67,24 +46,24 @@ export function getDetailDesc(data: Undefinable<WeaAddUnitBuffSimple>): string |
         {
             const filter = data.getConUnitFilter();
             if (filter != null) {
-                conTextArray.push(`- ${getUnitsDescForEmbed(filter)}`);
+                conTextArray.push(`- ${Units_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConTileFilter();
             if (filter != null) {
-                conTextArray.push(`- (${getText(TextType.B1423)}) ${getTilesDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1423)}) ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${getText(TextType.B1422)}) ${getPlayersDescForEmbed(filter)}`);
+                conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1422)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${getText(TextType.A0944)}`);
+            conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
         }
     }
 
@@ -92,110 +71,110 @@ export function getDetailDesc(data: Undefinable<WeaAddUnitBuffSimple>): string |
     {
         {
             const act = data.getActBuffType();
-            actTextArray.push(`- ${getText(TextType.AbnormalStateTypeId)}: ${getUnitBuffName(act)}`);
+            actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId)}: ${Lang_Utils.getUnitBuffName(act)}`);
         }
         {
             const turnIndex = data.getActEndTurnIndex();
             if (turnIndex == null) {
-                actTextArray.push(`- ${getText(TextType.EndTime)}: ${getText(TextType.B1455)}`);
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTime)}: ${Lang_Utils.getText(Lang_Constants.TextType.B1455)}`);
             } else {
-                const textForRelative = ` (${getText(TextType.B1017)})`;
-                actTextArray.push(`- ${getText(TextType.EndTurnIndex)}: ${turnIndex}${data.getActIsRelativeEndTurnIndex() ? textForRelative : ``}`);
+                const textForRelative = ` (${Lang_Utils.getText(Lang_Constants.TextType.B1017)})`;
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex)}: ${turnIndex}${data.getActIsRelativeEndTurnIndex() ? textForRelative : ``}`);
 
                 const playerIndex = data.getActEndPlayerIndex() ?? 0;
-                actTextArray.push(`- ${getText(TextType.EndPlayerIndex)}: ${playerIndex}${data.getActIsRelativeEndPlayerIndex() ? textForRelative : ``}`);
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex)}: ${playerIndex}${data.getActIsRelativeEndPlayerIndex() ? textForRelative : ``}`);
             }
         }
         {
             const extraParams = data.getActExtraParams();
             if (extraParams != null) {
-                actTextArray.push(`- ${getText(TextType.B1229)}: [${extraParams.join(", ")}]`);
+                actTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.B1229)}: [${extraParams.join(", ")}]`);
             }
         }
 
         if (!actTextArray.length) {
-            actTextArray.push(getText(TextType.A0957));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
         }
     }
 
-    return getFormattedText(
-        TextType.F0261,
-        getText(TextType.Units),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0261,
+        Lang_Utils.getText(Lang_Constants.TextType.Units),
         conTextArray.join(`\n`),
-        getText(TextType.Units),
+        Lang_Utils.getText(Lang_Constants.TextType.Units),
         actTextArray.join(`\n`),
     );
 }
 
 export function getErrorTip(
     data                    : WeaAddUnitBuffSimple,
-    mapSize                 : MapSize,
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gameConfig              : GameConfig
+    gameConfig              : GameConfigs_GameConfig.GameConfig
 ): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
+            if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
+            (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
         }
     }
 
     const actBuffTypeId = data.getActBuffType();
     {
         if ((actBuffTypeId != null)                                     &&
-            (!checkIsValidTypeId(actBuffTypeId))
+            (!UnitBuffs_Utils_Common.checkIsValidTypeId(actBuffTypeId))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId));
         }
     }
     {
         const act = data.getActEndTurnIndex();
         if (act != null) {
-            if (!checkIsValidModificationEndTurnIndex(act)) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+            if (!UnitBuffs_Utils_Common.checkIsValidModificationEndTurnIndex(act)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
             }
         }
         if (data.getActIsRelativeEndTurnIndex()) {
             if (act == null) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex));
             }
         }
     }
     {
         const act = data.getActEndPlayerIndex();
         if (act != null) {
-            if (!checkIsValidModificationEndPlayerIndex(act)) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+            if (!UnitBuffs_Utils_Common.checkIsValidModificationEndPlayerIndex(act)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
             }
         }
         if (data.getActIsRelativeEndPlayerIndex()) {
             if (act == null) {
-                return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex));
             }
         }
     }
     {
         const act = data.getActExtraParams();
-        if (!checkIsValidExtraParams(actBuffTypeId, act)) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1229));
+        if (!UnitBuffs_Utils_Common.checkIsValidExtraParams(actBuffTypeId, act)) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1229));
         }
     }
 
@@ -206,28 +185,28 @@ export function getErrorTip(
 export async function applyWithExtraData(_action: WeaAddUnitBuffSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaAddUnitBuffSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(data: WeaAddUnitBuffSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const newBuff = generateNewBuff(data, war);
     if (newBuff == null) {
         return;
     }
 
-    const targetUnitList: IUnit[] = [];
+    const targetUnitList: Units_IUnit.IUnit[] = [];
     {
         const tileMap           = war.getTileMap();
         const conTileFilter     = data.getConTileFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
         const conUnitFilter     = data.getConUnitFilter();
-        const playerFilterDict  = new Map<IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         for (const unit of war.getUnitMap().getAllUnits()) {
             if ((conUnitFilter != null) &&
-                (!checkIsMeetUnitFilter(conUnitFilter, unit))
+                (!Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))
             ) {
                 continue;
             }
 
             if ((conTileFilter != null) &&
-                (!checkIsMeetTileFilter(conTileFilter, tileMap.getTile(unit.getGridIndex())))
+                (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tileMap.getTile(unit.getGridIndex())))
             ) {
                 continue;
             }
@@ -253,9 +232,9 @@ export async function applyWithoutExtraData(data: WeaAddUnitBuffSimple, isFastEx
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
+        resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
@@ -284,7 +263,7 @@ function calculateExpiringTime(
 
     return [turnIndex, playerIndex];
 }
-function generateNewBuff(action: WeaAddUnitBuffSimple, war: IBwWar): UnitBuff | null {
+function generateNewBuff(action: WeaAddUnitBuffSimple, war: BaseWar_Interface_IBwWar.IBwWar): UnitBuff | null {
     const turnManager           = war.getTurnManager();
     const currentTurnIndex      = turnManager.getTurnIndex();
     const currentPlayerIndex    = turnManager.getPlayerIndexInTurn();
@@ -296,7 +275,7 @@ function generateNewBuff(action: WeaAddUnitBuffSimple, war: IBwWar): UnitBuff | 
         extraParamArray     : action.getActExtraParams(),
     });
 
-    return (!checkIsValidUnitBuff(buff)) || (checkIsExpired(buff, currentTurnIndex, currentPlayerIndex))
+    return (!UnitBuffs_Utils_Common.checkIsValid(buff)) || (UnitBuffs_Utils_Common.checkIsExpired(buff, currentTurnIndex, currentPlayerIndex))
         ? null
         : buff;
 }

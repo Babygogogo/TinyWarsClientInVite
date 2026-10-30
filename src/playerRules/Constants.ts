@@ -1,4 +1,6 @@
-import { PlayerIndex } from "../players/Constants.ts";
+import {
+    Players_Constants,
+} from "../internal.ts";
 import { PlayerRule } from "../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 
 // eslint-disable-next-line no-shadow
@@ -126,7 +128,7 @@ export const enum MaxUnitsCount {
 }
 
 export const NeutralPlayerRule = PlayerRule.fromJson({
-    playerIndex                 : PlayerIndex.Neutral,
+    playerIndex                 : Players_Constants.PlayerIndex.Neutral,
     teamIndex                   : 0,
     bannedCoCategoryIdArray     : [],
     bannedUnitTypeArray         : [],

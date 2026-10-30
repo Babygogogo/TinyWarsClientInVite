@@ -1,36 +1,38 @@
-import { show } from "../../FloatText.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { setPassword } from "../../localData/Storage.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import { setSelfPassword } from "../Model.ts";
-import { reqUserSetPassword } from "../Proxy.ts";
-import { checkIsPasswordValid } from "../Utils.ts";
+import {
+    Users_Utils,
+    Lang_Utils,
+    Users_Proxy,
+    LocalData_Storage,
+    Users_Model,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _group!                    : IUiContainer;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _labelOldPasswordTitle!    : IUiLabel;
-    private readonly _inputOldPassword!         : IUiPromptedInput;
-    private readonly _labelNewPasswordTitle0!   : IUiLabel;
-    private readonly _inputNewPassword0!        : IUiPromptedInput;
-    private readonly _labelNewPasswordTitle1!   : IUiLabel;
-    private readonly _inputNewPassword1!        : IUiPromptedInput;
-    private readonly _btnConfirm!               : IUiButton;
-    private readonly _btnClose!                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOldPasswordTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputOldPassword!         : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelNewPasswordTitle0!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputNewPassword0!        : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _labelNewPasswordTitle1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _inputNewPassword1!        : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnConfirm!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserSetPassword,  callback: this._onMsgUserSetPassword },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserSetPassword,  callback: this._onMsgUserSetPassword },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
@@ -48,11 +50,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onMsgUserSetPassword(): void {
-        show(getText(TextType.A0148));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0148));
 
         const password = this._inputNewPassword0.trimInputText() ?? ``;
-        setPassword(password);
-        setSelfPassword(password);
+        LocalData_Storage.setPassword(password);
+        Users_Model.setSelfPassword(password);
         this.closePanel();
     }
     private _onNotifyLanguageChanged(): void {
@@ -61,21 +63,21 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnConfirm(): void {
         const newPassword = this._inputNewPassword0.trimInputText() ?? ``;
-        if (!checkIsPasswordValid(newPassword)) {
-            show(getText(TextType.A0003));
+        if (!Users_Utils.checkIsPasswordValid(newPassword)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0003));
         } else if (newPassword !== this._inputNewPassword1.trimInputText()) {
-            show(getText(TextType.A0147));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0147));
         } else {
-            reqUserSetPassword(this._inputOldPassword.trimInputText() ?? ``, newPassword);
+            Users_Proxy.reqUserSetPassword(this._inputOldPassword.trimInputText() ?? ``, newPassword);
         }
     }
 
     private _updateOnLanguageChanged(): void {
-        this._labelTitle.setLangText(TextType.B0426);
-        this._labelOldPasswordTitle.setLangText(TextType.B0427);
-        this._labelNewPasswordTitle0.setLangText(TextType.B0428);
-        this._labelNewPasswordTitle1.setLangText(TextType.B0429);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnClose.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0426);
+        this._labelOldPasswordTitle.setLangText(Lang_Constants.TextType.B0427);
+        this._labelNewPasswordTitle0.setLangText(Lang_Constants.TextType.B0428);
+        this._labelNewPasswordTitle1.setLangText(Lang_Constants.TextType.B0429);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
     }
 }

@@ -1,57 +1,43 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import { GridIndexAndWeight } from "../../../auxiliaryTypes/GridIndexAndWeight.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
-import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import { getFormattedText } from "../../../lang/Utils.ts";
-import {
-    MinId,
-    MaxId,
-} from "../../../locations/Constants.ts";
-import { encode } from "../../../locations/Utils.ts";
-import {
-    getValueInRange,
-    getValueInInt32,
-} from "../../../numbers/Utils.ts";
-import { PlayerIndex } from "../../../players/Constants.ts";
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_GridIndexAndWeight,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_NumArray,
+    ExpressionParsers_Parser,
+    ExpressionParsers_Contexts_Tile,
+    Units_Unit,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Constants,
+    Units_Utils_Common,
+    Units_Utils_Serialization,
+    Locations_Utils,
+    Helpers_Team,
+    WarEvents_Actions_Constants_FillUnitOnMapExpr,
+    Helpers_Misc,
+    Lang_Utils,
+    Visibilities_Utils,
+    Numbers_Utils,
+    Locations_Constants,
+    Players_Constants,
+    Lang_Constants,
+    type Tiles_ITile,
+    type Units_IUnit,
+} from "../../../internal.ts";
+
 import type { WeaFillUnitOnMapExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { ITile } from "../../../tiles/ITile.ts";
-import {
-    ActionStateId,
-    AiModeId,
-    TagId,
-} from "../../../units/Constants.ts";
-import type { IUnit } from "../../../units/IUnit.ts";
-import {
-    checkIsValidActionStateId,
-    checkIsValidAiModeId,
-    getEncodedTagId,
-} from "../../../units/utils/Common.ts";
-import { create } from "../../../units/utils/Serialization.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { ExpressionInfoDict } from "../constants/FillUnitOnMapExpr.ts";
 
-export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaFillUnitOnMapExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getConTileFilter(),
-            expressionInfo          : ExpressionInfoDict.ConTileFilter,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ConTileFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -59,9 +45,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActUnitType(),
-            expressionInfo          : ExpressionInfoDict.ActUnitType,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -69,9 +55,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActPlayerIndex(),
-            expressionInfo          : ExpressionInfoDict.ActPlayerIndex,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -79,9 +65,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActActionState(),
-            expressionInfo          : ExpressionInfoDict.ActActionState,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -89,9 +75,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCurrentHp(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentHp,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -99,9 +85,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActPrimaryWeaponCurrentAmmo(),
-            expressionInfo          : ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -109,9 +95,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActFlareCurrentAmmo(),
-            expressionInfo          : ExpressionInfoDict.ActFlareCurrentAmmo,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -119,9 +105,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCurrentFuel(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentFuel,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -129,9 +115,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActIsCapturingTile(),
-            expressionInfo          : ExpressionInfoDict.ActIsCapturingTile,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -139,9 +125,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActIsDiving(),
-            expressionInfo          : ExpressionInfoDict.ActIsDiving,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -149,9 +135,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCurrentBuildMaterial(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentBuildMaterial,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -159,9 +145,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCurrentProduceMaterial(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentProduceMaterial,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -169,9 +155,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActCurrentPromotion(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentPromotion,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -179,9 +165,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActIsBuildingTile(),
-            expressionInfo          : ExpressionInfoDict.ActIsBuildingTile,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -189,9 +175,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActIsCoOnboard(),
-            expressionInfo          : ExpressionInfoDict.ActIsCoOnboard,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -199,9 +185,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActAiMode(),
-            expressionInfo          : ExpressionInfoDict.ActAiMode,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -209,9 +195,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActGroupedTagId(),
-            expressionInfo          : ExpressionInfoDict.ActGroupedTagId,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -219,9 +205,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActForbiddenGroupedLocationIdArray(),
-            expressionInfo          : ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -229,9 +215,9 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getActAiWeightedDestination(),
-            expressionInfo          : ExpressionInfoDict.ActAiWeightedDestination,
+            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -241,292 +227,292 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCo
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaFillUnitOnMapExpr>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaFillUnitOnMapExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(TextType.F0048, data.getConTileFilter() ?? UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError);
 }
-export function getDetailDesc(data: Undefinable<WeaFillUnitOnMapExpr>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaFillUnitOnMapExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActUnitType()                        ? `${ExpressionInfoDict.ActUnitType.getTitleText()}: ${data.getActUnitType()}`                                               : null,
-        data.getActPlayerIndex()                     ? `${ExpressionInfoDict.ActPlayerIndex.getTitleText()}: ${data.getActPlayerIndex()}`                                         : null,
-        data.getActActionState()                     ? `${ExpressionInfoDict.ActActionState.getTitleText()}: ${data.getActActionState()}`                                         : null,
-        data.getActIsCoOnboard()                     ? `${ExpressionInfoDict.ActIsCoOnboard.getTitleText()}: ${data.getActIsCoOnboard()}`                                         : null,
-        data.getActCurrentPromotion()                ? `${ExpressionInfoDict.ActCurrentPromotion.getTitleText()}: ${data.getActCurrentPromotion()}`                               : null,
-        data.getActCurrentHp()                       ? `${ExpressionInfoDict.ActCurrentHp.getTitleText()}: ${data.getActCurrentHp()}`                                             : null,
-        data.getActPrimaryWeaponCurrentAmmo()        ? `${ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo.getTitleText()}: ${data.getActPrimaryWeaponCurrentAmmo()}`               : null,
-        data.getActFlareCurrentAmmo()                ? `${ExpressionInfoDict.ActFlareCurrentAmmo.getTitleText()}: ${data.getActFlareCurrentAmmo()}`                               : null,
-        data.getActCurrentFuel()                     ? `${ExpressionInfoDict.ActCurrentFuel.getTitleText()}: ${data.getActCurrentFuel()}`                                         : null,
-        data.getActCurrentBuildMaterial()            ? `${ExpressionInfoDict.ActCurrentBuildMaterial.getTitleText()}: ${data.getActCurrentBuildMaterial()}`                       : null,
-        data.getActCurrentProduceMaterial()          ? `${ExpressionInfoDict.ActCurrentProduceMaterial.getTitleText()}: ${data.getActCurrentProduceMaterial()}`                   : null,
-        data.getActIsDiving()                        ? `${ExpressionInfoDict.ActIsDiving.getTitleText()}: ${data.getActIsDiving()}`                                               : null,
-        data.getActIsBuildingTile()                  ? `${ExpressionInfoDict.ActIsBuildingTile.getTitleText()}: ${data.getActIsBuildingTile()}`                                   : null,
-        data.getActIsCapturingTile()                 ? `${ExpressionInfoDict.ActIsCapturingTile.getTitleText()}: ${data.getActIsCapturingTile()}`                                 : null,
-        data.getActGroupedTagId()                    ? `${ExpressionInfoDict.ActGroupedTagId.getTitleText()}: ${data.getActGroupedTagId()}`                                       : null,
-        data.getActForbiddenGroupedLocationIdArray() ? `${ExpressionInfoDict.ActForbiddenGroupedLocationIdArray.getTitleText()}: ${data.getActForbiddenGroupedLocationIdArray()}` : null,
-        data.getActAiMode()                          ? `${ExpressionInfoDict.ActAiMode.getTitleText()}: ${data.getActAiMode()}`                                                   : null,
-        data.getActAiWeightedDestination()           ? `${ExpressionInfoDict.ActAiWeightedDestination.getTitleText()}: ${data.getActAiWeightedDestination()}`                     : null,
+        data.getActUnitType()                        ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType.getTitleText()}: ${data.getActUnitType()}`                                               : null,
+        data.getActPlayerIndex()                     ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex.getTitleText()}: ${data.getActPlayerIndex()}`                                         : null,
+        data.getActActionState()                     ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState.getTitleText()}: ${data.getActActionState()}`                                         : null,
+        data.getActIsCoOnboard()                     ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard.getTitleText()}: ${data.getActIsCoOnboard()}`                                         : null,
+        data.getActCurrentPromotion()                ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion.getTitleText()}: ${data.getActCurrentPromotion()}`                               : null,
+        data.getActCurrentHp()                       ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp.getTitleText()}: ${data.getActCurrentHp()}`                                             : null,
+        data.getActPrimaryWeaponCurrentAmmo()        ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo.getTitleText()}: ${data.getActPrimaryWeaponCurrentAmmo()}`               : null,
+        data.getActFlareCurrentAmmo()                ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo.getTitleText()}: ${data.getActFlareCurrentAmmo()}`                               : null,
+        data.getActCurrentFuel()                     ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel.getTitleText()}: ${data.getActCurrentFuel()}`                                         : null,
+        data.getActCurrentBuildMaterial()            ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial.getTitleText()}: ${data.getActCurrentBuildMaterial()}`                       : null,
+        data.getActCurrentProduceMaterial()          ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial.getTitleText()}: ${data.getActCurrentProduceMaterial()}`                   : null,
+        data.getActIsDiving()                        ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving.getTitleText()}: ${data.getActIsDiving()}`                                               : null,
+        data.getActIsBuildingTile()                  ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile.getTitleText()}: ${data.getActIsBuildingTile()}`                                   : null,
+        data.getActIsCapturingTile()                 ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile.getTitleText()}: ${data.getActIsCapturingTile()}`                                 : null,
+        data.getActGroupedTagId()                    ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId.getTitleText()}: ${data.getActGroupedTagId()}`                                       : null,
+        data.getActForbiddenGroupedLocationIdArray() ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray.getTitleText()}: ${data.getActForbiddenGroupedLocationIdArray()}` : null,
+        data.getActAiMode()                          ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode.getTitleText()}: ${data.getActAiMode()}`                                                   : null,
+        data.getActAiWeightedDestination()           ? `${WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination.getTitleText()}: ${data.getActAiWeightedDestination()}`                     : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${getFormattedText(TextType.F0048, data.getConTileFilter() ?? UndefinedError)}\n${additionalText}`;
+    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0048, data.getConTileFilter() ?? Lang_Constants.UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = ExpressionInfoDict.ConTileFilter;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ConTileFilter;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getConTileFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActUnitType;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActUnitType(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActPlayerIndex;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActPlayerIndex(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActActionState;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActActionState(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCurrentHp;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCurrentHp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActPrimaryWeaponCurrentAmmo(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActFlareCurrentAmmo;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActFlareCurrentAmmo(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCurrentFuel;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCurrentFuel(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActIsCapturingTile;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActIsCapturingTile(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActIsDiving;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActIsDiving(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCurrentBuildMaterial;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCurrentBuildMaterial(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCurrentProduceMaterial;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCurrentProduceMaterial(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActCurrentPromotion;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActCurrentPromotion(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActIsBuildingTile;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActIsBuildingTile(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActIsCoOnboard;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActIsCoOnboard(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActAiMode;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActAiMode(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActGroupedTagId;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActGroupedTagId(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActForbiddenGroupedLocationIdArray;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActForbiddenGroupedLocationIdArray(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.ActAiWeightedDestination;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getActAiWeightedDestination(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: ITile): boolean {
+function checkIsMeetConditionForTile(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): boolean {
     try {
-        const result = Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new Tile(tile), false);
-        return (result instanceof Num) && (result.num !== 0);
+        const result = ExpressionParsers_Parser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        return (result instanceof ExpressionParsers_Results_Num.Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
     }
 }
-function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: ITile): number | null {
+function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number | null {
     const act = action.getActPlayerIndex();
     if (!act) {
         return null;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const playerIndex = Math.floor(epResult.num);
-            return (playerIndex >= PlayerIndex.First) && (playerIndex <= tile.getWar().getPlayerManager().getTotalPlayersCount(false)) ? playerIndex : null;
+            return (playerIndex >= Players_Constants.PlayerIndex.First) && (playerIndex <= tile.getWar().getPlayerManager().getTotalPlayersCount(false)) ? playerIndex : null;
         } else {
             return null;
         }
@@ -534,15 +520,15 @@ function evalActPlayerIndex(action: WeaFillUnitOnMapExpr, tile: ITile): number |
         return null;
     }
 }
-function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: ITile): number | null {
+function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number | null {
     const act = action.getActUnitType();
     if (!act) {
         return null;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const unitType = Math.floor(epResult.num);
             return (tile.getGameConfig().checkIsValidUnitType(unitType)) ? unitType : null;
         } else {
@@ -552,18 +538,18 @@ function evalActUnitType(action: WeaFillUnitOnMapExpr, tile: ITile): number | nu
         return null;
     }
 }
-function evalActActionState(action: WeaFillUnitOnMapExpr, tile: ITile): number {
-    const defaultValue  = ActionStateId.Idle;
+function evalActActionState(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+    const defaultValue  = Units_Constants.ActionStateId.Idle;
     const act             = action.getActActionState();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const actionState = Math.floor(epResult.num);
-            return (checkIsValidActionStateId(actionState)) ? actionState : defaultValue;
+            return (Units_Utils_Common.checkIsValidActionStateId(actionState)) ? actionState : defaultValue;
         } else {
             return defaultValue;
         }
@@ -571,7 +557,7 @@ function evalActActionState(action: WeaFillUnitOnMapExpr, tile: ITile): number {
         return defaultValue;
     }
 }
-function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
+function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getPrimaryWeaponMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -583,9 +569,9 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITi
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -597,17 +583,17 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITi
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
-    const defaultValue = getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxHp());
+function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+    const defaultValue = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxHp());
     const act = action.getActCurrentHp();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 1,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -641,8 +627,8 @@ function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: n
 //         return defaultValue;
 //     }
 // }
-function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): boolean {
-    const unitCfg = getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType));
+function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): boolean {
+    const unitCfg = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType));
     if (unitCfg.getDiveCfg() == null) {
         return false;
     }
@@ -654,8 +640,8 @@ function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: nu
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -664,7 +650,7 @@ function evalActIsDiving(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: nu
         return defaultValue;
     }
 }
-function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
+function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getFlareMaxAmmo() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -676,9 +662,9 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITile, unit
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -690,17 +676,17 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: ITile, unit
         return defaultValue;
     }
 }
-function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
-    const defaultValue = getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxFuel());
+function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
+    const defaultValue = Helpers_Misc.getExisted(tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxFuel());
     const act = action.getActCurrentFuel();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -712,7 +698,7 @@ function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: ITile, unitType:
         return defaultValue;
     }
 }
-function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
+function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxBuildMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -724,9 +710,9 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: ITile, 
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -738,7 +724,7 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: ITile, unitType: number): number {
+function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitType: number): number {
     const defaultValue = tile.getGameConfig().getUnitTemplateCfg(unitType)?.getMaxProduceMaterial() ?? 0;
     if (defaultValue <= 0) {
         return defaultValue;
@@ -750,9 +736,9 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: ITile
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -764,7 +750,7 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: ITile
         return defaultValue;
     }
 }
-function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: ITile): number {
+function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
     const defaultValue    = tile.getGameConfig().getUnitMaxPromotion();
     const act             = action.getActCurrentPromotion();
     if (!act) {
@@ -772,9 +758,9 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: ITile): num
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
-            return getValueInRange({
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
+            return Numbers_Utils.getValueInRange({
                 minValue    : 0,
                 maxValue    : defaultValue,
                 rawValue    : Math.floor(epResult.num),
@@ -809,7 +795,7 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: ITile): num
 //         return defaultValue;
 //     }
 // }
-function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: ITile): boolean {
+function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): boolean {
     const defaultValue  = false;
     const act             = action.getActIsCoOnboard();
     if (!act) {
@@ -817,8 +803,8 @@ function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: ITile): boolean 
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -827,18 +813,18 @@ function evalActIsCoOnboard(action: WeaFillUnitOnMapExpr, tile: ITile): boolean 
         return defaultValue;
     }
 }
-function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: ITile): number {
-    const defaultValue  = AiModeId.Normal;
+function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
+    const defaultValue  = Units_Constants.AiModeId.Normal;
     const act             = action.getActAiMode();
     if (!act) {
         return defaultValue;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof Num) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             const aiMode = Math.floor(epResult.num);
-            return (checkIsValidAiModeId(aiMode)) ? aiMode : defaultValue;
+            return (Units_Utils_Common.checkIsValidAiModeId(aiMode)) ? aiMode : defaultValue;
         } else {
             return defaultValue;
         }
@@ -846,7 +832,7 @@ function evalActAiMode(action: WeaFillUnitOnMapExpr, tile: ITile): number {
         return defaultValue;
     }
 }
-function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: ITile): number {
+function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number {
     const defaultValue  = 0;
     const act             = action.getActGroupedTagId();
     if (!act) {
@@ -854,11 +840,11 @@ function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: ITile): number 
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof NumArray) {
-            return getEncodedTagId(epResult.numberArray.map(v => getValueInRange({
-                minValue    : TagId.MinTagId,
-                maxValue    : TagId.MaxTagId,
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
+            return Units_Utils_Common.getEncodedTagId(epResult.numberArray.map(v => Numbers_Utils.getValueInRange({
+                minValue    : Units_Constants.TagId.MinTagId,
+                maxValue    : Units_Constants.TagId.MaxTagId,
                 rawValue    : Math.floor(v),
             })));
         } else {
@@ -868,18 +854,18 @@ function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: ITile): number 
         return defaultValue;
     }
 }
-function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, tile: ITile): number[] {
+function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): number[] {
     const act = action.getActForbiddenGroupedLocationIdArray();
     if (!act) {
         return [];
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof NumArray) {
-            return encode(epResult.numberArray.map(v => getValueInRange({
-                minValue    : MinId,
-                maxValue    : MaxId,
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
+            return Locations_Utils.encode(epResult.numberArray.map(v => Numbers_Utils.getValueInRange({
+                minValue    : Locations_Constants.MinId,
+                maxValue    : Locations_Constants.MaxId,
                 rawValue    : Math.floor(v),
             })));
         } else {
@@ -889,26 +875,26 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, ti
         return [];
     }
 }
-function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: ITile): GridIndexAndWeight | null {
+function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
     const act = action.getActAiWeightedDestination();
     if (!act) {
         return null;
     }
 
     try {
-        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
-        if (epResult instanceof NumArray) {
+        const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
+        if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             if (epResult.numberArray.length !== 3) {
                 return null;
             }
 
-            const arr       = epResult.numberArray.map(v => getValueInInt32(v));
-            const gridIndex = new GridIndex(arr[0], arr[1]);
+            const arr       = epResult.numberArray.map(v => Numbers_Utils.getValueInInt32(v));
+            const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(arr[0], arr[1]);
             if (!gridIndex.checkIsInsideMap(tile.getWar().getTileMap().getMapSize())) {
                 return null;
             }
 
-            return new GridIndexAndWeight(gridIndex, arr[2]);
+            return new AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight(gridIndex, arr[2]);
         } else {
             return null;
         }
@@ -921,7 +907,7 @@ function evalActAiWeightedDestination(action: WeaFillUnitOnMapExpr, tile: ITile)
 export async function applyWithExtraData(_action: WeaFillUnitOnMapExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const unitMap         = war.getUnitMap();
     let nextUnitId      = unitMap.getNextUnitId();
     const newUnitDataList : SerialUnit[] = [];
@@ -944,7 +930,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapExpr, isFast
     unitMap.setNextUnitId(nextUnitId);
     applyNewUnitDataArray(newUnitDataList, war, isFast);
 }
-function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: ITile, unitId: number): SerialUnit | null {
+function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile, unitId: number): SerialUnit | null {
     const unitType = evalActUnitType(action, tile);
     if (unitType == null) {
         return null;
@@ -972,7 +958,7 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: ITile, unitId: nu
     const currentProduceMaterial            = evalActCurrentProduceMaterial(action, tile, unitType);
     const currentFuel                       = evalActCurrentFuel(action, tile, unitType);
 
-    return create({
+    return Units_Utils_Serialization.create({
         unitType                        : unitType,
         unitId                          : unitId,
         playerIndex                     : playerIndex,
@@ -1000,12 +986,12 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: ITile, unitId: nu
         loaderUnitId                    : null,
     });
 }
-function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: IBwWar, isFast: boolean): void {
+function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     const unitMap       = war.getUnitMap();
     const gameConfig    = war.getGcData();
-    const unitArray     : IUnit[] = [];
+    const unitArray     : Units_IUnit.IUnit[] = [];
     for (const unitData of unitDataArray) {
-        const unit = new (getUnitClass())();
+        const unit = new Units_Unit.Unit();
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();
@@ -1017,7 +1003,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: IBwWar, isFast:
 
     const warStatisticsManager = war.getWarStatisticsManager();
     for (const unit of unitArray) {
-        const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
         if (observerTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                 unitType                    : unit.getUnitType(),
@@ -1026,7 +1012,7 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: IBwWar, isFast:
                 unitLoss                    : 0,
                 normalizedHpGain            : unit.getNormalizedCurrentHp(),
                 normalizedHpLoss            : 0,
-                groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }

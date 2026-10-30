@@ -1,4 +1,6 @@
-import type { BgmSfxCfg } from "./Types.ts";
+import {
+    type Sounds_Types,
+} from "../internal.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum SoundTypeId {
@@ -38,7 +40,7 @@ export const enum ShortSfxCode {
     UnitProduction      = 100017,
 }
 
-export const BgmSfxCfgDict = new Map<number, BgmSfxCfg>([
+export const BgmSfxCfgDict = new Map<number, Sounds_Types.BgmSfxCfg>([
     [7,         { code: 7,      filename: "co0007.m4a",             nameTextId: 30003,  sortWeight: 11100,  isBgm: true,    loopStart: 10000,   loopEnd: 598240 } ],
     [2,         { code: 2,      filename: "co0002.m4a",             nameTextId: 30004,  sortWeight: 11101,  isBgm: true,    loopStart: 10000,   loopEnd: 650000 } ],
     [10,        { code: 10,     filename: "co0010.m4a",             nameTextId: 30008,  sortWeight: 11102,  isBgm: true,    loopStart: 49500,   loopEnd: 620000 } ],

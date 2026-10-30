@@ -1,102 +1,78 @@
-import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { getFinalSkinId } from "../forceSkins/Utils.ts";
 import {
-    getRwWarClass,
-    getRwWarBaseClass,
-    getMpwWarClass,
-    getMeWarClass,
-    getSpwWarClass,
-} from "../gameHelpers/GhFactory.ts";
-import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { getGridMark } from "../helpers/ImageSource.ts";
-import {
-    createLazyFunc,
-    getExisted,
-} from "../helpers/Misc.ts";
-import { getNumText } from "../helpers/Text.ts";
-import {
-    MinId,
-    MaxId,
-} from "../locations/Constants.ts";
-import type {
-    BwTileHasLocationIdSet,
-    GridMarkAdded,
-    GridMarkDeleted,
-    HiddenGridMarkTypeIdListChanged,
-    GridMarkListChanged,
-    BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,
-} from "../notifications/DataTypes.ts";
-import {
-    addEventListeners,
-    removeEventListeners,
-} from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import type { Listener } from "../notifications/Types.ts";
-import { PlayerIndex } from "../players/Constants.ts";
+    ForceSkins_Utils,
+    AuxiliaryTypes_GridIndex,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    Ui_Components_UiImage,
+    type BaseWar_Interface_IBwWar,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Tween_Executor,
+    Graphics_Utils,
+    Helpers_ImageSource,
+    Helpers_Text,
+    Locations_Constants,
+    Players_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiContainer,
+    type Notifications_DataTypes,
+    type Tiles_ITileMap,
+    type Tiles_ITileMapView,
+    type Tiles_ITileView,
+    type Ui_Interfaces_IUiImage,
+    type Notifications_Types,
+    Visibilities_Utils,
+    Users_Model,
+    type Egret_Egret,
+} from "../internal.ts";
+
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import type { ITileMap } from "./ITileMap.ts";
-import type { ITileMapView } from "./ITileMapView.ts";
-import type { ITileView } from "./ITileView.ts";
-import { Executor } from "../tween/Executor.ts";
-import { UiContainer } from "../ui/components/UiContainer.ts";
-import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import {
-    getUiContainerClass,
-    getUiImageClass,
-} from "../ui/utils/UiFactory.ts";
-import {
-    getSelfSettingsIsShowGridBorder,
-    getSelfSettingsOpacitySettings,
-} from "../users/Model.ts";
-import type {
-    DisplayObject,
-    Event,
-} from "../egret/Egret.ts";
-import { checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
-const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class TileMapView extends UiContainer implements ITileMapView {
-    private readonly _borderLayer               = new (getUiContainerClass())();
-    private readonly _imgCornerUL               = new (getUiImageClass())({ textureSourceName: `uncompressedCorner0000` });
-    private readonly _imgCornerUR               = new (getUiImageClass())({ textureSourceName: `uncompressedCorner0001` });
-    private readonly _imgCornerDR               = new (getUiImageClass())({ textureSourceName: `uncompressedCorner0002` });
-    private readonly _imgCornerDL               = new (getUiImageClass())({ textureSourceName: `uncompressedCorner0003` });
-    private readonly _imgBorderU                = new (getUiImageClass())({ textureSourceName: `uncompressedBorder0000` });
-    private readonly _imgBorderR                = new (getUiImageClass())({ textureSourceName: `uncompressedBorder0001` });
-    private readonly _imgBorderD                = new (getUiImageClass())({ textureSourceName: `uncompressedBorder0002` });
-    private readonly _imgBorderL                = new (getUiImageClass())({ textureSourceName: `uncompressedBorder0003` });
+export class TileMapView extends Ui_Components_UiContainer.UiContainer implements Tiles_ITileMapView.ITileMapView {
+    private readonly _borderLayer               = new Ui_Components_UiContainer.UiContainer();
+    private readonly _imgCornerUL               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0000` });
+    private readonly _imgCornerUR               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0001` });
+    private readonly _imgCornerDR               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0002` });
+    private readonly _imgCornerDL               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0003` });
+    private readonly _imgBorderU                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0000` });
+    private readonly _imgBorderR                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0001` });
+    private readonly _imgBorderD                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0002` });
+    private readonly _imgBorderL                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0003` });
 
-    private readonly _tileViewArray             : ITileView[] = [];
-    private readonly _baseLayer                 = new (getUiContainerClass())();
-    private readonly _decorationLayer           = new (getUiContainerClass())();
-    private readonly _gridBorderLayer           = new (getUiContainerClass())();
-    private readonly _objectLayer               = new (getUiContainerClass())();
-    private readonly _buffLayer                 = new (getUiContainerClass())();
-    private readonly _highlightLayer            = new (getUiContainerClass())();
-    private readonly _locationLayer             = new (getUiContainerClass())();
-    private readonly _coZoneContainer           = new (getUiContainerClass())();
-    private readonly _coZoneAreaImageDict       = new Map<number, IUiImage[][]>();
-    private readonly _coZoneBorderImageArray    : IUiImage[] = [];
-    private readonly _markLayer                 = new (getUiContainerClass())();
+    private readonly _tileViewArray             : Tiles_ITileView.ITileView[] = [];
+    private readonly _baseLayer                 = new Ui_Components_UiContainer.UiContainer();
+    private readonly _decorationLayer           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _gridBorderLayer           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _objectLayer               = new Ui_Components_UiContainer.UiContainer();
+    private readonly _buffLayer                 = new Ui_Components_UiContainer.UiContainer();
+    private readonly _highlightLayer            = new Ui_Components_UiContainer.UiContainer();
+    private readonly _locationLayer             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _coZoneContainer           = new Ui_Components_UiContainer.UiContainer();
+    private readonly _coZoneAreaImageDict       = new Map<number, Ui_Interfaces_IUiImage.IUiImage[][]>();
+    private readonly _coZoneBorderImageArray    : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _markLayer                 = new Ui_Components_UiContainer.UiContainer();
 
-    private readonly _notifyListeners: Listener[] = [
-        { type: TypeId.TileAnimationTick,                                   callback: this._onNotifyTileAnimationTick },
-        { type: TypeId.StateIndicatorTick,                                  callback: this._onNotifyStateIndicatorTick },
-        { type: TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyIsShowGridBorderChanged },
-        { type: TypeId.BwTileHasLocationIdSet,                              callback: this._onNotifyBwTileHasLocationIdSet },
-        { type: TypeId.BwOverridingSkinIdChanged,                           callback: this._onNotifyBwOverridingSkinIdChanged },
-        { type: TypeId.GridMarkAdded,                                       callback: this._onNotifyGridMarkAdded },
-        { type: TypeId.GridMarkDeleted,                                     callback: this._onNotifyGridMarkDeleted },
-        { type: TypeId.GridMarkListChanged,                                 callback: this._onNotifyGridMarkListChanged },
-        { type: TypeId.HiddenGridMarkTypeIdListChanged,                     callback: this._onNotifyHiddenGridMarkTypeIdListChanged },
-        { type: TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,    callback: this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
-        { type: TypeId.UserSettingsOpacitySettingsChanged,                  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
+        { type: Notifications_TypeId.TypeId.TileAnimationTick,                                   callback: this._onNotifyTileAnimationTick },
+        { type: Notifications_TypeId.TypeId.StateIndicatorTick,                                  callback: this._onNotifyStateIndicatorTick },
+        { type: Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyIsShowGridBorderChanged },
+        { type: Notifications_TypeId.TypeId.BwTileHasLocationIdSet,                              callback: this._onNotifyBwTileHasLocationIdSet },
+        { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,                           callback: this._onNotifyBwOverridingSkinIdChanged },
+        { type: Notifications_TypeId.TypeId.GridMarkAdded,                                       callback: this._onNotifyGridMarkAdded },
+        { type: Notifications_TypeId.TypeId.GridMarkDeleted,                                     callback: this._onNotifyGridMarkDeleted },
+        { type: Notifications_TypeId.TypeId.GridMarkListChanged,                                 callback: this._onNotifyGridMarkListChanged },
+        { type: Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged,                     callback: this._onNotifyHiddenGridMarkTypeIdListChanged },
+        { type: Notifications_TypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,    callback: this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
+        { type: Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,                  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
-    private _tileMap?: ITileMap;
+    private _tileMap?: Tiles_ITileMap.ITileMap;
 
     public constructor() {
         super();
@@ -119,7 +95,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
         this.setIsTouchChildrenEnabled(false);
     }
 
-    public init(tileMap: ITileMap): void {
+    public init(tileMap: Tiles_ITileMap.ITileMap): void {
         this._tileMap = tileMap;
 
         {
@@ -186,7 +162,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
             const gridBorderLayer   = this._gridBorderLayer;
             gridBorderLayer.removeUiChildren();
             for (let x = 1; x < mapWidth; ++x) {
-                const img       = new (getUiImageClass())({ textureSourceName: `uncompressedColorBlack0000` });
+                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
                 img.setIsSmoothing(false);
                 img.setUnscaledManualWidth(1);
                 img.setUnscaledManualHeight(borderHeight);
@@ -194,7 +170,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
                 gridBorderLayer.addUiChild(img);
             }
             for (let y = 1; y < mapHeight; ++y) {
-                const img       = new (getUiImageClass())({ textureSourceName: `uncompressedColorBlack0000` });
+                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
                 img.setIsSmoothing(false);
                 img.setUnscaledManualWidth(borderWidth);
                 img.setUnscaledManualHeight(1);
@@ -210,7 +186,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
             for (let y = 0; y < mapHeight; ++y) {
                 for (let x = 0; x < mapWidth; ++x) {
-                    const imgLocation       = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+                    const imgLocation       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
                     imgLocation.setIsSmoothing(false);
                     imgLocation.setX(x * getGridWidth());
                     imgLocation.setY(y * getGridHeight());
@@ -227,7 +203,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
             for (let y = 0; y < mapHeight; ++y) {
                 for (let x = 0; x < mapWidth; ++x) {
-                    const img = new (getUiImageClass())();
+                    const img = new Ui_Components_UiImage.UiImage();
                     img.setIsSmoothing(false);
                     img.setX(x * getGridWidth());
                     img.setY(y * getGridHeight());
@@ -240,12 +216,12 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
         this._updateBorderLayer();
     }
-    public fastInit(tileMap: ITileMap): void {
+    public fastInit(tileMap: Tiles_ITileMap.ITileMap): void {
         this._tileMap = tileMap;
     }
 
     public startRunningView(): void {
-        addEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.addEventListeners(this._notifyListeners, this);
 
         this.resetLocationLayer();
         this.resetMarkLayer();
@@ -254,7 +230,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
         this.updateCoZone();
     }
     public stopRunningView(): void {
-        removeEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
 
         this._stopCoZoneAnimation();
     }
@@ -282,8 +258,8 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
     public resetLocationLayer(): void {
         const locationIdArray   : number[] = [];
-        const tileMap           = getExisted(this._tileMap);
-        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
+        const tileMap           = Helpers_Misc.getExisted(this._tileMap);
+        for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             if (tileMap.getIsLocationVisible(locationId)) {
                 locationIdArray.push(locationId);
             }
@@ -295,7 +271,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
         const layer     = this._locationLayer;
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
-                const gridIndex = new GridIndex(x, y);
+                const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                 const tile      = tileMap.getTile(gridIndex);
                 layer.getUiChildAt(gridIndex.getGridId(mapSize))?.setIsVisible(locationIdArray.some(v => tile.getHasLocationId(v)));
             }
@@ -303,7 +279,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
     }
 
     public resetMarkLayer(): void {
-        const tileMap       = getExisted(this._tileMap);
+        const tileMap       = Helpers_Misc.getExisted(this._tileMap);
         const dataArray     = getGridMarkDataArray(tileMap.getWar());
         const mapSize       = tileMap.getMapSize();
         const width         = mapSize.getWidth();
@@ -311,36 +287,36 @@ export class TileMapView extends UiContainer implements ITileMapView {
         const layer         = this._markLayer;
         for (let y = 0; y < height; ++y) {
             for (let x = 0; x < width; ++x) {
-                const gridId    = GridIndex.getGridId(x, y, mapSize);
-                const img       = layer.getUiChildAt(gridId) as IUiImage | undefined;
+                const gridId    = AuxiliaryTypes_GridIndex.GridIndex.getGridId(x, y, mapSize);
+                const img       = layer.getUiChildAt(gridId) as Ui_Interfaces_IUiImage.IUiImage | undefined;
                 if (img) {
                     const markTypeId = dataArray.find(v => v.getGridId() === gridId)?.getMarkTypeId();
                     if (markTypeId == null) {
                         img.setIsVisible(false);
                     } else {
                         img.setIsVisible(true);
-                        img.loadSource(getGridMark(markTypeId));
+                        img.loadSource(Helpers_ImageSource.getGridMark(markTypeId));
                     }
                 }
             }
         }
     }
     private _updateMarkGrid(gridId: number): void {
-        const img = this._markLayer.getUiChildAt(gridId) as IUiImage | undefined;
+        const img = this._markLayer.getUiChildAt(gridId) as Ui_Interfaces_IUiImage.IUiImage | undefined;
         if (img) {
-            const markTypeId = getGridMarkDataArray(getExisted(this._tileMap?.getWar())).find(v => v.getGridId() === gridId)?.getMarkTypeId();
+            const markTypeId = getGridMarkDataArray(Helpers_Misc.getExisted(this._tileMap?.getWar())).find(v => v.getGridId() === gridId)?.getMarkTypeId();
             if (markTypeId == null) {
                 img.setIsVisible(false);
             } else {
                 img.setIsVisible(true);
-                img.loadSource(getGridMark(markTypeId));
+                img.loadSource(Helpers_ImageSource.getGridMark(markTypeId));
             }
         }
     }
 
     private _initCoZoneContainer(): void {
         const container     = this._coZoneContainer;
-        const tileMap       = getExisted(this._tileMap);
+        const tileMap       = Helpers_Misc.getExisted(this._tileMap);
         const mapSize       = tileMap.getMapSize();
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
@@ -354,8 +330,8 @@ export class TileMapView extends UiContainer implements ITileMapView {
                     imageDict.set(playerIndex, []);
                 }
 
-                const imgSource = `c08_t03_s${getNumText(playerManager.getPlayer(playerIndex).getUnitAndTileSkinId())}_f01`;
-                const matrix    = getExisted(imageDict.get(playerIndex));
+                const imgSource = `c08_t03_s${Helpers_Text.getNumText(playerManager.getPlayer(playerIndex).getUnitAndTileSkinId())}_f01`;
+                const matrix    = Helpers_Misc.getExisted(imageDict.get(playerIndex));
                 for (let x = 0; x < mapWidth; ++x) {
                     if (matrix[x] == null) {
                         matrix[x] = [];
@@ -364,7 +340,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
                     const column = matrix[x];
                     for (let y = 0; y < mapHeight; ++y) {
                         if (column[y] == null) {
-                            const img       = new (getUiImageClass())({ textureSourceName: imgSource });
+                            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: imgSource });
                             img.setIsSmoothing(false);
                             img.setX(getGridWidth() * x);
                             img.setY(getGridHeight() * y);
@@ -377,23 +353,23 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
                     for (let y = mapHeight; y < column.length; ++y) {
                         const img = column[y];
-                        img?.getParent()?.removeChild(img as unknown as DisplayObject);
+                        img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
                     }
                     column.length = mapHeight;
                 }
 
                 for (let x = mapWidth; x < matrix.length; ++x) {
                     for (const img of matrix[x] || []) {
-                        img?.getParent()?.removeChild(img as unknown as DisplayObject);
+                        img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
                     }
                 }
                 matrix.length = mapWidth;
             }
 
-            for (let playerIndex = playersCount + 1; playerIndex <= PlayerIndex.Max; ++playerIndex) {
+            for (let playerIndex = playersCount + 1; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
                 for (const column of imageDict.get(playerIndex) || []) {
                     for (const img of column || []) {
-                        img?.getParent()?.removeChild(img as unknown as DisplayObject);
+                        img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
                     }
                 }
                 imageDict.delete(playerIndex);
@@ -405,7 +381,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
             const imgsCount = (mapWidth + 1) * mapHeight + (mapHeight + 1) * mapWidth;
             for (let i = imgsCount; i < imgArray.length; ++i) {
                 const img = imgArray[i];
-                img?.getParent()?.removeChild(img as unknown as DisplayObject);
+                img?.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
             }
             imgArray.length = imgsCount;
 
@@ -413,7 +389,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
             for (let y = 0; y <= mapHeight; ++y) {
                 for (let x = 0; x < mapWidth; ++x) {
                     if (imgArray[i] == null) {
-                        const img       = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
                         imgArray[i]     = img;
                         img.setIsSmoothing(false);
                         container.addUiChild(img);
@@ -431,7 +407,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
             for (let y = 0; y < mapHeight; ++y) {
                 for (let x = 0; x <= mapWidth; ++x) {
                     if (imgArray[i] == null) {
-                        const img       = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
                         imgArray[i]     = img;
                         img.setIsSmoothing(false);
                         container.addUiChild(img);
@@ -449,7 +425,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
         }
     }
     public updateCoZone(): void {
-        const tileMap               = getExisted(this._tileMap);
+        const tileMap               = Helpers_Misc.getExisted(this._tileMap);
         const war                   = tileMap.getWar();
         const mapSize               = tileMap.getMapSize();
         const mapWidth              = mapSize.getWidth();
@@ -459,7 +435,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
         const areaImgDict           = this._coZoneAreaImageDict;
         const borderImgArray        = this._coZoneBorderImageArray;
         const playersCount          = playerManager.getTotalPlayersCount(false);
-        const watcherTeamIndexes    = ((war instanceof getRwWarClass()) && (!war.getIsShowAllUnits()))
+        const watcherTeamIndexes    = ((war instanceof ReplayWar_Model_RwWar.RwWar) && (!war.getIsShowAllUnits()))
             ? new Set([war.getVisionTeamIndex() ?? war.getPlayerInTurn().getTeamIndex()])
             : playerManager.getWatcherTeamIndexesForSelf();
         for (const img of borderImgArray) {
@@ -474,7 +450,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
                 : player.getCoGridIndexListOnMap().filter(gridIndex => {
                     const unit = unitMap.getUnitOnMap(gridIndex);
                     return (!!unit)
-                        && (checkIsUnitOnMapVisibleToTeams({
+                        && (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                             war                 : war,
                             gridIndex           : gridIndex,
                             unitType            : unit.getUnitType(),
@@ -486,12 +462,12 @@ export class TileMapView extends UiContainer implements ITileMapView {
                 });
 
             {
-                const matrix    = getExisted(areaImgDict.get(playerIndex));
-                const imgSource = `c08_t03_s${getNumText(getFinalSkinId(war, playerIndex))}_f01`;
+                const matrix    = Helpers_Misc.getExisted(areaImgDict.get(playerIndex));
+                const imgSource = `c08_t03_s${Helpers_Text.getNumText(ForceSkins_Utils.getFinalSkinId(war, playerIndex))}_f01`;
                 for (let x = 0; x < mapWidth; ++x) {
                     for (let y = 0; y < mapHeight; ++y) {
                         const img = matrix[x][y];
-                        if ((gridIndexList.length > 0) && (radius >= new GridIndex(x, y).getMinDistance(gridIndexList))) {
+                        if ((gridIndexList.length > 0) && (radius >= new AuxiliaryTypes_GridIndex.GridIndex(x, y).getMinDistance(gridIndexList))) {
                             img.setIsVisible(true);
                             img.loadSource(imgSource);
                         } else {
@@ -529,17 +505,17 @@ export class TileMapView extends UiContainer implements ITileMapView {
 
         const coZoneContainer = this._coZoneContainer;
         coZoneContainer.setAlpha(0);
-        Executor.get(coZoneContainer, { loop: true })
+        Tween_Executor.Executor.get(coZoneContainer, { loop: true })
             .to({ customAlpha: 0.75 }, 1000)
             .to({ customAlpha: 0 }, 1000);
     }
     private _stopCoZoneAnimation(): void {
-        Executor.removeTweens(this._coZoneContainer);
+        Tween_Executor.Executor.removeTweens(this._coZoneContainer);
     }
 
     private _onNotifyTileAnimationTick(): void {
         const war = this._tileMap?.getWar();
-        if ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction())){
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
             return;
         }
 
@@ -549,7 +525,7 @@ export class TileMapView extends UiContainer implements ITileMapView {
     }
     private _onNotifyStateIndicatorTick(): void {
         const war = this._tileMap?.getWar();
-        if ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction())){
+        if ((war instanceof ReplayWar_Model_RwWarBase.RwWarBase) && (war.getIsBatchExecuteAction())){
             return;
         }
 
@@ -562,11 +538,11 @@ export class TileMapView extends UiContainer implements ITileMapView {
         this._updateGridBorderLayerVisible();
     }
 
-    private _onNotifyBwTileHasLocationIdSet(e: Event): void {
-        const tileMap   = getExisted(this._tileMap);
-        const tile      = e.data as BwTileHasLocationIdSet;
+    private _onNotifyBwTileHasLocationIdSet(e: Egret_Egret.Event): void {
+        const tileMap   = Helpers_Misc.getExisted(this._tileMap);
+        const tile      = e.data as Notifications_DataTypes.BwTileHasLocationIdSet;
         const img       = this._locationLayer.getUiChildAt(tile.getGridIndex().getGridId(tileMap.getMapSize()));
-        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
+        for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             if ((tileMap.getIsLocationVisible(locationId)) && (tile.getHasLocationId(locationId))) {
                 img?.setIsVisible(true);
                 return;
@@ -578,32 +554,32 @@ export class TileMapView extends UiContainer implements ITileMapView {
     private _onNotifyBwOverridingSkinIdChanged(): void {
         this.updateCoZone();
     }
-    private _onNotifyGridMarkAdded(e: Event): void {
-        const data = e.data as GridMarkAdded;
+    private _onNotifyGridMarkAdded(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.GridMarkAdded;
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
-    private _onNotifyGridMarkDeleted(e: Event): void {
-        const data = e.data as GridMarkDeleted;
+    private _onNotifyGridMarkDeleted(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.GridMarkDeleted;
         if (data.war === this._tileMap?.getWar()) {
             this._updateMarkGrid(data.gridId);
         }
     }
-    private _onNotifyHiddenGridMarkTypeIdListChanged(e: Event): void {
-        const data = e.data as HiddenGridMarkTypeIdListChanged;
+    private _onNotifyHiddenGridMarkTypeIdListChanged(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.HiddenGridMarkTypeIdListChanged;
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
-    private _onNotifyGridMarkListChanged(e: Event): void {
-        const data = e.data as GridMarkListChanged;
+    private _onNotifyGridMarkListChanged(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.GridMarkListChanged;
         if (data.war === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
     }
-    private _onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated(e: Event): void {
-        const data = e.data as BwPlayerPlayerIndexArrayForShowMarkedGridUpdated;
+    private _onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated(e: Egret_Egret.Event): void {
+        const data = e.data as Notifications_DataTypes.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated;
         if (data.player.getWar() === this._tileMap?.getWar()) {
             this.resetMarkLayer();
         }
@@ -614,11 +590,11 @@ export class TileMapView extends UiContainer implements ITileMapView {
     }
 
     private _updateGridBorderLayerVisible(): void {
-        this._gridBorderLayer.setIsVisible(getSelfSettingsIsShowGridBorder());
+        this._gridBorderLayer.setIsVisible(Users_Model.getSelfSettingsIsShowGridBorder());
     }
 
     private _updateOpacityForTileLayers(): void {
-        const opacitySettings = getSelfSettingsOpacitySettings();
+        const opacitySettings = Users_Model.getSelfSettingsOpacitySettings();
         this._baseLayer.setAlpha((opacitySettings?.getTileBaseOpacity() ?? 100) / 100);
         this._objectLayer.setAlpha((opacitySettings?.getTileObjectOpacity() ?? 100) / 100);
         this._decorationLayer.setAlpha((opacitySettings?.getTileDecorationOpacity() ?? 100) / 100);
@@ -716,8 +692,8 @@ export class TileMapView extends UiContainer implements ITileMapView {
     }
 }
 
-function getGridMarkDataArray(war: IBwWar): GridIdAndMarkTypeId[] {
-    if (war instanceof getMpwWarClass()) {
+function getGridMarkDataArray(war: BaseWar_Interface_IBwWar.IBwWar): GridIdAndMarkTypeId[] {
+    if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         const player = war.getPlayerLoggedIn();
         if (player == null) {
             return [];
@@ -726,12 +702,12 @@ function getGridMarkDataArray(war: IBwWar): GridIdAndMarkTypeId[] {
         const hiddenGridMarkTypeIdList = player.getHiddenGridMarkTypeIdList();
         return player.getGridMarkList().filter(v => !hiddenGridMarkTypeIdList.includes(v.getMarkTypeId()));
 
-    } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
+    } else if ((war instanceof MapEditor_Model_MeWar.MeWar) || (war instanceof ReplayWar_Model_RwWarBase.RwWarBase)) {
         const data                      = war.getGridMarkData();
         const hiddenGridMarkTypeIdList  = data.getHiddenMarkTypeIdList();
         return data.getGridIdAndMarkTypeIdList().filter(v => !hiddenGridMarkTypeIdList.includes(v.getMarkTypeId()));
 
-    } else if (war instanceof getSpwWarClass()) {
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         const data                      = war.getSaveSlotExtraData().getGridMarkData();
         const hiddenGridMarkTypeIdList  = data?.getHiddenMarkTypeIdList() ?? [];
         return data?.getGridIdAndMarkTypeIdList().filter(v => !hiddenGridMarkTypeIdList.includes(v.getMarkTypeId())) ?? [];

@@ -1,31 +1,33 @@
-import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonSettingManager.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import type { IPlayerManager } from "../../players/IPlayerManager.ts";
+import {
+    type Utils_ClientErrorCode,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwCommonSettingManager,
+    type BaseWar_Interface_IBwWar,
+    type BaseWar_Interface_IBwWarEventManager,
+    type BaseWar_Interface_IBwWarStatisticsManager,
+    type Players_IPlayerManager,
+    type WarTypes_Constants,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import type { WarTypeId } from "../../warTypes/Constants.ts";
 
-export interface ITwWar extends IBwWar {
+export interface ITwWar extends BaseWar_Interface_IBwWar.IBwWar {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
-    getPlayerManager(): IPlayerManager;
-    getCommonSettingManager(): IBwCommonSettingManager;
-    getWarEventManager(): IBwWarEventManager;
-    getWarStatisticsManager(): IBwWarStatisticsManager;
+    getPlayerManager(): Players_IPlayerManager.IPlayerManager;
+    getCommonSettingManager(): BaseWar_Interface_IBwCommonSettingManager.IBwCommonSettingManager;
+    getWarEventManager(): BaseWar_Interface_IBwWarEventManager.IBwWarEventManager;
+    getWarStatisticsManager(): BaseWar_Interface_IBwWarStatisticsManager.IBwWarStatisticsManager;
 
     getIsExecuteActionsWithExtraData(): boolean;
     updateTilesAndUnitsOnVisibilityChanged(): void;
 
-    init(data: SerialWar, gameConfig: GameConfig, warType?: WarTypeId): void;
-    initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<void>;
+    init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig, warType?: WarTypes_Constants.WarTypeId): void;
+    initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<void>;
 
-    getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode;
-    getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode;
-    getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<ClientErrorCode>;
+    getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode;
+    getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): Utils_ClientErrorCode.ClientErrorCode;
+    getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<Utils_ClientErrorCode.ClientErrorCode>;
 
     getNormalMapId(): number | null;
 

@@ -1,31 +1,33 @@
-import { Common } from "../../dialogues/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getBigDialogueBackgroundImage } from "../../helpers/ImageSource.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    Dialogues_Constants,
+    Notifications_Dispatcher,
+    Helpers_ImageSource,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { WeaBigDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
     action      : WeaBigDialogueSimple;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _listBackground!   : IUiScrollList<DataForBackgroundRenderer>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listBackground!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForBackgroundRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.ActionPlannerStateSet,     callback: this._onNotifyBwPlannerStateChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback: this._onNotifyBwPlannerStateChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -77,7 +79,7 @@ export class Panel extends UiPanel<OpenData> {
             return [];
         }
 
-        const maxId     = Common.BackgroundMaxId;
+        const maxId     = Dialogues_Constants.Common.BackgroundMaxId;
         const dataArray : DataForBackgroundRenderer[] = [];
         const action    = openData.action;
         for (let backgroundId = 0; backgroundId <= maxId; ++backgroundId) {
@@ -92,20 +94,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForBackgroundRenderer extends UiListItemData {
+interface DataForBackgroundRenderer extends Ui_Types_UiListItemData.UiListItemData {
     backgroundId            : number;
     action                  : WeaBigDialogueSimple;
     panel                   : Panel;
 }
-class BackgroundRenderer extends UiListItemRenderer<DataForBackgroundRenderer> {
-    private readonly _group!        : IUiContainer;
-    private readonly _imgBg!        : IUiImage;
-    private readonly _imgTarget!    : IUiImage;
-    private readonly _groupSelect!  : IUiContainer;
+class BackgroundRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForBackgroundRenderer> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgTarget!    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupSelect!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._imgBg,                      callback: this._onTouchedImgBg },
@@ -122,7 +124,7 @@ class BackgroundRenderer extends UiListItemRenderer<DataForBackgroundRenderer> {
     }
 
     private _onTouchedImgBg(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupSelect(): void {
@@ -133,8 +135,8 @@ class BackgroundRenderer extends UiListItemRenderer<DataForBackgroundRenderer> {
 
         const panel = openData.panel;
         openData.action.setBackgroundId(openData.backgroundId);
-        playShortSfx(ShortSfxCode.ButtonConfirm01);
-        dispatch(TypeId.WarEventFullDataChanged);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonConfirm01);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
         panel.closePanel();
     }
 
@@ -147,6 +149,6 @@ class BackgroundRenderer extends UiListItemRenderer<DataForBackgroundRenderer> {
             return;
         }
 
-        this._imgTarget.loadSource(getBigDialogueBackgroundImage(backgroundId));
+        this._imgTarget.loadSource(Helpers_ImageSource.getBigDialogueBackgroundImage(backgroundId));
     }
 }

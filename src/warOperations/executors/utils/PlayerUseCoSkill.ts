@@ -1,19 +1,18 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { SkillTypeId } from "../../../coSkills/Constants.ts";
-import { generate } from "../../../coSkills/utils/DataGeneratorForUseCoSkill.ts";
-import { executeInstantSkill } from "../../../coSkills/utils/Executor.ts";
-import { createRange } from "../../../helpers/Collection.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
 import {
-    PlayerIndex,
-    AliveStateId,
-} from "../../../players/Constants.ts";
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Collection,
+    CoSkills_Utils_Executor,
+    CoSkills_Utils_DataGeneratorForUseCoSkill,
+    Helpers_Misc,
+    WarOperations_Executors_Utils_Common,
+    CoSkills_Constants,
+    type BaseWar_Interface_IBwWar,
+} from "../../../internal.ts";
 import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoPlayerUseCoSkill, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerUseCoSkill, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerUseCoSkill(war, action);
     } else {
@@ -21,44 +20,44 @@ export async function execute(war: IBwWar, action: WoPlayerUseCoSkill, isFast: b
     }
 }
 
-function fastExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): void {
+function fastExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerUseCoSkill): void {
     const playerInTurn      = war.getPlayerInTurn();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
-        const skillType         = getExisted(actionExtraData.getSkillType(), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_00);
+        const skillType         = Helpers_Misc.getExisted(actionExtraData.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_00);
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
         const skillDataArray    = actionExtraData.getSkillDataArray();
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-            executeInstantSkill({
+            CoSkills_Utils_Executor.executeInstantSkill({
                 player              : playerInTurn,
                 skillId             : skillIdArray[skillIndex],
-                skillData           : getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_02),
+                skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_02),
                 targetGridIndexes   : action.getTargetGridIndexArray(),
                 hasExtraData        : true,
                 isFastExecute       : true,
             });
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_03),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_03),
             isFastExecute   : true,
         });
 
     } else {
         const unitMap           = war.getUnitMap();
         const playerManager     = war.getPlayerManager();
-        const playerIndexArray  = createRange(PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+        const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
-        const skillType         = getExisted(action.getSkillType(), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_04);
+        const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_04);
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
         playerInTurn.updateOnUseCoSkill(skillType);
 
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-            executeInstantSkill({
+            CoSkills_Utils_Executor.executeInstantSkill({
                 player              : playerInTurn,
                 skillId             : skillIdArray[skillIndex],
-                skillData           : generate({
+                skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                     war         : war,
                     player      : playerInTurn,
                     skillType   : skillType,
@@ -85,38 +84,38 @@ function fastExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): void 
             }
 
             const player = playerManager.getPlayer(playerIndex);
-            if ((player.getAliveState() != AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
-                player.setAliveState(AliveStateId.Dying);
+            if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(playerIndex))) {
+                player.setAliveState(Players_Constants.AliveStateId.Dying);
             }
         }
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): void {
+function normalExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerUseCoSkill): void {
     const gridVisualEffect  = war.getGridVisualEffect();
     const unitMap           = war.getUnitMap();
     const playerInTurn      = war.getPlayerInTurn();
     const actionExtraData   = action.getExtraData();
     const playerIndex       = playerInTurn.getPlayerIndex();
     if (actionExtraData) {
-        const skillType         = getExisted(actionExtraData.getSkillType(), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_00);
+        const skillType         = Helpers_Misc.getExisted(actionExtraData.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_00);
         const skillDataArray    = actionExtraData.getSkillDataArray();
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-            executeInstantSkill({
+            CoSkills_Utils_Executor.executeInstantSkill({
                 player              : playerInTurn,
                 skillId             : skillIdArray[skillIndex],
-                skillData           : getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_02),
+                skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_02),
                 targetGridIndexes   : action.getTargetGridIndexArray(),
                 hasExtraData        : true,
                 isFastExecute       : false,
             });
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_03),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_03),
             isFastExecute   : false,
         });
 
@@ -124,7 +123,7 @@ function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): voi
             if (unit.getPlayerIndex() === playerIndex) {
                 unit.updateView();
 
-                if (skillType === SkillTypeId.Power) {
+                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                     gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                 } else {
                     gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
@@ -134,17 +133,17 @@ function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): voi
 
     } else {
         const playerManager     = war.getPlayerManager();
-        const playerIndexArray  = createRange(PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
+        const playerIndexArray  = Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, playerManager.getTotalPlayersCount(true), 1);
         const oldHasUnitFlags   = playerIndexArray.map(v => unitMap.checkHasUnitForPlayer(v));
-        const skillType         = getExisted(action.getSkillType(), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_04);
+        const skillType         = Helpers_Misc.getExisted(action.getSkillType(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_04);
         playerInTurn.updateOnUseCoSkill(skillType);
 
         const skillIdArray = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-            executeInstantSkill({
+            CoSkills_Utils_Executor.executeInstantSkill({
                 player              : playerInTurn,
                 skillId             : skillIdArray[skillIndex],
-                skillData           : generate({
+                skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
                     war         : war,
                     player      : playerInTurn,
                     skillType   : skillType,
@@ -170,8 +169,8 @@ function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): voi
             }
 
             const player = playerManager.getPlayer(i);
-            if ((player.getAliveState() != AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
-                player.setAliveState(AliveStateId.Dying);
+            if ((player.getAliveState() != Players_Constants.AliveStateId.Dead) && (!unitMap.checkHasUnitForPlayer(i))) {
+                player.setAliveState(Players_Constants.AliveStateId.Dying);
             }
         }
 
@@ -179,7 +178,7 @@ function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): voi
             if (unit.getPlayerIndex() === playerIndex) {
                 unit.updateView();
 
-                if (skillType === SkillTypeId.Power) {
+                if (skillType === CoSkills_Constants.SkillTypeId.Power) {
                     gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                 } else {
                     gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());

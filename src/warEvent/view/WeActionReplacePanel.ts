@@ -1,48 +1,44 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    GamePanels_Manager,
+    Notifications_Dispatcher,
+    WarEvents_FullDatas_Utils,
+    WarEvents_Actions_Utils_Common,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
-import {
-    getEvent,
-    getAction,
-} from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
-    war             : IBwWar;
+    war             : BaseWar_Interface_IBwWar.IBwWar;
     fullData        : WarEventFullData;
     eventId         : number;
     nodeId          : number;
     oldActionId     : number | null;
     oldActionIndex  : number | null;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _listAction!       : IUiScrollList<DataForActionRenderer>;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _labelNoAction!    : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listAction!       : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForActionRenderer>;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNoAction!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -74,9 +70,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0615)} A${this.getOpenData()?.oldActionId}`);
-        this._labelNoAction.setLangText(TextType.B0278);
-        this._btnClose.setLangText(TextType.B0146);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0615)} A${this.getOpenData()?.oldActionId}`);
+        this._labelNoAction.setLangText(Lang_Constants.TextType.B0278);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
     }
     private async _updateComponentsForAction(): Promise<void> {
         const openData = this.getOpenData();
@@ -98,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
                 nodeId              : nodeId,
                 oldActionId         : oldActionId,
                 oldActionIndex      : oldActionIndex,
-                candidateActionId   : getExisted(action.getWeaCommonData()?.getActionId()),
+                candidateActionId   : Helpers_Misc.getExisted(action.getWeaCommonData()?.getActionId()),
                 fullData            : fullData,
             });
         }
@@ -108,8 +104,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForActionRenderer extends UiListItemData {
-    war                 : IBwWar;
+interface DataForActionRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war                 : BaseWar_Interface_IBwWar.IBwWar;
     eventId             : number;
     nodeId              : number;
     oldActionId         : number | null;
@@ -117,11 +113,11 @@ interface DataForActionRenderer extends UiListItemData {
     candidateActionId   : number;
     fullData            : WarEventFullData;
 }
-class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
-    private readonly _labelActionId!    : IUiLabel;
-    private readonly _labelAction!      : IUiLabel;
-    private readonly _btnCopy!          : IUiButton;
-    private readonly _btnSelect!        : IUiButton;
+class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForActionRenderer> {
+    private readonly _labelActionId!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelAction!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCopy!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSelect!        : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -129,7 +125,7 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
             { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -155,8 +151,8 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
             oldActionIndex      : openData.oldActionIndex,
             actionIdForClone    : openData.candidateActionId,
         }) != null) {
-            dispatch(TypeId.WarEventFullDataChanged);
-            closePanel(getDict().WeActionReplacePanel);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+            GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeActionReplacePanel);
         }
     }
     private _onTouchedBtnSelect(): void {        // DONE
@@ -169,7 +165,7 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
         const nodeId            = openData.nodeId;
         const oldActionIndex    = openData.oldActionIndex;
         const newActionId       = openData.candidateActionId;
-        const actionIdArray     = getExisted(openData.fullData.getEventArray()
+        const actionIdArray     = Helpers_Misc.getExisted(openData.fullData.getEventArray()
             .find(v => v.getEventId() === eventId)
             ?.getRootNodeAndActionsArray()
             .find(v => v.getNodeIdAndFlags()?.getNodeId() === nodeId)
@@ -181,17 +177,17 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
             actionIdArray[oldActionIndex] = openData.candidateActionId;
         }
 
-        dispatch(TypeId.WarEventFullDataChanged);
-        closePanel(getDict().WeActionReplacePanel);
-        closePanel(getDict().WeCommandPanel);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeActionReplacePanel);
+        GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeCommandPanel);
     }
     private _onNotifyLanguageChanged(): void {        // DONE
         this._updateComponentsForLanguage();
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setLangText(TextType.B0487);
-        this._btnSelect.setLangText(TextType.B0492);
+        this._btnCopy.setLangText(Lang_Constants.TextType.B0487);
+        this._btnSelect.setLangText(Lang_Constants.TextType.B0492);
 
         this._updateLabelActionId();
         this._updateLabelAction();
@@ -205,7 +201,7 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
 
         const actionId          = openData.candidateActionId;
         const eventNameArray    = openData.fullData.getEventArray().filter(event => event.getRootNodeAndActionsArray()?.some(v => v.getActionIdArray().includes(actionId))).map(v => `E${v.getEventId()}`);
-        this._labelActionId.setText(`A${actionId} (${getText(TextType.B0749)}: ${eventNameArray?.length ? eventNameArray.join(`, `) : getText(TextType.None)})`);
+        this._labelActionId.setText(`A${actionId} (${Lang_Utils.getText(Lang_Constants.TextType.B0749)}: ${eventNameArray?.length ? eventNameArray.join(`, `) : Lang_Utils.getText(Lang_Constants.TextType.None)})`);
     }
     private _updateLabelAction(): void {
         const openData = this.getOpenData();
@@ -216,9 +212,9 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
         const action    = openData.fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === openData.candidateActionId);
         const label     = this._labelAction;
         if (action == null) {
-            label.setLangText(TextType.A0168);
+            label.setLangText(Lang_Constants.TextType.A0168);
         } else {
-            label.setText(getBriefDescForAction(action, openData.war.getGcData()) || UndefinedError);
+            label.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, openData.war.getGcData()) || Lang_Constants.UndefinedError);
         }
 
         this.setUnscaledManualHeight(label.getY() + label.getScaledHeight() + 2);
@@ -236,13 +232,13 @@ function cloneAndReplaceActionInEvent({ fullData, eventId, nodeId, oldActionInde
     oldActionIndex      : number | null;
     actionIdForClone    : number;
 }): number | null {
-    const eventData = getEvent(fullData, eventId);
+    const eventData = WarEvents_FullDatas_Utils.getEvent(fullData, eventId);
     if (eventData == null) {
         return null;
     }
 
     const fullActionArray   = fullData.getActionArray();
-    const srcAction         = getAction(fullData, actionIdForClone);
+    const srcAction         = WarEvents_FullDatas_Utils.getAction(fullData, actionIdForClone);
     if (srcAction == null) {
         return null;
     }
@@ -255,9 +251,9 @@ function cloneAndReplaceActionInEvent({ fullData, eventId, nodeId, oldActionInde
     const newAction = srcAction.clone();
     for (let newActionId = 1; ; ++newActionId) {
         if (!fullActionArray.some(v => v.getWeaCommonData()?.getActionId() === newActionId)) {
-            getExisted(newAction.getWeaCommonData()).setActionId(newActionId);
+            Helpers_Misc.getExisted(newAction.getWeaCommonData()).setActionId(newActionId);
             fullActionArray.push(newAction);
-            fullActionArray.sort((v1, v2) => getExisted(v1.getWeaCommonData()?.getActionId()) - getExisted(v2.getWeaCommonData()?.getActionId()));
+            fullActionArray.sort((v1, v2) => Helpers_Misc.getExisted(v1.getWeaCommonData()?.getActionId()) - Helpers_Misc.getExisted(v2.getWeaCommonData()?.getActionId()));
 
             if (oldActionIndex != null) {
                 actionIdArray[oldActionIndex] = newActionId;

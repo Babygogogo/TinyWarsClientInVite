@@ -1,24 +1,26 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import {
+    type BaseWar_Interface_IBwWar,
+    type Weathers_IView,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
 import type { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
-import type { IView } from "./IView.ts";
 
 export interface IManager {
-    init(data: Undefinable<SerialWeatherManager>): void;
-    fastInit(data: Undefinable<SerialWeatherManager>): void;
+    init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>): void;
+    fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialWeatherManager>): void;
 
     serialize(): SerialWeatherManager;
     serializeForCreateMfr(): SerialWeatherManager;
     serializeForCreateSfw(): SerialWeatherManager;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
-    getView(): IView;
+    getView(): Weathers_IView.IView;
 
     getDefaultWeatherType(): number;
     getCurrentWeatherType(): number;

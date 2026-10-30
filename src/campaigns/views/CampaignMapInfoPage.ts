@@ -1,19 +1,21 @@
-import { getCampaignMapRawData } from "../mains/Provider.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { pickRandomElement } from "../../helpers/Collection.ts";
-import { getCoBust } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { UndefinedError } from "../../lang/Constants.ts";
-import { getLanguageText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
-import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { getUiImageClass } from "../../ui/utils/UiFactory.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
+import {
+    Campaigns_Mains_Provider,
+    Helpers_ImageSource,
+    Helpers_Misc,
+    Lang_Utils,
+    GameConfigs_Provider,
+    Helpers_Collection,
+    Notifications_TypeId,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiImage,
+    Ui_Components_UiOpenableComponent,
+    Ui_Types_UiVerticalAlign,
+    Lang_Constants,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScroller,
+    Ui_Utils_UiSkinHelpers,
+} from "../../internal.ts";
 
 const CO_GROUP_WIDTH = 200;
 
@@ -21,26 +23,26 @@ export type OpenData = {
     campaignId      : number;
     campaignMapId   : number;
 } | null;
-export class Page extends UiOpenableComponent<OpenData> {
-    private readonly _groupCoLeft!  : IUiContainer;
-    private readonly _groupCoRight! : IUiContainer;
-    private readonly _scrDesc!      : IUiScroller<IUiContainer>;
-    private readonly _labelDesc!    : IUiLabel;
+export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData> {
+    private readonly _groupCoLeft!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupCoRight! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _scrDesc!      : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiContainer.IUiContainer>;
+    private readonly _labelDesc!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "campaigns/views/CampaignMapInfoPage.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "campaigns/views/CampaignMapInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
+            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -67,10 +69,10 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         const { campaignId, campaignMapId } = openData;
-        const descArray                     = (await getCampaignMapRawData(campaignId, campaignMapId))?.getMapExtraText()?.getMapDescription();
+        const descArray                     = (await Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId))?.getMapExtraText()?.getMapDescription();
         const newOpenData                   = this.getOpenData();
         if ((newOpenData != null) && (campaignId === newOpenData.campaignId) && (campaignMapId === newOpenData.campaignMapId)) {
-            this._labelDesc.setText(getLanguageText({ textArray: descArray }) ?? UndefinedError);
+            this._labelDesc.setText(Lang_Utils.getLanguageText({ textArray: descArray }) ?? Lang_Constants.UndefinedError);
         }
     }
 
@@ -83,8 +85,8 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         const [gameConfig, mapData] = await Promise.all([
-            getLatestGameConfig(),
-            await getCampaignMapRawData(openData.campaignId, openData.campaignMapId),
+            GameConfigs_Provider.getLatestGameConfig(),
+            await Campaigns_Mains_Provider.getCampaignMapRawData(openData.campaignId, openData.campaignMapId),
         ]);
         if ((mapData == null) || (openData !== this.getOpenData())) {
             return;
@@ -94,18 +96,18 @@ export class Page extends UiOpenableComponent<OpenData> {
         for (const playerRule of mapData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
             const campaignHumanCoIdArray = playerRule.getCampaignHumanCoIdArray();
             if (campaignHumanCoIdArray?.length) {
-                coIdArray.push(pickRandomElement(campaignHumanCoIdArray));
+                coIdArray.push(Helpers_Collection.pickRandomElement(campaignHumanCoIdArray));
             }
         }
 
         for (const coId of coIdArray) {
-            const source    = getExisted(getCoBust(gameConfig, coId));
-            const img       = new (getUiImageClass())({ textureSourceName: source });
+            const source    = Helpers_Misc.getExisted(Helpers_ImageSource.getCoBust(gameConfig, coId));
+            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: source });
             img.setScaleX(-0.7);
             img.setScaleY(0.7);
             img.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align: UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
-                verticalAlign   : { align: UiVerticalAlign.Bottom },
+                horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
+                verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
             });
             group.addUiChild(img);
         }
@@ -119,8 +121,8 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         const [gameConfig, mapData] = await Promise.all([
-            getLatestGameConfig(),
-            await getCampaignMapRawData(openData.campaignId, openData.campaignMapId),
+            GameConfigs_Provider.getLatestGameConfig(),
+            await Campaigns_Mains_Provider.getCampaignMapRawData(openData.campaignId, openData.campaignMapId),
         ]);
         if ((mapData == null) || (openData !== this.getOpenData())) {
             return;
@@ -135,13 +137,13 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         for (const coId of coIdArray) {
-            const source    = getExisted(getCoBust(gameConfig, coId));
-            const img       = new (getUiImageClass())({ textureSourceName: source });
+            const source    = Helpers_Misc.getExisted(Helpers_ImageSource.getCoBust(gameConfig, coId));
+            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: source });
             img.setScaleX(0.7);
             img.setScaleY(0.7);
             img.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align: UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
-                verticalAlign   : { align: UiVerticalAlign.Bottom },
+                horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
+                verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
             });
             group.addUiChild(img);
         }

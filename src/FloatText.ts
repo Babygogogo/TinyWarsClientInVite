@@ -1,19 +1,21 @@
-import { DisplayLayerId } from "./graphics/Constants.ts";
-import type { TextType } from "./lang/Constants.ts";
-import { getText } from "./lang/Utils.ts";
-import { Dimension } from "./stages/Constants.ts";
-import { getLayer } from "./stages/StageManager.ts";
-import { Executor } from "./tween/Executor.ts";
-import { UiContainer } from "./ui/components/UiContainer.ts";
-import type { IUiLayer } from "./ui/interfaces/IUiLayer.ts";
-import { UiHorizontalAlign } from "./ui/types/UiHorizontalAlign.ts";
-import { getUiLabelClass } from "./ui/utils/UiFactory.ts";
+import {
+    Stages_Constants,
+    Graphics_Constants,
+    Tween_Executor,
+    Stages_StageManager,
+    Lang_Utils,
+    Ui_Components_UiContainer,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Components_UiLabel,
+    type Ui_Interfaces_IUiLayer,
+    type Lang_Constants,
+} from "./internal.ts";
 
 const StartY    = 100;
-let Container   : IUiLayer;
+let Container   : Ui_Interfaces_IUiLayer.IUiLayer;
 
 export function show(text: string): void {
-    Container ??= getLayer(DisplayLayerId.FloatText);
+    Container ??= Stages_StageManager.getLayer(Graphics_Constants.DisplayLayerId.FloatText);
 
     const uiTextCount = Container.getUiChildren().length;
     for (let i = 0; i < uiTextCount; ++i) {
@@ -28,16 +30,16 @@ export function show(text: string): void {
     newUiText.y     = StartY;
     Container.addUiChild(newUiText);
 }
-export function showLang(langTextType: TextType): void {
-    show(getText(langTextType));
+export function showLang(langTextType: Lang_Constants.TextType): void {
+    show(Lang_Utils.getText(langTextType));
 }
 
-class UiFloatText extends UiContainer {
+class UiFloatText extends Ui_Components_UiContainer.UiContainer {
     public constructor(text: string) {
         super();
 
-        const width = Dimension.DesignWidth;
-        const label = new (getUiLabelClass());
+        const width = Stages_Constants.Dimension.DesignWidth;
+        const label = new Ui_Components_UiLabel.UiLabel;
         label.setTextColor(0xFFFFFF);
         label.setStrokeWidth(2);
         label.setFontSize(16);
@@ -47,10 +49,10 @@ class UiFloatText extends UiContainer {
         this.addUiChild(label);
 
         this.checkAndInitSizerInfo().setSizerOptions({
-            horizontalAlign : { align: UiHorizontalAlign.Center },
+            horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
         });
 
-        Executor.get(label)
+        Tween_Executor.Executor.get(label)
             .wait(4000)
             .to({ customAlpha: 0 }, 1000)
             .call(() => this.getParent()?.removeChild(this));
@@ -61,7 +63,7 @@ class UiFloatText extends UiContainer {
         this.setUnscaledManualHeight(height);
         this.setAnchorOffsetY(height);
 
-        Executor.get(this as UiContainer)
+        Tween_Executor.Executor.get(this as Ui_Components_UiContainer.UiContainer)
             .set({ customScaleX: 0.5, customScaleY: 0.5 })
             .to({ customScaleX: 1, customScaleY: 1 }, 100);
     }

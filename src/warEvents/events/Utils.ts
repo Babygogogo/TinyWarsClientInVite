@@ -1,23 +1,16 @@
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    checkIsValidLanguageTextArray,
-    getText,
-    getFormattedText,
-    getCurrentLanguageType,
-    getSecondaryLanguageType,
-} from "../../lang/Utils.ts";
+    Lang_Utils,
+    WarEvents_Actions_Utils_Common,
+    WarEvents_ConditionNodes_Utils,
+    WarEvents_Constants,
+    Helpers_Misc,
+    WarEvents_Actions_Constants_Common,
+    Lang_Constants,
+} from "../../internal.ts";
 import { WarEvent as ProtoWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { MaxCounts } from "../actions/constants/Common.ts";
-import { cloneAction } from "../actions/utils/Common.ts";
-import { cloneNode } from "../conditionNodes/Utils.ts";
-import {
-    Event,
-    ConditionNode,
-} from "../Constants.ts";
 
 export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DONE
     warEvent    : ProtoWarEvent;
@@ -26,9 +19,9 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
 }): boolean {
     const eventNameArray = warEvent.getEventNameArray();
     if ((eventNameArray == null)                                     ||
-        (!checkIsValidLanguageTextArray({
+        (!Lang_Utils.checkIsValidLanguageTextArray({
             list            : eventNameArray,
-            maxTextLength   : Event.MaxNameLength,
+            maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
             minTextLength   : 1,
             minTextCount    : 1,
         }))
@@ -43,8 +36,8 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
         }
 
         const canBeTriggeredRightAfterAnyEvent = warEvent.getCanBeTriggeredRightAfterAnyEvent();
-        if (((canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountInPlayerTurn))    ||
-            ((!canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountTotal))
+        if (((canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountInPlayerTurn))    ||
+            ((!canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountTotal))
         ) {
             return false;
         }
@@ -53,7 +46,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
     const maxCallCountTotal = warEvent.getMaxCallCountTotal();
     if ((maxCallCountTotal == null)                                     ||
         (maxCallCountTotal < 1)                                         ||
-        (maxCallCountTotal > Event.MaxCallCountTotal)
+        (maxCallCountTotal > WarEvents_Constants.Event.MaxCallCountTotal)
     ) {
         return false;
     }
@@ -61,7 +54,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
     {
         const rootNodeAndActionsArray = warEvent.getRootNodeAndActionsArray();
         if ((rootNodeAndActionsArray.length <= 0)                                                       ||
-            (rootNodeAndActionsArray.length > ConditionNode.MaxCountPerEventRoot)
+            (rootNodeAndActionsArray.length > WarEvents_Constants.ConditionNode.MaxCountPerEventRoot)
         ) {
             return false;
         }
@@ -82,7 +75,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
             usedNodeIdSet.add(nodeId);
 
             const actionIdArray = rootNodeAndActions.getActionIdArray();
-            if ((actionIdArray.length > MaxCounts.PerEvent) ||
+            if ((actionIdArray.length > WarEvents_Actions_Constants_Common.MaxCounts.PerEvent) ||
                 (actionIdArray.length <= 0)                                                     ||
                 (actionIdArray.some(v => !actionDict.has(v)))
             ) {
@@ -96,32 +89,32 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
 
 export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarEvent): string | null {
     const eventsCount = fullData.getEventArray().length;
-    if (eventsCount > Event.MaxEventsPerMap) {
-        return `${getText(TextType.A0182)} (${eventsCount}/${Event.MaxEventsPerMap})`;
+    if (eventsCount > WarEvents_Constants.Event.MaxEventsPerMap) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.A0182)} (${eventsCount}/${WarEvents_Constants.Event.MaxEventsPerMap})`;
     }
 
     const rootNodeAndActionsArray = event.getRootNodeAndActionsArray();
     {
         const count     = rootNodeAndActionsArray.length;
         const minCount  = 1;
-        const maxCount  = ConditionNode.MaxCountPerEventRoot;
+        const maxCount  = WarEvents_Constants.ConditionNode.MaxCountPerEventRoot;
         if ((count < minCount) || (count > maxCount)) {
-            return getFormattedText(TextType.F0267, minCount, maxCount, count);
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0267, minCount, maxCount, count);
         }
     }
 
     for (const rootNodeAndActions of rootNodeAndActionsArray) {
         const nodeIdAndFlags = rootNodeAndActions.getNodeIdAndFlags();
         if (nodeIdAndFlags == null) {
-            return getText(TextType.A0159);
+            return Lang_Utils.getText(Lang_Constants.TextType.A0159);
         }
 
         {
             const count     = rootNodeAndActions.getActionIdArray().length;
             const minCount  = 1;
-            const maxCount  = MaxCounts.PerEvent;
+            const maxCount  = WarEvents_Actions_Constants_Common.MaxCounts.PerEvent;
             if ((count < minCount) || (count > maxCount)) {
-                return getFormattedText(TextType.F0268, `N${nodeIdAndFlags.getNodeId()}`, `E${event.getEventId()}`, minCount, maxCount, count);
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0268, `N${nodeIdAndFlags.getNodeId()}`, `E${event.getEventId()}`, minCount, maxCount, count);
             }
         }
     }
@@ -132,14 +125,14 @@ export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarE
 export function getErrorTipForEventCallCountInPlayerTurn(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountInPlayerTurn();
     if ((count == null) || (count < 1)) {
-        return getText(TextType.A0181);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
     }
 
     const canBeTriggeredRightAfterAnyEvent = event.getCanBeTriggeredRightAfterAnyEvent();
-    if (((canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountInPlayerTurn))    ||
-        ((!canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountTotal))
+    if (((canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountInPlayerTurn))    ||
+        ((!canBeTriggeredRightAfterAnyEvent) && (count > WarEvents_Constants.Event.MaxCallCountTotal))
     ) {
-        return getText(TextType.A0181);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
     }
 
     return null;
@@ -147,8 +140,8 @@ export function getErrorTipForEventCallCountInPlayerTurn(event: ProtoWarEvent): 
 
 export function getErrorTipForEventCallCountTotal(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountTotal();
-    if ((count == null) || (count < 1) || (count > Event.MaxCallCountTotal)) {
-        return getText(TextType.A0181);
+    if ((count == null) || (count < 1) || (count > WarEvents_Constants.Event.MaxCallCountTotal)) {
+        return Lang_Utils.getText(Lang_Constants.TextType.A0181);
     }
 
     return null;
@@ -165,8 +158,8 @@ export function addEvent(fullData: WarEventFullData): number | null {
                 canBeTriggeredRightAfterAnyEvent    : false,
                 rootNodeAndActionsArray             : [],
                 eventNameArray                      : [
-                    { languageType: getCurrentLanguageType(), text: `${getText(TextType.B0469)} #${eventId}` },
-                    { languageType: getSecondaryLanguageType(), text: `${getText(TextType.B0469, getSecondaryLanguageType())} #${eventId}` },
+                    { languageType: Lang_Utils.getCurrentLanguageType(), text: `${Lang_Utils.getText(Lang_Constants.TextType.B0469)} #${eventId}` },
+                    { languageType: Lang_Utils.getSecondaryLanguageType(), text: `${Lang_Utils.getText(Lang_Constants.TextType.B0469, Lang_Utils.getSecondaryLanguageType())} #${eventId}` },
                 ],
                 deprecatedActionIdArray             : [],
             }));
@@ -177,7 +170,7 @@ export function addEvent(fullData: WarEventFullData): number | null {
 }
 export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isShallowClone: boolean): number {
     const eventArray    = fullData.getEventArray();
-    const srcEvent      = getExisted(eventArray.find(v => v.getEventId() === srcEventId));
+    const srcEvent      = Helpers_Misc.getExisted(eventArray.find(v => v.getEventId() === srcEventId));
     for (let eventId = 1; ; ++eventId) {
         if (eventArray.some(v => v.getEventId() === eventId)) {
             continue;
@@ -214,10 +207,10 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
                         nodeIdAndFlags  : nodeIdAndFlags == null
                             ? null
                             : {
-                                nodeId      : cloneNode(fullData, nodeIdAndFlags.getNodeId(), isShallowClone),
+                                nodeId      : WarEvents_ConditionNodes_Utils.cloneNode(fullData, nodeIdAndFlags.getNodeId(), isShallowClone),
                                 isNegated   : nodeIdAndFlags.getIsNegated(),
                             },
-                        actionIdArray   : root.getActionIdArray().map(v => cloneAction(fullData, v)),
+                        actionIdArray   : root.getActionIdArray().map(v => WarEvents_Actions_Utils_Common.cloneAction(fullData, v)),
                     };
                 }),
                 deprecatedActionIdArray             : [],

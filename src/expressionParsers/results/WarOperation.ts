@@ -1,21 +1,23 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { ResultType } from "../Enums.ts";
-import { Base } from "./Base.ts";
+import {
+    ExpressionParsers_Results_Base,
+    ExpressionParsers_Enums,
+    type BaseWar_Interface_IBwWar,
+} from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export class WarOperation extends Base {
+export class WarOperation extends ExpressionParsers_Results_Base.Base {
     public readonly woContainer: WoContainer | null;
 
-    public constructor(woContainer: WoContainer | null, war: IBwWar) {
+    public constructor(woContainer: WoContainer | null, war: BaseWar_Interface_IBwWar.IBwWar) {
         super(war);
 
         this.woContainer = woContainer;
     }
 
-    public override getResultType(): ResultType {
-        return ResultType.WarOperation;
+    public override getResultType(): ExpressionParsers_Enums.ResultType {
+        return ExpressionParsers_Enums.ResultType.WarOperation;
     }
-    public override checkIsEqual(rhs: Base): boolean {
+    public override checkIsEqual(rhs: ExpressionParsers_Results_Base.Base): boolean {
         return (rhs instanceof WarOperation)
             && (rhs.woContainer != null)
             && (rhs.woContainer === this.woContainer);

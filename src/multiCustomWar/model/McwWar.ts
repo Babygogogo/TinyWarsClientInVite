@@ -1,17 +1,19 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    Helpers_ProtoSchema_WarSerialization_SerialWar,
+    MultiPlayerWar_Model_MpwWar,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class McwWar extends MpwWar {
+export class McwWar extends MultiPlayerWar_Model_MpwWar.MpwWar {
     private _settingsForMcw?: SettingsForMcw;
 
-    public init(data: SerialWar, gameConfig: GameConfig): void {
-        this._baseInit(data, gameConfig, getWarTypeId(data));
-        this._setSettingsForMcw(getExisted(data.getSettingsForMcw(), ClientErrorCode.McwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
+        this._baseInit(data, gameConfig, Helpers_ProtoSchema_WarSerialization_SerialWar.getWarTypeId(data));
+        this._setSettingsForMcw(Helpers_Misc.getExisted(data.getSettingsForMcw(), Utils_ClientErrorCode.ClientErrorCode.McwWar_Init_00));
 
         this._initView();
     }
@@ -37,7 +39,7 @@ export class McwWar extends MpwWar {
         this._settingsForMcw = settings;
     }
     public getSettingsForMcw(): SettingsForMcw {
-        return getExisted(this._settingsForMcw);
+        return Helpers_Misc.getExisted(this._settingsForMcw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

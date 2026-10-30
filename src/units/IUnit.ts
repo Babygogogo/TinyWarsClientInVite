@@ -1,35 +1,30 @@
-import type {
-    Undefinable,
-    RepairHpAndCost,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
-import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import type { LanguageType } from "../lang/Constants.ts";
-import type { IPlayer } from "../players/IPlayer.ts";
+import {
+    type Units_Constants,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_GridIndexAndWeight,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Tiles_ITile,
+    type Units_IUnitView,
+    type Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type CoSkills_Constants,
+    type AuxiliaryTypes_UnitVisionInfo,
+} from "../internal.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
 import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import type { ITile } from "../tiles/ITile.ts";
-import type {
-    ActionStateId,
-    AiModeId,
-    WeaponTypeId,
-} from "./Constants.ts";
-import type { IUnitView } from "./IUnitView.ts";
 
 export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    init(unitData: SerialUnit, gameConfig: GameConfig): void;
+    init(unitData: SerialUnit, gameConfig: GameConfigs_GameConfig.GameConfig): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
@@ -39,29 +34,29 @@ export interface IUnit {
     serializeForCreateSfw(): SerialUnit;
     serializeForCreateMfr(): SerialUnit;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
-    getGcData(): GameConfig;
+    getGcData(): GameConfigs_GameConfig.GameConfig;
 
     getTemplateCfg(): UnitTemplateCfg;
 
     getUnitType(): number;
 
-    getPlayer(): IPlayer;
+    getPlayer(): Players_IPlayer.IPlayer;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    getView(): IUnitView;
+    getView(): Units_IUnitView.IUnitView;
 
     updateView(): void;
     setViewVisible(visible: boolean): void;
 
     moveViewAlongPath({ pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove }: {
-        pathNodes           : GridIndex[];
+        pathNodes           : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
-        aiming              : GridIndex | null;
+        aiming              : AuxiliaryTypes_GridIndex.GridIndex | null;
         updateViewAfterMove : boolean;
     }): Promise<void>;
 
@@ -76,8 +71,8 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for state.
     ////////////////////////////////////////////////////////////////////////////////
-    getActionState(): ActionStateId;
-    setActionState(state: ActionStateId): void;
+    getActionState(): Units_Constants.ActionStateId;
+    setActionState(state: Units_Constants.ActionStateId): void;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for player index and team index.
@@ -111,44 +106,44 @@ export interface IUnit {
 
     checkHasPrimaryWeapon(): boolean;
 
-    getPrimaryWeaponMaxAmmo(): Undefinable<number>;
+    getPrimaryWeaponMaxAmmo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getPrimaryWeaponCurrentAmmo(): number;
     setAndValidatePrimaryWeaponCurrentAmmo(ammo: number): void;
     addAndValidatePrimaryWeaponCurrentAmmo(offsetAmmo: number): void;
 
-    getPrimaryWeaponUsedAmmo(): Undefinable<number>;
+    getPrimaryWeaponUsedAmmo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     checkIsPrimaryWeaponAmmoInShort(): boolean;
 
     getPrimaryWeaponBaseDamage(armorType: number): number | null;
 
     getAttackModifierByCo({ selfGridIndex, isCounter, observerTeamIndexSet, useDamagePreviewSettings }: {
-        selfGridIndex               : GridIndex;
+        selfGridIndex               : AuxiliaryTypes_GridIndex.GridIndex;
         isCounter                   : boolean;
         observerTeamIndexSet        : Set<number> | null;
         useDamagePreviewSettings    : boolean;
     }): number;
-    getAttackModifierByWeather(selfGridIndex: GridIndex, observerTeamIndexSet: Set<number> | null, useDamagePreviewSettings: boolean): number;
-    getEffectiveOffensePierce(selfGridIndex: GridIndex): number[];
+    getAttackModifierByWeather(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex, observerTeamIndexSet: Set<number> | null, useDamagePreviewSettings: boolean): number;
+    getEffectiveOffensePierce(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): number[];
     getDefenseModifierByCo({ selfGridIndex, attackerUnitTypeId, observerTeamIndexSet, useDamagePreviewSettings }: {
-        selfGridIndex               : GridIndex;
+        selfGridIndex               : AuxiliaryTypes_GridIndex.GridIndex;
         attackerUnitTypeId          : number | null;
         observerTeamIndexSet        : Set<number> | null;
         useDamagePreviewSettings    : boolean;
     }): number;
 
-    checkCanBeCounterAttackedByCo(selfGridIndex: GridIndex): boolean;
-    checkCanCounterAttackByCo(selfGridIndex: GridIndex): boolean;
+    checkCanBeCounterAttackedByCo(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
+    checkCanCounterAttackByCo(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
-    getLuckLimitModifierByCo(selfGridIndex: GridIndex): { lower: number, upper: number };
+    getLuckLimitModifierByCo(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): { lower: number, upper: number };
 
     checkHasSecondaryWeapon(): boolean;
 
     getCfgSecondaryWeaponBaseDamage(armorType: number): number | null;
     getSecondaryWeaponBaseDamage(armorType: number): number | null;
 
-    getCfgBaseDamage(targetArmorType: number, weaponType: WeaponTypeId): number | null;
+    getCfgBaseDamage(targetArmorType: number, weaponType: Units_Constants.WeaponTypeId): number | null;
     getBaseDamage(armorType: number): number | null;
 
     getMinAttackRange(): number | null;
@@ -160,13 +155,13 @@ export interface IUnit {
     getFinalCanAttackAfterMoving(): boolean;
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    checkCanAttackTargetAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean;
+    checkCanAttackTargetAfterMovePath(movePath: AuxiliaryTypes_GridIndex.GridIndex[], targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    checkCanAttackUnitAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean;
+    checkCanAttackUnitAfterMovePath(movePath: AuxiliaryTypes_GridIndex.GridIndex[], targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    checkCanAttackTileAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean;
+    checkCanAttackTileAfterMovePath(movePath: AuxiliaryTypes_GridIndex.GridIndex[], targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for capture.
@@ -174,9 +169,9 @@ export interface IUnit {
     checkIsCapturingTile(): boolean;
 
     checkIsCapturer(): boolean;
-    checkCanCaptureTile(tile: ITile): boolean;
+    checkCanCaptureTile(tile: Tiles_ITile.ITile): boolean;
 
-    getFinalCaptureAmount(selfGridIndex: GridIndex): number | null;
+    getFinalCaptureAmount(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): number | null;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for dive.
@@ -191,7 +186,7 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for invisible.
     ////////////////////////////////////////////////////////////////////////////////
-    checkIsInvisible(selfGridIndex: GridIndex): boolean;
+    checkIsInvisible(selfGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for fuel.
@@ -213,17 +208,17 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for flare.
     ////////////////////////////////////////////////////////////////////////////////
-    getFlareRadius(gridIndex: GridIndex): number | null;
+    getFlareRadius(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number | null;
 
-    getFlareMaxRange(gridIndex: GridIndex): number | null;
+    getFlareMaxRange(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number | null;
 
-    getFlareMaxAmmo(): Undefinable<number>;
+    getFlareMaxAmmo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getFlareCurrentAmmo(): number;
     setFlareCurrentAmmo(ammo: number): void;
     addFlareCurrentAmmo(offsetAmmo: number): void;
 
-    getFlareUsedAmmo(): Undefinable<number>;
+    getFlareUsedAmmo(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     checkIsFlareAmmoInShort(): boolean;
 
@@ -236,8 +231,8 @@ export interface IUnit {
     getGridY(): number;
     setGridY(y: number): void;
 
-    getGridIndex(): GridIndex;
-    setGridIndex(gridIndex: GridIndex): void;
+    getGridIndex(): AuxiliaryTypes_GridIndex.GridIndex;
+    setGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for produce unit.
@@ -246,7 +241,7 @@ export interface IUnit {
 
     getProduceUnitCost(): number;
 
-    getMaxProduceMaterial(): Undefinable<number>;
+    getMaxProduceMaterial(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getCurrentProduceMaterial(): number;
     setAndValidateCurrentProduceMaterial(material: number): void;
@@ -284,7 +279,7 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for launch silo.
     ////////////////////////////////////////////////////////////////////////////////
-    checkCanLaunchSiloOnTile(tile: ITile): boolean;
+    checkCanLaunchSiloOnTile(tile: Tiles_ITile.ITile): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for build tile.
@@ -292,13 +287,13 @@ export interface IUnit {
     checkIsBuildingTile(): boolean;
 
     checkIsTileBuilder(): boolean;
-    checkCanBuildOnTile(tile: ITile): boolean;
+    checkCanBuildOnTile(tile: Tiles_ITile.ITile): boolean;
 
     getBuildTargetTileCfg(baseType: number, objectType: number): BuildableTileCfg | null;
 
     getBuildAmount(): number | null;
 
-    getMaxBuildMaterial(): Undefinable<number>;
+    getMaxBuildMaterial(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 
     getCurrentBuildMaterial(): number;
     setCurrentBuildMaterial(material: number): void;
@@ -327,12 +322,12 @@ export interface IUnit {
 
     getNormalizedRepairAmountAndCostModifier(): { amountModifier: number, costMultiplierPct: number };
 
-    setLoaderUnitId(loaderUnitId: Undefinable<number>): void;
-    getLoaderUnitId(): Undefinable<number>;
+    setLoaderUnitId(loaderUnitId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
+    getLoaderUnitId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     getLoaderUnit(): IUnit | null;
     checkIsMeetLoadedState(state: number): boolean;
 
-    getRepairHpAndCostForLoadedUnit(unit: IUnit): RepairHpAndCost | null;
+    getRepairHpAndCostForLoadedUnit(unit: IUnit): AuxiliaryTypes_AuxiliaryTypes.RepairHpAndCost | null;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for supply unit.
@@ -351,8 +346,8 @@ export interface IUnit {
     getCfgVisionRange(): number;
     getVisionRangeBonusOnTile(tileType: number): number;
 
-    getVisionInfo(): UnitVisionInfo;
-    getFinalVisionRange(visionInfo: UnitVisionInfo, gridIndex: GridIndex): number;
+    getVisionInfo(): AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo;
+    getFinalVisionRange(visionInfo: AuxiliaryTypes_UnitVisionInfo.UnitVisionInfo, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for join.
@@ -367,9 +362,9 @@ export interface IUnit {
     setIsCoOnboard(isCoOnBoard: boolean): void;
     getIsCoOnboard(): boolean;
 
-    checkCanCoBoardAfterMovePath(movePath: GridIndex[]): boolean;
+    checkCanCoBoardAfterMovePath(movePath: AuxiliaryTypes_GridIndex.GridIndex[]): boolean;
 
-    checkCanUseCoSkill(skillType: SkillTypeId): boolean;
+    checkCanUseCoSkill(skillType: CoSkills_Constants.SkillTypeId): boolean;
 
     getCoBoardCost(): number;
 
@@ -393,14 +388,14 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for weighted destination.
     ////////////////////////////////////////////////////////////////////////////////
-    setAiWeightedDestinationWithProto(proto: Undefinable<WeightedGridIndex>): void;
-    getAiWeightedDestination(): Undefinable<GridIndexAndWeight>;
+    setAiWeightedDestinationWithProto(proto: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeightedGridIndex>): void;
+    getAiWeightedDestination(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for ai mode.
     ////////////////////////////////////////////////////////////////////////////////
-    setAiMode(aiMode: AiModeId): void;
-    getAiMode(): AiModeId;
+    setAiMode(aiMode: Units_Constants.AiModeId): void;
+    getAiMode(): Units_Constants.AiModeId;
 
     /**
      * @returns indicates the ai mode is modified or not
@@ -424,8 +419,8 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // custom name
     ////////////////////////////////////////////////////////////////////////////////
-    getCustomNameId(): Undefinable<number>;
-    setCustomNameId(nameId: Undefinable<number>): void;
+    getCustomNameId(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    setCustomNameId(nameId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void;
 
-    getCustomName(languageType?: LanguageType): Undefinable<string>;
+    getCustomName(languageType?: Lang_Constants.LanguageType): AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
 }

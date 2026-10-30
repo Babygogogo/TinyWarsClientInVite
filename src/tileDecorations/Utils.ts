@@ -1,24 +1,23 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { SymmetryTypeId } from "../geometries/Constants.ts";
 import {
-    DecorationCfgDict,
-    DecorationSymmetryCfgDict,
-} from "../tiles/constants/Common.ts";
-import type { TileDecorationCfg } from "../tiles/Types.ts";
+    Tiles_Constants_Common,
+    type Geometries_Constants,
+    type Tiles_Types,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
-export function getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {
-    return DecorationCfgDict.get(tileDecorationType) ?? null;
+export function getTileDecorationCfg(tileDecorationType: number): Tiles_Types.TileDecorationCfg | null {
+    return Tiles_Constants_Common.DecorationCfgDict.get(tileDecorationType) ?? null;
 }
 
 export function checkIsValidTileDecorationType(tileDecorationType: number): boolean {
-    return DecorationCfgDict.has(tileDecorationType);
+    return Tiles_Constants_Common.DecorationCfgDict.has(tileDecorationType);
 }
 
-export function getAllTileDecorationCfgArray(): TileDecorationCfg[] {
-    return [...DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
+export function getAllTileDecorationCfgArray(): Tiles_Types.TileDecorationCfg[] {
+    return [...Tiles_Constants_Common.DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
 }
 
-export function checkIsValidTileDecorationShapeId(tileDecorationType: Undefinable<number>, shapeId: Undefinable<number>): boolean {
+export function checkIsValidTileDecorationShapeId(tileDecorationType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, shapeId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): boolean {
     if (tileDecorationType == null) {
         return shapeId == null;
     }
@@ -28,16 +27,16 @@ export function checkIsValidTileDecorationShapeId(tileDecorationType: Undefinabl
         && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
 }
 
-export function getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
-    const shapeIdArray = DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
+export function getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: Geometries_Constants.SymmetryTypeId): number | null {
+    const shapeIdArray = Tiles_Constants_Common.DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
     return shapeIdArray ? shapeIdArray[symmetryType] : null;
 }
 
 export function checkIsTileDecorationSymmetrical({ tileDecorationType, shapeId1, shapeId2, symmetryType }: {
     tileDecorationType: number | null;
-    shapeId1: Undefinable<number>;
-    shapeId2: Undefinable<number>;
-    symmetryType: SymmetryTypeId;
+    shapeId1: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    shapeId2: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    symmetryType: Geometries_Constants.SymmetryTypeId;
 }): boolean {
     if (tileDecorationType == null) {
         return (shapeId1 == null) && (shapeId2 == null);

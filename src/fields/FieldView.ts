@@ -1,23 +1,25 @@
-import type { IActionPlannerView } from "../actionPlanners/IActionPlannerView.ts";
-import type { IBwCursorView } from "../baseWar/interface/IBwCursorView.ts";
-import type { IBwGridVisualEffectView } from "../baseWar/interface/IBwGridVisualEffectView.ts";
-import type { IField } from "./IField.ts";
-import type { IFieldView } from "./IFieldView.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import type { ITileMapView } from "../tiles/ITileMapView.ts";
-import { UiContainer } from "../ui/components/UiContainer.ts";
-import type { IUnitMapView } from "../units/IUnitMapView.ts";
+import {
+    Helpers_Misc,
+    Ui_Components_UiContainer,
+    type ActionPlanners_IActionPlannerView,
+    type BaseWar_Interface_IBwCursorView,
+    type BaseWar_Interface_IBwGridVisualEffectView,
+    type Fields_IField,
+    type Fields_IFieldView,
+    type Tiles_ITileMapView,
+    type Units_IUnitMapView,
+} from "../internal.ts";
 
-export class FieldView extends UiContainer implements IFieldView {
-    private _field?                 : IField;
+export class FieldView extends Ui_Components_UiContainer.UiContainer implements Fields_IFieldView.IFieldView {
+    private _field?                 : Fields_IField.IField;
 
-    private _tileMapView?           : ITileMapView;
-    private _actionPlannerView?     : IActionPlannerView;
-    private _unitMapView?           : IUnitMapView;
-    private _cursorView?            : IBwCursorView;
-    private _gridVisualEffectView?  : IBwGridVisualEffectView;
+    private _tileMapView?           : Tiles_ITileMapView.ITileMapView;
+    private _actionPlannerView?     : ActionPlanners_IActionPlannerView.IActionPlannerView;
+    private _unitMapView?           : Units_IUnitMapView.IUnitMapView;
+    private _cursorView?            : BaseWar_Interface_IBwCursorView.IBwCursorView;
+    private _gridVisualEffectView?  : BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView;
 
-    public init(field: IField): void {
+    public init(field: Fields_IField.IField): void {
         if (!this._field) {
             this._field = field;
 
@@ -34,7 +36,7 @@ export class FieldView extends UiContainer implements IFieldView {
             this.addUiChild(this._gridVisualEffectView);
         }
     }
-    public fastInit(field: IField): void {
+    public fastInit(field: Fields_IField.IField): void {
         this._field = field;
     }
 
@@ -45,11 +47,11 @@ export class FieldView extends UiContainer implements IFieldView {
         // nothing to do
     }
 
-    private _getUnitMapView(): IUnitMapView {
-        return getExisted(this._unitMapView);
+    private _getUnitMapView(): Units_IUnitMapView.IUnitMapView {
+        return Helpers_Misc.getExisted(this._unitMapView);
     }
-    private _getTileMapView(): ITileMapView {
-        return getExisted(this._tileMapView);
+    private _getTileMapView(): Tiles_ITileMapView.ITileMapView {
+        return Helpers_Misc.getExisted(this._tileMapView);
     }
 
     public setUnitsVisible(visible: boolean): void {

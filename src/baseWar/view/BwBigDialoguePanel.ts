@@ -1,57 +1,44 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { BigDialogueSideId } from "../../dialogues/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorId } from "../../graphics/Constants.ts";
 import {
-    getBigDialogueBackgroundImage,
-    getCoBust,
-} from "../../helpers/ImageSource.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Dialogues_Constants,
+    Ui_Utils_UiHelpers,
+    Graphics_Constants,
+    Tween_Executor,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Lang_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Timer_TimerModel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 import type { WeaBigDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import {
-    playShortSfx,
-    playBgm,
-} from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { changeColor } from "../../ui/utils/UiHelpers.ts";
 
 export interface OpenData {
-    war             : IBwWar;
+    war             : BaseWar_Interface_IBwWar.IBwWar;
     actionData      : WeaBigDialogueSimple;
     callbackOnClose : () => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!        : IUiContainer;
-    private readonly _imgBg!        : IUiImage;
-    private readonly _imgCo1!       : IUiImage;
-    private readonly _imgCo2!       : IUiImage;
-    private readonly _groupName1!   : IUiContainer;
-    private readonly _labelName1!   : IUiLabel;
-    private readonly _groupName2!   : IUiContainer;
-    private readonly _labelName2!   : IUiLabel;
-    private readonly _imgTouchMask! : IUiImage;
-    private readonly _btnSkip!      : IUiButton;
-    private readonly _labelContent! : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo1!       : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgCo2!       : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _groupName1!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelName1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupName2!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelName2!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgTouchMask! : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnSkip!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelContent! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _dialogueIndex  = 0;
 
@@ -61,7 +48,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._imgTouchMask,   callback: this._onTouchedImgTouchMask },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -72,7 +59,7 @@ export class Panel extends UiPanel<OpenData> {
 
         this._updateComponentsForLanguage();
 
-        this._imgBg.loadSource(getBigDialogueBackgroundImage(this.getOpenData()?.actionData.getBackgroundId() ?? 0));
+        this._imgBg.loadSource(Helpers_ImageSource.getBigDialogueBackgroundImage(this.getOpenData()?.actionData.getBackgroundId() ?? 0));
         this._groupName1.setIsVisible(false);
         this._groupName2.setIsVisible(false);
         this._imgCo1.loadSource(``);
@@ -88,18 +75,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSkip(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0226),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0226),
             callback: () => this.closePanel(),
         });
     }
     private _onTouchedImgTouchMask(): void {
-        if (getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
+        if (Helpers_Misc.getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
             this._tickDialogue();
         } else {
             this.closePanel();
         }
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -107,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setLangText(TextType.B0665);
+        this._btnSkip.setLangText(Lang_Constants.TextType.B0665);
 
         this._updateComponentsForDialogue();
     }
@@ -213,32 +200,32 @@ export class Panel extends UiPanel<OpenData> {
             const side          = dataForCoDialogue.getSide();
             const nameArray     = dataForCoDialogue.getNameArray();
             const playerIndex   = dataForCoDialogue.getPlayerIndex();
-            const coId          = playerIndex == null ? getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
-            const coImageSource = getCoBust(gameConfig, coId) ?? UndefinedError;
-            const coName        = getLanguageText({ textArray: nameArray }) ?? gameConfig.getCoNameAndTierText(coId) ?? UndefinedError;
+            const coId          = playerIndex == null ? Helpers_Misc.getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
+            const coImageSource = Helpers_ImageSource.getCoBust(gameConfig, coId) ?? Lang_Constants.UndefinedError;
+            const coName        = Lang_Utils.getLanguageText({ textArray: nameArray }) ?? gameConfig.getCoNameAndTierText(coId) ?? Lang_Constants.UndefinedError;
 
-            if (side === BigDialogueSideId.Left) {
+            if (side === Dialogues_Constants.BigDialogueSideId.Left) {
                 groupName1.setIsVisible(true);
                 groupName2.setIsVisible(false);
                 labelName1.setText(coName);
                 imgCo1.loadSource(coImageSource);
-                changeColor(imgCo1, ColorId.Origin);
-                changeColor(imgCo2, ColorId.Dark);
+                Ui_Utils_UiHelpers.changeColor(imgCo1, Graphics_Constants.ColorId.Origin);
+                Ui_Utils_UiHelpers.changeColor(imgCo2, Graphics_Constants.ColorId.Dark);
 
-            } else if (side === BigDialogueSideId.Right) {
+            } else if (side === Dialogues_Constants.BigDialogueSideId.Right) {
                 groupName1.setIsVisible(false);
                 groupName2.setIsVisible(true);
                 labelName2.setText(coName);
                 imgCo2.loadSource(coImageSource);
-                changeColor(imgCo1, ColorId.Dark);
-                changeColor(imgCo2, ColorId.Origin);
+                Ui_Utils_UiHelpers.changeColor(imgCo1, Graphics_Constants.ColorId.Dark);
+                Ui_Utils_UiHelpers.changeColor(imgCo2, Graphics_Constants.ColorId.Origin);
 
             } else {
-                throw newError(`BwDialoguePanel._updateComponentsForDialogue() invalid side.`);
+                throw Helpers_Misc.newError(`BwDialoguePanel._updateComponentsForDialogue() invalid side.`);
             }
 
             labelContent.setText(war.getWarEventManager().handleEscapeText(
-                getExisted(getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
             ));
 
         } else if (dataForAside) {
@@ -248,20 +235,20 @@ export class Panel extends UiPanel<OpenData> {
             imgCo2.loadSource(``);
 
             labelContent.setText(war.getWarEventManager().handleEscapeText(
-                getExisted(getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
             ));
         } else if (dataForMisc) {
             {
                 const dataForPlayBgm = dataForMisc.getDataForPlayBgm();
                 if (dataForPlayBgm) {
-                    playBgm(dataForPlayBgm.getBgmCode() ?? 0);
+                    Sounds_SoundPlayer.playBgm(dataForPlayBgm.getBgmCode() ?? 0);
                 }
             }
 
             {
                 const dataForPlaySfx = dataForMisc.getDataForPlaySfx();
                 if (dataForPlaySfx) {
-                    playShortSfx(dataForPlaySfx.getSfxCode() ?? 0);
+                    Sounds_SoundPlayer.playShortSfx(dataForPlaySfx.getSfxCode() ?? 0);
                 }
             }
 
@@ -275,21 +262,21 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }

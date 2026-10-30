@@ -1,8 +1,10 @@
+import {
+    Timer_TimerModel,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
 
 export async function getActionForPhase12(): Promise<WoContainer> {
-    await checkAndCallLater();
+    await Timer_TimerModel.checkAndCallLater();
 
     return WoContainer.fromJson({
         WoPlayerEndTurn: {},

@@ -1,116 +1,116 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getHrwWarClass,
-    getRwWarClass,
-    getMeWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    ReplayWar_Model_RwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+} from "../../internal.ts";
 
-export class ChoosingUnitCrushTarget implements IState {
+export class ChoosingUnitCrushTarget implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ChoosingUnitCrushTarget();
 
     public static getInstance(): ChoosingUnitCrushTarget {
         return ChoosingUnitCrushTarget._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ChoosingUnitCrushTarget;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if ((war instanceof getHrwWarClass()) ||
-            (war instanceof getRwWarClass())
+        if ((war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) ||
+            (war instanceof ReplayWar_Model_RwWar.RwWar)
         ) {
-            return StateId.ChoosingUnitCrushTarget;
+            return ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget;
         }
 
-        if ((war instanceof getMeWarClass()) ||
-            (war instanceof getTwWarClass())
+        if ((war instanceof MapEditor_Model_MeWar.MeWar) ||
+            (war instanceof TestWar_Model_TwWar.TwWar)
         ) {
-            return StateId.Idle;
+            return ActionPlanners_Constants.StateId.Idle;
         }
 
         const targetGridIndex = actionPlanner.getUnitCrushTargetGridIndex();
         if (targetGridIndex == null) {
             if (actionPlanner.getUnitCrushCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex))) {
-                return StateId.ChoosingUnitCrushTarget;
+                return ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget;
             } else {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             }
         } else {
             if (targetGridIndex.checkIsEqual(gridIndex)) {
-                return StateId.RequestingUnitCrushUnit;
+                return ActionPlanners_Constants.StateId.RequestingUnitCrushUnit;
             } else {
-                return StateId.ChoosingUnitCrushTarget;
+                return ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget;
             }
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearUnitCrushTargetGridIndex();
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.ButtonCancel01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId === StateId.ChoosingUnitCrushTarget) {
+        if (currStateId === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             if (actionPlanner.getUnitCrushCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex))) {
                 actionPlanner.setUnitCrushTargetGridIndex(gridIndex);
-                playShortSfx(ShortSfxCode.CursorConfirm01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
             } else {
                 actionPlanner.clearUnitCrushTargetGridIndex();
-                playShortSfx(ShortSfxCode.CursorMove01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorMove01);
             }
 
         } else {
-            throw newError(`Invalid currState: ${currStateId}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitCrushTarget);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitCrushTarget) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget) {
             // Nothing to do.
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitCrushTarget);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
-        actionPlanner.setStateId(StateId.ChoosingUnitCrushTarget);
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitCrushTarget);
 
         actionPlanner.updateView();
     }

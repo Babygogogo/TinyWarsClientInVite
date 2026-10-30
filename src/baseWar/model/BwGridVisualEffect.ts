@@ -1,18 +1,17 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwGridVisualEffect } from "../interface/IBwGridVisualEffect.ts";
-import type { IBwGridVisualEffectView } from "../interface/IBwGridVisualEffectView.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { getBwGridVisualEffectViewClass } from "../../gameHelpers/GhFactory.ts";
 import {
-    addEventListeners,
-    removeEventListeners,
-} from "../../notifications/Dispatcher.ts";
-import type { Listener } from "../../notifications/Types.ts";
+    BaseWar_View_BwGridVisualEffectView,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Interface_IBwGridVisualEffectView,
+    type BaseWar_Interface_IBwWar,
+    Notifications_Dispatcher,
+    type Notifications_Types,
+} from "../../internal.ts";
 
-export class BwGridVisualEffect implements IBwGridVisualEffect {
-    private readonly _view = new (getBwGridVisualEffectViewClass())();
+export class BwGridVisualEffect implements BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
+    private readonly _view = new BaseWar_View_BwGridVisualEffectView.BwGridVisualEffectView();
 
-    private _notifyListeners: Listener[] = [
+    private _notifyListeners: Notifications_Types.Listener[] = [
         // { type: NotifyType.BwUnitBeAttacked,   callback: this._onNotifyBwUnitBeAttacked },
         // { type: NotifyType.BwUnitBeDestroyed,  callback: this._onNotifyBwUnitBeDestroyed },
         // { type: NotifyType.BwUnitBeRepaired,   callback: this._onNotifyBwUnitBeRepaired },
@@ -30,19 +29,19 @@ export class BwGridVisualEffect implements IBwGridVisualEffect {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public startRunning(war: IBwWar): void {
-        addEventListeners(this._notifyListeners, this, false, 1);
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
+        Notifications_Dispatcher.addEventListeners(this._notifyListeners, this, false, 1);
     }
     public startRunningView(): void {
         this.getView().startRunningView();
     }
     public stopRunning(): void {
-        removeEventListeners(this._notifyListeners, this);
+        Notifications_Dispatcher.removeEventListeners(this._notifyListeners, this);
 
         this.getView().stopRunningView();
     }
 
-    public getView(): IBwGridVisualEffectView {
+    public getView(): BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView {
         return this._view;
     }
 
@@ -80,54 +79,54 @@ export class BwGridVisualEffect implements IBwGridVisualEffect {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public showEffectBlock(gridIndex: GridIndex): void {
+    public showEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectBlock(gridIndex);
     }
 
-    public showEffectDive(gridIndex: GridIndex): void {
+    public showEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectDive(gridIndex);
     }
 
-    public showEffectExplosion(gridIndex: GridIndex): void {
+    public showEffectExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectExplosion(gridIndex);
     }
 
-    public showEffectFlare(gridIndex: GridIndex): void {
+    public showEffectFlare(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectFlare(gridIndex);
     }
 
-    public showEffectDamage(gridIndex: GridIndex): void {
+    public showEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectDamage(gridIndex);
     }
 
-    public showEffectSupply(gridIndex: GridIndex): void {
+    public showEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectSupply(gridIndex);
     }
 
-    public showEffectRepair(gridIndex: GridIndex): void {
+    public showEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectRepair(gridIndex);
     }
 
-    public showEffectSiloExplosion(gridIndex: GridIndex): void {
+    public showEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectSiloExplosion(gridIndex);
     }
 
-    public showEffectCoPowerActivation(gridIndex: GridIndex): void {
+    public showEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectCoPowerActivation(gridIndex);
     }
-    public showEffectCoSuperPowerActivation(gridIndex: GridIndex): void {
+    public showEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectCoSuperPowerActivation(gridIndex);
     }
 
-    public showEffectCharge(gridIndex: GridIndex): void {
+    public showEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectCharge(gridIndex);
     }
 
-    public showEffectSurface(gridIndex: GridIndex): void {
+    public showEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this.getView().showEffectSurface(gridIndex);
     }
 
-    public showEffectAiming(gridIndex: GridIndex, timeMs: number): void {
+    public showEffectAiming(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, timeMs: number): void {
         this.getView().showEffectAiming(gridIndex, timeMs);
     }
 }

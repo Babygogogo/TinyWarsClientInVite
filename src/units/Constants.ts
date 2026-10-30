@@ -1,4 +1,6 @@
-import { createRange } from "../helpers/Collection.ts";
+import {
+    Helpers_Collection,
+} from "../internal.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum CategoryId {
@@ -12,7 +14,7 @@ export const enum TagId {
     MaxTagId        = 30,
     MaxEncodedTagId = 2 ** MaxTagId - 1,
 }
-export const AllTagIdArray = createRange(TagId.MinTagId, TagId.MaxTagId + 1, 1);
+export const AllTagIdArray = Helpers_Collection.createRange(TagId.MinTagId, TagId.MaxTagId + 1, 1);
 
 // eslint-disable-next-line no-shadow
 export const enum AiModeId {

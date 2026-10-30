@@ -1,61 +1,57 @@
 import {
-    setMrwRankArray,
-    setCoStatistics,
-} from "./CommonModel.ts";
-import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    Common_Model_CommonModel,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
 import type { S as CommonGetRankListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
 import type { S as CommonGetServerStatusResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
-import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
-        { msgCode: MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
-        { msgCode: MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
-        { msgCode: MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
     ], null);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _onMsgCommonError(e: Event): void {
+function _onMsgCommonError(e: Egret_Egret.Event): void {
     // TODO: Handle common error message.
 }
 
 export function reqCommonGetServerStatus(): void {
-    send({ MsgCommonGetServerStatus: { c: {} }, });
+    Networks_Manager.send({ MsgCommonGetServerStatus: { c: {} }, });
 }
-function _onMsgCommonGetServerStatus(e: Event): void {
+function _onMsgCommonGetServerStatus(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetServerStatusResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgCommonGetServerStatus, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonGetServerStatus, data);
     }
 }
 
 export function reqGetRankList(): void {
-    send({ MsgCommonGetRankList: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetRankList: { c: {} } });
 }
-function _onMsgCommonGetRankList(e: Event): void {
+function _onMsgCommonGetRankList(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetRankListResponse;
     if (!data.getErrorCode()) {
-        setMrwRankArray(data.getMrwRankDataArray());
-        dispatch(TypeId.MsgCommonGetRankList, data);
+        Common_Model_CommonModel.setMrwRankArray(data.getMrwRankDataArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonGetRankList, data);
     }
 }
 
 export function reqCommonGetCoStatistics(): void {
-    send({ MsgCommonGetCoStatistics: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetCoStatistics: { c: {} } });
 }
-function _onMsgCommonGetCoStatistics(e: Event): void {
+function _onMsgCommonGetCoStatistics(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetCoStatisticsResponse;
     if (!data.getErrorCode()) {
-        setCoStatistics(data);
-        dispatch(TypeId.MsgCommonGetCoStatistics, data);
+        Common_Model_CommonModel.setCoStatistics(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgCommonGetCoStatistics, data);
     }
 }

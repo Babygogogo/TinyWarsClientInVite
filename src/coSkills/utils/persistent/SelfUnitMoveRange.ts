@@ -1,5 +1,7 @@
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+} from "../../../internal.ts";
 import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
 
 export function getTotalOffset({
@@ -14,14 +16,14 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitCommonAttributes | null | undefined;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): number {
     if (cfg == null) {
         return 0;

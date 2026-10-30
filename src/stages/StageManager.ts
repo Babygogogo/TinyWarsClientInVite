@@ -1,92 +1,76 @@
-import { DisplayLayerId } from "../graphics/Constants.ts";
-import { getWebPlayer } from "../helpers/Compatibility.ts";
 import {
-    getExisted,
-    newError,
-} from "../helpers/Misc.ts";
-import { enable } from "../helpers/PointerInput.ts";
-import {
-    Dimension,
-    Scale,
-} from "./Constants.ts";
-import type { IUiLayer } from "../ui/interfaces/IUiLayer.ts";
-import { getUiLayerClass } from "../ui/utils/UiFactory.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import {
-    Stage,
-    startTick,
-    Capabilities,
-    OrientationMode,
-    Event,
-    updateAllScreens,
-    DisplayObject,
-} from "../egret/Egret.ts";
-import {
-    ScreenAdapterHelper,
-    type IScreenAdapter,
-    type StageSize,
-} from "../egret/Sys.ts";
+    Stages_Constants,
+    Graphics_Constants,
+    Helpers_PointerInput,
+    Helpers_Misc,
+    Helpers_Compatibility,
+    Ui_Components_UiLayer,
+    type Ui_Interfaces_IUiLayer,
+    Egret_Egret,
+    Utils_ClientErrorCode,
+    Egret_Sys,
+} from "../internal.ts";
 
 // The game is in landscape mode, which means that its design max height equals its design width, 960.
-const RATIO_FOR_MIN_HEIGHT = Dimension.DesignWidth / Dimension.DesignMinHeight;
+const RATIO_FOR_MIN_HEIGHT = Stages_Constants.Dimension.DesignWidth / Stages_Constants.Dimension.DesignMinHeight;
 
 const _canvasBoundsInfo = {
     isUpdated   : false,
     rect        : new DOMRect(),
 };
 
-let   _stage        : Stage;
-let   _stageScale   = Scale.MinScale;
-const _LAYERS       = new Map<DisplayLayerId, IUiLayer>();
+let   _stage        : Egret_Egret.Stage;
+let   _stageScale   = Stages_Constants.Scale.MinScale;
+const _LAYERS       = new Map<Graphics_Constants.DisplayLayerId, Ui_Interfaces_IUiLayer.IUiLayer>();
 
-export function init(stg: Stage): void {
+export function init(stg: Egret_Egret.Stage): void {
     _stage = stg;
 
-    startTick(() => _canvasBoundsInfo.isUpdated = false, undefined);
+    Egret_Egret.startTick(() => _canvasBoundsInfo.isUpdated = false, undefined);
 
-    enable();
+    Helpers_PointerInput.enable();
 
-    if (!Capabilities.isMobile) {
-        stg.orientation = OrientationMode.AUTO;
+    if (!Egret_Egret.Capabilities.isMobile) {
+        stg.orientation = Egret_Egret.OrientationMode.AUTO;
     }
-    ScreenAdapterHelper.screenAdapter = new ScreenAdapter();
+    Egret_Sys.ScreenAdapterHelper.screenAdapter = new ScreenAdapter();
     _stage.setContentSize(_stage.stageWidth, _stage.stageHeight);
-    _stage.addEventListener(Event.RESIZE, _onStageResize, undefined);
+    _stage.addEventListener(Egret_Egret.Event.RESIZE, _onStageResize, undefined);
 
-    _addLayer(DisplayLayerId.Bottom);
-    _addLayer(DisplayLayerId.Scene);
-    _addLayer(DisplayLayerId.Hud0);
-    _addLayer(DisplayLayerId.Hud1);
-    _addLayer(DisplayLayerId.Hud2);
-    _addLayer(DisplayLayerId.Hud3);
-    _addLayer(DisplayLayerId.Notify0);
-    _addLayer(DisplayLayerId.Notify1);
-    _addLayer(DisplayLayerId.FloatText);
-    _addLayer(DisplayLayerId.Top);
+    _addLayer(Graphics_Constants.DisplayLayerId.Bottom);
+    _addLayer(Graphics_Constants.DisplayLayerId.Scene);
+    _addLayer(Graphics_Constants.DisplayLayerId.Hud0);
+    _addLayer(Graphics_Constants.DisplayLayerId.Hud1);
+    _addLayer(Graphics_Constants.DisplayLayerId.Hud2);
+    _addLayer(Graphics_Constants.DisplayLayerId.Hud3);
+    _addLayer(Graphics_Constants.DisplayLayerId.Notify0);
+    _addLayer(Graphics_Constants.DisplayLayerId.Notify1);
+    _addLayer(Graphics_Constants.DisplayLayerId.FloatText);
+    _addLayer(Graphics_Constants.DisplayLayerId.Top);
 }
 
-export function getStage(): Stage {
+export function getStage(): Egret_Egret.Stage {
     return _stage;
 }
 
 export function getCanvasBoundingClientRect(): DOMRect {
     if (!_canvasBoundsInfo.isUpdated) {
         _canvasBoundsInfo.isUpdated = true;
-        _canvasBoundsInfo.rect      = getExisted(getWebPlayer()?.canvas.getBoundingClientRect());
+        _canvasBoundsInfo.rect      = Helpers_Misc.getExisted(Helpers_Compatibility.getWebPlayer()?.canvas.getBoundingClientRect());
     }
     return _canvasBoundsInfo.rect;
 }
 
-export function getLayer(layer: DisplayLayerId): IUiLayer {
-    return getExisted(_LAYERS.get(layer));
+export function getLayer(layer: Graphics_Constants.DisplayLayerId): Ui_Interfaces_IUiLayer.IUiLayer {
+    return Helpers_Misc.getExisted(_LAYERS.get(layer));
 }
 
 export function setStageScale(scale: number): void {
-    const s = Math.min(Math.max(Scale.MinScale, scale), Scale.MaxScale);
+    const s = Math.min(Math.max(Stages_Constants.Scale.MinScale, scale), Stages_Constants.Scale.MaxScale);
     if (getStageScale() !== s) {
         _stageScale = s;
 
-        updateAllScreens();
+        Egret_Egret.updateAllScreens();
     }
 }
 export function getStageScale(): number {
@@ -102,22 +86,22 @@ function _onStageResize(): void {
     }
 }
 
-function _addLayer(layerType: DisplayLayerId): void {
+function _addLayer(layerType: Graphics_Constants.DisplayLayerId): void {
     if (_LAYERS.has(layerType)) {
-        throw newError(`StageManager._addLayer() duplicated layer: ${layerType}.`, ClientErrorCode.StageManager_AddLayer_00);
+        throw Helpers_Misc.newError(`StageManager._addLayer() duplicated layer: ${layerType}.`, Utils_ClientErrorCode.ClientErrorCode.StageManager_AddLayer_00);
     }
 
     const stage     = getStage();
     const width     = stage.stageWidth;
     const height    = stage.stageHeight;
-    const layer     = new (getUiLayerClass())();
+    const layer     = new Ui_Components_UiLayer.UiLayer();
     layer.resize(width, height);
     _LAYERS.set(layerType, layer);
-    getStage().addChild(layer as unknown as DisplayObject);
+    getStage().addChild(layer as unknown as Egret_Egret.DisplayObject);
 }
 
-class ScreenAdapter implements IScreenAdapter {
-    public calculateStageSize(_scaleMode: string, screenWidth: number, screenHeight: number): StageSize {
+class ScreenAdapter implements Egret_Sys.IScreenAdapter {
+    public calculateStageSize(_scaleMode: string, screenWidth: number, screenHeight: number): Egret_Sys.StageSize {
         // const currRatio = screenWidth / screenHeight;
         // if (currRatio > RATIO_FOR_MIN_HEIGHT) {
         //     return {
@@ -139,16 +123,16 @@ class ScreenAdapter implements IScreenAdapter {
         if (screenWidth / screenHeight > RATIO_FOR_MIN_HEIGHT) {
             // 屏幕高度不足
             return {
-                stageWidth      : reviseStageDisplaySize(Dimension.DesignMinHeight * screenWidth / screenHeight * scaler),
-                stageHeight     : reviseStageDisplaySize(Dimension.DesignMinHeight * scaler),
+                stageWidth      : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * screenWidth / screenHeight * scaler),
+                stageHeight     : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * scaler),
                 displayWidth    : reviseStageDisplaySize(screenWidth),
                 displayHeight   : reviseStageDisplaySize(screenHeight),
             };
         } else {
             // 屏幕高度充足
             return {
-                stageWidth      : reviseStageDisplaySize(Dimension.DesignWidth * scaler),
-                stageHeight     : reviseStageDisplaySize(Dimension.DesignWidth * screenHeight / screenWidth * scaler),
+                stageWidth      : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * scaler),
+                stageHeight     : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * screenHeight / screenWidth * scaler),
                 displayWidth    : reviseStageDisplaySize(screenWidth),
                 displayHeight   : reviseStageDisplaySize(screenHeight),
             };

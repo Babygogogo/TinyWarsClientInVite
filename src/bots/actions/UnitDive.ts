@@ -1,11 +1,13 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { ScoreAndAction } from "../Types.ts";
+import {
+    Timer_TimerModel,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-export async function getScoreAndActionUnitDive(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitDive(unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if (!unit.checkCanDive()) {
         return null;
@@ -25,8 +27,8 @@ export async function getScoreAndActionUnitDive(unit: IUnit, pathNodes: MovePath
     }
 }
 
-async function getScoreForActionUnitDive(unit: IUnit): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForActionUnitDive(unit: Units_IUnit.IUnit): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
     return unit.checkIsFuelInShort() ? -10 : 10;
 }

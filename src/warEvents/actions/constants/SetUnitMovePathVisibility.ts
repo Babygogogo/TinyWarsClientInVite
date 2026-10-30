@@ -1,27 +1,26 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConPositionFilter   : EpExpressionInfo;
-    ActVisibilityArray  : EpExpressionInfo;
+    ConPositionFilter   : ExpressionParsers_Types.EpExpressionInfo;
+    ActVisibilityArray  : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConPositionFilter   : {
-        contextType     : ContextType.Position,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Position,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.B1073),
-        getHelpText     : () => getText(TextType.A0882),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1073),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0882),
     },
     ActVisibilityArray  : {
-        contextType     : ContextType.Position,
-        resultTypes     : [ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Position,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.B1339),
-        getHelpText     : () => getText(TextType.A0883),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1339),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0883),
     },
 };

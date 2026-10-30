@@ -1,126 +1,88 @@
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import {
-    type OpenData as CommonWarAdvancedSettingsPageOpenData,
-    Page as CommonWarAdvancedSettingsPage,
-} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import {
-    type OpenData as CommonWarBasicSettingsPageOpenData,
-    Page as CommonWarBasicSettingsPage,
-} from "../../common/view/CommonWarBasicSettingsPage.ts";
-import {
-    type OpenData as CommonWarMapInfoPageOpenData,
-    Page as CommonWarMapInfoPage,
-} from "../../common/view/CommonWarMapInfoPage.ts";
-import {
-    type OpenData as CommonWarPlayerInfoPageOpenData,
-    Page as CommonWarPlayerInfoPage,
-} from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { Common } from "../../coopCustomWars/Constants.ts";
-import { pickRandomCo } from "../../cos/Utils.ts";
-import { show } from "../../FloatText.ts";
-import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import {
-    createRange,
-    getNonNullElements,
-} from "../../helpers/Collection.ts";
-import {
-    getCoEye,
-    getSkinCircle,
-} from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getPlayerTeamName,
-    getText,
-} from "../../lang/Utils.ts";
-import { ExitRoomType } from "../../multiPlayerRooms/Constants.ts";
-import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getFinalCcwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Common_View_CommonWarAdvancedSettingsPage,
+    Common_View_CommonWarBasicSettingsPage,
+    Common_View_CommonWarMapInfoPage,
+    Common_View_CommonWarPlayerInfoPage,
+    type Egret_Egret,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiTab,
+    type Ui_Types_UiListItemData,
+    AuxiliaryTypes_ChatToTarget,
+    CoopCustomRoom_Model_CcrModel,
+    CoopCustomWars_Constants,
+    Helpers_Collection,
+    Tween_Executor,
+    MultiPlayerRooms_Constants,
+    ForceSkins_Utils,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    Helpers_Misc,
+    PlayerRules_Utils,
+    GameConfigs_Provider,
+    WarRules_Utils_CommonData,
+    Lang_Utils,
+    NormalMap_Model_NormalMapModel,
+    Users_Model,
+    GamePanels_Manager,
+    Cos_Utils,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    CoopCustomRoom_Model_CcrProxy,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTabItemRenderer,
+    Timer_TimerModel,
+} from "../../internal.ts";
 import type { S as CcrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrExitRoom/S.ts";
 import type { S as CcrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
 import type { S as CcrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
 import { C as CcrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgCcrSetSelfSettings/C.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { wait } from "../../timer/TimerModel.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../egret/Egret.ts";
-import {
-    getPlayerRule,
-    getPlayersCountUnneutral,
-} from "../../warRules/utils/CommonData.ts";
-import {
-    checkCanStartGame,
-    createDataForCommonWarAdvancedSettingsPage,
-    createDataForCommonWarBasicSettingsPage,
-    createDataForCommonWarPlayerInfoPage,
-    getRoomPlayerInfo,
-    getRoomStaticInfo,
-} from "../model/CcrModel.ts";
-import {
-    reqCcrDeleteRoom,
-    reqCcrInvite,
-    reqCcrSetReady,
-    reqCcrSetSelfSettings,
-    reqCcrStartWar,
-} from "../model/CcrProxy.ts";
 
 export interface OpenData {
     roomId  : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupTab!                 : IUiContainer;
-    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarPlayerInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupTab!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _tabSettings!              : Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, Common_View_CommonWarMapInfoPage.OpenData | Common_View_CommonWarPlayerInfoPage.OpenData | Common_View_CommonWarBasicSettingsPage.OpenData | Common_View_CommonWarAdvancedSettingsPage.OpenData>;
 
-    private readonly _groupNavigator!           : IUiLayout;
-    private readonly _labelMultiPlayer!         : IUiLabel;
-    private readonly _labelMyRoom!              : IUiLabel;
-    private readonly _labelRoomInfo!            : IUiLabel;
+    private readonly _groupNavigator!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMultiPlayer!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMyRoom!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRoomInfo!            : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupSettings!            : IUiContainer;
-    private readonly _groupChooseCo!            : IUiContainer;
-    private readonly _btnChooseCo!              : IUiButton;
-    private readonly _imgCo!                    : IUiImage;
+    private readonly _groupSettings!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupChooseCo!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnChooseCo!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _imgCo!                    : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupChoosePlayerIndex!   : IUiContainer;
-    private readonly _btnChoosePlayerIndex!     : IUiButton;
-    private readonly _labelPlayerIndex!         : IUiLabel;
+    private readonly _groupChoosePlayerIndex!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnChoosePlayerIndex!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelPlayerIndex!         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupChooseSkinId!        : IUiContainer;
-    private readonly _btnChooseSkinId!          : IUiButton;
-    private readonly _imgSkinId!                : IUiImage;
+    private readonly _groupChooseSkinId!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnChooseSkinId!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _imgSkinId!                : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupChooseReady!         : IUiContainer;
-    private readonly _btnChooseReady!           : IUiButton;
-    private readonly _imgReady!                 : IUiImage;
+    private readonly _groupChooseReady!         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnChooseReady!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _imgReady!                 : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupTopRightButtons!     : IUiContainer;
-    private readonly _btnInvite!                : IUiButton;
-    private readonly _btnChat!                  : IUiButton;
+    private readonly _groupTopRightButtons!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnInvite!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChat!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupButton!              : IUiLayout;
-    private readonly _btnStartGame!             : IUiButton;
-    private readonly _btnDeleteRoom!            : IUiButton;
+    private readonly _groupButton!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnStartGame!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteRoom!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnBack!                  : IUiButton;
+    private readonly _btnBack!                  : Ui_Interfaces_IUiButton.IUiButton;
 
     private _isTabInitialized = false;
 
@@ -137,14 +99,14 @@ export class Panel extends UiPanel<OpenData> {
             { ui : this._btnInvite,              callback : this._onTouchedBtnInvite },
         ]);
         this._setNotifyListenerArray([
-            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : TypeId.MsgCcrGetRoomStaticInfo,     callback : this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type : TypeId.MsgCcrGetRoomPlayerInfo,     callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type : TypeId.MsgCcrExitRoom,              callback : this._onNotifyMsgCcrExitRoom },
-            { type : TypeId.MsgCcrInvite,                callback : this._onNotifyMsgCcrInvite },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,     callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,     callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrExitRoom,              callback : this._onNotifyMsgCcrExitRoom },
+            { type : Notifications_TypeId.TypeId.MsgCcrInvite,                callback : this._onNotifyMsgCcrInvite },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -176,7 +138,7 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        openPanel(getDict().MpwMyRoomListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
     }
 
     private async _onTouchedBtnChooseCo(): Promise<void> {
@@ -186,29 +148,29 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const [roomStaticInfo, roomPlayerInfo] = await Promise.all([
-            getRoomStaticInfo(roomId),
-            getRoomPlayerInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId),
         ]);
         if ((roomStaticInfo == null) || (roomPlayerInfo == null)) {
             return;
         }
 
-        const selfUserId        = getSelfUserId();
+        const selfUserId        = Users_Model.getSelfUserId();
         const selfPlayerData    = roomPlayerInfo.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         if (selfPlayerData != null) {
             if (selfPlayerData.getIsReady()) {
-                show(getText(TextType.A0128));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
             } else {
                 const playerIndex       = selfPlayerData.getPlayerIndex();
                 const currentCoId       = selfPlayerData.getCoId();
-                const settingsForCommon = getExisted(roomStaticInfo.getSettingsForCommon());
-                const gameConfig        = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
-                const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
-                openPanel(getDict().CommonChooseSingleCoIdPanel, {
+                const settingsForCommon = Helpers_Misc.getExisted(roomStaticInfo.getSettingsForCommon());
+                const gameConfig        = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion()));
+                const warRuleCommonData = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
                     gameConfig         : gameConfig,
                     currentCoId        : currentCoId,
-                    availableCoIdArray : [...getFinalCcwHumanCoIdSet({
-                        playerRule      : getPlayerRule(warRuleCommonData, playerIndex),
+                    availableCoIdArray : [...PlayerRules_Utils.getFinalCcwHumanCoIdSet({
+                        playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
                         gameConfig      : gameConfig,
                         hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                         includeRandom   : true,
@@ -216,7 +178,7 @@ export class Panel extends UiPanel<OpenData> {
                     isBan             : false,
                     callbackOnConfirm : newCoId => {
                         if (newCoId !== currentCoId) {
-                            reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
+                            CoopCustomRoom_Model_CcrProxy.reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
                                 roomId            : roomId,
                                 playerIndex       : playerIndex,
                                 coId              : newCoId,
@@ -236,8 +198,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const [roomStaticInfo, roomPlayerInfo] = await Promise.all([
-            getRoomStaticInfo(roomId),
-            getRoomPlayerInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId),
         ]);
         if ((roomStaticInfo == null) || (roomPlayerInfo == null)) {
             return;
@@ -249,12 +211,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const gameConfig = await getGameConfig(getExisted(settingsForCommon?.getConfigVersion()));
+        const gameConfig = await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon?.getConfigVersion()));
         if (gameConfig == null) {
             return;
         }
 
-        const selfUserId        = getSelfUserId();
+        const selfUserId        = Users_Model.getSelfUserId();
         const playerDataList    = roomPlayerInfo.getPlayerDataList();
         const selfPlayerData    = playerDataList.find(v => v.getUserId() === selfUserId);
         if (selfPlayerData == null) {
@@ -262,32 +224,32 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (selfPlayerData.getIsReady()) {
-            show(getText(TextType.A0128));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
             return;
         }
 
         const selfPlayerIndex   = selfPlayerData.getPlayerIndex();
-        const warRuleCommonData = getExisted(warRule.getWarRuleCommonData());
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        const warRuleCommonData = Helpers_Misc.getExisted(warRule.getWarRuleCommonData());
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             currentNumber        : selfPlayerIndex,
-            availableNumberArray : createRange(PlayerIndex.First, getPlayersCountUnneutral(warRuleCommonData) + 1, 1)
+            availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.First, WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData) + 1, 1)
                 .filter(playerIndex => (playerIndex === selfPlayerIndex) || (!playerDataList.some(v => v.getPlayerIndex() === playerIndex))),
-            getTitleText      : () => getText(TextType.B0168),
-            getNumberMainText : playerIndex => `P${playerIndex}, ${getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? UndefinedError}`,
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0168),
+            getNumberMainText : playerIndex => `P${playerIndex}, ${Lang_Utils.getPlayerTeamName(WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? Lang_Constants.UndefinedError}`,
             callbackOnConfirm : newPlayerIndex => {
                 if (newPlayerIndex !== selfPlayerIndex) {
                     const currCoId              = selfPlayerData.getCoId();
-                    const availableCoIdArray    = [...getFinalCcwHumanCoIdSet({
-                        playerRule      : getPlayerRule(warRuleCommonData, newPlayerIndex),
+                    const availableCoIdArray    = [...PlayerRules_Utils.getFinalCcwHumanCoIdSet({
+                        playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, newPlayerIndex),
                         gameConfig      : gameConfig,
                         hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                         includeRandom   : true,
                     })];
-                    reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
+                    CoopCustomRoom_Model_CcrProxy.reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
                         roomId            : roomId,
                         playerIndex       : newPlayerIndex,
                         unitAndTileSkinId : selfPlayerData.getUnitAndTileSkinId(),
-                        coId              : availableCoIdArray.indexOf(currCoId) >= 0 ? currCoId : pickRandomCo(availableCoIdArray),
+                        coId              : availableCoIdArray.indexOf(currCoId) >= 0 ? currCoId : Cos_Utils.pickRandomCo(availableCoIdArray),
                     }));
                 }
             },
@@ -300,31 +262,31 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const roomPlayerInfo = await getRoomPlayerInfo(roomId);
+        const roomPlayerInfo = await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId);
         if (roomPlayerInfo == null) {
             return;
         }
 
-        const selfUserId        = getSelfUserId();
+        const selfUserId        = Users_Model.getSelfUserId();
         const playerDataList    = roomPlayerInfo.getPlayerDataList();
         const selfPlayerData    = playerDataList.find(v => v.getUserId() === selfUserId);
         if (selfPlayerData == null) {
             return;
         }
         if (selfPlayerData.getIsReady()) {
-            show(getText(TextType.A0128));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0128));
             return;
         }
 
-        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()));
-        const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
+        const usedSkinIdArray       = Helpers_Collection.getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()));
+        const availableSkinIdArray  = ForceSkins_Utils.getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
-        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
             currentSkinId        : selfSkinId,
             availableSkinIdArray : availableSkinIdArray,
             callback             : newSkinId => {
                 if (newSkinId !== selfSkinId) {
-                    reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
+                    CoopCustomRoom_Model_CcrProxy.reqCcrSetSelfSettings(CcrSetSelfSettingsRequest.fromJson({
                         roomId            : roomId,
                         playerIndex       : selfPlayerData.getPlayerIndex(),
                         unitAndTileSkinId : newSkinId,
@@ -341,35 +303,35 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const selfUserId        = getSelfUserId();
-        const selfPlayerData    = (await getRoomPlayerInfo(roomId))?.getPlayerDataList()?.find(v => v.getUserId() === selfUserId);
+        const selfUserId        = Users_Model.getSelfUserId();
+        const selfPlayerData    = (await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId))?.getPlayerDataList()?.find(v => v.getUserId() === selfUserId);
         if (selfPlayerData) {
-            reqCcrSetReady(roomId, !selfPlayerData.getIsReady());
+            CoopCustomRoom_Model_CcrProxy.reqCcrSetReady(roomId, !selfPlayerData.getIsReady());
         }
     }
 
     private _onTouchedBtnStartGame(): void {
         const roomId = this.getOpenData()?.roomId;
         if (roomId != null) {
-            reqCcrStartWar(roomId);
+            CoopCustomRoom_Model_CcrProxy.reqCcrStartWar(roomId);
         }
     }
 
     private _onTouchedBtnDeleteRoom(): void {
         const roomId = this.getOpenData()?.roomId;
         if (roomId != null) {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.A0149),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0149),
                 callback   : () => {
-                    reqCcrDeleteRoom(roomId);
+                    CoopCustomRoom_Model_CcrProxy.reqCcrDeleteRoom(roomId);
                 },
             });
         }
     }
 
     private _onTouchedBtnChat(): void {
-        openPanel(getDict().ChatPanel, {
-            toTarget : new ChatToTarget({
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
+            toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
                 toCcrRoomId : this.getOpenData()?.roomId,
             })
         });
@@ -381,27 +343,27 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const playersCountUnneutral = (await getRoomStaticInfo(roomId))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getPlayerRuleList().length;
+        const playersCountUnneutral = (await CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getPlayerRuleList().length;
         if (playersCountUnneutral == null) {
             return;
         }
 
-        const joinedPlayersCount = (await getRoomPlayerInfo(roomId))?.getPlayerDataList().length;
+        const joinedPlayersCount = (await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId))?.getPlayerDataList().length;
         if (joinedPlayersCount == null) {
             return;
         }
 
         if (joinedPlayersCount >= playersCountUnneutral) {
-            show(getText(TextType.A0145));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0145));
             return;
         }
 
-        openPanel(getDict().CommonSearchMultiUserPanel, {
-            maxChooseCount    : Common.MaxInviteCount,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchMultiUserPanel, {
+            maxChooseCount    : CoopCustomWars_Constants.Common.MaxInviteCount,
             minChooseCount    : 1,
-            getTitleText      : () => getText(TextType.B1003),
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1003),
             callbackOnConfirm : userIdArray => {
-                reqCcrInvite(roomId, userIdArray);
+                CoopCustomRoom_Model_CcrProxy.reqCcrInvite(roomId, userIdArray);
             },
         });
     }
@@ -410,16 +372,16 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Event): void {
+    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
         const data = e.data as CcrGetRoomPlayerInfoResponse;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
 
-        const selfUserId = getExisted(getSelfUserId());
+        const selfUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         if (!data.getRoomPlayerInfo()?.getPlayerDataList()?.some(v => v.getUserId() === selfUserId)) {
             this.closePanel();
-            openPanel(getDict().MpwMyRoomListPanel, void 0);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
         } else {
             this._updateGroupButton();
             this._updateImgCo();
@@ -430,16 +392,16 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private _onNotifyMsgCcrGetRoomStaticInfo(e: Event): void {
+    private _onNotifyMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): void {
         const data = e.data as CcrGetRoomStaticInfoResponse;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
 
         if (data.getRoomStaticInfo() == null) {
-            show(getText(TextType.A0019));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0019));
             this.closePanel();
-            openPanel(getDict().MpwMyRoomListPanel, void 0);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
         } else {
             this._updateCommonWarMapInfoPage();
             this._updateCommonWarBasicSettingsPage();
@@ -447,24 +409,24 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _onNotifyMsgCcrExitRoom(e: Event): Promise<void> {
+    private async _onNotifyMsgCcrExitRoom(e: Egret_Egret.Event): Promise<void> {
         const data      = e.data as CcrExitRoomResponse;
         const roomId    = data.getRoomId();
         if (roomId === this.getOpenData()?.roomId) {
             const exitRoomType = data.getExitType();
-            if (exitRoomType === ExitRoomType.DeletedByRoomOwner) {
-                show(getText(TextType.A0127));
-            } else if (exitRoomType === ExitRoomType.SelfExit) {
-                show(getText(TextType.A0016));
+            if (exitRoomType === MultiPlayerRooms_Constants.ExitRoomType.DeletedByRoomOwner) {
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0127));
+            } else if (exitRoomType === MultiPlayerRooms_Constants.ExitRoomType.SelfExit) {
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0016));
             }
 
             this.closePanel();
-            openPanel(getDict().MpwMyRoomListPanel, void 0);
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
         }
     }
 
     private _onNotifyMsgCcrInvite(): void {
-        show(getText(TextType.A0378));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0378));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -477,10 +439,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const [roomStaticInfo, roomPlayerInfo]  = await Promise.all([
-            getRoomStaticInfo(roomId),
-            getRoomPlayerInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId),
         ]);
-        const selfUserId        = getSelfUserId();
+        const selfUserId        = Users_Model.getSelfUserId();
         const selfPlayerData    = roomPlayerInfo?.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         const label             = this._labelPlayerIndex;
         if (selfPlayerData == null) {
@@ -495,8 +457,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const playerIndex   = selfPlayerData.getPlayerIndex();
-        const teamIndex     = getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex();
-        label.setText(`P${playerIndex}${`\n`}${getPlayerTeamName(teamIndex) ?? UndefinedError}`);
+        const teamIndex     = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex();
+        label.setText(`P${playerIndex}${`\n`}${Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError}`);
     }
 
     private async _updateImgSkinId(): Promise<void> {
@@ -505,9 +467,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const selfUserId    = getSelfUserId();
-        const skinId        = (await getRoomPlayerInfo(roomId))?.getPlayerDataList().find(v => v.getUserId() === selfUserId)?.getUnitAndTileSkinId();
-        this._imgSkinId.loadSource(skinId == null ? `` : getSkinCircle(skinId, true));
+        const selfUserId    = Users_Model.getSelfUserId();
+        const skinId        = (await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId))?.getPlayerDataList().find(v => v.getUserId() === selfUserId)?.getUnitAndTileSkinId();
+        this._imgSkinId.loadSource(skinId == null ? `` : Helpers_ImageSource.getSkinCircle(skinId, true));
     }
 
     private async _updateGroupChooseReady(): Promise<void> {
@@ -516,23 +478,23 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const selfUserId    = getSelfUserId();
-        const isReady       = (await getRoomPlayerInfo(roomId))?.getPlayerDataList().find(v => v.getUserId() === selfUserId)?.getIsReady();
+        const selfUserId    = Users_Model.getSelfUserId();
+        const isReady       = (await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId))?.getPlayerDataList().find(v => v.getUserId() === selfUserId)?.getIsReady();
         this._imgReady.setIsVisible(!!isReady);
         this._btnChooseReady.setRedVisible(!isReady);
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelMultiPlayer.setLangText(TextType.B0646);
-        this._labelMyRoom.setLangText(TextType.B0410);
-        this._labelRoomInfo.setLangText(TextType.B0398);
-        this._btnBack.setLangText(TextType.B0146);
-        this._btnChooseCo.setLangText(TextType.B0425);
-        this._btnChoosePlayerIndex.setLangText(TextType.B0168);
-        this._btnChooseSkinId.setLangText(TextType.B0397);
-        this._btnChooseReady.setLangText(TextType.B0402);
-        this._btnStartGame.setLangText(TextType.B0401);
-        this._btnDeleteRoom.setLangText(TextType.B0400);
+        this._labelMultiPlayer.setLangText(Lang_Constants.TextType.B0646);
+        this._labelMyRoom.setLangText(Lang_Constants.TextType.B0410);
+        this._labelRoomInfo.setLangText(Lang_Constants.TextType.B0398);
+        this._btnBack.setLangText(Lang_Constants.TextType.B0146);
+        this._btnChooseCo.setLangText(Lang_Constants.TextType.B0425);
+        this._btnChoosePlayerIndex.setLangText(Lang_Constants.TextType.B0168);
+        this._btnChooseSkinId.setLangText(Lang_Constants.TextType.B0397);
+        this._btnChooseReady.setLangText(Lang_Constants.TextType.B0402);
+        this._btnStartGame.setLangText(Lang_Constants.TextType.B0401);
+        this._btnDeleteRoom.setLangText(Lang_Constants.TextType.B0400);
 
         this._groupNavigator.arrangeItems();
         this._updateLabelPlayerIndex();
@@ -542,23 +504,23 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name : getText(TextType.B0298) },
-                pageClass   : CommonWarMapInfoPage,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : getText(TextType.B0224) },
-                pageClass   : CommonWarPlayerInfoPage,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : getText(TextType.B0002) },
-                pageClass   : CommonWarBasicSettingsPage,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name : getText(TextType.B0003) },
-                pageClass   : CommonWarAdvancedSettingsPage,
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
         ]);
@@ -580,17 +542,17 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const [roomStaticInfo, roomPlayerInfo]  = await Promise.all([
-            getRoomStaticInfo(roomId),
-            getRoomPlayerInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId),
+            CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId),
         ]);
 
         const configVersion     = roomStaticInfo?.getSettingsForCommon()?.getConfigVersion();
-        const gameConfig        = configVersion ? await getGameConfig(configVersion) : null;
-        const selfUserId        = getSelfUserId();
+        const gameConfig        = configVersion ? await GameConfigs_Provider.getGameConfig(configVersion) : null;
+        const selfUserId        = Users_Model.getSelfUserId();
         const selfPlayerData    = roomPlayerInfo?.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         this._imgCo.loadSource(((gameConfig == null) || (selfPlayerData == null))
             ? ``
-            : getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``
+            : Helpers_ImageSource.getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``
         );
     }
 
@@ -600,11 +562,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const roomPlayerInfo    = getExisted(await getRoomPlayerInfo(roomId));
+        const roomPlayerInfo    = Helpers_Misc.getExisted(await CoopCustomRoom_Model_CcrModel.getRoomPlayerInfo(roomId));
         const ownerInfo         = roomPlayerInfo.getPlayerDataList().find(v => v.getPlayerIndex() === roomPlayerInfo.getOwnerPlayerIndex());
-        const isSelfOwner       = (!!ownerInfo) && (ownerInfo.getUserId() === getSelfUserId());
+        const isSelfOwner       = (!!ownerInfo) && (ownerInfo.getUserId() === Users_Model.getSelfUserId());
         const btnStartGame      = this._btnStartGame;
-        btnStartGame.setRedVisible(await checkCanStartGame(roomId));
+        btnStartGame.setRedVisible(await CoopCustomRoom_Model_CcrModel.checkCanStartGame(roomId));
 
         {
             const groupButton = this._groupButton;
@@ -642,118 +604,118 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<Common_View_CommonWarMapInfoPage.OpenData> {
         const roomId = this.getOpenData()?.roomId;
         if (roomId == null) {
             return null;
         }
 
-        const roomInfo      = await getRoomStaticInfo(roomId);
+        const roomInfo      = await CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(roomId);
         const normalMapId   = roomInfo ? (roomInfo.getSettingsForCcw()?.getNormalMapId() ?? 0) : null;
         return normalMapId == null
             ? null
             : {
                 mapInfo : {
-                    gameConfig        : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                    gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
                     hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                    mapRawData        : getExisted(await getRawData(normalMapId)),
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
                     overridingPlayers : null,
                 },
             };
     }
 
-    private _createDataForCommonWarPlayerInfoPage(): Promise<CommonWarPlayerInfoPageOpenData> {
-        return createDataForCommonWarPlayerInfoPage(this.getOpenData()?.roomId);
+    private _createDataForCommonWarPlayerInfoPage(): Promise<Common_View_CommonWarPlayerInfoPage.OpenData> {
+        return CoopCustomRoom_Model_CcrModel.createDataForCommonWarPlayerInfoPage(this.getOpenData()?.roomId);
     }
 
-    private _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
-        return createDataForCommonWarBasicSettingsPage(this.getOpenData()?.roomId, true);
+    private _createDataForCommonWarBasicSettingsPage(): Promise<Common_View_CommonWarBasicSettingsPage.OpenData> {
+        return CoopCustomRoom_Model_CcrModel.createDataForCommonWarBasicSettingsPage(this.getOpenData()?.roomId, true);
     }
 
-    private _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
-        return createDataForCommonWarAdvancedSettingsPage(this.getOpenData()?.roomId);
+    private _createDataForCommonWarAdvancedSettingsPage(): Promise<Common_View_CommonWarAdvancedSettingsPage.OpenData> {
+        return CoopCustomRoom_Model_CcrModel.createDataForCommonWarAdvancedSettingsPage(this.getOpenData()?.roomId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Opening/closing animations.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupNavigator,
             beginProps : { customAlpha : 0, customY : -20 },
             endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupTopRightButtons,
             beginProps : { customAlpha : 0, customY : 16 - 40 },
             endProps   : { customAlpha : 1, customY : 16 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._btnBack,
             beginProps : { customAlpha : 0, customY : -20 },
             endProps   : { customAlpha : 1, customY : 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupSettings,
             beginProps : { customAlpha : 0, customX : -20 },
             endProps   : { customAlpha : 1, customX : 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupButton,
             beginProps : { customAlpha : 0, customX : -20 },
             endProps   : { customAlpha : 1, customX : 20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupTab,
             beginProps : { customAlpha : 0, },
             endProps   : { customAlpha : 1, },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupNavigator,
             beginProps : { customAlpha : 1, customY : 20 },
             endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupTopRightButtons,
             beginProps : { customAlpha : 1, customY : 16 },
             endProps   : { customAlpha : 0, customY : 16 - 40 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._btnBack,
             beginProps : { customAlpha : 1, customY : 20 },
             endProps   : { customAlpha : 0, customY : -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupSettings,
             beginProps : { customAlpha : 1, customX : 20 },
             endProps   : { customAlpha : 0, customX : -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupButton,
             beginProps : { customAlpha : 1, customX : 20 },
             endProps   : { customAlpha : 0, customX : -20 },
         });
-        Executor.reset({
+        Tween_Executor.Executor.reset({
             obj        : this._groupTab,
             beginProps : { customAlpha : 1, },
             endProps   : { customAlpha : 0, },
         });
 
-        await wait();
+        await Timer_TimerModel.wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiListItemData {
+interface DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : IUiLabel;
+class TabItemRenderer extends Ui_Components_UiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? Lang_Constants.UndefinedError);
     }
 }

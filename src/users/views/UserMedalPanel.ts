@@ -1,68 +1,60 @@
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getMedal } from "../../helpers/ImageSource.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getMedalDesc,
-    getTimestampShortText,
-} from "../../lang/Utils.ts";
-import { Common } from "../../medals/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {
-    getSelfShowMedalIdArray,
-    getSelfInfo,
-} from "../Model.ts";
-import { reqUserSetShowMedalIdArray } from "../Proxy.ts";
+    Medals_Constants,
+    GamePanels_Dict,
+    GameConfigs_Provider,
+    Helpers_ImageSource,
+    Lang_Utils,
+    Helpers_Collection,
+    Users_Model,
+    Timer_TimerModel,
+    GamePanels_Manager,
+    Users_Proxy,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listMedal!        : IUiScrollList<DataForMedalRenderer>;
-    private readonly _labelNoMedal!     : IUiLabel;
+    private readonly _listMedal!        : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMedalRenderer>;
+    private readonly _labelNoMedal!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupDesc!        : IUiLayout;
-    private readonly _labelDesc!        : IUiLabel;
-    private readonly _layoutTime!       : IUiLayout;
+    private readonly _groupDesc!        : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutTime!       : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _layoutObtainTime! : IUiLayout;
-    private readonly _labelObtainTitle! : IUiLabel;
-    private readonly _labelObtain!      : IUiLabel;
+    private readonly _layoutObtainTime! : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelObtainTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelObtain!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutExpireTime! : IUiLayout;
-    private readonly _labelExpireTitle! : IUiLabel;
-    private readonly _labelExpire!      : IUiLabel;
+    private readonly _layoutExpireTime! : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelExpireTitle! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelExpire!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _layoutShow!       : IUiLayout;
-    private readonly _labelShow!        : IUiLabel;
-    private readonly _imgMedal!         : IUiImage;
+    private readonly _layoutShow!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelShow!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgMedal!         : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
@@ -76,7 +68,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const list = this._listMedal;
         list.setItemRendererClass(MedalRenderer);
-        list.setMaxSelection(Common.MedalMaxShowCount);
+        list.setMaxSelection(Medals_Constants.Common.MedalMaxShowCount);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
@@ -95,14 +87,14 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0402),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0402),
         });
     }
     private _onTouchedBtnConfirm(): void {
         const medalId = (this._listMedal.getSelectedDataArray() ?? [])[0]?.medalId;
-        if (medalId != getSelfShowMedalIdArray()[0]) {
-            reqUserSetShowMedalIdArray(getNonNullElements([medalId]));
+        if (medalId != Users_Model.getSelfShowMedalIdArray()[0]) {
+            Users_Proxy.reqUserSetShowMedalIdArray(Helpers_Collection.getNonNullElements([medalId]));
         }
         this.closePanel();
     }
@@ -114,12 +106,12 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1018);
-        this._labelNoMedal.setLangText(TextType.A0401);
-        this._labelObtainTitle.setLangText(TextType.B1020);
-        this._labelExpireTitle.setLangText(TextType.B1021);
-        this._labelShow.setLangText(TextType.B1019);
-        this._btnConfirm.setLangText(TextType.B0026);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1018);
+        this._labelNoMedal.setLangText(Lang_Constants.TextType.A0401);
+        this._labelObtainTitle.setLangText(Lang_Constants.TextType.B1020);
+        this._labelExpireTitle.setLangText(Lang_Constants.TextType.B1021);
+        this._labelShow.setLangText(Lang_Constants.TextType.B1019);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
 
         this._layoutExpireTime.arrangeItems();
         this._layoutObtainTime.arrangeItems();
@@ -137,11 +129,11 @@ export class Panel extends UiPanel<OpenData> {
             imgMedal.setIsVisible(false);
             groupDesc.setIsVisible(false);
         } else {
-            const gameConfig    = await getLatestGameConfig();
+            const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
             imgMedal.setIsVisible(true);
-            imgMedal.loadSource(getMedal(medalId));
+            imgMedal.loadSource(Helpers_ImageSource.getMedal(medalId));
 
-            const medalInfo = getSelfInfo()?.getUserComplexInfo()?.getUserMedalInfo()?.getOwnMedalArray()?.find(v => v.getMedalId() === medalId);
+            const medalInfo = Users_Model.getSelfInfo()?.getUserComplexInfo()?.getUserMedalInfo()?.getOwnMedalArray()?.find(v => v.getMedalId() === medalId);
             if (medalInfo == null) {
                 groupDesc.setIsVisible(false);
             } else {
@@ -150,7 +142,7 @@ export class Panel extends UiPanel<OpenData> {
                 const expireTimestamp   = medalInfo.getExpireTimestamp();
                 this._labelExpire.setText(expireTimestamp == null ? `--` : getTextForTimestamp(expireTimestamp));
                 this._labelObtain.setText(getTextForTimestamp(medalInfo.getObtainTimestamp()));
-                this._labelDesc.setText(getMedalDesc(medalId) ?? UndefinedError);
+                this._labelDesc.setText(Lang_Utils.getMedalDesc(medalId) ?? Lang_Constants.UndefinedError);
 
                 this._layoutExpireTime.arrangeItems();
                 this._layoutObtainTime.arrangeItems();
@@ -160,9 +152,9 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
     private async _updateComponentsForListMedal(): Promise<void> {
-        const timestamp     = getServerTimestamp();
+        const timestamp     = Timer_TimerModel.getServerTimestamp();
         const dataArray     : DataForMedalRenderer[] = [];
-        for (const medalInfo of getSelfInfo()?.getUserComplexInfo()?.getUserMedalInfo()?.getOwnMedalArray() ?? []) {
+        for (const medalInfo of Users_Model.getSelfInfo()?.getUserComplexInfo()?.getUserMedalInfo()?.getOwnMedalArray() ?? []) {
             const expireTimestamp = medalInfo.getExpireTimestamp();
             if ((expireTimestamp == null) || (expireTimestamp >= timestamp)) {
                 dataArray.push({
@@ -183,21 +175,21 @@ export class Panel extends UiPanel<OpenData> {
             listMedal.setIsVisible(true);
             await listMedal.bindData(dataArray);
 
-            const showMedalId = getSelfShowMedalIdArray()[0];
+            const showMedalId = Users_Model.getSelfShowMedalIdArray()[0];
             listMedal.setSelectedItemIndexes([listMedal.getRevisedFirstIndex(v => v?.medalId == showMedalId)]);
         }
     }
 }
 
-interface DataForMedalRenderer extends UiListItemData {
+interface DataForMedalRenderer extends Ui_Types_UiListItemData.UiListItemData {
     medalId     : number;
     panel       : Panel;
 }
 class MedalRenderer
-    extends     UiListItemRenderer<DataForMedalRenderer>
-    implements  IUiListItemRenderer<DataForMedalRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMedalRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMedalRenderer>
 {
-    private readonly _imgMedal! : IUiImage;
+    private readonly _imgMedal! : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -209,7 +201,7 @@ class MedalRenderer
             return;
         }
 
-        this._imgMedal.loadSource(getMedal(openData.medalId));
+        this._imgMedal.loadSource(Helpers_ImageSource.getMedal(openData.medalId));
     }
 
     public onItemTapEvent(): void {
@@ -218,7 +210,7 @@ class MedalRenderer
 }
 
 function getTextForTimestamp(timestamp: number): string {
-    const text1 = getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
-    const text2 = getTimestampShortText(timestamp, { year: false, month: false, date: false });
+    const text1 = Lang_Utils.getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
+    const text2 = Lang_Utils.getTimestampShortText(timestamp, { year: false, month: false, date: false });
     return `${text1} ${text2}`;
 }

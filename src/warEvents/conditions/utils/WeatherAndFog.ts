@@ -1,22 +1,20 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType } from "../../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-    getWeatherName,
-} from "../../../lang/Utils.ts";
+    Lang_Utils,
+    Lang_Constants,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
 
-export function getBriefDesc(data: Undefinable<WecWeatherAndFog>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecWeatherAndFog>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getText(TextType.A0947);
+    return Lang_Utils.getText(Lang_Constants.TextType.A0947);
 }
-export function getDetailedDesc(data: Undefinable<WecWeatherAndFog>, gameConfig: GameConfig): string | null {
+export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecWeatherAndFog>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -25,41 +23,41 @@ export function getDetailedDesc(data: Undefinable<WecWeatherAndFog>, gameConfig:
     {
         const weatherTypeArray = data.getWeatherTypeArray();
         if (weatherTypeArray?.length) {
-            subTextArray.push(`- ${getFormattedText(
-                TextType.F0224,
-                weatherTypeArray.map(v => getWeatherName(v, gameConfig)).join(` ${getText(TextType.Or)} `)
+            subTextArray.push(`- ${Lang_Utils.getFormattedText(
+                Lang_Constants.TextType.F0224,
+                weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
             )}`);
         }
     }
     {
         const hasFogCurrently = data.getHasFogCurrently();
         if (hasFogCurrently != null) {
-            subTextArray.push(`- ${getText(hasFogCurrently ? TextType.A0949 : TextType.A0950)}`);
+            subTextArray.push(`- ${Lang_Utils.getText(hasFogCurrently ? Lang_Constants.TextType.A0949 : Lang_Constants.TextType.A0950)}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(getText(TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
     }
 
     return [
-        getText(TextType.A0948),
+        Lang_Utils.getText(Lang_Constants.TextType.A0948),
         ...subTextArray
     ].join(`\n`);
 }
-export function getErrorTip(data: WecWeatherAndFog, war: IBwWar): string | null {
+export function getErrorTip(data: WecWeatherAndFog, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
     const gameConfig = war.getGcData();
     {
         const weatherTypeArray = data.getWeatherTypeArray();
         if ((weatherTypeArray?.length) && (weatherTypeArray.some(v => !gameConfig.checkIsValidWeatherType(v)))) {
-            return getFormattedText(TextType.F0091, getText(TextType.Weather));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Weather));
         }
     }
 
     return null;
 }
 
-export function checkIsValid(condition: Undefinable<WecWeatherAndFog>, gameConfig: GameConfig): boolean {
+export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecWeatherAndFog>, gameConfig: GameConfigs_GameConfig.GameConfig): boolean {
     if (condition == null) {
         return false;
     }
@@ -71,7 +69,7 @@ export function checkIsValid(condition: Undefinable<WecWeatherAndFog>, gameConfi
     return true;
 }
 
-export function checkIsMeet(condition: WecWeatherAndFog, war: IBwWar): boolean {
+export function checkIsMeet(condition: WecWeatherAndFog, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
     const weatherTypeArray  = condition.getWeatherTypeArray();
     if ((weatherTypeArray?.length) && (weatherTypeArray.indexOf(war.getWeatherManager().getCurrentWeatherType()) < 0)) {
         return false;

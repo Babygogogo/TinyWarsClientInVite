@@ -1,82 +1,77 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import {
-    getPlayerClass,
-    getMeWarClass,
-    getHrwWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../gameHelpers/GhFactory.ts";
-import {
-    newError,
-    getExisted,
-} from "../helpers/Misc.ts";
-import { createDefaultISerialPlayer } from "../mapEditor/model/MeHelpers.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "./Constants.ts";
-import type { IPlayer } from "./IPlayer.ts";
-import type { IPlayerManager } from "./IPlayerManager.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    Players_Player,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Players_Constants,
+    Utils_ClientErrorCode,
+    MapEditor_Model_MeHelpers,
+    Helpers_Misc,
+    Users_Model,
+    type Players_IPlayer,
+    type Players_IPlayerManager,
+} from "../internal.ts";
+
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { getSelfUserId } from "../users/Model.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-export class PlayerManager implements IPlayerManager {
-    private _players                    = new Map<number, IPlayer>();
-    private _war?                       : IBwWar;
+export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
+    private _players                    = new Map<number, Players_IPlayer.IPlayer>();
+    private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
     private _watcherTeamIndexesForHrw?  : Set<number>;
 
-    public init(data: Undefinable<SerialPlayerManager>, gameConfig: GameConfig): void {
+    public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayerManager>, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         if (data == null) {
-            throw newError(`Empty data.`, ClientErrorCode.BwPlayerManager_Init_00);
+            throw Helpers_Misc.newError(`Empty data.`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_00);
         }
 
         const playerArray = data.getPlayers();
         if ((!playerArray)                                              ||
             (playerArray.length < 3)                                    ||
-            (playerArray.length > PlayerIndex.Max + 1)
+            (playerArray.length > Players_Constants.PlayerIndex.Max + 1)
         ) {
-            throw newError(`Invalid playerArray.`, ClientErrorCode.BwPlayerManager_Init_01);
+            throw Helpers_Misc.newError(`Invalid playerArray.`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_01);
         }
 
-        const newPlayerMap  = new Map<number, IPlayer>();
+        const newPlayerMap  = new Map<number, Players_IPlayer.IPlayer>();
         const skinIdSet     = new Set<number>();
         for (const playerData of playerArray) {
             const playerIndex = playerData.getPlayerIndex();
             if (newPlayerMap.has(playerIndex)) {
-                throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwPlayerManager_Init_02);
+                throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_02);
             }
 
             const skinId = playerData.getUnitAndTileSkinId();
             if (skinIdSet.has(skinId)) {
-                throw newError(`Invalid skinId: ${skinId}`, ClientErrorCode.BwPlayerManager_Init_03);
+                throw Helpers_Misc.newError(`Invalid skinId: ${skinId}`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_03);
             }
             skinIdSet.add(skinId);
 
-            const player = new (getPlayerClass())();
+            const player = new Players_Player.Player();
             player.init(playerData, gameConfig);
 
             newPlayerMap.set(playerIndex, player);
         }
 
-        if (!newPlayerMap.has(PlayerIndex.Neutral)) {
-            throw newError(`No WarNeutralPlayerIndex.`, ClientErrorCode.BwPlayerManager_Init_04);
+        if (!newPlayerMap.has(Players_Constants.PlayerIndex.Neutral)) {
+            throw Helpers_Misc.newError(`No WarNeutralPlayerIndex.`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_04);
         }
 
         for (const [playerIndex] of newPlayerMap) {
-            if ((playerIndex > PlayerIndex.Neutral) && (!newPlayerMap.has(playerIndex - 1))) {
-                throw newError(`Non-continuous`, ClientErrorCode.BwPlayerManager_Init_05);
+            if ((playerIndex > Players_Constants.PlayerIndex.Neutral) && (!newPlayerMap.has(playerIndex - 1))) {
+                throw Helpers_Misc.newError(`Non-continuous`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_05);
             }
         }
 
-        if ((newPlayerMap.size < 3) || (newPlayerMap.size > PlayerIndex.Max + 1)) {
-            throw newError(`Invalid playersCount: ${newPlayerMap.size}`, ClientErrorCode.BwPlayerManager_Init_06);
+        if ((newPlayerMap.size < 3) || (newPlayerMap.size > Players_Constants.PlayerIndex.Max + 1)) {
+            throw Helpers_Misc.newError(`Invalid playersCount: ${newPlayerMap.size}`, Utils_ClientErrorCode.ClientErrorCode.BwPlayerManager_Init_06);
         }
 
         const playerMap = this.getAllPlayersDict();
@@ -85,7 +80,7 @@ export class PlayerManager implements IPlayerManager {
             playerMap.set(playerIndex, player);
         }
     }
-    public fastInit(data: SerialPlayerManager, gameConfig: GameConfig): void {
+    public fastInit(data: SerialPlayerManager, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         for (const playerData of data ? data.getPlayers() : []) {
             const playerIndex   = playerData.getPlayerIndex();
             const player        = this.getPlayer(playerIndex);
@@ -100,7 +95,7 @@ export class PlayerManager implements IPlayerManager {
         this._watcherTeamIndexesForHrw = teamIndexes;
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._setWar(war);
         for (const [, player] of this._players) {
             player.startRunning(war);
@@ -119,11 +114,11 @@ export class PlayerManager implements IPlayerManager {
     }
     public serializeForCreateSfw(): SerialPlayerManager {
         const war = this._getWar();
-        if (war instanceof getMeWarClass()) {
+        if (war instanceof MapEditor_Model_MeWar.MeWar) {
             const maxPlayerIndex    = war.getField().getMaxPlayerIndex();
             const players           : SerialPlayer[] = [];
-            for (let playerIndex = PlayerIndex.Neutral; playerIndex <= maxPlayerIndex; ++playerIndex) {
-                players.push(createDefaultISerialPlayer(playerIndex));
+            for (let playerIndex = Players_Constants.PlayerIndex.Neutral; playerIndex <= maxPlayerIndex; ++playerIndex) {
+                players.push(MapEditor_Model_MeHelpers.createDefaultISerialPlayer(playerIndex));
             }
 
             return SerialPlayerManager.fromJson({
@@ -143,10 +138,10 @@ export class PlayerManager implements IPlayerManager {
     }
     public serializeForCreateMfr(): SerialPlayerManager {
         const war = this._getWar();
-        if (war instanceof getMeWarClass()) {
+        if (war instanceof MapEditor_Model_MeWar.MeWar) {
             const maxPlayerIndex    = war.getField().getMaxPlayerIndex();
             const players           : SerialPlayer[] = [];
-            for (let playerIndex = PlayerIndex.Neutral; playerIndex <= maxPlayerIndex; ++playerIndex) {
+            for (let playerIndex = Players_Constants.PlayerIndex.Neutral; playerIndex <= maxPlayerIndex; ++playerIndex) {
                 players.push(this.getPlayer(playerIndex).serializeForCreateMfr());
             }
 
@@ -166,11 +161,11 @@ export class PlayerManager implements IPlayerManager {
         }
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
     }
-    protected _getWar(): IBwWar {
-        return getExisted(this._war);
+    protected _getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -179,24 +174,24 @@ export class PlayerManager implements IPlayerManager {
     public checkHasPlayer(playerIndex: number): boolean {
         return this._players.has(playerIndex);
     }
-    public getPlayer(playerIndex: number): IPlayer {
-        return getExisted(this._players.get(playerIndex));
+    public getPlayer(playerIndex: number): Players_IPlayer.IPlayer {
+        return Helpers_Misc.getExisted(this._players.get(playerIndex));
     }
-    public getAllPlayersDict(): Map<number, IPlayer> {
+    public getAllPlayersDict(): Map<number, Players_IPlayer.IPlayer> {
         return this._players;
     }
     /** 返回结果已按playerIndex排序 */
-    public getAllPlayers(includeNeutral = true): IPlayer[] {
-        const players: IPlayer[] = [];
+    public getAllPlayers(includeNeutral = true): Players_IPlayer.IPlayer[] {
+        const players: Players_IPlayer.IPlayer[] = [];
         for (const [playerIndex, player] of this.getAllPlayersDict()) {
-            if ((includeNeutral) || (playerIndex !== PlayerIndex.Neutral)) {
+            if ((includeNeutral) || (playerIndex !== Players_Constants.PlayerIndex.Neutral)) {
                 players.push(player);
             }
         }
         return players.sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex());
     }
 
-    public getPlayerByUserId(userId: number): IPlayer | null {
+    public getPlayerByUserId(userId: number): Players_IPlayer.IPlayer | null {
         for (const [, player] of this._players) {
             if (player.getUserId() === userId) {
                 return player;
@@ -205,8 +200,8 @@ export class PlayerManager implements IPlayerManager {
         return null;
     }
 
-    public getPlayerLoggedIn(): IPlayer | null {
-        const userId = getExisted(getSelfUserId());
+    public getPlayerLoggedIn(): Players_IPlayer.IPlayer | null {
+        const userId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
         for (const [, player] of this.getAllPlayersDict()) {
             if (player.getUserId() === userId) {
                 return player;
@@ -219,12 +214,12 @@ export class PlayerManager implements IPlayerManager {
         return this.getPlayerLoggedIn()?.getPlayerIndex() ?? null;
     }
 
-    public getPlayerInTurn(): IPlayer {
+    public getPlayerInTurn(): Players_IPlayer.IPlayer {
         return this.getPlayer(this._getWar().getPlayerIndexInTurn());
     }
 
-    public getHumanPlayers(): IPlayer[] {
-        const players: IPlayer[] = [];
+    public getHumanPlayers(): Players_IPlayer.IPlayer[] {
+        const players: Players_IPlayer.IPlayer[] = [];
         for (const [, player] of this.getAllPlayersDict()) {
             if (player.getUserId() != null) {
                 players.push(player);
@@ -268,10 +263,10 @@ export class PlayerManager implements IPlayerManager {
     public getPlayerIndexArray(startingPlayerIndex: number, includeNeutral: boolean): number[] {
         const playersCountUnneutral = this.getTotalPlayersCount(false);
         const playerIndexList       : number[] = [];
-        for (let playerIndex = Math.max(startingPlayerIndex, includeNeutral ? PlayerIndex.Neutral : PlayerIndex.First); playerIndex <= playersCountUnneutral; ++playerIndex) {
+        for (let playerIndex = Math.max(startingPlayerIndex, includeNeutral ? Players_Constants.PlayerIndex.Neutral : Players_Constants.PlayerIndex.First); playerIndex <= playersCountUnneutral; ++playerIndex) {
             playerIndexList.push(playerIndex);
         }
-        for (let playerIndex = includeNeutral ? PlayerIndex.Neutral : PlayerIndex.First; playerIndex < startingPlayerIndex; ++playerIndex) {
+        for (let playerIndex = includeNeutral ? Players_Constants.PlayerIndex.Neutral : Players_Constants.PlayerIndex.First; playerIndex < startingPlayerIndex; ++playerIndex) {
             playerIndexList.push(playerIndex);
         }
 
@@ -281,8 +276,8 @@ export class PlayerManager implements IPlayerManager {
     public getAlivePlayersCount(includeNeutral: boolean): number {
         let count = 0;
         for (const [playerIndex, player] of this._players) {
-            if ((player.getAliveState() !== AliveStateId.Dead)                          &&
-                ((includeNeutral) || (playerIndex !== PlayerIndex.Neutral))
+            if ((player.getAliveState() !== Players_Constants.AliveStateId.Dead)                          &&
+                ((includeNeutral) || (playerIndex !== Players_Constants.PlayerIndex.Neutral))
             ) {
                 ++count;
             }
@@ -294,8 +289,8 @@ export class PlayerManager implements IPlayerManager {
         const teamIndexes = new Set<number>();
         for (const [playerIndex, player] of this._players) {
             const aliveState = player.getAliveState();
-            if (((aliveState === AliveStateId.Alive) || (aliveState === AliveStateId.Dying))   &&
-                ((includeNeutral) || (playerIndex !== PlayerIndex.Neutral))
+            if (((aliveState === Players_Constants.AliveStateId.Alive) || (aliveState === Players_Constants.AliveStateId.Dying))   &&
+                ((includeNeutral) || (playerIndex !== Players_Constants.PlayerIndex.Neutral))
             ) {
                 teamIndexes.add(player.getTeamIndex());
             }
@@ -306,13 +301,13 @@ export class PlayerManager implements IPlayerManager {
     public getAliveTeamIndexes(includeNeutral: boolean, ignoredPlayerIndex?: number): Set<number> {
         const indexes = new Set<number>();
         for (const [playerIndex, player] of this._players) {
-            if ((player.getAliveState() !== AliveStateId.Dead)  &&
+            if ((player.getAliveState() !== Players_Constants.AliveStateId.Dead)  &&
                 (playerIndex !== ignoredPlayerIndex)                &&
                 ((includeNeutral) || (playerIndex !== 0))
             ) {
                 const teamIndex = player.getTeamIndex();
                 if (teamIndex == null) {
-                    throw newError(`BwPlayerManager.getAliveTeamIndexes() empty teamIndex.`);
+                    throw Helpers_Misc.newError(`BwPlayerManager.getAliveTeamIndexes() empty teamIndex.`);
                 } else {
                     indexes.add(teamIndex);
                 }
@@ -327,7 +322,7 @@ export class PlayerManager implements IPlayerManager {
         return (p1 != null) && (p2 != null) && (p1.getTeamIndex() === p2.getTeamIndex());
     }
 
-    public forEachPlayer(includeNeutral: boolean, func: (p: IPlayer) => void): void {
+    public forEachPlayer(includeNeutral: boolean, func: (p: Players_IPlayer.IPlayer) => void): void {
         for (const [playerIndex, player] of this._players) {
             ((includeNeutral) || (playerIndex !== 0)) && (func(player));
         }
@@ -335,8 +330,8 @@ export class PlayerManager implements IPlayerManager {
 
     public checkHasAliveWatcherTeam(watcherUserId: number): boolean {
         for (const [playerIndex, player] of this._players) {
-            if ((playerIndex !== PlayerIndex.Neutral) &&
-                (player.getAliveState() !== AliveStateId.Dead)
+            if ((playerIndex !== Players_Constants.PlayerIndex.Neutral) &&
+                (player.getAliveState() !== Players_Constants.AliveStateId.Dead)
             ) {
                 if ((player.getUserId() === watcherUserId) || (player.getWatchOngoingSrcUserIds().has(watcherUserId))) {
                     return true;
@@ -348,14 +343,14 @@ export class PlayerManager implements IPlayerManager {
 
     public getWatcherTeamIndexesForSelf(): Set<number> {
         const war = this._getWar();
-        if (war instanceof getHrwWarClass()) {
-            return getExisted(this._watcherTeamIndexesForHrw, ClientErrorCode.HrwPlayerManager_GetAliveWatcherTeamIndexesForSelf_00);
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+            return Helpers_Misc.getExisted(this._watcherTeamIndexesForHrw, Utils_ClientErrorCode.ClientErrorCode.HrwPlayerManager_GetAliveWatcherTeamIndexesForSelf_00);
 
-        } else if (war instanceof getMeWarClass()) {
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
             return this.getAliveTeamIndexes(false);
 
-        } else if (war instanceof getMpwWarClass()) {
-            const watcherUserId = getExisted(getSelfUserId());
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            const watcherUserId = Helpers_Misc.getExisted(Users_Model.getSelfUserId());
             const indexes       = new Set<number>();
             this.forEachPlayer(false, player => {
                 if ((player.getUserId() === watcherUserId)                  ||
@@ -367,10 +362,10 @@ export class PlayerManager implements IPlayerManager {
 
             return indexes;
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             return this.getAliveTeamIndexes(false);
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const humanPlayers = this.getHumanPlayers();
             if (!humanPlayers.length) {
                 return this.getAliveTeamIndexes(false);
@@ -393,11 +388,11 @@ export class PlayerManager implements IPlayerManager {
                 }
             }
 
-        } else if (war instanceof getTwWarClass()) {
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
             return new Set();
 
         } else {
-            throw newError(`Invalid war.`);
+            throw Helpers_Misc.newError(`Invalid war.`);
         }
     }
 }

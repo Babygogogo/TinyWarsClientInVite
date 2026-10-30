@@ -1,21 +1,23 @@
-import type { PointerEventType } from "../../helpers/PointerInput.ts";
-import type { UiCommonEventType } from "../types/UiCommonEventType.ts";
-import type { UiInputEventType } from "../types/UiInputEventType.ts";
-import type { Event } from "../../egret/Egret.ts";
+import {
+    type Egret_Egret,
+    type Helpers_PointerInput,
+    type Ui_Types_UiCommonEventType,
+    type Ui_Types_UiInputEventType,
+} from "../../internal.ts";
 
 export interface IUiEventAgent {
-    addUiCommonEventListener(eventType: UiCommonEventType, callback: (e: Event) => void, thisObject: unknown): void;
-    onceUiCommonEventListener(eventType: UiCommonEventType, callback: (e: Event) => void, thisObject: unknown): void;
-    removeUiCommonEventListener(eventType: UiCommonEventType, callback: (e: Event) => void, thisObject: unknown): void;
-    dispatchUiCommonEvent(eventType: UiCommonEventType): void;
+    addUiCommonEventListener(eventType: Ui_Types_UiCommonEventType.UiCommonEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    onceUiCommonEventListener(eventType: Ui_Types_UiCommonEventType.UiCommonEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    removeUiCommonEventListener(eventType: Ui_Types_UiCommonEventType.UiCommonEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    dispatchUiCommonEvent(eventType: Ui_Types_UiCommonEventType.UiCommonEventType): void;
 
     /** 自动在ui进入舞台时注册，在ui离开舞台时移除 */
-    addAutoEnterFrameListener(callback: (e: Event) => void, thisObject: unknown): void;
-    removeAutoEnterFrameListener(callback: (e: Event) => void, thisObject: unknown): void;
+    addAutoEnterFrameListener(callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    removeAutoEnterFrameListener(callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
 
-    addPointerEventListener(eventType: PointerEventType, callback: (e: Event) => void, thisObject: unknown): void;
-    removePointerEventListener(eventType: PointerEventType, callback: (e: Event) => void, thisObject: unknown): void;
+    addPointerEventListener(eventType: Helpers_PointerInput.PointerEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    removePointerEventListener(eventType: Helpers_PointerInput.PointerEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
 
-    addInputEventListener(eventType: UiInputEventType, callback: (e: Event) => void, thisObject: unknown): void;
-    removeInputEventListener(eventType: UiInputEventType, callback: (e: Event) => void, thisObject: unknown): void;
+    addInputEventListener(eventType: Ui_Types_UiInputEventType.UiInputEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
+    removeInputEventListener(eventType: Ui_Types_UiInputEventType.UiInputEventType, callback: (e: Egret_Egret.Event) => void, thisObject: unknown): void;
 }

@@ -1,48 +1,46 @@
-import { showLang } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getJoinedShortLanguageText,
-    getTextForYesOrNo,
-} from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Graphics_Constants,
+    TaskObjectives_Constants,
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    TaskObjectives_Utils,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import { getErrorText } from "../../taskObjectives/Utils.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { Common } from "../../taskObjectives/Constants.ts";
 
 export interface OpenData {
-    war: IMeWar;
+    war: MapEditor_Interface_IMeWar.IMeWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _group!                : IUiContainer;
-    private readonly _imgMask!              : IUiImage;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnAdd!               : IUiButton;
-    private readonly _btnHelp!              : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listTaskObjective!    : IUiScrollList<DataForTaskObjectiveRenderer>;
-    private readonly _labelNoTaskObjective! : IUiLabel;
+    private readonly _listTaskObjective!    : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTaskObjectiveRenderer>;
+    private readonly _labelNoTaskObjective! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyMeTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -77,14 +75,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
         if (war.getIsReviewingMap()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const fullData              = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
         const taskObjectiveArray    = fullData.getTaskObjectiveArray();
-        if (taskObjectiveArray.length >= Common.MaxObjectivesCount) {
-            showLang(TextType.A0712);
+        if (taskObjectiveArray.length >= TaskObjectives_Constants.Common.MaxObjectivesCount) {
+            FloatText.showLang(Lang_Constants.TextType.A0712);
             return;
         }
 
@@ -100,12 +98,12 @@ export class Panel extends UiPanel<OpenData> {
         }
         taskObjectiveArray.sort((v1, v2) => (v1.getObjectiveId()) - (v2.getObjectiveId()));
         war.setTaskObjectiveFullData(fullData);
-        dispatch(TypeId.MeTaskObjectiveFullDataChanged, fullData);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, fullData);
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0713),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0713),
         });
     }
 
@@ -116,8 +114,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1214);
-        this._labelNoTaskObjective.setLangText(TextType.B0278);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1214);
+        this._labelNoTaskObjective.setLangText(Lang_Constants.TextType.B0278);
     }
     private async _updateComponentsForTaskObjective(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -144,19 +142,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTaskObjectiveRenderer extends UiListItemData {
+interface DataForTaskObjectiveRenderer extends Ui_Types_UiListItemData.UiListItemData {
     taskObjective           : TaskObjective;
     fullData                : TaskObjectiveFullData;
     customCounterNameSet    : Set<string>;
-    war                     : IMeWar;
+    war                     : MapEditor_Interface_IMeWar.IMeWar;
 }
-class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRenderer> {
-    private readonly _labelError!       : IUiLabel;
-    private readonly _labelDescTitle!   : IUiLabel;
-    private readonly _labelDesc!        : IUiLabel;
-    private readonly _btnDesc!          : IUiButton;
-    private readonly _btnDelete!        : IUiButton;
-    private readonly _btnEdit!          : IUiButton;
+class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTaskObjectiveRenderer> {
+    private readonly _labelError!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDescTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDesc!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnDesc!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDelete!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnEdit!          : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -165,7 +163,7 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
             { ui: this._btnEdit,        callback: this._onTouchedBtnEdit },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -181,13 +179,13 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
             return;
         }
 
-        openPanel(getDict().CommonAlertPanel, {
-            getTitle   : () => getText(TextType.B0088),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0088),
             getContent : () => [
-                `${getText(TextType.B1215)}:`,
-                getJoinedShortLanguageText(taskObjective.getDesc()),
+                `${Lang_Utils.getText(Lang_Constants.TextType.B1215)}:`,
+                Lang_Utils.getJoinedShortLanguageText(taskObjective.getDesc()),
                 ``,
-                `${getText(TextType.B1226)}:`,
+                `${Lang_Utils.getText(Lang_Constants.TextType.B1226)}:`,
                 taskObjective.getUpdaterForCurrentProgress() ?? `----`,
             ].join(`\n`),
         });
@@ -200,16 +198,16 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
         }
 
         if (openData.war.getIsReviewingMap()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent : () => getText(TextType.AreYouSureYouWantToContinue),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
                 callback: () => {
                     const fullData = openData.fullData;
-                    deleteElementFromList(fullData.getTaskObjectiveArray(), openData.taskObjective);
-                    showLang(TextType.OperationSucceeded);
+                    Helpers_Collection.deleteElementFromList(fullData.getTaskObjectiveArray(), openData.taskObjective);
+                    FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 
-                    dispatch(TypeId.MeTaskObjectiveFullDataChanged, fullData);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, fullData);
                 },
             });
         }
@@ -222,9 +220,9 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
 
         const war = openData.war;
         if (war.getIsReviewingMap()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
-            openPanel(getDict().MeTaskObjectivePanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTaskObjectivePanel, {
                 taskObjective       : openData.taskObjective,
                 fullData            : openData.fullData,
                 warEventFullData    : war.getWarEventManager().getWarEventFullData(),
@@ -237,17 +235,17 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDesc.setLangText(TextType.B1258);
-        this._btnDelete.setLangText(TextType.B0220);
-        this._btnEdit.setLangText(TextType.B0465);
+        this._btnDesc.setLangText(Lang_Constants.TextType.B1258);
+        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
+        this._btnEdit.setLangText(Lang_Constants.TextType.B0465);
         this._labelDescTitle.setText([
-            getText(TextType.B1215),
+            Lang_Utils.getText(Lang_Constants.TextType.B1215),
             ``,
-            getText(TextType.B1217),
-            getText(TextType.B1216),
-            getText(TextType.B1218),
-            getText(TextType.B1219),
-            getText(TextType.B1226),
+            Lang_Utils.getText(Lang_Constants.TextType.B1217),
+            Lang_Utils.getText(Lang_Constants.TextType.B1216),
+            Lang_Utils.getText(Lang_Constants.TextType.B1218),
+            Lang_Utils.getText(Lang_Constants.TextType.B1219),
+            Lang_Utils.getText(Lang_Constants.TextType.B1226),
         ].join(`\n`));
 
         this._updateLabelErrorAndDesc();
@@ -261,14 +259,14 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
 
         const labelError        = this._labelError;
         const taskObjective     = openData.taskObjective;
-        const errorText         = getErrorText(taskObjective, openData.customCounterNameSet);
-        labelError.setText(`#${taskObjective.getObjectiveId()} ${errorText ?? getText(TextType.B0493)}`);
-        labelError.setTextColor(errorText ? ColorValue.Yellow : ColorValue.Green);
+        const errorText         = TaskObjectives_Utils.getErrorText(taskObjective, openData.customCounterNameSet);
+        labelError.setText(`#${taskObjective.getObjectiveId()} ${errorText ?? Lang_Utils.getText(Lang_Constants.TextType.B0493)}`);
+        labelError.setTextColor(errorText ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
 
         const updaterForCurrentProgress = taskObjective.getUpdaterForCurrentProgress() ?? `----`;
         this._labelDesc.setText([
-            getJoinedShortLanguageText(taskObjective.getDesc(), 40),
-            getTextForYesOrNo(taskObjective.getIsMain()),
+            Lang_Utils.getJoinedShortLanguageText(taskObjective.getDesc(), 40),
+            Lang_Utils.getTextForYesOrNo(taskObjective.getIsMain()),
             `${taskObjective.getMaxProgress() ?? `----`}`,
             `${taskObjective.getScoreForCompletion()}`,
             `${taskObjective.getScoreForProgress()}`,

@@ -1,9 +1,11 @@
-import type { CommonParams } from "../CommonParams.ts";
+import {
+    Timer_TimerModel,
+    type Bots_CommonParams,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
 
-export async function getActionForPhase11(commonParams: CommonParams): Promise<WoContainer | null> {
-    await checkAndCallLater();
+export async function getActionForPhase11(commonParams: Bots_CommonParams.CommonParams): Promise<WoContainer | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war           = commonParams.getWar();
     const playerIndex   = commonParams.getPlayerIndexInTurn();

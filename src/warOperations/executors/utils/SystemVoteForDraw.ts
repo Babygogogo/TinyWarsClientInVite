@@ -1,11 +1,13 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
+import {
+    Utils_ClientErrorCode,
+    Helpers_Misc,
+    WarOperations_Executors_Utils_Common,
+    type BaseWar_Interface_IBwWar,
+} from "../../../internal.ts";
 import type { WoSystemVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData } from "./Common.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemVoteForDraw(war, action);
     } else {
@@ -13,12 +15,12 @@ export async function execute(war: IBwWar, action: WoSystemVoteForDraw, isFast: 
     }
 }
 
-function fastExeSystemVoteForDraw(war: IBwWar, action: WoSystemVoteForDraw): void {
+function fastExeSystemVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemVoteForDraw): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeSystemVoteForDraw_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeSystemVoteForDraw_00),
             isFastExecute   : true,
         });
     }
@@ -29,17 +31,17 @@ function fastExeSystemVoteForDraw(war: IBwWar, action: WoSystemVoteForDraw): voi
     );
 }
 
-async function normalExeSystemVoteForDraw(war: IBwWar, action: WoSystemVoteForDraw): Promise<void> {
+async function normalExeSystemVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemVoteForDraw): Promise<void> {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeSystemVoteForDraw_00);
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemVoteForDraw_00);
         await war.moveExtraUnit({
             movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
             aiming                  : null,
             deleteViewAfterMoving   : true,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
             isFastExecute   : false,

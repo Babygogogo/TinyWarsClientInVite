@@ -1,1744 +1,723 @@
 import {
-    type OpenData as ActionPlannerPanelOpenData,
-    Panel as ActionPlannersActionPlannerPanel,
-} from "../actionPlanners/ActionPlannerPanel.ts";
-import {
-    type OpenData as AtGlobalSettingsPanelOpenData,
-    Panel as ViewsAtGlobalSettingsPanel,
-} from "../autoTourneys/mains/views/AtGlobalSettingsPanel.ts";
-import {
-    type OpenData as AtRegisterPanelOpenData,
-    Panel as ViewsAtRegisterPanel,
-} from "../autoTourneys/mains/views/AtRegisterPanel.ts";
-import {
-    type OpenData as AtSetInitialBracketsPanelOpenData,
-    Panel as ViewsAtSetInitialBracketsPanel,
-} from "../autoTourneys/mains/views/AtSetInitialBracketsPanel.ts";
-import {
-    type OpenData as AtSetMapPoolPanelOpenData,
-    Panel as ViewsAtSetMapPoolPanel,
-} from "../autoTourneys/mains/views/AtSetMapPoolPanel.ts";
-import {
-    type OpenData as AtTourneyInfoPanelOpenData,
-    Panel as ViewsAtTourneyInfoPanel,
-} from "../autoTourneys/mains/views/AtTourneyInfoPanel.ts";
-import {
-    type OpenData as AtTourneySettingsPanelOpenData,
-    Panel as ViewsAtTourneySettingsPanel,
-} from "../autoTourneys/mains/views/AtTourneySettingsPanel.ts";
-import {
-    type OpenData as AtrMainMenuPanelOpenData,
-    Panel as ViewsAtrMainMenuPanel,
-} from "../autoTourneys/rooms/views/AtrMainMenuPanel.ts";
-import {
-    type OpenData as AtrPreviewMapListPanelOpenData,
-    Panel as ViewsAtrPreviewMapListPanel,
-} from "../autoTourneys/rooms/views/AtrPreviewMapListPanel.ts";
-import {
-    type OpenData as AtrRoomInfoPanelOpenData,
-    Panel as ViewsAtrRoomInfoPanel,
-} from "../autoTourneys/rooms/views/AtrRoomInfoPanel.ts";
-import {
-    type OpenData as BwBackgroundPanelOpenData,
-    Panel as ViewBwBackgroundPanel,
-} from "../baseWar/view/BwBackgroundPanel.ts";
-import {
-    type OpenData as BwBeginTurnPanelOpenData,
-    Panel as ViewBwBeginTurnPanel,
-} from "../baseWar/view/BwBeginTurnPanel.ts";
-import {
-    type OpenData as BwBigDialoguePanelOpenData,
-    Panel as ViewBwBigDialoguePanel,
-} from "../baseWar/view/BwBigDialoguePanel.ts";
-import {
-    type OpenData as BwCaptureProgressPanelOpenData,
-    Panel as ViewBwCaptureProgressPanel,
-} from "../baseWar/view/BwCaptureProgressPanel.ts";
-import {
-    type OpenData as BwCustomCounterListPanelOpenData,
-    Panel as ViewBwCustomCounterListPanel,
-} from "../baseWar/view/BwCustomCounterListPanel.ts";
-import {
-    type OpenData as BwDamagePreviewPanelOpenData,
-    Panel as ViewBwDamagePreviewPanel,
-} from "../baseWar/view/BwDamagePreviewPanel.ts";
-import {
-    type OpenData as BwMapSimpleDialogueListPanelOpenData,
-    Panel as ViewBwMapSimpleDialogueListPanel,
-} from "../baseWar/view/BwMapSimpleDialogueListPanel.ts";
-import {
-    type OpenData as BwMapSimpleDialoguePanelOpenData,
-    Panel as ViewBwMapSimpleDialoguePanel,
-} from "../baseWar/view/BwMapSimpleDialoguePanel.ts";
-import {
-    type OpenData as BwMarkGridPanelOpenData,
-    Panel as ViewBwMarkGridPanel,
-} from "../baseWar/view/BwMarkGridPanel.ts";
-import {
-    type OpenData as BwProduceUnitPanelOpenData,
-    Panel as ViewBwProduceUnitPanel,
-} from "../baseWar/view/BwProduceUnitPanel.ts";
-import {
-    type OpenData as BwSmallDialoguePanelOpenData,
-    Panel as ViewBwSmallDialoguePanel,
-} from "../baseWar/view/BwSmallDialoguePanel.ts";
-import {
-    type OpenData as BwTaskObjectivePanelOpenData,
-    Panel as ViewBwTaskObjectivePanel,
-} from "../baseWar/view/BwTaskObjectivePanel.ts";
-import {
-    type OpenData as BwTileBriefPanelOpenData,
-    Panel as ViewBwTileBriefPanel,
-} from "../baseWar/view/BwTileBriefPanel.ts";
-import {
-    type OpenData as BwTileBuffListPanelOpenData,
-    Panel as ViewBwTileBuffListPanel,
-} from "../baseWar/view/BwTileBuffListPanel.ts";
-import {
-    type OpenData as BwTileDetailPanelOpenData,
-    Panel as ViewBwTileDetailPanel,
-} from "../baseWar/view/BwTileDetailPanel.ts";
-import {
-    type OpenData as BwTileStatisticsPanelOpenData,
-    Panel as ViewBwTileStatisticsPanel,
-} from "../baseWar/view/BwTileStatisticsPanel.ts";
-import {
-    type OpenData as BwUnitActionsPanelOpenData,
-    Panel as ViewBwUnitActionsPanel,
-} from "../baseWar/view/BwUnitActionsPanel.ts";
-import {
-    type OpenData as BwUnitBriefPanelOpenData,
-    Panel as ViewBwUnitBriefPanel,
-} from "../baseWar/view/BwUnitBriefPanel.ts";
-import {
-    type OpenData as BwUnitBuffListPanelOpenData,
-    Panel as ViewBwUnitBuffListPanel,
-} from "../baseWar/view/BwUnitBuffListPanel.ts";
-import {
-    type OpenData as BwUnitDetailPanelOpenData,
-    Panel as ViewBwUnitDetailPanel,
-} from "../baseWar/view/BwUnitDetailPanel.ts";
-import {
-    type OpenData as BwUnitListPanelOpenData,
-    Panel as ViewBwUnitListPanel,
-} from "../baseWar/view/BwUnitListPanel.ts";
-import {
-    type OpenData as BwUnitStatisticsPanelOpenData,
-    Panel as ViewBwUnitStatisticsPanel,
-} from "../baseWar/view/BwUnitStatisticsPanel.ts";
-import {
-    type OpenData as BwWarExtraInfoPanelOpenData,
-    Panel as ViewBwWarExtraInfoPanel,
-} from "../baseWar/view/BwWarExtraInfoPanel.ts";
-import {
-    type OpenData as BwWarInfoPanelOpenData,
-    Panel as ViewBwWarInfoPanel,
-} from "../baseWar/view/BwWarInfoPanel.ts";
-import {
-    type OpenData as BwWarPanelOpenData,
-    Panel as ViewBwWarPanel,
-} from "../baseWar/view/BwWarPanel.ts";
-import {
-    type OpenData as BroadcastAddMessagePanelOpenData,
-    Panel as ViewsBroadcastAddMessagePanel,
-} from "../broadcasts/views/BroadcastAddMessagePanel.ts";
-import {
-    type OpenData as BroadcastMessageListPanelOpenData,
-    Panel as ViewsBroadcastMessageListPanel,
-} from "../broadcasts/views/BroadcastMessageListPanel.ts";
-import {
-    type OpenData as BroadcastPanelOpenData,
-    Panel as ViewsBroadcastPanel,
-} from "../broadcasts/views/BroadcastPanel.ts";
-import {
-    type OpenData as CmCampaignCommandsPanelOpenData,
-    Panel as ViewsCmCampaignCommandsPanel,
-} from "../campaigns/managements/views/CmCampaignCommandsPanel.ts";
-import {
-    type OpenData as CmCampaignDesignersPanelOpenData,
-    Panel as ViewsCmCampaignDesignersPanel,
-} from "../campaigns/managements/views/CmCampaignDesignersPanel.ts";
-import {
-    type OpenData as CmCampaignListPanelOpenData,
-    Panel as ViewsCmCampaignListPanel,
-} from "../campaigns/managements/views/CmCampaignListPanel.ts";
-import {
-    type OpenData as CmCampaignMapsPanelOpenData,
-    Panel as ViewsCmCampaignMapsPanel,
-} from "../campaigns/managements/views/CmCampaignMapsPanel.ts";
-import {
-    type OpenData as CampaignCreateCampaignsPanelOpenData,
-    Panel as ViewsCampaignCreateCampaignsPanel,
-} from "../campaigns/views/CampaignCreateCampaignsPanel.ts";
-import {
-    type OpenData as CampaignCreateMapsPanelOpenData,
-    Panel as ViewsCampaignCreateMapsPanel,
-} from "../campaigns/views/CampaignCreateMapsPanel.ts";
-import {
-    type OpenData as CampaignCreateQuickSettingsPanelOpenData,
-    Panel as ViewsCampaignCreateQuickSettingsPanel,
-} from "../campaigns/views/CampaignCreateQuickSettingsPanel.ts";
-import {
-    type OpenData as ChangeLogPanelOpenData,
-    Panel as ChangeLogsChangeLogPanel,
-} from "../changeLogs/ChangeLogPanel.ts";
-import {
-    type OpenData as ChatCommandPanelOpenData,
-    Panel as ViewChatCommandPanel,
-} from "../chat/view/ChatCommandPanel.ts";
-import {
-    type OpenData as ChatPanelOpenData,
-    Panel as ViewChatPanel,
-} from "../chat/view/ChatPanel.ts";
-import {
-    type OpenData as CommonAlertPanelOpenData,
-    Panel as ViewCommonAlertPanel,
-} from "../common/view/CommonAlertPanel.ts";
-import {
-    type OpenData as CommonApiPanelOpenData,
-    Panel as ViewCommonApiPanel,
-} from "../common/view/CommonApiPanel.ts";
-import {
-    type OpenData as CommonBlockPanelOpenData,
-    Panel as ViewCommonBlockPanel,
-} from "../common/view/CommonBlockPanel.ts";
-import {
-    type OpenData as CommonChangeVersionPanelOpenData,
-    Panel as ViewCommonChangeVersionPanel,
-} from "../common/view/CommonChangeVersionPanel.ts";
-import {
-    type OpenData as CommonChooseCoAndColorPanelOpenData,
-    Panel as ViewCommonChooseCoAndColorPanel,
-} from "../common/view/CommonChooseCoAndColorPanel.ts";
-import {
-    type OpenData as CommonChooseGridIndexPanelOpenData,
-    Panel as ViewCommonChooseGridIndexPanel,
-} from "../common/view/CommonChooseGridIndexPanel.ts";
-import {
-    type OpenData as CommonChooseMapSorterPanelOpenData,
-    Panel as ViewCommonChooseMapSorterPanel,
-} from "../common/view/CommonChooseMapSorterPanel.ts";
-import {
-    type OpenData as CommonChooseMultiCoCategoryIdPanelOpenData,
-    Panel as ViewCommonChooseMultiCoCategoryIdPanel,
-} from "../common/view/CommonChooseMultiCoCategoryIdPanel.ts";
-import {
-    type OpenData as CommonChooseMultiCoIdPanelOpenData,
-    Panel as ViewCommonChooseMultiCoIdPanel,
-} from "../common/view/CommonChooseMultiCoIdPanel.ts";
-import {
-    type OpenData as CommonChooseMultiIntegerPanelOpenData,
-    Panel as ViewCommonChooseMultiIntegerPanel,
-} from "../common/view/CommonChooseMultiIntegerPanel.ts";
-import {
-    type OpenData as CommonChooseMultiNumberPanelOpenData,
-    Panel as ViewCommonChooseMultiNumberPanel,
-} from "../common/view/CommonChooseMultiNumberPanel.ts";
-import {
-    type OpenData as CommonChooseMultiTileTypePanelOpenData,
-    Panel as ViewCommonChooseMultiTileTypePanel,
-} from "../common/view/CommonChooseMultiTileTypePanel.ts";
-import {
-    type OpenData as CommonChooseMultiUnitTypePanelOpenData,
-    Panel as ViewCommonChooseMultiUnitTypePanel,
-} from "../common/view/CommonChooseMultiUnitTypePanel.ts";
-import {
-    type OpenData as CommonChooseOverridingSkinIdPanelOpenData,
-    Panel as ViewCommonChooseOverridingSkinIdPanel,
-} from "../common/view/CommonChooseOverridingSkinIdPanel.ts";
-import {
-    type OpenData as CommonChooseSfxPanelOpenData,
-    Panel as ViewCommonChooseSfxPanel,
-} from "../common/view/CommonChooseSfxPanel.ts";
-import {
-    type OpenData as CommonChooseSingleCoCategoryIdPanelOpenData,
-    Panel as ViewCommonChooseSingleCoCategoryIdPanel,
-} from "../common/view/CommonChooseSingleCoCategoryIdPanel.ts";
-import {
-    type OpenData as CommonChooseSingleCoIdPanelOpenData,
-    Panel as ViewCommonChooseSingleCoIdPanel,
-} from "../common/view/CommonChooseSingleCoIdPanel.ts";
-import {
-    type OpenData as CommonChooseSingleGridMarkPanelOpenData,
-    Panel as ViewCommonChooseSingleGridMarkPanel,
-} from "../common/view/CommonChooseSingleGridMarkPanel.ts";
-import {
-    type OpenData as CommonChooseSingleMapEditorSlotPanelOpenData,
-    Panel as ViewCommonChooseSingleMapEditorSlotPanel,
-} from "../common/view/CommonChooseSingleMapEditorSlotPanel.ts";
-import {
-    type OpenData as CommonChooseSingleNormalMapIdPanelOpenData,
-    Panel as ViewCommonChooseSingleNormalMapIdPanel,
-} from "../common/view/CommonChooseSingleNormalMapIdPanel.ts";
-import {
-    type OpenData as CommonChooseSingleNumberPanelOpenData,
-    Panel as ViewCommonChooseSingleNumberPanel,
-} from "../common/view/CommonChooseSingleNumberPanel.ts";
-import {
-    type OpenData as CommonChooseSingleSkinIdPanelOpenData,
-    Panel as ViewCommonChooseSingleSkinIdPanel,
-} from "../common/view/CommonChooseSingleSkinIdPanel.ts";
-import {
-    type OpenData as CommonChooseSingleSpmSaveSlotPanelOpenData,
-    Panel as ViewCommonChooseSingleSpmSaveSlotPanel,
-} from "../common/view/CommonChooseSingleSpmSaveSlotPanel.ts";
-import {
-    type OpenData as CommonChooseSingleTileTypePanelOpenData,
-    Panel as ViewCommonChooseSingleTileTypePanel,
-} from "../common/view/CommonChooseSingleTileTypePanel.ts";
-import {
-    type OpenData as CommonChooseSingleUnitTypePanelOpenData,
-    Panel as ViewCommonChooseSingleUnitTypePanel,
-} from "../common/view/CommonChooseSingleUnitTypePanel.ts";
-import {
-    type OpenData as CommonChooseTileBasePanelOpenData,
-    Panel as ViewCommonChooseTileBasePanel,
-} from "../common/view/CommonChooseTileBasePanel.ts";
-import {
-    type OpenData as CommonChooseTileDecorationPanelOpenData,
-    Panel as ViewCommonChooseTileDecorationPanel,
-} from "../common/view/CommonChooseTileDecorationPanel.ts";
-import {
-    type OpenData as CommonChooseTileInfoPanelOpenData,
-    Panel as ViewCommonChooseTileInfoPanel,
-} from "../common/view/CommonChooseTileInfoPanel.ts";
-import {
-    type OpenData as CommonChooseTileObjectPanelOpenData,
-    Panel as ViewCommonChooseTileObjectPanel,
-} from "../common/view/CommonChooseTileObjectPanel.ts";
-import {
-    type OpenData as CommonChooseTileTypePanelOpenData,
-    Panel as ViewCommonChooseTileTypePanel,
-} from "../common/view/CommonChooseTileTypePanel.ts";
-import {
-    type OpenData as CommonChooseUnitAndPlayerIndexPanelOpenData,
-    Panel as ViewCommonChooseUnitAndPlayerIndexPanel,
-} from "../common/view/CommonChooseUnitAndPlayerIndexPanel.ts";
-import {
-    type OpenData as CommonChooseUnitAttrPanelOpenData,
-    Panel as ViewCommonChooseUnitAttrPanel,
-} from "../common/view/CommonChooseUnitAttrPanel.ts";
-import {
-    type OpenData as CommonChooseUnitTagPanelOpenData,
-    Panel as ViewCommonChooseUnitTagPanel,
-} from "../common/view/CommonChooseUnitTagPanel.ts";
-import {
-    type OpenData as CommonCoInfoPanelOpenData,
-    Panel as ViewCommonCoInfoPanel,
-} from "../common/view/CommonCoInfoPanel.ts";
-import {
-    type OpenData as CommonCoListPanelOpenData,
-    Panel as ViewCommonCoListPanel,
-} from "../common/view/CommonCoListPanel.ts";
-import {
-    type OpenData as CommonConfirmPanelOpenData,
-    Panel as ViewCommonConfirmPanel,
-} from "../common/view/CommonConfirmPanel.ts";
-import {
-    type OpenData as CommonCoStatisticsFilterPanelOpenData,
-    Panel as ViewCommonCoStatisticsFilterPanel,
-} from "../common/view/CommonCoStatisticsFilterPanel.ts";
-import {
-    type OpenData as CommonCoStatisticsPanelOpenData,
-    Panel as ViewCommonCoStatisticsPanel,
-} from "../common/view/CommonCoStatisticsPanel.ts";
-import {
-    type OpenData as CommonDamageCalculatorPanelOpenData,
-    Panel as ViewCommonDamageCalculatorPanel,
-} from "../common/view/CommonDamageCalculatorPanel.ts";
-import {
-    type OpenData as CommonDamageChartPanelOpenData,
-    Panel as ViewCommonDamageChartPanel,
-} from "../common/view/CommonDamageChartPanel.ts";
-import {
-    type OpenData as CommonDeletePlayerPanelOpenData,
-    Panel as ViewCommonDeletePlayerPanel,
-} from "../common/view/CommonDeletePlayerPanel.ts";
-import {
-    type OpenData as CommonDoubleSliderPanelOpenData,
-    Panel as ViewCommonDoubleSliderPanel,
-} from "../common/view/CommonDoubleSliderPanel.ts";
-import {
-    type OpenData as CommonErrorPanelOpenData,
-    Panel as ViewCommonErrorPanel,
-} from "../common/view/CommonErrorPanel.ts";
-import {
-    type OpenData as CommonExpressionTypeIdPanelOpenData,
-    Panel as ViewCommonExpressionTypeIdPanel,
-} from "../common/view/CommonExpressionTypeIdPanel.ts";
-import {
-    type OpenData as CommonGameChartPanelOpenData,
-    Panel as ViewCommonGameChartPanel,
-} from "../common/view/CommonGameChartPanel.ts";
-import {
-    type OpenData as CommonHelpPanelOpenData,
-    Panel as ViewCommonHelpPanel,
-} from "../common/view/CommonHelpPanel.ts";
-import {
-    type OpenData as CommonInputDurationPanelOpenData,
-    Panel as ViewCommonInputDurationPanel,
-} from "../common/view/CommonInputDurationPanel.ts";
-import {
-    type OpenData as CommonInputExpressionPanelOpenData,
-    Panel as ViewCommonInputExpressionPanel,
-} from "../common/view/CommonInputExpressionPanel.ts";
-import {
-    type OpenData as CommonInputIntegerPanelOpenData,
-    Panel as ViewCommonInputIntegerPanel,
-} from "../common/view/CommonInputIntegerPanel.ts";
-import {
-    type OpenData as CommonInputLanguageTextPanelOpenData,
-    Panel as ViewCommonInputLanguageTextPanel,
-} from "../common/view/CommonInputLanguageTextPanel.ts";
-import {
-    type OpenData as CommonInputNullableIntegerPanelOpenData,
-    Panel as ViewCommonInputNullableIntegerPanel,
-} from "../common/view/CommonInputNullableIntegerPanel.ts";
-import {
-    type OpenData as CommonInputPanelOpenData,
-    Panel as ViewCommonInputPanel,
-} from "../common/view/CommonInputPanel.ts";
-import {
-    type OpenData as CommonInputShortLangTextPanelOpenData,
-    Panel as ViewCommonInputShortLangTextPanel,
-} from "../common/view/CommonInputShortLangTextPanel.ts";
-import {
-    type OpenData as CommonMapFilterPanelOpenData,
-    Panel as ViewCommonMapFilterPanel,
-} from "../common/view/CommonMapFilterPanel.ts";
-import {
-    type OpenData as CommonMapWarStatisticsPanelOpenData,
-    Panel as ViewCommonMapWarStatisticsPanel,
-} from "../common/view/CommonMapWarStatisticsPanel.ts";
-import {
-    type OpenData as CommonRoomFilterPanelOpenData,
-    Panel as ViewCommonRoomFilterPanel,
-} from "../common/view/CommonRoomFilterPanel.ts";
-import {
-    type OpenData as CommonSearchMultiUserPanelOpenData,
-    Panel as ViewCommonSearchMultiUserPanel,
-} from "../common/view/CommonSearchMultiUserPanel.ts";
-import {
-    type OpenData as CommonSearchSingleUserPanelOpenData,
-    Panel as ViewCommonSearchSingleUserPanel,
-} from "../common/view/CommonSearchSingleUserPanel.ts";
-import {
-    type OpenData as CommonServerStatusPanelOpenData,
-    Panel as ViewCommonServerStatusPanel,
-} from "../common/view/CommonServerStatusPanel.ts";
-import {
-    type OpenData as CommonShowCoCategoryIdPanelOpenData,
-    Panel as ViewCommonShowCoCategoryIdPanel,
-} from "../common/view/CommonShowCoCategoryIdPanel.ts";
-import {
-    type OpenData as CommonShowCoIdPanelOpenData,
-    Panel as ViewCommonShowCoIdPanel,
-} from "../common/view/CommonShowCoIdPanel.ts";
-import {
-    type OpenData as CommonShowGameModePanelOpenData,
-    Panel as ViewCommonShowGameModePanel,
-} from "../common/view/CommonShowGameModePanel.ts";
-import {
-    type OpenData as CommonShowLangTextPanelOpenData,
-    Panel as ViewCommonShowLangTextPanel,
-} from "../common/view/CommonShowLangTextPanel.ts";
-import {
-    type OpenData as CommonShowMapPanelOpenData,
-    Panel as ViewCommonShowMapPanel,
-} from "../common/view/CommonShowMapPanel.ts";
-import {
-    type OpenData as CommonShowMapTagIdPanelOpenData,
-    Panel as ViewCommonShowMapTagIdPanel,
-} from "../common/view/CommonShowMapTagIdPanel.ts";
-import {
-    type OpenData as CommonShowPlayerListPanelOpenData,
-    Panel as ViewCommonShowPlayerListPanel,
-} from "../common/view/CommonShowPlayerListPanel.ts";
-import {
-    type OpenData as CommonShowSelectedCoCategoryIdPanelOpenData,
-    Panel as ViewCommonShowSelectedCoCategoryIdPanel,
-} from "../common/view/CommonShowSelectedCoCategoryIdPanel.ts";
-import {
-    type OpenData as CommonShowUnitTypePanelOpenData,
-    Panel as ViewCommonShowUnitTypePanel,
-} from "../common/view/CommonShowUnitTypePanel.ts";
-import {
-    type OpenData as CommonTileChartPanelOpenData,
-    Panel as ViewCommonTileChartPanel,
-} from "../common/view/CommonTileChartPanel.ts";
-import {
-    type OpenData as CommonTutorialPanelOpenData,
-    Panel as ViewCommonTutorialPanel,
-} from "../common/view/CommonTutorialPanel.ts";
-import {
-    type OpenData as CommonWarEventListPanelOpenData,
-    Panel as ViewCommonWarEventListPanel,
-} from "../common/view/CommonWarEventListPanel.ts";
-import {
-    type OpenData as CcrCreateMapListPanelOpenData,
-    Panel as ViewCcrCreateMapListPanel,
-} from "../coopCustomRoom/view/CcrCreateMapListPanel.ts";
-import {
-    type OpenData as CcrCreateSettingsPanelOpenData,
-    Panel as ViewCcrCreateSettingsPanel,
-} from "../coopCustomRoom/view/CcrCreateSettingsPanel.ts";
-import {
-    type OpenData as CcrMainMenuPanelOpenData,
-    Panel as ViewCcrMainMenuPanel,
-} from "../coopCustomRoom/view/CcrMainMenuPanel.ts";
-import {
-    type OpenData as CcrRoomInfoPanelOpenData,
-    Panel as ViewCcrRoomInfoPanel,
-} from "../coopCustomRoom/view/CcrRoomInfoPanel.ts";
-import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import {
-    type OpenData as GmSetUserFullPrivilegePanelOpenData,
-    Panel as ViewGmSetUserFullPrivilegePanel,
-} from "../gm/view/GmSetUserFullPrivilegePanel.ts";
-import {
-    DisplayLayerId,
-    TextureResolutionId,
-} from "../graphics/Constants.ts";
-import {
-    type OpenData as HrwTopPanelOpenData,
-    Panel as ViewHrwTopPanel,
-} from "../halfwayReplayWar/view/HrwTopPanel.ts";
-import {
-    type OpenData as HrwWarMenuPanelOpenData,
-    Panel as ViewHrwWarMenuPanel,
-} from "../halfwayReplayWar/view/HrwWarMenuPanel.ts";
-import { getNumText } from "../helpers/Text.ts";
-import {
-    type OpenData as LbMrwListPanelOpenData,
-    Panel as ViewLbMrwListPanel,
-} from "../leaderboard/view/LbMrwListPanel.ts";
-import {
-    type OpenData as LbSpmOverallListPanelOpenData,
-    Panel as ViewLbSpmOverallListPanel,
-} from "../leaderboard/view/LbSpmOverallListPanel.ts";
-import {
-    type OpenData as LobbyBackgroundPanelOpenData,
-    Panel as ViewLobbyBackgroundPanel,
-} from "../lobby/view/LobbyBackgroundPanel.ts";
-import {
-    type OpenData as LobbyBottomPanelOpenData,
-    Panel as ViewLobbyBottomPanel,
-} from "../lobby/view/LobbyBottomPanel.ts";
-import {
-    type OpenData as LobbyPanelOpenData,
-    Panel as ViewLobbyPanel,
-} from "../lobby/view/LobbyPanel.ts";
-import {
-    type OpenData as LobbyStartPanelOpenData,
-    Panel as ViewLobbyStartPanel,
-} from "../lobby/view/LobbyStartPanel.ts";
-import {
-    type OpenData as LobbyTopPanelOpenData,
-    Panel as ViewLobbyTopPanel,
-} from "../lobby/view/LobbyTopPanel.ts";
-import {
-    type OpenData as LobbyTopRightPanelOpenData,
-    Panel as ViewLobbyTopRightPanel,
-} from "../lobby/view/LobbyTopRightPanel.ts";
-import {
-    type OpenData as MailPanelOpenData,
-    Panel as ViewMailPanel,
-} from "../mail/view/MailPanel.ts";
-import {
-    type OpenData as MeAutoAdjustPanelOpenData,
-    Panel as ViewsMeAutoAdjustPanel,
-} from "../mapEditors/views/MeAutoAdjustPanel.ts";
-import {
-    type OpenData as MeChooseLocationPanelOpenData,
-    Panel as ViewsMeChooseLocationPanel,
-} from "../mapEditors/views/MeChooseLocationPanel.ts";
-import {
-    type OpenData as MeChooseTileBasePanelOpenData,
-    Panel as ViewsMeChooseTileBasePanel,
-} from "../mapEditors/views/MeChooseTileBasePanel.ts";
-import {
-    type OpenData as MeChooseTileDecorationPanelOpenData,
-    Panel as ViewsMeChooseTileDecorationPanel,
-} from "../mapEditors/views/MeChooseTileDecorationPanel.ts";
-import {
-    type OpenData as MeChooseTileObjectPanelOpenData,
-    Panel as ViewsMeChooseTileObjectPanel,
-} from "../mapEditors/views/MeChooseTileObjectPanel.ts";
-import {
-    type OpenData as MeChooseUnitPanelOpenData,
-    Panel as ViewsMeChooseUnitPanel,
-} from "../mapEditors/views/MeChooseUnitPanel.ts";
-import {
-    type OpenData as MeClearPanelOpenData,
-    Panel as ViewsMeClearPanel,
-} from "../mapEditors/views/MeClearPanel.ts";
-import {
-    type OpenData as MeImportContentPanelOpenData,
-    Panel as ViewsMeImportContentPanel,
-} from "../mapEditors/views/MeImportContentPanel.ts";
-import {
-    type OpenData as MeImportExportPanelOpenData,
-    Panel as ViewsMeImportExportPanel,
-} from "../mapEditors/views/MeImportExportPanel.ts";
-import {
-    type OpenData as MeMapInfoPanelOpenData,
-    Panel as ViewsMeMapInfoPanel,
-} from "../mapEditors/views/MeMapInfoPanel.ts";
-import {
-    type OpenData as MeMapSimpleDialogueMainPanelOpenData,
-    Panel as ViewsMeMapSimpleDialogueMainPanel,
-} from "../mapEditors/views/MeMapSimpleDialogueMainPanel.ts";
-import {
-    type OpenData as MeMapSimpleDialogueUtilPanelOpenData,
-    Panel as ViewsMeMapSimpleDialogueUtilPanel,
-} from "../mapEditors/views/MeMapSimpleDialogueUtilPanel.ts";
-import {
-    type OpenData as MeResizePanelOpenData,
-    Panel as ViewsMeResizePanel,
-} from "../mapEditors/views/MeResizePanel.ts";
-import {
-    type OpenData as MeSaveCampaignMapPanelOpenData,
-    Panel as ViewsMeSaveCampaignMapPanel,
-} from "../mapEditors/views/MeSaveCampaignMapPanel.ts";
-import {
-    type OpenData as MeSaveNormalMapPanelOpenData,
-    Panel as ViewsMeSaveNormalMapPanel,
-} from "../mapEditors/views/MeSaveNormalMapPanel.ts";
-import {
-    type OpenData as MeSetTileCustomNamePanelOpenData,
-    Panel as ViewsMeSetTileCustomNamePanel,
-} from "../mapEditors/views/MeSetTileCustomNamePanel.ts";
-import {
-    type OpenData as MeSetUnitCustomNamePanelOpenData,
-    Panel as ViewsMeSetUnitCustomNamePanel,
-} from "../mapEditors/views/MeSetUnitCustomNamePanel.ts";
-import {
-    type OpenData as MeSymmetricalPlayerIndexPanelOpenData,
-    Panel as ViewsMeSymmetricalPlayerIndexPanel,
-} from "../mapEditors/views/MeSymmetricalPlayerIndexPanel.ts";
-import {
-    type OpenData as MeSymmetryFillTilePanelOpenData,
-    Panel as ViewsMeSymmetryFillTilePanel,
-} from "../mapEditors/views/MeSymmetryFillTilePanel.ts";
-import {
-    type OpenData as MeSymmetryPanelOpenData,
-    Panel as ViewsMeSymmetryPanel,
-} from "../mapEditors/views/MeSymmetryPanel.ts";
-import {
-    type OpenData as MeTaskObjectiveListPanelOpenData,
-    Panel as ViewsMeTaskObjectiveListPanel,
-} from "../mapEditors/views/MeTaskObjectiveListPanel.ts";
-import {
-    type OpenData as MeTaskObjectivePanelOpenData,
-    Panel as ViewsMeTaskObjectivePanel,
-} from "../mapEditors/views/MeTaskObjectivePanel.ts";
-import {
-    type OpenData as MeTileCustomNameListPanelOpenData,
-    Panel as ViewsMeTileCustomNameListPanel,
-} from "../mapEditors/views/MeTileCustomNameListPanel.ts";
-import {
-    type OpenData as MeTileUnitInfoPanelOpenData,
-    Panel as ViewsMeTileUnitInfoPanel,
-} from "../mapEditors/views/MeTileUnitInfoPanel.ts";
-import {
-    type OpenData as MeTopPanelOpenData,
-    Panel as ViewsMeTopPanel,
-} from "../mapEditors/views/MeTopPanel.ts";
-import {
-    type OpenData as MeUnitCustomNameListPanelOpenData,
-    Panel as ViewsMeUnitCustomNameListPanel,
-} from "../mapEditors/views/MeUnitCustomNameListPanel.ts";
-import {
-    type OpenData as MeVisibilityPanelOpenData,
-    Panel as ViewsMeVisibilityPanel,
-} from "../mapEditors/views/MeVisibilityPanel.ts";
-import {
-    type OpenData as MeWarMenuPanelOpenData,
-    Panel as ViewsMeWarMenuPanel,
-} from "../mapEditors/views/MeWarMenuPanel.ts";
-import {
-    type OpenData as MeWarRuleMapSimpleDialoguePanelOpenData,
-    Panel as ViewsMeWarRuleMapSimpleDialoguePanel,
-} from "../mapEditors/views/MeWarRuleMapSimpleDialoguePanel.ts";
-import {
-    type OpenData as MeWarRulePanelOpenData,
-    Panel as ViewsMeWarRulePanel,
-} from "../mapEditors/views/MeWarRulePanel.ts";
-import {
-    type OpenData as MeWarRulePlayerRulePanelOpenData,
-    Panel as ViewsMeWarRulePlayerRulePanel,
-} from "../mapEditors/views/MeWarRulePlayerRulePanel.ts";
-import {
-    type OpenData as MeWarRuleTaskObjectivePanelOpenData,
-    Panel as ViewsMeWarRuleTaskObjectivePanel,
-} from "../mapEditors/views/MeWarRuleTaskObjectivePanel.ts";
-import {
-    type OpenData as MeWarRuleWarEventPanelOpenData,
-    Panel as ViewsMeWarRuleWarEventPanel,
-} from "../mapEditors/views/MeWarRuleWarEventPanel.ts";
-import {
-    type OpenData as MmCommandPanelOpenData,
-    Panel as ViewMmCommandPanel,
-} from "../mapManagement/view/MmCommandPanel.ts";
-import {
-    type OpenData as MmMainMenuPanelOpenData,
-    Panel as ViewMmMainMenuPanel,
-} from "../mapManagement/view/MmMainMenuPanel.ts";
-import {
-    type OpenData as MmMapTagListPanelOpenData,
-    Panel as ViewMmMapTagListPanel,
-} from "../mapManagement/view/MmMapTagListPanel.ts";
-import {
-    type OpenData as MmModifyWarRulePanelOpenData,
-    Panel as ViewMmModifyWarRulePanel,
-} from "../mapManagement/view/MmModifyWarRulePanel.ts";
-import {
-    type OpenData as MmReviewListPanelOpenData,
-    Panel as ViewMmReviewListPanel,
-} from "../mapManagement/view/MmReviewListPanel.ts";
-import {
-    type OpenData as MmWarRuleMapSimpleDialoguePanelOpenData,
-    Panel as ViewMmWarRuleMapSimpleDialoguePanel,
-} from "../mapManagement/view/MmWarRuleMapSimpleDialoguePanel.ts";
-import {
-    type OpenData as MmWarRulePanelOpenData,
-    Panel as ViewMmWarRulePanel,
-} from "../mapManagement/view/MmWarRulePanel.ts";
-import {
-    type OpenData as MmWarRulePlayerRulePanelOpenData,
-    Panel as ViewMmWarRulePlayerRulePanel,
-} from "../mapManagement/view/MmWarRulePlayerRulePanel.ts";
-import {
-    type OpenData as MmWarRuleTaskObjectivePanelOpenData,
-    Panel as ViewMmWarRuleTaskObjectivePanel,
-} from "../mapManagement/view/MmWarRuleTaskObjectivePanel.ts";
-import {
-    type OpenData as MmWarRuleWarEventPanelOpenData,
-    Panel as ViewMmWarRuleWarEventPanel,
-} from "../mapManagement/view/MmWarRuleWarEventPanel.ts";
-import {
-    type OpenData as McrCreateMapListPanelOpenData,
-    Panel as ViewMcrCreateMapListPanel,
-} from "../multiCustomRoom/view/McrCreateMapListPanel.ts";
-import {
-    type OpenData as McrCreateSettingsPanelOpenData,
-    Panel as ViewMcrCreateSettingsPanel,
-} from "../multiCustomRoom/view/McrCreateSettingsPanel.ts";
-import {
-    type OpenData as McrMainMenuPanelOpenData,
-    Panel as ViewMcrMainMenuPanel,
-} from "../multiCustomRoom/view/McrMainMenuPanel.ts";
-import {
-    type OpenData as McrRoomInfoPanelOpenData,
-    Panel as ViewMcrRoomInfoPanel,
-} from "../multiCustomRoom/view/McrRoomInfoPanel.ts";
-import {
-    type OpenData as MfrCreateSettingsPanelOpenData,
-    Panel as ViewMfrCreateSettingsPanel,
-} from "../multiFreeRoom/view/MfrCreateSettingsPanel.ts";
-import {
-    type OpenData as MfrMainMenuPanelOpenData,
-    Panel as ViewMfrMainMenuPanel,
-} from "../multiFreeRoom/view/MfrMainMenuPanel.ts";
-import {
-    type OpenData as MfrRoomInfoPanelOpenData,
-    Panel as ViewMfrRoomInfoPanel,
-} from "../multiFreeRoom/view/MfrRoomInfoPanel.ts";
-import {
-    type OpenData as MmrBanMapPanelOpenData,
-    Panel as ViewMmrBanMapPanel,
-} from "../multiMatchRoom/view/MmrBanMapPanel.ts";
-import {
-    type OpenData as MmrMainMenuPanelOpenData,
-    Panel as ViewMmrMainMenuPanel,
-} from "../multiMatchRoom/view/MmrMainMenuPanel.ts";
-import {
-    type OpenData as MmrPreviewMapListPanelOpenData,
-    Panel as ViewMmrPreviewMapListPanel,
-} from "../multiMatchRoom/view/MmrPreviewMapListPanel.ts";
-import {
-    type OpenData as MmrRoomInfoPanelOpenData,
-    Panel as ViewMmrRoomInfoPanel,
-} from "../multiMatchRoom/view/MmrRoomInfoPanel.ts";
-import {
-    type OpenData as MmrSetMaxConcurrentCountPanelOpenData,
-    Panel as ViewMmrSetMaxConcurrentCountPanel,
-} from "../multiMatchRoom/view/MmrSetMaxConcurrentCountPanel.ts";
-import {
-    type OpenData as MmrSetTimerPanelOpenData,
-    Panel as ViewMmrSetTimerPanel,
-} from "../multiMatchRoom/view/MmrSetTimerPanel.ts";
-import {
-    type OpenData as MpwJoinRoomListPanelOpenData,
-    Panel as ViewMpwJoinRoomListPanel,
-} from "../multiPlayerWar/view/MpwJoinRoomListPanel.ts";
-import {
-    type OpenData as MpwMyRoomListPanelOpenData,
-    Panel as ViewMpwMyRoomListPanel,
-} from "../multiPlayerWar/view/MpwMyRoomListPanel.ts";
-import {
-    type OpenData as MpwMyWarListPanelOpenData,
-    Panel as ViewMpwMyWarListPanel,
-} from "../multiPlayerWar/view/MpwMyWarListPanel.ts";
-import {
-    type OpenData as MpwSidePanelOpenData,
-    Panel as ViewMpwSidePanel,
-} from "../multiPlayerWar/view/MpwSidePanel.ts";
-import {
-    type OpenData as MpwSpectatePanelOpenData,
-    Panel as ViewMpwSpectatePanel,
-} from "../multiPlayerWar/view/MpwSpectatePanel.ts";
-import {
-    type OpenData as MpwTopPanelOpenData,
-    Panel as ViewMpwTopPanel,
-} from "../multiPlayerWar/view/MpwTopPanel.ts";
-import {
-    type OpenData as MpwWarAdvancedMenuPanelOpenData,
-    Panel as ViewMpwWarAdvancedMenuPanel,
-} from "../multiPlayerWar/view/MpwWarAdvancedMenuPanel.ts";
-import {
-    type OpenData as MpwWarMenuPanelOpenData,
-    Panel as ViewMpwWarMenuPanel,
-} from "../multiPlayerWar/view/MpwWarMenuPanel.ts";
-import {
-    type OpenData as MrrBanMapPanelOpenData,
-    Panel as ViewMrrBanMapPanel,
-} from "../multiRankRoom/view/MrrBanMapPanel.ts";
-import {
-    type OpenData as MrrMainMenuPanelOpenData,
-    Panel as ViewMrrMainMenuPanel,
-} from "../multiRankRoom/view/MrrMainMenuPanel.ts";
-import {
-    type OpenData as MrrPreviewMapListPanelOpenData,
-    Panel as ViewMrrPreviewMapListPanel,
-} from "../multiRankRoom/view/MrrPreviewMapListPanel.ts";
-import {
-    type OpenData as MrrRoomInfoPanelOpenData,
-    Panel as ViewMrrRoomInfoPanel,
-} from "../multiRankRoom/view/MrrRoomInfoPanel.ts";
-import {
-    type OpenData as MrrSetMaxConcurrentCountPanelOpenData,
-    Panel as ViewMrrSetMaxConcurrentCountPanel,
-} from "../multiRankRoom/view/MrrSetMaxConcurrentCountPanel.ts";
-import {
-    type OpenData as MrrSetTimerPanelOpenData,
-    Panel as ViewMrrSetTimerPanel,
-} from "../multiRankRoom/view/MrrSetTimerPanel.ts";
-import {
-    type OpenData as RwPauseTimePanelOpenData,
-    Panel as ViewRwPauseTimePanel,
-} from "../replayWar/view/RwPauseTimePanel.ts";
-import {
-    type OpenData as RwReplayListPanelOpenData,
-    Panel as ViewRwReplayListPanel,
-} from "../replayWar/view/RwReplayListPanel.ts";
-import {
-    type OpenData as RwReplayProgressPanelOpenData,
-    Panel as ViewRwReplayProgressPanel,
-} from "../replayWar/view/RwReplayProgressPanel.ts";
-import {
-    type OpenData as RwSearchReplayPanelOpenData,
-    Panel as ViewRwSearchReplayPanel,
-} from "../replayWar/view/RwSearchReplayPanel.ts";
-import {
-    type OpenData as RwTopPanelOpenData,
-    Panel as ViewRwTopPanel,
-} from "../replayWar/view/RwTopPanel.ts";
-import {
-    type OpenData as RwWarMenuPanelOpenData,
-    Panel as ViewRwWarMenuPanel,
-} from "../replayWar/view/RwWarMenuPanel.ts";
-import { getSkin } from "../ResManager.ts";
-import {
-    type OpenData as ScrCreateMapListPanelOpenData,
-    Panel as ViewScrCreateMapListPanel,
-} from "../singleCustomRoom/view/ScrCreateMapListPanel.ts";
-import {
-    type OpenData as ScrCreateSettingsPanelOpenData,
-    Panel as ViewScrCreateSettingsPanel,
-} from "../singleCustomRoom/view/ScrCreateSettingsPanel.ts";
-import {
-    type OpenData as SpmMainMenuPanelOpenData,
-    Panel as ViewSpmMainMenuPanel,
-} from "../singlePlayerMode/view/SpmMainMenuPanel.ts";
-import {
-    type OpenData as SpmMyWarRoomRecordPanelOpenData,
-    Panel as ViewSpmMyWarRoomRecordPanel,
-} from "../singlePlayerMode/view/SpmMyWarRoomRecordPanel.ts";
-import {
-    type OpenData as SpmWarListPanelOpenData,
-    Panel as ViewSpmWarListPanel,
-} from "../singlePlayerMode/view/SpmWarListPanel.ts";
-import {
-    type OpenData as SpwSidePanelOpenData,
-    Panel as ViewSpwSidePanel,
-} from "../singlePlayerWar/view/SpwSidePanel.ts";
-import {
-    type OpenData as SpwTopPanelOpenData,
-    Panel as ViewSpwTopPanel,
-} from "../singlePlayerWar/view/SpwTopPanel.ts";
-import {
-    type OpenData as SpwWarAdvancedMenuPanelOpenData,
-    Panel as ViewSpwWarAdvancedMenuPanel,
-} from "../singlePlayerWar/view/SpwWarAdvancedMenuPanel.ts";
-import {
-    type OpenData as SpwWarMenuPanelOpenData,
-    Panel as ViewSpwWarMenuPanel,
-} from "../singlePlayerWar/view/SpwWarMenuPanel.ts";
-import {
-    type OpenData as SrrCreateMapListPanelOpenData,
-    Panel as ViewSrrCreateMapListPanel,
-} from "../singleRankRoom/view/SrrCreateMapListPanel.ts";
-import {
-    type OpenData as SrrCreateQuickSettingsPanelOpenData,
-    Panel as ViewSrrCreateQuickSettingsPanel,
-} from "../singleRankRoom/view/SrrCreateQuickSettingsPanel.ts";
-import {
-    type OpenData as SrrCreateSettingsPanelOpenData,
-    Panel as ViewSrrCreateSettingsPanel,
-} from "../singleRankRoom/view/SrrCreateSettingsPanel.ts";
-import {
-    type OpenData as ChooseSingleBgmPanelOpenData,
-    Panel as ChooseSingleBgmPanel,
-} from "../sounds/panels/ChooseSingleBgmPanel.ts";
-import {
-    type OpenData as SettingsPanelOpenData,
-    Panel as SettingsPanel,
-} from "../sounds/panels/SettingsPanel.ts";
-import {
-    type OpenData as UserGameManagementPanelOpenData,
-    Panel as ViewsUserGameManagementPanel,
-} from "../users/views/UserGameManagementPanel.ts";
-import {
-    type OpenData as UserGraphicSettingsPanelOpenData,
-    Panel as ViewsUserGraphicSettingsPanel,
-} from "../users/views/UserGraphicSettingsPanel.ts";
-import {
-    type OpenData as UserLoginBackgroundPanelOpenData,
-    Panel as ViewsUserLoginBackgroundPanel,
-} from "../users/views/UserLoginBackgroundPanel.ts";
-import {
-    type OpenData as UserLoginPanelOpenData,
-    Panel as ViewsUserLoginPanel,
-} from "../users/views/UserLoginPanel.ts";
-import {
-    type OpenData as UserMedalPanelOpenData,
-    Panel as ViewsUserMedalPanel,
-} from "../users/views/UserMedalPanel.ts";
-import {
-    type OpenData as UserMiscSettingsPanelOpenData,
-    Panel as ViewsUserMiscSettingsPanel,
-} from "../users/views/UserMiscSettingsPanel.ts";
-import {
-    type OpenData as UserMpwStatisticsPanelOpenData,
-    Panel as ViewsUserMpwStatisticsPanel,
-} from "../users/views/UserMpwStatisticsPanel.ts";
-import {
-    type OpenData as UserOnlineUsersPanelOpenData,
-    Panel as ViewsUserOnlineUsersPanel,
-} from "../users/views/UserOnlineUsersPanel.ts";
-import {
-    type OpenData as UserPanelOpenData,
-    Panel as ViewsUserPanel,
-} from "../users/views/UserPanel.ts";
-import {
-    type OpenData as UserProfileSettingsPanelOpenData,
-    Panel as ViewsUserProfileSettingsPanel,
-} from "../users/views/UserProfileSettingsPanel.ts";
-import {
-    type OpenData as UserRegisterPanelOpenData,
-    Panel as ViewsUserRegisterPanel,
-} from "../users/views/UserRegisterPanel.ts";
-import {
-    type OpenData as UserSceneBgmSettingsPanelOpenData,
-    Panel as ViewsUserSceneBgmSettingsPanel,
-} from "../users/views/UserSceneBgmSettingsPanel.ts";
-import {
-    type OpenData as UserSetAvatarPanelOpenData,
-    Panel as ViewsUserSetAvatarPanel,
-} from "../users/views/UserSetAvatarPanel.ts";
-import {
-    type OpenData as UserSetCoBgmSettingsPanelOpenData,
-    Panel as ViewsUserSetCoBgmSettingsPanel,
-} from "../users/views/UserSetCoBgmSettingsPanel.ts";
-import {
-    type OpenData as UserSetDiscordInfoPanelOpenData,
-    Panel as ViewsUserSetDiscordInfoPanel,
-} from "../users/views/UserSetDiscordInfoPanel.ts";
-import {
-    type OpenData as UserSetEmailPanelOpenData,
-    Panel as ViewsUserSetEmailPanel,
-} from "../users/views/UserSetEmailPanel.ts";
-import {
-    type OpenData as UserSetOpacityPanelOpenData,
-    Panel as ViewsUserSetOpacityPanel,
-} from "../users/views/UserSetOpacityPanel.ts";
-import {
-    type OpenData as UserSetPasswordPanelOpenData,
-    Panel as ViewsUserSetPasswordPanel,
-} from "../users/views/UserSetPasswordPanel.ts";
-import {
-    type OpenData as UserSetPasswordWithEmailPanelOpenData,
-    Panel as ViewsUserSetPasswordWithEmailPanel,
-} from "../users/views/UserSetPasswordWithEmailPanel.ts";
-import {
-    type OpenData as UserSetRelationPanelOpenData,
-    Panel as ViewsUserSetRelationPanel,
-} from "../users/views/UserSetRelationPanel.ts";
-import {
-    type OpenData as UserSetStageScalePanelOpenData,
-    Panel as ViewsUserSetStageScalePanel,
-} from "../users/views/UserSetStageScalePanel.ts";
-import {
-    type OpenData as UserSettingsPanelOpenData,
-    Panel as ViewsUserSettingsPanel,
-} from "../users/views/UserSettingsPanel.ts";
-import {
-    type OpenData as UserWarHistoryPanelOpenData,
-    Panel as ViewsUserWarHistoryPanel,
-} from "../users/views/UserWarHistoryPanel.ts";
-import {
-    type OpenData as WeaAddTileBuffExprPanelOpenData,
-    Panel as ViewWeaAddTileBuffExprPanel,
-} from "../warEvent/view/WeaAddTileBuffExprPanel.ts";
-import {
-    type OpenData as WeaAddTileBuffSimplePanelOpenData,
-    Panel as ViewWeaAddTileBuffSimplePanel,
-} from "../warEvent/view/WeaAddTileBuffSimplePanel.ts";
-import {
-    type OpenData as WeaAddUnitBuffSimplePanelOpenData,
-    Panel as ViewWeaAddUnitBuffSimplePanel,
-} from "../warEvent/view/WeaAddUnitBuffSimplePanel.ts";
-import {
-    type OpenData as WeaAddUnitOnMapSimplePanelOpenData,
-    Panel as ViewWeaAddUnitOnMapSimplePanel,
-} from "../warEvent/view/WeaAddUnitOnMapSimplePanel.ts";
-import {
-    type OpenData as WeaBigDialogueSimplePanelOpenData,
-    Panel as ViewWeaBigDialogueSimplePanel,
-} from "../warEvent/view/WeaBigDialogueSimplePanel.ts";
-import {
-    type OpenData as WeActionReplacePanelOpenData,
-    Panel as ViewWeActionReplacePanel,
-} from "../warEvent/view/WeActionReplacePanel.ts";
-import {
-    type OpenData as WeActionTypeListPanelOpenData,
-    Panel as ViewWeActionTypeListPanel,
-} from "../warEvent/view/WeActionTypeListPanel.ts";
-import {
-    type OpenData as WeaDeleteTileBuffExprPanelOpenData,
-    Panel as ViewWeaDeleteTileBuffExprPanel,
-} from "../warEvent/view/WeaDeleteTileBuffExprPanel.ts";
-import {
-    type OpenData as WeaDeleteTileBuffSimplePanelOpenData,
-    Panel as ViewWeaDeleteTileBuffSimplePanel,
-} from "../warEvent/view/WeaDeleteTileBuffSimplePanel.ts";
-import {
-    type OpenData as WeaDeleteUnitBuffSimplePanelOpenData,
-    Panel as ViewWeaDeleteUnitBuffSimplePanel,
-} from "../warEvent/view/WeaDeleteUnitBuffSimplePanel.ts";
-import {
-    type OpenData as WeaDestroyUnitExprPanelOpenData,
-    Panel as ViewWeaDestroyUnitExprPanel,
-} from "../warEvent/view/WeaDestroyUnitExprPanel.ts";
-import {
-    type OpenData as WeaDestroyUnitSimplePanelOpenData,
-    Panel as ViewWeaDestroyUnitSimplePanel,
-} from "../warEvent/view/WeaDestroyUnitSimplePanel.ts";
-import {
-    type OpenData as WeaFillUnitLoadedExprPanelOpenData,
-    Panel as ViewWeaFillUnitLoadedExprPanel,
-} from "../warEvent/view/WeaFillUnitLoadedExprPanel.ts";
-import {
-    type OpenData as WeaFillUnitLoadedSimplePanelOpenData,
-    Panel as ViewWeaFillUnitLoadedSimplePanel,
-} from "../warEvent/view/WeaFillUnitLoadedSimplePanel.ts";
-import {
-    type OpenData as WeaFillUnitOnMapExprPanelOpenData,
-    Panel as ViewWeaFillUnitOnMapExprPanel,
-} from "../warEvent/view/WeaFillUnitOnMapExprPanel.ts";
-import {
-    type OpenData as WeaFillUnitOnMapSimplePanelOpenData,
-    Panel as ViewWeaFillUnitOnMapSimplePanel,
-} from "../warEvent/view/WeaFillUnitOnMapSimplePanel.ts";
-import {
-    type OpenData as WeaModifyTileBuffExprPanelOpenData,
-    Panel as ViewWeaModifyTileBuffExprPanel,
-} from "../warEvent/view/WeaModifyTileBuffExprPanel.ts";
-import {
-    type OpenData as WeaModifyTileBuffSimplePanelOpenData,
-    Panel as ViewWeaModifyTileBuffSimplePanel,
-} from "../warEvent/view/WeaModifyTileBuffSimplePanel.ts";
-import {
-    type OpenData as WeaModifyUnitBuffSimplePanelOpenData,
-    Panel as ViewWeaModifyUnitBuffSimplePanel,
-} from "../warEvent/view/WeaModifyUnitBuffSimplePanel.ts";
-import {
-    type OpenData as WeaPersistentModifyPlayerAttributePanelOpenData,
-    Panel as ViewWeaPersistentModifyPlayerAttributePanel,
-} from "../warEvent/view/WeaPersistentModifyPlayerAttributePanel.ts";
-import {
-    type OpenData as WeaPersistentModifyUnitAttributePanelOpenData,
-    Panel as ViewWeaPersistentModifyUnitAttributePanel,
-} from "../warEvent/view/WeaPersistentModifyUnitAttributePanel.ts";
-import {
-    type OpenData as WeaPersistentPlayBgmPanelOpenData,
-    Panel as ViewWeaPersistentPlayBgmPanel,
-} from "../warEvent/view/WeaPersistentPlayBgmPanel.ts";
-import {
-    type OpenData as WeaPersistentShowTextPanelOpenData,
-    Panel as ViewWeaPersistentShowTextPanel,
-} from "../warEvent/view/WeaPersistentShowTextPanel.ts";
-import {
-    type OpenData as WeaPlayBgmPanelOpenData,
-    Panel as ViewWeaPlayBgmPanel,
-} from "../warEvent/view/WeaPlayBgmPanel.ts";
-import {
-    type OpenData as WeaPlaySfxPanelOpenData,
-    Panel as ViewWeaPlaySfxPanel,
-} from "../warEvent/view/WeaPlaySfxPanel.ts";
-import {
-    type OpenData as WeaSetCustomBuildingStateExprPanelOpenData,
-    Panel as ViewWeaSetCustomBuildingStateExprPanel,
-} from "../warEvent/view/WeaSetCustomBuildingStateExprPanel.ts";
-import {
-    type OpenData as WeaSetCustomBuildingStateSimplePanelOpenData,
-    Panel as ViewWeaSetCustomBuildingStateSimplePanel,
-} from "../warEvent/view/WeaSetCustomBuildingStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetCustomCannonStateExprPanelOpenData,
-    Panel as ViewWeaSetCustomCannonStateExprPanel,
-} from "../warEvent/view/WeaSetCustomCannonStateExprPanel.ts";
-import {
-    type OpenData as WeaSetCustomCannonStateSimplePanelOpenData,
-    Panel as ViewWeaSetCustomCannonStateSimplePanel,
-} from "../warEvent/view/WeaSetCustomCannonStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetCustomCountersPanelOpenData,
-    Panel as ViewWeaSetCustomCountersPanel,
-} from "../warEvent/view/WeaSetCustomCountersPanel.ts";
-import {
-    type OpenData as WeaSetCustomCrystalStateExprPanelOpenData,
-    Panel as ViewWeaSetCustomCrystalStateExprPanel,
-} from "../warEvent/view/WeaSetCustomCrystalStateExprPanel.ts";
-import {
-    type OpenData as WeaSetCustomCrystalStateSimplePanelOpenData,
-    Panel as ViewWeaSetCustomCrystalStateSimplePanel,
-} from "../warEvent/view/WeaSetCustomCrystalStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetCustomLaserTurretStateExprPanelOpenData,
-    Panel as ViewWeaSetCustomLaserTurretStateExprPanel,
-} from "../warEvent/view/WeaSetCustomLaserTurretStateExprPanel.ts";
-import {
-    type OpenData as WeaSetCustomLaserTurretStateSimplePanelOpenData,
-    Panel as ViewWeaSetCustomLaserTurretStateSimplePanel,
-} from "../warEvent/view/WeaSetCustomLaserTurretStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetForceFogCodeExprPanelOpenData,
-    Panel as ViewWeaSetForceFogCodeExprPanel,
-} from "../warEvent/view/WeaSetForceFogCodeExprPanel.ts";
-import {
-    type OpenData as WeaSetForceFogCodeSimplePanelOpenData,
-    Panel as ViewWeaSetForceFogCodeSimplePanel,
-} from "../warEvent/view/WeaSetForceFogCodeSimplePanel.ts";
-import {
-    type OpenData as WeaSetPlayerStateExprPanelOpenData,
-    Panel as ViewWeaSetPlayerStateExprPanel,
-} from "../warEvent/view/WeaSetPlayerStateExprPanel.ts";
-import {
-    type OpenData as WeaSetPlayerStateSimplePanelOpenData,
-    Panel as ViewWeaSetPlayerStateSimplePanel,
-} from "../warEvent/view/WeaSetPlayerStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetTaskObjectiveStatePanelOpenData,
-    Panel as ViewWeaSetTaskObjectiveStatePanel,
-} from "../warEvent/view/WeaSetTaskObjectiveStatePanel.ts";
-import {
-    type OpenData as WeaSetTileStateExprPanelOpenData,
-    Panel as ViewWeaSetTileStateExprPanel,
-} from "../warEvent/view/WeaSetTileStateExprPanel.ts";
-import {
-    type OpenData as WeaSetTileStateSimplePanelOpenData,
-    Panel as ViewWeaSetTileStateSimplePanel,
-} from "../warEvent/view/WeaSetTileStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetTileTypeExprPanelOpenData,
-    Panel as ViewWeaSetTileTypeExprPanel,
-} from "../warEvent/view/WeaSetTileTypeExprPanel.ts";
-import {
-    type OpenData as WeaSetTileTypeSimplePanelOpenData,
-    Panel as ViewWeaSetTileTypeSimplePanel,
-} from "../warEvent/view/WeaSetTileTypeSimplePanel.ts";
-import {
-    type OpenData as WeaSetUnitMovePathVisibilityPanelOpenData,
-    Panel as ViewWeaSetUnitMovePathVisibilityPanel,
-} from "../warEvent/view/WeaSetUnitMovePathVisibilityPanel.ts";
-import {
-    type OpenData as WeaSetUnitOwnershipExprPanelOpenData,
-    Panel as ViewWeaSetUnitOwnershipExprPanel,
-} from "../warEvent/view/WeaSetUnitOwnershipExprPanel.ts";
-import {
-    type OpenData as WeaSetUnitOwnershipSimplePanelOpenData,
-    Panel as ViewWeaSetUnitOwnershipSimplePanel,
-} from "../warEvent/view/WeaSetUnitOwnershipSimplePanel.ts";
-import {
-    type OpenData as WeaSetUnitPositionExprPanelOpenData,
-    Panel as ViewWeaSetUnitPositionExprPanel,
-} from "../warEvent/view/WeaSetUnitPositionExprPanel.ts";
-import {
-    type OpenData as WeaSetUnitPositionSimplePanelOpenData,
-    Panel as ViewWeaSetUnitPositionSimplePanel,
-} from "../warEvent/view/WeaSetUnitPositionSimplePanel.ts";
-import {
-    type OpenData as WeaSetUnitStateExprPanelOpenData,
-    Panel as ViewWeaSetUnitStateExprPanel,
-} from "../warEvent/view/WeaSetUnitStateExprPanel.ts";
-import {
-    type OpenData as WeaSetUnitStateSimplePanelOpenData,
-    Panel as ViewWeaSetUnitStateSimplePanel,
-} from "../warEvent/view/WeaSetUnitStateSimplePanel.ts";
-import {
-    type OpenData as WeaSetUnitTypeExprPanelOpenData,
-    Panel as ViewWeaSetUnitTypeExprPanel,
-} from "../warEvent/view/WeaSetUnitTypeExprPanel.ts";
-import {
-    type OpenData as WeaSetUnitTypeSimplePanelOpenData,
-    Panel as ViewWeaSetUnitTypeSimplePanel,
-} from "../warEvent/view/WeaSetUnitTypeSimplePanel.ts";
-import {
-    type OpenData as WeaSetViewpointExprPanelOpenData,
-    Panel as ViewWeaSetViewpointExprPanel,
-} from "../warEvent/view/WeaSetViewpointExprPanel.ts";
-import {
-    type OpenData as WeaSetViewpointSimplePanelOpenData,
-    Panel as ViewWeaSetViewpointSimplePanel,
-} from "../warEvent/view/WeaSetViewpointSimplePanel.ts";
-import {
-    type OpenData as WeaSetWeatherExprPanelOpenData,
-    Panel as ViewWeaSetWeatherExprPanel,
-} from "../warEvent/view/WeaSetWeatherExprPanel.ts";
-import {
-    type OpenData as WeaSetWeatherSimplePanelOpenData,
-    Panel as ViewWeaSetWeatherSimplePanel,
-} from "../warEvent/view/WeaSetWeatherSimplePanel.ts";
-import {
-    type OpenData as WeaSmallDialogueSimplePanelOpenData,
-    Panel as ViewWeaSmallDialogueSimplePanel,
-} from "../warEvent/view/WeaSmallDialogueSimplePanel.ts";
-import {
-    type OpenData as WeaStopPersistentActionPanelOpenData,
-    Panel as ViewWeaStopPersistentActionPanel,
-} from "../warEvent/view/WeaStopPersistentActionPanel.ts";
-import {
-    type OpenData as WeBigDialogueBackgroundPanelOpenData,
-    Panel as ViewWeBigDialogueBackgroundPanel,
-} from "../warEvent/view/WeBigDialogueBackgroundPanel.ts";
-import {
-    type OpenData as WecEventCalledCountPanelOpenData,
-    Panel as ViewWecEventCalledCountPanel,
-} from "../warEvent/view/WecEventCalledCountPanel.ts";
-import {
-    type OpenData as WecExpressionPanelOpenData,
-    Panel as ViewWecExpressionPanel,
-} from "../warEvent/view/WecExpressionPanel.ts";
-import {
-    type OpenData as WecManualActionStatisticsPanelOpenData,
-    Panel as ViewWecManualActionStatisticsPanel,
-} from "../warEvent/view/WecManualActionStatisticsPanel.ts";
-import {
-    type OpenData as WeCommandPanelOpenData,
-    Panel as ViewWeCommandPanel,
-} from "../warEvent/view/WeCommandPanel.ts";
-import {
-    type OpenData as WeConditionModifyPanel60OpenData,
-    Panel as WeConditionModifyPanel60Panel,
-} from "../warEvent/view/WeConditionModifyPanel60.ts";
-import {
-    type OpenData as WeConditionReplacePanelOpenData,
-    Panel as ViewWeConditionReplacePanel,
-} from "../warEvent/view/WeConditionReplacePanel.ts";
-import {
-    type OpenData as WeConditionTypeListPanelOpenData,
-    Panel as ViewWeConditionTypeListPanel,
-} from "../warEvent/view/WeConditionTypeListPanel.ts";
-import {
-    type OpenData as WecOngoingPersistentActionPanelOpenData,
-    Panel as ViewWecOngoingPersistentActionPanel,
-} from "../warEvent/view/WecOngoingPersistentActionPanel.ts";
-import {
-    type OpenData as WecPlayerPresencePanelOpenData,
-    Panel as ViewWecPlayerPresencePanel,
-} from "../warEvent/view/WecPlayerPresencePanel.ts";
-import {
-    type OpenData as WecTilePresencePanelOpenData,
-    Panel as ViewWecTilePresencePanel,
-} from "../warEvent/view/WecTilePresencePanel.ts";
-import {
-    type OpenData as WecTurnAndPlayerPanelOpenData,
-    Panel as ViewWecTurnAndPlayerPanel,
-} from "../warEvent/view/WecTurnAndPlayerPanel.ts";
-import {
-    type OpenData as WecUnitPresencePanelOpenData,
-    Panel as ViewWecUnitPresencePanel,
-} from "../warEvent/view/WecUnitPresencePanel.ts";
-import {
-    type OpenData as WeCustomCounterNameListPanelOpenData,
-    Panel as ViewWeCustomCounterNameListPanel,
-} from "../warEvent/view/WeCustomCounterNameListPanel.ts";
-import {
-    type OpenData as WecWeatherAndFogPanelOpenData,
-    Panel as ViewWecWeatherAndFogPanel,
-} from "../warEvent/view/WecWeatherAndFogPanel.ts";
-import {
-    type OpenData as WeEventNameListPanelOpenData,
-    Panel as ViewWeEventNameListPanel,
-} from "../warEvent/view/WeEventNameListPanel.ts";
-import {
-    type OpenData as WeMainPanelOpenData,
-    Panel as ViewWeMainPanel,
-} from "../warEvent/view/WeMainPanel.ts";
-import {
-    type OpenData as WeNodeReplacePanelOpenData,
-    Panel as ViewWeNodeReplacePanel,
-} from "../warEvent/view/WeNodeReplacePanel.ts";
-import {
-    type OpenData as WePlayerFilterPanelOpenData,
-    Panel as ViewWePlayerFilterPanel,
-} from "../warEvent/view/WePlayerFilterPanel.ts";
-import {
-    type OpenData as WePositionFilterPanelOpenData,
-    Panel as ViewWePositionFilterPanel,
-} from "../warEvent/view/WePositionFilterPanel.ts";
-import {
-    type OpenData as WeTileBuffFilterPanelOpenData,
-    Panel as ViewWeTileBuffFilterPanel,
-} from "../warEvent/view/WeTileBuffFilterPanel.ts";
-import {
-    type OpenData as WeTileCustomCannonPanelOpenData,
-    Panel as ViewWeTileCustomCannonPanel,
-} from "../warEvent/view/WeTileCustomCannonPanel.ts";
-import {
-    type OpenData as WeTileCustomCrystalPanelOpenData,
-    Panel as ViewWeTileCustomCrystalPanel,
-} from "../warEvent/view/WeTileCustomCrystalPanel.ts";
-import {
-    type OpenData as WeTileCustomLaserTurretPanelOpenData,
-    Panel as ViewWeTileCustomLaserTurretPanel,
-} from "../warEvent/view/WeTileCustomLaserTurretPanel.ts";
-import {
-    type OpenData as WeTileFilterPanelOpenData,
-    Panel as ViewWeTileFilterPanel,
-} from "../warEvent/view/WeTileFilterPanel.ts";
-import {
-    type OpenData as WeUnitBuffFilterPanelOpenData,
-    Panel as ViewWeUnitBuffFilterPanel,
-} from "../warEvent/view/WeUnitBuffFilterPanel.ts";
-import {
-    type OpenData as WeUnitFilterPanelOpenData,
-    Panel as ViewWeUnitFilterPanel,
-} from "../warEvent/view/WeUnitFilterPanel.ts";
-import {
-    type OpenData as WwDeleteWatcherWarsPanelOpenData,
-    Panel as ViewWwDeleteWatcherWarsPanel,
-} from "../watchWar/view/WwDeleteWatcherWarsPanel.ts";
-import {
-    type OpenData as WwHandleRequestWarsPanelOpenData,
-    Panel as ViewWwHandleRequestWarsPanel,
-} from "../watchWar/view/WwHandleRequestWarsPanel.ts";
-import {
-    type OpenData as WwMainMenuPanelOpenData,
-    Panel as ViewWwMainMenuPanel,
-} from "../watchWar/view/WwMainMenuPanel.ts";
-import {
-    type OpenData as WwMakeRequestDetailPanelOpenData,
-    Panel as ViewWwMakeRequestDetailPanel,
-} from "../watchWar/view/WwMakeRequestDetailPanel.ts";
-import {
-    type OpenData as WwMakeRequestWarsPanelOpenData,
-    Panel as ViewWwMakeRequestWarsPanel,
-} from "../watchWar/view/WwMakeRequestWarsPanel.ts";
-import {
-    type OpenData as WwOngoingWarsPanelOpenData,
-    Panel as ViewWwOngoingWarsPanel,
-} from "../watchWar/view/WwOngoingWarsPanel.ts";
-import {
-    type OpenData as WwSearchWarPanelOpenData,
-    Panel as ViewWwSearchWarPanel,
-} from "../watchWar/view/WwSearchWarPanel.ts";
-import type { PanelConfig } from "./Types.ts";
+    ActionPlanners_ActionPlannerPanel,
+    AutoTourneys_Mains_Views_AtGlobalSettingsPanel,
+    AutoTourneys_Mains_Views_AtRegisterPanel,
+    AutoTourneys_Rooms_Views_AtrMainMenuPanel,
+    AutoTourneys_Rooms_Views_AtrPreviewMapListPanel,
+    AutoTourneys_Rooms_Views_AtrRoomInfoPanel,
+    AutoTourneys_Mains_Views_AtSetInitialBracketsPanel,
+    AutoTourneys_Mains_Views_AtSetMapPoolPanel,
+    AutoTourneys_Mains_Views_AtTourneyInfoPanel,
+    AutoTourneys_Mains_Views_AtTourneySettingsPanel,
+    Broadcasts_Views_BroadcastAddMessagePanel,
+    Broadcasts_Views_BroadcastMessageListPanel,
+    Broadcasts_Views_BroadcastPanel,
+    BaseWar_View_BwBackgroundPanel,
+    BaseWar_View_BwBeginTurnPanel,
+    BaseWar_View_BwBigDialoguePanel,
+    BaseWar_View_BwCaptureProgressPanel,
+    BaseWar_View_BwCustomCounterListPanel,
+    BaseWar_View_BwDamagePreviewPanel,
+    BaseWar_View_BwMapSimpleDialogueListPanel,
+    BaseWar_View_BwMapSimpleDialoguePanel,
+    BaseWar_View_BwMarkGridPanel,
+    BaseWar_View_BwProduceUnitPanel,
+    BaseWar_View_BwSmallDialoguePanel,
+    BaseWar_View_BwTaskObjectivePanel,
+    BaseWar_View_BwTileBriefPanel,
+    BaseWar_View_BwTileBuffListPanel,
+    BaseWar_View_BwTileDetailPanel,
+    BaseWar_View_BwTileStatisticsPanel,
+    BaseWar_View_BwUnitActionsPanel,
+    BaseWar_View_BwUnitBriefPanel,
+    BaseWar_View_BwUnitBuffListPanel,
+    BaseWar_View_BwUnitDetailPanel,
+    BaseWar_View_BwUnitListPanel,
+    BaseWar_View_BwUnitStatisticsPanel,
+    BaseWar_View_BwWarExtraInfoPanel,
+    BaseWar_View_BwWarInfoPanel,
+    BaseWar_View_BwWarPanel,
+    Campaigns_Views_CampaignCreateCampaignsPanel,
+    Campaigns_Views_CampaignCreateMapsPanel,
+    Campaigns_Views_CampaignCreateQuickSettingsPanel,
+    CoopCustomRoom_View_CcrCreateMapListPanel,
+    CoopCustomRoom_View_CcrCreateSettingsPanel,
+    CoopCustomRoom_View_CcrMainMenuPanel,
+    CoopCustomRoom_View_CcrRoomInfoPanel,
+    ChangeLogs_ChangeLogPanel,
+    Chat_View_ChatCommandPanel,
+    Chat_View_ChatPanel,
+    Sounds_Panels_ChooseSingleBgmPanel,
+    Campaigns_Managements_Views_CmCampaignCommandsPanel,
+    Campaigns_Managements_Views_CmCampaignDesignersPanel,
+    Campaigns_Managements_Views_CmCampaignListPanel,
+    Campaigns_Managements_Views_CmCampaignMapsPanel,
+    Common_View_CommonAlertPanel,
+    Common_View_CommonApiPanel,
+    Common_View_CommonBlockPanel,
+    Common_View_CommonChangeVersionPanel,
+    Common_View_CommonChooseCoAndColorPanel,
+    Common_View_CommonChooseGridIndexPanel,
+    Common_View_CommonChooseMapSorterPanel,
+    Common_View_CommonChooseMultiCoCategoryIdPanel,
+    Common_View_CommonChooseMultiCoIdPanel,
+    Common_View_CommonChooseMultiIntegerPanel,
+    Common_View_CommonChooseMultiNumberPanel,
+    Common_View_CommonChooseMultiTileTypePanel,
+    Common_View_CommonChooseMultiUnitTypePanel,
+    Common_View_CommonChooseOverridingSkinIdPanel,
+    Common_View_CommonChooseSfxPanel,
+    Common_View_CommonChooseSingleCoCategoryIdPanel,
+    Common_View_CommonChooseSingleCoIdPanel,
+    Common_View_CommonChooseSingleGridMarkPanel,
+    Common_View_CommonChooseSingleMapEditorSlotPanel,
+    Common_View_CommonChooseSingleNormalMapIdPanel,
+    Common_View_CommonChooseSingleNumberPanel,
+    Common_View_CommonChooseSingleSkinIdPanel,
+    Common_View_CommonChooseSingleSpmSaveSlotPanel,
+    Common_View_CommonChooseSingleTileTypePanel,
+    Common_View_CommonChooseSingleUnitTypePanel,
+    Common_View_CommonChooseTileBasePanel,
+    Common_View_CommonChooseTileDecorationPanel,
+    Common_View_CommonChooseTileInfoPanel,
+    Common_View_CommonChooseTileObjectPanel,
+    Common_View_CommonChooseTileTypePanel,
+    Common_View_CommonChooseUnitAndPlayerIndexPanel,
+    Common_View_CommonChooseUnitAttrPanel,
+    Common_View_CommonChooseUnitTagPanel,
+    Common_View_CommonCoInfoPanel,
+    Common_View_CommonCoListPanel,
+    Common_View_CommonConfirmPanel,
+    Common_View_CommonCoStatisticsFilterPanel,
+    Common_View_CommonCoStatisticsPanel,
+    Common_View_CommonDamageCalculatorPanel,
+    Common_View_CommonDamageChartPanel,
+    Common_View_CommonDeletePlayerPanel,
+    Common_View_CommonDoubleSliderPanel,
+    Common_View_CommonErrorPanel,
+    Common_View_CommonExpressionTypeIdPanel,
+    Common_View_CommonGameChartPanel,
+    Common_View_CommonHelpPanel,
+    Common_View_CommonInputDurationPanel,
+    Common_View_CommonInputExpressionPanel,
+    Common_View_CommonInputIntegerPanel,
+    Common_View_CommonInputLanguageTextPanel,
+    Common_View_CommonInputNullableIntegerPanel,
+    Common_View_CommonInputPanel,
+    Common_View_CommonInputShortLangTextPanel,
+    Common_View_CommonMapFilterPanel,
+    Common_View_CommonMapWarStatisticsPanel,
+    Common_View_CommonRoomFilterPanel,
+    Common_View_CommonSearchMultiUserPanel,
+    Common_View_CommonSearchSingleUserPanel,
+    Common_View_CommonServerStatusPanel,
+    Common_View_CommonShowCoCategoryIdPanel,
+    Common_View_CommonShowCoIdPanel,
+    Common_View_CommonShowGameModePanel,
+    Common_View_CommonShowLangTextPanel,
+    Common_View_CommonShowMapPanel,
+    Common_View_CommonShowMapTagIdPanel,
+    Common_View_CommonShowPlayerListPanel,
+    Common_View_CommonShowSelectedCoCategoryIdPanel,
+    Common_View_CommonShowUnitTypePanel,
+    Common_View_CommonTileChartPanel,
+    Common_View_CommonTutorialPanel,
+    Common_View_CommonWarEventListPanel,
+    Gm_View_GmSetUserFullPrivilegePanel,
+    HalfwayReplayWar_View_HrwTopPanel,
+    HalfwayReplayWar_View_HrwWarMenuPanel,
+    Leaderboard_View_LbMrwListPanel,
+    Leaderboard_View_LbSpmOverallListPanel,
+    Lobby_View_LobbyBackgroundPanel,
+    Lobby_View_LobbyBottomPanel,
+    Lobby_View_LobbyPanel,
+    Lobby_View_LobbyStartPanel,
+    Lobby_View_LobbyTopPanel,
+    Lobby_View_LobbyTopRightPanel,
+    Mail_View_MailPanel,
+    MultiCustomRoom_View_McrCreateMapListPanel,
+    MultiCustomRoom_View_McrCreateSettingsPanel,
+    MultiCustomRoom_View_McrMainMenuPanel,
+    MultiCustomRoom_View_McrRoomInfoPanel,
+    MapEditors_Views_MeAutoAdjustPanel,
+    MapEditors_Views_MeChooseLocationPanel,
+    MapEditors_Views_MeChooseTileBasePanel,
+    MapEditors_Views_MeChooseTileDecorationPanel,
+    MapEditors_Views_MeChooseTileObjectPanel,
+    MapEditors_Views_MeChooseUnitPanel,
+    MapEditors_Views_MeClearPanel,
+    MapEditors_Views_MeImportContentPanel,
+    MapEditors_Views_MeImportExportPanel,
+    MapEditors_Views_MeMapInfoPanel,
+    MapEditors_Views_MeMapSimpleDialogueMainPanel,
+    MapEditors_Views_MeMapSimpleDialogueUtilPanel,
+    MapEditors_Views_MeResizePanel,
+    MapEditors_Views_MeSaveCampaignMapPanel,
+    MapEditors_Views_MeSaveNormalMapPanel,
+    MapEditors_Views_MeSetTileCustomNamePanel,
+    MapEditors_Views_MeSetUnitCustomNamePanel,
+    MapEditors_Views_MeSymmetricalPlayerIndexPanel,
+    MapEditors_Views_MeSymmetryFillTilePanel,
+    MapEditors_Views_MeSymmetryPanel,
+    MapEditors_Views_MeTaskObjectiveListPanel,
+    MapEditors_Views_MeTaskObjectivePanel,
+    MapEditors_Views_MeTileCustomNameListPanel,
+    MapEditors_Views_MeTileUnitInfoPanel,
+    MapEditors_Views_MeTopPanel,
+    MapEditors_Views_MeUnitCustomNameListPanel,
+    MapEditors_Views_MeVisibilityPanel,
+    MapEditors_Views_MeWarMenuPanel,
+    MapEditors_Views_MeWarRuleMapSimpleDialoguePanel,
+    MapEditors_Views_MeWarRulePanel,
+    MapEditors_Views_MeWarRulePlayerRulePanel,
+    MapEditors_Views_MeWarRuleTaskObjectivePanel,
+    MapEditors_Views_MeWarRuleWarEventPanel,
+    MultiFreeRoom_View_MfrCreateSettingsPanel,
+    MultiFreeRoom_View_MfrMainMenuPanel,
+    MultiFreeRoom_View_MfrRoomInfoPanel,
+    MapManagement_View_MmCommandPanel,
+    MapManagement_View_MmMainMenuPanel,
+    MapManagement_View_MmMapTagListPanel,
+    MapManagement_View_MmModifyWarRulePanel,
+    MultiMatchRoom_View_MmrBanMapPanel,
+    MapManagement_View_MmReviewListPanel,
+    MultiMatchRoom_View_MmrMainMenuPanel,
+    MultiMatchRoom_View_MmrPreviewMapListPanel,
+    MultiMatchRoom_View_MmrRoomInfoPanel,
+    MultiMatchRoom_View_MmrSetMaxConcurrentCountPanel,
+    MultiMatchRoom_View_MmrSetTimerPanel,
+    MapManagement_View_MmWarRuleMapSimpleDialoguePanel,
+    MapManagement_View_MmWarRulePanel,
+    MapManagement_View_MmWarRulePlayerRulePanel,
+    MapManagement_View_MmWarRuleTaskObjectivePanel,
+    MapManagement_View_MmWarRuleWarEventPanel,
+    MultiPlayerWar_View_MpwJoinRoomListPanel,
+    MultiPlayerWar_View_MpwMyRoomListPanel,
+    MultiPlayerWar_View_MpwMyWarListPanel,
+    MultiPlayerWar_View_MpwSidePanel,
+    MultiPlayerWar_View_MpwSpectatePanel,
+    MultiPlayerWar_View_MpwTopPanel,
+    MultiPlayerWar_View_MpwWarAdvancedMenuPanel,
+    MultiPlayerWar_View_MpwWarMenuPanel,
+    MultiRankRoom_View_MrrBanMapPanel,
+    MultiRankRoom_View_MrrMainMenuPanel,
+    MultiRankRoom_View_MrrPreviewMapListPanel,
+    MultiRankRoom_View_MrrRoomInfoPanel,
+    MultiRankRoom_View_MrrSetMaxConcurrentCountPanel,
+    MultiRankRoom_View_MrrSetTimerPanel,
+    type GamePanels_Types,
+    ReplayWar_View_RwPauseTimePanel,
+    ReplayWar_View_RwReplayListPanel,
+    ReplayWar_View_RwReplayProgressPanel,
+    ReplayWar_View_RwSearchReplayPanel,
+    ReplayWar_View_RwTopPanel,
+    ReplayWar_View_RwWarMenuPanel,
+    SingleCustomRoom_View_ScrCreateMapListPanel,
+    SingleCustomRoom_View_ScrCreateSettingsPanel,
+    Sounds_Panels_SettingsPanel,
+    SinglePlayerMode_View_SpmMainMenuPanel,
+    SinglePlayerMode_View_SpmMyWarRoomRecordPanel,
+    SinglePlayerMode_View_SpmWarListPanel,
+    SinglePlayerWar_View_SpwSidePanel,
+    SinglePlayerWar_View_SpwTopPanel,
+    SinglePlayerWar_View_SpwWarAdvancedMenuPanel,
+    SinglePlayerWar_View_SpwWarMenuPanel,
+    SingleRankRoom_View_SrrCreateMapListPanel,
+    SingleRankRoom_View_SrrCreateQuickSettingsPanel,
+    SingleRankRoom_View_SrrCreateSettingsPanel,
+    Users_Views_UserGameManagementPanel,
+    Users_Views_UserGraphicSettingsPanel,
+    Users_Views_UserLoginBackgroundPanel,
+    Users_Views_UserLoginPanel,
+    Users_Views_UserMedalPanel,
+    Users_Views_UserMiscSettingsPanel,
+    Users_Views_UserMpwStatisticsPanel,
+    Users_Views_UserOnlineUsersPanel,
+    Users_Views_UserPanel,
+    Users_Views_UserProfileSettingsPanel,
+    Users_Views_UserRegisterPanel,
+    Users_Views_UserSceneBgmSettingsPanel,
+    Users_Views_UserSetAvatarPanel,
+    Users_Views_UserSetCoBgmSettingsPanel,
+    Users_Views_UserSetDiscordInfoPanel,
+    Users_Views_UserSetEmailPanel,
+    Users_Views_UserSetOpacityPanel,
+    Users_Views_UserSetPasswordPanel,
+    Users_Views_UserSetPasswordWithEmailPanel,
+    Users_Views_UserSetRelationPanel,
+    Users_Views_UserSetStageScalePanel,
+    Users_Views_UserSettingsPanel,
+    Users_Views_UserWarHistoryPanel,
+    WarEvent_View_WeaAddTileBuffExprPanel,
+    WarEvent_View_WeaAddTileBuffSimplePanel,
+    WarEvent_View_WeaAddUnitBuffSimplePanel,
+    WarEvent_View_WeaAddUnitOnMapSimplePanel,
+    WarEvent_View_WeaBigDialogueSimplePanel,
+    WarEvent_View_WeActionReplacePanel,
+    WarEvent_View_WeActionTypeListPanel,
+    WarEvent_View_WeaDeleteTileBuffExprPanel,
+    WarEvent_View_WeaDeleteTileBuffSimplePanel,
+    WarEvent_View_WeaDeleteUnitBuffSimplePanel,
+    WarEvent_View_WeaDestroyUnitExprPanel,
+    WarEvent_View_WeaDestroyUnitSimplePanel,
+    WarEvent_View_WeaFillUnitLoadedExprPanel,
+    WarEvent_View_WeaFillUnitLoadedSimplePanel,
+    WarEvent_View_WeaFillUnitOnMapExprPanel,
+    WarEvent_View_WeaFillUnitOnMapSimplePanel,
+    WarEvent_View_WeaModifyTileBuffExprPanel,
+    WarEvent_View_WeaModifyTileBuffSimplePanel,
+    WarEvent_View_WeaModifyUnitBuffSimplePanel,
+    WarEvent_View_WeaPersistentModifyPlayerAttributePanel,
+    WarEvent_View_WeaPersistentModifyUnitAttributePanel,
+    WarEvent_View_WeaPersistentPlayBgmPanel,
+    WarEvent_View_WeaPersistentShowTextPanel,
+    WarEvent_View_WeaPlayBgmPanel,
+    WarEvent_View_WeaPlaySfxPanel,
+    WarEvent_View_WeaSetCustomBuildingStateExprPanel,
+    WarEvent_View_WeaSetCustomBuildingStateSimplePanel,
+    WarEvent_View_WeaSetCustomCannonStateExprPanel,
+    WarEvent_View_WeaSetCustomCannonStateSimplePanel,
+    WarEvent_View_WeaSetCustomCountersPanel,
+    WarEvent_View_WeaSetCustomCrystalStateExprPanel,
+    WarEvent_View_WeaSetCustomCrystalStateSimplePanel,
+    WarEvent_View_WeaSetCustomLaserTurretStateExprPanel,
+    WarEvent_View_WeaSetCustomLaserTurretStateSimplePanel,
+    WarEvent_View_WeaSetForceFogCodeExprPanel,
+    WarEvent_View_WeaSetForceFogCodeSimplePanel,
+    WarEvent_View_WeaSetPlayerStateExprPanel,
+    WarEvent_View_WeaSetPlayerStateSimplePanel,
+    WarEvent_View_WeaSetTaskObjectiveStatePanel,
+    WarEvent_View_WeaSetTileStateExprPanel,
+    WarEvent_View_WeaSetTileStateSimplePanel,
+    WarEvent_View_WeaSetTileTypeExprPanel,
+    WarEvent_View_WeaSetTileTypeSimplePanel,
+    WarEvent_View_WeaSetUnitMovePathVisibilityPanel,
+    WarEvent_View_WeaSetUnitOwnershipExprPanel,
+    WarEvent_View_WeaSetUnitOwnershipSimplePanel,
+    WarEvent_View_WeaSetUnitPositionExprPanel,
+    WarEvent_View_WeaSetUnitPositionSimplePanel,
+    WarEvent_View_WeaSetUnitStateExprPanel,
+    WarEvent_View_WeaSetUnitStateSimplePanel,
+    WarEvent_View_WeaSetUnitTypeExprPanel,
+    WarEvent_View_WeaSetUnitTypeSimplePanel,
+    WarEvent_View_WeaSetViewpointExprPanel,
+    WarEvent_View_WeaSetViewpointSimplePanel,
+    WarEvent_View_WeaSetWeatherExprPanel,
+    WarEvent_View_WeaSetWeatherSimplePanel,
+    WarEvent_View_WeaSmallDialogueSimplePanel,
+    WarEvent_View_WeaStopPersistentActionPanel,
+    WarEvent_View_WeBigDialogueBackgroundPanel,
+    WarEvent_View_WecEventCalledCountPanel,
+    WarEvent_View_WecExpressionPanel,
+    WarEvent_View_WecManualActionStatisticsPanel,
+    WarEvent_View_WeCommandPanel,
+    WarEvent_View_WeConditionModifyPanel60,
+    WarEvent_View_WeConditionReplacePanel,
+    WarEvent_View_WeConditionTypeListPanel,
+    WarEvent_View_WecOngoingPersistentActionPanel,
+    WarEvent_View_WecPlayerPresencePanel,
+    WarEvent_View_WecTilePresencePanel,
+    WarEvent_View_WecTurnAndPlayerPanel,
+    WarEvent_View_WecUnitPresencePanel,
+    WarEvent_View_WeCustomCounterNameListPanel,
+    WarEvent_View_WecWeatherAndFogPanel,
+    WarEvent_View_WeEventNameListPanel,
+    WarEvent_View_WeMainPanel,
+    WarEvent_View_WeNodeReplacePanel,
+    WarEvent_View_WePlayerFilterPanel,
+    WarEvent_View_WePositionFilterPanel,
+    WarEvent_View_WeTileBuffFilterPanel,
+    WarEvent_View_WeTileCustomCannonPanel,
+    WarEvent_View_WeTileCustomCrystalPanel,
+    WarEvent_View_WeTileCustomLaserTurretPanel,
+    WarEvent_View_WeTileFilterPanel,
+    WarEvent_View_WeUnitBuffFilterPanel,
+    WarEvent_View_WeUnitFilterPanel,
+    WatchWar_View_WwDeleteWatcherWarsPanel,
+    WatchWar_View_WwHandleRequestWarsPanel,
+    WatchWar_View_WwMainMenuPanel,
+    WatchWar_View_WwMakeRequestDetailPanel,
+    WatchWar_View_WwMakeRequestWarsPanel,
+    WatchWar_View_WwOngoingWarsPanel,
+    WatchWar_View_WwSearchWarPanel,
+    Graphics_Constants,
+    GameVersions_Utils,
+    Helpers_Text,
+    ResManager,
+} from "../internal.ts";
 
 type DictType = {
-    ActionPlannerPanel                                      : PanelConfig<ActionPlannerPanelOpenData>;
+    ActionPlannerPanel                                      : GamePanels_Types.PanelConfig<ActionPlanners_ActionPlannerPanel.OpenData>;
 
-    AtGlobalSettingsPanel                                   : PanelConfig<AtGlobalSettingsPanelOpenData>;
-    AtRegisterPanel                                         : PanelConfig<AtRegisterPanelOpenData>;
-    AtSetInitialBracketsPanel                               : PanelConfig<AtSetInitialBracketsPanelOpenData>;
-    AtSetMapPoolPanel                                       : PanelConfig<AtSetMapPoolPanelOpenData>;
-    AtTourneyInfoPanel                                      : PanelConfig<AtTourneyInfoPanelOpenData>;
-    AtTourneySettingsPanel                                  : PanelConfig<AtTourneySettingsPanelOpenData>;
+    AtGlobalSettingsPanel                                   : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtGlobalSettingsPanel.OpenData>;
+    AtRegisterPanel                                         : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtRegisterPanel.OpenData>;
+    AtSetInitialBracketsPanel                               : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtSetInitialBracketsPanel.OpenData>;
+    AtSetMapPoolPanel                                       : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtSetMapPoolPanel.OpenData>;
+    AtTourneyInfoPanel                                      : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtTourneyInfoPanel.OpenData>;
+    AtTourneySettingsPanel                                  : GamePanels_Types.PanelConfig<AutoTourneys_Mains_Views_AtTourneySettingsPanel.OpenData>;
 
-    AtrMainMenuPanel                                        : PanelConfig<AtrMainMenuPanelOpenData>;
-    AtrPreviewMapListPanel                                  : PanelConfig<AtrPreviewMapListPanelOpenData>;
-    AtrRoomInfoPanel                                        : PanelConfig<AtrRoomInfoPanelOpenData>;
+    AtrMainMenuPanel                                        : GamePanels_Types.PanelConfig<AutoTourneys_Rooms_Views_AtrMainMenuPanel.OpenData>;
+    AtrPreviewMapListPanel                                  : GamePanels_Types.PanelConfig<AutoTourneys_Rooms_Views_AtrPreviewMapListPanel.OpenData>;
+    AtrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<AutoTourneys_Rooms_Views_AtrRoomInfoPanel.OpenData>;
 
-    BwBackgroundPanel                                       : PanelConfig<BwBackgroundPanelOpenData>;
-    BwBeginTurnPanel                                        : PanelConfig<BwBeginTurnPanelOpenData>;
-    BwCaptureProgressPanel                                  : PanelConfig<BwCaptureProgressPanelOpenData>;
-    BwCustomCounterListPanel                                : PanelConfig<BwCustomCounterListPanelOpenData>;
-    BwDamagePreviewPanel                                    : PanelConfig<BwDamagePreviewPanelOpenData>;
-    BwBigDialoguePanel                                      : PanelConfig<BwBigDialoguePanelOpenData>;
-    BwMapSimpleDialogueListPanel                            : PanelConfig<BwMapSimpleDialogueListPanelOpenData>;
-    BwMapSimpleDialoguePanel                                : PanelConfig<BwMapSimpleDialoguePanelOpenData>;
-    BwMarkGridPanel                                         : PanelConfig<BwMarkGridPanelOpenData>;
-    BwProduceUnitPanel                                      : PanelConfig<BwProduceUnitPanelOpenData>;
-    BwTaskObjectivePanel                                    : PanelConfig<BwTaskObjectivePanelOpenData>;
-    BwTileBriefPanel                                        : PanelConfig<BwTileBriefPanelOpenData>;
-    BwTileBuffListPanel                                     : PanelConfig<BwTileBuffListPanelOpenData>;
-    BwTileDetailPanel                                       : PanelConfig<BwTileDetailPanelOpenData>;
-    BwTileStatisticsPanel                                   : PanelConfig<BwTileStatisticsPanelOpenData>;
-    BwUnitActionsPanel                                      : PanelConfig<BwUnitActionsPanelOpenData>;
-    BwUnitBriefPanel                                        : PanelConfig<BwUnitBriefPanelOpenData>;
-    BwUnitBuffListPanel                                     : PanelConfig<BwUnitBuffListPanelOpenData>;
-    BwUnitDetailPanel                                       : PanelConfig<BwUnitDetailPanelOpenData>;
-    BwUnitListPanel                                         : PanelConfig<BwUnitListPanelOpenData>;
-    BwUnitStatisticsPanel                                   : PanelConfig<BwUnitStatisticsPanelOpenData>;
-    BwWarExtraInfoPanel                                     : PanelConfig<BwWarExtraInfoPanelOpenData>;
-    BwWarInfoPanel                                          : PanelConfig<BwWarInfoPanelOpenData>;
-    BwWarPanel                                              : PanelConfig<BwWarPanelOpenData>;
-    BwSmallDialoguePanel                                    : PanelConfig<BwSmallDialoguePanelOpenData>;
+    BwBackgroundPanel                                       : GamePanels_Types.PanelConfig<BaseWar_View_BwBackgroundPanel.OpenData>;
+    BwBeginTurnPanel                                        : GamePanels_Types.PanelConfig<BaseWar_View_BwBeginTurnPanel.OpenData>;
+    BwCaptureProgressPanel                                  : GamePanels_Types.PanelConfig<BaseWar_View_BwCaptureProgressPanel.OpenData>;
+    BwCustomCounterListPanel                                : GamePanels_Types.PanelConfig<BaseWar_View_BwCustomCounterListPanel.OpenData>;
+    BwDamagePreviewPanel                                    : GamePanels_Types.PanelConfig<BaseWar_View_BwDamagePreviewPanel.OpenData>;
+    BwBigDialoguePanel                                      : GamePanels_Types.PanelConfig<BaseWar_View_BwBigDialoguePanel.OpenData>;
+    BwMapSimpleDialogueListPanel                            : GamePanels_Types.PanelConfig<BaseWar_View_BwMapSimpleDialogueListPanel.OpenData>;
+    BwMapSimpleDialoguePanel                                : GamePanels_Types.PanelConfig<BaseWar_View_BwMapSimpleDialoguePanel.OpenData>;
+    BwMarkGridPanel                                         : GamePanels_Types.PanelConfig<BaseWar_View_BwMarkGridPanel.OpenData>;
+    BwProduceUnitPanel                                      : GamePanels_Types.PanelConfig<BaseWar_View_BwProduceUnitPanel.OpenData>;
+    BwTaskObjectivePanel                                    : GamePanels_Types.PanelConfig<BaseWar_View_BwTaskObjectivePanel.OpenData>;
+    BwTileBriefPanel                                        : GamePanels_Types.PanelConfig<BaseWar_View_BwTileBriefPanel.OpenData>;
+    BwTileBuffListPanel                                     : GamePanels_Types.PanelConfig<BaseWar_View_BwTileBuffListPanel.OpenData>;
+    BwTileDetailPanel                                       : GamePanels_Types.PanelConfig<BaseWar_View_BwTileDetailPanel.OpenData>;
+    BwTileStatisticsPanel                                   : GamePanels_Types.PanelConfig<BaseWar_View_BwTileStatisticsPanel.OpenData>;
+    BwUnitActionsPanel                                      : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitActionsPanel.OpenData>;
+    BwUnitBriefPanel                                        : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitBriefPanel.OpenData>;
+    BwUnitBuffListPanel                                     : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitBuffListPanel.OpenData>;
+    BwUnitDetailPanel                                       : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitDetailPanel.OpenData>;
+    BwUnitListPanel                                         : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitListPanel.OpenData>;
+    BwUnitStatisticsPanel                                   : GamePanels_Types.PanelConfig<BaseWar_View_BwUnitStatisticsPanel.OpenData>;
+    BwWarExtraInfoPanel                                     : GamePanels_Types.PanelConfig<BaseWar_View_BwWarExtraInfoPanel.OpenData>;
+    BwWarInfoPanel                                          : GamePanels_Types.PanelConfig<BaseWar_View_BwWarInfoPanel.OpenData>;
+    BwWarPanel                                              : GamePanels_Types.PanelConfig<BaseWar_View_BwWarPanel.OpenData>;
+    BwSmallDialoguePanel                                    : GamePanels_Types.PanelConfig<BaseWar_View_BwSmallDialoguePanel.OpenData>;
 
-    BroadcastAddMessagePanel                                : PanelConfig<BroadcastAddMessagePanelOpenData>;
-    BroadcastMessageListPanel                               : PanelConfig<BroadcastMessageListPanelOpenData>;
-    BroadcastPanel                                          : PanelConfig<BroadcastPanelOpenData>;
+    BroadcastAddMessagePanel                                : GamePanels_Types.PanelConfig<Broadcasts_Views_BroadcastAddMessagePanel.OpenData>;
+    BroadcastMessageListPanel                               : GamePanels_Types.PanelConfig<Broadcasts_Views_BroadcastMessageListPanel.OpenData>;
+    BroadcastPanel                                          : GamePanels_Types.PanelConfig<Broadcasts_Views_BroadcastPanel.OpenData>;
 
-    CampaignCreateCampaignsPanel                            : PanelConfig<CampaignCreateCampaignsPanelOpenData>;
-    CampaignCreateMapsPanel                                 : PanelConfig<CampaignCreateMapsPanelOpenData>;
-    CampaignCreateQuickSettingsPanel                        : PanelConfig<CampaignCreateQuickSettingsPanelOpenData>;
+    CampaignCreateCampaignsPanel                            : GamePanels_Types.PanelConfig<Campaigns_Views_CampaignCreateCampaignsPanel.OpenData>;
+    CampaignCreateMapsPanel                                 : GamePanels_Types.PanelConfig<Campaigns_Views_CampaignCreateMapsPanel.OpenData>;
+    CampaignCreateQuickSettingsPanel                        : GamePanels_Types.PanelConfig<Campaigns_Views_CampaignCreateQuickSettingsPanel.OpenData>;
 
-    ChangeLogPanel                                          : PanelConfig<ChangeLogPanelOpenData>;
+    ChangeLogPanel                                          : GamePanels_Types.PanelConfig<ChangeLogs_ChangeLogPanel.OpenData>;
 
-    CcrCreateMapListPanel                                   : PanelConfig<CcrCreateMapListPanelOpenData>;
-    CcrCreateSettingsPanel                                  : PanelConfig<CcrCreateSettingsPanelOpenData>;
-    CcrMainMenuPanel                                        : PanelConfig<CcrMainMenuPanelOpenData>;
-    CcrRoomInfoPanel                                        : PanelConfig<CcrRoomInfoPanelOpenData>;
+    CcrCreateMapListPanel                                   : GamePanels_Types.PanelConfig<CoopCustomRoom_View_CcrCreateMapListPanel.OpenData>;
+    CcrCreateSettingsPanel                                  : GamePanels_Types.PanelConfig<CoopCustomRoom_View_CcrCreateSettingsPanel.OpenData>;
+    CcrMainMenuPanel                                        : GamePanels_Types.PanelConfig<CoopCustomRoom_View_CcrMainMenuPanel.OpenData>;
+    CcrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<CoopCustomRoom_View_CcrRoomInfoPanel.OpenData>;
 
-    ChatCommandPanel                                        : PanelConfig<ChatCommandPanelOpenData>;
-    ChatPanel                                               : PanelConfig<ChatPanelOpenData>;
+    ChatCommandPanel                                        : GamePanels_Types.PanelConfig<Chat_View_ChatCommandPanel.OpenData>;
+    ChatPanel                                               : GamePanels_Types.PanelConfig<Chat_View_ChatPanel.OpenData>;
 
-    CmCampaignCommandsPanel                                 : PanelConfig<CmCampaignCommandsPanelOpenData>;
-    CmCampaignDesignersPanel                                : PanelConfig<CmCampaignDesignersPanelOpenData>;
-    CmCampaignListPanel                                     : PanelConfig<CmCampaignListPanelOpenData>;
-    CmCampaignMapsPanel                                     : PanelConfig<CmCampaignMapsPanelOpenData>;
+    CmCampaignCommandsPanel                                 : GamePanels_Types.PanelConfig<Campaigns_Managements_Views_CmCampaignCommandsPanel.OpenData>;
+    CmCampaignDesignersPanel                                : GamePanels_Types.PanelConfig<Campaigns_Managements_Views_CmCampaignDesignersPanel.OpenData>;
+    CmCampaignListPanel                                     : GamePanels_Types.PanelConfig<Campaigns_Managements_Views_CmCampaignListPanel.OpenData>;
+    CmCampaignMapsPanel                                     : GamePanels_Types.PanelConfig<Campaigns_Managements_Views_CmCampaignMapsPanel.OpenData>;
 
-    CommonAlertPanel                                        : PanelConfig<CommonAlertPanelOpenData>;
-    CommonApiPanel                                          : PanelConfig<CommonApiPanelOpenData>;
-    CommonBlockPanel                                        : PanelConfig<CommonBlockPanelOpenData>;
-    CommonChangeVersionPanel                                : PanelConfig<CommonChangeVersionPanelOpenData>;
-    CommonChooseCoAndColorPanel                             : PanelConfig<CommonChooseCoAndColorPanelOpenData>;
-    CommonChooseGridIndexPanel                              : PanelConfig<CommonChooseGridIndexPanelOpenData>;
-    CommonChooseMapSorterPanel                              : PanelConfig<CommonChooseMapSorterPanelOpenData>;
-    CommonChooseMultiCoCategoryIdPanel                      : PanelConfig<CommonChooseMultiCoCategoryIdPanelOpenData>;
-    CommonChooseMultiCoIdPanel                              : PanelConfig<CommonChooseMultiCoIdPanelOpenData>;
-    CommonChooseMultiIntegerPanel                           : PanelConfig<CommonChooseMultiIntegerPanelOpenData>;
-    CommonChooseMultiNumberPanel                            : PanelConfig<CommonChooseMultiNumberPanelOpenData>;
-    CommonChooseMultiTileTypePanel                          : PanelConfig<CommonChooseMultiTileTypePanelOpenData>;
-    CommonChooseMultiUnitTypePanel                          : PanelConfig<CommonChooseMultiUnitTypePanelOpenData>;
-    CommonChooseOverridingSkinIdPanel                       : PanelConfig<CommonChooseOverridingSkinIdPanelOpenData>;
-    CommonChooseSfxPanel                                    : PanelConfig<CommonChooseSfxPanelOpenData>;
-    CommonChooseSingleCoCategoryIdPanel                     : PanelConfig<CommonChooseSingleCoCategoryIdPanelOpenData>;
-    CommonChooseSingleCoIdPanel                             : PanelConfig<CommonChooseSingleCoIdPanelOpenData>;
-    CommonChooseSingleGridMarkPanel                         : PanelConfig<CommonChooseSingleGridMarkPanelOpenData>;
-    CommonChooseSingleMapEditorSlotPanel                    : PanelConfig<CommonChooseSingleMapEditorSlotPanelOpenData>;
-    CommonChooseSingleNormalMapIdPanel                      : PanelConfig<CommonChooseSingleNormalMapIdPanelOpenData>;
-    CommonChooseSingleNumberPanel                           : PanelConfig<CommonChooseSingleNumberPanelOpenData>;
-    CommonChooseSingleSkinIdPanel                           : PanelConfig<CommonChooseSingleSkinIdPanelOpenData>;
-    CommonChooseSingleSpmSaveSlotPanel                      : PanelConfig<CommonChooseSingleSpmSaveSlotPanelOpenData>;
-    CommonChooseSingleTileTypePanel                         : PanelConfig<CommonChooseSingleTileTypePanelOpenData>;
-    CommonChooseSingleUnitTypePanel                         : PanelConfig<CommonChooseSingleUnitTypePanelOpenData>;
-    CommonChooseTileBasePanel                               : PanelConfig<CommonChooseTileBasePanelOpenData>;
-    CommonChooseTileDecorationPanel                         : PanelConfig<CommonChooseTileDecorationPanelOpenData>;
-    CommonChooseTileInfoPanel                               : PanelConfig<CommonChooseTileInfoPanelOpenData>;
-    CommonChooseTileObjectPanel                             : PanelConfig<CommonChooseTileObjectPanelOpenData>;
-    CommonChooseTileTypePanel                               : PanelConfig<CommonChooseTileTypePanelOpenData>;
-    CommonChooseUnitAndPlayerIndexPanel                     : PanelConfig<CommonChooseUnitAndPlayerIndexPanelOpenData>;
-    CommonChooseUnitAttrPanel                               : PanelConfig<CommonChooseUnitAttrPanelOpenData>;
-    CommonChooseUnitTagPanel                                : PanelConfig<CommonChooseUnitTagPanelOpenData>;
-    CommonCoInfoPanel                                       : PanelConfig<CommonCoInfoPanelOpenData>;
-    CommonCoListPanel                                       : PanelConfig<CommonCoListPanelOpenData>;
-    CommonCoStatisticsFilterPanel                           : PanelConfig<CommonCoStatisticsFilterPanelOpenData>;
-    CommonCoStatisticsPanel                                 : PanelConfig<CommonCoStatisticsPanelOpenData>;
-    CommonConfirmPanel                                      : PanelConfig<CommonConfirmPanelOpenData>;
-    CommonDamageCalculatorPanel                             : PanelConfig<CommonDamageCalculatorPanelOpenData>;
-    CommonDamageChartPanel                                  : PanelConfig<CommonDamageChartPanelOpenData>;
-    CommonDeletePlayerPanel                                 : PanelConfig<CommonDeletePlayerPanelOpenData>;
-    CommonDoubleSliderPanel                                 : PanelConfig<CommonDoubleSliderPanelOpenData>;
-    CommonErrorPanel                                        : PanelConfig<CommonErrorPanelOpenData>;
-    CommonExpressionTypeIdPanel                             : PanelConfig<CommonExpressionTypeIdPanelOpenData>;
-    CommonGameChartPanel                                    : PanelConfig<CommonGameChartPanelOpenData>;
-    CommonHelpPanel                                         : PanelConfig<CommonHelpPanelOpenData>;
-    CommonInputDurationPanel                                : PanelConfig<CommonInputDurationPanelOpenData>;
-    CommonInputExpressionPanel                              : PanelConfig<CommonInputExpressionPanelOpenData>;
-    CommonInputIntegerPanel                                 : PanelConfig<CommonInputIntegerPanelOpenData>;
-    CommonInputLanguageTextPanel                            : PanelConfig<CommonInputLanguageTextPanelOpenData>;
-    CommonInputNullableIntegerPanel                         : PanelConfig<CommonInputNullableIntegerPanelOpenData>;
-    CommonInputPanel                                        : PanelConfig<CommonInputPanelOpenData>;
-    CommonInputShortLangTextPanel                           : PanelConfig<CommonInputShortLangTextPanelOpenData>;
-    CommonMapFilterPanel                                    : PanelConfig<CommonMapFilterPanelOpenData>;
-    CommonMapWarStatisticsPanel                             : PanelConfig<CommonMapWarStatisticsPanelOpenData>;
-    CommonRoomFilterPanel                                   : PanelConfig<CommonRoomFilterPanelOpenData>;
-    CommonSearchMultiUserPanel                              : PanelConfig<CommonSearchMultiUserPanelOpenData>;
-    CommonSearchSingleUserPanel                             : PanelConfig<CommonSearchSingleUserPanelOpenData>;
-    CommonServerStatusPanel                                 : PanelConfig<CommonServerStatusPanelOpenData>;
-    CommonShowCoCategoryIdPanel                             : PanelConfig<CommonShowCoCategoryIdPanelOpenData>;
-    CommonShowCoIdPanel                                     : PanelConfig<CommonShowCoIdPanelOpenData>;
-    CommonShowGameModePanel                                 : PanelConfig<CommonShowGameModePanelOpenData>;
-    CommonShowLangTextPanel                                 : PanelConfig<CommonShowLangTextPanelOpenData>;
-    CommonShowMapPanel                                      : PanelConfig<CommonShowMapPanelOpenData>;
-    CommonShowMapTagIdPanel                                 : PanelConfig<CommonShowMapTagIdPanelOpenData>;
-    CommonShowPlayerListPanel                               : PanelConfig<CommonShowPlayerListPanelOpenData>;
-    CommonShowSelectedCoCategoryIdPanel                     : PanelConfig<CommonShowSelectedCoCategoryIdPanelOpenData>;
-    CommonShowUnitTypePanel                                 : PanelConfig<CommonShowUnitTypePanelOpenData>;
-    CommonTileChartPanel                                    : PanelConfig<CommonTileChartPanelOpenData>;
-    CommonTutorialPanel                                     : PanelConfig<CommonTutorialPanelOpenData>;
-    CommonWarEventListPanel                                 : PanelConfig<CommonWarEventListPanelOpenData>;
+    CommonAlertPanel                                        : GamePanels_Types.PanelConfig<Common_View_CommonAlertPanel.OpenData>;
+    CommonApiPanel                                          : GamePanels_Types.PanelConfig<Common_View_CommonApiPanel.OpenData>;
+    CommonBlockPanel                                        : GamePanels_Types.PanelConfig<Common_View_CommonBlockPanel.OpenData>;
+    CommonChangeVersionPanel                                : GamePanels_Types.PanelConfig<Common_View_CommonChangeVersionPanel.OpenData>;
+    CommonChooseCoAndColorPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonChooseCoAndColorPanel.OpenData>;
+    CommonChooseGridIndexPanel                              : GamePanels_Types.PanelConfig<Common_View_CommonChooseGridIndexPanel.OpenData>;
+    CommonChooseMapSorterPanel                              : GamePanels_Types.PanelConfig<Common_View_CommonChooseMapSorterPanel.OpenData>;
+    CommonChooseMultiCoCategoryIdPanel                      : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiCoCategoryIdPanel.OpenData>;
+    CommonChooseMultiCoIdPanel                              : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiCoIdPanel.OpenData>;
+    CommonChooseMultiIntegerPanel                           : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiIntegerPanel.OpenData>;
+    CommonChooseMultiNumberPanel                            : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiNumberPanel.OpenData>;
+    CommonChooseMultiTileTypePanel                          : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiTileTypePanel.OpenData>;
+    CommonChooseMultiUnitTypePanel                          : GamePanels_Types.PanelConfig<Common_View_CommonChooseMultiUnitTypePanel.OpenData>;
+    CommonChooseOverridingSkinIdPanel                       : GamePanels_Types.PanelConfig<Common_View_CommonChooseOverridingSkinIdPanel.OpenData>;
+    CommonChooseSfxPanel                                    : GamePanels_Types.PanelConfig<Common_View_CommonChooseSfxPanel.OpenData>;
+    CommonChooseSingleCoCategoryIdPanel                     : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleCoCategoryIdPanel.OpenData>;
+    CommonChooseSingleCoIdPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleCoIdPanel.OpenData>;
+    CommonChooseSingleGridMarkPanel                         : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleGridMarkPanel.OpenData>;
+    CommonChooseSingleMapEditorSlotPanel                    : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleMapEditorSlotPanel.OpenData>;
+    CommonChooseSingleNormalMapIdPanel                      : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleNormalMapIdPanel.OpenData>;
+    CommonChooseSingleNumberPanel                           : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleNumberPanel.OpenData>;
+    CommonChooseSingleSkinIdPanel                           : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleSkinIdPanel.OpenData>;
+    CommonChooseSingleSpmSaveSlotPanel                      : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleSpmSaveSlotPanel.OpenData>;
+    CommonChooseSingleTileTypePanel                         : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleTileTypePanel.OpenData>;
+    CommonChooseSingleUnitTypePanel                         : GamePanels_Types.PanelConfig<Common_View_CommonChooseSingleUnitTypePanel.OpenData>;
+    CommonChooseTileBasePanel                               : GamePanels_Types.PanelConfig<Common_View_CommonChooseTileBasePanel.OpenData>;
+    CommonChooseTileDecorationPanel                         : GamePanels_Types.PanelConfig<Common_View_CommonChooseTileDecorationPanel.OpenData>;
+    CommonChooseTileInfoPanel                               : GamePanels_Types.PanelConfig<Common_View_CommonChooseTileInfoPanel.OpenData>;
+    CommonChooseTileObjectPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonChooseTileObjectPanel.OpenData>;
+    CommonChooseTileTypePanel                               : GamePanels_Types.PanelConfig<Common_View_CommonChooseTileTypePanel.OpenData>;
+    CommonChooseUnitAndPlayerIndexPanel                     : GamePanels_Types.PanelConfig<Common_View_CommonChooseUnitAndPlayerIndexPanel.OpenData>;
+    CommonChooseUnitAttrPanel                               : GamePanels_Types.PanelConfig<Common_View_CommonChooseUnitAttrPanel.OpenData>;
+    CommonChooseUnitTagPanel                                : GamePanels_Types.PanelConfig<Common_View_CommonChooseUnitTagPanel.OpenData>;
+    CommonCoInfoPanel                                       : GamePanels_Types.PanelConfig<Common_View_CommonCoInfoPanel.OpenData>;
+    CommonCoListPanel                                       : GamePanels_Types.PanelConfig<Common_View_CommonCoListPanel.OpenData>;
+    CommonCoStatisticsFilterPanel                           : GamePanels_Types.PanelConfig<Common_View_CommonCoStatisticsFilterPanel.OpenData>;
+    CommonCoStatisticsPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonCoStatisticsPanel.OpenData>;
+    CommonConfirmPanel                                      : GamePanels_Types.PanelConfig<Common_View_CommonConfirmPanel.OpenData>;
+    CommonDamageCalculatorPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonDamageCalculatorPanel.OpenData>;
+    CommonDamageChartPanel                                  : GamePanels_Types.PanelConfig<Common_View_CommonDamageChartPanel.OpenData>;
+    CommonDeletePlayerPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonDeletePlayerPanel.OpenData>;
+    CommonDoubleSliderPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonDoubleSliderPanel.OpenData>;
+    CommonErrorPanel                                        : GamePanels_Types.PanelConfig<Common_View_CommonErrorPanel.OpenData>;
+    CommonExpressionTypeIdPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonExpressionTypeIdPanel.OpenData>;
+    CommonGameChartPanel                                    : GamePanels_Types.PanelConfig<Common_View_CommonGameChartPanel.OpenData>;
+    CommonHelpPanel                                         : GamePanels_Types.PanelConfig<Common_View_CommonHelpPanel.OpenData>;
+    CommonInputDurationPanel                                : GamePanels_Types.PanelConfig<Common_View_CommonInputDurationPanel.OpenData>;
+    CommonInputExpressionPanel                              : GamePanels_Types.PanelConfig<Common_View_CommonInputExpressionPanel.OpenData>;
+    CommonInputIntegerPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonInputIntegerPanel.OpenData>;
+    CommonInputLanguageTextPanel                            : GamePanels_Types.PanelConfig<Common_View_CommonInputLanguageTextPanel.OpenData>;
+    CommonInputNullableIntegerPanel                         : GamePanels_Types.PanelConfig<Common_View_CommonInputNullableIntegerPanel.OpenData>;
+    CommonInputPanel                                        : GamePanels_Types.PanelConfig<Common_View_CommonInputPanel.OpenData>;
+    CommonInputShortLangTextPanel                           : GamePanels_Types.PanelConfig<Common_View_CommonInputShortLangTextPanel.OpenData>;
+    CommonMapFilterPanel                                    : GamePanels_Types.PanelConfig<Common_View_CommonMapFilterPanel.OpenData>;
+    CommonMapWarStatisticsPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonMapWarStatisticsPanel.OpenData>;
+    CommonRoomFilterPanel                                   : GamePanels_Types.PanelConfig<Common_View_CommonRoomFilterPanel.OpenData>;
+    CommonSearchMultiUserPanel                              : GamePanels_Types.PanelConfig<Common_View_CommonSearchMultiUserPanel.OpenData>;
+    CommonSearchSingleUserPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonSearchSingleUserPanel.OpenData>;
+    CommonServerStatusPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonServerStatusPanel.OpenData>;
+    CommonShowCoCategoryIdPanel                             : GamePanels_Types.PanelConfig<Common_View_CommonShowCoCategoryIdPanel.OpenData>;
+    CommonShowCoIdPanel                                     : GamePanels_Types.PanelConfig<Common_View_CommonShowCoIdPanel.OpenData>;
+    CommonShowGameModePanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonShowGameModePanel.OpenData>;
+    CommonShowLangTextPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonShowLangTextPanel.OpenData>;
+    CommonShowMapPanel                                      : GamePanels_Types.PanelConfig<Common_View_CommonShowMapPanel.OpenData>;
+    CommonShowMapTagIdPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonShowMapTagIdPanel.OpenData>;
+    CommonShowPlayerListPanel                               : GamePanels_Types.PanelConfig<Common_View_CommonShowPlayerListPanel.OpenData>;
+    CommonShowSelectedCoCategoryIdPanel                     : GamePanels_Types.PanelConfig<Common_View_CommonShowSelectedCoCategoryIdPanel.OpenData>;
+    CommonShowUnitTypePanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonShowUnitTypePanel.OpenData>;
+    CommonTileChartPanel                                    : GamePanels_Types.PanelConfig<Common_View_CommonTileChartPanel.OpenData>;
+    CommonTutorialPanel                                     : GamePanels_Types.PanelConfig<Common_View_CommonTutorialPanel.OpenData>;
+    CommonWarEventListPanel                                 : GamePanels_Types.PanelConfig<Common_View_CommonWarEventListPanel.OpenData>;
 
-    GmSetUserFullPrivilegePanel                             : PanelConfig<GmSetUserFullPrivilegePanelOpenData>;
+    GmSetUserFullPrivilegePanel                             : GamePanels_Types.PanelConfig<Gm_View_GmSetUserFullPrivilegePanel.OpenData>;
 
-    HrwTopPanel                                             : PanelConfig<HrwTopPanelOpenData>;
-    HrwWarMenuPanel                                         : PanelConfig<HrwWarMenuPanelOpenData>;
+    HrwTopPanel                                             : GamePanels_Types.PanelConfig<HalfwayReplayWar_View_HrwTopPanel.OpenData>;
+    HrwWarMenuPanel                                         : GamePanels_Types.PanelConfig<HalfwayReplayWar_View_HrwWarMenuPanel.OpenData>;
 
-    LbMrwListPanel                                          : PanelConfig<LbMrwListPanelOpenData>;
-    LbSpmOverallListPanel                                   : PanelConfig<LbSpmOverallListPanelOpenData>;
+    LbMrwListPanel                                          : GamePanels_Types.PanelConfig<Leaderboard_View_LbMrwListPanel.OpenData>;
+    LbSpmOverallListPanel                                   : GamePanels_Types.PanelConfig<Leaderboard_View_LbSpmOverallListPanel.OpenData>;
 
-    LobbyBackgroundPanel                                    : PanelConfig<LobbyBackgroundPanelOpenData>;
-    LobbyBottomPanel                                        : PanelConfig<LobbyBottomPanelOpenData>;
-    LobbyPanel                                              : PanelConfig<LobbyPanelOpenData>;
-    LobbyStartPanel                                         : PanelConfig<LobbyStartPanelOpenData>;
-    LobbyTopPanel                                           : PanelConfig<LobbyTopPanelOpenData>;
-    LobbyTopRightPanel                                      : PanelConfig<LobbyTopRightPanelOpenData>;
+    LobbyBackgroundPanel                                    : GamePanels_Types.PanelConfig<Lobby_View_LobbyBackgroundPanel.OpenData>;
+    LobbyBottomPanel                                        : GamePanels_Types.PanelConfig<Lobby_View_LobbyBottomPanel.OpenData>;
+    LobbyPanel                                              : GamePanels_Types.PanelConfig<Lobby_View_LobbyPanel.OpenData>;
+    LobbyStartPanel                                         : GamePanels_Types.PanelConfig<Lobby_View_LobbyStartPanel.OpenData>;
+    LobbyTopPanel                                           : GamePanels_Types.PanelConfig<Lobby_View_LobbyTopPanel.OpenData>;
+    LobbyTopRightPanel                                      : GamePanels_Types.PanelConfig<Lobby_View_LobbyTopRightPanel.OpenData>;
 
-    MailPanel                                               : PanelConfig<MailPanelOpenData>;
+    MailPanel                                               : GamePanels_Types.PanelConfig<Mail_View_MailPanel.OpenData>;
 
-    McrCreateMapListPanel                                   : PanelConfig<McrCreateMapListPanelOpenData>;
-    McrCreateSettingsPanel                                  : PanelConfig<McrCreateSettingsPanelOpenData>;
-    McrMainMenuPanel                                        : PanelConfig<McrMainMenuPanelOpenData>;
-    McrRoomInfoPanel                                        : PanelConfig<McrRoomInfoPanelOpenData>;
+    McrCreateMapListPanel                                   : GamePanels_Types.PanelConfig<MultiCustomRoom_View_McrCreateMapListPanel.OpenData>;
+    McrCreateSettingsPanel                                  : GamePanels_Types.PanelConfig<MultiCustomRoom_View_McrCreateSettingsPanel.OpenData>;
+    McrMainMenuPanel                                        : GamePanels_Types.PanelConfig<MultiCustomRoom_View_McrMainMenuPanel.OpenData>;
+    McrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<MultiCustomRoom_View_McrRoomInfoPanel.OpenData>;
 
-    MeAutoAdjustPanel                                       : PanelConfig<MeAutoAdjustPanelOpenData>;
-    MeChooseLocationPanel                                   : PanelConfig<MeChooseLocationPanelOpenData>;
-    MeChooseTileBasePanel                                   : PanelConfig<MeChooseTileBasePanelOpenData>;
-    MeChooseTileDecorationPanel                             : PanelConfig<MeChooseTileDecorationPanelOpenData>;
-    MeChooseTileObjectPanel                                 : PanelConfig<MeChooseTileObjectPanelOpenData>;
-    MeChooseUnitPanel                                       : PanelConfig<MeChooseUnitPanelOpenData>;
-    MeClearPanel                                            : PanelConfig<MeClearPanelOpenData>;
-    MeImportContentPanel                                    : PanelConfig<MeImportContentPanelOpenData>;
-    MeImportExportPanel                                     : PanelConfig<MeImportExportPanelOpenData>;
-    MeMapInfoPanel                                          : PanelConfig<MeMapInfoPanelOpenData>;
-    MeMapSimpleDialogueMainPanel                            : PanelConfig<MeMapSimpleDialogueMainPanelOpenData>;
-    MeMapSimpleDialogueUtilPanel                            : PanelConfig<MeMapSimpleDialogueUtilPanelOpenData>;
-    MeResizePanel                                           : PanelConfig<MeResizePanelOpenData>;
-    MeSaveCampaignMapPanel                                  : PanelConfig<MeSaveCampaignMapPanelOpenData>;
-    MeSaveNormalMapPanel                                    : PanelConfig<MeSaveNormalMapPanelOpenData>;
-    MeSetTileCustomNamePanel                                : PanelConfig<MeSetTileCustomNamePanelOpenData>;
-    MeSetUnitCustomNamePanel                                : PanelConfig<MeSetUnitCustomNamePanelOpenData>;
-    MeSymmetricalPlayerIndexPanel                           : PanelConfig<MeSymmetricalPlayerIndexPanelOpenData>;
-    MeSymmetryPanel                                         : PanelConfig<MeSymmetryPanelOpenData>;
-    MeSymmetryFillTilePanel                                 : PanelConfig<MeSymmetryFillTilePanelOpenData>;
-    MeTaskObjectivePanel                                    : PanelConfig<MeTaskObjectivePanelOpenData>;
-    MeTaskObjectiveListPanel                                : PanelConfig<MeTaskObjectiveListPanelOpenData>;
-    MeTileCustomNameListPanel                               : PanelConfig<MeTileCustomNameListPanelOpenData>;
-    MeTileUnitInfoPanel                                     : PanelConfig<MeTileUnitInfoPanelOpenData>;
-    MeTopPanel                                              : PanelConfig<MeTopPanelOpenData>;
-    MeUnitCustomNameListPanel                               : PanelConfig<MeUnitCustomNameListPanelOpenData>;
-    MeVisibilityPanel                                       : PanelConfig<MeVisibilityPanelOpenData>;
-    MeWarMenuPanel                                          : PanelConfig<MeWarMenuPanelOpenData>;
-    MeWarRulePanel                                          : PanelConfig<MeWarRulePanelOpenData>;
-    MeWarRuleMapSimpleDialoguePanel                         : PanelConfig<MeWarRuleMapSimpleDialoguePanelOpenData>;
-    MeWarRulePlayerRulePanel                                : PanelConfig<MeWarRulePlayerRulePanelOpenData>;
-    MeWarRuleTaskObjectivePanel                             : PanelConfig<MeWarRuleTaskObjectivePanelOpenData>;
-    MeWarRuleWarEventPanel                                  : PanelConfig<MeWarRuleWarEventPanelOpenData>;
+    MeAutoAdjustPanel                                       : GamePanels_Types.PanelConfig<MapEditors_Views_MeAutoAdjustPanel.OpenData>;
+    MeChooseLocationPanel                                   : GamePanels_Types.PanelConfig<MapEditors_Views_MeChooseLocationPanel.OpenData>;
+    MeChooseTileBasePanel                                   : GamePanels_Types.PanelConfig<MapEditors_Views_MeChooseTileBasePanel.OpenData>;
+    MeChooseTileDecorationPanel                             : GamePanels_Types.PanelConfig<MapEditors_Views_MeChooseTileDecorationPanel.OpenData>;
+    MeChooseTileObjectPanel                                 : GamePanels_Types.PanelConfig<MapEditors_Views_MeChooseTileObjectPanel.OpenData>;
+    MeChooseUnitPanel                                       : GamePanels_Types.PanelConfig<MapEditors_Views_MeChooseUnitPanel.OpenData>;
+    MeClearPanel                                            : GamePanels_Types.PanelConfig<MapEditors_Views_MeClearPanel.OpenData>;
+    MeImportContentPanel                                    : GamePanels_Types.PanelConfig<MapEditors_Views_MeImportContentPanel.OpenData>;
+    MeImportExportPanel                                     : GamePanels_Types.PanelConfig<MapEditors_Views_MeImportExportPanel.OpenData>;
+    MeMapInfoPanel                                          : GamePanels_Types.PanelConfig<MapEditors_Views_MeMapInfoPanel.OpenData>;
+    MeMapSimpleDialogueMainPanel                            : GamePanels_Types.PanelConfig<MapEditors_Views_MeMapSimpleDialogueMainPanel.OpenData>;
+    MeMapSimpleDialogueUtilPanel                            : GamePanels_Types.PanelConfig<MapEditors_Views_MeMapSimpleDialogueUtilPanel.OpenData>;
+    MeResizePanel                                           : GamePanels_Types.PanelConfig<MapEditors_Views_MeResizePanel.OpenData>;
+    MeSaveCampaignMapPanel                                  : GamePanels_Types.PanelConfig<MapEditors_Views_MeSaveCampaignMapPanel.OpenData>;
+    MeSaveNormalMapPanel                                    : GamePanels_Types.PanelConfig<MapEditors_Views_MeSaveNormalMapPanel.OpenData>;
+    MeSetTileCustomNamePanel                                : GamePanels_Types.PanelConfig<MapEditors_Views_MeSetTileCustomNamePanel.OpenData>;
+    MeSetUnitCustomNamePanel                                : GamePanels_Types.PanelConfig<MapEditors_Views_MeSetUnitCustomNamePanel.OpenData>;
+    MeSymmetricalPlayerIndexPanel                           : GamePanels_Types.PanelConfig<MapEditors_Views_MeSymmetricalPlayerIndexPanel.OpenData>;
+    MeSymmetryPanel                                         : GamePanels_Types.PanelConfig<MapEditors_Views_MeSymmetryPanel.OpenData>;
+    MeSymmetryFillTilePanel                                 : GamePanels_Types.PanelConfig<MapEditors_Views_MeSymmetryFillTilePanel.OpenData>;
+    MeTaskObjectivePanel                                    : GamePanels_Types.PanelConfig<MapEditors_Views_MeTaskObjectivePanel.OpenData>;
+    MeTaskObjectiveListPanel                                : GamePanels_Types.PanelConfig<MapEditors_Views_MeTaskObjectiveListPanel.OpenData>;
+    MeTileCustomNameListPanel                               : GamePanels_Types.PanelConfig<MapEditors_Views_MeTileCustomNameListPanel.OpenData>;
+    MeTileUnitInfoPanel                                     : GamePanels_Types.PanelConfig<MapEditors_Views_MeTileUnitInfoPanel.OpenData>;
+    MeTopPanel                                              : GamePanels_Types.PanelConfig<MapEditors_Views_MeTopPanel.OpenData>;
+    MeUnitCustomNameListPanel                               : GamePanels_Types.PanelConfig<MapEditors_Views_MeUnitCustomNameListPanel.OpenData>;
+    MeVisibilityPanel                                       : GamePanels_Types.PanelConfig<MapEditors_Views_MeVisibilityPanel.OpenData>;
+    MeWarMenuPanel                                          : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarMenuPanel.OpenData>;
+    MeWarRulePanel                                          : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarRulePanel.OpenData>;
+    MeWarRuleMapSimpleDialoguePanel                         : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarRuleMapSimpleDialoguePanel.OpenData>;
+    MeWarRulePlayerRulePanel                                : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarRulePlayerRulePanel.OpenData>;
+    MeWarRuleTaskObjectivePanel                             : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarRuleTaskObjectivePanel.OpenData>;
+    MeWarRuleWarEventPanel                                  : GamePanels_Types.PanelConfig<MapEditors_Views_MeWarRuleWarEventPanel.OpenData>;
 
-    MfrCreateSettingsPanel                                  : PanelConfig<MfrCreateSettingsPanelOpenData>;
-    MfrMainMenuPanel                                        : PanelConfig<MfrMainMenuPanelOpenData>;
-    MfrRoomInfoPanel                                        : PanelConfig<MfrRoomInfoPanelOpenData>;
+    MfrCreateSettingsPanel                                  : GamePanels_Types.PanelConfig<MultiFreeRoom_View_MfrCreateSettingsPanel.OpenData>;
+    MfrMainMenuPanel                                        : GamePanels_Types.PanelConfig<MultiFreeRoom_View_MfrMainMenuPanel.OpenData>;
+    MfrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<MultiFreeRoom_View_MfrRoomInfoPanel.OpenData>;
 
-    MmCommandPanel                                          : PanelConfig<MmCommandPanelOpenData>;
-    MmMainMenuPanel                                         : PanelConfig<MmMainMenuPanelOpenData>;
-    MmMapTagListPanel                                       : PanelConfig<MmMapTagListPanelOpenData>;
-    MmModifyWarRulePanel                                    : PanelConfig<MmModifyWarRulePanelOpenData>;
-    MmReviewListPanel                                       : PanelConfig<MmReviewListPanelOpenData>;
-    MmWarRuleMapSimpleDialoguePanel                         : PanelConfig<MmWarRuleMapSimpleDialoguePanelOpenData>;
-    MmWarRulePanel                                          : PanelConfig<MmWarRulePanelOpenData>;
-    MmWarRulePlayerRulePanel                                : PanelConfig<MmWarRulePlayerRulePanelOpenData>;
-    MmWarRuleTaskObjectivePanel                             : PanelConfig<MmWarRuleTaskObjectivePanelOpenData>;
-    MmWarRuleWarEventPanel                                  : PanelConfig<MmWarRuleWarEventPanelOpenData>;
+    MmCommandPanel                                          : GamePanels_Types.PanelConfig<MapManagement_View_MmCommandPanel.OpenData>;
+    MmMainMenuPanel                                         : GamePanels_Types.PanelConfig<MapManagement_View_MmMainMenuPanel.OpenData>;
+    MmMapTagListPanel                                       : GamePanels_Types.PanelConfig<MapManagement_View_MmMapTagListPanel.OpenData>;
+    MmModifyWarRulePanel                                    : GamePanels_Types.PanelConfig<MapManagement_View_MmModifyWarRulePanel.OpenData>;
+    MmReviewListPanel                                       : GamePanels_Types.PanelConfig<MapManagement_View_MmReviewListPanel.OpenData>;
+    MmWarRuleMapSimpleDialoguePanel                         : GamePanels_Types.PanelConfig<MapManagement_View_MmWarRuleMapSimpleDialoguePanel.OpenData>;
+    MmWarRulePanel                                          : GamePanels_Types.PanelConfig<MapManagement_View_MmWarRulePanel.OpenData>;
+    MmWarRulePlayerRulePanel                                : GamePanels_Types.PanelConfig<MapManagement_View_MmWarRulePlayerRulePanel.OpenData>;
+    MmWarRuleTaskObjectivePanel                             : GamePanels_Types.PanelConfig<MapManagement_View_MmWarRuleTaskObjectivePanel.OpenData>;
+    MmWarRuleWarEventPanel                                  : GamePanels_Types.PanelConfig<MapManagement_View_MmWarRuleWarEventPanel.OpenData>;
 
-    MmrBanMapPanel                                          : PanelConfig<MmrBanMapPanelOpenData>;
-    MmrMainMenuPanel                                        : PanelConfig<MmrMainMenuPanelOpenData>;
-    MmrPreviewMapListPanel                                  : PanelConfig<MmrPreviewMapListPanelOpenData>;
-    MmrRoomInfoPanel                                        : PanelConfig<MmrRoomInfoPanelOpenData>;
-    MmrSetMaxConcurrentCountPanel                           : PanelConfig<MmrSetMaxConcurrentCountPanelOpenData>;
-    MmrSetTimerPanel                                        : PanelConfig<MmrSetTimerPanelOpenData>;
+    MmrBanMapPanel                                          : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrBanMapPanel.OpenData>;
+    MmrMainMenuPanel                                        : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrMainMenuPanel.OpenData>;
+    MmrPreviewMapListPanel                                  : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrPreviewMapListPanel.OpenData>;
+    MmrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrRoomInfoPanel.OpenData>;
+    MmrSetMaxConcurrentCountPanel                           : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrSetMaxConcurrentCountPanel.OpenData>;
+    MmrSetTimerPanel                                        : GamePanels_Types.PanelConfig<MultiMatchRoom_View_MmrSetTimerPanel.OpenData>;
 
-    MpwJoinRoomListPanel                                    : PanelConfig<MpwJoinRoomListPanelOpenData>;
-    MpwMyRoomListPanel                                      : PanelConfig<MpwMyRoomListPanelOpenData>;
-    MpwMyWarListPanel                                       : PanelConfig<MpwMyWarListPanelOpenData>;
-    MpwSpectatePanel                                        : PanelConfig<MpwSpectatePanelOpenData>;
-    MpwSidePanel                                            : PanelConfig<MpwSidePanelOpenData>;
-    MpwTopPanel                                             : PanelConfig<MpwTopPanelOpenData>;
-    MpwWarAdvancedMenuPanel                                 : PanelConfig<MpwWarAdvancedMenuPanelOpenData>;
-    MpwWarMenuPanel                                         : PanelConfig<MpwWarMenuPanelOpenData>;
+    MpwJoinRoomListPanel                                    : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwJoinRoomListPanel.OpenData>;
+    MpwMyRoomListPanel                                      : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwMyRoomListPanel.OpenData>;
+    MpwMyWarListPanel                                       : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwMyWarListPanel.OpenData>;
+    MpwSpectatePanel                                        : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwSpectatePanel.OpenData>;
+    MpwSidePanel                                            : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwSidePanel.OpenData>;
+    MpwTopPanel                                             : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwTopPanel.OpenData>;
+    MpwWarAdvancedMenuPanel                                 : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwWarAdvancedMenuPanel.OpenData>;
+    MpwWarMenuPanel                                         : GamePanels_Types.PanelConfig<MultiPlayerWar_View_MpwWarMenuPanel.OpenData>;
 
-    MrrBanMapPanel                                          : PanelConfig<MrrBanMapPanelOpenData>;
-    MrrMainMenuPanel                                        : PanelConfig<MrrMainMenuPanelOpenData>;
-    MrrPreviewMapListPanel                                  : PanelConfig<MrrPreviewMapListPanelOpenData>;
-    MrrRoomInfoPanel                                        : PanelConfig<MrrRoomInfoPanelOpenData>;
-    MrrSetMaxConcurrentCountPanel                           : PanelConfig<MrrSetMaxConcurrentCountPanelOpenData>;
-    MrrSetTimerPanel                                        : PanelConfig<MrrSetTimerPanelOpenData>;
+    MrrBanMapPanel                                          : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrBanMapPanel.OpenData>;
+    MrrMainMenuPanel                                        : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrMainMenuPanel.OpenData>;
+    MrrPreviewMapListPanel                                  : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrPreviewMapListPanel.OpenData>;
+    MrrRoomInfoPanel                                        : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrRoomInfoPanel.OpenData>;
+    MrrSetMaxConcurrentCountPanel                           : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrSetMaxConcurrentCountPanel.OpenData>;
+    MrrSetTimerPanel                                        : GamePanels_Types.PanelConfig<MultiRankRoom_View_MrrSetTimerPanel.OpenData>;
 
-    RwPauseTimePanel                                        : PanelConfig<RwPauseTimePanelOpenData>;
-    RwReplayListPanel                                       : PanelConfig<RwReplayListPanelOpenData>;
-    RwReplayProgressPanel                                   : PanelConfig<RwReplayProgressPanelOpenData>;
-    RwSearchReplayPanel                                     : PanelConfig<RwSearchReplayPanelOpenData>;
-    RwTopPanel                                              : PanelConfig<RwTopPanelOpenData>;
-    RwWarMenuPanel                                          : PanelConfig<RwWarMenuPanelOpenData>;
+    RwPauseTimePanel                                        : GamePanels_Types.PanelConfig<ReplayWar_View_RwPauseTimePanel.OpenData>;
+    RwReplayListPanel                                       : GamePanels_Types.PanelConfig<ReplayWar_View_RwReplayListPanel.OpenData>;
+    RwReplayProgressPanel                                   : GamePanels_Types.PanelConfig<ReplayWar_View_RwReplayProgressPanel.OpenData>;
+    RwSearchReplayPanel                                     : GamePanels_Types.PanelConfig<ReplayWar_View_RwSearchReplayPanel.OpenData>;
+    RwTopPanel                                              : GamePanels_Types.PanelConfig<ReplayWar_View_RwTopPanel.OpenData>;
+    RwWarMenuPanel                                          : GamePanels_Types.PanelConfig<ReplayWar_View_RwWarMenuPanel.OpenData>;
 
-    ScrCreateMapListPanel                                   : PanelConfig<ScrCreateMapListPanelOpenData>;
-    ScrCreateSettingsPanel                                  : PanelConfig<ScrCreateSettingsPanelOpenData>;
+    ScrCreateMapListPanel                                   : GamePanels_Types.PanelConfig<SingleCustomRoom_View_ScrCreateMapListPanel.OpenData>;
+    ScrCreateSettingsPanel                                  : GamePanels_Types.PanelConfig<SingleCustomRoom_View_ScrCreateSettingsPanel.OpenData>;
 
-    SoundsChooseSingleBgmPanel                              : PanelConfig<ChooseSingleBgmPanelOpenData>;
-    SoundsSettingsPanel                                     : PanelConfig<SettingsPanelOpenData>;
+    SoundsChooseSingleBgmPanel                              : GamePanels_Types.PanelConfig<Sounds_Panels_ChooseSingleBgmPanel.OpenData>;
+    SoundsSettingsPanel                                     : GamePanels_Types.PanelConfig<Sounds_Panels_SettingsPanel.OpenData>;
 
-    SpmMainMenuPanel                                        : PanelConfig<SpmMainMenuPanelOpenData>;
-    SpmWarListPanel                                         : PanelConfig<SpmWarListPanelOpenData>;
-    SpmMyWarRoomRecordPanel                                 : PanelConfig<SpmMyWarRoomRecordPanelOpenData>;
+    SpmMainMenuPanel                                        : GamePanels_Types.PanelConfig<SinglePlayerMode_View_SpmMainMenuPanel.OpenData>;
+    SpmWarListPanel                                         : GamePanels_Types.PanelConfig<SinglePlayerMode_View_SpmWarListPanel.OpenData>;
+    SpmMyWarRoomRecordPanel                                 : GamePanels_Types.PanelConfig<SinglePlayerMode_View_SpmMyWarRoomRecordPanel.OpenData>;
 
-    SpwSidePanel                                            : PanelConfig<SpwSidePanelOpenData>;
-    SpwTopPanel                                             : PanelConfig<SpwTopPanelOpenData>;
-    SpwWarAdvancedMenuPanel                                 : PanelConfig<SpwWarAdvancedMenuPanelOpenData>;
-    SpwWarMenuPanel                                         : PanelConfig<SpwWarMenuPanelOpenData>;
+    SpwSidePanel                                            : GamePanels_Types.PanelConfig<SinglePlayerWar_View_SpwSidePanel.OpenData>;
+    SpwTopPanel                                             : GamePanels_Types.PanelConfig<SinglePlayerWar_View_SpwTopPanel.OpenData>;
+    SpwWarAdvancedMenuPanel                                 : GamePanels_Types.PanelConfig<SinglePlayerWar_View_SpwWarAdvancedMenuPanel.OpenData>;
+    SpwWarMenuPanel                                         : GamePanels_Types.PanelConfig<SinglePlayerWar_View_SpwWarMenuPanel.OpenData>;
 
-    SrrCreateMapListPanel                                   : PanelConfig<SrrCreateMapListPanelOpenData>;
-    SrrCreateQuickSettingsPanel                             : PanelConfig<SrrCreateQuickSettingsPanelOpenData>;
-    SrrCreateSettingsPanel                                  : PanelConfig<SrrCreateSettingsPanelOpenData>;
+    SrrCreateMapListPanel                                   : GamePanels_Types.PanelConfig<SingleRankRoom_View_SrrCreateMapListPanel.OpenData>;
+    SrrCreateQuickSettingsPanel                             : GamePanels_Types.PanelConfig<SingleRankRoom_View_SrrCreateQuickSettingsPanel.OpenData>;
+    SrrCreateSettingsPanel                                  : GamePanels_Types.PanelConfig<SingleRankRoom_View_SrrCreateSettingsPanel.OpenData>;
 
-    UserGameManagementPanel                                 : PanelConfig<UserGameManagementPanelOpenData>;
-    UserGraphicSettingsPanel                                : PanelConfig<UserGraphicSettingsPanelOpenData>;
-    UserLoginBackgroundPanel                                : PanelConfig<UserLoginBackgroundPanelOpenData>;
-    UserLoginPanel                                          : PanelConfig<UserLoginPanelOpenData>;
-    UserMedalPanel                                          : PanelConfig<UserMedalPanelOpenData>;
-    UserMiscSettingsPanel                                   : PanelConfig<UserMiscSettingsPanelOpenData>;
-    UserMpwStatisticsPanel                                  : PanelConfig<UserMpwStatisticsPanelOpenData>;
-    UserOnlineUsersPanel                                    : PanelConfig<UserOnlineUsersPanelOpenData>;
-    UserPanel                                               : PanelConfig<UserPanelOpenData>;
-    UserProfileSettingsPanel                                : PanelConfig<UserProfileSettingsPanelOpenData>;
-    UserRegisterPanel                                       : PanelConfig<UserRegisterPanelOpenData>;
-    UserSceneBgmSettingsPanel                               : PanelConfig<UserSceneBgmSettingsPanelOpenData>;
-    UserSetAvatarPanel                                      : PanelConfig<UserSetAvatarPanelOpenData>;
-    UserSetCoBgmSettingsPanel                               : PanelConfig<UserSetCoBgmSettingsPanelOpenData>;
-    UserSetDiscordInfoPanel                                 : PanelConfig<UserSetDiscordInfoPanelOpenData>;
-    UserSetEmailPanel                                       : PanelConfig<UserSetEmailPanelOpenData>;
-    UserSetOpacityPanel                                     : PanelConfig<UserSetOpacityPanelOpenData>;
-    UserSetPasswordPanel                                    : PanelConfig<UserSetPasswordPanelOpenData>;
-    UserSetPasswordWithEmailPanel                           : PanelConfig<UserSetPasswordWithEmailPanelOpenData>;
-    UserSetRelationPanel                                    : PanelConfig<UserSetRelationPanelOpenData>;
-    UserSetStageScalePanel                                  : PanelConfig<UserSetStageScalePanelOpenData>;
-    UserSettingsPanel                                       : PanelConfig<UserSettingsPanelOpenData>;
-    UserWarHistoryPanel                                     : PanelConfig<UserWarHistoryPanelOpenData>;
+    UserGameManagementPanel                                 : GamePanels_Types.PanelConfig<Users_Views_UserGameManagementPanel.OpenData>;
+    UserGraphicSettingsPanel                                : GamePanels_Types.PanelConfig<Users_Views_UserGraphicSettingsPanel.OpenData>;
+    UserLoginBackgroundPanel                                : GamePanels_Types.PanelConfig<Users_Views_UserLoginBackgroundPanel.OpenData>;
+    UserLoginPanel                                          : GamePanels_Types.PanelConfig<Users_Views_UserLoginPanel.OpenData>;
+    UserMedalPanel                                          : GamePanels_Types.PanelConfig<Users_Views_UserMedalPanel.OpenData>;
+    UserMiscSettingsPanel                                   : GamePanels_Types.PanelConfig<Users_Views_UserMiscSettingsPanel.OpenData>;
+    UserMpwStatisticsPanel                                  : GamePanels_Types.PanelConfig<Users_Views_UserMpwStatisticsPanel.OpenData>;
+    UserOnlineUsersPanel                                    : GamePanels_Types.PanelConfig<Users_Views_UserOnlineUsersPanel.OpenData>;
+    UserPanel                                               : GamePanels_Types.PanelConfig<Users_Views_UserPanel.OpenData>;
+    UserProfileSettingsPanel                                : GamePanels_Types.PanelConfig<Users_Views_UserProfileSettingsPanel.OpenData>;
+    UserRegisterPanel                                       : GamePanels_Types.PanelConfig<Users_Views_UserRegisterPanel.OpenData>;
+    UserSceneBgmSettingsPanel                               : GamePanels_Types.PanelConfig<Users_Views_UserSceneBgmSettingsPanel.OpenData>;
+    UserSetAvatarPanel                                      : GamePanels_Types.PanelConfig<Users_Views_UserSetAvatarPanel.OpenData>;
+    UserSetCoBgmSettingsPanel                               : GamePanels_Types.PanelConfig<Users_Views_UserSetCoBgmSettingsPanel.OpenData>;
+    UserSetDiscordInfoPanel                                 : GamePanels_Types.PanelConfig<Users_Views_UserSetDiscordInfoPanel.OpenData>;
+    UserSetEmailPanel                                       : GamePanels_Types.PanelConfig<Users_Views_UserSetEmailPanel.OpenData>;
+    UserSetOpacityPanel                                     : GamePanels_Types.PanelConfig<Users_Views_UserSetOpacityPanel.OpenData>;
+    UserSetPasswordPanel                                    : GamePanels_Types.PanelConfig<Users_Views_UserSetPasswordPanel.OpenData>;
+    UserSetPasswordWithEmailPanel                           : GamePanels_Types.PanelConfig<Users_Views_UserSetPasswordWithEmailPanel.OpenData>;
+    UserSetRelationPanel                                    : GamePanels_Types.PanelConfig<Users_Views_UserSetRelationPanel.OpenData>;
+    UserSetStageScalePanel                                  : GamePanels_Types.PanelConfig<Users_Views_UserSetStageScalePanel.OpenData>;
+    UserSettingsPanel                                       : GamePanels_Types.PanelConfig<Users_Views_UserSettingsPanel.OpenData>;
+    UserWarHistoryPanel                                     : GamePanels_Types.PanelConfig<Users_Views_UserWarHistoryPanel.OpenData>;
 
-    WeaAddTileBuffExprPanel                                 : PanelConfig<WeaAddTileBuffExprPanelOpenData>;
-    WeaAddTileBuffSimplePanel                               : PanelConfig<WeaAddTileBuffSimplePanelOpenData>;
-    WeaAddUnitBuffSimplePanel                               : PanelConfig<WeaAddUnitBuffSimplePanelOpenData>;
-    WeaAddUnitOnMapSimplePanel                              : PanelConfig<WeaAddUnitOnMapSimplePanelOpenData>;
-    WeaDeleteTileBuffExprPanel                              : PanelConfig<WeaDeleteTileBuffExprPanelOpenData>;
-    WeaDeleteTileBuffSimplePanel                            : PanelConfig<WeaDeleteTileBuffSimplePanelOpenData>;
-    WeaDeleteUnitBuffSimplePanel                            : PanelConfig<WeaDeleteUnitBuffSimplePanelOpenData>;
-    WeaDestroyUnitExprPanel                                 : PanelConfig<WeaDestroyUnitExprPanelOpenData>;
-    WeaDestroyUnitSimplePanel                               : PanelConfig<WeaDestroyUnitSimplePanelOpenData>;
-    WeaBigDialogueSimplePanel                               : PanelConfig<WeaBigDialogueSimplePanelOpenData>;
-    WeaFillUnitLoadedExprPanel                              : PanelConfig<WeaFillUnitLoadedExprPanelOpenData>;
-    WeaFillUnitLoadedSimplePanel                            : PanelConfig<WeaFillUnitLoadedSimplePanelOpenData>;
-    WeaFillUnitOnMapExprPanel                               : PanelConfig<WeaFillUnitOnMapExprPanelOpenData>;
-    WeaFillUnitOnMapSimplePanel                             : PanelConfig<WeaFillUnitOnMapSimplePanelOpenData>;
-    WeaModifyTileBuffExprPanel                              : PanelConfig<WeaModifyTileBuffExprPanelOpenData>;
-    WeaModifyTileBuffSimplePanel                            : PanelConfig<WeaModifyTileBuffSimplePanelOpenData>;
-    WeaModifyUnitBuffSimplePanel                            : PanelConfig<WeaModifyUnitBuffSimplePanelOpenData>;
-    WeaPersistentModifyPlayerAttributePanel                 : PanelConfig<WeaPersistentModifyPlayerAttributePanelOpenData>;
-    WeaPersistentModifyUnitAttributePanel                   : PanelConfig<WeaPersistentModifyUnitAttributePanelOpenData>;
-    WeaPersistentPlayBgmPanel                               : PanelConfig<WeaPersistentPlayBgmPanelOpenData>;
-    WeaPersistentShowTextPanel                              : PanelConfig<WeaPersistentShowTextPanelOpenData>;
-    WeaPlayBgmPanel                                         : PanelConfig<WeaPlayBgmPanelOpenData>;
-    WeaPlaySfxPanel                                         : PanelConfig<WeaPlaySfxPanelOpenData>;
-    WeaSetCustomCannonStateExprPanel                        : PanelConfig<WeaSetCustomCannonStateExprPanelOpenData>;
-    WeaSetCustomCannonStateSimplePanel                      : PanelConfig<WeaSetCustomCannonStateSimplePanelOpenData>;
-    WeaSetCustomCountersPanel                               : PanelConfig<WeaSetCustomCountersPanelOpenData>;
-    WeaSetCustomBuildingStateExprPanel                      : PanelConfig<WeaSetCustomBuildingStateExprPanelOpenData>;
-    WeaSetCustomBuildingStateSimplePanel                    : PanelConfig<WeaSetCustomBuildingStateSimplePanelOpenData>;
-    WeaSetCustomCrystalStateExprPanel                       : PanelConfig<WeaSetCustomCrystalStateExprPanelOpenData>;
-    WeaSetCustomCrystalStateSimplePanel                     : PanelConfig<WeaSetCustomCrystalStateSimplePanelOpenData>;
-    WeaSetCustomLaserTurretStateExprPanel                   : PanelConfig<WeaSetCustomLaserTurretStateExprPanelOpenData>;
-    WeaSetCustomLaserTurretStateSimplePanel                 : PanelConfig<WeaSetCustomLaserTurretStateSimplePanelOpenData>;
-    WeaSetForceFogCodeExprPanel                             : PanelConfig<WeaSetForceFogCodeExprPanelOpenData>;
-    WeaSetForceFogCodeSimplePanel                           : PanelConfig<WeaSetForceFogCodeSimplePanelOpenData>;
-    WeaSetPlayerStateExprPanel                              : PanelConfig<WeaSetPlayerStateExprPanelOpenData>;
-    WeaSetPlayerStateSimplePanel                            : PanelConfig<WeaSetPlayerStateSimplePanelOpenData>;
-    WeaSetTaskObjectiveStatePanel                           : PanelConfig<WeaSetTaskObjectiveStatePanelOpenData>;
-    WeaSetTileStateExprPanel                                : PanelConfig<WeaSetTileStateExprPanelOpenData>;
-    WeaSetTileStateSimplePanel                              : PanelConfig<WeaSetTileStateSimplePanelOpenData>;
-    WeaSetTileTypeExprPanel                                 : PanelConfig<WeaSetTileTypeExprPanelOpenData>;
-    WeaSetTileTypeSimplePanel                               : PanelConfig<WeaSetTileTypeSimplePanelOpenData>;
-    WeaSetUnitMovePathVisibilityPanel                       : PanelConfig<WeaSetUnitMovePathVisibilityPanelOpenData>;
-    WeaSetUnitOwnershipExprPanel                            : PanelConfig<WeaSetUnitOwnershipExprPanelOpenData>;
-    WeaSetUnitOwnershipSimplePanel                          : PanelConfig<WeaSetUnitOwnershipSimplePanelOpenData>;
-    WeaSetUnitPositionExprPanel                             : PanelConfig<WeaSetUnitPositionExprPanelOpenData>;
-    WeaSetUnitPositionSimplePanel                           : PanelConfig<WeaSetUnitPositionSimplePanelOpenData>;
-    WeaSetUnitStateExprPanel                                : PanelConfig<WeaSetUnitStateExprPanelOpenData>;
-    WeaSetUnitStateSimplePanel                              : PanelConfig<WeaSetUnitStateSimplePanelOpenData>;
-    WeaSetUnitTypeExprPanel                                 : PanelConfig<WeaSetUnitTypeExprPanelOpenData>;
-    WeaSetUnitTypeSimplePanel                               : PanelConfig<WeaSetUnitTypeSimplePanelOpenData>;
-    WeaSetViewpointExprPanel                                : PanelConfig<WeaSetViewpointExprPanelOpenData>;
-    WeaSetViewpointSimplePanel                              : PanelConfig<WeaSetViewpointSimplePanelOpenData>;
-    WeaSetWeatherExprPanel                                  : PanelConfig<WeaSetWeatherExprPanelOpenData>;
-    WeaSetWeatherSimplePanel                                : PanelConfig<WeaSetWeatherSimplePanelOpenData>;
-    WeaSmallDialogueSimplePanel                             : PanelConfig<WeaSmallDialogueSimplePanelOpenData>;
-    WeaStopPersistentActionPanel                            : PanelConfig<WeaStopPersistentActionPanelOpenData>;
-    WeActionReplacePanel                                    : PanelConfig<WeActionReplacePanelOpenData>;
-    WeActionTypeListPanel                                   : PanelConfig<WeActionTypeListPanelOpenData>;
-    WeCommandPanel                                          : PanelConfig<WeCommandPanelOpenData>;
-    WecPlayerPresencePanel                                  : PanelConfig<WecPlayerPresencePanelOpenData>;
-    WecTurnAndPlayerPanel                                   : PanelConfig<WecTurnAndPlayerPanelOpenData>;
-    WecEventCalledCountPanel                                : PanelConfig<WecEventCalledCountPanelOpenData>;
-    WecExpressionPanel                                      : PanelConfig<WecExpressionPanelOpenData>;
-    WecTilePresencePanel                                    : PanelConfig<WecTilePresencePanelOpenData>;
-    WecUnitPresencePanel                                    : PanelConfig<WecUnitPresencePanelOpenData>;
-    WecWeatherAndFogPanel                                   : PanelConfig<WecWeatherAndFogPanelOpenData>;
-    WeConditionModifyPanel60                                : PanelConfig<WeConditionModifyPanel60OpenData>;
-    WecOngoingPersistentActionPanel                         : PanelConfig<WecOngoingPersistentActionPanelOpenData>;
-    WecManualActionStatisticsPanel                          : PanelConfig<WecManualActionStatisticsPanelOpenData>;
-    WeConditionReplacePanel                                 : PanelConfig<WeConditionReplacePanelOpenData>;
-    WeConditionTypeListPanel                                : PanelConfig<WeConditionTypeListPanelOpenData>;
-    WeCustomCounterNameListPanel                            : PanelConfig<WeCustomCounterNameListPanelOpenData>;
-    WeBigDialogueBackgroundPanel                            : PanelConfig<WeBigDialogueBackgroundPanelOpenData>;
-    WeEventNameListPanel                                    : PanelConfig<WeEventNameListPanelOpenData>;
-    WeMainPanel                                             : PanelConfig<WeMainPanelOpenData>;
-    WeNodeReplacePanel                                      : PanelConfig<WeNodeReplacePanelOpenData>;
-    WePlayerFilterPanel                                     : PanelConfig<WePlayerFilterPanelOpenData>;
-    WePositionFilterPanel                                   : PanelConfig<WePositionFilterPanelOpenData>;
-    WeTileBuffFilterPanel                                   : PanelConfig<WeTileBuffFilterPanelOpenData>;
-    WeTileCustomCannonPanel                                 : PanelConfig<WeTileCustomCannonPanelOpenData>;
-    WeTileCustomCrystalPanel                                : PanelConfig<WeTileCustomCrystalPanelOpenData>;
-    WeTileCustomLaserTurretPanel                            : PanelConfig<WeTileCustomLaserTurretPanelOpenData>;
-    WeTileFilterPanel                                       : PanelConfig<WeTileFilterPanelOpenData>;
-    WeUnitBuffFilterPanel                                   : PanelConfig<WeUnitBuffFilterPanelOpenData>;
-    WeUnitFilterPanel                                       : PanelConfig<WeUnitFilterPanelOpenData>;
+    WeaAddTileBuffExprPanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaAddTileBuffExprPanel.OpenData>;
+    WeaAddTileBuffSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaAddTileBuffSimplePanel.OpenData>;
+    WeaAddUnitBuffSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaAddUnitBuffSimplePanel.OpenData>;
+    WeaAddUnitOnMapSimplePanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaAddUnitOnMapSimplePanel.OpenData>;
+    WeaDeleteTileBuffExprPanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaDeleteTileBuffExprPanel.OpenData>;
+    WeaDeleteTileBuffSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaDeleteTileBuffSimplePanel.OpenData>;
+    WeaDeleteUnitBuffSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaDeleteUnitBuffSimplePanel.OpenData>;
+    WeaDestroyUnitExprPanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaDestroyUnitExprPanel.OpenData>;
+    WeaDestroyUnitSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaDestroyUnitSimplePanel.OpenData>;
+    WeaBigDialogueSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaBigDialogueSimplePanel.OpenData>;
+    WeaFillUnitLoadedExprPanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaFillUnitLoadedExprPanel.OpenData>;
+    WeaFillUnitLoadedSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaFillUnitLoadedSimplePanel.OpenData>;
+    WeaFillUnitOnMapExprPanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaFillUnitOnMapExprPanel.OpenData>;
+    WeaFillUnitOnMapSimplePanel                             : GamePanels_Types.PanelConfig<WarEvent_View_WeaFillUnitOnMapSimplePanel.OpenData>;
+    WeaModifyTileBuffExprPanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaModifyTileBuffExprPanel.OpenData>;
+    WeaModifyTileBuffSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaModifyTileBuffSimplePanel.OpenData>;
+    WeaModifyUnitBuffSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaModifyUnitBuffSimplePanel.OpenData>;
+    WeaPersistentModifyPlayerAttributePanel                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaPersistentModifyPlayerAttributePanel.OpenData>;
+    WeaPersistentModifyUnitAttributePanel                   : GamePanels_Types.PanelConfig<WarEvent_View_WeaPersistentModifyUnitAttributePanel.OpenData>;
+    WeaPersistentPlayBgmPanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaPersistentPlayBgmPanel.OpenData>;
+    WeaPersistentShowTextPanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaPersistentShowTextPanel.OpenData>;
+    WeaPlayBgmPanel                                         : GamePanels_Types.PanelConfig<WarEvent_View_WeaPlayBgmPanel.OpenData>;
+    WeaPlaySfxPanel                                         : GamePanels_Types.PanelConfig<WarEvent_View_WeaPlaySfxPanel.OpenData>;
+    WeaSetCustomCannonStateExprPanel                        : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomCannonStateExprPanel.OpenData>;
+    WeaSetCustomCannonStateSimplePanel                      : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomCannonStateSimplePanel.OpenData>;
+    WeaSetCustomCountersPanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomCountersPanel.OpenData>;
+    WeaSetCustomBuildingStateExprPanel                      : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomBuildingStateExprPanel.OpenData>;
+    WeaSetCustomBuildingStateSimplePanel                    : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomBuildingStateSimplePanel.OpenData>;
+    WeaSetCustomCrystalStateExprPanel                       : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomCrystalStateExprPanel.OpenData>;
+    WeaSetCustomCrystalStateSimplePanel                     : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomCrystalStateSimplePanel.OpenData>;
+    WeaSetCustomLaserTurretStateExprPanel                   : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomLaserTurretStateExprPanel.OpenData>;
+    WeaSetCustomLaserTurretStateSimplePanel                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetCustomLaserTurretStateSimplePanel.OpenData>;
+    WeaSetForceFogCodeExprPanel                             : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetForceFogCodeExprPanel.OpenData>;
+    WeaSetForceFogCodeSimplePanel                           : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetForceFogCodeSimplePanel.OpenData>;
+    WeaSetPlayerStateExprPanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetPlayerStateExprPanel.OpenData>;
+    WeaSetPlayerStateSimplePanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetPlayerStateSimplePanel.OpenData>;
+    WeaSetTaskObjectiveStatePanel                           : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetTaskObjectiveStatePanel.OpenData>;
+    WeaSetTileStateExprPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetTileStateExprPanel.OpenData>;
+    WeaSetTileStateSimplePanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetTileStateSimplePanel.OpenData>;
+    WeaSetTileTypeExprPanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetTileTypeExprPanel.OpenData>;
+    WeaSetTileTypeSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetTileTypeSimplePanel.OpenData>;
+    WeaSetUnitMovePathVisibilityPanel                       : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitMovePathVisibilityPanel.OpenData>;
+    WeaSetUnitOwnershipExprPanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitOwnershipExprPanel.OpenData>;
+    WeaSetUnitOwnershipSimplePanel                          : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitOwnershipSimplePanel.OpenData>;
+    WeaSetUnitPositionExprPanel                             : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitPositionExprPanel.OpenData>;
+    WeaSetUnitPositionSimplePanel                           : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitPositionSimplePanel.OpenData>;
+    WeaSetUnitStateExprPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitStateExprPanel.OpenData>;
+    WeaSetUnitStateSimplePanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitStateSimplePanel.OpenData>;
+    WeaSetUnitTypeExprPanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitTypeExprPanel.OpenData>;
+    WeaSetUnitTypeSimplePanel                               : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetUnitTypeSimplePanel.OpenData>;
+    WeaSetViewpointExprPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetViewpointExprPanel.OpenData>;
+    WeaSetViewpointSimplePanel                              : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetViewpointSimplePanel.OpenData>;
+    WeaSetWeatherExprPanel                                  : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetWeatherExprPanel.OpenData>;
+    WeaSetWeatherSimplePanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeaSetWeatherSimplePanel.OpenData>;
+    WeaSmallDialogueSimplePanel                             : GamePanels_Types.PanelConfig<WarEvent_View_WeaSmallDialogueSimplePanel.OpenData>;
+    WeaStopPersistentActionPanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeaStopPersistentActionPanel.OpenData>;
+    WeActionReplacePanel                                    : GamePanels_Types.PanelConfig<WarEvent_View_WeActionReplacePanel.OpenData>;
+    WeActionTypeListPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WeActionTypeListPanel.OpenData>;
+    WeCommandPanel                                          : GamePanels_Types.PanelConfig<WarEvent_View_WeCommandPanel.OpenData>;
+    WecPlayerPresencePanel                                  : GamePanels_Types.PanelConfig<WarEvent_View_WecPlayerPresencePanel.OpenData>;
+    WecTurnAndPlayerPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WecTurnAndPlayerPanel.OpenData>;
+    WecEventCalledCountPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WecEventCalledCountPanel.OpenData>;
+    WecExpressionPanel                                      : GamePanels_Types.PanelConfig<WarEvent_View_WecExpressionPanel.OpenData>;
+    WecTilePresencePanel                                    : GamePanels_Types.PanelConfig<WarEvent_View_WecTilePresencePanel.OpenData>;
+    WecUnitPresencePanel                                    : GamePanels_Types.PanelConfig<WarEvent_View_WecUnitPresencePanel.OpenData>;
+    WecWeatherAndFogPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WecWeatherAndFogPanel.OpenData>;
+    WeConditionModifyPanel60                                : GamePanels_Types.PanelConfig<WarEvent_View_WeConditionModifyPanel60.OpenData>;
+    WecOngoingPersistentActionPanel                         : GamePanels_Types.PanelConfig<WarEvent_View_WecOngoingPersistentActionPanel.OpenData>;
+    WecManualActionStatisticsPanel                          : GamePanels_Types.PanelConfig<WarEvent_View_WecManualActionStatisticsPanel.OpenData>;
+    WeConditionReplacePanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeConditionReplacePanel.OpenData>;
+    WeConditionTypeListPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeConditionTypeListPanel.OpenData>;
+    WeCustomCounterNameListPanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeCustomCounterNameListPanel.OpenData>;
+    WeBigDialogueBackgroundPanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeBigDialogueBackgroundPanel.OpenData>;
+    WeEventNameListPanel                                    : GamePanels_Types.PanelConfig<WarEvent_View_WeEventNameListPanel.OpenData>;
+    WeMainPanel                                             : GamePanels_Types.PanelConfig<WarEvent_View_WeMainPanel.OpenData>;
+    WeNodeReplacePanel                                      : GamePanels_Types.PanelConfig<WarEvent_View_WeNodeReplacePanel.OpenData>;
+    WePlayerFilterPanel                                     : GamePanels_Types.PanelConfig<WarEvent_View_WePlayerFilterPanel.OpenData>;
+    WePositionFilterPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WePositionFilterPanel.OpenData>;
+    WeTileBuffFilterPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WeTileBuffFilterPanel.OpenData>;
+    WeTileCustomCannonPanel                                 : GamePanels_Types.PanelConfig<WarEvent_View_WeTileCustomCannonPanel.OpenData>;
+    WeTileCustomCrystalPanel                                : GamePanels_Types.PanelConfig<WarEvent_View_WeTileCustomCrystalPanel.OpenData>;
+    WeTileCustomLaserTurretPanel                            : GamePanels_Types.PanelConfig<WarEvent_View_WeTileCustomLaserTurretPanel.OpenData>;
+    WeTileFilterPanel                                       : GamePanels_Types.PanelConfig<WarEvent_View_WeTileFilterPanel.OpenData>;
+    WeUnitBuffFilterPanel                                   : GamePanels_Types.PanelConfig<WarEvent_View_WeUnitBuffFilterPanel.OpenData>;
+    WeUnitFilterPanel                                       : GamePanels_Types.PanelConfig<WarEvent_View_WeUnitFilterPanel.OpenData>;
 
-    WwDeleteWatcherWarsPanel                                : PanelConfig<WwDeleteWatcherWarsPanelOpenData>;
-    WwHandleRequestWarsPanel                                : PanelConfig<WwHandleRequestWarsPanelOpenData>;
-    WwMainMenuPanel                                         : PanelConfig<WwMainMenuPanelOpenData>;
-    WwMakeRequestDetailPanel                                : PanelConfig<WwMakeRequestDetailPanelOpenData>;
-    WwMakeRequestWarsPanel                                  : PanelConfig<WwMakeRequestWarsPanelOpenData>;
-    WwOngoingWarsPanel                                      : PanelConfig<WwOngoingWarsPanelOpenData>;
-    WwSearchWarPanel                                        : PanelConfig<WwSearchWarPanelOpenData>;
+    WwDeleteWatcherWarsPanel                                : GamePanels_Types.PanelConfig<WatchWar_View_WwDeleteWatcherWarsPanel.OpenData>;
+    WwHandleRequestWarsPanel                                : GamePanels_Types.PanelConfig<WatchWar_View_WwHandleRequestWarsPanel.OpenData>;
+    WwMainMenuPanel                                         : GamePanels_Types.PanelConfig<WatchWar_View_WwMainMenuPanel.OpenData>;
+    WwMakeRequestDetailPanel                                : GamePanels_Types.PanelConfig<WatchWar_View_WwMakeRequestDetailPanel.OpenData>;
+    WwMakeRequestWarsPanel                                  : GamePanels_Types.PanelConfig<WatchWar_View_WwMakeRequestWarsPanel.OpenData>;
+    WwOngoingWarsPanel                                      : GamePanels_Types.PanelConfig<WatchWar_View_WwOngoingWarsPanel.OpenData>;
+    WwSearchWarPanel                                        : GamePanels_Types.PanelConfig<WatchWar_View_WwSearchWarPanel.OpenData>;
 };
 let _dict: DictType;
 
@@ -1747,2160 +726,2160 @@ export function getDict(): DictType {
         _dict = {
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ActionPlannerPanel : {
-                cls      : ActionPlannersActionPlannerPanel,
+                cls      : ActionPlanners_ActionPlannerPanel.Panel,
                 skinName : `actionPlanners/ActionPlannerPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             AtGlobalSettingsPanel : {
-                cls      : ViewsAtGlobalSettingsPanel,
+                cls      : AutoTourneys_Mains_Views_AtGlobalSettingsPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtGlobalSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             AtRegisterPanel : {
-                cls      : ViewsAtRegisterPanel,
+                cls      : AutoTourneys_Mains_Views_AtRegisterPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtRegisterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             AtSetInitialBracketsPanel : {
-                cls      : ViewsAtSetInitialBracketsPanel,
+                cls      : AutoTourneys_Mains_Views_AtSetInitialBracketsPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtSetInitialBracketsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             AtSetMapPoolPanel : {
-                cls      : ViewsAtSetMapPoolPanel,
+                cls      : AutoTourneys_Mains_Views_AtSetMapPoolPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtSetMapPoolPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             AtTourneyInfoPanel : {
-                cls      : ViewsAtTourneyInfoPanel,
+                cls      : AutoTourneys_Mains_Views_AtTourneyInfoPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtTourneyInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             AtTourneySettingsPanel : {
-                cls      : ViewsAtTourneySettingsPanel,
+                cls      : AutoTourneys_Mains_Views_AtTourneySettingsPanel.Panel,
                 skinName : `autoTourneys/mains/views/AtTourneySettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             AtrMainMenuPanel : {
-                cls         : ViewsAtrMainMenuPanel,
+                cls         : AutoTourneys_Rooms_Views_AtrMainMenuPanel.Panel,
                 skinName    : `autoTourneys/rooms/views/AtrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             AtrPreviewMapListPanel : {
-                cls         : ViewsAtrPreviewMapListPanel,
+                cls         : AutoTourneys_Rooms_Views_AtrPreviewMapListPanel.Panel,
                 skinName    : `autoTourneys/rooms/views/AtrPreviewMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             AtrRoomInfoPanel : {
-                cls         : ViewsAtrRoomInfoPanel,
+                cls         : AutoTourneys_Rooms_Views_AtrRoomInfoPanel.Panel,
                 skinName    : `autoTourneys/rooms/views/AtrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             BwBackgroundPanel : {
-                cls         : ViewBwBackgroundPanel,
+                cls         : BaseWar_View_BwBackgroundPanel.Panel,
                 skinName    : `baseWar/BwBackgroundPanel.exml`,
-                layer       : DisplayLayerId.Bottom,
+                layer       : Graphics_Constants.DisplayLayerId.Bottom,
                 isExclusive : true,
                 needCache   : true,
             },
 
             BwBeginTurnPanel : {
-                cls       : ViewBwBeginTurnPanel,
+                cls       : BaseWar_View_BwBeginTurnPanel.Panel,
                 skinName  : `baseWar/BwBeginTurnPanel.exml`,
-                layer     : DisplayLayerId.Notify0,
+                layer     : Graphics_Constants.DisplayLayerId.Notify0,
                 needCache : true,
             },
 
             BwCaptureProgressPanel : {
-                cls       : ViewBwCaptureProgressPanel,
+                cls       : BaseWar_View_BwCaptureProgressPanel.Panel,
                 skinName  : `baseWar/BwCaptureProgressPanel.exml`,
-                layer     : DisplayLayerId.Notify0,
+                layer     : Graphics_Constants.DisplayLayerId.Notify0,
                 needCache : true,
             },
 
             BwCustomCounterListPanel : {
-                cls      : ViewBwCustomCounterListPanel,
+                cls      : BaseWar_View_BwCustomCounterListPanel.Panel,
                 skinName : `baseWar/BwCustomCounterListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwDamagePreviewPanel : {
-                cls       : ViewBwDamagePreviewPanel,
+                cls       : BaseWar_View_BwDamagePreviewPanel.Panel,
                 skinName  : `baseWar/BwDamagePreviewPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwBigDialoguePanel : {
-                cls      : ViewBwBigDialoguePanel,
+                cls      : BaseWar_View_BwBigDialoguePanel.Panel,
                 skinName : `baseWar/BwBigDialoguePanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             BwMapSimpleDialogueListPanel : {
-                cls      : ViewBwMapSimpleDialogueListPanel,
+                cls      : BaseWar_View_BwMapSimpleDialogueListPanel.Panel,
                 skinName : `baseWar/BwMapSimpleDialogueListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwMapSimpleDialoguePanel : {
-                cls      : ViewBwMapSimpleDialoguePanel,
+                cls      : BaseWar_View_BwMapSimpleDialoguePanel.Panel,
                 skinName : `baseWar/BwMapSimpleDialoguePanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             BwMarkGridPanel : {
-                cls      : ViewBwMarkGridPanel,
+                cls      : BaseWar_View_BwMarkGridPanel.Panel,
                 skinName : `baseWar/BwMarkGridPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwProduceUnitPanel : {
-                cls       : ViewBwProduceUnitPanel,
+                cls       : BaseWar_View_BwProduceUnitPanel.Panel,
                 skinName  : `baseWar/BwProduceUnitPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTaskObjectivePanel : {
-                cls      : ViewBwTaskObjectivePanel,
+                cls      : BaseWar_View_BwTaskObjectivePanel.Panel,
                 skinName : `baseWar/BwTaskObjectivePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwTileBriefPanel : {
-                cls       : ViewBwTileBriefPanel,
+                cls       : BaseWar_View_BwTileBriefPanel.Panel,
                 skinName  : `baseWar/BwTileBriefPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTileBuffListPanel : {
-                cls      : ViewBwTileBuffListPanel,
+                cls      : BaseWar_View_BwTileBuffListPanel.Panel,
                 skinName : `baseWar/BwTileBuffListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwTileDetailPanel : {
-                cls       : ViewBwTileDetailPanel,
+                cls       : BaseWar_View_BwTileDetailPanel.Panel,
                 skinName  : `baseWar/BwTileDetailPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTileStatisticsPanel : {
-                cls      : ViewBwTileStatisticsPanel,
+                cls      : BaseWar_View_BwTileStatisticsPanel.Panel,
                 skinName : `baseWar/BwTileStatisticsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwUnitActionsPanel : {
-                cls       : ViewBwUnitActionsPanel,
+                cls       : BaseWar_View_BwUnitActionsPanel.Panel,
                 skinName  : `baseWar/BwUnitActionsPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitBriefPanel : {
-                cls       : ViewBwUnitBriefPanel,
+                cls       : BaseWar_View_BwUnitBriefPanel.Panel,
                 skinName  : `baseWar/BwUnitBriefPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitBuffListPanel : {
-                cls      : ViewBwUnitBuffListPanel,
+                cls      : BaseWar_View_BwUnitBuffListPanel.Panel,
                 skinName : `baseWar/BwUnitBuffListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwUnitDetailPanel : {
-                cls       : ViewBwUnitDetailPanel,
+                cls       : BaseWar_View_BwUnitDetailPanel.Panel,
                 skinName  : `baseWar/BwUnitDetailPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitListPanel : {
-                cls       : ViewBwUnitListPanel,
+                cls       : BaseWar_View_BwUnitListPanel.Panel,
                 skinName  : `baseWar/BwUnitListPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitStatisticsPanel : {
-                cls       : ViewBwUnitStatisticsPanel,
+                cls       : BaseWar_View_BwUnitStatisticsPanel.Panel,
                 skinName  : `baseWar/BwUnitStatisticsPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwWarExtraInfoPanel : {
-                cls      : ViewBwWarExtraInfoPanel,
+                cls      : BaseWar_View_BwWarExtraInfoPanel.Panel,
                 skinName : `baseWar/BwWarExtraInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BwWarInfoPanel : {
-                cls       : ViewBwWarInfoPanel,
+                cls       : BaseWar_View_BwWarInfoPanel.Panel,
                 skinName  : `baseWar/BwWarInfoPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwWarPanel : {
-                cls         : ViewBwWarPanel,
+                cls         : BaseWar_View_BwWarPanel.Panel,
                 skinName    : `baseWar/BwWarPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
                 needCache   : true,
             },
 
             BwSmallDialoguePanel : {
-                cls      : ViewBwSmallDialoguePanel,
+                cls      : BaseWar_View_BwSmallDialoguePanel.Panel,
                 skinName : `baseWar/BwSmallDialoguePanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             BroadcastAddMessagePanel : {
-                cls      : ViewsBroadcastAddMessagePanel,
+                cls      : Broadcasts_Views_BroadcastAddMessagePanel.Panel,
                 skinName : `broadcasts/views/BroadcastAddMessagePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BroadcastMessageListPanel : {
-                cls      : ViewsBroadcastMessageListPanel,
+                cls      : Broadcasts_Views_BroadcastMessageListPanel.Panel,
                 skinName : `broadcasts/views/BroadcastMessageListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             BroadcastPanel : {
-                cls       : ViewsBroadcastPanel,
+                cls       : Broadcasts_Views_BroadcastPanel.Panel,
                 skinName  : `broadcasts/views/BroadcastPanel.exml`,
-                layer     : DisplayLayerId.Notify0,
+                layer     : Graphics_Constants.DisplayLayerId.Notify0,
                 needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CampaignCreateCampaignsPanel : {
-                cls      : ViewsCampaignCreateCampaignsPanel,
+                cls      : Campaigns_Views_CampaignCreateCampaignsPanel.Panel,
                 skinName : `campaigns/views/CampaignCreateCampaignsPanel.exml`,
-                layer    : DisplayLayerId.Scene,
+                layer    : Graphics_Constants.DisplayLayerId.Scene,
             },
 
             CampaignCreateMapsPanel : {
-                cls      : ViewsCampaignCreateMapsPanel,
+                cls      : Campaigns_Views_CampaignCreateMapsPanel.Panel,
                 skinName : `campaigns/views/CampaignCreateMapsPanel.exml`,
-                layer    : DisplayLayerId.Scene,
+                layer    : Graphics_Constants.DisplayLayerId.Scene,
             },
 
             CampaignCreateQuickSettingsPanel : {
-                cls      : ViewsCampaignCreateQuickSettingsPanel,
+                cls      : Campaigns_Views_CampaignCreateQuickSettingsPanel.Panel,
                 skinName : `campaigns/views/CampaignCreateQuickSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ChangeLogPanel : {
-                cls      : ChangeLogsChangeLogPanel,
+                cls      : ChangeLogs_ChangeLogPanel.Panel,
                 skinName : `changeLogs/ChangeLogPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CcrCreateMapListPanel : {
-                cls         : ViewCcrCreateMapListPanel,
+                cls         : CoopCustomRoom_View_CcrCreateMapListPanel.Panel,
                 skinName    : `coopCustomRoom/CcrCreateMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrCreateSettingsPanel : {
-                cls         : ViewCcrCreateSettingsPanel,
+                cls         : CoopCustomRoom_View_CcrCreateSettingsPanel.Panel,
                 skinName    : `coopCustomRoom/CcrCreateSettingsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrMainMenuPanel : {
-                cls         : ViewCcrMainMenuPanel,
+                cls         : CoopCustomRoom_View_CcrMainMenuPanel.Panel,
                 skinName    : `coopCustomRoom/CcrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrRoomInfoPanel : {
-                cls         : ViewCcrRoomInfoPanel,
+                cls         : CoopCustomRoom_View_CcrRoomInfoPanel.Panel,
                 skinName    : `coopCustomRoom/CcrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ChatCommandPanel : {
-                cls       : ViewChatCommandPanel,
+                cls       : Chat_View_ChatCommandPanel.Panel,
                 skinName  : `chats/ChatCommandPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : false,
             },
             ChatPanel : {
-                cls       : ViewChatPanel,
+                cls       : Chat_View_ChatPanel.Panel,
                 skinName  : `chats/ChatPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CmCampaignCommandsPanel : {
-                cls      : ViewsCmCampaignCommandsPanel,
+                cls      : Campaigns_Managements_Views_CmCampaignCommandsPanel.Panel,
                 skinName : `campaigns/managements/views/CmCampaignCommandsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CmCampaignDesignersPanel : {
-                cls      : ViewsCmCampaignDesignersPanel,
+                cls      : Campaigns_Managements_Views_CmCampaignDesignersPanel.Panel,
                 skinName : `campaigns/managements/views/CmCampaignDesignersPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CmCampaignListPanel : {
-                cls      : ViewsCmCampaignListPanel,
+                cls      : Campaigns_Managements_Views_CmCampaignListPanel.Panel,
                 skinName : `campaigns/managements/views/CmCampaignListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CmCampaignMapsPanel : {
-                cls      : ViewsCmCampaignMapsPanel,
+                cls      : Campaigns_Managements_Views_CmCampaignMapsPanel.Panel,
                 skinName : `campaigns/managements/views/CmCampaignMapsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CommonAlertPanel : {
-                cls      : ViewCommonAlertPanel,
+                cls      : Common_View_CommonAlertPanel.Panel,
                 skinName : `common/CommonAlertPanel.exml`,
-                layer    : DisplayLayerId.Notify0,
+                layer    : Graphics_Constants.DisplayLayerId.Notify0,
             },
 
             CommonApiPanel : {
-                cls      : ViewCommonApiPanel,
+                cls      : Common_View_CommonApiPanel.Panel,
                 skinName : `common/CommonApiPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonBlockPanel : {
-                cls      : ViewCommonBlockPanel,
+                cls      : Common_View_CommonBlockPanel.Panel,
                 skinName : `common/CommonBlockPanel.exml`,
-                layer    : DisplayLayerId.Notify0,
+                layer    : Graphics_Constants.DisplayLayerId.Notify0,
             },
 
             CommonChangeVersionPanel : {
-                cls      : ViewCommonChangeVersionPanel,
+                cls      : Common_View_CommonChangeVersionPanel.Panel,
                 skinName : `common/CommonChangeVersionPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseCoAndColorPanel : {
-                cls      : ViewCommonChooseCoAndColorPanel,
+                cls      : Common_View_CommonChooseCoAndColorPanel.Panel,
                 skinName : `common/CommonChooseCoAndColorPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseGridIndexPanel : {
-                cls      : ViewCommonChooseGridIndexPanel,
+                cls      : Common_View_CommonChooseGridIndexPanel.Panel,
                 skinName : `common/CommonChooseGridIndexPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMapSorterPanel : {
-                cls      : ViewCommonChooseMapSorterPanel,
+                cls      : Common_View_CommonChooseMapSorterPanel.Panel,
                 skinName : `common/CommonChooseMapSorterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiCoCategoryIdPanel : {
-                cls      : ViewCommonChooseMultiCoCategoryIdPanel,
+                cls      : Common_View_CommonChooseMultiCoCategoryIdPanel.Panel,
                 skinName : `common/CommonChooseMultiCoCategoryIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiCoIdPanel : {
-                cls      : ViewCommonChooseMultiCoIdPanel,
+                cls      : Common_View_CommonChooseMultiCoIdPanel.Panel,
                 skinName : `common/CommonChooseMultiCoIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiIntegerPanel : {
-                cls      : ViewCommonChooseMultiIntegerPanel,
+                cls      : Common_View_CommonChooseMultiIntegerPanel.Panel,
                 skinName : `common/CommonChooseMultiIntegerPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiNumberPanel : {
-                cls      : ViewCommonChooseMultiNumberPanel,
+                cls      : Common_View_CommonChooseMultiNumberPanel.Panel,
                 skinName : `common/CommonChooseMultiNumberPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiTileTypePanel : {
-                cls      : ViewCommonChooseMultiTileTypePanel,
+                cls      : Common_View_CommonChooseMultiTileTypePanel.Panel,
                 skinName : `common/CommonChooseMultiTileTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiUnitTypePanel : {
-                cls      : ViewCommonChooseMultiUnitTypePanel,
+                cls      : Common_View_CommonChooseMultiUnitTypePanel.Panel,
                 skinName : `common/CommonChooseMultiUnitTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseOverridingSkinIdPanel : {
-                cls      : ViewCommonChooseOverridingSkinIdPanel,
+                cls      : Common_View_CommonChooseOverridingSkinIdPanel.Panel,
                 skinName : `common/CommonChooseOverridingSkinIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSfxPanel : {
-                cls      : ViewCommonChooseSfxPanel,
+                cls      : Common_View_CommonChooseSfxPanel.Panel,
                 skinName : `common/CommonChooseSfxPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleCoCategoryIdPanel : {
-                cls      : ViewCommonChooseSingleCoCategoryIdPanel,
+                cls      : Common_View_CommonChooseSingleCoCategoryIdPanel.Panel,
                 skinName : `common/CommonChooseSingleCoCategoryIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleCoIdPanel : {
-                cls      : ViewCommonChooseSingleCoIdPanel,
+                cls      : Common_View_CommonChooseSingleCoIdPanel.Panel,
                 skinName : `common/CommonChooseSingleCoIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleGridMarkPanel : {
-                cls      : ViewCommonChooseSingleGridMarkPanel,
+                cls      : Common_View_CommonChooseSingleGridMarkPanel.Panel,
                 skinName : `common/CommonChooseSingleGridMarkPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleMapEditorSlotPanel : {
-                cls      : ViewCommonChooseSingleMapEditorSlotPanel,
+                cls      : Common_View_CommonChooseSingleMapEditorSlotPanel.Panel,
                 skinName : `common/CommonChooseSingleMapEditorSlotPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleNormalMapIdPanel : {
-                cls      : ViewCommonChooseSingleNormalMapIdPanel,
+                cls      : Common_View_CommonChooseSingleNormalMapIdPanel.Panel,
                 skinName : `common/CommonChooseSingleNormalMapIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleNumberPanel : {
-                cls      : ViewCommonChooseSingleNumberPanel,
+                cls      : Common_View_CommonChooseSingleNumberPanel.Panel,
                 skinName : `common/CommonChooseSingleNumberPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleSkinIdPanel : {
-                cls      : ViewCommonChooseSingleSkinIdPanel,
+                cls      : Common_View_CommonChooseSingleSkinIdPanel.Panel,
                 skinName : `common/CommonChooseSingleSkinIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleSpmSaveSlotPanel : {
-                cls      : ViewCommonChooseSingleSpmSaveSlotPanel,
+                cls      : Common_View_CommonChooseSingleSpmSaveSlotPanel.Panel,
                 skinName : `common/CommonChooseSingleSpmSaveSlotPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleTileTypePanel : {
-                cls      : ViewCommonChooseSingleTileTypePanel,
+                cls      : Common_View_CommonChooseSingleTileTypePanel.Panel,
                 skinName : `common/CommonChooseSingleTileTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleUnitTypePanel : {
-                cls      : ViewCommonChooseSingleUnitTypePanel,
+                cls      : Common_View_CommonChooseSingleUnitTypePanel.Panel,
                 skinName : `common/CommonChooseSingleUnitTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseTileBasePanel : {
-                cls      : ViewCommonChooseTileBasePanel,
+                cls      : Common_View_CommonChooseTileBasePanel.Panel,
                 skinName : `common/CommonChooseTileBasePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseTileDecorationPanel : {
-                cls      : ViewCommonChooseTileDecorationPanel,
+                cls      : Common_View_CommonChooseTileDecorationPanel.Panel,
                 skinName : `common/CommonChooseTileDecorationPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseTileInfoPanel : {
-                cls      : ViewCommonChooseTileInfoPanel,
+                cls      : Common_View_CommonChooseTileInfoPanel.Panel,
                 skinName : `common/CommonChooseTileInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseTileObjectPanel : {
-                cls      : ViewCommonChooseTileObjectPanel,
+                cls      : Common_View_CommonChooseTileObjectPanel.Panel,
                 skinName : `common/CommonChooseTileObjectPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseTileTypePanel : {
-                cls      : ViewCommonChooseTileTypePanel,
+                cls      : Common_View_CommonChooseTileTypePanel.Panel,
                 skinName : `common/CommonChooseTileTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitAndPlayerIndexPanel : {
-                cls      : ViewCommonChooseUnitAndPlayerIndexPanel,
+                cls      : Common_View_CommonChooseUnitAndPlayerIndexPanel.Panel,
                 skinName : `common/CommonChooseUnitAndPlayerIndexPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitAttrPanel : {
-                cls      : ViewCommonChooseUnitAttrPanel,
+                cls      : Common_View_CommonChooseUnitAttrPanel.Panel,
                 skinName : `common/CommonChooseUnitAttrPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitTagPanel : {
-                cls      : ViewCommonChooseUnitTagPanel,
+                cls      : Common_View_CommonChooseUnitTagPanel.Panel,
                 skinName : `common/CommonChooseUnitTagPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonCoInfoPanel : {
-                cls      : ViewCommonCoInfoPanel,
+                cls      : Common_View_CommonCoInfoPanel.Panel,
                 skinName : `common/CommonCoInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonCoListPanel : {
-                cls      : ViewCommonCoListPanel,
+                cls      : Common_View_CommonCoListPanel.Panel,
                 skinName : `common/CommonCoListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonCoStatisticsFilterPanel : {
-                cls      : ViewCommonCoStatisticsFilterPanel,
+                cls      : Common_View_CommonCoStatisticsFilterPanel.Panel,
                 skinName : `common/CommonCoStatisticsFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonCoStatisticsPanel : {
-                cls      : ViewCommonCoStatisticsPanel,
+                cls      : Common_View_CommonCoStatisticsPanel.Panel,
                 skinName : `common/CommonCoStatisticsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonConfirmPanel : {
-                cls      : ViewCommonConfirmPanel,
+                cls      : Common_View_CommonConfirmPanel.Panel,
                 skinName : `common/CommonConfirmPanel.exml`,
-                layer    : DisplayLayerId.Notify0,
+                layer    : Graphics_Constants.DisplayLayerId.Notify0,
             },
 
             CommonDamageCalculatorPanel : {
-                cls       : ViewCommonDamageCalculatorPanel,
+                cls       : Common_View_CommonDamageCalculatorPanel.Panel,
                 skinName  : `common/CommonDamageCalculatorPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonDamageChartPanel : {
-                cls       : ViewCommonDamageChartPanel,
+                cls       : Common_View_CommonDamageChartPanel.Panel,
                 skinName  : `common/CommonDamageChartPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonDeletePlayerPanel : {
-                cls      : ViewCommonDeletePlayerPanel,
+                cls      : Common_View_CommonDeletePlayerPanel.Panel,
                 skinName : `common/CommonDeletePlayerPanel.exml`,
-                layer    : DisplayLayerId.Notify0,
+                layer    : Graphics_Constants.DisplayLayerId.Notify0,
             },
 
             CommonDoubleSliderPanel : {
-                cls      : ViewCommonDoubleSliderPanel,
+                cls      : Common_View_CommonDoubleSliderPanel.Panel,
                 skinName : `common/CommonDoubleSliderPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonErrorPanel : {
-                cls      : ViewCommonErrorPanel,
+                cls      : Common_View_CommonErrorPanel.Panel,
                 skinName : `common/CommonErrorPanel.exml`,
-                layer    : DisplayLayerId.Top,
+                layer    : Graphics_Constants.DisplayLayerId.Top,
             },
 
             CommonExpressionTypeIdPanel : {
-                cls      : ViewCommonExpressionTypeIdPanel,
+                cls      : Common_View_CommonExpressionTypeIdPanel.Panel,
                 skinName : `common/CommonExpressionTypeIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonGameChartPanel : {
-                cls      : ViewCommonGameChartPanel,
+                cls      : Common_View_CommonGameChartPanel.Panel,
                 skinName : `common/CommonGameChartPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonHelpPanel : {
-                cls      : ViewCommonHelpPanel,
+                cls      : Common_View_CommonHelpPanel.Panel,
                 skinName : `common/CommonHelpPanel.exml`,
-                layer    : DisplayLayerId.Notify0,
+                layer    : Graphics_Constants.DisplayLayerId.Notify0,
             },
 
             CommonInputDurationPanel : {
-                cls      : ViewCommonInputDurationPanel,
+                cls      : Common_View_CommonInputDurationPanel.Panel,
                 skinName : `common/CommonInputDurationPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             CommonInputExpressionPanel : {
-                cls      : ViewCommonInputExpressionPanel,
+                cls      : Common_View_CommonInputExpressionPanel.Panel,
                 skinName : `common/CommonInputExpressionPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonInputIntegerPanel : {
-                cls      : ViewCommonInputIntegerPanel,
+                cls      : Common_View_CommonInputIntegerPanel.Panel,
                 skinName : `common/CommonInputIntegerPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             CommonInputLanguageTextPanel : {
-                cls      : ViewCommonInputLanguageTextPanel,
+                cls      : Common_View_CommonInputLanguageTextPanel.Panel,
                 skinName : `common/CommonInputLanguageTextPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             CommonInputNullableIntegerPanel : {
-                cls      : ViewCommonInputNullableIntegerPanel,
+                cls      : Common_View_CommonInputNullableIntegerPanel.Panel,
                 skinName : `common/CommonInputNullableIntegerPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             CommonInputPanel : {
-                cls      : ViewCommonInputPanel,
+                cls      : Common_View_CommonInputPanel.Panel,
                 skinName : `common/CommonInputPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             CommonInputShortLangTextPanel : {
-                cls      : ViewCommonInputShortLangTextPanel,
+                cls      : Common_View_CommonInputShortLangTextPanel.Panel,
                 skinName : `common/CommonInputShortLangTextPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonMapFilterPanel : {
-                cls      : ViewCommonMapFilterPanel,
+                cls      : Common_View_CommonMapFilterPanel.Panel,
                 skinName : `common/CommonMapFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonMapWarStatisticsPanel : {
-                cls      : ViewCommonMapWarStatisticsPanel,
+                cls      : Common_View_CommonMapWarStatisticsPanel.Panel,
                 skinName : `common/CommonMapWarStatisticsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonRoomFilterPanel : {
-                cls      : ViewCommonRoomFilterPanel,
+                cls      : Common_View_CommonRoomFilterPanel.Panel,
                 skinName : `common/CommonRoomFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonSearchMultiUserPanel : {
-                cls      : ViewCommonSearchMultiUserPanel,
+                cls      : Common_View_CommonSearchMultiUserPanel.Panel,
                 skinName : `common/CommonSearchMultiUserPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonSearchSingleUserPanel : {
-                cls      : ViewCommonSearchSingleUserPanel,
+                cls      : Common_View_CommonSearchSingleUserPanel.Panel,
                 skinName : `common/CommonSearchSingleUserPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonServerStatusPanel : {
-                cls      : ViewCommonServerStatusPanel,
+                cls      : Common_View_CommonServerStatusPanel.Panel,
                 skinName : `common/CommonServerStatusPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowCoCategoryIdPanel : {
-                cls      : ViewCommonShowCoCategoryIdPanel,
+                cls      : Common_View_CommonShowCoCategoryIdPanel.Panel,
                 skinName : `common/CommonShowCoCategoryIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowCoIdPanel : {
-                cls      : ViewCommonShowCoIdPanel,
+                cls      : Common_View_CommonShowCoIdPanel.Panel,
                 skinName : `common/CommonShowCoIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowGameModePanel : {
-                cls      : ViewCommonShowGameModePanel,
+                cls      : Common_View_CommonShowGameModePanel.Panel,
                 skinName : `common/CommonShowGameModePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowLangTextPanel : {
-                cls      : ViewCommonShowLangTextPanel,
+                cls      : Common_View_CommonShowLangTextPanel.Panel,
                 skinName : `common/CommonShowLangTextPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowMapPanel : {
-                cls      : ViewCommonShowMapPanel,
+                cls      : Common_View_CommonShowMapPanel.Panel,
                 skinName : `common/CommonShowMapPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowMapTagIdPanel : {
-                cls      : ViewCommonShowMapTagIdPanel,
+                cls      : Common_View_CommonShowMapTagIdPanel.Panel,
                 skinName : `common/CommonShowMapTagIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowPlayerListPanel : {
-                cls      : ViewCommonShowPlayerListPanel,
+                cls      : Common_View_CommonShowPlayerListPanel.Panel,
                 skinName : `common/CommonShowPlayerListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowSelectedCoCategoryIdPanel : {
-                cls      : ViewCommonShowSelectedCoCategoryIdPanel,
+                cls      : Common_View_CommonShowSelectedCoCategoryIdPanel.Panel,
                 skinName : `common/CommonShowSelectedCoCategoryIdPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonShowUnitTypePanel : {
-                cls      : ViewCommonShowUnitTypePanel,
+                cls      : Common_View_CommonShowUnitTypePanel.Panel,
                 skinName : `common/CommonShowUnitTypePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             CommonTileChartPanel : {
-                cls       : ViewCommonTileChartPanel,
+                cls       : Common_View_CommonTileChartPanel.Panel,
                 skinName  : `common/CommonTileChartPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonTutorialPanel : {
-                cls       : ViewCommonTutorialPanel,
+                cls       : Common_View_CommonTutorialPanel.Panel,
                 skinName  : `common/CommonTutorialPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonWarEventListPanel : {
-                cls      : ViewCommonWarEventListPanel,
+                cls      : Common_View_CommonWarEventListPanel.Panel,
                 skinName : `common/CommonWarEventListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             GmSetUserFullPrivilegePanel : {
-                cls      : ViewGmSetUserFullPrivilegePanel,
+                cls      : Gm_View_GmSetUserFullPrivilegePanel.Panel,
                 skinName : `gm/GmSetUserFullPrivilegePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             HrwTopPanel : {
-                cls      : ViewHrwTopPanel,
+                cls      : HalfwayReplayWar_View_HrwTopPanel.Panel,
                 skinName : `halfwayReplayWar/HrwTopPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             HrwWarMenuPanel : {
-                cls      : ViewHrwWarMenuPanel,
+                cls      : HalfwayReplayWar_View_HrwWarMenuPanel.Panel,
                 skinName : `halfwayReplayWar/HrwWarMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             LbMrwListPanel : {
-                cls      : ViewLbMrwListPanel,
+                cls      : Leaderboard_View_LbMrwListPanel.Panel,
                 skinName : `leaderboard/LbMrwListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             LbSpmOverallListPanel : {
-                cls      : ViewLbSpmOverallListPanel,
+                cls      : Leaderboard_View_LbSpmOverallListPanel.Panel,
                 skinName : `leaderboard/LbSpmOverallListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             LobbyBackgroundPanel : {
-                cls       : ViewLobbyBackgroundPanel,
+                cls       : Lobby_View_LobbyBackgroundPanel.Panel,
                 skinName  : `lobby/LobbyBackgroundPanel.exml`,
-                layer     : DisplayLayerId.Bottom,
+                layer     : Graphics_Constants.DisplayLayerId.Bottom,
                 needCache : true,
             },
 
             LobbyBottomPanel : {
-                cls       : ViewLobbyBottomPanel,
+                cls       : Lobby_View_LobbyBottomPanel.Panel,
                 skinName  : `lobby/LobbyBottomPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             LobbyPanel : {
-                cls         : ViewLobbyPanel,
+                cls         : Lobby_View_LobbyPanel.Panel,
                 skinName    : `lobby/LobbyPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
                 needCache   : true,
             },
 
             LobbyStartPanel : {
-                cls      : ViewLobbyStartPanel,
+                cls      : Lobby_View_LobbyStartPanel.Panel,
                 skinName : `lobby/LobbyStartPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             LobbyTopPanel : {
-                cls       : ViewLobbyTopPanel,
+                cls       : Lobby_View_LobbyTopPanel.Panel,
                 skinName  : `lobby/LobbyTopPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             LobbyTopRightPanel : {
-                cls       : ViewLobbyTopRightPanel,
+                cls       : Lobby_View_LobbyTopRightPanel.Panel,
                 skinName  : `lobby/LobbyTopRightPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MailPanel : {
-                cls      : ViewMailPanel,
+                cls      : Mail_View_MailPanel.Panel,
                 skinName : `mail/MailPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             McrCreateMapListPanel : {
-                cls         : ViewMcrCreateMapListPanel,
+                cls         : MultiCustomRoom_View_McrCreateMapListPanel.Panel,
                 skinName    : `multiCustomRoom/McrCreateMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrCreateSettingsPanel : {
-                cls         : ViewMcrCreateSettingsPanel,
+                cls         : MultiCustomRoom_View_McrCreateSettingsPanel.Panel,
                 skinName    : `multiCustomRoom/McrCreateSettingsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrMainMenuPanel : {
-                cls         : ViewMcrMainMenuPanel,
+                cls         : MultiCustomRoom_View_McrMainMenuPanel.Panel,
                 skinName    : `multiCustomRoom/McrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrRoomInfoPanel : {
-                cls         : ViewMcrRoomInfoPanel,
+                cls         : MultiCustomRoom_View_McrRoomInfoPanel.Panel,
                 skinName    : `multiCustomRoom/McrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MeAutoAdjustPanel : {
-                cls      : ViewsMeAutoAdjustPanel,
+                cls      : MapEditors_Views_MeAutoAdjustPanel.Panel,
                 skinName : `mapEditors/views/MeAutoAdjustPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeChooseLocationPanel : {
-                cls      : ViewsMeChooseLocationPanel,
+                cls      : MapEditors_Views_MeChooseLocationPanel.Panel,
                 skinName : `mapEditors/views/MeChooseLocationPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeChooseTileBasePanel : {
-                cls       : ViewsMeChooseTileBasePanel,
+                cls       : MapEditors_Views_MeChooseTileBasePanel.Panel,
                 skinName  : `mapEditors/views/MeChooseTileBasePanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseTileDecorationPanel : {
-                cls       : ViewsMeChooseTileDecorationPanel,
+                cls       : MapEditors_Views_MeChooseTileDecorationPanel.Panel,
                 skinName  : `mapEditors/views/MeChooseTileDecorationPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseTileObjectPanel : {
-                cls       : ViewsMeChooseTileObjectPanel,
+                cls       : MapEditors_Views_MeChooseTileObjectPanel.Panel,
                 skinName  : `mapEditors/views/MeChooseTileObjectPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseUnitPanel : {
-                cls       : ViewsMeChooseUnitPanel,
+                cls       : MapEditors_Views_MeChooseUnitPanel.Panel,
                 skinName  : `mapEditors/views/MeChooseUnitPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeClearPanel : {
-                cls      : ViewsMeClearPanel,
+                cls      : MapEditors_Views_MeClearPanel.Panel,
                 skinName : `mapEditors/views/MeClearPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeImportContentPanel : {
-                cls      : ViewsMeImportContentPanel,
+                cls      : MapEditors_Views_MeImportContentPanel.Panel,
                 skinName : `mapEditors/views/MeImportContentPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeImportExportPanel : {
-                cls      : ViewsMeImportExportPanel,
+                cls      : MapEditors_Views_MeImportExportPanel.Panel,
                 skinName : `mapEditors/views/MeImportExportPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeMapInfoPanel : {
-                cls      : ViewsMeMapInfoPanel,
+                cls      : MapEditors_Views_MeMapInfoPanel.Panel,
                 skinName : `mapEditors/views/MeMapInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeMapSimpleDialogueMainPanel : {
-                cls      : ViewsMeMapSimpleDialogueMainPanel,
+                cls      : MapEditors_Views_MeMapSimpleDialogueMainPanel.Panel,
                 skinName : `mapEditors/views/MeMapSimpleDialogueMainPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeMapSimpleDialogueUtilPanel : {
-                cls      : ViewsMeMapSimpleDialogueUtilPanel,
+                cls      : MapEditors_Views_MeMapSimpleDialogueUtilPanel.Panel,
                 skinName : `mapEditors/views/MeMapSimpleDialogueUtilPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeResizePanel : {
-                cls      : ViewsMeResizePanel,
+                cls      : MapEditors_Views_MeResizePanel.Panel,
                 skinName : `mapEditors/views/MeResizePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSaveCampaignMapPanel : {
-                cls      : ViewsMeSaveCampaignMapPanel,
+                cls      : MapEditors_Views_MeSaveCampaignMapPanel.Panel,
                 skinName : `mapEditors/views/MeSaveCampaignMapPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSaveNormalMapPanel : {
-                cls      : ViewsMeSaveNormalMapPanel,
+                cls      : MapEditors_Views_MeSaveNormalMapPanel.Panel,
                 skinName : `mapEditors/views/MeSaveNormalMapPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSetTileCustomNamePanel : {
-                cls      : ViewsMeSetTileCustomNamePanel,
+                cls      : MapEditors_Views_MeSetTileCustomNamePanel.Panel,
                 skinName : `mapEditors/views/MeSetTileCustomNamePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSetUnitCustomNamePanel : {
-                cls      : ViewsMeSetUnitCustomNamePanel,
+                cls      : MapEditors_Views_MeSetUnitCustomNamePanel.Panel,
                 skinName : `mapEditors/views/MeSetUnitCustomNamePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSymmetricalPlayerIndexPanel : {
-                cls      : ViewsMeSymmetricalPlayerIndexPanel,
+                cls      : MapEditors_Views_MeSymmetricalPlayerIndexPanel.Panel,
                 skinName : `mapEditors/views/MeSymmetricalPlayerIndexPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSymmetryPanel : {
-                cls      : ViewsMeSymmetryPanel,
+                cls      : MapEditors_Views_MeSymmetryPanel.Panel,
                 skinName : `mapEditors/views/MeSymmetryPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeSymmetryFillTilePanel : {
-                cls      : ViewsMeSymmetryFillTilePanel,
+                cls      : MapEditors_Views_MeSymmetryFillTilePanel.Panel,
                 skinName : `mapEditors/views/MeSymmetryFillTilePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeTaskObjectivePanel : {
-                cls      : ViewsMeTaskObjectivePanel,
+                cls      : MapEditors_Views_MeTaskObjectivePanel.Panel,
                 skinName : `mapEditors/views/MeTaskObjectivePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeTaskObjectiveListPanel : {
-                cls      : ViewsMeTaskObjectiveListPanel,
+                cls      : MapEditors_Views_MeTaskObjectiveListPanel.Panel,
                 skinName : `mapEditors/views/MeTaskObjectiveListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeTileCustomNameListPanel : {
-                cls      : ViewsMeTileCustomNameListPanel,
+                cls      : MapEditors_Views_MeTileCustomNameListPanel.Panel,
                 skinName : `mapEditors/views/MeTileCustomNameListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeTileUnitInfoPanel : {
-                cls      : ViewsMeTileUnitInfoPanel,
+                cls      : MapEditors_Views_MeTileUnitInfoPanel.Panel,
                 skinName : `mapEditors/views/MeTileUnitInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeTopPanel : {
-                cls      : ViewsMeTopPanel,
+                cls      : MapEditors_Views_MeTopPanel.Panel,
                 skinName : `mapEditors/views/MeTopPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeUnitCustomNameListPanel : {
-                cls      : ViewsMeUnitCustomNameListPanel,
+                cls      : MapEditors_Views_MeUnitCustomNameListPanel.Panel,
                 skinName : `mapEditors/views/MeUnitCustomNameListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeVisibilityPanel : {
-                cls      : ViewsMeVisibilityPanel,
+                cls      : MapEditors_Views_MeVisibilityPanel.Panel,
                 skinName : `mapEditors/views/MeVisibilityPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeWarMenuPanel : {
-                cls      : ViewsMeWarMenuPanel,
+                cls      : MapEditors_Views_MeWarMenuPanel.Panel,
                 skinName : `mapEditors/views/MeWarMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeWarRulePanel : {
-                cls       : ViewsMeWarRulePanel,
+                cls       : MapEditors_Views_MeWarRulePanel.Panel,
                 skinName  : `mapEditors/views/MeWarRulePanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeWarRuleMapSimpleDialoguePanel : {
-                cls      : ViewsMeWarRuleMapSimpleDialoguePanel,
+                cls      : MapEditors_Views_MeWarRuleMapSimpleDialoguePanel.Panel,
                 skinName : `mapEditors/views/MeWarRuleMapSimpleDialoguePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeWarRulePlayerRulePanel : {
-                cls      : ViewsMeWarRulePlayerRulePanel,
+                cls      : MapEditors_Views_MeWarRulePlayerRulePanel.Panel,
                 skinName : `mapEditors/views/MeWarRulePlayerRulePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeWarRuleTaskObjectivePanel : {
-                cls      : ViewsMeWarRuleTaskObjectivePanel,
+                cls      : MapEditors_Views_MeWarRuleTaskObjectivePanel.Panel,
                 skinName : `mapEditors/views/MeWarRuleTaskObjectivePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MeWarRuleWarEventPanel : {
-                cls      : ViewsMeWarRuleWarEventPanel,
+                cls      : MapEditors_Views_MeWarRuleWarEventPanel.Panel,
                 skinName : `mapEditors/views/MeWarRuleWarEventPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MfrCreateSettingsPanel : {
-                cls         : ViewMfrCreateSettingsPanel,
+                cls         : MultiFreeRoom_View_MfrCreateSettingsPanel.Panel,
                 skinName    : `multiFreeRoom/MfrCreateSettingsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MfrMainMenuPanel : {
-                cls         : ViewMfrMainMenuPanel,
+                cls         : MultiFreeRoom_View_MfrMainMenuPanel.Panel,
                 skinName    : `multiFreeRoom/MfrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MfrRoomInfoPanel : {
-                cls         : ViewMfrRoomInfoPanel,
+                cls         : MultiFreeRoom_View_MfrRoomInfoPanel.Panel,
                 skinName    : `multiFreeRoom/MfrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MmCommandPanel : {
-                cls      : ViewMmCommandPanel,
+                cls      : MapManagement_View_MmCommandPanel.Panel,
                 skinName : `mapManagement/MmCommandPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmMainMenuPanel : {
-                cls      : ViewMmMainMenuPanel,
+                cls      : MapManagement_View_MmMainMenuPanel.Panel,
                 skinName : `mapManagement/MmMainMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmMapTagListPanel : {
-                cls      : ViewMmMapTagListPanel,
+                cls      : MapManagement_View_MmMapTagListPanel.Panel,
                 skinName : `mapManagement/MmMapTagListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmModifyWarRulePanel : {
-                cls      : ViewMmModifyWarRulePanel,
+                cls      : MapManagement_View_MmModifyWarRulePanel.Panel,
                 skinName : `mapManagement/MmModifyWarRulePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmReviewListPanel : {
-                cls      : ViewMmReviewListPanel,
+                cls      : MapManagement_View_MmReviewListPanel.Panel,
                 skinName : `mapManagement/MmReviewListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmWarRuleMapSimpleDialoguePanel : {
-                cls      : ViewMmWarRuleMapSimpleDialoguePanel,
+                cls      : MapManagement_View_MmWarRuleMapSimpleDialoguePanel.Panel,
                 skinName : `mapManagement/MmWarRuleMapSimpleDialoguePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmWarRulePanel : {
-                cls      : ViewMmWarRulePanel,
+                cls      : MapManagement_View_MmWarRulePanel.Panel,
                 skinName : `mapManagement/MmWarRulePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmWarRulePlayerRulePanel : {
-                cls      : ViewMmWarRulePlayerRulePanel,
+                cls      : MapManagement_View_MmWarRulePlayerRulePanel.Panel,
                 skinName : `mapManagement/MmWarRulePlayerRulePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmWarRuleTaskObjectivePanel : {
-                cls      : ViewMmWarRuleTaskObjectivePanel,
+                cls      : MapManagement_View_MmWarRuleTaskObjectivePanel.Panel,
                 skinName : `mapManagement/MmWarRuleTaskObjectivePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmWarRuleWarEventPanel : {
-                cls      : ViewMmWarRuleWarEventPanel,
+                cls      : MapManagement_View_MmWarRuleWarEventPanel.Panel,
                 skinName : `mapManagement/MmWarRuleWarEventPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MmrBanMapPanel : {
-                cls      : ViewMmrBanMapPanel,
+                cls      : MultiMatchRoom_View_MmrBanMapPanel.Panel,
                 skinName : `multiMatchRoom/MmrBanMapPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmrMainMenuPanel : {
-                cls         : ViewMmrMainMenuPanel,
+                cls         : MultiMatchRoom_View_MmrMainMenuPanel.Panel,
                 skinName    : `multiMatchRoom/MmrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrPreviewMapListPanel : {
-                cls         : ViewMmrPreviewMapListPanel,
+                cls         : MultiMatchRoom_View_MmrPreviewMapListPanel.Panel,
                 skinName    : `multiMatchRoom/MmrPreviewMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrRoomInfoPanel : {
-                cls         : ViewMmrRoomInfoPanel,
+                cls         : MultiMatchRoom_View_MmrRoomInfoPanel.Panel,
                 skinName    : `multiMatchRoom/MmrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrSetMaxConcurrentCountPanel : {
-                cls      : ViewMmrSetMaxConcurrentCountPanel,
+                cls      : MultiMatchRoom_View_MmrSetMaxConcurrentCountPanel.Panel,
                 skinName : `multiMatchRoom/MmrSetMaxConcurrentCountPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MmrSetTimerPanel : {
-                cls      : ViewMmrSetTimerPanel,
+                cls      : MultiMatchRoom_View_MmrSetTimerPanel.Panel,
                 skinName : `multiMatchRoom/MmrSetTimerPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MpwMyWarListPanel : {
-                cls         : ViewMpwMyWarListPanel,
+                cls         : MultiPlayerWar_View_MpwMyWarListPanel.Panel,
                 skinName    : `multiPlayerWar/MpwMyWarListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MpwSpectatePanel : {
-                cls      : ViewMpwSpectatePanel,
+                cls      : MultiPlayerWar_View_MpwSpectatePanel.Panel,
                 skinName : `multiPlayerWar/MpwSpectatePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MpwSidePanel : {
-                cls      : ViewMpwSidePanel,
+                cls      : MultiPlayerWar_View_MpwSidePanel.Panel,
                 skinName : `multiPlayerWar/MpwSidePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MpwTopPanel : {
-                cls      : ViewMpwTopPanel,
+                cls      : MultiPlayerWar_View_MpwTopPanel.Panel,
                 skinName : `multiPlayerWar/MpwTopPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MpwWarAdvancedMenuPanel : {
-                cls      : ViewMpwWarAdvancedMenuPanel,
+                cls      : MultiPlayerWar_View_MpwWarAdvancedMenuPanel.Panel,
                 skinName : `multiPlayerWar/MpwWarAdvancedMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MpwWarMenuPanel : {
-                cls      : ViewMpwWarMenuPanel,
+                cls      : MultiPlayerWar_View_MpwWarMenuPanel.Panel,
                 skinName : `multiPlayerWar/MpwWarMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MrrBanMapPanel : {
-                cls      : ViewMrrBanMapPanel,
+                cls      : MultiRankRoom_View_MrrBanMapPanel.Panel,
                 skinName : `multiRankRoom/MrrBanMapPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MrrMainMenuPanel : {
-                cls         : ViewMrrMainMenuPanel,
+                cls         : MultiRankRoom_View_MrrMainMenuPanel.Panel,
                 skinName    : `multiRankRoom/MrrMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MpwJoinRoomListPanel : {
-                cls         : ViewMpwJoinRoomListPanel,
+                cls         : MultiPlayerWar_View_MpwJoinRoomListPanel.Panel,
                 skinName    : `multiPlayerWar/MpwJoinRoomListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MpwMyRoomListPanel : {
-                cls         : ViewMpwMyRoomListPanel,
+                cls         : MultiPlayerWar_View_MpwMyRoomListPanel.Panel,
                 skinName    : `multiPlayerWar/MpwMyRoomListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrPreviewMapListPanel : {
-                cls         : ViewMrrPreviewMapListPanel,
+                cls         : MultiRankRoom_View_MrrPreviewMapListPanel.Panel,
                 skinName    : `multiRankRoom/MrrPreviewMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrRoomInfoPanel : {
-                cls         : ViewMrrRoomInfoPanel,
+                cls         : MultiRankRoom_View_MrrRoomInfoPanel.Panel,
                 skinName    : `multiRankRoom/MrrRoomInfoPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrSetMaxConcurrentCountPanel : {
-                cls      : ViewMrrSetMaxConcurrentCountPanel,
+                cls      : MultiRankRoom_View_MrrSetMaxConcurrentCountPanel.Panel,
                 skinName : `multiRankRoom/MrrSetMaxConcurrentCountPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             MrrSetTimerPanel : {
-                cls      : ViewMrrSetTimerPanel,
+                cls      : MultiRankRoom_View_MrrSetTimerPanel.Panel,
                 skinName : `multiRankRoom/MrrSetTimerPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             RwPauseTimePanel : {
-                cls      : ViewRwPauseTimePanel,
+                cls      : ReplayWar_View_RwPauseTimePanel.Panel,
                 skinName : `replayWar/RwPauseTimePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             RwReplayListPanel : {
-                cls         : ViewRwReplayListPanel,
+                cls         : ReplayWar_View_RwReplayListPanel.Panel,
                 skinName    : `replayWar/RwReplayListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             RwReplayProgressPanel : {
-                cls      : ViewRwReplayProgressPanel,
+                cls      : ReplayWar_View_RwReplayProgressPanel.Panel,
                 skinName : `replayWar/RwReplayProgressPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             RwSearchReplayPanel : {
-                cls      : ViewRwSearchReplayPanel,
+                cls      : ReplayWar_View_RwSearchReplayPanel.Panel,
                 skinName : `replayWar/RwSearchReplayPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             RwTopPanel : {
-                cls      : ViewRwTopPanel,
+                cls      : ReplayWar_View_RwTopPanel.Panel,
                 skinName : `replayWar/RwTopPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             RwWarMenuPanel : {
-                cls      : ViewRwWarMenuPanel,
+                cls      : ReplayWar_View_RwWarMenuPanel.Panel,
                 skinName : `replayWar/RwWarMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ScrCreateMapListPanel : {
-                cls         : ViewScrCreateMapListPanel,
+                cls         : SingleCustomRoom_View_ScrCreateMapListPanel.Panel,
                 skinName    : `singleCustomRoom/ScrCreateMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ScrCreateSettingsPanel : {
-                cls         : ViewScrCreateSettingsPanel,
+                cls         : SingleCustomRoom_View_ScrCreateSettingsPanel.Panel,
                 skinName    : `singleCustomRoom/ScrCreateSettingsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SoundsChooseSingleBgmPanel : {
-                cls      : ChooseSingleBgmPanel,
+                cls      : Sounds_Panels_ChooseSingleBgmPanel.Panel,
                 skinName : `sounds/panels/ChooseSingleBgmPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             SoundsSettingsPanel : {
-                cls      : SettingsPanel,
+                cls      : Sounds_Panels_SettingsPanel.Panel,
                 skinName : `sounds/panels/SettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SpmMainMenuPanel : {
-                cls         : ViewSpmMainMenuPanel,
+                cls         : SinglePlayerMode_View_SpmMainMenuPanel.Panel,
                 skinName    : `singlePlayerMode/SpmMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SpmWarListPanel : {
-                cls         : ViewSpmWarListPanel,
+                cls         : SinglePlayerMode_View_SpmWarListPanel.Panel,
                 skinName    : `singlePlayerMode/SpmWarListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SpmMyWarRoomRecordPanel : {
-                cls      : ViewSpmMyWarRoomRecordPanel,
+                cls      : SinglePlayerMode_View_SpmMyWarRoomRecordPanel.Panel,
                 skinName : `singlePlayerMode/SpmMyWarRoomRecordPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SpwSidePanel : {
-                cls      : ViewSpwSidePanel,
+                cls      : SinglePlayerWar_View_SpwSidePanel.Panel,
                 skinName : `singlePlayerWar/SpwSidePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             SpwTopPanel : {
-                cls      : ViewSpwTopPanel,
+                cls      : SinglePlayerWar_View_SpwTopPanel.Panel,
                 skinName : `singlePlayerWar/SpwTopPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             SpwWarAdvancedMenuPanel : {
-                cls      : ViewSpwWarAdvancedMenuPanel,
+                cls      : SinglePlayerWar_View_SpwWarAdvancedMenuPanel.Panel,
                 skinName : `singlePlayerWar/SpwWarAdvancedMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             SpwWarMenuPanel : {
-                cls      : ViewSpwWarMenuPanel,
+                cls      : SinglePlayerWar_View_SpwWarMenuPanel.Panel,
                 skinName : `singlePlayerWar/SpwWarMenuPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SrrCreateMapListPanel : {
-                cls         : ViewSrrCreateMapListPanel,
+                cls         : SingleRankRoom_View_SrrCreateMapListPanel.Panel,
                 skinName    : `singleRankRoom/SrrCreateMapListPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SrrCreateQuickSettingsPanel : {
-                cls      : ViewSrrCreateQuickSettingsPanel,
+                cls      : SingleRankRoom_View_SrrCreateQuickSettingsPanel.Panel,
                 skinName : `singleRankRoom/SrrCreateQuickSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             SrrCreateSettingsPanel : {
-                cls         : ViewSrrCreateSettingsPanel,
+                cls         : SingleRankRoom_View_SrrCreateSettingsPanel.Panel,
                 skinName    : `singleRankRoom/SrrCreateSettingsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             UserGameManagementPanel : {
-                cls      : ViewsUserGameManagementPanel,
+                cls      : Users_Views_UserGameManagementPanel.Panel,
                 skinName : `users/UserGameManagementPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserGraphicSettingsPanel : {
-                cls      : ViewsUserGraphicSettingsPanel,
+                cls      : Users_Views_UserGraphicSettingsPanel.Panel,
                 skinName : `users/UserGraphicSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserLoginBackgroundPanel : {
-                cls         : ViewsUserLoginBackgroundPanel,
+                cls         : Users_Views_UserLoginBackgroundPanel.Panel,
                 skinName    : `users/UserLoginBackgroundPanel.exml`,
-                layer       : DisplayLayerId.Bottom,
+                layer       : Graphics_Constants.DisplayLayerId.Bottom,
                 isExclusive : true,
             },
 
             UserLoginPanel : {
-                cls      : ViewsUserLoginPanel,
+                cls      : Users_Views_UserLoginPanel.Panel,
                 skinName : `users/UserLoginPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserMedalPanel : {
-                cls      : ViewsUserMedalPanel,
+                cls      : Users_Views_UserMedalPanel.Panel,
                 skinName : `users/UserMedalPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             UserMiscSettingsPanel : {
-                cls      : ViewsUserMiscSettingsPanel,
+                cls      : Users_Views_UserMiscSettingsPanel.Panel,
                 skinName : `users/UserMiscSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserMpwStatisticsPanel : {
-                cls      : ViewsUserMpwStatisticsPanel,
+                cls      : Users_Views_UserMpwStatisticsPanel.Panel,
                 skinName : `users/UserMpwStatisticsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserOnlineUsersPanel : {
-                cls       : ViewsUserOnlineUsersPanel,
+                cls       : Users_Views_UserOnlineUsersPanel.Panel,
                 skinName  : `users/UserOnlineUsersPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserPanel : {
-                cls       : ViewsUserPanel,
+                cls       : Users_Views_UserPanel.Panel,
                 skinName  : `users/UserPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserProfileSettingsPanel : {
-                cls      : ViewsUserProfileSettingsPanel,
+                cls      : Users_Views_UserProfileSettingsPanel.Panel,
                 skinName : `users/UserProfileSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserRegisterPanel : {
-                cls      : ViewsUserRegisterPanel,
+                cls      : Users_Views_UserRegisterPanel.Panel,
                 skinName : `users/UserRegisterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSceneBgmSettingsPanel : {
-                cls      : ViewsUserSceneBgmSettingsPanel,
+                cls      : Users_Views_UserSceneBgmSettingsPanel.Panel,
                 skinName : `users/UserSceneBgmSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetAvatarPanel : {
-                cls      : ViewsUserSetAvatarPanel,
+                cls      : Users_Views_UserSetAvatarPanel.Panel,
                 skinName : `users/UserSetAvatarPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetCoBgmSettingsPanel : {
-                cls      : ViewsUserSetCoBgmSettingsPanel,
+                cls      : Users_Views_UserSetCoBgmSettingsPanel.Panel,
                 skinName : `users/UserSetCoBgmSettingsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetDiscordInfoPanel : {
-                cls      : ViewsUserSetDiscordInfoPanel,
+                cls      : Users_Views_UserSetDiscordInfoPanel.Panel,
                 skinName : `users/UserSetDiscordInfoPanel.exml`,
-                layer    : DisplayLayerId.Hud1,
+                layer    : Graphics_Constants.DisplayLayerId.Hud1,
             },
 
             UserSetEmailPanel : {
-                cls      : ViewsUserSetEmailPanel,
+                cls      : Users_Views_UserSetEmailPanel.Panel,
                 skinName : `users/UserSetEmailPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetPasswordPanel : {
-                cls      : ViewsUserSetPasswordPanel,
+                cls      : Users_Views_UserSetPasswordPanel.Panel,
                 skinName : `users/UserSetPasswordPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetPasswordWithEmailPanel : {
-                cls      : ViewsUserSetPasswordWithEmailPanel,
+                cls      : Users_Views_UserSetPasswordWithEmailPanel.Panel,
                 skinName : `users/UserSetPasswordWithEmailPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetRelationPanel : {
-                cls      : ViewsUserSetRelationPanel,
+                cls      : Users_Views_UserSetRelationPanel.Panel,
                 skinName : `users/UserSetRelationPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetOpacityPanel : {
-                cls      : ViewsUserSetOpacityPanel,
+                cls      : Users_Views_UserSetOpacityPanel.Panel,
                 skinName : `users/UserSetOpacityPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSetStageScalePanel : {
-                cls      : ViewsUserSetStageScalePanel,
+                cls      : Users_Views_UserSetStageScalePanel.Panel,
                 skinName : `users/UserSetStageScalePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             UserSettingsPanel : {
-                cls       : ViewsUserSettingsPanel,
+                cls       : Users_Views_UserSettingsPanel.Panel,
                 skinName  : `users/UserSettingsPanel.exml`,
-                layer     : DisplayLayerId.Hud0,
+                layer     : Graphics_Constants.DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserWarHistoryPanel : {
-                cls      : ViewsUserWarHistoryPanel,
+                cls      : Users_Views_UserWarHistoryPanel.Panel,
                 skinName : `users/UserWarHistoryPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             WeaAddTileBuffExprPanel : {
-                cls      : ViewWeaAddTileBuffExprPanel,
+                cls      : WarEvent_View_WeaAddTileBuffExprPanel.Panel,
                 skinName : `warEvent/WeaAddTileBuffExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaAddTileBuffSimplePanel : {
-                cls      : ViewWeaAddTileBuffSimplePanel,
+                cls      : WarEvent_View_WeaAddTileBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaAddTileBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaAddUnitBuffSimplePanel : {
-                cls      : ViewWeaAddUnitBuffSimplePanel,
+                cls      : WarEvent_View_WeaAddUnitBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaAddUnitBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaAddUnitOnMapSimplePanel : {
-                cls      : ViewWeaAddUnitOnMapSimplePanel,
+                cls      : WarEvent_View_WeaAddUnitOnMapSimplePanel.Panel,
                 skinName : `warEvent/WeaAddUnitOnMapSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaDeleteTileBuffExprPanel : {
-                cls      : ViewWeaDeleteTileBuffExprPanel,
+                cls      : WarEvent_View_WeaDeleteTileBuffExprPanel.Panel,
                 skinName : `warEvent/WeaDeleteTileBuffExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaDeleteTileBuffSimplePanel : {
-                cls      : ViewWeaDeleteTileBuffSimplePanel,
+                cls      : WarEvent_View_WeaDeleteTileBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaDeleteTileBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaDeleteUnitBuffSimplePanel : {
-                cls      : ViewWeaDeleteUnitBuffSimplePanel,
+                cls      : WarEvent_View_WeaDeleteUnitBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaDeleteUnitBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaDestroyUnitExprPanel : {
-                cls      : ViewWeaDestroyUnitExprPanel,
+                cls      : WarEvent_View_WeaDestroyUnitExprPanel.Panel,
                 skinName : `warEvent/WeaDestroyUnitExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaDestroyUnitSimplePanel : {
-                cls      : ViewWeaDestroyUnitSimplePanel,
+                cls      : WarEvent_View_WeaDestroyUnitSimplePanel.Panel,
                 skinName : `warEvent/WeaDestroyUnitSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaBigDialogueSimplePanel : {
-                cls      : ViewWeaBigDialogueSimplePanel,
+                cls      : WarEvent_View_WeaBigDialogueSimplePanel.Panel,
                 skinName : `warEvent/WeaBigDialogueSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaFillUnitOnMapExprPanel : {
-                cls      : ViewWeaFillUnitOnMapExprPanel,
+                cls      : WarEvent_View_WeaFillUnitOnMapExprPanel.Panel,
                 skinName : `warEvent/WeaFillUnitOnMapExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaFillUnitOnMapSimplePanel : {
-                cls      : ViewWeaFillUnitOnMapSimplePanel,
+                cls      : WarEvent_View_WeaFillUnitOnMapSimplePanel.Panel,
                 skinName : `warEvent/WeaFillUnitOnMapSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaFillUnitLoadedExprPanel : {
-                cls      : ViewWeaFillUnitLoadedExprPanel,
+                cls      : WarEvent_View_WeaFillUnitLoadedExprPanel.Panel,
                 skinName : `warEvent/WeaFillUnitLoadedExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaFillUnitLoadedSimplePanel : {
-                cls      : ViewWeaFillUnitLoadedSimplePanel,
+                cls      : WarEvent_View_WeaFillUnitLoadedSimplePanel.Panel,
                 skinName : `warEvent/WeaFillUnitLoadedSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaModifyTileBuffExprPanel : {
-                cls      : ViewWeaModifyTileBuffExprPanel,
+                cls      : WarEvent_View_WeaModifyTileBuffExprPanel.Panel,
                 skinName : `warEvent/WeaModifyTileBuffExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaModifyTileBuffSimplePanel : {
-                cls      : ViewWeaModifyTileBuffSimplePanel,
+                cls      : WarEvent_View_WeaModifyTileBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaModifyTileBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaModifyUnitBuffSimplePanel : {
-                cls      : ViewWeaModifyUnitBuffSimplePanel,
+                cls      : WarEvent_View_WeaModifyUnitBuffSimplePanel.Panel,
                 skinName : `warEvent/WeaModifyUnitBuffSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPersistentPlayBgmPanel : {
-                cls      : ViewWeaPersistentPlayBgmPanel,
+                cls      : WarEvent_View_WeaPersistentPlayBgmPanel.Panel,
                 skinName : `warEvent/WeaPersistentPlayBgmPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPlayBgmPanel : {
-                cls      : ViewWeaPlayBgmPanel,
+                cls      : WarEvent_View_WeaPlayBgmPanel.Panel,
                 skinName : `warEvent/WeaPlayBgmPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPlaySfxPanel : {
-                cls      : ViewWeaPlaySfxPanel,
+                cls      : WarEvent_View_WeaPlaySfxPanel.Panel,
                 skinName : `warEvent/WeaPlaySfxPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPersistentModifyPlayerAttributePanel : {
-                cls      : ViewWeaPersistentModifyPlayerAttributePanel,
+                cls      : WarEvent_View_WeaPersistentModifyPlayerAttributePanel.Panel,
                 skinName : `warEvent/WeaPersistentModifyPlayerAttributePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPersistentModifyUnitAttributePanel : {
-                cls      : ViewWeaPersistentModifyUnitAttributePanel,
+                cls      : WarEvent_View_WeaPersistentModifyUnitAttributePanel.Panel,
                 skinName : `warEvent/WeaPersistentModifyUnitAttributePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaPersistentShowTextPanel : {
-                cls      : ViewWeaPersistentShowTextPanel,
+                cls      : WarEvent_View_WeaPersistentShowTextPanel.Panel,
                 skinName : `warEvent/WeaPersistentShowTextPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCannonStateExprPanel : {
-                cls      : ViewWeaSetCustomCannonStateExprPanel,
+                cls      : WarEvent_View_WeaSetCustomCannonStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetCustomCannonStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCannonStateSimplePanel : {
-                cls      : ViewWeaSetCustomCannonStateSimplePanel,
+                cls      : WarEvent_View_WeaSetCustomCannonStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetCustomCannonStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCountersPanel : {
-                cls      : ViewWeaSetCustomCountersPanel,
+                cls      : WarEvent_View_WeaSetCustomCountersPanel.Panel,
                 skinName : `warEvent/WeaSetCustomCountersPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomBuildingStateExprPanel : {
-                cls      : ViewWeaSetCustomBuildingStateExprPanel,
+                cls      : WarEvent_View_WeaSetCustomBuildingStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetCustomBuildingStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomBuildingStateSimplePanel : {
-                cls      : ViewWeaSetCustomBuildingStateSimplePanel,
+                cls      : WarEvent_View_WeaSetCustomBuildingStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetCustomBuildingStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCrystalStateExprPanel : {
-                cls      : ViewWeaSetCustomCrystalStateExprPanel,
+                cls      : WarEvent_View_WeaSetCustomCrystalStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetCustomCrystalStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCrystalStateSimplePanel : {
-                cls      : ViewWeaSetCustomCrystalStateSimplePanel,
+                cls      : WarEvent_View_WeaSetCustomCrystalStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetCustomCrystalStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomLaserTurretStateExprPanel : {
-                cls      : ViewWeaSetCustomLaserTurretStateExprPanel,
+                cls      : WarEvent_View_WeaSetCustomLaserTurretStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetCustomLaserTurretStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetCustomLaserTurretStateSimplePanel : {
-                cls      : ViewWeaSetCustomLaserTurretStateSimplePanel,
+                cls      : WarEvent_View_WeaSetCustomLaserTurretStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetCustomLaserTurretStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetForceFogCodeExprPanel : {
-                cls      : ViewWeaSetForceFogCodeExprPanel,
+                cls      : WarEvent_View_WeaSetForceFogCodeExprPanel.Panel,
                 skinName : `warEvent/WeaSetForceFogCodeExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetForceFogCodeSimplePanel : {
-                cls      : ViewWeaSetForceFogCodeSimplePanel,
+                cls      : WarEvent_View_WeaSetForceFogCodeSimplePanel.Panel,
                 skinName : `warEvent/WeaSetForceFogCodeSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetPlayerStateExprPanel : {
-                cls      : ViewWeaSetPlayerStateExprPanel,
+                cls      : WarEvent_View_WeaSetPlayerStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetPlayerStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetPlayerStateSimplePanel : {
-                cls      : ViewWeaSetPlayerStateSimplePanel,
+                cls      : WarEvent_View_WeaSetPlayerStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetPlayerStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetTaskObjectiveStatePanel : {
-                cls      : ViewWeaSetTaskObjectiveStatePanel,
+                cls      : WarEvent_View_WeaSetTaskObjectiveStatePanel.Panel,
                 skinName : `warEvent/WeaSetTaskObjectiveStatePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetTileStateExprPanel : {
-                cls      : ViewWeaSetTileStateExprPanel,
+                cls      : WarEvent_View_WeaSetTileStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetTileStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetTileStateSimplePanel : {
-                cls      : ViewWeaSetTileStateSimplePanel,
+                cls      : WarEvent_View_WeaSetTileStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetTileStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetTileTypeExprPanel : {
-                cls      : ViewWeaSetTileTypeExprPanel,
+                cls      : WarEvent_View_WeaSetTileTypeExprPanel.Panel,
                 skinName : `warEvent/WeaSetTileTypeExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetTileTypeSimplePanel : {
-                cls      : ViewWeaSetTileTypeSimplePanel,
+                cls      : WarEvent_View_WeaSetTileTypeSimplePanel.Panel,
                 skinName : `warEvent/WeaSetTileTypeSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitMovePathVisibilityPanel : {
-                cls      : ViewWeaSetUnitMovePathVisibilityPanel,
+                cls      : WarEvent_View_WeaSetUnitMovePathVisibilityPanel.Panel,
                 skinName : `warEvent/WeaSetUnitMovePathVisibilityPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitOwnershipExprPanel : {
-                cls      : ViewWeaSetUnitOwnershipExprPanel,
+                cls      : WarEvent_View_WeaSetUnitOwnershipExprPanel.Panel,
                 skinName : `warEvent/WeaSetUnitOwnershipExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitOwnershipSimplePanel : {
-                cls      : ViewWeaSetUnitOwnershipSimplePanel,
+                cls      : WarEvent_View_WeaSetUnitOwnershipSimplePanel.Panel,
                 skinName : `warEvent/WeaSetUnitOwnershipSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitPositionExprPanel : {
-                cls      : ViewWeaSetUnitPositionExprPanel,
+                cls      : WarEvent_View_WeaSetUnitPositionExprPanel.Panel,
                 skinName : `warEvent/WeaSetUnitPositionExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitPositionSimplePanel : {
-                cls      : ViewWeaSetUnitPositionSimplePanel,
+                cls      : WarEvent_View_WeaSetUnitPositionSimplePanel.Panel,
                 skinName : `warEvent/WeaSetUnitPositionSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitStateExprPanel : {
-                cls      : ViewWeaSetUnitStateExprPanel,
+                cls      : WarEvent_View_WeaSetUnitStateExprPanel.Panel,
                 skinName : `warEvent/WeaSetUnitStateExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitStateSimplePanel : {
-                cls      : ViewWeaSetUnitStateSimplePanel,
+                cls      : WarEvent_View_WeaSetUnitStateSimplePanel.Panel,
                 skinName : `warEvent/WeaSetUnitStateSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitTypeExprPanel : {
-                cls      : ViewWeaSetUnitTypeExprPanel,
+                cls      : WarEvent_View_WeaSetUnitTypeExprPanel.Panel,
                 skinName : `warEvent/WeaSetUnitTypeExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetUnitTypeSimplePanel : {
-                cls      : ViewWeaSetUnitTypeSimplePanel,
+                cls      : WarEvent_View_WeaSetUnitTypeSimplePanel.Panel,
                 skinName : `warEvent/WeaSetUnitTypeSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetViewpointExprPanel : {
-                cls      : ViewWeaSetViewpointExprPanel,
+                cls      : WarEvent_View_WeaSetViewpointExprPanel.Panel,
                 skinName : `warEvent/WeaSetViewpointExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetViewpointSimplePanel : {
-                cls      : ViewWeaSetViewpointSimplePanel,
+                cls      : WarEvent_View_WeaSetViewpointSimplePanel.Panel,
                 skinName : `warEvent/WeaSetViewpointSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetWeatherExprPanel : {
-                cls      : ViewWeaSetWeatherExprPanel,
+                cls      : WarEvent_View_WeaSetWeatherExprPanel.Panel,
                 skinName : `warEvent/WeaSetWeatherExprPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSetWeatherSimplePanel : {
-                cls      : ViewWeaSetWeatherSimplePanel,
+                cls      : WarEvent_View_WeaSetWeatherSimplePanel.Panel,
                 skinName : `warEvent/WeaSetWeatherSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaSmallDialogueSimplePanel : {
-                cls      : ViewWeaSmallDialogueSimplePanel,
+                cls      : WarEvent_View_WeaSmallDialogueSimplePanel.Panel,
                 skinName : `warEvent/WeaSmallDialogueSimplePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeaStopPersistentActionPanel : {
-                cls      : ViewWeaStopPersistentActionPanel,
+                cls      : WarEvent_View_WeaStopPersistentActionPanel.Panel,
                 skinName : `warEvent/WeaStopPersistentActionPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeActionReplacePanel : {
-                cls      : ViewWeActionReplacePanel,
+                cls      : WarEvent_View_WeActionReplacePanel.Panel,
                 skinName : `warEvent/WeActionReplacePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeActionTypeListPanel : {
-                cls      : ViewWeActionTypeListPanel,
+                cls      : WarEvent_View_WeActionTypeListPanel.Panel,
                 skinName : `warEvent/WeActionTypeListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeCommandPanel : {
-                cls      : ViewWeCommandPanel,
+                cls      : WarEvent_View_WeCommandPanel.Panel,
                 skinName : `warEvent/WeCommandPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecPlayerPresencePanel : {
-                cls      : ViewWecPlayerPresencePanel,
+                cls      : WarEvent_View_WecPlayerPresencePanel.Panel,
                 skinName : `warEvent/WecPlayerPresencePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecTurnAndPlayerPanel : {
-                cls      : ViewWecTurnAndPlayerPanel,
+                cls      : WarEvent_View_WecTurnAndPlayerPanel.Panel,
                 skinName : `warEvent/WecTurnAndPlayerPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecEventCalledCountPanel : {
-                cls      : ViewWecEventCalledCountPanel,
+                cls      : WarEvent_View_WecEventCalledCountPanel.Panel,
                 skinName : `warEvent/WecEventCalledCountPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecExpressionPanel : {
-                cls      : ViewWecExpressionPanel,
+                cls      : WarEvent_View_WecExpressionPanel.Panel,
                 skinName : `warEvent/WecExpressionPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecTilePresencePanel : {
-                cls      : ViewWecTilePresencePanel,
+                cls      : WarEvent_View_WecTilePresencePanel.Panel,
                 skinName : `warEvent/WecTilePresencePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecUnitPresencePanel : {
-                cls      : ViewWecUnitPresencePanel,
+                cls      : WarEvent_View_WecUnitPresencePanel.Panel,
                 skinName : `warEvent/WecUnitPresencePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecWeatherAndFogPanel : {
-                cls      : ViewWecWeatherAndFogPanel,
+                cls      : WarEvent_View_WecWeatherAndFogPanel.Panel,
                 skinName : `warEvent/WecWeatherAndFogPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeConditionModifyPanel60 : {
-                cls      : WeConditionModifyPanel60Panel,
+                cls      : WarEvent_View_WeConditionModifyPanel60.Panel,
                 skinName : `warEvent/WeConditionModifyPanel60.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecOngoingPersistentActionPanel : {
-                cls      : ViewWecOngoingPersistentActionPanel,
+                cls      : WarEvent_View_WecOngoingPersistentActionPanel.Panel,
                 skinName : `warEvent/WecOngoingPersistentActionPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WecManualActionStatisticsPanel : {
-                cls      : ViewWecManualActionStatisticsPanel,
+                cls      : WarEvent_View_WecManualActionStatisticsPanel.Panel,
                 skinName : `warEvent/WecManualActionStatisticsPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeConditionReplacePanel : {
-                cls      : ViewWeConditionReplacePanel,
+                cls      : WarEvent_View_WeConditionReplacePanel.Panel,
                 skinName : `warEvent/WeConditionReplacePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeConditionTypeListPanel : {
-                cls      : ViewWeConditionTypeListPanel,
+                cls      : WarEvent_View_WeConditionTypeListPanel.Panel,
                 skinName : `warEvent/WeConditionTypeListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeCustomCounterNameListPanel : {
-                cls      : ViewWeCustomCounterNameListPanel,
+                cls      : WarEvent_View_WeCustomCounterNameListPanel.Panel,
                 skinName : `warEvent/WeCustomCounterNameListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeBigDialogueBackgroundPanel : {
-                cls      : ViewWeBigDialogueBackgroundPanel,
+                cls      : WarEvent_View_WeBigDialogueBackgroundPanel.Panel,
                 skinName : `warEvent/WeBigDialogueBackgroundPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeEventNameListPanel : {
-                cls      : ViewWeEventNameListPanel,
+                cls      : WarEvent_View_WeEventNameListPanel.Panel,
                 skinName : `warEvent/WeEventNameListPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeMainPanel : {
-                cls      : ViewWeMainPanel,
+                cls      : WarEvent_View_WeMainPanel.Panel,
                 skinName : `warEvent/WeMainPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeNodeReplacePanel : {
-                cls      : ViewWeNodeReplacePanel,
+                cls      : WarEvent_View_WeNodeReplacePanel.Panel,
                 skinName : `warEvent/WeNodeReplacePanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WePlayerFilterPanel : {
-                cls      : ViewWePlayerFilterPanel,
+                cls      : WarEvent_View_WePlayerFilterPanel.Panel,
                 skinName : `warEvent/WePlayerFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WePositionFilterPanel : {
-                cls      : ViewWePositionFilterPanel,
+                cls      : WarEvent_View_WePositionFilterPanel.Panel,
                 skinName : `warEvent/WePositionFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeTileBuffFilterPanel : {
-                cls      : ViewWeTileBuffFilterPanel,
+                cls      : WarEvent_View_WeTileBuffFilterPanel.Panel,
                 skinName : `warEvent/WeTileBuffFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeTileCustomCannonPanel : {
-                cls      : ViewWeTileCustomCannonPanel,
+                cls      : WarEvent_View_WeTileCustomCannonPanel.Panel,
                 skinName : `warEvent/WeTileCustomCannonPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeTileCustomCrystalPanel : {
-                cls      : ViewWeTileCustomCrystalPanel,
+                cls      : WarEvent_View_WeTileCustomCrystalPanel.Panel,
                 skinName : `warEvent/WeTileCustomCrystalPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeTileCustomLaserTurretPanel : {
-                cls      : ViewWeTileCustomLaserTurretPanel,
+                cls      : WarEvent_View_WeTileCustomLaserTurretPanel.Panel,
                 skinName : `warEvent/WeTileCustomLaserTurretPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeTileFilterPanel : {
-                cls      : ViewWeTileFilterPanel,
+                cls      : WarEvent_View_WeTileFilterPanel.Panel,
                 skinName : `warEvent/WeTileFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeUnitBuffFilterPanel : {
-                cls      : ViewWeUnitBuffFilterPanel,
+                cls      : WarEvent_View_WeUnitBuffFilterPanel.Panel,
                 skinName : `warEvent/WeUnitBuffFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WeUnitFilterPanel : {
-                cls      : ViewWeUnitFilterPanel,
+                cls      : WarEvent_View_WeUnitFilterPanel.Panel,
                 skinName : `warEvent/WeUnitFilterPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             WwDeleteWatcherWarsPanel : {
-                cls         : ViewWwDeleteWatcherWarsPanel,
+                cls         : WatchWar_View_WwDeleteWatcherWarsPanel.Panel,
                 skinName    : `watchWar/WwDeleteWatcherWarsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwHandleRequestWarsPanel : {
-                cls         : ViewWwHandleRequestWarsPanel,
+                cls         : WatchWar_View_WwHandleRequestWarsPanel.Panel,
                 skinName    : `watchWar/WwHandleRequestWarsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwMainMenuPanel : {
-                cls         : ViewWwMainMenuPanel,
+                cls         : WatchWar_View_WwMainMenuPanel.Panel,
                 skinName    : `watchWar/WwMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwMakeRequestDetailPanel : {
-                cls      : ViewWwMakeRequestDetailPanel,
+                cls      : WatchWar_View_WwMakeRequestDetailPanel.Panel,
                 skinName : `watchWar/WwMakeRequestDetailPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
 
             WwMakeRequestWarsPanel : {
-                cls         : ViewWwMakeRequestWarsPanel,
+                cls         : WatchWar_View_WwMakeRequestWarsPanel.Panel,
                 skinName    : `watchWar/WwMakeRequestWarsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwOngoingWarsPanel : {
-                cls         : ViewWwOngoingWarsPanel,
+                cls         : WatchWar_View_WwOngoingWarsPanel.Panel,
                 skinName    : `watchWar/WwOngoingWarsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
+                layer       : Graphics_Constants.DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwSearchWarPanel : {
-                cls      : ViewWwSearchWarPanel,
+                cls      : WatchWar_View_WwSearchWarPanel.Panel,
                 skinName : `watchWar/WwSearchWarPanel.exml`,
-                layer    : DisplayLayerId.Hud0,
+                layer    : Graphics_Constants.DisplayLayerId.Hud0,
             },
         };
 
         {
-            const resTypeId = getCurrentGameEssentialConfig().textureResolutionTypeId;
-            if (resTypeId !== TextureResolutionId.Dor) {
-                const suffix = `_res${getNumText(resTypeId)}`;
+            const resTypeId = GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId;
+            if (resTypeId !== Graphics_Constants.TextureResolutionId.Dor) {
+                const suffix = `_res${Helpers_Text.getNumText(resTypeId)}`;
                 for (const key in _dict) {
                     const info          = _dict[key as keyof DictType];
                     const oldSkinName   = info.skinName;
                     const dotIndex      = oldSkinName.lastIndexOf(".");
                     const newSkinName   = `${oldSkinName.substring(0, dotIndex)}${suffix}${oldSkinName.substring(dotIndex)}`;
-                    if (getSkin(newSkinName)) {
+                    if (ResManager.getSkin(newSkinName)) {
                         info.skinName = newSkinName;
                     }
                 }

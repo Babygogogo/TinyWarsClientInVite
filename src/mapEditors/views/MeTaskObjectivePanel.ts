@@ -1,32 +1,28 @@
-import { ContextType } from "../../expressionParsers/Enums.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
 import {
-    MaxInt32,
-    MinInt32,
-} from "../../numbers/Constants.ts";
+    Graphics_Constants,
+    TaskObjectives_Constants,
+    ExpressionParsers_Enums,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    TaskObjectives_Utils,
+    Lang_Utils,
+    Numbers_Constants,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+} from "../../internal.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import {
-    ExpressionInfoDict,
-    Common,
-} from "../../taskObjectives/Constants.ts";
-import { getErrorText } from "../../taskObjectives/Utils.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 
 export interface OpenData {
     fullData                : TaskObjectiveFullData;
@@ -34,51 +30,51 @@ export interface OpenData {
     warEventFullData        : WarEventFullData;
     isReviewingMap          : boolean;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                              : IUiImage;
-    private readonly _group!                                : IUiContainer;
-    private readonly _labelTitle!                           : IUiLabel;
-    private readonly _btnClose!                             : IUiButton;
-    private readonly _labelError!                           : IUiLabel;
-    private readonly _btnIdentifier!                        : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelError!                           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnIdentifier!                        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                            : IUiContainer;
-    private readonly _btnHelpDesc!                          : IUiButton;
-    private readonly _groupModifyDesc!                      : IUiContainer;
-    private readonly _labelDesc!                            : IUiLabel;
+    private readonly _groupDesc!                            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpDesc!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyDesc!                      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelDesc!                            : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _scrollData!                           : IUiScroller<IUiLayout>;
-    private readonly _groupData!                            : IUiLayout;
+    private readonly _scrollData!                           : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupData!                            : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupIsMain!                          : IUiContainer;
-    private readonly _btnHelpIsMain!                        : IUiButton;
-    private readonly _groupModifyIsMain!                    : IUiContainer;
-    private readonly _labelIsMain!                          : IUiLabel;
+    private readonly _groupIsMain!                          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpIsMain!                        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyIsMain!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelIsMain!                          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupMaxProgress!                     : IUiContainer;
-    private readonly _btnHelpMaxProgress!                   : IUiButton;
-    private readonly _groupModifyMaxProgress!               : IUiContainer;
-    private readonly _labelMaxProgress!                     : IUiLabel;
+    private readonly _groupMaxProgress!                     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpMaxProgress!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyMaxProgress!               : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelMaxProgress!                     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupScoreForCompletion!              : IUiContainer;
-    private readonly _btnHelpScoreForCompletion!            : IUiButton;
-    private readonly _groupModifyScoreForCompletion!        : IUiContainer;
-    private readonly _labelScoreForCompletion!              : IUiLabel;
+    private readonly _groupScoreForCompletion!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpScoreForCompletion!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyScoreForCompletion!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelScoreForCompletion!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupScoreForProgress!                : IUiContainer;
-    private readonly _btnHelpScoreForProgress!              : IUiButton;
-    private readonly _groupModifyScoreForProgress!          : IUiContainer;
-    private readonly _labelScoreForProgress!                : IUiLabel;
+    private readonly _groupScoreForProgress!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpScoreForProgress!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyScoreForProgress!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelScoreForProgress!                : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupUpdaterForCurrentProgress!       : IUiContainer;
-    private readonly _btnHelpUpdaterForCurrentProgress!     : IUiButton;
-    private readonly _groupModifyUpdaterForCurrentProgress! : IUiContainer;
-    private readonly _labelUpdaterForCurrentProgress!       : IUiLabel;
+    private readonly _groupUpdaterForCurrentProgress!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnHelpUpdaterForCurrentProgress!     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupModifyUpdaterForCurrentProgress! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelUpdaterForCurrentProgress!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyTaskObjectiveFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                               callback: this.closePanel },
@@ -124,26 +120,26 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonInputLanguageTextPanel, {
-            getTitle            : () => getText(TextType.B1215),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
+            getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B1215),
             currentTextArray    : taskObjective.getDesc(),
-            maxLength           : Common.MaxDescLength,
+            maxLength           : TaskObjectives_Constants.Common.MaxDescLength,
             callback            : newValue => {
                 taskObjective.setDesc(newValue);
-                dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
             },
         });
     }
     private _onTouchedBtnHelpDesc(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0714),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0714),
         });
     }
     private _onTouchedBtnIdentifier(): void {
-        openPanel(getDict().CommonApiPanel, {
-            contextType : ContextType.TaskObjective,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonApiPanel, {
+            contextType : ExpressionParsers_Enums.ContextType.TaskObjective,
         });
     }
 
@@ -153,18 +149,18 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (taskObjective.getIsMain()) {
             taskObjective.setIsMain(null);
         } else {
             taskObjective.setIsMain(true);
         }
-        dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
     }
     private _onTouchedBtnHelpIsMain(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0715),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0715),
         });
     }
 
@@ -174,25 +170,25 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const currentValue = taskObjective.getMaxProgress();
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1216),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1216),
             minValue        : 1,
-            maxValue        : MaxInt32,
+            maxValue        : Numbers_Constants.MaxInt32,
             currentValue    : currentValue ?? 0,
             callback        : newValue => {
                 if (newValue != currentValue) {
                     taskObjective.setMaxProgress(newValue);
-                    dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
                 }
             },
         });
     }
     private _onTouchedBtnHelpMaxProgress(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0716),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0716),
         });
     }
 
@@ -202,13 +198,13 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const currentValue  = taskObjective.getScoreForCompletion();
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle        : () => getText(TextType.B1218),
-            minValue        : MinInt32,
-            maxValue        : MaxInt32,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1218),
+            minValue        : Numbers_Constants.MinInt32,
+            maxValue        : Numbers_Constants.MaxInt32,
             currentValue    : currentValue,
             callback        : newValue => {
                 if (newValue != currentValue) {
@@ -217,14 +213,14 @@ export class Panel extends UiPanel<OpenData> {
                     } else {
                         taskObjective.setScoreForCompletion(newValue);
                     }
-                    dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
                 }
             },
         });
     }
     private _onTouchedBtnHelpScoreForCompletion(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0717),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0717),
         });
     }
 
@@ -234,13 +230,13 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const currentValue = taskObjective.getScoreForProgress();
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle        : () => getText(TextType.B1219),
-            minValue        : MinInt32,
-            maxValue        : MaxInt32,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1219),
+            minValue        : Numbers_Constants.MinInt32,
+            maxValue        : Numbers_Constants.MaxInt32,
             currentValue    : currentValue,
             callback        : newValue => {
                 if (newValue != currentValue) {
@@ -249,20 +245,20 @@ export class Panel extends UiPanel<OpenData> {
                     } else {
                         taskObjective.setScoreForProgress(newValue);
                     }
-                    dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
                 }
             },
         });
     }
     private _onTouchedBtnHelpScoreForProgress(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0718),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0718),
         });
     }
 
     private _onTouchedBtnUpdaterForCurrentProgress(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0730),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0730),
         });
     }
     private _onTouchedGroupModifyUpdaterForCurrentProgress(): void {
@@ -271,17 +267,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const taskObjective = openData.taskObjective;
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : taskObjective.getUpdaterForCurrentProgress(),
-            expressionInfo  : ExpressionInfoDict.UpdaterForCurrentProgress,
+            expressionInfo  : TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress,
             fullData        : openData.warEventFullData,
             isReviewingMap  : openData.isReviewingMap,
             callback        : text => {
                 taskObjective.setUpdaterForCurrentProgress(text);
-                dispatch(TypeId.MeTaskObjectiveFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
             },
         });
     }
@@ -295,16 +291,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B1214)} #${this.getOpenData()?.taskObjective.getObjectiveId() ?? 0}`);
-        this._btnClose.setLangText(TextType.B0146);
-        this._btnIdentifier.setLangText(TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1214)} #${this.getOpenData()?.taskObjective.getObjectiveId() ?? 0}`);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
 
-        this._btnHelpDesc.setLangText(TextType.B1215);
-        this._btnHelpIsMain.setLangText(TextType.B1217);
-        this._btnHelpMaxProgress.setLangText(TextType.B1216);
-        this._btnHelpScoreForCompletion.setLangText(TextType.B1218);
-        this._btnHelpScoreForProgress.setLangText(TextType.B1219);
-        this._btnHelpUpdaterForCurrentProgress.setLangText(TextType.B1226);
+        this._btnHelpDesc.setLangText(Lang_Constants.TextType.B1215);
+        this._btnHelpIsMain.setLangText(Lang_Constants.TextType.B1217);
+        this._btnHelpMaxProgress.setLangText(Lang_Constants.TextType.B1216);
+        this._btnHelpScoreForCompletion.setLangText(Lang_Constants.TextType.B1218);
+        this._btnHelpScoreForProgress.setLangText(Lang_Constants.TextType.B1219);
+        this._btnHelpUpdaterForCurrentProgress.setLangText(Lang_Constants.TextType.B1226);
 
         this._updateLabelError();
     }
@@ -315,10 +311,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const errorTip      = getErrorText(openData.taskObjective, new Set(openData.warEventFullData.getCustomCounterNameArray()?.map(v => v.getName() ?? ``)));
+        const errorTip      = TaskObjectives_Utils.getErrorText(openData.taskObjective, new Set(openData.warEventFullData.getCustomCounterNameArray()?.map(v => v.getName() ?? ``)));
         const labelError    = this._labelError;
-        labelError.setText(errorTip ?? getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Yellow : ColorValue.Green);
+        labelError.setText(errorTip ?? Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
     }
 
     private _updateInputs(): void {
@@ -330,7 +326,7 @@ export class Panel extends UiPanel<OpenData> {
         }
         {
             const label = this._labelIsMain;
-            label.setLangText(taskObjective?.getIsMain() ? TextType.Yes : TextType.No);
+            label.setLangText(taskObjective?.getIsMain() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
             this._groupIsMain.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
         {

@@ -1,11 +1,13 @@
-import { UiContainer } from "./UiContainer.ts";
-import type { IUiLayer } from "../interfaces/IUiLayer.ts";
-import type { IUiPanel } from "../interfaces/IUiPanel.ts";
-import { getUiPanelClass } from "../utils/UiFactory.ts";
+import {
+    Ui_Components_UiContainer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiLayer,
+    type Ui_Interfaces_IUiPanel,
+} from "../../internal.ts";
 
-export class UiLayer extends UiContainer implements IUiLayer {
-    public closeAllPanels(exceptions?: IUiPanel<any>[]): void {
-        const panelClass = getUiPanelClass();
+export class UiLayer extends Ui_Components_UiContainer.UiContainer implements Ui_Interfaces_IUiLayer.IUiLayer {
+    public closeAllPanels(exceptions?: Ui_Interfaces_IUiPanel.IUiPanel<any>[]): void {
+        const panelClass = Ui_Components_UiPanel.UiPanel;
         for (let i = this.numChildren - 1; i >= 0; --i) {
             const child = this.getChildAt(i);
             if ((child instanceof panelClass) &&
@@ -20,7 +22,7 @@ export class UiLayer extends UiContainer implements IUiLayer {
         this.setUnscaledManualWidth(width);
         this.setUnscaledManualHeight(height);
 
-        const cls = getUiPanelClass();
+        const cls = Ui_Components_UiPanel.UiPanel;
         for (const child of this.getUiChildren()) {
             if (child instanceof cls) {
                 child.resize(width, height);

@@ -1,28 +1,27 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { War } from "../../../expressionParsers/contexts/War.ts";
-import { Parser } from "../../../expressionParsers/Parser.ts";
-import { Num } from "../../../expressionParsers/results/Num.ts";
-import { checkIsValidForcedFogCode } from "../../../fogMaps/Utils.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import { getFormattedText } from "../../../lang/Utils.ts";
-import { MaxInt32 } from "../../../numbers/Constants.ts";
-import { getValueInRange } from "../../../numbers/Utils.ts";
+    FogMaps_Utils,
+    WarEvents_Actions_Constants_SetForceFogCodeExpr,
+    Lang_Utils,
+    Numbers_Utils,
+    Numbers_Constants,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Parser,
+    Lang_Constants,
+    ExpressionParsers_Contexts_War,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WeaSetForceFogCodeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeExpr.ts";
-import { ExpressionInfoDict } from "../constants/SetForceFogCodeExpr.ts";
 
-export function checkIsValid(action: Undefinable<WeaSetForceFogCodeExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getForceFogCode(),
-            expressionInfo          : ExpressionInfoDict.ForceFogCode,
+            expressionInfo          : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -30,9 +29,9 @@ export function checkIsValid(action: Undefinable<WeaSetForceFogCodeExpr>, custom
     }
 
     {
-        if (!Parser.checkIsValidString2({
+        if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
             str                     : action.getTurnsCount(),
-            expressionInfo          : ExpressionInfoDict.TurnsCount,
+            expressionInfo          : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -42,50 +41,49 @@ export function checkIsValid(action: Undefinable<WeaSetForceFogCodeExpr>, custom
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetForceFogCodeExpr>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return getFormattedText(TextType.F0047, data.getForceFogCode() ?? UndefinedError);
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError);
 }
-export function getDetailDesc(data: Undefinable<WeaSetForceFogCodeExpr>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetForceFogCodeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const textArray = [
-        data.getTurnsCount() ? `${ExpressionInfoDict.TurnsCount.getTitleText()}: ${data.getTurnsCount()}` : null,
+        data.getTurnsCount() ? `${WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount.getTitleText()}: ${data.getTurnsCount()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${getFormattedText(TextType.F0047, data.getForceFogCode() ?? UndefinedError)}\n${textArray}`;
+    return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0047, data.getForceFogCode() ?? Lang_Constants.UndefinedError)}\n${textArray}`;
 }
 
 export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = ExpressionInfoDict.ForceFogCode;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getForceFogCode(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = ExpressionInfoDict.TurnsCount;
-        const errorData = Parser.getErrorDataForString2({
+        const info      = WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount;
+        const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
             str                     : data.getTurnsCount(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
-
 
     return null;
 }
@@ -95,7 +93,7 @@ export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promi
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
         return;
@@ -116,21 +114,21 @@ export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isF
         const turnManager         = war.getTurnManager();
         const expirePlayerIndex   = turnManager.getPlayerIndexInTurn();
         const turnIndex           = turnManager.getTurnIndex();
-        const expireTurnIndex     = getValueInRange({
+        const expireTurnIndex     = Numbers_Utils.getValueInRange({
             minValue    : turnIndex,
-            maxValue    : MaxInt32,
+            maxValue    : Numbers_Constants.MaxInt32,
             rawValue    : turnIndex + turnsCount
         });
         fogMap.setForceExpirePlayerIndex(expirePlayerIndex);
         fogMap.setForceExpireTurnIndex(expireTurnIndex);
     }
 }
-function getForceFogCode(str: string, war: IBwWar): number | null {
+function getForceFogCode(str: string, war: BaseWar_Interface_IBwWar.IBwWar): number | null {
     try {
-        const result = Parser.getParseResult(str).eval(new War(war), false);
-        if (result instanceof Num) {
+        const result = ExpressionParsers_Parser.Parser.getParseResult(str).eval(new ExpressionParsers_Contexts_War.War(war), false);
+        if (result instanceof ExpressionParsers_Results_Num.Num) {
             const code = Math.floor(result.num);
-            if (checkIsValidForcedFogCode(code)) {
+            if (FogMaps_Utils.checkIsValidForcedFogCode(code)) {
                 return code;
             }
         }
@@ -140,14 +138,14 @@ function getForceFogCode(str: string, war: IBwWar): number | null {
         return null;
     }
 }
-function getTurnsCount(str: string, war: IBwWar): number | null {
+function getTurnsCount(str: string, war: BaseWar_Interface_IBwWar.IBwWar): number | null {
     if (!str) {
         return 0;
     }
 
     try {
-        const result = Parser.getParseResult(str).eval(new War(war), false);
-        if (result instanceof Num) {
+        const result = ExpressionParsers_Parser.Parser.getParseResult(str).eval(new ExpressionParsers_Contexts_War.War(war), false);
+        if (result instanceof ExpressionParsers_Results_Num.Num) {
             return Math.floor(result.num);
         } else {
             return null;

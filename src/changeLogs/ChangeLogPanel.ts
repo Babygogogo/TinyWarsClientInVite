@@ -1,52 +1,43 @@
-import { show } from "../FloatText.ts";
-import { Constants } from "./Constants.ts";
-import { getDict } from "../gamePanels/Dict.ts";
-import { openPanel } from "../gamePanels/Manager.ts";
-import { getNumText } from "../helpers/Text.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../lang/Constants.ts";
-import {
-    getLanguageText,
-    getText,
-    getTimestampShortText,
-} from "../lang/Utils.ts";
-import { TypeId } from "../notifications/TypeId.ts";
+    Users_Model,
+    ChangeLogs_Constants,
+    ChangeLogs_Provider,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Text,
+    GamePanels_Manager,
+    ChangeLogs_Gateway,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../internal.ts";
 import type { ChangeLogMessage } from "../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
-import { UiListItemRenderer } from "../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../ui/components/UiPanel.ts";
-import type { IUiButton } from "../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../ui/types/UiListItemData.ts";
-import { checkCanSelfEditChangeLog } from "../users/Model.ts";
-import {
-    reqChangeLogAddMessage,
-    reqChangeLogGetMessageList,
-    reqChangeLogModifyMessage,
-} from "./Gateway.ts";
-import { getAllMessageList } from "./Provider.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listMessage!      : IUiScrollList<DataForMessageRenderer>;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _labelNoMessage!   : IUiLabel;
-    private readonly _btnAddMessage!    : IUiButton;
+    private readonly _listMessage!      : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMessageRenderer>;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelNoMessage!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnAddMessage!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
-            { type : TypeId.MsgChangeLogGetMessageList, callback : this._onMsgChangeLogGetMessageList },
-            { type : TypeId.MsgChangeLogAddMessage,     callback : this._onMsgChangeLogAddMessage },
-            { type : TypeId.MsgChangeLogModifyMessage,  callback : this._onMsgChangeLogModifyMessage },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgChangeLogGetMessageList, callback : this._onMsgChangeLogGetMessageList },
+            { type : Notifications_TypeId.TypeId.MsgChangeLogAddMessage,     callback : this._onMsgChangeLogAddMessage },
+            { type : Notifications_TypeId.TypeId.MsgChangeLogModifyMessage,  callback : this._onMsgChangeLogModifyMessage },
         ]);
         this._setUiListenerArray([
             { ui : this._btnAddMessage,  callback : this._onTouchedBtnAddMessage },
@@ -62,8 +53,8 @@ export class Panel extends UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
 
-        if (!getAllMessageList()) {
-            reqChangeLogGetMessageList();
+        if (!ChangeLogs_Provider.getAllMessageList()) {
+            ChangeLogs_Gateway.reqChangeLogGetMessageList();
         }
     }
     protected override async _onClosed(): Promise<void> {
@@ -79,22 +70,22 @@ export class Panel extends UiPanel<OpenData> {
         this._updateListMessageAndLabelNoMessage();
     }
     private _onMsgChangeLogAddMessage(): void {
-        show(getText(TextType.A0154));
-        reqChangeLogGetMessageList();
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0154));
+        ChangeLogs_Gateway.reqChangeLogGetMessageList();
     }
     private _onMsgChangeLogModifyMessage(): void {
-        show(getText(TextType.A0154));
-        reqChangeLogGetMessageList();
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0154));
+        ChangeLogs_Gateway.reqChangeLogGetMessageList();
     }
 
     private _onTouchedBtnAddMessage(): void {
-        openPanel(getDict().CommonInputLanguageTextPanel, {
-            getTitle         : () => getText(TextType.B0457),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
+            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B0457),
             currentTextArray : null,
             isMultiline      : true,
-            maxLength        : Constants.TextMaxLength,
+            maxLength        : ChangeLogs_Constants.Constants.TextMaxLength,
             callback         : textArray => {
-                reqChangeLogAddMessage(textArray);
+                ChangeLogs_Gateway.reqChangeLogAddMessage(textArray);
             },
         });
     }
@@ -107,29 +98,29 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setLangText(TextType.B0457);
-        this._labelNoMessage.setLangText(TextType.B0278);
-        this._btnAddMessage.setLangText(TextType.B0454);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0457);
+        this._labelNoMessage.setLangText(Lang_Constants.TextType.B0278);
+        this._btnAddMessage.setLangText(Lang_Constants.TextType.B0454);
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
-        const dataArray: DataForMessageRenderer[] = getAllMessageList()?.map(v => ({ data : v })) ?? [];
+        const dataArray: DataForMessageRenderer[] = ChangeLogs_Provider.getAllMessageList()?.map(v => ({ data : v })) ?? [];
         this._labelNoMessage.setIsVisible(!dataArray.length);
         await this._listMessage.bindData(dataArray);
     }
     private async _updateBtnAddMessage(): Promise<void> {
         const btn   = this._btnAddMessage;
         btn.setIsVisible(false);
-        btn.setIsVisible(checkCanSelfEditChangeLog());
+        btn.setIsVisible(Users_Model.checkCanSelfEditChangeLog());
     }
 }
 
-interface DataForMessageRenderer extends UiListItemData{
+interface DataForMessageRenderer extends Ui_Types_UiListItemData.UiListItemData{
     data: ChangeLogMessage;
 }
-class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
-    private readonly _labelIndex!   : IUiLabel;
-    private readonly _labelContent! : IUiLabel;
-    private readonly _btnModify!    : IUiButton;
+class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMessageRenderer> {
+    private readonly _labelIndex!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelContent! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnModify!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -145,34 +136,34 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
 
         const messageId         = data.getMessageId();
         const createTimestamp   = data.getCreateTimestamp();
-        this._labelIndex.setText(`#${messageId == null ? UndefinedError : getNumText(messageId, 3)} (${createTimestamp == null ? UndefinedError : getTimestampShortText(createTimestamp)})`);
+        this._labelIndex.setText(`#${messageId == null ? Lang_Constants.UndefinedError : Helpers_Text.getNumText(messageId, 3)} (${createTimestamp == null ? Lang_Constants.UndefinedError : Lang_Utils.getTimestampShortText(createTimestamp)})`);
 
         const textArray     = data.getTextList();
         const labelContent  = this._labelContent;
         labelContent.setText(textArray == null
-            ? UndefinedError
-            : (getLanguageText({ textArray }) || UndefinedError)
+            ? Lang_Constants.UndefinedError
+            : (Lang_Utils.getLanguageText({ textArray }) || Lang_Constants.UndefinedError)
         );
 
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 38);
 
         const btnModify = this._btnModify;
-        btnModify.setLangText(TextType.B0317);
+        btnModify.setLangText(Lang_Constants.TextType.B0317);
         btnModify.setIsVisible(false);
-        btnModify.setIsVisible(checkCanSelfEditChangeLog());
+        btnModify.setIsVisible(Users_Model.checkCanSelfEditChangeLog());
     }
 
     private _onTouchedBtnModify(): void {
         const data      = this.getOpenData()?.data;
         const messageId = data?.getMessageId();
         if (messageId != null) {
-            openPanel(getDict().CommonInputLanguageTextPanel, {
-                getTitle         : () => `${getText(TextType.B0317)} #${messageId}`,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
+                getTitle         : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0317)} #${messageId}`,
                 currentTextArray : data?.getTextList() ?? null,
-                maxLength        : Constants.TextMaxLength,
+                maxLength        : ChangeLogs_Constants.Constants.TextMaxLength,
                 isMultiline      : true,
                 callback         : textArray => {
-                    reqChangeLogModifyMessage(messageId, textArray);
+                    ChangeLogs_Gateway.reqChangeLogModifyMessage(messageId, textArray);
                 },
             });
         }

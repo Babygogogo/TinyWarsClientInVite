@@ -1,18 +1,17 @@
-import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { removeUnitOnMap } from "../../destructions/Utils.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import type { IHrwWar } from "../interface/IHrwWar.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
-import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { RwWarBase } from "../../replayWar/model/RwWarBase.ts";
-import { TeamIndex } from "../../teams/Constants.ts";
 import {
-    getAllUnitsOnMapVisibleToTeams,
-    getAllTilesVisibleToTeams,
-} from "../../visibilities/Utils.ts";
+    Helpers_Collection,
+    Visibilities_Utils,
+    Destructions_Utils,
+    ReplayWar_Model_RwWarBase,
+    Teams_Constants,
+    type GameConfigs_GameConfig,
+    type HalfwayReplayWar_Interface_IHrwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-export class HrwWar extends RwWarBase implements IHrwWar {
-    public init(warData: SerialWar, gameConfig: GameConfig): void {
+export class HrwWar extends ReplayWar_Model_RwWarBase.RwWarBase implements HalfwayReplayWar_Interface_IHrwWar.IHrwWar {
+    public init(warData: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void {
         super.init(warData, gameConfig);
 
         this.getPlayerManager().initWatcherTeamIndexesForHrw(warData);
@@ -35,20 +34,20 @@ export class HrwWar extends RwWarBase implements IHrwWar {
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const watcherTeamIndexes    = this.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const visibleUnitsOnMap     = getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
+        const visibleUnitsOnMap     = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
         for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
             if (visibleUnitsOnMap.has(unit)) {
                 if (!isFastExecute) {
                     unit.setViewVisible(true);
                 }
             } else {
-                removeUnitOnMap(this, unit.getGridIndex());
+                Destructions_Utils.removeUnitOnMap(this, unit.getGridIndex());
             }
         }
 
         const tileMap = this.getTileMap();
         if (!this.getIsBatchExecuteAction()) {
-            const visibleTiles = getAllTilesVisibleToTeams(this, watcherTeamIndexes);
+            const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(this, watcherTeamIndexes);
             for (const tile of tileMap.getAllTiles()) {
                 if (visibleTiles.has(tile)) {
                     tile.setHasFog(false);
@@ -81,7 +80,7 @@ export class HrwWar extends RwWarBase implements IHrwWar {
             return;
         }
 
-        const visibleTiles = getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
+        const visibleTiles = Visibilities_Utils.getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
         for (const tile of this.getTileMap().getAllTiles()) {
             tile.setHasFog(!visibleTiles.has(tile));
 
@@ -91,7 +90,7 @@ export class HrwWar extends RwWarBase implements IHrwWar {
         }
     }
 
-    public serializeForCheckpoint(): ReplayCheckpointData {
+    public serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData {
         return {
             nextOperationId : this.getNextOperationId(),
             warData         : SerialWar.fromJson({
@@ -122,7 +121,7 @@ export class HrwWar extends RwWarBase implements IHrwWar {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public tickVisionTeamIndex(): number | null {
         const teamIndexArray = [...this.getPlayerManager().getWatcherTeamIndexesForSelf()].sort((v1, v2) => v1 - v2);
-        deleteElementFromList(teamIndexArray, TeamIndex.Neutral);
+        Helpers_Collection.deleteElementFromList(teamIndexArray, Teams_Constants.TeamIndex.Neutral);
 
         const currentVisionTeamIndex    = this.getVisionTeamIndex();
         const newVisionTeamIndex        = currentVisionTeamIndex == null

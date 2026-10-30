@@ -1,19 +1,17 @@
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
 import {
-    getBestScoreAndActionForCandidateUnit,
-    getBetterScoreAndAction,
-    candidateUnitSorter,
-} from "../Utils.ts";
+    Units_Constants,
+    Bots_Utils,
+    Timer_TimerModel,
+    type Bots_CommonParams,
+    type Units_IUnit,
+    type Bots_Types,
+} from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
 const _CANDIDATE_UNITS_PER_ROUND    = 10;
 
-export async function getActionForPhase08(commonParams: CommonParams): Promise<WoContainer | null> {
-    await checkAndCallLater();
+export async function getActionForPhase08(commonParams: Bots_CommonParams.CommonParams): Promise<WoContainer | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // const bestActionDict = commonParams.bestActionDict;
@@ -47,16 +45,16 @@ export async function getActionForPhase08(commonParams: CommonParams): Promise<W
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     const candidateUnits = await getCandidateUnitsForPhase8(commonParams);
     for (let i = 0; ; ++i) {
-        let bestScoreAndAction: ScoreAndAction | null = null;
+        let bestScoreAndAction: Bots_Types.ScoreAndAction | null = null;
         for (let j = 0; j < _CANDIDATE_UNITS_PER_ROUND; ++j) {
             const index = i * _CANDIDATE_UNITS_PER_ROUND + j;
             if (index >= candidateUnits.length) {
                 return bestScoreAndAction?.action ?? null;
             }
 
-            const newData = await getBestScoreAndActionForCandidateUnit(commonParams, candidateUnits[index]);
+            const newData = await Bots_Utils.getBestScoreAndActionForCandidateUnit(commonParams, candidateUnits[index]);
             if (newData != null) {
-                bestScoreAndAction = getBetterScoreAndAction(bestScoreAndAction, newData, commonParams);
+                bestScoreAndAction = Bots_Utils.getBetterScoreAndAction(bestScoreAndAction, newData, commonParams);
             }
         }
 
@@ -66,15 +64,15 @@ export async function getActionForPhase08(commonParams: CommonParams): Promise<W
     }
 }
 
-async function getCandidateUnitsForPhase8(commonParams: CommonParams): Promise<IUnit[]> {
-    await checkAndCallLater();
+async function getCandidateUnitsForPhase8(commonParams: Bots_CommonParams.CommonParams): Promise<Units_IUnit.IUnit[]> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : IUnit[] = [];
+    const units             : Units_IUnit.IUnit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)       &&
-            (unit.getActionState() === ActionStateId.Idle)    &&
+            (unit.getActionState() === Units_Constants.ActionStateId.Idle)    &&
             (unit.checkCanAiDoAction())
         ) {
             units.push(unit);
@@ -82,12 +80,12 @@ async function getCandidateUnitsForPhase8(commonParams: CommonParams): Promise<I
     }
     for (const unit of unitMap.getAllUnitsLoaded()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)       &&
-            (unit.getActionState() === ActionStateId.Idle)    &&
+            (unit.getActionState() === Units_Constants.ActionStateId.Idle)    &&
             (unit.checkCanAiDoAction())
         ) {
             const loaderUnit = unit.getLoaderUnit();
             if ((loaderUnit?.getPlayerIndex() === playerIndexInTurn)            &&
-                (loaderUnit.getActionState() === ActionStateId.Idle)          &&
+                (loaderUnit.getActionState() === Units_Constants.ActionStateId.Idle)          &&
                 (loaderUnit.checkCanAiDoAction())                               &&
                 (loaderUnit.checkCanLaunchLoadedUnit())                         &&
                 (unitMap.getUnitOnMap(loaderUnit.getGridIndex()) === loaderUnit)
@@ -97,5 +95,5 @@ async function getCandidateUnitsForPhase8(commonParams: CommonParams): Promise<I
         }
     }
 
-    return units.sort(candidateUnitSorter).slice(0, 10);
+    return units.sort(Bots_Utils.candidateUnitSorter).slice(0, 10);
 }

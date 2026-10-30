@@ -1,4 +1,6 @@
-import { Capabilities } from "./egret/Egret.ts";
+import {
+    Egret_Egret,
+} from "./internal.ts";
 
 const LogLevel = {
     All   : 0,
@@ -17,7 +19,7 @@ const IS_ASSERT_ENABLED = true;
 
 export function trace(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Trace) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.trace(rest.join(" "));
         } else {
             CONSOLE.trace(...rest);
@@ -27,7 +29,7 @@ export function trace(...rest: unknown[]): void {
 
 export function debug(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Debug) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.debug(rest.join(" "));
         } else {
             CONSOLE.debug(...rest);
@@ -37,7 +39,7 @@ export function debug(...rest: unknown[]): void {
 
 export function log(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Log) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.log(rest.join(" "));
         } else {
             CONSOLE.log(...rest);
@@ -47,7 +49,7 @@ export function log(...rest: unknown[]): void {
 
 export function info(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Info) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.info(rest.join(" "));
         } else {
             CONSOLE.info(...rest);
@@ -57,7 +59,7 @@ export function info(...rest: unknown[]): void {
 
 export function warn(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Warn) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.warn(rest.join(" "));
         } else {
             CONSOLE.warn(...rest);
@@ -67,7 +69,7 @@ export function warn(...rest: unknown[]): void {
 
 export function error(...rest: unknown[]): void {
     if (LOG_LEVEL <= LogLevel.Error) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.error(rest.join(" "));
         } else {
             CONSOLE.error(...rest);
@@ -81,7 +83,7 @@ export function dump(obj: unknown): void {
 
 export function assert(cond: boolean, ...rest: unknown[]): void {
     if (IS_ASSERT_ENABLED) {
-        if (Capabilities.isMobile) {
+        if (Egret_Egret.Capabilities.isMobile) {
             CONSOLE.assert(cond, rest.join(" "));
         } else {
             CONSOLE.assert(cond, ...rest);

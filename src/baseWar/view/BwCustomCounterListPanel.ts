@@ -1,42 +1,42 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { Constants } from "../../customCounters/Constants.ts";
 import {
-    getScwWarClass,
-    getSfwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    CustomCounters_Constants,
+    SingleCustomWar_Model_ScwWar,
+    SingleFreeWar_Model_SfwWar,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Tween_Executor,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    war     : IBwWar;
+    war     : BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listName!             : IUiScrollList<DataForCustomCounterRenderer>;
-    private readonly _labelTips!            : IUiLabel;
+    private readonly _listName!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCustomCounterRenderer>;
+    private readonly _labelTips!            : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -72,8 +72,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1143);
-        this._labelTips.setLangText(TextType.A0785);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1143);
+        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
     }
     private async _updateListName(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -82,7 +82,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForCustomCounterRenderer[] = [];
-        for (let id = Constants.MinId; id <= Constants.MaxId; ++id) {
+        for (let id = CustomCounters_Constants.Constants.MinId; id <= CustomCounters_Constants.Constants.MaxId; ++id) {
             dataArray.push({
                 war : war,
                 id  : id,
@@ -96,23 +96,23 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForCustomCounterRenderer extends UiListItemData {
+interface DataForCustomCounterRenderer extends Ui_Types_UiListItemData.UiListItemData {
     id      : number;
-    war     : IBwWar;
+    war     : BaseWar_Interface_IBwWar.IBwWar;
 }
-class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName!    : IUiLabel;
+class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCustomCounterRenderer> {
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgSelected!  : IUiImage;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._imgSelected,                        callback: this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.BwCustomCountersChanged,     callback: this._onNotifyBwCustomCountersChanged },
+            { type: Notifications_TypeId.TypeId.BwCustomCountersChanged,     callback: this._onNotifyBwCustomCountersChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -121,13 +121,13 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -146,8 +146,8 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
         if (checkCanModify(war)) {
             const id                = openData.id;
             const warEventManager   = war.getWarEventManager();
-            openPanel(getDict().CommonInputIntegerPanel, {
-                getTitle           : () => getText(TextType.B1143),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1143),
                 minValue        : Number.MIN_SAFE_INTEGER,
                 maxValue        : Number.MAX_SAFE_INTEGER,
                 currentValue    : warEventManager.getCustomCounter(id),
@@ -175,7 +175,7 @@ class CustomCounterRenderer extends UiListItemRenderer<DataForCustomCounterRende
     }
 }
 
-function checkCanModify(war: Undefinable<IBwWar>): boolean {
-    return (war instanceof getScwWarClass())
-        || (war instanceof getSfwWarClass());
+function checkCanModify(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar>): boolean {
+    return (war instanceof SingleCustomWar_Model_ScwWar.ScwWar)
+        || (war instanceof SingleFreeWar_Model_SfwWar.SfwWar);
 }

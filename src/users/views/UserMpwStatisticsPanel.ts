@@ -1,50 +1,49 @@
-import { format } from "../../helpers/Text.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import {
-    getUserNickname,
-    getUserMpwStatisticsData,
-} from "../Model.ts";
-import { reqUserGetPublicInfo } from "../Proxy.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
+    Helpers_Text,
+    Lang_Utils,
+    Users_Model,
+    Players_Constants,
+    Users_Proxy,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    WarTypes_Constants,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
     userId  : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelHistoryStd!              : IUiLabel;
-    private readonly _labelHistoryStdWin!           : IUiLabel;
-    private readonly _labelHistoryStdLose!          : IUiLabel;
-    private readonly _labelHistoryStdDraw!          : IUiLabel;
-    private readonly _labelHistoryStdRatio!         : IUiLabel;
-    private readonly _sclHistoryStd!                : IUiScrollList<DataForHistoryRenderer>;
+    private readonly _labelHistoryStd!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryStdWin!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryStdLose!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryStdDraw!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryStdRatio!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _sclHistoryStd!                : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForHistoryRenderer>;
 
-    private readonly _labelHistoryFog!              : IUiLabel;
-    private readonly _labelHistoryFogWin!           : IUiLabel;
-    private readonly _labelHistoryFogLose!          : IUiLabel;
-    private readonly _labelHistoryFogDraw!          : IUiLabel;
-    private readonly _labelHistoryFogRatio!         : IUiLabel;
-    private readonly _sclHistoryFog!                : IUiScrollList<DataForHistoryRenderer>;
+    private readonly _labelHistoryFog!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryFogWin!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryFogLose!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryFogDraw!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHistoryFogRatio!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _sclHistoryFog!                : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForHistoryRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserGetPublicInfo,        callback: this._onNotifyMsgUserGetPublicInfo },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,        callback: this._onNotifyMsgUserGetPublicInfo },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -65,7 +64,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        reqUserGetPublicInfo(userId);
+        Users_Proxy.reqUserGetPublicInfo(userId);
     }
     protected override async _onClosed(): Promise<void> {
         await Promise.all([
@@ -88,16 +87,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelHistoryStd.setLangText(TextType.B0548);
-        this._labelHistoryStdWin.setLangText(TextType.B0550);
-        this._labelHistoryStdLose.setLangText(TextType.B0551);
-        this._labelHistoryStdDraw.setLangText(TextType.B0552);
-        this._labelHistoryStdRatio.setLangText(TextType.B0553);
-        this._labelHistoryFog.setLangText(TextType.B0549);
-        this._labelHistoryFogWin.setLangText(TextType.B0550);
-        this._labelHistoryFogLose.setLangText(TextType.B0551);
-        this._labelHistoryFogDraw.setLangText(TextType.B0552);
-        this._labelHistoryFogRatio.setLangText(TextType.B0553);
+        this._labelHistoryStd.setLangText(Lang_Constants.TextType.B0548);
+        this._labelHistoryStdWin.setLangText(Lang_Constants.TextType.B0550);
+        this._labelHistoryStdLose.setLangText(Lang_Constants.TextType.B0551);
+        this._labelHistoryStdDraw.setLangText(Lang_Constants.TextType.B0552);
+        this._labelHistoryStdRatio.setLangText(Lang_Constants.TextType.B0553);
+        this._labelHistoryFog.setLangText(Lang_Constants.TextType.B0549);
+        this._labelHistoryFogWin.setLangText(Lang_Constants.TextType.B0550);
+        this._labelHistoryFogLose.setLangText(Lang_Constants.TextType.B0551);
+        this._labelHistoryFogDraw.setLangText(Lang_Constants.TextType.B0552);
+        this._labelHistoryFogRatio.setLangText(Lang_Constants.TextType.B0553);
 
         this._updateLabelTitle();
         this._updateSclHistoryStd();
@@ -110,7 +109,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelTitle.setText(getFormattedText(TextType.F0009, await getUserNickname(userId)));
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0009, await Users_Model.getUserNickname(userId)));
     }
     private async _updateSclHistoryStd(): Promise<void> {
         const userId = this.getOpenData()?.userId;
@@ -122,14 +121,14 @@ export class Panel extends UiPanel<OpenData> {
         const dataList  : DataForHistoryRenderer[] = [{
             index       : index++,
             userId,
-            warType     : WarTypeId.MrwStd,
+            warType     : WarTypes_Constants.WarTypeId.MrwStd,
             playersCount: 2,
         }];
-        for (let playersCount = 2; playersCount <= PlayerIndex.Max; ++playersCount) {
+        for (let playersCount = 2; playersCount <= Players_Constants.PlayerIndex.Max; ++playersCount) {
             dataList.push({
                 index       : index++,
                 userId,
-                warType     : WarTypeId.McwStd,
+                warType     : WarTypes_Constants.WarTypeId.McwStd,
                 playersCount,
             });
         }
@@ -146,14 +145,14 @@ export class Panel extends UiPanel<OpenData> {
         const dataList  : DataForHistoryRenderer[] = [{
             index       : index++,
             userId,
-            warType     : WarTypeId.MrwFog,
+            warType     : WarTypes_Constants.WarTypeId.MrwFog,
             playersCount: 2,
         }];
-        for (let playersCount = 2; playersCount <= PlayerIndex.Max; ++playersCount) {
+        for (let playersCount = 2; playersCount <= Players_Constants.PlayerIndex.Max; ++playersCount) {
             dataList.push({
                 index       : index++,
                 userId,
-                warType     : WarTypeId.McwFog,
+                warType     : WarTypes_Constants.WarTypeId.McwFog,
                 playersCount,
             });
         }
@@ -162,21 +161,21 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForHistoryRenderer extends UiListItemData {
+interface DataForHistoryRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
     userId      : number;
-    warType     : WarTypeId;
+    warType     : WarTypes_Constants.WarTypeId;
     playersCount: number;
     showBottom? : boolean;
 }
-class HistoryRenderer extends UiListItemRenderer<DataForHistoryRenderer> {
-    private readonly _imgBg!        : IUiImage;
-    private readonly _labelType!    : IUiLabel;
-    private readonly _labelWin!     : IUiLabel;
-    private readonly _labelLose!    : IUiLabel;
-    private readonly _labelDraw!    : IUiLabel;
-    private readonly _labelRatio!   : IUiLabel;
-    private readonly _imgBottom!    : IUiImage;
+class HistoryRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForHistoryRenderer> {
+    private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelWin!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLose!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelDraw!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRatio!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgBottom!    : Ui_Interfaces_IUiImage.IUiImage;
 
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
@@ -193,34 +192,34 @@ class HistoryRenderer extends UiListItemRenderer<DataForHistoryRenderer> {
         const warType       = openData.warType;
         const playersCount  = openData.playersCount;
         const labelType     = this._labelType;
-        if ((warType === WarTypeId.MrwFog) || (warType === WarTypeId.MrwStd)) {
-            labelType.setLangText(TextType.B1075);
+        if ((warType === WarTypes_Constants.WarTypeId.MrwFog) || (warType === WarTypes_Constants.WarTypeId.MrwStd)) {
+            labelType.setLangText(Lang_Constants.TextType.B1075);
         } else {
             labelType.setText(`${playersCount}P`);
         }
 
-        const info      = await getUserMpwStatisticsData(openData.userId, warType, playersCount);
+        const info      = await Users_Model.getUserMpwStatisticsData(openData.userId, warType, playersCount);
         let winCount    = info?.getWins() ?? 0;
         let loseCount   = info?.getLoses() ?? 0;
         let drawCount   = info?.getDraws() ?? 0;
-        if (warType === WarTypeId.McwStd) {
-            const info2 = await getUserMpwStatisticsData(openData.userId, WarTypeId.MmwStd, playersCount);
+        if (warType === WarTypes_Constants.WarTypeId.McwStd) {
+            const info2 = await Users_Model.getUserMpwStatisticsData(openData.userId, WarTypes_Constants.WarTypeId.MmwStd, playersCount);
             winCount    += info2?.getWins() ?? 0;
             loseCount   += info2?.getLoses() ?? 0;
             drawCount   += info2?.getDraws() ?? 0;
 
-            const info3 = await getUserMpwStatisticsData(openData.userId, WarTypeId.AtwStd, playersCount);
+            const info3 = await Users_Model.getUserMpwStatisticsData(openData.userId, WarTypes_Constants.WarTypeId.AtwStd, playersCount);
             winCount    += info3?.getWins() ?? 0;
             loseCount   += info3?.getLoses() ?? 0;
             drawCount   += info3?.getDraws() ?? 0;
 
-        } else if (warType === WarTypeId.McwFog) {
-            const info2 = await getUserMpwStatisticsData(openData.userId, WarTypeId.MmwFog, playersCount);
+        } else if (warType === WarTypes_Constants.WarTypeId.McwFog) {
+            const info2 = await Users_Model.getUserMpwStatisticsData(openData.userId, WarTypes_Constants.WarTypeId.MmwFog, playersCount);
             winCount    += info2?.getWins() ?? 0;
             loseCount   += info2?.getLoses() ?? 0;
             drawCount   += info2?.getDraws() ?? 0;
 
-            const info3 = await getUserMpwStatisticsData(openData.userId, WarTypeId.AtwFog, playersCount);
+            const info3 = await Users_Model.getUserMpwStatisticsData(openData.userId, WarTypes_Constants.WarTypeId.AtwFog, playersCount);
             winCount    += info3?.getWins() ?? 0;
             loseCount   += info3?.getLoses() ?? 0;
             drawCount   += info3?.getDraws() ?? 0;
@@ -230,6 +229,6 @@ class HistoryRenderer extends UiListItemRenderer<DataForHistoryRenderer> {
         this._labelWin.setText(`${winCount}`);
         this._labelLose.setText(`${loseCount}`);
         this._labelDraw.setText(`${drawCount}`);
-        this._labelRatio.setText(totalCount ? format(`%.2f`, winCount / totalCount * 100) : `--`);
+        this._labelRatio.setText(totalCount ? Helpers_Text.format(`%.2f`, winCount / totalCount * 100) : `--`);
     }
 }

@@ -1,9 +1,11 @@
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
-import type { IUnitMap } from "./IUnitMap.ts";
-import type { IUnitView } from "./IUnitView.ts";
+import {
+    type Ui_Interfaces_IUiContainer,
+    type Units_IUnitMap,
+    type Units_IUnitView,
+} from "../internal.ts";
 
-export interface IUnitMapView extends IUiContainer {
-    init(unitMap: IUnitMap): void;
+export interface IUnitMapView extends Ui_Interfaces_IUiContainer.IUiContainer {
+    init(unitMap: Units_IUnitMap.IUnitMap): void;
 
     startRunningView(): void;
     stopRunningView(): void;
@@ -11,9 +13,9 @@ export interface IUnitMapView extends IUiContainer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    addUnit(view: IUnitView, needResetZOrder: boolean): void;
+    addUnit(view: Units_IUnitView.IUnitView, needResetZOrder: boolean): void;
 
-    removeUnit(view: IUnitView): void;
+    removeUnit(view: Units_IUnitView.IUnitView): void;
 
     resetZOrder(unitType: number): void;
 }

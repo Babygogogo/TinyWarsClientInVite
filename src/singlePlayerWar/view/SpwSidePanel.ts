@@ -1,84 +1,76 @@
-import { StateId } from "../../actionPlanners/Constants.ts";
-import { ChoosingCoActiveSkillTarget } from "../../actionPlanners/states/ChoosingCoActiveSkillTarget.ts";
-import { Idle } from "../../actionPlanners/states/Idle.ts";
-import { RequestingPlayerEndTurn } from "../../actionPlanners/states/RequestingPlayerEndTurn.ts";
-import { RequestingPlayerUseCoActiveSkill } from "../../actionPlanners/states/RequestingPlayerUseCoActiveSkill.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { EnergyTypeId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getPowerSkillTargetsCount } from "../../coSkills/utils/Common.ts";
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    ActionPlanners_States_ChoosingCoActiveSkillTarget,
+    Cos_Constants,
+    GamePanels_Dict,
+    Lang_Utils,
+    CoSkills_Utils_Common,
+    ActionPlanners_States_Idle,
+    GamePanels_Manager,
+    Turns_Constants,
+    Sounds_SoundPlayer,
+    ActionPlanners_States_RequestingPlayerEndTurn,
+    ActionPlanners_States_RequestingPlayerUseCoActiveSkill,
+    Sounds_Constants,
+    FloatText,
+    CoSkills_Constants,
+    ActionPlanners_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiContainer,
+    Ui_Components_UiLabel,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type SinglePlayerWar_Interface_ISpwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+    Units_Constants,
+    Users_Model,
+    Ui_Utils_UiSkinHelpers,
+} from "../../internal.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { ISpwWar } from "../interface/ISpwWar.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import {
-    playCoBgmWithWar,
-    playShortSfx,
-} from "../../sounds/SoundPlayer.ts";
-import { PhaseCode } from "../../turns/Constants.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { getUiLabelClass } from "../../ui/utils/UiFactory.ts";
-import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import {
-    ActionStateId,
-    DisplayLayerId,
-} from "../../units/Constants.ts";
-import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 
 let _showTaskObjective = false;
 
 export interface OpenData {
-    war : ISpwWar;
+    war : SinglePlayerWar_Interface_ISpwWar.ISpwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupLeft!                : IUiContainer;
-    private readonly _btnCop!                   : IUiButton;
-    private readonly _btnScop!                  : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupLeft!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCop!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnScop!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupRight!               : IUiContainer;
-    private readonly _btnUndo!                  : IUiButton;
-    private readonly _btnRedo!                  : IUiButton;
-    private readonly _btnNextUnit!              : IUiButton;
-    private readonly _btnNextTile!              : IUiButton;
-    private readonly _btnEndTurn!               : IUiButton;
-    private readonly _btnCancel!                : IUiButton;
-    private readonly _btnInfo!                  : IUiButton;
-    private readonly _btnMenu!                  : IUiButton;
+    private readonly _groupRight!               : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnUndo!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRedo!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextUnit!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnNextTile!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnEndTurn!               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCancel!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnInfo!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMenu!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnTaskObjective!         : IUiButton;
-    private readonly _groupTaskObjectiveWindow! : IUiContainer;
-    private readonly _scrollerTaskObjective!    : IUiScroller<IUiLayout>;
-    private readonly _groupTaskObjective!       : IUiLayout;
-    private readonly _btnCloseTaskObjective!    : IUiButton;
+    private readonly _btnTaskObjective!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupTaskObjectiveWindow! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _scrollerTaskObjective!    : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupTaskObjective!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnCloseTaskObjective!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MouseRightButtonClicked,         callback: this._onNotifyMouseRightButtonClicked },
-            { type: TypeId.BwTurnPhaseCodeChanged,          callback: this._onNotifyBwTurnPhaseCodeChanged },
-            { type: TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
-            { type: TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
-            { type: TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: TypeId.ActionPlannerStateChanged,       callback: this._onNotifyActionPlannerStateChanged },
-            { type: TypeId.WarOperationNormalExecuted,      callback: this._onNotifyWarOperationNormalExecuted },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MouseRightButtonClicked,         callback: this._onNotifyMouseRightButtonClicked },
+            { type: Notifications_TypeId.TypeId.BwTurnPhaseCodeChanged,          callback: this._onNotifyBwTurnPhaseCodeChanged },
+            { type: Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
+            { type: Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
+            { type: Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
+            { type: Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback: this._onNotifyActionPlannerStateChanged },
+            { type: Notifications_TypeId.TypeId.WarOperationNormalExecuted,      callback: this._onNotifyWarOperationNormalExecuted },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCop,                 callback: this._onTouchedBtnCop },
@@ -94,10 +86,10 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnTaskObjective,       callback: this._onTouchedBtnTaskObjective },
             { ui: this._btnCloseTaskObjective,  callback: this._onTouchedBtnCloseTaskObjective },
         ]);
-        this._btnCop.setShortSfxCode(ShortSfxCode.None);
-        this._btnScop.setShortSfxCode(ShortSfxCode.None);
-        this._btnNextUnit.setShortSfxCode(ShortSfxCode.None);
-        this._btnNextTile.setShortSfxCode(ShortSfxCode.None);
+        this._btnCop.setShortSfxCode(Sounds_Constants.ShortSfxCode.None);
+        this._btnScop.setShortSfxCode(Sounds_Constants.ShortSfxCode.None);
+        this._btnNextUnit.setShortSfxCode(Sounds_Constants.ShortSfxCode.None);
+        this._btnNextTile.setShortSfxCode(Sounds_Constants.ShortSfxCode.None);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
@@ -117,7 +109,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const planner = war.getActionPlanner();
         if ((!war.getIsExecutingAction()) && (!planner.checkIsStateRequesting())) {
-            Idle.getInstance().apply(planner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
         }
     }
     private _onNotifyBwTurnPhaseCodeChanged(): void {
@@ -130,10 +122,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._updateDynamicButtons();
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : war,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyBwCoEnergyChanged(): void {
@@ -149,10 +141,10 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        playCoBgmWithWar({
+        Sounds_SoundPlayer.playCoBgmWithWar({
             war                             : war,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyActionPlannerStateChanged(): void {
@@ -168,25 +160,25 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const skillType     = SkillTypeId.Power;
+        const skillType     = CoSkills_Constants.SkillTypeId.Power;
         const playerInTurn  = war.getPlayerInTurn();
         if (!playerInTurn.checkCanUseCoSkill(skillType)) {
-            playShortSfx(ShortSfxCode.ButtonForbidden01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
         } else {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            const targetsCount  = getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
+            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             const actionPlanner = war.getActionPlanner();
             if (targetsCount <= 0) {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getTitle    : () => getText(TextType.B0142),
-                    getContent  : () => getText(TextType.A0054),
-                    callback    : () => RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0142),
+                    getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0054),
+                    callback    : () => ActionPlanners_States_RequestingPlayerUseCoActiveSkill.RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
                 });
             } else {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent  : () => getFormattedText(TextType.F0205, targetsCount),
-                    callback    : () => ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                    callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
                 });
             }
         }
@@ -197,25 +189,25 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const skillType     = SkillTypeId.SuperPower;
+        const skillType     = CoSkills_Constants.SkillTypeId.SuperPower;
         const playerInTurn  = war.getPlayerInTurn();
         if (!playerInTurn.checkCanUseCoSkill(skillType)) {
-            playShortSfx(ShortSfxCode.ButtonForbidden01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
         } else {
-            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-            const targetsCount  = getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
+            const targetsCount  = CoSkills_Utils_Common.getPowerSkillTargetsCount(playerInTurn.getCoBasicCfg(), skillType);
             const actionPlanner = war.getActionPlanner();
             if (targetsCount <= 0) {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getTitle    : () => getText(TextType.B0144),
-                    getContent  : () => getText(TextType.A0058),
-                    callback    : () => RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0144),
+                    getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0058),
+                    callback    : () => ActionPlanners_States_RequestingPlayerUseCoActiveSkill.RequestingPlayerUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null),
                 });
             } else {
-                openPanel(getDict().CommonConfirmPanel, {
-                    getContent  : () => getFormattedText(TextType.F0205, targetsCount),
-                    callback    : () => ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                    callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnTouchButton(actionPlanner, skillType),
                 });
             }
         }
@@ -227,11 +219,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0374));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0374));
             return;
         }
         if (!war.checkIsHumanInTurn()) {
-            show(getText(TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
             return;
         }
 
@@ -239,14 +231,14 @@ export class Panel extends UiPanel<OpenData> {
         const retractId         = retractManager.getNextRetractId() - 2;
         const retractState      = retractManager.getRetractState(retractId);
         if (retractState == null) {
-            show(getText(TextType.A0318));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0318));
         } else {
             war.fastLoadState(SerialWar.decode(retractState));
             retractManager.setNextRetractId(retractId + 1);
-            playCoBgmWithWar({
+            Sounds_SoundPlayer.playCoBgmWithWar({
                 war                             : war,
                 force                           : false,
-                coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+                coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
             });
         }
     }
@@ -257,11 +249,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            show(getText(TextType.A0374));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0374));
             return;
         }
         if (!war.checkIsHumanInTurn()) {
-            show(getText(TextType.A0239));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0239));
             return;
         }
 
@@ -269,14 +261,14 @@ export class Panel extends UiPanel<OpenData> {
         const retractId         = Math.max(1, retractManager.getNextRetractId());
         const retractState      = retractManager.getRetractState(retractId);
         if (retractState == null) {
-            show(getText(TextType.A0319));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0319));
         } else {
             war.fastLoadState(SerialWar.decode(retractState));
             retractManager.setNextRetractId(retractId + 1);
-            playCoBgmWithWar({
+            Sounds_SoundPlayer.playCoBgmWithWar({
                 war                             : war,
                 force                           : false,
-                coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+                coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
             });
         }
     }
@@ -288,19 +280,19 @@ export class Panel extends UiPanel<OpenData> {
 
         const field         = war.getField();
         const actionPlanner = field.getActionPlanner();
-        if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== StateId.ExecutingAction)) {
-            Idle.getInstance().apply(actionPlanner);
+        if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)) {
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
             const gridIndex = war.getIdleUnitGridIndex();
             if (!gridIndex) {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
                 const cursor = field.getCursor();
                 cursor.setGridIndex(gridIndex);
                 cursor.updateView();
                 war.getView().tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                playShortSfx(ShortSfxCode.ButtonNeutral01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             }
         }
     }
@@ -312,19 +304,19 @@ export class Panel extends UiPanel<OpenData> {
 
         const field         = war.getField();
         const actionPlanner = field.getActionPlanner();
-        if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== StateId.ExecutingAction)) {
-            Idle.getInstance().apply(actionPlanner);
+        if ((!actionPlanner.checkIsStateRequesting()) && (actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.ExecutingAction)) {
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
 
             const gridIndex = war.getIdleBuildingGridIndex();
             if (!gridIndex) {
-                playShortSfx(ShortSfxCode.ButtonForbidden01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonForbidden01);
             } else {
                 const cursor = field.getCursor();
                 cursor.setGridIndex(gridIndex);
                 cursor.updateView();
                 war.getView().tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                playShortSfx(ShortSfxCode.ButtonNeutral01);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             }
         }
     }
@@ -335,12 +327,12 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (war.getDrawVoteManager().checkNeedVoteBeforeEndTurn(war.getPlayerIndexInTurn())) {
-            show(getText(TextType.A0034));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0034));
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getTitle    : () => getText(TextType.B0036),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0036),
                 getContent  : () => war.getHintForEndTurn(),
-                callback    : () => RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                callback    : () => ActionPlanners_States_RequestingPlayerEndTurn.RequestingPlayerEndTurn.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
             });
         }
     }
@@ -352,7 +344,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const planner = war.getActionPlanner();
         if ((!war.getIsExecutingAction()) && (!planner.checkIsStateRequesting())) {
-            Idle.getInstance().apply(planner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(planner);
         }
     }
     private _onTouchedBtnInfo(): void {
@@ -363,9 +355,9 @@ export class Panel extends UiPanel<OpenData> {
 
         const actionPlanner = war.getActionPlanner();
         if (!actionPlanner.checkIsStateRequesting()) {
-            Idle.getInstance().apply(actionPlanner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
-        openPanel(getDict().BwWarInfoPanel, { war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarInfoPanel, { war });
     }
     private _onTouchedBtnMenu(): void {
         const war = this.getOpenData()?.war;
@@ -375,9 +367,9 @@ export class Panel extends UiPanel<OpenData> {
 
         const actionPlanner = war.getActionPlanner();
         if (!actionPlanner.checkIsStateRequesting()) {
-            Idle.getInstance().apply(actionPlanner);
+            ActionPlanners_States_Idle.Idle.getInstance().apply(actionPlanner);
         }
-        openPanel(getDict().SpwWarMenuPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwWarMenuPanel, {
             war: war,
         });
     }
@@ -408,17 +400,17 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCop.setLangText(TextType.B0142);
-        this._btnScop.setLangText(TextType.B0144);
-        this._btnUndo.setLangText(TextType.B0923);
-        this._btnRedo.setLangText(TextType.B0924);
-        this._btnNextUnit.setLangText(TextType.B0685);
-        this._btnNextTile.setLangText(TextType.B0686);
-        this._btnEndTurn.setLangText(TextType.B0036);
-        this._btnCancel.setLangText(TextType.B0154);
-        this._btnInfo.setLangText(TextType.B0223);
-        this._btnMenu.setLangText(TextType.B0155);
-        this._btnTaskObjective.setLangText(TextType.B1480);
+        this._btnCop.setLangText(Lang_Constants.TextType.B0142);
+        this._btnScop.setLangText(Lang_Constants.TextType.B0144);
+        this._btnUndo.setLangText(Lang_Constants.TextType.B0923);
+        this._btnRedo.setLangText(Lang_Constants.TextType.B0924);
+        this._btnNextUnit.setLangText(Lang_Constants.TextType.B0685);
+        this._btnNextTile.setLangText(Lang_Constants.TextType.B0686);
+        this._btnEndTurn.setLangText(Lang_Constants.TextType.B0036);
+        this._btnCancel.setLangText(Lang_Constants.TextType.B0154);
+        this._btnInfo.setLangText(Lang_Constants.TextType.B0223);
+        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
+        this._btnTaskObjective.setLangText(Lang_Constants.TextType.B1480);
 
         this._updateComponentsForTaskObjective();
     }
@@ -454,7 +446,7 @@ export class Panel extends UiPanel<OpenData> {
             group.removeAllItems(false);
 
             if (mainDataArray.length) {
-                group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1217)), false);
+                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1217)), false);
 
                 for (const data of mainDataArray) {
                     group.addItem(createTaskObjectiveRenderer(data), false);
@@ -462,7 +454,7 @@ export class Panel extends UiPanel<OpenData> {
             }
 
             if (subDataArray.length) {
-                group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1220)), false);
+                group.addItem(createLabelForTaskObjectiveCategory(Lang_Utils.getText(Lang_Constants.TextType.B1220)), false);
 
                 for (const data of subDataArray) {
                     group.addItem(createTaskObjectiveRenderer(data), false);
@@ -481,16 +473,16 @@ export class Panel extends UiPanel<OpenData> {
 
         const player    = war.getPlayerInTurn();
         const btn       = this._btnCop;
-        if ((war.getActionPlanner().getStateId() !== StateId.Idle)     ||
-            (war.getTurnManager().getPhaseCode() !== PhaseCode.Main)        ||
+        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle)     ||
+            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)        ||
             (!war.checkIsHumanInTurn())                                         ||
-            (player.getCoEnergyType() !== EnergyTypeId.Trilogy)                            ||
+            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                            ||
             (player.getCoPowerEnergy() == null)
         ) {
             btn.setIsVisible(false);
         } else {
             btn.setIsVisible(true);
-            btn.setIconSource(player.checkCanUseCoSkill(SkillTypeId.Power) ? `commonIcon0009` : `commonIcon0010`);
+            btn.setIconSource(player.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.Power) ? `commonIcon0009` : `commonIcon0010`);
         }
     }
 
@@ -502,16 +494,16 @@ export class Panel extends UiPanel<OpenData> {
 
         const player    = war.getPlayerInTurn();
         const btn       = this._btnScop;
-        if ((war.getActionPlanner().getStateId() !== StateId.Idle)   ||
-            (war.getTurnManager().getPhaseCode() !== PhaseCode.Main)      ||
+        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle)   ||
+            (war.getTurnManager().getPhaseCode() !== Turns_Constants.PhaseCode.Main)      ||
             (!war.checkIsHumanInTurn())                                       ||
-            (player.getCoEnergyType() !== EnergyTypeId.Trilogy)                            ||
+            (player.getCoEnergyType() !== Cos_Constants.EnergyTypeId.Trilogy)                            ||
             (player.getCoSuperPowerEnergy() == null)
         ) {
             btn.setIsVisible(false);
         } else {
             btn.setIsVisible(true);
-            btn.setIconSource(player.checkCanUseCoSkill(SkillTypeId.SuperPower) ? `commonIcon0011` : `commonIcon0012`);
+            btn.setIconSource(player.checkCanUseCoSkill(CoSkills_Constants.SkillTypeId.SuperPower) ? `commonIcon0011` : `commonIcon0012`);
         }
     }
 
@@ -529,9 +521,9 @@ export class Panel extends UiPanel<OpenData> {
 
         const turnManager = war.getTurnManager();
         this._btnEndTurn.setIsVisible(
-            (war.getActionPlanner().getStateId() === StateId.Idle) &&
+            (war.getActionPlanner().getStateId() === ActionPlanners_Constants.StateId.Idle) &&
             (war.checkIsHumanInTurn())                                      &&
-            (turnManager.getPhaseCode() === PhaseCode.Main)
+            (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main)
         );
     }
 
@@ -543,9 +535,9 @@ export class Panel extends UiPanel<OpenData> {
 
         const turnManager   = war.getTurnManager();
         const btn           = this._btnNextUnit;
-        if ((war.getActionPlanner().getStateId() !== StateId.Idle) ||
+        if ((war.getActionPlanner().getStateId() !== ActionPlanners_Constants.StateId.Idle) ||
             (!war.checkIsHumanInTurn())                                     ||
-            (turnManager.getPhaseCode() !== PhaseCode.Main)
+            (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
         ) {
             btn.setIsVisible(false);
         } else {
@@ -557,18 +549,18 @@ export class Panel extends UiPanel<OpenData> {
             let airUnitsCount       = 0;
             let navalUnitsCount     = 0;
             for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
-                if ((unit.getActionState() !== ActionStateId.Idle)  ||
+                if ((unit.getActionState() !== Units_Constants.ActionStateId.Idle)  ||
                     (unit.getPlayerIndex() !== playerIndex)
                 ) {
                     continue;
                 }
 
                 const layer = unit.getTemplateCfg().getLayer();
-                if (layer === DisplayLayerId.Ground) {
+                if (layer === Units_Constants.DisplayLayerId.Ground) {
                     ++groundUnitsCount;
-                } else if (layer === DisplayLayerId.Air) {
+                } else if (layer === Units_Constants.DisplayLayerId.Air) {
                     ++airUnitsCount;
-                } else if (layer === DisplayLayerId.Sea) {
+                } else if (layer === Units_Constants.DisplayLayerId.Sea) {
                     ++navalUnitsCount;
                 }
             }
@@ -585,9 +577,9 @@ export class Panel extends UiPanel<OpenData> {
         const actionPlanner = war.getActionPlanner();
         const turnManager   = war.getTurnManager();
         const btn           = this._btnNextTile;
-        if ((actionPlanner.getStateId() !== StateId.Idle)  ||
+        if ((actionPlanner.getStateId() !== ActionPlanners_Constants.StateId.Idle)  ||
             (!war.checkIsHumanInTurn())                             ||
-            (turnManager.getPhaseCode() !== PhaseCode.Main)
+            (turnManager.getPhaseCode() !== Turns_Constants.PhaseCode.Main)
         ) {
             btn.setIsVisible(false);
         } else {
@@ -606,17 +598,17 @@ export class Panel extends UiPanel<OpenData> {
         const actionPlanner     = war.getActionPlanner();
         const state             = actionPlanner.getStateId();
         this._btnCancel.setIsVisible(
-            (state !== StateId.Idle)             &&
-            (state !== StateId.ExecutingAction)  &&
+            (state !== ActionPlanners_Constants.StateId.Idle)             &&
+            (state !== ActionPlanners_Constants.StateId.ExecutingAction)  &&
             (!actionPlanner.checkIsStateRequesting())       &&
             (war.checkIsHumanInTurn())                      &&
-            (turnManager.getPhaseCode() === PhaseCode.Main)
+            (turnManager.getPhaseCode() === Turns_Constants.PhaseCode.Main)
         );
     }
 }
 
-function createLabelForTaskObjectiveCategory(text: string): IUiLabel {
-    const label = new (getUiLabelClass());
+function createLabelForTaskObjectiveCategory(text: string): Ui_Interfaces_IUiLabel.IUiLabel {
+    const label = new Ui_Components_UiLabel.UiLabel;
     label.setText(text);
     // label.setIsBold(true);
     label.setFontSize(8);
@@ -628,7 +620,7 @@ function createTaskObjectiveRenderer(data: DataForTaskObjectiveRenderer): TaskOb
     renderer.setData(data);
     return renderer;
 }
-function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
+function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Interface_IBwWar.IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
     const dataArray: DataForTaskObjectiveRenderer[] = [];
     for (const taskObjective of allTaskObjectiveArray.filter(v => isMain === !!v.getIsMain())) {
         const objectiveId = taskObjective.getObjectiveId();
@@ -644,19 +636,19 @@ function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray
 
 interface DataForTaskObjectiveRenderer {
     taskObjective   : TaskObjective;
-    war             : IBwWar;
+    war             : BaseWar_Interface_IBwWar.IBwWar;
 }
-class TaskObjectiveRenderer extends UiContainer {
-    private readonly _groupCompleted!   : IUiContainer;
-    private readonly _imgCompleted!     : IUiImage;
-    private readonly _labelDesc!        : IUiLabel;
+class TaskObjectiveRenderer extends Ui_Components_UiContainer.UiContainer {
+    private readonly _groupCompleted!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgCompleted!     : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelDesc!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _data           : DataForTaskObjectiveRenderer | null = null;
 
     public constructor() {
         super();
 
-        loadSkinByPath(this, "component/taskObjective/TaskObjective002.exml");
+        Ui_Utils_UiSkinHelpers.loadSkinByPath(this, "component/taskObjective/TaskObjective002.exml");
     }
 
     public updateOnLoadedSkin(): void {
@@ -685,7 +677,7 @@ class TaskObjectiveRenderer extends UiContainer {
         const maxProgress       = taskObjective.getMaxProgress();
         const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) == objectiveId)?.getCurrentProgress() ?? 0;
         const labelDesc         = this._labelDesc;
-        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${getLanguageText({ textArray: taskObjective.getDesc() })}`);
+        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${Lang_Utils.getLanguageText({ textArray: taskObjective.getDesc() })}`);
         this.setUnscaledManualHeight(labelDesc.getScaledHeight());
 
         const groupCompleted = this._groupCompleted;

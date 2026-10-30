@@ -1,38 +1,37 @@
 import {
-    newError,
-    getExisted,
-} from "../../helpers/Misc.ts";
-import { warn } from "../../Logger.ts";
-import { UiContainer } from "./UiContainer.ts";
-import type { IUiContainer } from "../interfaces/IUiContainer.ts";
-import type { IUiList } from "../interfaces/IUiList.ts";
-import type { IUiOpenableComponent } from "../interfaces/IUiOpenableComponent.ts";
-import type { IUiTab } from "../interfaces/IUiTab.ts";
-import type { IUiTabItemRenderer } from "../interfaces/IUiTabItemRenderer.ts";
-import { UiCommonEventType } from "../types/UiCommonEventType.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
-import type { UiTabData } from "../types/UiTabData.ts";
-import { getUiOpenableComponentClass } from "../utils/UiFactory.ts";
-import type { Event } from "../../egret/Egret.ts";
+    Helpers_Misc,
+    Ui_Types_UiCommonEventType,
+    Ui_Components_UiContainer,
+    Ui_Components_UiOpenableComponent,
+    Logger,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiList,
+    type Ui_Interfaces_IUiOpenableComponent,
+    type Ui_Interfaces_IUiTab,
+    type Ui_Interfaces_IUiTabItemRenderer,
+    type Ui_Types_UiListItemData,
+    type Ui_Types_UiTabData,
+    type Egret_Egret,
+} from "../../internal.ts";
 
-export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
-    extends     UiContainer
-    implements  IUiTab<DataForTabItemRenderer, DataForPage>
+export class UiTab<DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData, DataForPage>
+    extends     Ui_Components_UiContainer.UiContainer
+    implements  Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, DataForPage>
 {
-    private readonly _bar?              : IUiList<DataForTabItemRenderer>;   // 页签栏
-    private readonly _page?             : IUiContainer;                      // 页面内容，仅用于占位
+    private readonly _bar?              : Ui_Interfaces_IUiList.IUiList<DataForTabItemRenderer>;   // 页签栏
+    private readonly _page?             : Ui_Interfaces_IUiContainer.IUiContainer;                      // 页面内容，仅用于占位
 
-    private readonly _pageInstanceArray : (IUiOpenableComponent<DataForPage> | undefined)[] = [];
-    private readonly _tabDataArray      : UiTabData<DataForTabItemRenderer, DataForPage>[] = [];
+    private readonly _pageInstanceArray : (Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<DataForPage> | undefined)[] = [];
+    private readonly _tabDataArray      : Ui_Types_UiTabData.UiTabData<DataForTabItemRenderer, DataForPage>[] = [];
 
     public updateOnLoadedSkin(): void {
         const bar = this._getBar();
         bar.setAllowMultiSelection(false);
         bar.setRequireSelection(true);
-        bar.getEventAgent().addUiCommonEventListener(UiCommonEventType.ListItemSelectedByTap, this._onListItemSelectedByTap, this);
+        bar.getEventAgent().addUiCommonEventListener(Ui_Types_UiCommonEventType.UiCommonEventType.ListItemSelectedByTap, this._onListItemSelectedByTap, this);
     }
 
-    private async _onListItemSelectedByTap(e: Event): Promise<void> {
+    private async _onListItemSelectedByTap(e: Egret_Egret.Event): Promise<void> {
         // const item = this._getBar().getItem(index);
         // if (item instanceof UiTabItemRenderer) {
         //     SoundManager.playShortSfx(item.getShortSfxCode());
@@ -52,19 +51,19 @@ export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
         return indexes == null ? undefined : indexes[0];
     }
 
-    public setBarItemRenderer(itemRenderer: new () => IUiTabItemRenderer<DataForTabItemRenderer>): void {
+    public setBarItemRenderer(itemRenderer: new () => Ui_Interfaces_IUiTabItemRenderer.IUiTabItemRenderer<DataForTabItemRenderer>): void {
         this._getBar().setItemRendererClass(itemRenderer);
     }
 
-    private _getPageInstanceArray(): (IUiOpenableComponent<DataForPage> | undefined)[] {
+    private _getPageInstanceArray(): (Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<DataForPage> | undefined)[] {
         return this._pageInstanceArray;
     }
-    private _getTabDataArray(): UiTabData<DataForTabItemRenderer, DataForPage>[] {
+    private _getTabDataArray(): Ui_Types_UiTabData.UiTabData<DataForTabItemRenderer, DataForPage>[] {
         return this._tabDataArray;
     }
-    public async bindData(dataArray: UiTabData<DataForTabItemRenderer, DataForPage>[], selectedIndex = 0): Promise<void> {
+    public async bindData(dataArray: Ui_Types_UiTabData.UiTabData<DataForTabItemRenderer, DataForPage>[], selectedIndex = 0): Promise<void> {
         if (!dataArray.length) {
-            throw newError(`UiTab.bindData() empty data.`);
+            throw Helpers_Misc.newError(`UiTab.bindData() empty data.`);
         }
 
         {
@@ -98,12 +97,12 @@ export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
         if (length === 0) {
             return;
         } else if (length > 1) {
-            throw newError(`Multi page opened?!`);
+            throw Helpers_Misc.newError(`Multi page opened?!`);
         }
 
         const page = children[0];
-        if (!(page instanceof getUiOpenableComponentClass())) {
-            throw newError(`Invalid page.`);
+        if (!(page instanceof Ui_Components_UiOpenableComponent.UiOpenableComponent)) {
+            throw Helpers_Misc.newError(`Invalid page.`);
         }
 
         await page.close();
@@ -112,18 +111,18 @@ export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
     public async updatePageData(index: number, pageData: DataForPage, refreshPage = true): Promise<void> {
         const tabData = this._getTabDataArray()[index];
         if (tabData == null) {
-            warn(`page doesn't exist: ${index}`);
+            Logger.warn(`page doesn't exist: ${index}`);
             return;
         }
         tabData.pageData = pageData;
 
         if ((refreshPage) && (this.getSelectedIndex() === index)) {
             const pageInstance = this._getPageContainer().getUiChildAt(0);
-            if (pageInstance instanceof getUiOpenableComponentClass()) {
+            if (pageInstance instanceof Ui_Components_UiOpenableComponent.UiOpenableComponent) {
                 pageInstance.setOpenData(pageData);
                 await pageInstance.applyOpenData();
             } else {
-                throw newError(`UiTab.updatePageData() invalid pageInstance.`);
+                throw Helpers_Misc.newError(`UiTab.updatePageData() invalid pageInstance.`);
             }
         }
     }
@@ -133,11 +132,11 @@ export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
         await this._clearPageInstanceArray();
     }
 
-    private _getBar(): IUiList<DataForTabItemRenderer> {
-        return getExisted(this._bar);
+    private _getBar(): Ui_Interfaces_IUiList.IUiList<DataForTabItemRenderer> {
+        return Helpers_Misc.getExisted(this._bar);
     }
-    private _getPageContainer(): IUiContainer {
-        return getExisted(this._page);
+    private _getPageContainer(): Ui_Interfaces_IUiContainer.IUiContainer {
+        return Helpers_Misc.getExisted(this._page);
     }
 
     private async _clearPageInstanceArray(): Promise<void> {

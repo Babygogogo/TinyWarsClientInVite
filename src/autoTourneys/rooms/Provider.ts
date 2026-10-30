@@ -1,26 +1,22 @@
 import {
-    reqAtrGetRoomPublicInfo,
-    reqAtrGetJoinedRoomIdArray,
-} from "./Gateway.ts";
-import type {
-    Undefinable,
-    PlayerInfo,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData as CommonWarAdvancedSettingsPageOpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { getGameConfig } from "../../gameConfigs/Provider.ts";
-import { ModeId } from "../../gameModes/Constants.ts";
-import {
-    getExisted,
-    checkIsAnyPromiseTrue,
-    newError,
-} from "../../helpers/Misc.ts";
-import { warn } from "../../Logger.ts";
-import { SelfSettings } from "../../multiPlayerRooms/SelfSettings.ts";
-import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+    Wars_Constants,
+    AuxiliaryTypes_CachedDataAccessor,
+    Helpers_Misc,
+    Utils_ClientErrorCode,
+    GameConfigs_Provider,
+    WarRules_Utils_CommonData,
+    NormalMap_Model_NormalMapModel,
+    Users_Model,
+    GameModes_Constants,
+    AutoTourneys_Rooms_Gateway,
+    MultiPlayerRooms_SelfSettings,
+    BootTimers_Constants,
+    Logger,
+    type Common_View_CommonWarAdvancedSettingsPage,
+    type Common_View_CommonWarBasicSettingsPage,
+    type Common_View_CommonWarPlayerInfoPage,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { AtrRoomInfo } from "../../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
 import type { S as AtrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
 import type { S as AtrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
@@ -28,37 +24,30 @@ import type { S as AtrSetBannedCoIdArrayResponse } from "../../proto/schema/Comm
 import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
 import { DataForPlayerBanCo } from "../../proto/schema/CommonProto/Structure/DataForPlayerBanCo.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
-import { getSelfUserId } from "../../users/Model.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import {
-    getPlayerRule,
-    getPlayersCountUnneutral,
-} from "../../warRules/utils/CommonData.ts";
-import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
-const _selfSettingsDict         = new Map<number, SelfSettings>();
-const _roomInfoAccessor         = new CachedDataAccessor<number, AtrRoomInfo>({
-    reqData : (roomId: number) => reqAtrGetRoomPublicInfo(roomId),
+const _selfSettingsDict         = new Map<number, MultiPlayerRooms_SelfSettings.SelfSettings>();
+const _roomInfoAccessor         = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AtrRoomInfo>({
+    reqData : (roomId: number) => AutoTourneys_Rooms_Gateway.reqAtrGetRoomPublicInfo(roomId),
 });
-const _joinedRoomIdArrayAccessor = new CachedDataAccessor<null, number[]>({
-    reqData : () => reqAtrGetJoinedRoomIdArray(),
+const _joinedRoomIdArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, number[]>({
+    reqData : () => AutoTourneys_Rooms_Gateway.reqAtrGetJoinedRoomIdArray(),
 });
 
-function setRoomInfo(roomId: number, roomInfo: Undefinable<AtrRoomInfo>): void {
+function setRoomInfo(roomId: number, roomInfo: AuxiliaryTypes_AuxiliaryTypes.Undefinable<AtrRoomInfo>): void {
     _roomInfoAccessor.setData(roomId, roomInfo);
 }
-export function getRoomInfo(roomId: number): Promise<Undefinable<AtrRoomInfo>> {
+export function getRoomInfo(roomId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<AtrRoomInfo>> {
     return _roomInfoAccessor.getData(roomId);
 }
 
 export function setJoinedRoomIdArray(roomIdArray: number[]): void {
     _joinedRoomIdArrayAccessor.setData(null, roomIdArray);
 }
-export function getJoinedRoomIdArray(): Promise<Undefinable<number[]>> {
+export function getJoinedRoomIdArray(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>> {
     return _joinedRoomIdArrayAccessor.getData(null);
 }
 
-export async function getSelfSettings(roomId: number): Promise<Undefinable<SelfSettings>> {
+export async function getSelfSettings(roomId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<MultiPlayerRooms_SelfSettings.SelfSettings>> {
     const roomInfo = await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
@@ -68,9 +57,9 @@ export async function getSelfSettings(roomId: number): Promise<Undefinable<SelfS
     if (existingData != null) {
         return existingData;
     } else {
-        const newData = new SelfSettings(
+        const newData = new MultiPlayerRooms_SelfSettings.SelfSettings(
             roomInfo,
-            await getGameConfig(getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion()))
+            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion()))
         );
         _selfSettingsDict.set(roomId, newData);
         return newData;
@@ -94,13 +83,13 @@ export function updateOnFailedMsgAtrGetRoomPublicInfo(data: AtrGetRoomPublicInfo
 }
 
 export async function updateOnMsgAtrSetBannedCoIdArray(data: AtrSetBannedCoIdArrayResponse): Promise<void> {
-    const roomId    = getExisted(data.getRoomId());
+    const roomId    = Helpers_Misc.getExisted(data.getRoomId());
     const roomInfo  = await getRoomInfo(roomId);
     if (!roomInfo) {
         return;
     }
 
-    const settingsForAtw    = getExisted(roomInfo.getSettingsForAtw());
+    const settingsForAtw    = Helpers_Misc.getExisted(roomInfo.getSettingsForAtw());
     const srcPlayerIndex    = data.getPlayerIndex();
     const bannedCoIdArray   = data.getBannedCoIdArray();
     const dataArray         = settingsForAtw.getDataArrayForBanCo();
@@ -115,7 +104,7 @@ export async function updateOnMsgAtrSetBannedCoIdArray(data: AtrSetBannedCoIdArr
     }
 }
 export async function updateOnMsgAtrSetSelfSettings(data: AtrSetSelfSettingsResponse): Promise<void> {
-    const roomInfo = await getRoomInfo(getExisted(data.getRoomId()));
+    const roomInfo = await getRoomInfo(Helpers_Misc.getExisted(data.getRoomId()));
     if (!roomInfo) {
         return;
     }
@@ -130,7 +119,7 @@ export async function updateOnMsgAtrSetSelfSettings(data: AtrSetSelfSettingsResp
         playerData.setIsReady(true);
         playerData.setUnitAndTileSkinId(unitAndTileSkinId);
     } else {
-        warn(`AtrModel.updateOnMsgAtrSetSelfSettings() playerData == null.`);
+        Logger.warn(`AtrModel.updateOnMsgAtrSetSelfSettings() playerData == null.`);
         dataArray.push(DataForPlayerInRoom.fromJson({
             playerIndex         : playerIndex,
             userId              : null,
@@ -141,7 +130,7 @@ export async function updateOnMsgAtrSetSelfSettings(data: AtrSetSelfSettingsResp
     }
 }
 export function updateOnMsgAtrDeleteRoomByServer(data: AtrDeleteRoomByServerResponse): void {
-    setRoomInfo(getExisted(data.getRoomId()), null);
+    setRoomInfo(Helpers_Misc.getExisted(data.getRoomId()), null);
 }
 
 export async function checkIsRed(): Promise<boolean> {
@@ -149,7 +138,7 @@ export async function checkIsRed(): Promise<boolean> {
     for (const roomId of await getJoinedRoomIdArray() ?? []) {
         promiseArray.push(checkIsRedForRoom(roomId));
     }
-    return checkIsAnyPromiseTrue(promiseArray);
+    return Helpers_Misc.checkIsAnyPromiseTrue(promiseArray);
 }
 export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
     const roomInfo = await getRoomInfo(roomId);
@@ -157,7 +146,7 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
         return false;
     }
 
-    const selfUserId = getSelfUserId();
+    const selfUserId = Users_Model.getSelfUserId();
     const playerData = roomInfo.getPlayerDataList().find(v => v.getUserId() === selfUserId);
     if (playerData == null) {
         return false;
@@ -175,20 +164,20 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
     return false;
 }
 
-export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarPlayerInfoPage.OpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
     }
 
-    const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
-    const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
-    const playerInfoArray   : PlayerInfo[] = [];
+    const settingsForCommon = Helpers_Misc.getExisted(roomInfo.getSettingsForCommon());
+    const warRuleCommonData = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
+    const playerInfoArray   : AuxiliaryTypes_AuxiliaryTypes.PlayerInfo[] = [];
     for (const playerInfo of roomInfo.getPlayerDataList()) {
         const playerIndex = playerInfo.getPlayerIndex();
         playerInfoArray.push({
             playerIndex         : playerIndex,
-            teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
+            teamIndex           : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
             isAi                : false,
             userId              : playerInfo.getUserId() ?? null,
             coId                : playerInfo.getCoId(),
@@ -201,8 +190,8 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     }
 
     return {
-        gameConfig              : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
-        playersCountUnneutral   : getPlayersCountUnneutral(warRuleCommonData),
+        gameConfig              : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())),
+        playersCountUnneutral   : WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData),
         roomOwnerPlayerIndex    : null,
         callbackOnExitRoom      : null,
         callbackOnDeletePlayer  : null,
@@ -214,24 +203,24 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<CommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarBasicSettingsPage.OpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return { dataArrayForListSettings: [] };
     }
 
-    const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
-    const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
-    const settingsForAtw    = getExisted(roomInfo.getSettingsForAtw());
-    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const settingsForCommon = Helpers_Misc.getExisted(roomInfo.getSettingsForCommon());
+    const instanceWarRule   = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule());
+    const settingsForAtw    = Helpers_Misc.getExisted(roomInfo.getSettingsForAtw());
+    const gameConfig        = (await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())));
     const normalMapId       = settingsForAtw.getNormalMapId();
-    const warEventFullData  = (await getRawData(normalMapId))?.getWarEventFullData();
+    const warEventFullData  = (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getWarEventFullData();
     const bootTimerParams   = settingsForAtw.getBootTimerParams();
-    const timerType         = bootTimerParams[0] as TimerTypeId;
-    const openData          : CommonWarBasicSettingsPageOpenData = {
+    const timerType         = bootTimerParams[0] as BootTimers_Constants.TimerTypeId;
+    const openData          : Common_View_CommonWarBasicSettingsPage.OpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType    : BasicSettingsTypeId.NormalMapId,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.NormalMapId,
                 currentValue    : normalMapId,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -239,7 +228,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsTypeId.WarRuleTitle,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -247,7 +236,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsTypeId.HasFog,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.HasFog,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -255,7 +244,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsTypeId.Weather,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.Weather,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -263,7 +252,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType        : BasicSettingsTypeId.TileTheme,
+                settingsType        : Wars_Constants.BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -271,7 +260,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify    : null,
             },
             {
-                settingsType    : BasicSettingsTypeId.WarEvent,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.WarEvent,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -279,7 +268,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -287,7 +276,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsTypeId.TimerType,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerType,
                 currentValue    : timerType,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -296,19 +285,19 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
             },
         ],
     };
-    if (timerType === TimerTypeId.Regular) {
+    if (timerType === BootTimers_Constants.TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType    : BasicSettingsTypeId.TimerRegularParam,
+            settingsType    : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
             currentValue    : bootTimerParams[1],
             instanceWarRule : instanceWarRule,
             gameConfig      : gameConfig,
             warEventFullData: warEventFullData,
             callbackOnModify: null,
         });
-    } else if (timerType === TimerTypeId.Incremental) {
+    } else if (timerType === BootTimers_Constants.TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType    : BasicSettingsTypeId.TimerIncrementalParams,
+                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -317,24 +306,24 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
             },
         );
     } else {
-        throw newError(`AtrModel.createDataForCommonWarBasicSettingsPage() invalid timerType: ${timerType}`, ClientErrorCode.AtrModel_CreateDataForCommonWarBasicSettingsPage_00);
+        throw Helpers_Misc.newError(`AtrModel.createDataForCommonWarBasicSettingsPage() invalid timerType: ${timerType}`, Utils_ClientErrorCode.ClientErrorCode.AtrModel_CreateDataForCommonWarBasicSettingsPage_00);
     }
 
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<CommonWarAdvancedSettingsPageOpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarAdvancedSettingsPage.OpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
     }
 
-    const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
-    const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
+    const settingsForCommon = Helpers_Misc.getExisted(roomInfo.getSettingsForCommon());
+    const instanceWarRule   = Helpers_Misc.getExisted(settingsForCommon.getInstanceWarRule());
     return {
         canModify       : false,
-        gcData          : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
+        gcData          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())),
         instanceWarRule : instanceWarRule,
-        gameModeId      : ModeId.AutoTourney,
+        gameModeId      : GameModes_Constants.ModeId.AutoTourney,
     };
 }

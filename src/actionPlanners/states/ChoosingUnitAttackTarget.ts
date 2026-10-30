@@ -1,149 +1,146 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getHrwWarClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+} from "../../internal.ts";
 
-export class ChoosingUnitAttackTarget implements IState {
+export class ChoosingUnitAttackTarget implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ChoosingUnitAttackTarget();
 
     public static getInstance(): ChoosingUnitAttackTarget {
         return ChoosingUnitAttackTarget._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ChoosingUnitAttackTarget;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                return StateId.ChoosingUnitAttackTarget;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget;
             }
 
-        } else if (war instanceof getMeWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                if (getExisted(war.getCursor().getPreviousGridIndex()).checkIsEqual(gridIndex)) {
+                if (Helpers_Misc.getExisted(war.getCursor().getPreviousGridIndex()).checkIsEqual(gridIndex)) {
                     if (war.getUnitMap().getUnitOnMap(gridIndex)) {
-                        return StateId.RequestingUnitAttackUnit;
+                        return ActionPlanners_Constants.StateId.RequestingUnitAttackUnit;
                     } else {
-                        return StateId.RequestingUnitAttackTile;
+                        return ActionPlanners_Constants.StateId.RequestingUnitAttackTile;
                     }
                 } else {
-                    return StateId.ChoosingUnitAttackTarget;
+                    return ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget;
                 }
             }
 
-        } else if (war instanceof getRwWarClass()) {
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
-                return StateId.ChoosingUnitAttackTarget;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget;
             }
 
-        } else if (war instanceof getSpwWarClass()) {
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             if (!actionPlanner.checkHasAttackableGridForUnitWeapon(gridIndex)) {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
                 const previousGridIndex = war.getCursor().getPreviousGridIndex();
                 if ((previousGridIndex != null) && (previousGridIndex.checkIsEqual(gridIndex))) {
                     if (war.getUnitMap().getUnitOnMap(gridIndex)) {
-                        return StateId.RequestingUnitAttackUnit;
+                        return ActionPlanners_Constants.StateId.RequestingUnitAttackUnit;
                     } else {
-                        return StateId.RequestingUnitAttackTile;
+                        return ActionPlanners_Constants.StateId.RequestingUnitAttackTile;
                     }
                 } else {
-                    return StateId.ChoosingUnitAttackTarget;
+                    return ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget;
                 }
             }
 
-        } else if (war instanceof getTwWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
         } else {
-            throw newError(`Unknown actionPlanner.`);
+            throw Helpers_Misc.newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
         war.getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.ButtonCancel01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitAttackTarget) {
-            playShortSfx(ShortSfxCode.CursorConfirm01);
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAttackTarget);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitAttackTarget) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget) {
             // Nothing to do.
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAttackTarget);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`ChoosingUnitAttackTargetState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`ChoosingUnitAttackTargetState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId !== StateId.ChoosingUnitAction) {
-            throw newError(`Invalid currState: ${currStateId}`);
+        if (currStateId !== ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+            throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);
         } else {
             actionPlanner.setAttackableGridsForUnitWeapon(actionPlanner.createAttackableGridsForUnitWeapon());
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAttackTarget);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget);
         actionPlanner.updateView();
     }
 }

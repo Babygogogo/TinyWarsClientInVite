@@ -1,36 +1,28 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getComparatorName,
-    getText,
-} from "../../../lang/Utils.ts";
-import { checkIsValidPlayerIndexSubset } from "../../../players/utils/Common.ts";
+    ValueAndComparators_Utils,
+    Players_Utils_Common,
+    Lang_Utils,
+    Helpers_Misc,
+    Lang_Constants,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { WecManualActionStatistics } from "../../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
-import {
-    checkIsValid as checkIsValidValueAndComparator,
-    checkIsMeet1,
-} from "../../../valueAndComparators/Utils.ts";
 
-export function getBriefDesc(data: Undefinable<WecManualActionStatistics>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecManualActionStatistics>): string | null {
     if (data == null) {
         return null;
     }
 
     const totalActions  = data.getTotalActions();
     const comparator    = totalActions == null ? null : (totalActions.getComparator());
-    return getFormattedText(
-        TextType.F0143,
-        comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        totalActions == null ? UndefinedError : (totalActions.getValue())
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0143,
+        comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
+        totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue())
     );
 }
-export function getDetailedDesc(data: Undefinable<WecManualActionStatistics>): string | null {
+export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecManualActionStatistics>): string | null {
     if (data == null) {
         return null;
     }
@@ -39,76 +31,76 @@ export function getDetailedDesc(data: Undefinable<WecManualActionStatistics>): s
     {
         const playerIndexArray = data.getPlayerIndexArray();
         if (playerIndexArray?.length) {
-            subTextArray.push(`- ${getFormattedText(
-                TextType.F0217,
-                playerIndexArray.map(v => `P${v}`).join(` ${getText(TextType.Or)} `)
+            subTextArray.push(`- ${Lang_Utils.getFormattedText(
+                Lang_Constants.TextType.F0217,
+                playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
             )}`);
         }
     }
     {
         const isPlayerInTurn = data.getIsPlayerInTurn();
         if (isPlayerInTurn != null) {
-            subTextArray.push(`- ${getText(isPlayerInTurn ? TextType.A0831 : TextType.A0832)}`);
+            subTextArray.push(`- ${Lang_Utils.getText(isPlayerInTurn ? Lang_Constants.TextType.A0831 : Lang_Constants.TextType.A0832)}`);
         }
     }
     {
         const recentTurnsCount = data.getRecentTurnsCount();
         if (recentTurnsCount != null) {
-            subTextArray.push(`- ${getFormattedText(
-                TextType.F0144,
+            subTextArray.push(`- ${Lang_Utils.getFormattedText(
+                Lang_Constants.TextType.F0144,
                 recentTurnsCount
             )}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(getText(TextType.A0944));
+        subTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0944));
     }
 
     const totalActions  = data.getTotalActions();
     const comparator    = totalActions == null ? null : totalActions.getComparator();
     return [
-        getFormattedText(
-            TextType.F0227,
-            comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-            totalActions == null ? UndefinedError : (totalActions.getValue())
+        Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0227,
+            comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
+            totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue())
         ),
         ...subTextArray
     ].join(`\n`);
 }
-export function getErrorTip(data: WecManualActionStatistics, war: IBwWar): string | null {
+export function getErrorTip(data: WecManualActionStatistics, war: BaseWar_Interface_IBwWar.IBwWar): string | null {
     {
         const playerIndexArray = data.getPlayerIndexArray();
-        if ((playerIndexArray) && (!checkIsValidPlayerIndexSubset(playerIndexArray, war.getPlayersCountUnneutral()))) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
+        if ((playerIndexArray) && (!Players_Utils_Common.checkIsValidPlayerIndexSubset(playerIndexArray, war.getPlayersCountUnneutral()))) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
         }
     }
 
     {
         const totalActions = data.getTotalActions();
-        if ((totalActions == null) || (!checkIsValidValueAndComparator(totalActions))) {
-            return getFormattedText(TextType.F0091, getText(TextType.B0902));
+        if ((totalActions == null) || (!ValueAndComparators_Utils.checkIsValid(totalActions))) {
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0902));
         }
     }
 
     return null;
 }
 
-export function checkIsValid(condition: Undefinable<WecManualActionStatistics>, playersCountUnneutral: number): boolean {
+export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecManualActionStatistics>, playersCountUnneutral: number): boolean {
     if (condition == null) {
         return false;
     }
 
     {
         const playerIndexArray = condition.getPlayerIndexArray();
-        if ((playerIndexArray) && (!checkIsValidPlayerIndexSubset(playerIndexArray, playersCountUnneutral))) {
+        if ((playerIndexArray) && (!Players_Utils_Common.checkIsValidPlayerIndexSubset(playerIndexArray, playersCountUnneutral))) {
             return false;
         }
     }
 
     {
         const totalActions = condition.getTotalActions();
-        if ((totalActions == null) || (!checkIsValidValueAndComparator(totalActions))) {
+        if ((totalActions == null) || (!ValueAndComparators_Utils.checkIsValid(totalActions))) {
             return false;
         }
     }
@@ -116,7 +108,7 @@ export function checkIsValid(condition: Undefinable<WecManualActionStatistics>, 
     return true;
 }
 
-export function checkIsMeet(condition: WecManualActionStatistics, war: IBwWar): boolean {
+export function checkIsMeet(condition: WecManualActionStatistics, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
     const conPlayerIndexArray       = condition.getPlayerIndexArray();
     const revisedConPlayerIndexSet  = conPlayerIndexArray?.length
         ? new Set(conPlayerIndexArray)
@@ -137,8 +129,8 @@ export function checkIsMeet(condition: WecManualActionStatistics, war: IBwWar): 
         }
     }
 
-    const totalActions = getExisted(condition.getTotalActions());
-    return checkIsMeet1({
+    const totalActions = Helpers_Misc.getExisted(condition.getTotalActions());
+    return ValueAndComparators_Utils.checkIsMeet1({
         comparator  : totalActions.getComparator(),
         targetValue : totalActions.getValue(),
         actualValue : war.getWarStatisticsManager().getManualActionsCountForPlayersInRecentTurns(revisedConPlayerIndexSet, condition.getRecentTurnsCount()),

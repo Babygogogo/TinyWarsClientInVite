@@ -1,67 +1,66 @@
 import {
-    ContextType,
-    ResultType,
-} from "../../../expressionParsers/Enums.ts";
-import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+    ExpressionParsers_Enums,
+    Lang_Utils,
+    Lang_Constants,
+    type ExpressionParsers_Types,
+} from "../../../internal.ts";
 
 export const ExpressionInfoDict: {
-    ConPlayerFilter                     : EpExpressionInfo;
-    ActBannedUnitTypeArray              : EpExpressionInfo;
-    ActUnbannedUnitTypeArray            : EpExpressionInfo;
-    ActCanActivateCoSkill               : EpExpressionInfo;
-    ActEnergyGrowthMultiplierModifier   : EpExpressionInfo;
-    ActCoZoneRadiusModifier             : EpExpressionInfo;
-    ActAiUnitProductionBonusScore       : EpExpressionInfo;
+    ConPlayerFilter                     : ExpressionParsers_Types.EpExpressionInfo;
+    ActBannedUnitTypeArray              : ExpressionParsers_Types.EpExpressionInfo;
+    ActUnbannedUnitTypeArray            : ExpressionParsers_Types.EpExpressionInfo;
+    ActCanActivateCoSkill               : ExpressionParsers_Types.EpExpressionInfo;
+    ActEnergyGrowthMultiplierModifier   : ExpressionParsers_Types.EpExpressionInfo;
+    ActCoZoneRadiusModifier             : ExpressionParsers_Types.EpExpressionInfo;
+    ActAiUnitProductionBonusScore       : ExpressionParsers_Types.EpExpressionInfo;
 } = {
     ConPlayerFilter: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => getText(TextType.PlayerFilter),
-        getHelpText     : () => getText(TextType.A0533),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0533),
     },
     ActBannedUnitTypeArray: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number, ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number, ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B0895),
-        getHelpText     : () => getText(TextType.A0534),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0895),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0534),
     },
     ActUnbannedUnitTypeArray: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number, ResultType.NumberArray],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number, ExpressionParsers_Enums.ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1081),
-        getHelpText     : () => getText(TextType.A0535),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1081),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0535),
     },
     ActCanActivateCoSkill: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B0897),
-        getHelpText     : () => getText(TextType.A0536),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0897),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0536),
     },
     ActEnergyGrowthMultiplierModifier: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1089),
-        getHelpText     : () => getText(TextType.A0537),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1089),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0537),
     },
     ActCoZoneRadiusModifier: {
-        contextType     : ContextType.Player,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.Player,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1231),
-        getHelpText     : () => getText(TextType.A0747),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1231),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0747),
     },
     ActAiUnitProductionBonusScore: {
-        contextType     : ContextType.NumberArray,
-        resultTypes     : [ResultType.Number],
+        contextType     : ExpressionParsers_Enums.ContextType.NumberArray,
+        resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => getText(TextType.B1449),
-        getHelpText     : () => getText(TextType.A0966),
+        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B1449),
+        getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0966),
     },
 };

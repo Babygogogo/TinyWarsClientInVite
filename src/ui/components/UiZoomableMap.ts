@@ -1,19 +1,21 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CommonMapView } from "../../common/view/CommonMapView.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import type { MouseStyleType } from "../../helpers/PointerInput.ts";
+import {
+    Common_View_CommonMapView,
+    Ui_Components_UiContainer,
+    Ui_Types_UiHorizontalAlign,
+    Ui_Types_UiVerticalAlign,
+    Ui_Components_UiZoomableComponent,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiZoomableMap,
+    type Helpers_PointerInput,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { UiContainer } from "./UiContainer.ts";
-import type { IUiZoomableMap } from "../interfaces/IUiZoomableMap.ts";
-import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
-import { getUiZoomableComponentClass } from "../utils/UiFactory.ts";
 
-export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
-    private readonly _mapView           = new CommonMapView();
-    private readonly _zoomableComponent = new (getUiZoomableComponentClass())();
+export class UiZoomableMap extends Ui_Components_UiContainer.UiContainer implements Ui_Interfaces_IUiZoomableMap.IUiZoomableMap {
+    private readonly _mapView           = new Common_View_CommonMapView.CommonMapView();
+    private readonly _zoomableComponent = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
 
     public constructor() {
         super();
@@ -22,8 +24,8 @@ export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
         zoom.checkAndInitSizerInfo().setSizerOptions({
             width           : { percentage: 100 },
             height          : { percentage: 100 },
-            horizontalAlign : { align: UiHorizontalAlign.Center },
-            verticalAlign   : { align: UiVerticalAlign.Middle },
+            horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
         });
         zoom.addContent(this._mapView);
         this.addUiChild(zoom);
@@ -31,8 +33,8 @@ export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
 
     public showMapByMapData({ mapRawData, gameConfig, overridingPlayers }: {
         mapRawData          : MapRawData;
-        gameConfig          : GameConfig;
-        overridingPlayers   : Undefinable<SerialPlayer[]>;
+        gameConfig          : GameConfigs_GameConfig.GameConfig;
+        overridingPlayers   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>;
     }): void {
         const mapView = this._mapView;
         mapView.showMapByMapData({ mapRawData, gameConfig, overridingPlayers });
@@ -43,7 +45,7 @@ export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
     }
     public async showMapByWarData({ warData, overridingPlayers, showInitialWarData }: {
         warData             : SerialWar;
-        overridingPlayers   : Undefinable<SerialPlayer[]>;
+        overridingPlayers   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialPlayer[]>;
         showInitialWarData  : boolean;
     }): Promise<void> {
         const mapView = this._mapView;
@@ -58,7 +60,7 @@ export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
         this._mapView.clear();
     }
 
-    public setContentCursor(style: MouseStyleType): void {
+    public setContentCursor(style: Helpers_PointerInput.MouseStyleType): void {
         this._zoomableComponent.setMouseStyle(style);
     }
     public setMouseWheelListenerEnabled(enabled: boolean): void {

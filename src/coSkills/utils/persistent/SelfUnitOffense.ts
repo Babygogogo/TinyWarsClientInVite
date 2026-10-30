@@ -1,17 +1,19 @@
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
+import {
+    Units_Utils_Common,
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
-import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
-function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
+function getTotalPctFromOwnTiles(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return getOwnTilesCount(cfg[0]) * cfg[1];
     }
 }
-function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
+function getTotalPctFromTileDefense(cfg: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
     if (!cfg?.length) {
         return 0;
     } else {
@@ -39,15 +41,15 @@ export function getTotalOffsetPct({
     getOwnTilesCount,
 }: {
     cfg                         : SelfUnitCommonAttributes | null | undefined;
-    gameConfig                  : GameConfig;
+    gameConfig                  : GameConfigs_GameConfig.GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
     isInCozByPreviewSettings    : boolean;
-    gridIndex                   : GridIndex;
+    gridIndex                   : AuxiliaryTypes_GridIndex.GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => GridIndex[];
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
     fund                        : number;
     promotion                   : number;
     hp                          : number;
@@ -98,7 +100,7 @@ export function getTotalOffsetPct({
         + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
         + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0);
 }
 
 export function getTotalOffsetPctForDamageCalculatorPanel({
@@ -117,7 +119,7 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     getOwnTilesCount,
 }: {
     cfg                 : SelfUnitCommonAttributes | null | undefined;
-    gameConfig          : GameConfig;
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     unitTypeId          : number;
     tileTypeId          : number;
     weatherTypeId       : number;
@@ -161,5 +163,5 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
         + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[Units_Utils_Common.getNormalizedHp(hp) - 1] ?? 0 : 0);
 }

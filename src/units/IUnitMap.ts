@@ -1,28 +1,30 @@
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwWar,
+    type Units_IUnit,
+    type Units_IUnitMapView,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
 import type { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
-import type { IUnit } from "./IUnit.ts";
-import type { IUnitMapView } from "./IUnitMapView.ts";
 
 export interface IUnitMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnitMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GameConfig;
-        mapSize                 : MapSize;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnitMap>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
+        mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
@@ -33,47 +35,47 @@ export interface IUnitMap {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): IUnitMapView;
+    getView(): Units_IUnitMapView.IUnitMapView;
 
-    getWar(): IBwWar;
+    getWar(): BaseWar_Interface_IBwWar.IBwWar;
 
-    getMapSize(): MapSize;
+    getMapSize(): AuxiliaryTypes_MapSize.MapSize;
 
-    getUnitCustomNameArray(): Undefinable<UnitCustomName[]>;
-    setUnitCustomNameArray(arr: Undefinable<UnitCustomName[]>): void;
+    getUnitCustomNameArray(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>;
+    setUnitCustomNameArray(arr: AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitCustomName[]>): void;
 
     getNextUnitId(): number;
     setNextUnitId(id: number): void;
 
-    getUnit(gridIndex: GridIndex, unitId: Undefinable<number>): IUnit | null;
-    getUnitById(unitId: number): IUnit | null;
+    getUnit(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Units_IUnit.IUnit | null;
+    getUnitById(unitId: number): Units_IUnit.IUnit | null;
 
-    getUnitOnMap(gridIndex: GridIndex): IUnit | null;
-    getVisibleUnitOnMap(gridIndex: GridIndex): IUnit | null;
+    getUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit | null;
+    getVisibleUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit | null;
 
-    getUnitLoadedById(unitId: number): IUnit | null;
-    getRawAllUnitsLoaded(): Map<number, IUnit>;
-    getUnitsLoadedByLoader(loader: IUnit, isRecursive: boolean): IUnit[];
+    getUnitLoadedById(unitId: number): Units_IUnit.IUnit | null;
+    getRawAllUnitsLoaded(): Map<number, Units_IUnit.IUnit>;
+    getUnitsLoadedByLoader(loader: Units_IUnit.IUnit, isRecursive: boolean): Units_IUnit.IUnit[];
 
-    getAllUnitsOnMap(predicate?: (unit: IUnit) => boolean): IUnit[];
-    getAllUnitsLoaded(): IUnit[];
-    getAllUnits(): IUnit[];
+    getAllUnitsOnMap(predicate?: (unit: Units_IUnit.IUnit) => boolean): Units_IUnit.IUnit[];
+    getAllUnitsLoaded(): Units_IUnit.IUnit[];
+    getAllUnits(): Units_IUnit.IUnit[];
 
-    getUnitsCountOnGrid(gridIndex: GridIndex): number;
-    getAllUnitsOnGrid(gridIndex: GridIndex): IUnit[];
+    getUnitsCountOnGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number;
+    getAllUnitsOnGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Units_IUnit.IUnit[];
 
-    setUnitLoaded(unit: IUnit): void;
-    setUnitUnloaded(unitId: number, gridIndex: GridIndex): void;
+    setUnitLoaded(unit: Units_IUnit.IUnit): void;
+    setUnitUnloaded(unitId: number, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void;
 
-    setUnitOnMap(unit: IUnit): void;
+    setUnitOnMap(unit: Units_IUnit.IUnit): void;
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    removeUnitOnMap(gridIndex: GridIndex, removeView: boolean): IUnit | null;
-
-    /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    removeUnitLoaded(unitId: number): IUnit;
+    removeUnitOnMap(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, removeView: boolean): Units_IUnit.IUnit | null;
 
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    removeUnitById(unitId: number, removeView: boolean): IUnit | null;
+    removeUnitLoaded(unitId: number): Units_IUnit.IUnit;
+
+    /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
+    removeUnitById(unitId: number, removeView: boolean): Units_IUnit.IUnit | null;
 
     countUnitsOnMapForPlayer(playerIndex: number): number;
     countUnitsLoadedForPlayer(playerIndex: number): number;
@@ -85,8 +87,8 @@ export interface IUnitMap {
     checkIsCoLoadedByAnyUnitLoaded(playerIndex: number): boolean;
     checkIsCoLoadedByAnyUnitOnMap(playerIndex: number): boolean;
 
-    getCoGridIndexListOnMap(playerIndex: number): GridIndex[];
-    getVisibleCoGridIndexArrayOnMap(coPlayerIndex: number, observerTeamIndexSet: Set<number>): GridIndex[];
+    getCoGridIndexListOnMap(playerIndex: number): AuxiliaryTypes_GridIndex.GridIndex[];
+    getVisibleCoGridIndexArrayOnMap(coPlayerIndex: number, observerTeamIndexSet: Set<number>): AuxiliaryTypes_GridIndex.GridIndex[];
 
-    getAllCoUnits(playerIndex: number): IUnit[];
+    getAllCoUnits(playerIndex: number): Units_IUnit.IUnit[];
 }

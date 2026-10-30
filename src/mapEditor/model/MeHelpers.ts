@@ -1,32 +1,38 @@
-import type {
-    CustomError,
-    Undefinable,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { CoId } from "../../cos/Constants.ts";
-import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getLatestConfigVersion,
-    getLatestGameConfig,
-} from "../../gameConfigs/Provider.ts";
-import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import {
-    DirectionId,
-    SymmetryTypeId,
-} from "../../geometries/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { Common as MapsCommon } from "../../maps/Constants.ts";
-import {
-    createDefaultPlayerRule,
-    createDefaultPlayerRuleList,
-} from "../../playerRules/Utils.ts";
-import {
-    AliveStateId,
-    PlayerIndex,
-} from "../../players/Constants.ts";
+    Cos_Constants,
+    FogMaps_Constants,
+    GameConfigs_GameConfig,
+    GameConfigs_Provider,
+    AuxiliaryTypes_GridIndex,
+    MapEditor_Model_MeWar,
+    CoSkills_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type AuxiliaryTypes_MapSize,
+    Players_Constants,
+    Tiles_Constants_Common,
+    TileBases_Utils,
+    TileDecorations_Utils,
+    TileObjects_Utils,
+    Utils_ClientErrorCode,
+    WarRules_Utils_Instance,
+    PlayerRules_Utils,
+    Tiles_Utils_Serialization,
+    WarRules_Utils_Template,
+    Geometries_Constants,
+    Helpers_Misc,
+    Users_Model,
+    Timer_TimerModel,
+    Maps_Constants,
+    Turns_Constants,
+    WarOperations_Constants,
+    type MapEditor_Model_MeTypes,
+    type MapEditor_Interface_IMeWar,
+    type Tiles_ITile,
+    type Tiles_ITileMap,
+    type Units_IUnit,
+    type Units_IUnitMap,
+} from "../../internal.ts";
+
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { GridIndex as ProtoGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
@@ -37,40 +43,6 @@ import { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerializa
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import {
-    checkIsTileBaseSymmetrical,
-    getDefaultTileBaseType,
-} from "../../tileBases/Utils.ts";
-import { checkIsTileDecorationSymmetrical } from "../../tileDecorations/Utils.ts";
-import {
-    checkIsTileObjectSymmetrical,
-    getSymmetricalTileObjectType,
-} from "../../tileObjects/Utils.ts";
-import {
-    BaseTypeId,
-    DecorationTypeId,
-    ObjectTypeId,
-} from "../../tiles/constants/Common.ts";
-import type { ITile } from "../../tiles/ITile.ts";
-import type { ITileMap } from "../../tiles/ITileMap.ts";
-import { createDefault as createSerializationDefault } from "../../tiles/utils/Serialization.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import {
-    PhaseCode,
-    TurnIndex,
-} from "../../turns/Constants.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import type { IUnitMap } from "../../units/IUnitMap.ts";
-import {
-    getSelfNickname,
-    getSelfUserId,
-} from "../../users/Model.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Common as WarOperationsCommon } from "../../warOperations/Constants.ts";
-import { create } from "../../warRules/utils/Instance.ts";
-import { createDefault as createTemplateDefault } from "../../warRules/utils/Template.ts";
-import type { IMeWar } from "../interface/IMeWar.ts";
-import type { AsymmetricalCounters } from "./MeTypes.ts";
 
 const TileDecorationAutoShapeIdArray = [
 //  000     001     010     011     100     101     110     111
@@ -200,17 +172,17 @@ const TilePipeAutoShapeIdArray = [
 ];
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDefaultMapRawData(slotIndex: number, gameConfig: GameConfig): Promise<MapRawData> {
+export async function createDefaultMapRawData(slotIndex: number, gameConfig: GameConfigs_GameConfig.GameConfig): Promise<MapRawData> {
     const mapWidth  = 20;
     const mapHeight = 15;
     return MapRawData.fromJson({
-        designerName           : getSelfNickname(),
-        designerUserId         : getSelfUserId(),
+        designerName           : Users_Model.getSelfNickname(),
+        designerUserId         : Users_Model.getSelfUserId(),
         mapWidth               : mapWidth,
         mapHeight              : mapHeight,
         playersCountUnneutral  : 2,
-        modifiedTime           : getServerTimestamp(),
-        tileDataArray          : createDefaultTileDataArray(mapWidth, mapHeight, getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
+        modifiedTime           : Timer_TimerModel.getServerTimestamp(),
+        tileDataArray          : createDefaultTileDataArray(mapWidth, mapHeight, TileBases_Utils.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
         unitDataArray          : [],
         warEventFullData       : new WarEventFullData().toJson(),
         tileCustomNameArray    : [],
@@ -220,13 +192,13 @@ export async function createDefaultMapRawData(slotIndex: number, gameConfig: Gam
         mapSimpleDialogueArray : [],
     });
 }
-export function createDefaultTileDataArray(mapWidth: number, mapHeight: number, tileBaseType: number, gcData: GameConfig): SerialTile[] {
+export function createDefaultTileDataArray(mapWidth: number, mapHeight: number, tileBaseType: number, gcData: GameConfigs_GameConfig.GameConfig): SerialTile[] {
     const dataList: SerialTile[] = [];
     for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
-            dataList.push(createSerializationDefault({
+            dataList.push(Tiles_Utils_Serialization.createDefault({
                 tileBaseTypeId   : tileBaseType,
-                tileObjectTypeId : ObjectTypeId.Empty,
+                tileObjectTypeId : Tiles_Constants_Common.ObjectTypeId.Empty,
                 gridIndex        : { x, y },
                 gcData           : gcData,
             }));
@@ -240,8 +212,8 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
     const mapRawData            = rawMapRawData.clone();
     const templateWarRuleArray  = mapRawData.getTemplateWarRuleArray();
     const unitDataArray         = mapRawData.getUnitDataArray();
-    const instanceWarRule       = create({
-        templateWarRule           : createRevisedTemplateWarRuleForMeWar(templateWarRuleArray ? templateWarRuleArray[0] : null, await getLatestGameConfig()),
+    const instanceWarRule       = WarRules_Utils_Instance.create({
+        templateWarRule           : createRevisedTemplateWarRuleForMeWar(templateWarRuleArray ? templateWarRuleArray[0] : null, await GameConfigs_Provider.getLatestGameConfig()),
         warEventFullData          : mapRawData.getWarEventFullData(),
         allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
         taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
@@ -250,10 +222,10 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
 
     return SerialWar.fromJson({
         settingsForCommon : {
-            configVersion      : await getLatestConfigVersion(),
+            configVersion      : await GameConfigs_Provider.getLatestConfigVersion(),
             instanceWarRule    : instanceWarRule.toJson(),
-            turnsLimit         : TurnIndex.DefaultLimit,
-            warOperationsLimit : WarOperationsCommon.DefaultLimit,
+            turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+            warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
         },
         isEnded         : false,
         drawVoteManager : {
@@ -266,14 +238,14 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
         },
         playerManager : createSerialPlayerManager().toJson(),
         turnManager   : {
-            turnIndex     : TurnIndex.FirstIndex,
-            turnPhaseCode : PhaseCode.WaitBeginTurn,
-            playerIndex   : PlayerIndex.Neutral,
+            turnIndex     : Turns_Constants.TurnIndex.FirstIndex,
+            turnPhaseCode : Turns_Constants.PhaseCode.WaitBeginTurn,
+            playerIndex   : Players_Constants.PlayerIndex.Neutral,
             enterTurnTime : 0,
         },
         field : {
             fogMap : {
-                forceFogCode           : ForcedFogCode.None,
+                forceFogCode           : FogMaps_Constants.ForcedFogCode.None,
                 forceExpirePlayerIndex : null,
                 forceExpireTurnIndex   : null,
                 mapsFromPath           : [],
@@ -292,7 +264,7 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
 }
 function createSerialPlayerManager(): SerialPlayerManager {
     const players: SerialPlayer[] = [];
-    for (let playerIndex = PlayerIndex.Neutral; playerIndex <= PlayerIndex.Max; ++playerIndex) {
+    for (let playerIndex = Players_Constants.PlayerIndex.Neutral; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
         players.push(createDefaultISerialPlayer(playerIndex));
     }
 
@@ -304,11 +276,11 @@ export function createDefaultISerialPlayer(playerIndex: number): SerialPlayer {
     return SerialPlayer.fromJson({
         fund                        : 0,
         hasVotedForDraw             : false,
-        aliveState                  : AliveStateId.Alive,
+        aliveState                  : Players_Constants.AliveStateId.Alive,
         playerIndex                 : playerIndex,
-        userId                      : playerIndex > 0 ? getSelfUserId() : null,
-        coId                        : CoId.Empty,
-        coUsingSkillType            : SkillTypeId.Passive,
+        userId                      : playerIndex > 0 ? Users_Model.getSelfUserId() : null,
+        coId                        : Cos_Constants.CoId.Empty,
+        coUsingSkillType            : CoSkills_Constants.SkillTypeId.Passive,
         coIsDestroyedInTurn         : false,
         watchRequestSrcUserIdArray  : [],
         watchOngoingSrcUserIdArray  : [],
@@ -320,7 +292,7 @@ export function createDefaultISerialPlayer(playerIndex: number): SerialPlayer {
     });
 }
 
-export function createRevisedTemplateWarRuleArrayForMeWar(srcTemplateWarRuleArray: Undefinable<TemplateWarRule[]>, gameConfig: GameConfig): TemplateWarRule[] {
+export function createRevisedTemplateWarRuleArrayForMeWar(srcTemplateWarRuleArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TemplateWarRule[]>, gameConfig: GameConfigs_GameConfig.GameConfig): TemplateWarRule[] {
     if (!srcTemplateWarRuleArray?.length) {
         return [createRevisedTemplateWarRuleForMeWar(null, gameConfig)];
     } else {
@@ -331,23 +303,23 @@ export function createRevisedTemplateWarRuleArrayForMeWar(srcTemplateWarRuleArra
         return revisedTemplateWarRuleArray;
     }
 }
-function createRevisedTemplateWarRuleForMeWar(templateWarRule: Undefinable<TemplateWarRule>, gcData: GameConfig): TemplateWarRule {
+function createRevisedTemplateWarRuleForMeWar(templateWarRule: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TemplateWarRule>, gcData: GameConfigs_GameConfig.GameConfig): TemplateWarRule {
     if (templateWarRule == null) {
-        return createTemplateDefault(0, PlayerIndex.Max, gcData);
+        return WarRules_Utils_Template.createDefault(0, Players_Constants.PlayerIndex.Max, gcData);
     } else {
         const revisedTemplateWarRule = templateWarRule.clone();
         revisedTemplateWarRule.getWarRuleCommonData()?.setPlayerRuleList(createRevisedRuleForPlayersForMeWar(revisedTemplateWarRule, gcData));
         return revisedTemplateWarRule;
     }
 }
-function createRevisedRuleForPlayersForMeWar(templateWarRule: Undefinable<TemplateWarRule>, gcData: GameConfig): PlayerRule[] {
+function createRevisedRuleForPlayersForMeWar(templateWarRule: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TemplateWarRule>, gcData: GameConfigs_GameConfig.GameConfig): PlayerRule[] {
     const playerRuleArray = templateWarRule?.getWarRuleCommonData()?.getPlayerRuleList();
     if (playerRuleArray == null) {
-        return createDefaultPlayerRuleList(PlayerIndex.Max, gcData);
+        return PlayerRules_Utils.createDefaultPlayerRuleList(Players_Constants.PlayerIndex.Max, gcData);
     } else {
         const revisedPlayerRuleArray: PlayerRule[] = [];
-        for (let playerIndex = PlayerIndex.First; playerIndex <= PlayerIndex.Max; ++playerIndex) {
-            revisedPlayerRuleArray.push(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)?.clone() ?? createDefaultPlayerRule(playerIndex, gcData));
+        for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
+            revisedPlayerRuleArray.push(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)?.clone() ?? PlayerRules_Utils.createDefaultPlayerRule(playerIndex, gcData));
         }
         return revisedPlayerRuleArray;
     }
@@ -358,7 +330,7 @@ export function clearMap({ mapRawData, newWidth, newHeight, gameConfig }: {
     mapRawData  : MapRawData;
     newWidth    : number;
     newHeight   : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }): MapRawData {
     return MapRawData.fromJson({
         normalMapId            : mapRawData.getNormalMapId(),
@@ -370,8 +342,8 @@ export function clearMap({ mapRawData, newWidth, newHeight, gameConfig }: {
         playersCountUnneutral  : mapRawData.getPlayersCountUnneutral(),
         warEventFullData       : mapRawData.getWarEventFullData()?.toJson(),
         campaignMapData        : mapRawData.getCampaignMapData()?.toJson(),
-        modifiedTime           : getServerTimestamp(),
-        tileDataArray          : createDefaultTileDataArray(newWidth, newHeight, getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
+        modifiedTime           : Timer_TimerModel.getServerTimestamp(),
+        tileDataArray          : createDefaultTileDataArray(newWidth, newHeight, TileBases_Utils.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
         unitDataArray          : [],
         templateWarRuleArray   : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
         tileCustomNameArray    : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
@@ -383,7 +355,7 @@ export function resizeMap({ mapRawData, newWidth, newHeight, gameConfig }: {
     mapRawData  : MapRawData;
     newWidth    : number;
     newHeight   : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }): MapRawData {
     return MapRawData.fromJson({
         normalMapId            : mapRawData.getNormalMapId(),
@@ -400,7 +372,7 @@ export function resizeMap({ mapRawData, newWidth, newHeight, gameConfig }: {
         taskObjectiveFullData  : mapRawData.getTaskObjectiveFullData()?.toJson(),
         mapExtraText           : mapRawData.getMapExtraText()?.toJson(),
         mapTagIdFlags          : mapRawData.getMapTagIdFlags(),
-        modifiedTime           : getServerTimestamp(),
+        modifiedTime           : Timer_TimerModel.getServerTimestamp(),
         tileDataArray          : getNewTileDataListForResize({
             mapRawData, newWidth, newHeight, gameConfig
         }).map(v => v.toJson()),
@@ -413,11 +385,11 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
     mapRawData  : MapRawData;
     newWidth    : number;
     newHeight   : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }): SerialTile[] {
     const tileList: SerialTile[] = [];
     for (const tileData of mapRawData.getTileDataArray()) {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()));
         if ((gridIndex.getX() < newWidth) && (gridIndex.getY() < newHeight)) {
             tileList.push(tileData);
         }
@@ -425,13 +397,13 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
 
     const oldWidth      = mapRawData.getMapWidth();
     const oldHeight     = mapRawData.getMapHeight();
-    const tileBaseType  = getDefaultTileBaseType();
+    const tileBaseType  = TileBases_Utils.getDefaultTileBaseType();
     for (let x = 0; x < newWidth; ++x) {
         for (let y = 0; y < newHeight; ++y) {
             if ((x >= oldWidth) || (y >= oldHeight)) {
-                tileList.push(createSerializationDefault({
+                tileList.push(Tiles_Utils_Serialization.createDefault({
                     tileBaseTypeId   : tileBaseType,
-                    tileObjectTypeId : ObjectTypeId.Empty,
+                    tileObjectTypeId : Tiles_Constants_Common.ObjectTypeId.Empty,
                     gridIndex        : { x, y },
                     gcData           : gameConfig,
                 }));
@@ -444,7 +416,7 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
 function getNewUnitDataListForResize(mapRawData: MapRawData, newWidth: number, newHeight: number): SerialUnit[] {
     const unitDataArray: SerialUnit[] = [];
     for (const unitData of mapRawData.getUnitDataArray()) {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(unitData.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex()));
         if ((gridIndex.getX() < newWidth) && (gridIndex.getY() < newHeight)) {
             unitDataArray.push(unitData);
         }
@@ -462,7 +434,7 @@ function getNewUnitDataListForResize(mapRawData: MapRawData, newWidth: number, n
 
         const loaderUnitId = unit.getLoaderUnitId();
         if (loaderUnitId != null) {
-            unit.setLoaderUnitId(getExisted(allUnitsDict.get(loaderUnitId)).newUnitId);
+            unit.setLoaderUnitId(Helpers_Misc.getExisted(allUnitsDict.get(loaderUnitId)).newUnitId);
         }
     }
 
@@ -474,7 +446,7 @@ export function addOffset({ mapRawData, offsetX, offsetY, gameConfig }: {
     mapRawData  : MapRawData;
     offsetX     : number;
     offsetY     : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }): MapRawData {
     return MapRawData.fromJson({
         normalMapId           : mapRawData.getNormalMapId(),
@@ -485,7 +457,7 @@ export function addOffset({ mapRawData, offsetX, offsetY, gameConfig }: {
         mapHeight             : mapRawData.getMapHeight(),
         playersCountUnneutral : mapRawData.getPlayersCountUnneutral(),
         campaignMapData       : mapRawData.getCampaignMapData()?.toJson(),
-        modifiedTime          : getServerTimestamp(),
+        modifiedTime          : Timer_TimerModel.getServerTimestamp(),
         tileDataArray         : getNewTileDataListForOffset({
             mapRawData, offsetX, offsetY, gameConfig
         }).map(v => v.toJson()),
@@ -504,13 +476,13 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
     mapRawData  : MapRawData;
     offsetX     : number;
     offsetY     : number;
-    gameConfig  : GameConfig;
+    gameConfig  : GameConfigs_GameConfig.GameConfig;
 }): SerialTile[] {
     const width         = mapRawData.getMapWidth();
     const height        = mapRawData.getMapHeight();
     const tileDataList  : SerialTile[] = [];
     for (const tileData of mapRawData.getTileDataArray()) {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()));
         const newX      = gridIndex.getX() + offsetX;
         const newY      = gridIndex.getY() + offsetY;
         if ((newX >= 0) && (newX < width) && (newY >= 0) && (newY < height)) {
@@ -520,7 +492,7 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
         }
     }
 
-    const tileBaseType = getDefaultTileBaseType();
+    const tileBaseType = TileBases_Utils.getDefaultTileBaseType();
     for (let x = 0; x < width; ++x) {
         for (let y = 0; y < height; ++y) {
             if (((offsetX > 0) && (x < offsetX))            ||
@@ -528,9 +500,9 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
                 ((offsetY > 0) && (y < offsetY))            ||
                 ((offsetY < 0) && (y >= height + offsetY))
             ) {
-                tileDataList.push(createSerializationDefault({
+                tileDataList.push(Tiles_Utils_Serialization.createDefault({
                     tileBaseTypeId   : tileBaseType,
-                    tileObjectTypeId : ObjectTypeId.Empty,
+                    tileObjectTypeId : Tiles_Constants_Common.ObjectTypeId.Empty,
                     gridIndex        : { x, y },
                     gcData           : gameConfig,
                 }));
@@ -545,7 +517,7 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
     const height        = mapRawData.getMapHeight();
     const unitDataArray : SerialUnit[] = [];
     for (const unitData of mapRawData.getUnitDataArray()) {
-        const gridIndex = getExisted(GridIndex.convertGridIndex(unitData.getGridIndex()));
+        const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(unitData.getGridIndex()));
         const newX      = gridIndex.getX() + offsetX;
         const newY      = gridIndex.getY() + offsetY;
         if ((newX >= 0) && (newX < width) && (newY >= 0) && (newY < height)) {
@@ -567,7 +539,7 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
 
         const loaderUnitId = unit.getLoaderUnitId();
         if (loaderUnitId != null) {
-            unit.setLoaderUnitId(getExisted(allUnitsDict.get(loaderUnitId)).newUnitId);
+            unit.setLoaderUnitId(Helpers_Misc.getExisted(allUnitsDict.get(loaderUnitId)).newUnitId);
         }
     }
 
@@ -575,8 +547,8 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function reviseAllUnitIds(unitMap: IUnitMap): void {
-    const allUnits  = new Map<number, { unit: IUnit, newUnitId: number }>();
+export function reviseAllUnitIds(unitMap: Units_IUnitMap.IUnitMap): void {
+    const allUnits  = new Map<number, { unit: Units_IUnit.IUnit, newUnitId: number }>();
     let nextUnitId  = 0;
     for (const unit of unitMap.getAllUnits()) {
         allUnits.set(unit.getUnitId(), { unit, newUnitId : nextUnitId } );
@@ -588,14 +560,14 @@ export function reviseAllUnitIds(unitMap: IUnitMap): void {
 
         const loaderUnitId = unit.getLoaderUnitId();
         if (loaderUnitId != null) {
-            unit.setLoaderUnitId(getExisted(allUnits.get(loaderUnitId), ClientErrorCode.MeUtility_ReviseAllUnitIds_00).newUnitId);
+            unit.setLoaderUnitId(Helpers_Misc.getExisted(allUnits.get(loaderUnitId), Utils_ClientErrorCode.ClientErrorCode.MeUtility_ReviseAllUnitIds_00).newUnitId);
         }
     }
     unitMap.setNextUnitId(nextUnitId);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getAsymmetricalCounters(war: IMeWar): AsymmetricalCounters {
+export function getAsymmetricalCounters(war: MapEditor_Interface_IMeWar.IMeWar): MapEditor_Model_MeTypes.AsymmetricalCounters {
     const tileMap               = war.getTileMap();
     const mapSize               = tileMap.getMapSize();
     const { width, height }     = mapSize.getWH();
@@ -608,22 +580,22 @@ export function getAsymmetricalCounters(war: IMeWar): AsymmetricalCounters {
 
     for (let x = 0; x < width; ++x) {
         for (let y = 0; y < height; ++y) {
-            const gridIndex = new GridIndex(x, y);
+            const gridIndex = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
             const tile      = tileMap.getTile(gridIndex);
-            if (checkIsSymmetrical(tile, tileMap.getTile(getExisted(getSymmetricalGridIndex(gridIndex, SymmetryTypeId.LeftToRight, mapSize))), SymmetryTypeId.LeftToRight)) {
+            if (checkIsSymmetrical(tile, tileMap.getTile(Helpers_Misc.getExisted(getSymmetricalGridIndex(gridIndex, Geometries_Constants.SymmetryTypeId.LeftToRight, mapSize))), Geometries_Constants.SymmetryTypeId.LeftToRight)) {
                 ++countLeftRight;
             }
-            if (checkIsSymmetrical(tile, tileMap.getTile(getExisted(getSymmetricalGridIndex(gridIndex, SymmetryTypeId.UpToDown, mapSize))), SymmetryTypeId.UpToDown)) {
+            if (checkIsSymmetrical(tile, tileMap.getTile(Helpers_Misc.getExisted(getSymmetricalGridIndex(gridIndex, Geometries_Constants.SymmetryTypeId.UpToDown, mapSize))), Geometries_Constants.SymmetryTypeId.UpToDown)) {
                 ++countUpDown;
             }
-            if (checkIsSymmetrical(tile, tileMap.getTile(getExisted(getSymmetricalGridIndex(gridIndex, SymmetryTypeId.Rotation, mapSize))), SymmetryTypeId.Rotation)) {
+            if (checkIsSymmetrical(tile, tileMap.getTile(Helpers_Misc.getExisted(getSymmetricalGridIndex(gridIndex, Geometries_Constants.SymmetryTypeId.Rotation, mapSize))), Geometries_Constants.SymmetryTypeId.Rotation)) {
                 ++countRotational;
             }
             if (isSquare) {
-                if (checkIsSymmetrical(tile, tileMap.getTile(getExisted(getSymmetricalGridIndex(gridIndex, SymmetryTypeId.UpLeftToDownRight, mapSize))), SymmetryTypeId.UpLeftToDownRight)) {
+                if (checkIsSymmetrical(tile, tileMap.getTile(Helpers_Misc.getExisted(getSymmetricalGridIndex(gridIndex, Geometries_Constants.SymmetryTypeId.UpLeftToDownRight, mapSize))), Geometries_Constants.SymmetryTypeId.UpLeftToDownRight)) {
                     ++countUpLeftDownRight;
                 }
-                if (checkIsSymmetrical(tile, tileMap.getTile(getExisted(getSymmetricalGridIndex(gridIndex, SymmetryTypeId.UpRightToDownLeft, mapSize))), SymmetryTypeId.UpRightToDownLeft)) {
+                if (checkIsSymmetrical(tile, tileMap.getTile(Helpers_Misc.getExisted(getSymmetricalGridIndex(gridIndex, Geometries_Constants.SymmetryTypeId.UpRightToDownLeft, mapSize))), Geometries_Constants.SymmetryTypeId.UpRightToDownLeft)) {
                     ++countUpRightDownLeft;
                 }
             }
@@ -639,37 +611,37 @@ export function getAsymmetricalCounters(war: IMeWar): AsymmetricalCounters {
         UpRightToDownLeft : isSquare ? totalGrids - countUpRightDownLeft : null,
     };
 }
-export function getSymmetricalGridIndex(gridIndex: GridIndex, symmetryType: SymmetryTypeId, mapSize: MapSize): GridIndex | null {
+export function getSymmetricalGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, symmetryType: Geometries_Constants.SymmetryTypeId, mapSize: AuxiliaryTypes_MapSize.MapSize): AuxiliaryTypes_GridIndex.GridIndex | null {
     const { width, height } = mapSize.getWH();
-    if (symmetryType === SymmetryTypeId.LeftToRight) {
-        return new GridIndex(
+    if (symmetryType === Geometries_Constants.SymmetryTypeId.LeftToRight) {
+        return new AuxiliaryTypes_GridIndex.GridIndex(
             width - gridIndex.getX() - 1,
             gridIndex.getY(),
         );
-    } else if (symmetryType === SymmetryTypeId.UpToDown) {
-        return new GridIndex(
+    } else if (symmetryType === Geometries_Constants.SymmetryTypeId.UpToDown) {
+        return new AuxiliaryTypes_GridIndex.GridIndex(
             gridIndex.getX(),
             height - gridIndex.getY() - 1,
         );
-    } else if (symmetryType === SymmetryTypeId.Rotation) {
-        return new GridIndex(
+    } else if (symmetryType === Geometries_Constants.SymmetryTypeId.Rotation) {
+        return new AuxiliaryTypes_GridIndex.GridIndex(
             width - gridIndex.getX() - 1,
             height - gridIndex.getY() - 1,
         );
-    } else if (symmetryType === SymmetryTypeId.UpLeftToDownRight) {
+    } else if (symmetryType === Geometries_Constants.SymmetryTypeId.UpLeftToDownRight) {
         if (width !== height) {
             return null;
         } else {
-            return new GridIndex(
+            return new AuxiliaryTypes_GridIndex.GridIndex(
                 width - 1 - gridIndex.getY(),
                 width - 1 - gridIndex.getX(),
             );
         }
-    } else if (symmetryType === SymmetryTypeId.UpRightToDownLeft) {
+    } else if (symmetryType === Geometries_Constants.SymmetryTypeId.UpRightToDownLeft) {
         if (width !== height) {
             return null;
         } else {
-            return new GridIndex(
+            return new AuxiliaryTypes_GridIndex.GridIndex(
                 gridIndex.getY(),
                 gridIndex.getX(),
             );
@@ -678,26 +650,26 @@ export function getSymmetricalGridIndex(gridIndex: GridIndex, symmetryType: Symm
         return null;
     }
 }
-function checkIsSymmetrical(tile1: ITile, tile2: ITile, symmetryType: SymmetryTypeId): boolean {
+function checkIsSymmetrical(tile1: Tiles_ITile.ITile, tile2: Tiles_ITile.ITile, symmetryType: Geometries_Constants.SymmetryTypeId): boolean {
     const baseType          = tile1.getBaseType();
     const objectType        = tile1.getObjectType();
     const decorationType    = tile1.getDecorationType();
     return (baseType === tile2.getBaseType())
-        && (getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectType())
+        && (TileObjects_Utils.getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectType())
         && (decorationType == tile2.getDecorationType())
-        && (checkIsTileBaseSymmetrical({
+        && (TileBases_Utils.checkIsTileBaseSymmetrical({
             baseType,
             shapeId1 : tile1.getBaseShapeId(),
             shapeId2 : tile2.getBaseShapeId(),
             symmetryType,
         }))
-        && (checkIsTileObjectSymmetrical({
+        && (TileObjects_Utils.checkIsTileObjectSymmetrical({
             objectType,
             shapeId1 : tile1.getObjectShapeId(),
             shapeId2 : tile2.getObjectShapeId(),
             symmetryType,
         }))
-        && (checkIsTileDecorationSymmetrical({
+        && (TileDecorations_Utils.checkIsTileDecorationSymmetrical({
             tileDecorationType : decorationType,
             shapeId1           : tile1.getDecorationShapeId(),
             shapeId2           : tile2.getDecorationShapeId(),
@@ -706,73 +678,73 @@ function checkIsSymmetrical(tile1: ITile, tile2: ITile, symmetryType: SymmetryTy
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getAutoRiverShapeId(tileMap: ITileMap, gridIndex: GridIndex): number {
+export function getAutoRiverShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
     const { x, y }      = gridIndex.getXY();
-    const isAdjacent4   = checkCanRiverLinkToTile(tileMap, gridIndex, new GridIndex(x - 1, y    )) ? 1 : 0;
-    const isAdjacent3   = checkCanRiverLinkToTile(tileMap, gridIndex, new GridIndex(x + 1, y    )) ? 1 : 0;
-    const isAdjacent2   = checkCanRiverLinkToTile(tileMap, gridIndex, new GridIndex(x,     y + 1)) ? 1 : 0;
-    const isAdjacent1   = checkCanRiverLinkToTile(tileMap, gridIndex, new GridIndex(x,     y - 1)) ? 1 : 0;
+    const isAdjacent4   = checkCanRiverLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y    )) ? 1 : 0;
+    const isAdjacent3   = checkCanRiverLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y    )) ? 1 : 0;
+    const isAdjacent2   = checkCanRiverLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1)) ? 1 : 0;
+    const isAdjacent1   = checkCanRiverLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1)) ? 1 : 0;
     return TileRiverAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkCanRiverLinkToTile(tileMap: ITileMap, gridIndex1: GridIndex, gridIndex2: GridIndex): boolean {
+function checkCanRiverLinkToTile(tileMap: Tiles_ITileMap.ITileMap, gridIndex1: AuxiliaryTypes_GridIndex.GridIndex, gridIndex2: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (!gridIndex2.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     }
 
     const baseType = tileMap.getTile(gridIndex2).getBaseType();
     // return (baseType === GameConfig.Tile.TileBaseType.River);
-    return (baseType === BaseTypeId.River) || (baseType === BaseTypeId.Sea);
+    return (baseType === Tiles_Constants_Common.BaseTypeId.River) || (baseType === Tiles_Constants_Common.BaseTypeId.Sea);
 }
 
-export function getAutoBeachShapeId(tileMap: ITileMap, gridIndex: GridIndex): number {
+export function getAutoBeachShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
     const { x, y }      = gridIndex.getXY();
-    const isAdjacent4   = checkCanBeachLinkToTile(tileMap, gridIndex, new GridIndex(x - 1, y    )) ? 1 : 0;
-    const isAdjacent3   = checkCanBeachLinkToTile(tileMap, gridIndex, new GridIndex(x + 1, y    )) ? 1 : 0;
-    const isAdjacent2   = checkCanBeachLinkToTile(tileMap, gridIndex, new GridIndex(x,     y + 1)) ? 1 : 0;
-    const isAdjacent1   = checkCanBeachLinkToTile(tileMap, gridIndex, new GridIndex(x,     y - 1)) ? 1 : 0;
+    const isAdjacent4   = checkCanBeachLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y    )) ? 1 : 0;
+    const isAdjacent3   = checkCanBeachLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y    )) ? 1 : 0;
+    const isAdjacent2   = checkCanBeachLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1)) ? 1 : 0;
+    const isAdjacent1   = checkCanBeachLinkToTile(tileMap, gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1)) ? 1 : 0;
     return TileBeachAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkCanBeachLinkToTile(tileMap: ITileMap, gridIndex1: GridIndex, gridIndex2: GridIndex): boolean {
+function checkCanBeachLinkToTile(tileMap: Tiles_ITileMap.ITileMap, gridIndex1: AuxiliaryTypes_GridIndex.GridIndex, gridIndex2: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (!gridIndex2.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     }
 
     const tileBaseType = tileMap.getTile(gridIndex2).getBaseType();
-    return (tileBaseType === BaseTypeId.Beach) || (tileBaseType === BaseTypeId.Sea);
+    return (tileBaseType === Tiles_Constants_Common.BaseTypeId.Beach) || (tileBaseType === Tiles_Constants_Common.BaseTypeId.Sea);
 }
 
-export function getAutoSeaShapeId(tileMap: ITileMap, gridIndex: GridIndex): number {
+export function getAutoSeaShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
     const { x, y }      = gridIndex.getXY();
-    const isAdjacent4   = checkIsRiver(tileMap, new GridIndex(x - 1, y    )) ? 1 : 0;
-    const isAdjacent3   = checkIsRiver(tileMap, new GridIndex(x + 1, y    )) ? 1 : 0;
-    const isAdjacent2   = checkIsRiver(tileMap, new GridIndex(x,     y + 1)) ? 1 : 0;
-    const isAdjacent1   = checkIsRiver(tileMap, new GridIndex(x,     y - 1)) ? 1 : 0;
+    const isAdjacent4   = checkIsRiver(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y    )) ? 1 : 0;
+    const isAdjacent3   = checkIsRiver(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y    )) ? 1 : 0;
+    const isAdjacent2   = checkIsRiver(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1)) ? 1 : 0;
+    const isAdjacent1   = checkIsRiver(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1)) ? 1 : 0;
     return TileSeaAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkIsRiver(tileMap: ITileMap, gridIndex: GridIndex): boolean {
+function checkIsRiver(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return false;
     }
-    return tileMap.getTile(gridIndex).getBaseType() === BaseTypeId.River;
+    return tileMap.getTile(gridIndex).getBaseType() === Tiles_Constants_Common.BaseTypeId.River;
 }
 
-export function getAutoRoadShapeId(tileMap: ITileMap, gridIndex: GridIndex, connectTileTypeArray: number[]): number {
+export function getAutoRoadShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, connectTileTypeArray: number[]): number {
     const { x, y }      = gridIndex.getXY();
-    const isAdjacent4   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x - 1, y     ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent3   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x + 1, y     ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent2   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x,     y + 1 ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent1   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x,     y - 1 ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent4   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y     ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent3   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y     ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent2   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1 ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent1   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1 ), connectTileTypeArray) ? 1 : 0;
     return TileRoadAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-export function getAutoBridgeShapeId(tileMap: ITileMap, gridIndex: GridIndex, connectTileTypeArray: number[]): number {
+export function getAutoBridgeShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, connectTileTypeArray: number[]): number {
     const { x, y }      = gridIndex.getXY();
-    const isAdjacent4   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x - 1, y     ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent3   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x + 1, y     ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent2   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x,     y + 1 ), connectTileTypeArray) ? 1 : 0;
-    const isAdjacent1   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new GridIndex(x,     y - 1 ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent4   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y     ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent3   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y     ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent2   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1 ), connectTileTypeArray) ? 1 : 0;
+    const isAdjacent1   = checkIsTileEmptyOrIncludedInTypeArray(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1 ), connectTileTypeArray) ? 1 : 0;
     return TileBridgeAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkIsTileEmptyOrIncludedInTypeArray(tileMap: ITileMap, gridIndex: GridIndex, tileTypeArray: number[]): boolean {
+function checkIsTileEmptyOrIncludedInTypeArray(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, tileTypeArray: number[]): boolean {
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     }
@@ -780,31 +752,31 @@ function checkIsTileEmptyOrIncludedInTypeArray(tileMap: ITileMap, gridIndex: Gri
     return tileTypeArray.indexOf(tileMap.getTile(gridIndex).getTileTypeId()) >= 0;
 }
 
-export function getAutoPlasmaShapeId(tileMap: ITileMap, gridIndex: GridIndex): number {
+export function getAutoPlasmaShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
     const { x, y }              = gridIndex.getXY();
-    const isAdjacent4           = checkIsPlasma(tileMap, new GridIndex(x - 1, y     )) ? 1 : 0;
-    const isAdjacent3           = checkIsPlasma(tileMap, new GridIndex(x + 1, y     )) ? 1 : 0;
-    const isAdjacent2           = checkIsPlasma(tileMap, new GridIndex(x,     y + 1 )) ? 1 : 0;
-    const isAdjacent1           = checkIsPlasma(tileMap, new GridIndex(x,     y - 1 )) ? 1 : 0;
-    const isAdjacentToMeteor    = gridIndex.getAdjacentGrids(tileMap.getMapSize()).some(v => tileMap.getTile(v).getObjectType() === ObjectTypeId.Meteor);
-    return getExisted(TilePlasmaAutoShapeIdMap.get(isAdjacentToMeteor))[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
+    const isAdjacent4           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x - 1, y     )) ? 1 : 0;
+    const isAdjacent3           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x + 1, y     )) ? 1 : 0;
+    const isAdjacent2           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y + 1 )) ? 1 : 0;
+    const isAdjacent1           = checkIsPlasma(tileMap, new AuxiliaryTypes_GridIndex.GridIndex(x,     y - 1 )) ? 1 : 0;
+    const isAdjacentToMeteor    = gridIndex.getAdjacentGrids(tileMap.getMapSize()).some(v => tileMap.getTile(v).getObjectType() === Tiles_Constants_Common.ObjectTypeId.Meteor);
+    return Helpers_Misc.getExisted(TilePlasmaAutoShapeIdMap.get(isAdjacentToMeteor))[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkIsPlasma(tileMap: ITileMap, gridIndex: GridIndex): boolean {
+function checkIsPlasma(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     }
 
-    return tileMap.getTile(gridIndex).getObjectType() === ObjectTypeId.Plasma;
+    return tileMap.getTile(gridIndex).getObjectType() === Tiles_Constants_Common.ObjectTypeId.Plasma;
 }
 
-export function getAutoPipeShapeId(tileMap: ITileMap, gridIndex: GridIndex): number {
-    const isAdjacent4   = checkCanLinkToPipe(tileMap, gridIndex, DirectionId.Left) ? 1 : 0;
-    const isAdjacent3   = checkCanLinkToPipe(tileMap, gridIndex, DirectionId.Right) ? 1 : 0;
-    const isAdjacent2   = checkCanLinkToPipe(tileMap, gridIndex, DirectionId.Down) ? 1 : 0;
-    const isAdjacent1   = checkCanLinkToPipe(tileMap, gridIndex, DirectionId.Up) ? 1 : 0;
+export function getAutoPipeShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): number {
+    const isAdjacent4   = checkCanLinkToPipe(tileMap, gridIndex, Geometries_Constants.DirectionId.Left) ? 1 : 0;
+    const isAdjacent3   = checkCanLinkToPipe(tileMap, gridIndex, Geometries_Constants.DirectionId.Right) ? 1 : 0;
+    const isAdjacent2   = checkCanLinkToPipe(tileMap, gridIndex, Geometries_Constants.DirectionId.Down) ? 1 : 0;
+    const isAdjacent1   = checkCanLinkToPipe(tileMap, gridIndex, Geometries_Constants.DirectionId.Up) ? 1 : 0;
     return TilePipeAutoShapeIdArray[isAdjacent1 + isAdjacent2 * 2 + isAdjacent3 * 4 + isAdjacent4 * 8];
 }
-function checkCanLinkToPipe(tileMap: ITileMap, origin: GridIndex, direction: DirectionId): boolean {
+function checkCanLinkToPipe(tileMap: Tiles_ITileMap.ITileMap, origin: AuxiliaryTypes_GridIndex.GridIndex, direction: Geometries_Constants.DirectionId): boolean {
     const gridIndex = origin.getAdjacentGrid(direction);
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
@@ -813,33 +785,33 @@ function checkCanLinkToPipe(tileMap: ITileMap, origin: GridIndex, direction: Dir
     const tile          = tileMap.getTile(gridIndex);
     const objectType    = tile.getObjectType();
     const objectShapeId = tile.getObjectShapeId();
-    if (objectType === ObjectTypeId.Empty) {
-        return ((objectShapeId === 1) && ((direction === DirectionId.Left) || (direction === DirectionId.Right)))
-            || ((objectShapeId === 2) && ((direction === DirectionId.Up) || (direction === DirectionId.Down)));
-    } else if (objectType === ObjectTypeId.Pipe) {
+    if (objectType === Tiles_Constants_Common.ObjectTypeId.Empty) {
+        return ((objectShapeId === 1) && ((direction === Geometries_Constants.DirectionId.Left) || (direction === Geometries_Constants.DirectionId.Right)))
+            || ((objectShapeId === 2) && ((direction === Geometries_Constants.DirectionId.Up) || (direction === Geometries_Constants.DirectionId.Down)));
+    } else if (objectType === Tiles_Constants_Common.ObjectTypeId.Pipe) {
         return true;
-    } else if (objectType === ObjectTypeId.PipeJoint) {
-        return ((objectShapeId === 0) && ((direction === DirectionId.Left) || (direction === DirectionId.Right)))
-            || ((objectShapeId === 1) && ((direction === DirectionId.Up) || (direction === DirectionId.Down)));
+    } else if (objectType === Tiles_Constants_Common.ObjectTypeId.PipeJoint) {
+        return ((objectShapeId === 0) && ((direction === Geometries_Constants.DirectionId.Left) || (direction === Geometries_Constants.DirectionId.Right)))
+            || ((objectShapeId === 1) && ((direction === Geometries_Constants.DirectionId.Up) || (direction === Geometries_Constants.DirectionId.Down)));
     } else {
         return false;
     }
 }
 
-export function getAutoTileBaseShapeId(tileMap: ITileMap, tile: ITile): number | null {
+export function getAutoTileBaseShapeId(tileMap: Tiles_ITileMap.ITileMap, tile: Tiles_ITile.ITile): number | null {
     const gridIndex = tile.getGridIndex();
     switch (tile.getBaseType()) {
-        case BaseTypeId.Sea   : return getAutoSeaShapeId(tileMap, gridIndex);
-        case BaseTypeId.River : return getAutoRiverShapeId(tileMap, gridIndex);
-        case BaseTypeId.Beach : return getAutoBeachShapeId(tileMap, gridIndex);
+        case Tiles_Constants_Common.BaseTypeId.Sea   : return getAutoSeaShapeId(tileMap, gridIndex);
+        case Tiles_Constants_Common.BaseTypeId.River : return getAutoRiverShapeId(tileMap, gridIndex);
+        case Tiles_Constants_Common.BaseTypeId.Beach : return getAutoBeachShapeId(tileMap, gridIndex);
         default                                 : return null;
     }
 }
 
-export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex: GridIndex): { decorationType: number, shapeId: number } {
+export function getAutoTileDecorationTypeAndShapeId(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): { decorationType: number, shapeId: number } {
     const tile      = tileMap.getTile(gridIndex);
     const baseType  = tile.getBaseType();
-    if (baseType === BaseTypeId.Sea) {
+    if (baseType === Tiles_Constants_Common.BaseTypeId.Sea) {
         const mapSize   = tileMap.getMapSize();
         let weight      = Math.pow(2, 7);
         let index       = 0;
@@ -849,15 +821,15 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex
                     continue;
                 }
 
-                const g = GridIndex.add(gridIndex, new GridIndex(offsetX, offsetY));
+                const g = AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(offsetX, offsetY));
                 const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseType() : null;
-                if (t === BaseTypeId.Plain) {
+                if (t === Tiles_Constants_Common.BaseTypeId.Plain) {
                     index += weight;
-                } else if (t === BaseTypeId.River) {
-                    if (((offsetX === -1) && (offsetY === -1) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 0)))) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(0, -1)))))  ||
-                        ((offsetX === -1) && (offsetY ===  1) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 0)))) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(0,  1)))))  ||
-                        ((offsetX ===  1) && (offsetY === -1) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex( 1, 0)))) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(0, -1)))))  ||
-                        ((offsetX ===  1) && (offsetY ===  1) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex( 1, 0)))) && (!checkIsRiver(tileMap, GridIndex.add(gridIndex, new GridIndex(0,  1)))))
+                } else if (t === Tiles_Constants_Common.BaseTypeId.River) {
+                    if (((offsetX === -1) && (offsetY === -1) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 0)))) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0, -1)))))  ||
+                        ((offsetX === -1) && (offsetY ===  1) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 0)))) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0,  1)))))  ||
+                        ((offsetX ===  1) && (offsetY === -1) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex( 1, 0)))) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0, -1)))))  ||
+                        ((offsetX ===  1) && (offsetY ===  1) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex( 1, 0)))) && (!checkIsRiver(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0,  1)))))
                     ) {
                         index += weight;
                     }
@@ -871,99 +843,99 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex
         }
 
         return {
-            decorationType : DecorationTypeId.Shore,
+            decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,
             shapeId        : TileDecorationAutoShapeIdArray[index],
         };
 
-    } else if (baseType === BaseTypeId.Beach) {
+    } else if (baseType === Tiles_Constants_Common.BaseTypeId.Beach) {
         const shapeId = tile.getBaseShapeId();
         if ((shapeId === 0) || (shapeId === 4) || (shapeId === 8) || (shapeId === 12)) {
-            if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(0, 1)))) {
-                return { decorationType : DecorationTypeId.Shore, shapeId : 25 };
+            if (!checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0, 1)))) {
+                return { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore, shapeId : 25 };
             } else {
-                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1)));
-                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1)));
+                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 1)));
+                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, 1)));
                 if (isSea1) {
                     return isSea2
                         ? { decorationType : 0,                                           shapeId : 0 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 1 };
                 } else {
                     return isSea2
-                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 4 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 5 };
+                        ? { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 4 }
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 5 };
                 }
             }
 
         } else if ((shapeId === 1) || (shapeId === 5) || (shapeId === 9) || (shapeId === 13)) {
-            if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(0, -1)))) {
-                return { decorationType : DecorationTypeId.Shore, shapeId : 34 };
+            if (!checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(0, -1)))) {
+                return { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore, shapeId : 34 };
             } else {
-                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1)));
-                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1)));
+                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, -1)));
+                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, -1)));
                 if (isSea1) {
                     return isSea2
                         ? { decorationType : 0,                                           shapeId : 0 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 2 };
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 2 };
                 } else {
                     return isSea2
-                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 8 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 10 };
+                        ? { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 8 }
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 10 };
                 }
             }
 
         } else if ((shapeId === 2) || (shapeId === 6) || (shapeId === 10) || (shapeId === 14)) {
-            if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 0)))) {
-                return { decorationType : DecorationTypeId.Shore, shapeId : 16 };
+            if (!checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, 0)))) {
+                return { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore, shapeId : 16 };
             } else {
-                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1)));
-                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1)));
+                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, -1)));
+                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, 1)));
                 if (isSea1) {
                     return isSea2
                         ? { decorationType : 0,                                           shapeId : 0 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 1 };
                 } else {
                     return isSea2
-                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 2 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 3 };
+                        ? { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 2 }
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 3 };
                 }
             }
 
         } else if ((shapeId === 3) || (shapeId === 7) || (shapeId === 11) || (shapeId === 15)) {
-            if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 0)))) {
-                return { decorationType : DecorationTypeId.Shore, shapeId : 20 };
+            if (!checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 0)))) {
+                return { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore, shapeId : 20 };
             } else {
-                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1)));
-                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1)));
+                const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, -1)));
+                const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 1)));
                 if (isSea1) {
                     return isSea2
                         ? { decorationType : 0,                                           shapeId : 0 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 4 };
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 4 };
                 } else {
                     return isSea2
-                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 8 }
-                        : { decorationType : DecorationTypeId.Shore,    shapeId : 12 };
+                        ? { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 8 }
+                        : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 12 };
                 }
             }
 
         } else if ((shapeId === 16) || (shapeId === 20) || (shapeId === 24) || (shapeId === 28)) {
-            return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1))))
+            return (checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, 1))))
                 ? { decorationType : 0,                                           shapeId : 0 }
-                : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
+                : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 1 };
 
         } else if ((shapeId === 17) || (shapeId === 21) || (shapeId === 25) || (shapeId === 29)) {
-            return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1))))
+            return (checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, 1))))
                 ? { decorationType : 0,                                           shapeId : 0 }
-                : { decorationType : DecorationTypeId.Shore,    shapeId : 4 };
+                : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 4 };
 
         } else if ((shapeId === 18) || (shapeId === 22) || (shapeId === 26) || (shapeId === 30)) {
-            return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1))))
+            return (checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(-1, -1))))
                 ? { decorationType : 0,                                           shapeId : 0 }
-                : { decorationType : DecorationTypeId.Shore,    shapeId : 8 };
+                : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 8 };
 
         } else if ((shapeId === 19) || (shapeId === 23) || (shapeId === 27) || (shapeId === 31)) {
-            return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1))))
+            return (checkIsSeaOrBeachOrEmpty(tileMap, AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(1, -1))))
                 ? { decorationType : 0,                                           shapeId : 0 }
-                : { decorationType : DecorationTypeId.Shore,    shapeId : 2 };
+                : { decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,    shapeId : 2 };
 
         } else if (shapeId === 37) {
             const mapSize   = tileMap.getMapSize();
@@ -975,11 +947,11 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex
                         continue;
                     }
 
-                    const g = GridIndex.add(gridIndex, new GridIndex(offsetX, offsetY));
+                    const g = AuxiliaryTypes_GridIndex.GridIndex.add(gridIndex, new AuxiliaryTypes_GridIndex.GridIndex(offsetX, offsetY));
                     const t = g.checkIsInsideMap(mapSize) ? tileMap.getTile(g).getBaseType() : null;
                     if ((t != null)                                 &&
-                        (t !== BaseTypeId.Sea)    &&
-                        (t !== BaseTypeId.Beach)
+                        (t !== Tiles_Constants_Common.BaseTypeId.Sea)    &&
+                        (t !== Tiles_Constants_Common.BaseTypeId.Beach)
                     ) {
                         index += weight;
                     }
@@ -988,7 +960,7 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex
             }
 
             return {
-                decorationType : DecorationTypeId.Shore,
+                decorationType : Tiles_Constants_Common.DecorationTypeId.Shore,
                 shapeId        : TileDecorationAutoShapeIdArray[index],
             };
 
@@ -1005,27 +977,27 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: ITileMap, gridIndex
         shapeId        : 0,
     };
 }
-function checkIsSeaOrBeachOrEmpty(tileMap: ITileMap, gridIndex: GridIndex): boolean {
+function checkIsSeaOrBeachOrEmpty(tileMap: Tiles_ITileMap.ITileMap, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean {
     if (!gridIndex.checkIsInsideMap(tileMap.getMapSize())) {
         return true;
     } else {
         const tileBaseType = tileMap.getTile(gridIndex).getBaseType();
-        return (tileBaseType === BaseTypeId.Sea) || (tileBaseType === BaseTypeId.Beach);
+        return (tileBaseType === Tiles_Constants_Common.BaseTypeId.Sea) || (tileBaseType === Tiles_Constants_Common.BaseTypeId.Beach);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData): Promise<ClientErrorCode> {
-    if (mapRawData.encode().byteLength > MapsCommon.MaxFileSize) {
-        return ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_00;
+export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData): Promise<Utils_ClientErrorCode.ClientErrorCode> {
+    if (mapRawData.encode().byteLength > Maps_Constants.Common.MaxFileSize) {
+        return Utils_ClientErrorCode.ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_00;
     }
 
-    const war = new (getMeWarClass())();
+    const war = new MapEditor_Model_MeWar.MeWar();
     try {
         await war.initWithMapRawData({
             mapRawData                : mapRawData,
             slotIndex                 : 0,
-            gameConfig                : await getLatestGameConfig(),
+            gameConfig                : await GameConfigs_Provider.getLatestGameConfig(),
             srcNormalMapIdForAddEvent : null,
             gridMarkData              : null,
         });
@@ -1039,8 +1011,8 @@ export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData):
             // nothing to do
         }
 
-        return (e as CustomError).errorCode ?? ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_01;
+        return (e as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? Utils_ClientErrorCode.ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_01;
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }

@@ -1,178 +1,149 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    show,
-    showLang,
-} from "../../FloatText.ts";
-import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import { Common } from "../../maps/Constants.ts";
-import { DrawerMode } from "../Constants.ts";
-import {
-    getUnitViewClass,
-    getUnitClass,
-    getTileViewClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { isPc } from "../../helpers/Compatibility.ts";
-import {
-    gotoLobby,
-    gotoMyWarListPanel,
-} from "../../helpers/GameFlow.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import {
-    getMouseX,
-    getMouseY,
-} from "../../helpers/PointerInput.ts";
-import { TextType } from "../../lang/Constants.ts";
-import {
-    getText,
-    getErrorText,
-} from "../../lang/Utils.ts";
-import { getShowMapEditorAutoAdjustToggle } from "../../localData/Storage.ts";
-import type { IMeDrawer } from "../../mapEditor/interface/IMeDrawer.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import {
-    getCriticalErrorCodeForMapRawData,
-    createDefaultMapRawData,
-} from "../../mapEditor/model/MeHelpers.ts";
-import {
-    getWar,
-    getReviewingMapSlotIndex,
-    getMapEditorData,
-} from "../../mapEditor/model/MeModel.ts";
-import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import type {
-    DataForDrawUnit,
-    DataForDrawTileBase,
-    DataForDrawTileDecoration,
-    DataForDrawTileObject,
-} from "../../mapEditor/model/MeTypes.ts";
-import { reqMmReviewMap } from "../../normalMap/model/NormalMapProxy.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    AuxiliaryTypes_ChatToTarget,
+    Maps_Constants,
+    MapEditors_Constants,
+    ForceSkins_Utils,
+    AuxiliaryTypes_GridIndex,
+    FloatText,
+    Tiles_TileView,
+    Ui_Components_UiTileView,
+    Units_Unit,
+    Units_UnitView,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Tiles_Utils_Serialization,
+    MapEditor_Model_MeHelpers,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Misc,
+    MapEditor_Model_MeModel,
+    Helpers_PointerInput,
+    Helpers_Collection,
+    Timer_TimerModel,
+    LocalData_Storage,
+    Helpers_GameFlow,
+    Helpers_Compatibility,
+    GamePanels_Manager,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    MapEditor_Model_MeProxy,
+    NormalMap_Model_NormalMapProxy,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type MapEditor_Model_MeTypes,
+    type MapEditor_Interface_IMeDrawer,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+    Units_Utils_Serialization,
+    Users_Model,
+    WarTypes_Constants,
+    type Egret_Egret,
+} from "../../internal.ts";
+
 import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import type { S as MmReviewMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import {
-    create,
-    fillNonTrivialDefaultValues,
-} from "../../tiles/utils/Serialization.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
-import {
-    getSelfMapEditorAutoSaveTime,
-    getSelfUserId,
-} from "../../users/Model.ts";
-import type { Event } from "../../egret/Egret.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
 
 const MaxLengthForListRecent = 30;
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _groupRight!                   : IUiContainer;
-    private readonly _groupModeButton!              : IUiLayout;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _groupRight!                   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModeButton!              : Ui_Interfaces_IUiLayout.IUiLayout;
     // private readonly _labelMode!                    : Ui.Interfaces.IUiLabel;
-    private readonly _conUnitView!                  : IUiContainer;
-    private readonly _conTileView!                  : IUiContainer;
+    private readonly _conUnitView!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conTileView!                  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _groupRecent!                  : IUiContainer;
-    private readonly _listRecent!                   : IUiScrollList<DataForRecentRenderer>;
-    private readonly _btnUndo!                      : IUiButton;
-    private readonly _btnRedo!                      : IUiButton;
+    private readonly _groupRecent!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listRecent!                   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRecentRenderer>;
+    private readonly _btnUndo!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnRedo!                      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModePreview!             : IUiContainer;
-    private readonly _btnModePreview!               : IUiButton;
+    private readonly _groupModePreview!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModePreview!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDrawTileBase!        : IUiContainer;
-    private readonly _btnModeDrawTileBase!          : IUiButton;
+    private readonly _groupModeDrawTileBase!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDrawTileBase!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDrawTileDecorator!   : IUiContainer;
-    private readonly _btnModeDrawTileDecorator!     : IUiButton;
+    private readonly _groupModeDrawTileDecorator!   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDrawTileDecorator!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDeleteTileDecorator! : IUiContainer;
-    private readonly _btnModeDeleteTileDecorator!   : IUiButton;
+    private readonly _groupModeDeleteTileDecorator! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDeleteTileDecorator!   : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDrawTileObject!      : IUiContainer;
-    private readonly _btnModeDrawTileObject!        : IUiButton;
+    private readonly _groupModeDrawTileObject!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDrawTileObject!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDeleteTileObject!    : IUiContainer;
-    private readonly _btnModeDeleteTileObject!      : IUiButton;
+    private readonly _groupModeDeleteTileObject!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDeleteTileObject!      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDrawUnit!            : IUiContainer;
-    private readonly _btnModeDrawUnit!              : IUiButton;
+    private readonly _groupModeDrawUnit!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDrawUnit!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDeleteUnit!          : IUiContainer;
-    private readonly _btnModeDeleteUnit!            : IUiButton;
+    private readonly _groupModeDeleteUnit!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDeleteUnit!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDrawLocation!        : IUiContainer;
-    private readonly _btnModeDrawLocation!          : IUiButton;
+    private readonly _groupModeDrawLocation!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDrawLocation!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModeDeleteLocation!      : IUiContainer;
-    private readonly _btnModeDeleteLocation!        : IUiButton;
+    private readonly _groupModeDeleteLocation!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModeDeleteLocation!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupCopyTile!                : IUiContainer;
-    private readonly _btnCopyTile!                  : IUiButton;
+    private readonly _groupCopyTile!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCopyTile!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModePasteTile!           : IUiContainer;
-    private readonly _btnModePasteTile!             : IUiButton;
+    private readonly _groupModePasteTile!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModePasteTile!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupCopyUnit!                : IUiContainer;
-    private readonly _btnCopyUnit!                  : IUiButton;
+    private readonly _groupCopyUnit!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnCopyUnit!                  : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupModePasteUnit!           : IUiContainer;
-    private readonly _btnModePasteUnit!             : IUiButton;
+    private readonly _groupModePasteUnit!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnModePasteUnit!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupLeftButtons!             : IUiLayout;
-    private readonly _btnSaveMap!                   : IUiButton;
-    private readonly _btnLoadMap!                   : IUiButton;
-    private readonly _btnReviewAccept!              : IUiButton;
-    private readonly _btnReviewReject!              : IUiButton;
-    private readonly _btnWarRule!                   : IUiButton;
-    private readonly _btnWarEvent!                  : IUiButton;
-    private readonly _btnMapInfo!                   : IUiButton;
-    private readonly _btnVisibility!                : IUiButton;
-    private readonly _btnSymmetry!                  : IUiButton;
-    private readonly _btnChat!                      : IUiButton;
-    private readonly _btnMenu!                      : IUiButton;
-    private readonly _groupAutoAdjust!              : IUiLayout;
-    private readonly _btnAutoAdjust!                : IUiButton;
-    private readonly _btnAutoAdjustToggleOn!        : IUiButton;
-    private readonly _btnAutoAdjustToggleOff!       : IUiButton;
+    private readonly _groupLeftButtons!             : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnSaveMap!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnLoadMap!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnReviewAccept!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnReviewReject!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnWarRule!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnWarEvent!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMapInfo!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnVisibility!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSymmetry!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnChat!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMenu!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _groupAutoAdjust!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnAutoAdjust!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAutoAdjustToggleOn!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAutoAdjustToggleOff!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelLocation!                : IUiLabel;
-    private readonly _labelMouseHover!              : IUiLabel;
+    private readonly _labelLocation!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMouseHover!              : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView                      = new (getUnitViewClass())();
-    private readonly _tileView                      = new (getUiTileViewClass())();
+    private readonly _unitView                      = new Units_UnitView.UnitView();
+    private readonly _tileView                      = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
-            { type: TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
-            { type: TypeId.MeDrawerModeChanged,                 callback: this._onNotifyMeDrawerModeChanged },
-            { type: TypeId.MeAutoAdjustToggleVisibilityChanged, callback: this._onNotifyMeAutoAdjustToggleVisibilityChanged },
-            { type: TypeId.MeRealTimeAdjustChanged,             callback: this._onNotifyMeRealTimeAdjustChanged },
-            { type: TypeId.BwCursorGridIndexChanged,            callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: TypeId.BwTileHasLocationIdSet,              callback: this._onNotifyBwTileLocationFlatSet },
-            { type: TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
-            { type: TypeId.MsgMmReviewMap,                      callback: this._onNotifyMsgMmReviewMap },
-            { type: TypeId.MsgMeDeleteSlot,                     callback: this._onNotifyMsgMeDeleteSlot },
-            { type: TypeId.MsgCmSetCampaignMapRawData,          callback: this._onNotifyMsgCmSetCampaignMapRawData },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
+            { type: Notifications_TypeId.TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
+            { type: Notifications_TypeId.TypeId.MeDrawerModeChanged,                 callback: this._onNotifyMeDrawerModeChanged },
+            { type: Notifications_TypeId.TypeId.MeAutoAdjustToggleVisibilityChanged, callback: this._onNotifyMeAutoAdjustToggleVisibilityChanged },
+            { type: Notifications_TypeId.TypeId.MeRealTimeAdjustChanged,             callback: this._onNotifyMeRealTimeAdjustChanged },
+            { type: Notifications_TypeId.TypeId.BwCursorGridIndexChanged,            callback: this._onNotifyBwCursorGridIndexChanged },
+            { type: Notifications_TypeId.TypeId.BwTileHasLocationIdSet,              callback: this._onNotifyBwTileLocationFlatSet },
+            { type: Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
+            { type: Notifications_TypeId.TypeId.MsgMmReviewMap,                      callback: this._onNotifyMsgMmReviewMap },
+            { type: Notifications_TypeId.TypeId.MsgMeDeleteSlot,                     callback: this._onNotifyMsgMeDeleteSlot },
+            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignMapRawData,          callback: this._onNotifyMsgCmSetCampaignMapRawData },
         ]);
         this._setUiListenerArray([
             { ui: this._groupModePreview,               callback: this._onTouchedGroupModePreview },
@@ -238,10 +209,10 @@ export class Panel extends UiPanel<OpenData> {
         this._labelMouseHover.setAutoShrinkWidth(width);
     }
 
-    private _getWar(): IMeWar {
-        return getExisted(getWar());
+    private _getWar(): MapEditor_Interface_IMeWar.IMeWar {
+        return Helpers_Misc.getExisted(MapEditor_Model_MeModel.getWar());
     }
-    private _getDrawer(): IMeDrawer {
+    private _getDrawer(): MapEditor_Interface_IMeDrawer.IMeDrawer {
         return this._getWar().getDrawer();
     }
 
@@ -252,26 +223,26 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private async _onNotifyTimeTick(): Promise<void> {
-        const autoSaveTime = getSelfMapEditorAutoSaveTime();
-        if ((!autoSaveTime) || (getServerTimestamp() % autoSaveTime !== 0)) {
+        const autoSaveTime = Users_Model.getSelfMapEditorAutoSaveTime();
+        if ((!autoSaveTime) || (Timer_TimerModel.getServerTimestamp() % autoSaveTime !== 0)) {
             return;
         }
 
-        const war = getWar();
+        const war = MapEditor_Model_MeModel.getWar();
         if ((war == null) || (!war.getIsMapModified()) || (war.getIsReviewingMap())) {
             return;
         }
 
         const slotIndex = war.getMapSlotIndex();
-        if (slotIndex === await getReviewingMapSlotIndex()) {
+        if (slotIndex === await MapEditor_Model_MeModel.getReviewingMapSlotIndex()) {
             return;
         }
 
         const mapRawData = await war.serializeForMap();
-        if (await getCriticalErrorCodeForMapRawData(mapRawData)) {
-            show(getText(TextType.A0304));
+        if (await MapEditor_Model_MeHelpers.getCriticalErrorCodeForMapRawData(mapRawData)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0304));
         } else {
-            reqMeSubmitNormalMap({
+            MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
                 slotIndex                   : slotIndex,
                 mapRawData                  : mapRawData,
                 needReview                  : false,
@@ -290,9 +261,9 @@ export class Panel extends UiPanel<OpenData> {
         const drawer    = war.getDrawer();
         const mode      = drawer.getMode();
         const list      = this._listRecent;
-        const dataArray = getNonNullElements(list.getBoundDataArray() ?? []);
-        if (mode === DrawerMode.DrawTileBase) {
-            const dataForDrawTileBase   = getExisted(drawer.getDrawTargetTileBaseData());
+        const dataArray = Helpers_Collection.getNonNullElements(list.getBoundDataArray() ?? []);
+        if (mode === MapEditors_Constants.DrawerMode.DrawTileBase) {
+            const dataForDrawTileBase   = Helpers_Misc.getExisted(drawer.getDrawTargetTileBaseData());
             const newDataArray          = dataArray?.filter(v => {
                 const existingData = v?.dataForDrawTileBase;
                 return (existingData == null) || (existingData.baseType !== dataForDrawTileBase.baseType) || (existingData.shapeId !== dataForDrawTileBase.shapeId);
@@ -308,8 +279,8 @@ export class Panel extends UiPanel<OpenData> {
             newDataArray.length = Math.min(MaxLengthForListRecent, newDataArray.length);
             await list.bindData(newDataArray);
 
-        } else if (mode === DrawerMode.DrawTileDecoration) {
-            const dataForDrawTileDecoration = getExisted(drawer.getDrawTargetTileDecorationData());
+        } else if (mode === MapEditors_Constants.DrawerMode.DrawTileDecoration) {
+            const dataForDrawTileDecoration = Helpers_Misc.getExisted(drawer.getDrawTargetTileDecorationData());
             const newDataArray              = dataArray?.filter(v => {
                 const existingData  = v.dataForDrawTileDecoration;
                 return (existingData == null) || (existingData.decorationType !== dataForDrawTileDecoration.decorationType) || (existingData.shapeId !== dataForDrawTileDecoration.shapeId);
@@ -325,8 +296,8 @@ export class Panel extends UiPanel<OpenData> {
             newDataArray.length = Math.min(MaxLengthForListRecent, newDataArray.length);
             await list.bindData(newDataArray);
 
-        } else if (mode === DrawerMode.DrawTileObject) {
-            const dataForDrawTileObject = getExisted(drawer.getDrawTargetTileObjectData());
+        } else if (mode === MapEditors_Constants.DrawerMode.DrawTileObject) {
+            const dataForDrawTileObject = Helpers_Misc.getExisted(drawer.getDrawTargetTileObjectData());
             const newDataArray          = dataArray?.filter(v => {
                 const existingData = v.dataForDrawTileObject;
                 return (existingData == null)
@@ -345,8 +316,8 @@ export class Panel extends UiPanel<OpenData> {
             newDataArray.length = Math.min(MaxLengthForListRecent, newDataArray.length);
             await list.bindData(newDataArray);
 
-        } else if (mode === DrawerMode.DrawUnit) {
-            const targetUnit    = getExisted(drawer.getDrawTargetUnit());
+        } else if (mode === MapEditors_Constants.DrawerMode.DrawUnit) {
+            const targetUnit    = Helpers_Misc.getExisted(drawer.getDrawTargetUnit());
             const unitType      = targetUnit.getUnitType();
             const playerIndex   = targetUnit.getPlayerIndex();
             const newDataArray  = dataArray?.filter(v => {
@@ -377,147 +348,147 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyBwTileLocationFlatSet(): void {
         this._updateLabelLocation();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
+    private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
         const data = e.data as MeSubmitNormalMapResponse;
         if (!data.getNeedReview()) {
-            show(getText(TextType.A0085));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0085));
         } else {
             const errorCode = data.getMapRawDataErrorCode();
             if (errorCode) {
-                show(getText(TextType.A0197));
-                show(getErrorText(errorCode));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0197));
+                FloatText.show(Lang_Utils.getErrorText(errorCode));
             } else {
-                show(getText(TextType.A0244));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0244));
             }
         }
 
         this._getWar().setIsMapModified(false);
     }
-    private _onNotifyMsgMmReviewMap(e: Event): void {
+    private _onNotifyMsgMmReviewMap(e: Egret_Egret.Event): void {
         const data = e.data as MmReviewMapResponse;
         if (data.getIsAccept()) {
-            show(getText(TextType.A0092));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0092));
         } else {
-            show(getText(TextType.A0093));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0093));
         }
-        gotoLobby();
+        Helpers_GameFlow.gotoLobby();
     }
     private _onNotifyMsgMeDeleteSlot(): void {
-        show(getText(TextType.A0081));
-        gotoMyWarListPanel(WarTypeId.Me);
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0081));
+        Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me);
     }
     private _onNotifyMsgCmSetCampaignMapRawData(): void {
-        showLang(TextType.OperationSucceeded);
+        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
     }
 
     private _onEnterFrame(): void {
         const label = this._labelMouseHover;
-        if (!isPc) {
+        if (!Helpers_Compatibility.isPc) {
             label.setIsVisible(false);
             return;
         }
 
-        const x = getMouseX();
-        const y = getMouseY();
+        const x = Helpers_PointerInput.getMouseX();
+        const y = Helpers_PointerInput.getMouseY();
         if ((x == null) || (y == null)) {
             label.setIsVisible(false);
             return;
         }
 
         const war       = this._getWar();
-        const gridIndex = GridIndex.createGridIndexByPoint(war.getView().getFieldContainer().getContentsContainerGlobalToLocal({ x, y }));
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.createGridIndexByPoint(war.getView().getFieldContainer().getContentsContainerGlobalToLocal({ x, y }));
         label.setIsVisible(true);
         if (!gridIndex.checkIsInsideMap(war.getTileMap().getMapSize())) {
-            label.setText(`${getText(TextType.B1112)}: --`);
+            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: --`);
         } else {
             const locationIdArray   = war.getTileMap().getTile(gridIndex).getLocationIdList(true);
             const textForGridIndex  = `x${gridIndex.getX()} y${gridIndex.getY()}`;
             const textForLocation   = locationIdArray.length ? locationIdArray.join(` `) : `--`;
-            label.setText(`${getText(TextType.B1112)}: ${textForGridIndex}, ${getText(TextType.Location)}: ${textForLocation}`);
+            label.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1112)}: ${textForGridIndex}, ${Lang_Utils.getText(Lang_Constants.TextType.Location)}: ${textForLocation}`);
         }
     }
 
     private _onTouchedGroupModePreview(): void {
         this._getDrawer().setModePreview();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDrawTileBase(): void {
-        openPanel(getDict().MeChooseTileBasePanel, { war: this._getWar() });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseTileBasePanel, { war: this._getWar() });
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDrawTileDecoration(): void {
-        openPanel(getDict().MeChooseTileDecorationPanel, { war: this._getWar() });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseTileDecorationPanel, { war: this._getWar() });
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDrawTileObject(): void {
-        openPanel(getDict().MeChooseTileObjectPanel, { war: this._getWar() });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseTileObjectPanel, { war: this._getWar() });
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDrawUnit(): void {
-        openPanel(getDict().MeChooseUnitPanel, { war: this._getWar() });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseUnitPanel, { war: this._getWar() });
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDeleteTileObject(): void {
         this._getDrawer().setModeDeleteTileObject();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDrawLocation(): void {
         const war = this._getWar();
-        openPanel(getDict().MeChooseLocationPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseLocationPanel, {
             needChangeLocationVisibility    : true,
             currentGroupedLocationIds       : war.getTileMap().getVisibleGroupedLocationIdArray().concat(),
             war                             : war,
-            getTitleText                    : () => getText(TextType.B0759),
+            getTitleText                    : () => Lang_Utils.getText(Lang_Constants.TextType.B0759),
             callback                        : locationIdArray => {
                 if (!locationIdArray.length) {
-                    show(getText(TextType.A0266));
+                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
                 } else {
                     war.getDrawer().setModeAddTileToLocation({ locationIdArray });
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDeleteLocation(): void {
         const war = this._getWar();
-        openPanel(getDict().MeChooseLocationPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeChooseLocationPanel, {
             needChangeLocationVisibility    : true,
             currentGroupedLocationIds       : war.getTileMap().getVisibleGroupedLocationIdArray().concat(),
             war                             : war,
-            getTitleText                    : () => getText(TextType.B0760),
+            getTitleText                    : () => Lang_Utils.getText(Lang_Constants.TextType.B0760),
             callback                        : locationIdArray => {
                 if (!locationIdArray.length) {
-                    show(getText(TextType.A0266));
+                    FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0266));
                 } else {
                     war.getDrawer().setModeDeleteTileFromLocation({ locationIdArray });
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupCopyTile(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const war = this._getWar();
         war.getDrawer().setDataForPasteTile(war.getTileMap().getTile(war.getCursor().getGridIndex()).serialize());
-        show(getText(TextType.A0369));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0369));
     }
     private _onTouchedGroupModePasteTile(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const drawer    = this._getWar().getDrawer();
         const data      = drawer.getDataForPasteTile();
         if (data == null) {
-            show(getText(TextType.A0371));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0371));
         } else {
             drawer.setModePasteTile();
         }
     }
     private _onTouchedGroupCopyUnit(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const war       = this._getWar();
         const unitMap   = war.getUnitMap();
         const unit      = unitMap.getUnitOnMap(war.getCursor().getGridIndex());
         if (unit == null) {
-            show(getText(TextType.A0373));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0373));
             return;
         }
 
@@ -526,14 +497,14 @@ export class Panel extends UiPanel<OpenData> {
             dataArray.push(loadedUnit.clone());
         }
         war.getDrawer().setDataForPasteUnit(dataArray);
-        show(getText(TextType.A0370));
+        FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0370));
     }
     private _onTouchedGroupModePasteUnit(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         const drawer    = this._getWar().getDrawer();
         const data      = drawer.getDataForPasteUnit();
         if (data == null) {
-            show(getText(TextType.A0372));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0372));
         } else {
             drawer.setModePasteUnit();
         }
@@ -542,7 +513,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnUndo(): void {
         const war = this._getWar();
         if (war.getIsReviewingMap()) {
-            showLang(TextType.A0318);
+            FloatText.showLang(Lang_Constants.TextType.A0318);
         } else {
             war.getDrawer().loadPreviousCheckpoint();
         }
@@ -550,7 +521,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnRedo(): void {
         const war = this._getWar();
         if (war.getIsReviewingMap()) {
-            showLang(TextType.A0319);
+            FloatText.showLang(Lang_Constants.TextType.A0319);
         } else {
             war.getDrawer().loadNextCheckpoint();
         }
@@ -559,26 +530,26 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnSaveMap(): void {
         const war = this._getWar();
         if (war.getCampaignMapData()) {
-            openPanel(getDict().MeSaveCampaignMapPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeSaveCampaignMapPanel, {
                 war     : war,
             });
         } else {
-            openPanel(getDict().MeSaveNormalMapPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeSaveNormalMapPanel, {
                 war     : war,
             });
         }
     }
     private _onTouchedBtnLoadMap(): void {
         const war = this._getWar();
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0072),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
             callback: async () => {
                 const slotIndex     = war.getMapSlotIndex();
                 const gameConfig    = war.getGcData();
-                const mapEditorData = await getMapEditorData(slotIndex);
+                const mapEditorData = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 war.stopRunning();
                 await war.initWithMapRawData({
-                    mapRawData                  : mapEditorData?.mapRawData ?? await createDefaultMapRawData(slotIndex, gameConfig),
+                    mapRawData                  : mapEditorData?.mapRawData ?? await MapEditor_Model_MeHelpers.createDefaultMapRawData(slotIndex, gameConfig),
                     slotIndex                   : slotIndex,
                     gameConfig                  : gameConfig,
                     srcNormalMapIdForAddEvent   : mapEditorData?.srcNormalMapIdForAddEvent ?? null,
@@ -591,18 +562,18 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnReviewAccept(): void {
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0296),
-            tips            : getText(TextType.A0105),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0296),
+            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0105),
             currentValue    : ``,
             canBeEmpty      : true,
             isMultiLine     : true,
-            maxChars        : Common.MaxReviewCommentLength,
+            maxChars        : Maps_Constants.Common.MaxReviewCommentLength,
             charRestrict    : null,
             callback        : panel => {
                 const war       = this._getWar();
                 const callback  = () => {
-                    reqMmReviewMap({
+                    NormalMap_Model_NormalMapProxy.reqMmReviewMap({
                         designerUserId  : war.getMapDesignerUserId(),
                         slotIndex       : war.getMapSlotIndex(),
                         modifiedTime    : war.getMapModifiedTime(),
@@ -613,8 +584,8 @@ export class Panel extends UiPanel<OpenData> {
                 if (!war.getTemplateWarRuleArray().some(v => v.getRuleAvailability()?.getCanMrw())) {
                     callback();
                 } else {
-                    openPanel(getDict().CommonConfirmPanel, {
-                        getContent     : () => getText(TextType.A0296),
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0296),
                         callback    : callback,
                     });
                 }
@@ -622,17 +593,17 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnReviewReject(): void {
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0297),
-            tips            : getText(TextType.A0094),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0297),
+            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0094),
             currentValue    : ``,
             canBeEmpty      : true,
             isMultiLine     : true,
-            maxChars        : Common.MaxReviewCommentLength,
+            maxChars        : Maps_Constants.Common.MaxReviewCommentLength,
             charRestrict    : null,
             callback        : panel => {
                 const war = this._getWar();
-                reqMmReviewMap({
+                NormalMap_Model_NormalMapProxy.reqMmReviewMap({
                     designerUserId  : war.getMapDesignerUserId(),
                     slotIndex       : war.getMapSlotIndex(),
                     modifiedTime    : war.getMapModifiedTime(),
@@ -644,48 +615,48 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnWarRule(): void {
         const war = this._getWar();
-        openPanel(getDict().MeWarRulePanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeWarRulePanel, { war: war });
     }
     private _onTouchedBtnWarEvent(): void {
-        openPanel(getDict().WeMainPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeMainPanel, {
             war: this._getWar(),
         });
     }
     private _onTouchedBtnMapInfo(): void {
-        openPanel(getDict().MeMapInfoPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeMapInfoPanel, {
             war     : this._getWar(),
         });
     }
     private _onTouchedGroupModeDeleteTileDecoration(): void {
         this._getDrawer().setModeDeleteTileDecoration();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupModeDeleteUnit(): void {
         this._getDrawer().setModeDeleteUnit();
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnVisibility(): void {
-        openPanel(getDict().MeVisibilityPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeVisibilityPanel, void 0);
     }
     private _onTouchedBtnSymmetry(): void {
-        openPanel(getDict().MeSymmetryPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeSymmetryPanel, {
             war: this._getWar(),
         });
     }
     private _onTouchedBtnChat(): void {
         const war = this._getWar();
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({
             toMapReviewTarget: war.getIsReviewingMap()
             ? war.getMapDesignerUserId()
-            : getExisted(getSelfUserId())
+            : Helpers_Misc.getExisted(Users_Model.getSelfUserId())
         }) });
     }
     private _onTouchedBtnMenu(): void {
-        openPanel(getDict().MeWarMenuPanel, { war: this._getWar() });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeWarMenuPanel, { war: this._getWar() });
     }
     private _onTouchedBtnAutoAdjust(): void {
-        openPanel(getDict().MeAutoAdjustPanel,  {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeAutoAdjustPanel,  {
             war : this._getWar(),
         });
     }
@@ -723,34 +694,34 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         // this._updateLabelMode();
-        this._btnModePreview.setLangText(TextType.B0286);
-        this._btnModeDrawTileBase.setLangText(TextType.B0282);
-        this._btnModeDeleteTileDecorator.setLangText(TextType.B0661);
-        this._btnModeDrawUnit.setLangText(TextType.B0281);
-        this._btnModeDrawTileDecorator.setLangText(TextType.B0662);
-        this._btnModeDrawTileObject.setLangText(TextType.B0283);
-        this._btnModeDeleteUnit.setLangText(TextType.B0284);
-        this._btnModeDeleteTileObject.setLangText(TextType.B0285);
-        this._btnModeDrawLocation.setLangText(TextType.B0759);
-        this._btnModeDeleteLocation.setLangText(TextType.B0760);
-        this._btnCopyTile.setLangText(TextType.B0993);
-        this._btnModePasteTile.setLangText(TextType.B0994);
-        this._btnCopyUnit.setLangText(TextType.B0995);
-        this._btnModePasteUnit.setLangText(TextType.B0996);
-        this._btnSaveMap.setLangText(TextType.B0287);
-        this._btnLoadMap.setLangText(TextType.B0288);
-        this._btnReviewAccept.setLangText(TextType.B0296);
-        this._btnReviewReject.setLangText(TextType.B0297);
-        this._btnWarRule.setLangText(TextType.B0314);
-        this._btnWarEvent.setLangText(TextType.B0461);
-        this._btnMapInfo.setLangText(TextType.B0298);
-        this._btnVisibility.setLangText(TextType.B0301);
-        this._btnSymmetry.setLangText(TextType.B0306);
-        this._btnChat.setLangText(TextType.B0383);
-        this._btnMenu.setLangText(TextType.B0155);
-        this._btnAutoAdjust.setLangText(TextType.B1451);
-        this._btnAutoAdjustToggleOn.setLangText(TextType.B0890);
-        this._btnAutoAdjustToggleOff.setLangText(TextType.B0890);
+        this._btnModePreview.setLangText(Lang_Constants.TextType.B0286);
+        this._btnModeDrawTileBase.setLangText(Lang_Constants.TextType.B0282);
+        this._btnModeDeleteTileDecorator.setLangText(Lang_Constants.TextType.B0661);
+        this._btnModeDrawUnit.setLangText(Lang_Constants.TextType.B0281);
+        this._btnModeDrawTileDecorator.setLangText(Lang_Constants.TextType.B0662);
+        this._btnModeDrawTileObject.setLangText(Lang_Constants.TextType.B0283);
+        this._btnModeDeleteUnit.setLangText(Lang_Constants.TextType.B0284);
+        this._btnModeDeleteTileObject.setLangText(Lang_Constants.TextType.B0285);
+        this._btnModeDrawLocation.setLangText(Lang_Constants.TextType.B0759);
+        this._btnModeDeleteLocation.setLangText(Lang_Constants.TextType.B0760);
+        this._btnCopyTile.setLangText(Lang_Constants.TextType.B0993);
+        this._btnModePasteTile.setLangText(Lang_Constants.TextType.B0994);
+        this._btnCopyUnit.setLangText(Lang_Constants.TextType.B0995);
+        this._btnModePasteUnit.setLangText(Lang_Constants.TextType.B0996);
+        this._btnSaveMap.setLangText(Lang_Constants.TextType.B0287);
+        this._btnLoadMap.setLangText(Lang_Constants.TextType.B0288);
+        this._btnReviewAccept.setLangText(Lang_Constants.TextType.B0296);
+        this._btnReviewReject.setLangText(Lang_Constants.TextType.B0297);
+        this._btnWarRule.setLangText(Lang_Constants.TextType.B0314);
+        this._btnWarEvent.setLangText(Lang_Constants.TextType.B0461);
+        this._btnMapInfo.setLangText(Lang_Constants.TextType.B0298);
+        this._btnVisibility.setLangText(Lang_Constants.TextType.B0301);
+        this._btnSymmetry.setLangText(Lang_Constants.TextType.B0306);
+        this._btnChat.setLangText(Lang_Constants.TextType.B0383);
+        this._btnMenu.setLangText(Lang_Constants.TextType.B0155);
+        this._btnAutoAdjust.setLangText(Lang_Constants.TextType.B1451);
+        this._btnAutoAdjustToggleOn.setLangText(Lang_Constants.TextType.B0890);
+        this._btnAutoAdjustToggleOff.setLangText(Lang_Constants.TextType.B0890);
     }
 
     private _resetGroupLeftButtons(): void {
@@ -804,18 +775,18 @@ export class Panel extends UiPanel<OpenData> {
         // this._imgModePasteTile.visible              = mode === MapEditorDrawerMode.PasteTile;
         // this._imgModePasteUnit.visible              = mode === MapEditorDrawerMode.PasteUnit;
 
-        this._groupModePreview.setUnscaledManualWidth(mode === DrawerMode.Preview ? 80 : 70);
-        this._groupModeDrawTileBase.setUnscaledManualWidth(mode === DrawerMode.DrawTileBase ? 80 : 70);
-        this._groupModeDrawTileDecorator.setUnscaledManualWidth(mode === DrawerMode.DrawTileDecoration ? 80 : 70);
-        this._groupModeDeleteTileDecorator.setUnscaledManualWidth(mode === DrawerMode.DeleteTileDecoration ? 80 : 70);
-        this._groupModeDrawTileObject.setUnscaledManualWidth(mode === DrawerMode.DrawTileObject ? 80 : 70);
-        this._groupModeDeleteTileObject.setUnscaledManualWidth(mode === DrawerMode.DeleteTileObject ? 80 : 70);
-        this._groupModeDrawUnit.setUnscaledManualWidth(mode === DrawerMode.DrawUnit ? 80 : 70);
-        this._groupModeDeleteUnit.setUnscaledManualWidth(mode === DrawerMode.DeleteUnit ? 80 : 70);
-        this._groupModeDrawLocation.setUnscaledManualWidth(mode === DrawerMode.AddTileToLocation ? 80 : 70);
-        this._groupModeDeleteLocation.setUnscaledManualWidth(mode === DrawerMode.DeleteTileFromLocation ? 80 : 70);
-        this._groupModePasteTile.setUnscaledManualWidth(mode === DrawerMode.PasteTile ? 80 : 70);
-        this._groupModePasteUnit.setUnscaledManualWidth(mode === DrawerMode.PasteUnit ? 80 : 70);
+        this._groupModePreview.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.Preview ? 80 : 70);
+        this._groupModeDrawTileBase.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DrawTileBase ? 80 : 70);
+        this._groupModeDrawTileDecorator.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DrawTileDecoration ? 80 : 70);
+        this._groupModeDeleteTileDecorator.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DeleteTileDecoration ? 80 : 70);
+        this._groupModeDrawTileObject.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DrawTileObject ? 80 : 70);
+        this._groupModeDeleteTileObject.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DeleteTileObject ? 80 : 70);
+        this._groupModeDrawUnit.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DrawUnit ? 80 : 70);
+        this._groupModeDeleteUnit.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DeleteUnit ? 80 : 70);
+        this._groupModeDrawLocation.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.AddTileToLocation ? 80 : 70);
+        this._groupModeDeleteLocation.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.DeleteTileFromLocation ? 80 : 70);
+        this._groupModePasteTile.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.PasteTile ? 80 : 70);
+        this._groupModePasteUnit.setUnscaledManualWidth(mode === MapEditors_Constants.DrawerMode.PasteUnit ? 80 : 70);
 
         this._groupModeButton.arrangeItems();
     }
@@ -842,10 +813,10 @@ export class Panel extends UiPanel<OpenData> {
         const con           = this._conTileView;
         const tileView      = this._tileView;
         const gameConfig    = this._getWar().getGcData();
-        if (mode === DrawerMode.DrawTileBase) {
+        if (mode === MapEditors_Constants.DrawerMode.DrawTileBase) {
             con.setIsVisible(true);
 
-            const tileBaseData = getExisted(drawer.getDrawTargetTileBaseData());
+            const tileBaseData = Helpers_Misc.getExisted(drawer.getDrawTargetTileBaseData());
             tileView.init({
                 tileBaseShapeId         : tileBaseData.shapeId,
                 tileBaseType            : tileBaseData.baseType,
@@ -853,16 +824,16 @@ export class Panel extends UiPanel<OpenData> {
                 tileDecorationShapeId   : null,
                 tileObjectShapeId       : null,
                 tileObjectType          : null,
-                skinId                  : PlayerIndex.Neutral,
+                skinId                  : Players_Constants.PlayerIndex.Neutral,
                 overridingSkinId        : undefined,
                 gameConfig              : gameConfig,
             });
             tileView.updateView();
 
-        } else if (mode === DrawerMode.DrawTileDecoration) {
+        } else if (mode === MapEditors_Constants.DrawerMode.DrawTileDecoration) {
             con.setIsVisible(true);
 
-            const tileDecorationData = getExisted(drawer.getDrawTargetTileDecorationData());
+            const tileDecorationData = Helpers_Misc.getExisted(drawer.getDrawTargetTileDecorationData());
             tileView.init({
                 tileBaseShapeId         : null,
                 tileBaseType            : null,
@@ -870,16 +841,16 @@ export class Panel extends UiPanel<OpenData> {
                 tileDecorationShapeId   : tileDecorationData.shapeId,
                 tileObjectShapeId       : null,
                 tileObjectType          : null,
-                skinId                  : PlayerIndex.Neutral,
+                skinId                  : Players_Constants.PlayerIndex.Neutral,
                 overridingSkinId        : undefined,
                 gameConfig              : gameConfig,
             });
             tileView.updateView();
 
-        } else if (mode === DrawerMode.DrawTileObject) {
+        } else if (mode === MapEditors_Constants.DrawerMode.DrawTileObject) {
             con.setIsVisible(true);
 
-            const tileObjectData = getExisted(drawer.getDrawTargetTileObjectData());
+            const tileObjectData = Helpers_Misc.getExisted(drawer.getDrawTargetTileObjectData());
             tileView.init({
                 tileBaseShapeId         : null,
                 tileBaseType            : null,
@@ -893,10 +864,10 @@ export class Panel extends UiPanel<OpenData> {
             });
             tileView.updateView();
 
-        } else if (mode === DrawerMode.PasteTile) {
+        } else if (mode === MapEditors_Constants.DrawerMode.PasteTile) {
             con.setIsVisible(true);
 
-            const data = getExisted(drawer.getDataForPasteTile());
+            const data = Helpers_Misc.getExisted(drawer.getDataForPasteTile());
             tileView.init({
                 tileBaseShapeId         : data.getBaseShapeId(),
                 tileBaseType            : data.getBaseType(),
@@ -904,7 +875,7 @@ export class Panel extends UiPanel<OpenData> {
                 tileDecorationShapeId   : data.getDecorationShapeId(),
                 tileObjectShapeId       : data.getObjectShapeId(),
                 tileObjectType          : data.getObjectType(),
-                skinId                  : getDefaultSkinId(data.getPlayerIndex()),
+                skinId                  : ForceSkins_Utils.getDefaultSkinId(data.getPlayerIndex()),
                 overridingSkinId        : undefined,
                 gameConfig              : gameConfig,
             });
@@ -920,14 +891,14 @@ export class Panel extends UiPanel<OpenData> {
         const con       = this._conUnitView;
         const unitView  = this._unitView;
         const drawMode  = drawer.getMode();
-        if (drawMode === DrawerMode.DrawUnit) {
+        if (drawMode === MapEditors_Constants.DrawerMode.DrawUnit) {
             con.setIsVisible(true);
-            unitView.init(getExisted(drawer.getDrawTargetUnit()));
+            unitView.init(Helpers_Misc.getExisted(drawer.getDrawTargetUnit()));
             unitView.resetAllViews();
 
-        } else if (drawMode === DrawerMode.PasteUnit) {
+        } else if (drawMode === MapEditors_Constants.DrawerMode.PasteUnit) {
             con.setIsVisible(true);
-            unitView.init(getExisted(drawer.getDataForPasteUnit())[0]);
+            unitView.init(Helpers_Misc.getExisted(drawer.getDataForPasteUnit())[0]);
             unitView.resetAllViews();
 
         } else {
@@ -984,13 +955,13 @@ export class Panel extends UiPanel<OpenData> {
         const locationIdArray   = war.getTileMap().getTile(gridIndex).getLocationIdList(true);
         const textForGridIndex  = `x${gridIndex.getX()} y${gridIndex.getY()}`;
         const textForLocation   = locationIdArray.length ? locationIdArray.join(` `) : `--`;
-        this._labelLocation.setText(`${textForGridIndex} ${getText(TextType.Location)}: ${textForLocation}`);
+        this._labelLocation.setText(`${textForGridIndex} ${Lang_Utils.getText(Lang_Constants.TextType.Location)}: ${textForLocation}`);
     }
 
     private _updateGroupAutoAdjust(): void {
         const btnOn     = this._btnAutoAdjustToggleOn;
         const btnOff    = this._btnAutoAdjustToggleOff;
-        if (!getShowMapEditorAutoAdjustToggle()) {
+        if (!LocalData_Storage.getShowMapEditorAutoAdjustToggle()) {
             btnOn.setIsVisible(false);
             btnOff.setIsVisible(false);
         } else {
@@ -1012,7 +983,7 @@ export class Panel extends UiPanel<OpenData> {
             tileDecorationShapeId   : null,
             tileObjectType          : null,
             tileObjectShapeId       : null,
-            skinId                  : PlayerIndex.Neutral,
+            skinId                  : Players_Constants.PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : this._getWar().getGcData(),
         });
@@ -1020,13 +991,13 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _initUnitView(): void {
         const war           = this._getWar();
-        const unit          = new (getUnitClass())();
+        const unit          = new Units_Unit.Unit();
         const gameConfig    = war.getGcData();
-        unit.init(createDefault({
+        unit.init(Units_Utils_Serialization.createDefault({
             gridIndex   : { x: 0, y: 0 },
             unitId      : 0,
             unitTypeId  : gameConfig.getFirstUnitType(),
-            playerIndex : PlayerIndex.First,
+            playerIndex : Players_Constants.PlayerIndex.First,
             gcData      : gameConfig,
         }), gameConfig);
         unit.startRunning(war);
@@ -1035,25 +1006,25 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForRecentRenderer extends UiListItemData {
-    war                         : IMeWar;
+interface DataForRecentRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war                         : MapEditor_Interface_IMeWar.IMeWar;
     panel                       : Panel;
-    dataForDrawUnit             : Undefinable<DataForDrawUnit>;
-    dataForDrawTileBase         : Undefinable<DataForDrawTileBase>;
-    dataForDrawTileDecoration   : Undefinable<DataForDrawTileDecoration>;
-    dataForDrawTileObject       : Undefinable<DataForDrawTileObject>;
+    dataForDrawUnit             : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawUnit>;
+    dataForDrawTileBase         : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawTileBase>;
+    dataForDrawTileDecoration   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawTileDecoration>;
+    dataForDrawTileObject       : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapEditor_Model_MeTypes.DataForDrawTileObject>;
 }
-class RecentRenderer extends UiListItemRenderer<DataForRecentRenderer> {
-    private readonly _conUnitView!  : IUiContainer;
-    private readonly _conTileView!  : IUiContainer;
+class RecentRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForRecentRenderer> {
+    private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _unitView      = new (getUnitViewClass())();
-    private readonly _tileView      = new (getTileViewClass())();
+    private readonly _unitView      = new Units_UnitView.UnitView();
+    private readonly _tileView      = new Tiles_TileView.TileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
-            { type: TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
+            { type: Notifications_TypeId.TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
+            { type: Notifications_TypeId.TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -1082,8 +1053,8 @@ class RecentRenderer extends UiListItemRenderer<DataForRecentRenderer> {
             conUnitView.setIsVisible(true);
             conTileView.setIsVisible(false);
 
-            const unit = new (getUnitClass())();
-            unit.init(createDefault({
+            const unit = new Units_Unit.Unit();
+            unit.init(Units_Utils_Serialization.createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 unitId      : 0,
                 unitTypeId  : dataForDrawUnit.unitType,
@@ -1102,8 +1073,8 @@ class RecentRenderer extends UiListItemRenderer<DataForRecentRenderer> {
             const dataForDrawTileBase       = openData.dataForDrawTileBase;
             const dataForDrawTileDecoration = openData.dataForDrawTileDecoration;
             const dataForDrawTileObject     = openData.dataForDrawTileObject;
-            const playerIndex               = dataForDrawTileObject?.playerIndex ?? PlayerIndex.Neutral;
-            const tileData                  = create({
+            const playerIndex               = dataForDrawTileObject?.playerIndex ?? Players_Constants.PlayerIndex.Neutral;
+            const tileData                  = Tiles_Utils_Serialization.create({
                 baseType                : dataForDrawTileBase?.baseType ?? null,
                 baseShapeId             : dataForDrawTileBase?.shapeId ?? null,
                 decorationType          : dataForDrawTileDecoration?.decorationType ?? null,
@@ -1127,7 +1098,7 @@ class RecentRenderer extends UiListItemRenderer<DataForRecentRenderer> {
                 customCrystalData       : null,
                 customLaserTurretData   : null,
             });
-            fillNonTrivialDefaultValues(tileData, gameConfig);
+            Tiles_Utils_Serialization.fillNonTrivialDefaultValues(tileData, gameConfig);
 
             const tileView = this._tileView;
             tileView.setData({
@@ -1138,7 +1109,7 @@ class RecentRenderer extends UiListItemRenderer<DataForRecentRenderer> {
                 isFullReplay        : true,
                 gameConfig          : gameConfig,
                 themeType           : war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-                    ?? getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
+                    ?? Helpers_Misc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme()),
             });
             tileView.updateView();
         }

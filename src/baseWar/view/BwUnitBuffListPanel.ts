@@ -1,67 +1,55 @@
 import {
-    showLang,
-    show,
-} from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getUnitBuffName,
-    getUnitBuffDesc,
-    getUnitBuffExtraParamDesc,
-} from "../../lang/Utils.ts";
-import type { BwUnitBuffChanged } from "../../notifications/DataTypes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    UnitBuffs_Constants,
+    UnitBuffs_Utils_Common,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Notifications_DataTypes,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiScrollList,
+    type Units_IUnit,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { AllBuffTypeIdArray } from "../../unitBuffs/Constants.ts";
-import {
-    create,
-    getIsExtraParamSupported,
-} from "../../unitBuffs/utils/Common.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
 export interface OpenData {
-    unit        : IUnit;
+    unit        : Units_IUnit.IUnit;
     canModify   : boolean;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnHelp!              : IUiButton;
-    private readonly _btnAdd!               : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelNoData!          : IUiLabel;
-    private readonly _listBuff!             : IUiScrollList<DataForBuffRenderer>;
+    private readonly _labelNoData!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listBuff!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForBuffRenderer>;
 
-    private readonly _labelBuffType!        : IUiLabel;
+    private readonly _labelBuffType!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupExpire!          : IUiContainer;
-    private readonly _labelExpire!          : IUiLabel;
+    private readonly _groupExpire!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelExpire!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupExtraParams!     : IUiContainer;
-    private readonly _labelExtraParams!     : IUiLabel;
+    private readonly _groupExtraParams!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelExtraParams!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.BwUnitBuffChanged,   callback: this._onNotifyBwUnitBuffChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.BwUnitBuffChanged,   callback: this._onNotifyBwUnitBuffChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -94,8 +82,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getText(TextType.A0742),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0742),
         });
     }
 
@@ -107,30 +95,30 @@ export class Panel extends UiPanel<OpenData> {
 
         const buffArray = unit.getBuffList();
         if ((buffArray?.length) >= 10) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : null,
-            availableNumberArray    : AllBuffTypeIdArray,
+            availableNumberArray    : UnitBuffs_Constants.AllBuffTypeIdArray,
             showNumber              : true,
-            getTitleText            : () => getText(TextType.AbnormalStates),
-            getNumberMainText       : buffTypeId => getUnitBuffName(buffTypeId) ?? UndefinedError,
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+            getNumberMainText       : buffTypeId => Lang_Utils.getUnitBuffName(buffTypeId) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : buffTypeId => {
-                openPanel(getDict().CommonInputPanel, {
-                    title           : getText(TextType.EndTime),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+                    title           : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
                     charRestrict    : `0-9 `,
                     currentValue    : ``,
                     maxChars        : 10,
-                    tips            : getText(TextType.A0743),
+                    tips            : Lang_Utils.getText(Lang_Constants.TextType.A0743),
                     canBeEmpty      : true,
                     callback        : panel => {
                         const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
                         const isEmpty       = !numberArray.length;
                         const turnIndex     = isEmpty ? null : numberArray[0];
                         const playerIndex   = isEmpty ? null : numberArray[1] ?? 0;
-                        unit.addBuff(create({
+                        unit.addBuff(UnitBuffs_Utils_Common.create({
                             buffTypeId          : buffTypeId,
                             expiringTurnIndex   : turnIndex,
                             expiringPlayerIndex : playerIndex,
@@ -143,18 +131,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedGroupExpire(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0738),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0738),
         });
     }
 
     private _onTouchedGroupExtraParams(): void {
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0739),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0739),
         });
     }
 
@@ -168,11 +156,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.AbnormalStates);
-        this._labelBuffType.setLangText(TextType.B0805);
-        this._labelNoData.setLangText(TextType.B0278);
-        this._labelExpire.setText(`${getText(TextType.EndTime)} ?`);
-        this._labelExtraParams.setText(`${getText(TextType.B1229)} ?`);
+        this._labelTitle.setLangText(Lang_Constants.TextType.AbnormalStates);
+        this._labelBuffType.setLangText(Lang_Constants.TextType.B0805);
+        this._labelNoData.setLangText(Lang_Constants.TextType.B0278);
+        this._labelExpire.setText(`${Lang_Utils.getText(Lang_Constants.TextType.EndTime)} ?`);
+        this._labelExtraParams.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B1229)} ?`);
     }
 
     private async _updateComponentsForBuff(): Promise<void> {
@@ -203,27 +191,27 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForBuffRenderer extends UiListItemData {
+interface DataForBuffRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index       : number;
-    unit        : IUnit;
+    unit        : Units_IUnit.IUnit;
     buff        : UnitBuff;
     isLast      : boolean;
     canModify   : boolean;
 }
-class BuffRenderer extends UiListItemRenderer<DataForBuffRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgBg!            : IUiImage;
-    private readonly _imgBottom!        : IUiImage;
+class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForBuffRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgBottom!        : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _groupType!        : IUiContainer;
-    private readonly _imgDelete!        : IUiImage;
-    private readonly _labelType!        : IUiLabel;
+    private readonly _groupType!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgDelete!        : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelType!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupExpire!      : IUiContainer;
-    private readonly _labelExpire!      : IUiLabel;
+    private readonly _groupExpire!      : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelExpire!      : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupExtraParams! : IUiContainer;
-    private readonly _labelExtraParams! : IUiLabel;
+    private readonly _groupExtraParams! : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelExtraParams! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -243,17 +231,17 @@ class BuffRenderer extends UiListItemRenderer<DataForBuffRenderer> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const buff          = openData.buff;
         const buffTypeId    = buff.getBuffTypeId();
         if (!openData.canModify) {
-            openPanel(getDict().CommonHelpPanel, {
-                getContent : () => getUnitBuffDesc(buffTypeId) ?? UndefinedError,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getContent : () => Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError,
             });
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent     : () => `${getUnitBuffDesc(buffTypeId) ?? UndefinedError}\n\n${getText(TextType.A0741)}`,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent     : () => `${Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0741)}`,
                 callback    : () => {
                     openData.unit.deleteBuff(buff, true);
                 },
@@ -269,23 +257,23 @@ class BuffRenderer extends UiListItemRenderer<DataForBuffRenderer> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.EndTime),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
             charRestrict    : `0-9 `,
             currentValue    : ``,
             maxChars        : 10,
-            tips            : getText(TextType.A0743),
+            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0743),
             callback        : panel => {
                 const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
                 const isEmpty       = !numberArray.length;
                 const buff          = openData.buff;
                 buff.setExpiringTurnIndex(isEmpty ? null : numberArray[0]);
                 buff.setExpiringPlayerIndex(isEmpty ? null : numberArray[1] ?? 0);
-                dispatch(TypeId.BwUnitBuffChanged, {
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitBuffChanged, {
                     unit    : openData.unit,
-                } as BwUnitBuffChanged);
+                } as Notifications_DataTypes.BwUnitBuffChanged);
             },
         });
     }
@@ -295,17 +283,17 @@ class BuffRenderer extends UiListItemRenderer<DataForBuffRenderer> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         const buff          = openData.buff;
         const buffTypeId    = buff.getBuffTypeId();
-        if ((!openData.canModify) || (!getIsExtraParamSupported(buffTypeId))) {
-            openPanel(getDict().CommonHelpPanel, {
-                getContent : () => getUnitBuffExtraParamDesc(buffTypeId) ?? UndefinedError,
+        if ((!openData.canModify) || (!UnitBuffs_Utils_Common.getIsExtraParamSupported(buffTypeId))) {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getContent : () => Lang_Utils.getUnitBuffExtraParamDesc(buffTypeId) ?? Lang_Constants.UndefinedError,
             });
         } else {
             // TODO
-            show("TODO!");
+            FloatText.show("TODO!");
         }
     }
 
@@ -319,13 +307,13 @@ class BuffRenderer extends UiListItemRenderer<DataForBuffRenderer> {
         }
 
         const buff = openData.buff;
-        this._labelType.setText(getUnitBuffName(buff.getBuffTypeId()) ?? UndefinedError);
+        this._labelType.setText(Lang_Utils.getUnitBuffName(buff.getBuffTypeId()) ?? Lang_Constants.UndefinedError);
 
         const expiringTurnIndex     = buff.getExpiringTurnIndex();
         const expiringPlayerIndex   = buff.getExpiringPlayerIndex();
         this._labelExpire.setText(((expiringTurnIndex == null) || (expiringPlayerIndex == null))
             ? `--`
-            : `${getText(TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`
+            : `${Lang_Utils.getText(Lang_Constants.TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`
         );
 
         const extraParamArray = buff.getExtraParamArray();

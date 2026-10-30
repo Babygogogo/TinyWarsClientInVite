@@ -1,27 +1,20 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { Base } from "./Base.ts";
-import { War } from "./War.ts";
 import {
-    ResultType,
-    ContextType,
-} from "../Enums.ts";
-import type { Base as ResultsBase } from "../results/Base.ts";
-import { Num } from "../results/Num.ts";
-import { War as ResultsWar } from "../results/War.ts";
-import type {
-    EpVariableInfoDict,
-    EpFunctionInfoDict,
-} from "../Types.ts";
-import {
-    extendVariableInfoDict,
-    extendFunctionInfoDict,
-} from "../Utils.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
+    ExpressionParsers_Contexts_Base,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Results_Num,
+    ExpressionParsers_Results_War,
+    Lang_Constants,
+    ExpressionParsers_Contexts_War,
+    type ExpressionParsers_Types,
+    type BaseWar_Interface_IBwWar,
+    type ExpressionParsers_Results_Base,
+} from "../../internal.ts";
 import type { TaskObjective as ProtoTaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 
-export class TaskObjective extends Base {
+export class TaskObjective extends ExpressionParsers_Contexts_Base.Base {
     private static readonly VnId                        = "id";
     private static readonly VnMain                      = "main";
     private static readonly VnMaxProgress               = "maxProgress";
@@ -34,59 +27,59 @@ export class TaskObjective extends Base {
 
     public static readonly Variables    = TaskObjective.generateVariables();
     public static readonly Functions    = TaskObjective.generateFunctions();
-    private static generateVariables(): EpVariableInfoDict {
-        const variables = extendVariableInfoDict(War.Variables);
-        variables.set(TaskObjective.VnId,                      { desc: TextType.A0719, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnMain,                    { desc: TextType.A0720, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnMaxProgress,             { desc: TextType.A0721, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnCompletionScore,         { desc: TextType.A0722, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnProgressScore,           { desc: TextType.A0723, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnHidden,                  { desc: TextType.A0724, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnProgress,                { desc: TextType.A0725, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnProgressUpdaterDisabled, { desc: TextType.A0731, resultType: ResultType.Number, isExtension: false });
-        variables.set(TaskObjective.VnWar,                     { desc: TextType.A0384, resultType: ResultType.War,    isExtension: false });
+    private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
+        const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
+        variables.set(TaskObjective.VnId,                      { desc: Lang_Constants.TextType.A0719, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnMain,                    { desc: Lang_Constants.TextType.A0720, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnMaxProgress,             { desc: Lang_Constants.TextType.A0721, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnCompletionScore,         { desc: Lang_Constants.TextType.A0722, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnProgressScore,           { desc: Lang_Constants.TextType.A0723, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnHidden,                  { desc: Lang_Constants.TextType.A0724, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnProgress,                { desc: Lang_Constants.TextType.A0725, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnProgressUpdaterDisabled, { desc: Lang_Constants.TextType.A0731, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
+        variables.set(TaskObjective.VnWar,                     { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,    isExtension: false });
 
         return variables;
     }
-    private static generateFunctions(): EpFunctionInfoDict {
-        const functions = extendFunctionInfoDict(War.Functions);
+    private static generateFunctions(): ExpressionParsers_Types.EpFunctionInfoDict {
+        const functions = ExpressionParsers_Utils.extendFunctionInfoDict(ExpressionParsers_Contexts_War.War.Functions);
         return functions;
     }
 
     private readonly _taskObjective : ProtoTaskObjective | null;
     private readonly _state         : TaskObjectiveState | null;
-    private _contextWar             : War | null = null;
+    private _contextWar             : ExpressionParsers_Contexts_War.War | null = null;
 
-    public constructor(war: IBwWar, objectiveId: number) {
+    public constructor(war: BaseWar_Interface_IBwWar.IBwWar, objectiveId: number) {
         super(war);
 
         this._taskObjective = war.getInstanceWarRule()?.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === objectiveId) ?? null;
         this._state         = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId) ?? null;
     }
 
-    public getContextType(): ContextType {
-        return ContextType.TaskObjective;
+    public getContextType(): ExpressionParsers_Enums.ContextType {
+        return ExpressionParsers_Enums.ContextType.TaskObjective;
     }
 
-    public override resolveVariable(identifierName: string): ResultsBase {
+    public override resolveVariable(identifierName: string): ExpressionParsers_Results_Base.Base {
         const war           = this.getWar();
         const taskObjective = this._taskObjective;
         if (identifierName == TaskObjective.VnId) {
-            return new Num(
+            return new ExpressionParsers_Results_Num.Num(
                 war,
                 taskObjective == null
                     ? -2
                     : (taskObjective.getObjectiveId())
             );
         } else if (identifierName == TaskObjective.VnMain) {
-            return new Num(
+            return new ExpressionParsers_Results_Num.Num(
                 war,
                 taskObjective == null
                     ? -2
                     : (taskObjective.getIsMain() ? 1 : 0)
             );
         } else if (identifierName == TaskObjective.VnMaxProgress) {
-            return new Num(
+            return new ExpressionParsers_Results_Num.Num(
                 war,
                 taskObjective == null
                     ? -2
@@ -94,16 +87,16 @@ export class TaskObjective extends Base {
             );
         } else if (identifierName == TaskObjective.VnCompletionScore) {
             if (taskObjective == null) {
-                throw newError(`Invalid objectiveId.`);
+                throw Helpers_Misc.newError(`Invalid objectiveId.`);
             }
-            return new Num(war, taskObjective.getScoreForCompletion());
+            return new ExpressionParsers_Results_Num.Num(war, taskObjective.getScoreForCompletion());
         } else if (identifierName == TaskObjective.VnProgressScore) {
             if (taskObjective == null) {
-                throw newError(`Invalid objectiveId.`);
+                throw Helpers_Misc.newError(`Invalid objectiveId.`);
             }
-            return new Num(war, taskObjective.getScoreForProgress());
+            return new ExpressionParsers_Results_Num.Num(war, taskObjective.getScoreForProgress());
         } else if (identifierName == TaskObjective.VnHidden) {
-            return new Num(
+            return new ExpressionParsers_Results_Num.Num(
                 war,
                 taskObjective == null
                     ? -2
@@ -111,24 +104,24 @@ export class TaskObjective extends Base {
             );
         } else if (identifierName == TaskObjective.VnProgress) {
             if (taskObjective == null) {
-                throw newError(`Invalid objectiveId.`);
+                throw Helpers_Misc.newError(`Invalid objectiveId.`);
             }
-            return new Num(war, this._state?.getCurrentProgress() ?? 0);
+            return new ExpressionParsers_Results_Num.Num(war, this._state?.getCurrentProgress() ?? 0);
         } else if (identifierName == TaskObjective.VnProgressUpdaterDisabled) {
-            return new Num(
+            return new ExpressionParsers_Results_Num.Num(
                 war,
                 taskObjective == null
                     ? -2
                     : (this._state?.getIsProgressUpdaterDisabled() ? 1 : 0)
             );
         } else if (identifierName == TaskObjective.VnWar) {
-            return new ResultsWar(war);
+            return new ExpressionParsers_Results_War.War(war);
         }
 
-        return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
+        return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(war)).resolveVariable(identifierName);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
-        return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+    public override callFunction(identifierName: string, argumentArray: ExpressionParsers_Results_Base.Base[], rootCtx: ExpressionParsers_Contexts_Base.Base, localVariableDict: Map<string, ExpressionParsers_Results_Base.Base> | null, isRestricted: boolean): ExpressionParsers_Results_Base.Base {
+        return (this._contextWar ??= new ExpressionParsers_Contexts_War.War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
     }
 }

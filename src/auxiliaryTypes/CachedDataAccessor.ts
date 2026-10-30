@@ -1,13 +1,12 @@
-import type { Undefinable } from "./AuxiliaryTypes.ts";
-import { getExisted } from "../helpers/Misc.ts";
-import { getServerTimestamp } from "../timer/TimerModel.ts";
 import {
-    setTimeout,
-    clearTimeout,
-} from "../egret/Egret.ts";
+    Egret_Egret,
+    Helpers_Misc,
+    Timer_TimerModel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 
 export class CachedDataAccessor<KeyType, DataType> {
-    private _dataDict                   = new Map<KeyType, Undefinable<DataType>>();
+    private _dataDict                   = new Map<KeyType, AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>();
     private _dataTimestampDict          = new Map<KeyType, number>();
     private _requestDict                = new Map<KeyType, (() => void)[]>();
     private _requestTimestampDict       = new Map<KeyType, number>();
@@ -25,14 +24,14 @@ export class CachedDataAccessor<KeyType, DataType> {
         this._reqData        = reqData;
     }
 
-    public getData(key: KeyType, forceNew = false): Promise<Undefinable<DataType>> {
-        const serverTimestamp       = getServerTimestamp();
+    public getData(key: KeyType, forceNew = false): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>> {
+        const serverTimestamp       = Timer_TimerModel.getServerTimestamp();
         const dataDict              = this._dataDict;
         const requestTimestampDict  = this._requestTimestampDict;
         const requestDict           = this._requestDict;
         if (requestDict.has(key)) {
-            return new Promise<Undefinable<DataType>>(resolve => {
-                getExisted(requestDict.get(key)).push(() => {
+            return new Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>(resolve => {
+                Helpers_Misc.getExisted(requestDict.get(key)).push(() => {
                     resolve(dataDict.get(key) ?? null);
                 });
 
@@ -48,10 +47,10 @@ export class CachedDataAccessor<KeyType, DataType> {
             (dataDict.has(key))                                                                 &&
             (serverTimestamp - (this._dataTimestampDict.get(key) ?? 0) <= this._dataExpireTime)
         ) {
-            return new Promise<Undefinable<DataType>>(resolve => resolve(dataDict.get(key) ?? null));
+            return new Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>(resolve => resolve(dataDict.get(key) ?? null));
         }
 
-        return new Promise<Undefinable<DataType>>(resolve => {
+        return new Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>(resolve => {
             requestDict.set(key, [() => {
                 resolve(dataDict.get(key) ?? null);
             }]);
@@ -74,8 +73,8 @@ export class CachedDataAccessor<KeyType, DataType> {
     //     return keyArray;
     // },
 
-    public setData(key: KeyType, data: Undefinable<DataType>): void {
-        this._dataTimestampDict.set(key, getServerTimestamp());
+    public setData(key: KeyType, data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>): void {
+        this._dataTimestampDict.set(key, Timer_TimerModel.getServerTimestamp());
         this._dataDict.set(key, data);
 
         const requestDict = this._requestDict;
@@ -97,7 +96,7 @@ export class CachedDataAccessor<KeyType, DataType> {
         } else {
             this._requestRetryTimeoutDict.set(
                 key,
-                setTimeout(() => {
+                Egret_Egret.setTimeout(() => {
                     requestRetryCountDict.set(key, failCount);
                     this._reqData(key);
                 }, null, 1000)
@@ -112,7 +111,7 @@ export class CachedDataAccessor<KeyType, DataType> {
         const timeoutId = requestRetryTimeoutDict.get(key);
         if (timeoutId != null) {
             requestRetryTimeoutDict.delete(key);
-            clearTimeout(timeoutId);
+            Egret_Egret.clearTimeout(timeoutId);
         }
     }
 }

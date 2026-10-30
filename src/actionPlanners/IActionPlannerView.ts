@@ -1,15 +1,17 @@
-import type { IActionPlanner } from "./IActionPlanner.ts";
-import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import {
+    type ActionPlanners_IActionPlanner,
+    type Ui_Interfaces_IUiContainer,
+} from "../internal.ts";
 
 export interface IActionPlannerView {
-    init(actionPlanner: IActionPlanner): void;
-    fastInit(actionPlanner: IActionPlanner): void;
+    init(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void;
+    fastInit(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void;
 
     startRunningView(): void;
     stopRunningView(): void;
 
-    getContainerForGrids(): IUiContainer;
-    getContainerForUnits(): IUiContainer;
+    getContainerForGrids(): Ui_Interfaces_IUiContainer.IUiContainer;
+    getContainerForUnits(): Ui_Interfaces_IUiContainer.IUiContainer;
 
     updateView(): void;
 }

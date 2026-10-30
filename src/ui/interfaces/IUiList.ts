@@ -1,10 +1,12 @@
-import type { IUiLayoutBase } from "./IUiLayoutBase.ts";
-import type { IUiListItemRenderer } from "./IUiListItemRenderer.ts";
-import type { UiListItemData } from "../types/UiListItemData.ts";
+import {
+    type Ui_Interfaces_IUiLayoutBase,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
-export interface IUiList<DataForRenderer extends UiListItemData> extends IUiLayoutBase {
-    getItemRendererClass(): (new () => IUiListItemRenderer<DataForRenderer>) | undefined;
-    setItemRendererClass(itemRenderer: new () => IUiListItemRenderer<DataForRenderer>): void;
+export interface IUiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData> extends Ui_Interfaces_IUiLayoutBase.IUiLayoutBase {
+    getItemRendererClass(): (new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>) | undefined;
+    setItemRendererClass(itemRenderer: new () => Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): void;
 
     getRequireSelection(): boolean;
     setRequireSelection(value: boolean): void;
@@ -19,29 +21,29 @@ export interface IUiList<DataForRenderer extends UiListItemData> extends IUiLayo
     getBoundDataArray(): (DataForRenderer | undefined)[];
     updateSingleData(index: number, data: DataForRenderer | undefined): Promise<void>;
 
-    addItemByData(data: DataForRenderer): Promise<IUiListItemRenderer<DataForRenderer>>;
-    addItemsByData(dataArray: DataForRenderer[]): Promise<IUiListItemRenderer<DataForRenderer>[]>;
+    addItemByData(data: DataForRenderer): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>>;
+    addItemsByData(dataArray: DataForRenderer[]): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[]>;
 
-    removeItemAt(index: number): Promise<IUiListItemRenderer<DataForRenderer> | undefined>;
-    removeItem(item: IUiListItemRenderer<DataForRenderer>): Promise<IUiListItemRenderer<DataForRenderer> | undefined>;
-    removeAllItems(): Promise<IUiListItemRenderer<DataForRenderer>[]>;
+    removeItemAt(index: number): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined>;
+    removeItem(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined>;
+    removeAllItems(): Promise<Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[]>;
 
-    getItemAt(index: number): IUiListItemRenderer<DataForRenderer> | undefined;
-    getItemIndex(item: IUiListItemRenderer<DataForRenderer>): number;
-    getAllItems(): IUiListItemRenderer<DataForRenderer>[];
+    getItemAt(index: number): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined;
+    getItemIndex(item: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>): number;
+    getAllItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
 
-    getPreviousSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined;
+    getPreviousSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined;
     getPreviousSelectedItemIndexes(): number[] | undefined;
 
-    getSelectedItems(): IUiListItemRenderer<DataForRenderer>[] | undefined;
-    setSelectedItems(newItems: IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin?: boolean): void;
+    getSelectedItems(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined;
+    setSelectedItems(newItems: Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[] | undefined, needResetItemsSkin?: boolean): void;
 
     getSelectedDataArray(): (DataForRenderer | undefined)[] | undefined;
 
     getSelectedItemIndexes(): number[] | undefined;
     setSelectedItemIndexes(indexes: number[], needResetItemsSkin?: boolean): void;
 
-    getFirstSelectedItem(): IUiListItemRenderer<DataForRenderer> | undefined;
+    getFirstSelectedItem(): Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer> | undefined;
     getFirstSelectedItemIndex(): number | undefined;
     getFirstSelectedData(): DataForRenderer | undefined;
 

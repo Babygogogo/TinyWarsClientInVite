@@ -1,40 +1,26 @@
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { runBattleForAttackTile } from "../../../damageCalculators/Utils.ts";
 import {
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarBaseClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type { WoUnitAttackTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitAttackTile.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { ActionStateId } from "../../../units/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { getAllUnitsOnMapVisibleToTeams } from "../../../visibilities/Utils.ts";
-import {
-    handleCommonExtraData,
-    handlePostOperationPlunder,
-    handleViewForBattle,
-} from "./Common.ts";
+    AuxiliaryTypes_GridIndex,
+    MapEditor_Model_MeWar,
+    AuxiliaryTypes_MovePath,
+    MultiPlayerWar_Model_MpwWar,
+    DamageCalculators_Utils,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    Units_Constants,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    Helpers_Misc,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+} from "../../../internal.ts";
 
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
+import type { WoUnitAttackTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitAttackTile.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoUnitAttackTile, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackTile, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitAttackTile(war, action);
     } else {
@@ -42,25 +28,25 @@ export async function execute(war: IBwWar, action: WoUnitAttackTile, isFast: boo
     }
 }
 
-function fastExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): void {
+function fastExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackTile): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeUnitAttackTile_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitAttackTile_00),
             isFastExecute   : true,
         });
 
     } else {
-        const path          = MovePath.create(getExisted(action.getPath()));
+        const path          = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
-        const focusUnit     = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         if (path.isBlocked) {
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         } else {
             const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
@@ -69,17 +55,17 @@ function fastExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): void {
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
 
-            const battleInfo = runBattleForAttackTile({
+            const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
                 war                     : war,
                 movePath1               : pathNodes,
                 launchUnitId1           : launchUnitId,
                 maxAttackRange1         : maxAttackRange1,
                 canAttackAfterMoving1   : canAttackAfterMoving1,
-                gridIndex2              : getExisted(GridIndex.convertGridIndex(action.getTargetGridIndex())),
+                gridIndex2              : Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
                 maxAttackRange2         : null,
                 canAttackAfterMoving2   : false,
             });
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             const unitMapView = unitMap.getView();
             for (const [, unit] of battleInfo.destroyedUnits) {
@@ -87,40 +73,40 @@ function fastExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): void {
             }
         }
 
-        handlePostOperationPlunder(focusUnit, true);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
-async function normalExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): Promise<void> {
+async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackTile): Promise<void> {
     // const desc = await war.getDescForExeUnitAttackTile(action);
     // (desc) && (FloatText.show(desc));
 
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_00);
-        const targetGridIndex = GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
+        const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_00);
+        const targetGridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         await war.moveExtraUnit({
             movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
             aiming                  : targetGridIndex,
             deleteViewAfterMoving   : true,
         });
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
             isFastExecute                       : false,
         });
 
     } else {
-        const path              = MovePath.create(getExisted(action.getPath()));
+        const path              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId      = action.getLaunchUnitId();
         const pathNodes         = path.nodes;
         const unitMap           = war.getUnitMap();
-        const focusUnit         = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         if (path.isBlocked) {
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             await focusUnit.moveViewAlongPath({
                 pathNodes           : pathNodes,
@@ -137,8 +123,8 @@ async function normalExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): P
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
 
-            const gridIndex2        = getExisted(GridIndex.convertGridIndex(action.getTargetGridIndex()), ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);
-            const allVisibleUnits   = getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+            const gridIndex2        = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);
+            const allVisibleUnits   = Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
             await focusUnit.moveViewAlongPath({
                 pathNodes           : pathNodes,
                 isDiving            : focusUnit.getIsDiving(),
@@ -147,7 +133,7 @@ async function normalExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): P
                 updateViewAfterMove : false,
             });
 
-            const battleInfo = runBattleForAttackTile({
+            const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
                 war                     : war,
                 movePath1               : pathNodes,
                 launchUnitId1           : launchUnitId,
@@ -157,34 +143,29 @@ async function normalExeUnitAttackTile(war: IBwWar, action: WoUnitAttackTile): P
                 maxAttackRange2         : null,
                 canAttackAfterMoving2   : false,
             });
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
-            handleViewForBattle(battleInfo, war, allVisibleUnits);
+            WarOperations_Executors_Utils_Common.handleViewForBattle(battleInfo, war, allVisibleUnits);
         }
 
-        handlePostOperationPlunder(focusUnit, false);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoUnitAttackTile): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitAttackTile): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0097)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0097)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

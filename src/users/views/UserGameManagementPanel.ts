@@ -1,47 +1,43 @@
-import { getDesigningCampaignIdArray } from "../../campaigns/managements/Provider.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { reqGmDeleteSpmAllScoreAndReplay } from "../../gm/model/GmProxy.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import { checkIsRedForMapManagement } from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import {
-    getSelfUserId,
-    getIsSelfAdmin,
-    getIsSelfMapCommittee,
-    getIsSelfAutoTourneyCommittee,
-    getIsSelfCampaignManager,
-} from "../Model.ts";
+    NormalMap_Model_NormalMapModel,
+    Campaigns_Managements_Provider,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Users_Model,
+    Lang_Utils,
+    GamePanels_Manager,
+    Gm_Model_GmProxy,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
-    private readonly _group!                    : IUiContainer;
-    private readonly _scroller!                 : IUiScroller<IUiContainer>;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _scroller!                 : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiContainer.IUiContainer>;
 
-    private readonly _groupButtons!             : IUiLayout;
-    private readonly _btnDeleteAllSpmRank!      : IUiButton;
-    private readonly _btnSetPrivilege!          : IUiButton;
-    private readonly _btnMapManagement!         : IUiButton;
-    private readonly _btnManageBroadcast!       : IUiButton;
-    private readonly _btnAutoTourneyManagement! : IUiButton;
-    private readonly _btnCampaignManagement!    : IUiButton;
+    private readonly _groupButtons!             : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnDeleteAllSpmRank!      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetPrivilege!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnMapManagement!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnManageBroadcast!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAutoTourneyManagement! : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnCampaignManagement!    : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -69,26 +65,26 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnDeleteAllSpmRank(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getTitle       : () => getText(TextType.B0879),
-            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback    : () => reqGmDeleteSpmAllScoreAndReplay(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B0879),
+            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback    : () => Gm_Model_GmProxy.reqGmDeleteSpmAllScoreAndReplay(),
         });
     }
     private _onTouchedBtnSetPrivilege(): void {
-        openPanel(getDict().GmSetUserFullPrivilegePanel, { userId: getExisted(getSelfUserId()) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, { userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()) });
     }
     private _onTouchedBtnMapManagement(): void {
-        openPanel(getDict().MmMainMenuPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmMainMenuPanel, void 0);
     }
     private _onTouchedBtnManageBroadcast(): void {
-        openPanel(getDict().BroadcastMessageListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastMessageListPanel, void 0);
     }
     private _onTouchedBtnAutoTourneyManagement(): void {
-        openPanel(getDict().AtGlobalSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtGlobalSettingsPanel, void 0);
     }
     private _onTouchedBtnCampaignManagement(): void {
-        openPanel(getDict().CmCampaignListPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CmCampaignListPanel, void 0);
     }
 
     private _updateView(): void {
@@ -98,32 +94,32 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0878);
-        this._btnDeleteAllSpmRank.setLangText(TextType.B0879);
-        this._btnSetPrivilege.setLangText(TextType.B0460);
-        this._btnMapManagement.setLangText(TextType.B0192);
-        this._btnManageBroadcast.setLangText(TextType.B0880);
-        this._btnAutoTourneyManagement.setLangText(TextType.B1036);
-        this._btnCampaignManagement.setLangText(TextType.B1133);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0878);
+        this._btnDeleteAllSpmRank.setLangText(Lang_Constants.TextType.B0879);
+        this._btnSetPrivilege.setLangText(Lang_Constants.TextType.B0460);
+        this._btnMapManagement.setLangText(Lang_Constants.TextType.B0192);
+        this._btnManageBroadcast.setLangText(Lang_Constants.TextType.B0880);
+        this._btnAutoTourneyManagement.setLangText(Lang_Constants.TextType.B1036);
+        this._btnCampaignManagement.setLangText(Lang_Constants.TextType.B1133);
     }
 
     private async _updateGroupButtons(): Promise<void> {
         const group = this._groupButtons;
         group.removeAllItems(false);
 
-        if (getIsSelfAdmin()) {
+        if (Users_Model.getIsSelfAdmin()) {
             group.addItem(this._btnSetPrivilege, false);
             group.addItem(this._btnDeleteAllSpmRank, false);
             group.addItem(this._btnManageBroadcast, false);
         }
-        if (getIsSelfMapCommittee()) {
+        if (Users_Model.getIsSelfMapCommittee()) {
             group.addItem(this._btnMapManagement, false);
         }
-        if (getIsSelfAutoTourneyCommittee()) {
+        if (Users_Model.getIsSelfAutoTourneyCommittee()) {
             group.addItem(this._btnAutoTourneyManagement, false);
         }
-        if ((getIsSelfCampaignManager())                                 ||
-            ((await getDesigningCampaignIdArray())?.length)
+        if ((Users_Model.getIsSelfCampaignManager())                                 ||
+            ((await Campaigns_Managements_Provider.getDesigningCampaignIdArray())?.length)
         ) {
             group.addItem(this._btnCampaignManagement, false);
         }
@@ -131,6 +127,6 @@ export class Panel extends UiPanel<OpenData> {
         group.arrangeItems();
     }
     private async _updateRedForBtnMapManagement(): Promise<void> {
-        this._btnMapManagement.setRedVisible(await checkIsRedForMapManagement());
+        this._btnMapManagement.setRedVisible(await NormalMap_Model_NormalMapModel.checkIsRedForMapManagement());
     }
 }

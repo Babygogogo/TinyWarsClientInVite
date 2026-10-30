@@ -1,52 +1,42 @@
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import {
-    newError,
-    getExisted,
-} from "../helpers/Misc.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import {
-    PlayerIndex,
-    AliveStateId,
-} from "../players/Constants.ts";
+    Players_Constants,
+    Utils_ClientErrorCode,
+    Notifications_Dispatcher,
+    Helpers_Misc,
+    Turns_Constants,
+    Notifications_TypeId,
+    Turns_PhaseHandlers_WithExtraData,
+    Turns_PhaseHandlers_WithoutExtraData,
+    type BaseWar_Interface_IBwWar,
+    type Turns_ITurnManager,
+    type Turns_Types,
+} from "../internal.ts";
 import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 import { SerialTurnManager } from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
-import { PhaseCode } from "./Constants.ts";
-import type { ITurnManager } from "./ITurnManager.ts";
-import {
-    endPhaseStandby as withExtraDataEndPhaseStandby,
-    endPhaseMain as withExtraDataEndPhaseMain,
-} from "./phaseHandlers/WithExtraData.ts";
-import {
-    endPhaseStandby as withoutExtraDataEndPhaseStandby,
-    endPhaseMain as withoutExtraDataEndPhaseMain,
-} from "./phaseHandlers/WithoutExtraData.ts";
-import type { TurnAndPlayerIndex } from "./Types.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-export class TurnManager implements ITurnManager {
+export class TurnManager implements Turns_ITurnManager.ITurnManager {
     private _turnIndex?             : number;
     private _playerIndexInTurn?     : number;
-    private _phaseCode?             : PhaseCode;
+    private _phaseCode?             : Turns_Constants.PhaseCode;
     private _enterTurnTime?         : number;
 
-    private _war?                   : IBwWar;
+    private _war?                   : BaseWar_Interface_IBwWar.IBwWar;
     private _hasUnitOnBeginningTurn = false;
 
     public init(data: SerialTurnManager, playersCountUnneutral: number): void {
         const playerIndex = data.getPlayerIndex();
-        if ((playerIndex < PlayerIndex.Neutral)   ||
+        if ((playerIndex < Players_Constants.PlayerIndex.Neutral)   ||
             (playerIndex > playersCountUnneutral)
         ) {
-            throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwTurnManager_Init_01);
+            throw Helpers_Misc.newError(`Invalid playerIndex: ${playerIndex}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_Init_01);
         }
 
         const turnPhaseCode = data.getTurnPhaseCode();
-        if ((turnPhaseCode !== PhaseCode.Main)          &&
-            (turnPhaseCode !== PhaseCode.WaitBeginTurn)
+        if ((turnPhaseCode !== Turns_Constants.PhaseCode.Main)          &&
+            (turnPhaseCode !== Turns_Constants.PhaseCode.WaitBeginTurn)
         ) {
-            throw newError(`Invalid turnPhaseCode: ${turnPhaseCode}`, ClientErrorCode.BwTurnManager_Init_02);
+            throw Helpers_Misc.newError(`Invalid turnPhaseCode: ${turnPhaseCode}`, Utils_ClientErrorCode.ClientErrorCode.BwTurnManager_Init_02);
         }
 
         this.setTurnIndex(data.getTurnIndex());
@@ -58,7 +48,7 @@ export class TurnManager implements ITurnManager {
         this.init(data, playersCountUnneutral);
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._setWar(war);
     }
 
@@ -77,11 +67,11 @@ export class TurnManager implements ITurnManager {
         return this.serializeForCreateSfw();
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BaseWar_Interface_IBwWar.IBwWar): void {
         this._war = war;
     }
-    public getWar(): IBwWar {
-        return getExisted(this._war);
+    public getWar(): BaseWar_Interface_IBwWar.IBwWar {
+        return Helpers_Misc.getExisted(this._war);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,41 +79,41 @@ export class TurnManager implements ITurnManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public endPhaseStandby(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
         return this.getWar().getIsExecuteActionsWithExtraData()
-            ? withExtraDataEndPhaseStandby(this, action, isFastExecute)
-            : withoutExtraDataEndPhaseStandby(this, isFastExecute);
+            ? Turns_PhaseHandlers_WithExtraData.endPhaseStandby(this, action, isFastExecute)
+            : Turns_PhaseHandlers_WithoutExtraData.endPhaseStandby(this, isFastExecute);
     }
 
     public endPhaseMain(action: WoPlayerEndTurn, isFastExecute: boolean): void {
         this.getWar().getIsExecuteActionsWithExtraData()
-            ? withExtraDataEndPhaseMain(this, action, isFastExecute)
-            : withoutExtraDataEndPhaseMain(this, isFastExecute);
+            ? Turns_PhaseHandlers_WithExtraData.endPhaseMain(this, action, isFastExecute)
+            : Turns_PhaseHandlers_WithoutExtraData.endPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getTurnIndex(): number {
-        return getExisted(this._turnIndex);
+        return Helpers_Misc.getExisted(this._turnIndex);
     }
     public setTurnIndex(index: number): void {
         if (this._turnIndex !== index){
             this._turnIndex = index;
-            dispatch(TypeId.BwTurnIndexChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTurnIndexChanged);
         }
     }
 
     public getPlayerIndexInTurn(): number {
-        return getExisted(this._playerIndexInTurn);
+        return Helpers_Misc.getExisted(this._playerIndexInTurn);
     }
     public setPlayerIndexInTurn(index: number): void {
         if (this._playerIndexInTurn !== index) {
             this._playerIndexInTurn = index;
-            dispatch(TypeId.BwPlayerIndexInTurnChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged);
         }
     }
     public getPreviousAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
         const playerIndex1  = this._getPreviousAlivePlayerIndex(playerIndex);
-        if ((playerIndex1 !== PlayerIndex.Neutral) || (includeNeutral)) {
+        if ((playerIndex1 !== Players_Constants.PlayerIndex.Neutral) || (includeNeutral)) {
             return playerIndex1;
         } else {
             return this._getPreviousAlivePlayerIndex(playerIndex1);
@@ -132,7 +122,7 @@ export class TurnManager implements ITurnManager {
     public getNextAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
         const data          = this._getNextAliveTurnAndPlayerIndex(null, playerIndex);
         const playerIndex1  = data.playerIndex;
-        if ((playerIndex1 !== PlayerIndex.Neutral) || (includeNeutral)) {
+        if ((playerIndex1 !== Players_Constants.PlayerIndex.Neutral) || (includeNeutral)) {
             return playerIndex1;
         } else {
             const nextData = this._getNextAliveTurnAndPlayerIndex(data.turnIndex, playerIndex1);
@@ -140,18 +130,18 @@ export class TurnManager implements ITurnManager {
         }
     }
 
-    public getPhaseCode(): PhaseCode {
-        return getExisted(this._phaseCode);
+    public getPhaseCode(): Turns_Constants.PhaseCode {
+        return Helpers_Misc.getExisted(this._phaseCode);
     }
-    public setPhaseCode(code: PhaseCode): void {
+    public setPhaseCode(code: Turns_Constants.PhaseCode): void {
         if (this._phaseCode !== code) {
             this._phaseCode = code;
-            dispatch(TypeId.BwTurnPhaseCodeChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTurnPhaseCodeChanged);
         }
     }
 
     public getEnterTurnTime(): number {
-        return getExisted(this._enterTurnTime);
+        return Helpers_Misc.getExisted(this._enterTurnTime);
     }
     public setEnterTurnTime(time: number): void {
         this._enterTurnTime = time;
@@ -167,7 +157,7 @@ export class TurnManager implements ITurnManager {
             }
 
             const player = playerManager.getPlayer(previousPlayerIndex);
-            if (player.getAliveState() !== AliveStateId.Dead) {
+            if (player.getAliveState() !== Players_Constants.AliveStateId.Dead) {
                 return previousPlayerIndex;
             } else {
                 --previousPlayerIndex;
@@ -177,7 +167,7 @@ export class TurnManager implements ITurnManager {
     public getNextTurnAndPlayerIndex(
         currTurnIndex   = this.getTurnIndex(),
         currPlayerIndex = this.getPlayerIndexInTurn(),
-    ): TurnAndPlayerIndex {
+    ): Turns_Types.TurnAndPlayerIndex {
         if (currPlayerIndex < this.getWar().getPlayerManager().getTotalPlayersCount(false)) {
             return {
                 turnIndex   : currTurnIndex,
@@ -186,14 +176,14 @@ export class TurnManager implements ITurnManager {
         } else {
             return {
                 turnIndex   : currTurnIndex + 1,
-                playerIndex : PlayerIndex.Neutral,
+                playerIndex : Players_Constants.PlayerIndex.Neutral,
             };
         }
     }
     private _getNextAliveTurnAndPlayerIndex(
         currTurnIndex   : number | null,
         currPlayerIndex = this.getPlayerIndexInTurn(),
-    ): TurnAndPlayerIndex {
+    ): Turns_Types.TurnAndPlayerIndex {
         const war           = this.getWar();
         currTurnIndex       = currTurnIndex ?? this.getTurnIndex();
         const playerManager = war.getPlayerManager();
@@ -207,7 +197,7 @@ export class TurnManager implements ITurnManager {
             }
 
             const player = playerManager.getPlayer(nextPlayerIndex);
-            if (player.getAliveState() !== AliveStateId.Dead) {
+            if (player.getAliveState() !== Players_Constants.AliveStateId.Dead) {
                 return {
                     turnIndex   : nextTurnIndex,
                     playerIndex : nextPlayerIndex

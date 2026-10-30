@@ -1,32 +1,27 @@
-import type { DataForTileView } from "../baseWar/model/BwTypes.ts";
 import {
-    getCachedTileBuffImageSource,
-    getTileAnimationTickCount,
-    getCachedTileObjectImageSource,
-    getCachedTileBaseImageSource,
-    getCachedTileDecorationImageSource,
-    getStateIndicatorTickCount,
-} from "../common/model/CommonModel.ts";
-import { SkinId } from "../forceSkins/Constants.ts";
-import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { createLazyFunc } from "../helpers/Misc.ts";
-import { PlayerIndex } from "../players/Constants.ts";
-import type { ITileView } from "./ITileView.ts";
-import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import { getUiImageClass } from "../ui/utils/UiFactory.ts";
-import { getSelfSettingsTextureVersion } from "../users/Model.ts";
+    Helpers_Misc,
+    Common_Model_CommonModel,
+    Graphics_Utils,
+    Players_Constants,
+    ForceSkins_Constants,
+    Ui_Components_UiImage,
+    type BaseWar_Model_BwTypes,
+    type Tiles_ITileView,
+    type Ui_Interfaces_IUiImage,
+    Users_Model,
+} from "../internal.ts";
 
-const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth  = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
 
-export class TileView implements ITileView {
-    private readonly _imgBase       = new (getUiImageClass())();
-    private readonly _imgDecoration = new (getUiImageClass())();
-    private readonly _imgObject     = new (getUiImageClass())();
-    private readonly _imgBuff       = new (getUiImageClass())();
-    private readonly _imgHighlight  = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+export class TileView implements Tiles_ITileView.ITileView {
+    private readonly _imgBase       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgDecoration = new Ui_Components_UiImage.UiImage();
+    private readonly _imgObject     = new Ui_Components_UiImage.UiImage();
+    private readonly _imgBuff       = new Ui_Components_UiImage.UiImage();
+    private readonly _imgHighlight  = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
 
-    private _data           : DataForTileView | null = null;
+    private _data           : BaseWar_Model_BwTypes.DataForTileView | null = null;
     private _framesForBuff  : string[] | null = null;
 
     public constructor() {
@@ -64,12 +59,12 @@ export class TileView implements ITileView {
         }
     }
 
-    public setData(data: DataForTileView): void {
+    public setData(data: BaseWar_Model_BwTypes.DataForTileView): void {
         this._data = data;
 
         this._resetFramesForBuff();
     }
-    public getData(): DataForTileView | null {
+    public getData(): BaseWar_Model_BwTypes.DataForTileView | null {
         return this._data;
     }
     private _resetFramesForBuff(): void {
@@ -83,9 +78,9 @@ export class TileView implements ITileView {
         if (!buffTypeArray.length) {
             this._framesForBuff = null;
         } else {
-            const version       = getSelfSettingsTextureVersion();
+            const version       = Users_Model.getSelfSettingsTextureVersion();
             const hasFog        = data.hasFog;
-            this._framesForBuff = buffTypeArray.map(v => getCachedTileBuffImageSource({
+            this._framesForBuff = buffTypeArray.map(v => Common_Model_CommonModel.getCachedTileBuffImageSource({
                 version     : version,
                 buffType    : v,
                 isDark      : hasFog,
@@ -108,8 +103,8 @@ export class TileView implements ITileView {
         const tileData      = data.tileData;
         const themeType     = data.themeType;
         const gameConfig    = data.gameConfig;
-        const version       = getSelfSettingsTextureVersion();
-        const tickCount     = getTileAnimationTickCount();
+        const version       = Users_Model.getSelfSettingsTextureVersion();
+        const tickCount     = Common_Model_CommonModel.getTileAnimationTickCount();
         const tileBaseType  = tileData.getBaseType();
 
         {
@@ -122,12 +117,12 @@ export class TileView implements ITileView {
                 imgObject.setIsVisible(true);
 
                 const overridingSkinId = data.overridingSkinId ?? -1;
-                imgObject.loadSource(getCachedTileObjectImageSource({
+                imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
                     version     : version,
                     themeType   : themeType,
                     skinId      : ((hasFog) && (!data.isFullReplay) && (!gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseType, objectType)?.getIsAlwaysShowOwner()))
-                        ? SkinId.Neutral
-                        : (overridingSkinId >= PlayerIndex.First ? overridingSkinId : skinId),
+                        ? ForceSkins_Constants.SkinId.Neutral
+                        : (overridingSkinId >= Players_Constants.PlayerIndex.First ? overridingSkinId : skinId),
                     shapeId     : shapeId,
                     objectType  : objectType,
                     isDark      : hasFog,
@@ -142,10 +137,10 @@ export class TileView implements ITileView {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
-                imgBase.loadSource(getCachedTileBaseImageSource({
+                imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
                     version,
                     themeType,
-                    skinId      : SkinId.Neutral,
+                    skinId      : ForceSkins_Constants.SkinId.Neutral,
                     shapeId     : tileData.getBaseShapeId(),
                     baseType    : tileBaseType,
                     isDark      : hasFog,
@@ -161,10 +156,10 @@ export class TileView implements ITileView {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
-                imgDecoration.loadSource(getCachedTileDecorationImageSource({
+                imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
                     version,
                     themeType,
-                    skinId              : SkinId.Neutral,
+                    skinId              : ForceSkins_Constants.SkinId.Neutral,
                     tileDecorationType  : decorationType,
                     shapeId             : tileData.getDecorationShapeId(),
                     isDark              : hasFog,
@@ -188,23 +183,23 @@ export class TileView implements ITileView {
             img.setIsVisible(false);
         } else {
             img.setIsVisible(true);
-            img.loadSource(framesForBuff[getStateIndicatorTickCount() % length]);
+            img.loadSource(framesForBuff[Common_Model_CommonModel.getStateIndicatorTickCount() % length]);
         }
     }
 
-    public getImgHighlight(): IUiImage {
+    public getImgHighlight(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgHighlight;
     }
-    public getImgObject(): IUiImage {
+    public getImgObject(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgObject;
     }
-    public getImgBuff(): IUiImage {
+    public getImgBuff(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBuff;
     }
-    public getImgDecoration(): IUiImage {
+    public getImgDecoration(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgDecoration;
     }
-    public getImgBase(): IUiImage {
+    public getImgBase(): Ui_Interfaces_IUiImage.IUiImage {
         return this._imgBase;
     }
 }

@@ -1,130 +1,122 @@
-import { CustomCounter } from "./contexts/CustomCounter.ts";
-import { Fog } from "./contexts/Fog.ts";
-import { Num } from "./contexts/Num.ts";
-import { NumArray } from "./contexts/NumArray.ts";
-import { Player } from "./contexts/Player.ts";
-import { PlayerArray } from "./contexts/PlayerArray.ts";
-import { Position } from "./contexts/Position.ts";
-import { PositionArray } from "./contexts/PositionArray.ts";
-import { TaskObjective } from "./contexts/TaskObjective.ts";
-import { Tile } from "./contexts/Tile.ts";
-import { TileArray } from "./contexts/TileArray.ts";
-import { TileBuff } from "./contexts/TileBuff.ts";
-import { TileBuffArray } from "./contexts/TileBuffArray.ts";
-import { Turn } from "./contexts/Turn.ts";
-import { Unit } from "./contexts/Unit.ts";
-import { UnitArray } from "./contexts/UnitArray.ts";
-import { UnitStatistic } from "./contexts/UnitStatistic.ts";
-import { UnitStatisticArray } from "./contexts/UnitStatisticArray.ts";
-import { War } from "./contexts/War.ts";
-import { WarOperation } from "./contexts/WarOperation.ts";
-import { Weather } from "./contexts/Weather.ts";
 import {
-    ContextType,
-    ResultType,
-} from "./Enums.ts";
-import { FunctionInfo } from "./FunctionInfo.ts";
-import type {
-    EpFunctionInfoDict,
-    EpVariableInfoDict,
-    EpVariableInfo,
-} from "./Types.ts";
-import { newError } from "../helpers/Misc.ts";
-import { TextType } from "../lang/Constants.ts";
-import {
-    getFormattedText,
-    getExpressionParserResultTypeName,
-} from "../lang/Utils.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+    Utils_ClientErrorCode,
+    ExpressionParsers_Enums,
+    ExpressionParsers_Contexts_CustomCounter,
+    ExpressionParsers_Contexts_Fog,
+    ExpressionParsers_FunctionInfo,
+    Lang_Utils,
+    Helpers_Misc,
+    ExpressionParsers_Contexts_Num,
+    ExpressionParsers_Contexts_NumArray,
+    ExpressionParsers_Contexts_Player,
+    ExpressionParsers_Contexts_PlayerArray,
+    ExpressionParsers_Contexts_Position,
+    ExpressionParsers_Contexts_PositionArray,
+    ExpressionParsers_Contexts_TaskObjective,
+    Lang_Constants,
+    ExpressionParsers_Contexts_Tile,
+    ExpressionParsers_Contexts_TileArray,
+    ExpressionParsers_Contexts_TileBuff,
+    ExpressionParsers_Contexts_TileBuffArray,
+    ExpressionParsers_Contexts_Turn,
+    ExpressionParsers_Contexts_Unit,
+    ExpressionParsers_Contexts_UnitArray,
+    ExpressionParsers_Contexts_UnitStatistic,
+    ExpressionParsers_Contexts_UnitStatisticArray,
+    ExpressionParsers_Contexts_War,
+    ExpressionParsers_Contexts_WarOperation,
+    ExpressionParsers_Contexts_Weather,
+    type ExpressionParsers_Types,
+} from "../internal.ts";
 
-export function getFunctionInfoDict(contextType: ContextType): EpFunctionInfoDict {
+export function getFunctionInfoDict(contextType: ExpressionParsers_Enums.ContextType): ExpressionParsers_Types.EpFunctionInfoDict {
     switch (contextType) {
-        case ContextType.War                  : return War.Functions;
-        case ContextType.CustomCounter        : return CustomCounter.Functions;
-        case ContextType.Number               : return Num.Functions;
-        case ContextType.NumberArray          : return NumArray.Functions;
-        case ContextType.Tile                 : return Tile.Functions;
-        case ContextType.TileArray            : return TileArray.Functions;
-        case ContextType.Unit                 : return Unit.Functions;
-        case ContextType.UnitArray            : return UnitArray.Functions;
-        case ContextType.Position             : return Position.Functions;
-        case ContextType.PositionArray        : return PositionArray.Functions;
-        case ContextType.Player               : return Player.Functions;
-        case ContextType.PlayerArray          : return PlayerArray.Functions;
-        case ContextType.Turn                 : return Turn.Functions;
-        case ContextType.Weather              : return Weather.Functions;
-        case ContextType.TaskObjective        : return TaskObjective.Functions;
-        case ContextType.TileBuff             : return TileBuff.Functions;
-        case ContextType.TileBuffArray        : return TileBuffArray.Functions;
-        case ContextType.WarOperation         : return WarOperation.Functions;
-        case ContextType.Fog                  : return Fog.Functions;
-        case ContextType.UnitStatistic        : return UnitStatistic.Functions;
-        case ContextType.UnitStatisticArray   : return UnitStatisticArray.Functions;
-        case ContextType.Unknown              : throw newError(`Unknown contextType: ${contextType}`, ClientErrorCode.ExpressionParser_ContextType_GetFunctionInfoDict_00);
-        default                                 : throw newError(`Invalid contextType: ${contextType}`, ClientErrorCode.ExpressionParser_ContextType_GetFunctionInfoDict_01);
+        case ExpressionParsers_Enums.ContextType.War                  : return ExpressionParsers_Contexts_War.War.Functions;
+        case ExpressionParsers_Enums.ContextType.CustomCounter        : return ExpressionParsers_Contexts_CustomCounter.CustomCounter.Functions;
+        case ExpressionParsers_Enums.ContextType.Number               : return ExpressionParsers_Contexts_Num.Num.Functions;
+        case ExpressionParsers_Enums.ContextType.NumberArray          : return ExpressionParsers_Contexts_NumArray.NumArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Tile                 : return ExpressionParsers_Contexts_Tile.Tile.Functions;
+        case ExpressionParsers_Enums.ContextType.TileArray            : return ExpressionParsers_Contexts_TileArray.TileArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Unit                 : return ExpressionParsers_Contexts_Unit.Unit.Functions;
+        case ExpressionParsers_Enums.ContextType.UnitArray            : return ExpressionParsers_Contexts_UnitArray.UnitArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Position             : return ExpressionParsers_Contexts_Position.Position.Functions;
+        case ExpressionParsers_Enums.ContextType.PositionArray        : return ExpressionParsers_Contexts_PositionArray.PositionArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Player               : return ExpressionParsers_Contexts_Player.Player.Functions;
+        case ExpressionParsers_Enums.ContextType.PlayerArray          : return ExpressionParsers_Contexts_PlayerArray.PlayerArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Turn                 : return ExpressionParsers_Contexts_Turn.Turn.Functions;
+        case ExpressionParsers_Enums.ContextType.Weather              : return ExpressionParsers_Contexts_Weather.Weather.Functions;
+        case ExpressionParsers_Enums.ContextType.TaskObjective        : return ExpressionParsers_Contexts_TaskObjective.TaskObjective.Functions;
+        case ExpressionParsers_Enums.ContextType.TileBuff             : return ExpressionParsers_Contexts_TileBuff.TileBuff.Functions;
+        case ExpressionParsers_Enums.ContextType.TileBuffArray        : return ExpressionParsers_Contexts_TileBuffArray.TileBuffArray.Functions;
+        case ExpressionParsers_Enums.ContextType.WarOperation         : return ExpressionParsers_Contexts_WarOperation.WarOperation.Functions;
+        case ExpressionParsers_Enums.ContextType.Fog                  : return ExpressionParsers_Contexts_Fog.Fog.Functions;
+        case ExpressionParsers_Enums.ContextType.UnitStatistic        : return ExpressionParsers_Contexts_UnitStatistic.UnitStatistic.Functions;
+        case ExpressionParsers_Enums.ContextType.UnitStatisticArray   : return ExpressionParsers_Contexts_UnitStatisticArray.UnitStatisticArray.Functions;
+        case ExpressionParsers_Enums.ContextType.Unknown              : throw Helpers_Misc.newError(`Unknown contextType: ${contextType}`, Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_ContextType_GetFunctionInfoDict_00);
+        default                                 : throw Helpers_Misc.newError(`Invalid contextType: ${contextType}`, Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_ContextType_GetFunctionInfoDict_01);
     }
 }
 
-export function getVariableInfoDict(contextType: ContextType): EpVariableInfoDict {
+export function getVariableInfoDict(contextType: ExpressionParsers_Enums.ContextType): ExpressionParsers_Types.EpVariableInfoDict {
     switch (contextType) {
-        case ContextType.War                  : return War.Variables;
-        case ContextType.CustomCounter        : return CustomCounter.Variables;
-        case ContextType.Number               : return Num.Variables;
-        case ContextType.NumberArray          : return NumArray.Variables;
-        case ContextType.Tile                 : return Tile.Variables;
-        case ContextType.TileArray            : return TileArray.Variables;
-        case ContextType.Unit                 : return Unit.Variables;
-        case ContextType.UnitArray            : return UnitArray.Variables;
-        case ContextType.Position             : return Position.Variables;
-        case ContextType.PositionArray        : return PositionArray.Variables;
-        case ContextType.Player               : return Player.Variables;
-        case ContextType.PlayerArray          : return PlayerArray.Variables;
-        case ContextType.Turn                 : return Turn.Variables;
-        case ContextType.Weather              : return Weather.Variables;
-        case ContextType.TaskObjective        : return TaskObjective.Variables;
-        case ContextType.TileBuff             : return TileBuff.Variables;
-        case ContextType.TileBuffArray        : return TileBuffArray.Variables;
-        case ContextType.WarOperation         : return WarOperation.Variables;
-        case ContextType.Fog                  : return Fog.Variables;
-        case ContextType.UnitStatistic        : return UnitStatistic.Variables;
-        case ContextType.UnitStatisticArray   : return UnitStatisticArray.Variables;
-        case ContextType.Unknown              : throw newError(`Unknown contextType: ${contextType}`, ClientErrorCode.ExpressionParser_ContextType_GetVariableInfoDict_00);
-        default                                 : throw newError(`Invalid contextType: ${contextType}`, ClientErrorCode.ExpressionParser_ContextType_GetVariableInfoDict_01);
+        case ExpressionParsers_Enums.ContextType.War                  : return ExpressionParsers_Contexts_War.War.Variables;
+        case ExpressionParsers_Enums.ContextType.CustomCounter        : return ExpressionParsers_Contexts_CustomCounter.CustomCounter.Variables;
+        case ExpressionParsers_Enums.ContextType.Number               : return ExpressionParsers_Contexts_Num.Num.Variables;
+        case ExpressionParsers_Enums.ContextType.NumberArray          : return ExpressionParsers_Contexts_NumArray.NumArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Tile                 : return ExpressionParsers_Contexts_Tile.Tile.Variables;
+        case ExpressionParsers_Enums.ContextType.TileArray            : return ExpressionParsers_Contexts_TileArray.TileArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Unit                 : return ExpressionParsers_Contexts_Unit.Unit.Variables;
+        case ExpressionParsers_Enums.ContextType.UnitArray            : return ExpressionParsers_Contexts_UnitArray.UnitArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Position             : return ExpressionParsers_Contexts_Position.Position.Variables;
+        case ExpressionParsers_Enums.ContextType.PositionArray        : return ExpressionParsers_Contexts_PositionArray.PositionArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Player               : return ExpressionParsers_Contexts_Player.Player.Variables;
+        case ExpressionParsers_Enums.ContextType.PlayerArray          : return ExpressionParsers_Contexts_PlayerArray.PlayerArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Turn                 : return ExpressionParsers_Contexts_Turn.Turn.Variables;
+        case ExpressionParsers_Enums.ContextType.Weather              : return ExpressionParsers_Contexts_Weather.Weather.Variables;
+        case ExpressionParsers_Enums.ContextType.TaskObjective        : return ExpressionParsers_Contexts_TaskObjective.TaskObjective.Variables;
+        case ExpressionParsers_Enums.ContextType.TileBuff             : return ExpressionParsers_Contexts_TileBuff.TileBuff.Variables;
+        case ExpressionParsers_Enums.ContextType.TileBuffArray        : return ExpressionParsers_Contexts_TileBuffArray.TileBuffArray.Variables;
+        case ExpressionParsers_Enums.ContextType.WarOperation         : return ExpressionParsers_Contexts_WarOperation.WarOperation.Variables;
+        case ExpressionParsers_Enums.ContextType.Fog                  : return ExpressionParsers_Contexts_Fog.Fog.Variables;
+        case ExpressionParsers_Enums.ContextType.UnitStatistic        : return ExpressionParsers_Contexts_UnitStatistic.UnitStatistic.Variables;
+        case ExpressionParsers_Enums.ContextType.UnitStatisticArray   : return ExpressionParsers_Contexts_UnitStatisticArray.UnitStatisticArray.Variables;
+        case ExpressionParsers_Enums.ContextType.Unknown              : throw Helpers_Misc.newError(`Unknown contextType: ${contextType}`, Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_ContextType_GetVariableInfoDict_00);
+        default                                 : throw Helpers_Misc.newError(`Invalid contextType: ${contextType}`, Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_ContextType_GetVariableInfoDict_01);
     }
 }
 
-export function getContextType(resultType: ResultType): ContextType | null {
+export function getContextType(resultType: ExpressionParsers_Enums.ResultType): ExpressionParsers_Enums.ContextType | null {
     switch (resultType) {
-        case ResultType.Number                : return ContextType.Number;
-        case ResultType.NumberArray           : return ContextType.NumberArray;
-        case ResultType.Tile                  : return ContextType.Tile;
-        case ResultType.TileArray             : return ContextType.TileArray;
-        case ResultType.Unit                  : return ContextType.Unit;
-        case ResultType.UnitArray             : return ContextType.UnitArray;
-        case ResultType.Position              : return ContextType.Position;
-        case ResultType.PositionArray         : return ContextType.PositionArray;
-        case ResultType.War                   : return ContextType.War;
-        case ResultType.Player                : return ContextType.Player;
-        case ResultType.PlayerArray           : return ContextType.PlayerArray;
-        case ResultType.Turn                  : return ContextType.Turn;
-        case ResultType.Weather               : return ContextType.Weather;
-        case ResultType.TaskObjective         : return ContextType.TaskObjective;
-        case ResultType.TileBuff              : return ContextType.TileBuff;
-        case ResultType.TileBuffArray         : return ContextType.TileBuffArray;
-        case ResultType.WarOperation          : return ContextType.WarOperation;
-        case ResultType.Fog                   : return ContextType.Fog;
-        case ResultType.UnitStatistic         : return ContextType.UnitStatistic;
-        case ResultType.UnitStatisticArray    : return ContextType.UnitStatisticArray;
-        case ResultType.Lambda                : return null;
-        case ResultType.Unknown               : return null;
+        case ExpressionParsers_Enums.ResultType.Number                : return ExpressionParsers_Enums.ContextType.Number;
+        case ExpressionParsers_Enums.ResultType.NumberArray           : return ExpressionParsers_Enums.ContextType.NumberArray;
+        case ExpressionParsers_Enums.ResultType.Tile                  : return ExpressionParsers_Enums.ContextType.Tile;
+        case ExpressionParsers_Enums.ResultType.TileArray             : return ExpressionParsers_Enums.ContextType.TileArray;
+        case ExpressionParsers_Enums.ResultType.Unit                  : return ExpressionParsers_Enums.ContextType.Unit;
+        case ExpressionParsers_Enums.ResultType.UnitArray             : return ExpressionParsers_Enums.ContextType.UnitArray;
+        case ExpressionParsers_Enums.ResultType.Position              : return ExpressionParsers_Enums.ContextType.Position;
+        case ExpressionParsers_Enums.ResultType.PositionArray         : return ExpressionParsers_Enums.ContextType.PositionArray;
+        case ExpressionParsers_Enums.ResultType.War                   : return ExpressionParsers_Enums.ContextType.War;
+        case ExpressionParsers_Enums.ResultType.Player                : return ExpressionParsers_Enums.ContextType.Player;
+        case ExpressionParsers_Enums.ResultType.PlayerArray           : return ExpressionParsers_Enums.ContextType.PlayerArray;
+        case ExpressionParsers_Enums.ResultType.Turn                  : return ExpressionParsers_Enums.ContextType.Turn;
+        case ExpressionParsers_Enums.ResultType.Weather               : return ExpressionParsers_Enums.ContextType.Weather;
+        case ExpressionParsers_Enums.ResultType.TaskObjective         : return ExpressionParsers_Enums.ContextType.TaskObjective;
+        case ExpressionParsers_Enums.ResultType.TileBuff              : return ExpressionParsers_Enums.ContextType.TileBuff;
+        case ExpressionParsers_Enums.ResultType.TileBuffArray         : return ExpressionParsers_Enums.ContextType.TileBuffArray;
+        case ExpressionParsers_Enums.ResultType.WarOperation          : return ExpressionParsers_Enums.ContextType.WarOperation;
+        case ExpressionParsers_Enums.ResultType.Fog                   : return ExpressionParsers_Enums.ContextType.Fog;
+        case ExpressionParsers_Enums.ResultType.UnitStatistic         : return ExpressionParsers_Enums.ContextType.UnitStatistic;
+        case ExpressionParsers_Enums.ResultType.UnitStatisticArray    : return ExpressionParsers_Enums.ContextType.UnitStatisticArray;
+        case ExpressionParsers_Enums.ResultType.Lambda                : return null;
+        case ExpressionParsers_Enums.ResultType.Unknown               : return null;
         default                                 : return null;
     }
 }
 
-export function extendFunctionInfoDict(src: EpFunctionInfoDict): EpFunctionInfoDict {
-    const dict = new Map<string, FunctionInfo>();
+export function extendFunctionInfoDict(src: ExpressionParsers_Types.EpFunctionInfoDict): ExpressionParsers_Types.EpFunctionInfoDict {
+    const dict = new Map<string, ExpressionParsers_FunctionInfo.FunctionInfo>();
     for (const [identifierName, info] of src) {
-        dict.set(identifierName, new FunctionInfo(
+        dict.set(identifierName, new ExpressionParsers_FunctionInfo.FunctionInfo(
             info.desc,
             info.getResultType,
             true,
@@ -134,8 +126,8 @@ export function extendFunctionInfoDict(src: EpFunctionInfoDict): EpFunctionInfoD
     return dict;
 }
 
-export function extendVariableInfoDict(src: EpVariableInfoDict): EpVariableInfoDict {
-    const dict = new Map<string, EpVariableInfo>();
+export function extendVariableInfoDict(src: ExpressionParsers_Types.EpVariableInfoDict): ExpressionParsers_Types.EpVariableInfoDict {
+    const dict = new Map<string, ExpressionParsers_Types.EpVariableInfo>();
     for (const [identifierName, info] of src) {
         dict.set(identifierName, {
             desc        : info.desc,
@@ -149,37 +141,37 @@ export function extendVariableInfoDict(src: EpVariableInfoDict): EpVariableInfoD
 }
 
 export function getErrorTextForParameterCount(functionName: string, expectedCount: string | number, actualCount: number): string {
-    return getFormattedText(TextType.F0013, functionName, expectedCount, actualCount);
+    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0013, functionName, expectedCount, actualCount);
 }
-export function getErrorTextForParameterType(functionName: string, index: number, expectedType: ResultType | ResultType[], actualType: ResultType): string {
-    return getFormattedText(
-        TextType.F0014,
+export function getErrorTextForParameterType(functionName: string, index: number, expectedType: ExpressionParsers_Enums.ResultType | ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0014,
         functionName,
         index,
         typeof expectedType == "number"
-            ? getExpressionParserResultTypeName(expectedType)
-            : expectedType.map(v => getExpressionParserResultTypeName(v)).join(" / "),
-        getExpressionParserResultTypeName(actualType)
+            ? Lang_Utils.getExpressionParserResultTypeName(expectedType)
+            : expectedType.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
+        Lang_Utils.getExpressionParserResultTypeName(actualType)
     );
 }
-export function getErrorTextForLambdaResultType(functionName: string, index: number, expectedTypes: ResultType[], actualType: ResultType): string {
-    return getFormattedText(
-        TextType.F0015,
+export function getErrorTextForLambdaResultType(functionName: string, index: number, expectedTypes: ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0015,
         functionName,
         index,
-        expectedTypes.map(v => getExpressionParserResultTypeName(v)).join(" / "),
-        getExpressionParserResultTypeName(actualType)
+        expectedTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
+        Lang_Utils.getExpressionParserResultTypeName(actualType)
     );
 }
-export function getErrorTextForOperandType(operatorName: string, index: number, expectedType: ResultType | ResultType[], actualType: ResultType): string {
-    return getFormattedText(
-        TextType.F0025,
+export function getErrorTextForOperandType(operatorName: string, index: number, expectedType: ExpressionParsers_Enums.ResultType | ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0025,
         operatorName,
         index,
         typeof expectedType == "number"
-            ? getExpressionParserResultTypeName(expectedType)
-            : expectedType.map(v => getExpressionParserResultTypeName(v)).join(" / "),
-        getExpressionParserResultTypeName(actualType)
+            ? Lang_Utils.getExpressionParserResultTypeName(expectedType)
+            : expectedType.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
+        Lang_Utils.getExpressionParserResultTypeName(actualType)
     );
 }
 

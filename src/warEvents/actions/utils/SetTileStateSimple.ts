@@ -1,54 +1,32 @@
 import {
-    checkIsValid as checkIsValidArrayModifier,
-    getResultValue as getArrayModifiersResultValue,
-} from "../../../arrayModifiers/Utils.ts";
-import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getText,
-} from "../../../lang/Utils.ts";
-import { AllLocationIdSet } from "../../../locations/Constants.ts";
-import { encode } from "../../../locations/Utils.ts";
-import {
-    checkIsValid as checkIsValidMultiplierAndOffset,
-    getResultValue as getMultiplierAndOffsetsResultValue,
-} from "../../../multiplierAndOffsets/Utils.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
-import {
-    checkIsMeet as checkIsMeetPlayerFilter,
-    getDescForEmbed as getPlayersDescForEmbed,
-    checkIsValid as checkIsValidPlayerFilter,
-} from "../../../players/utils/Filter.ts";
+    Locations_Constants,
+    Players_Utils_Filter,
+    Tiles_Utils_Filter,
+    Units_Utils_Filter,
+    ValueAndComparators_Utils,
+    ArrayModifiers_Utils,
+    Tiles_Utils_Common,
+    MultiplierAndOffsets_Utils,
+    TileObjects_Utils,
+    Tiles_Utils_Serialization,
+    Locations_Utils,
+    GameConfigs_GameConfig,
+    Lang_Utils,
+    Lang_Constants,
+    type BaseWar_Interface_IBwWar,
+    type Players_IPlayer,
+    type Tiles_ITile,
+    type AuxiliaryTypes_MapSize,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../../internal.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetTileStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateSimple.ts";
-import { checkIsValidPlayerIndexForTileObject } from "../../../tileObjects/Utils.ts";
-import type { ITile } from "../../../tiles/ITile.ts";
-import { checkIsValidCustomNameId } from "../../../tiles/utils/Common.ts";
-import {
-    checkIsMeet as checkIsMeetTileFilter,
-    checkIsValid as checkIsValidTileFilter,
-    getDescForEmbed as getTilesDescForEmbed,
-} from "../../../tiles/utils/Filter.ts";
-import { create } from "../../../tiles/utils/Serialization.ts";
-import {
-    checkIsMeet as checkIsMeetUnitFilter,
-    checkIsValid as checkIsValidUnitFilter,
-} from "../../../units/utils/Filter.ts";
-import {
-    getDesc,
-    checkIsMeet as checkIsMeetValueAndComparator,
-    checkIsValid as checkIsValidValueAndComparator,
-} from "../../../valueAndComparators/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetTileStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileStateSimple>, gameConfig: GameConfigs_GameConfig.GameConfig, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetTileStateSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -57,57 +35,57 @@ export function getBriefDesc(data: Undefinable<WeaSetTileStateSimple>): string |
     {
         const act = data.getActPlayerIndex();
         if (act != null) {
-            actTextArray.push(getText(TextType.PlayerIndex));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
         }
     }
     {
         const act = data.getActCurrentHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.Hp));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Hp));
         }
     }
     {
         const act = data.getActCurrentBuildPoint();
         if (act != null) {
-            actTextArray.push(getText(TextType.BuildPoint));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.BuildPoint));
         }
     }
     {
         const act = data.getActCurrentCapturePoint();
         if (act != null) {
-            actTextArray.push(getText(TextType.CapturePoint));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CapturePoint));
         }
     }
     {
         const act = data.getActIsHighlighted();
         if (act != null) {
-            actTextArray.push(getText(TextType.IsHighlighted));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.IsHighlighted));
         }
     }
     {
         const act = data.getActLocationIdArray();
         if (act != null) {
-            actTextArray.push(getText(TextType.Location));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Location));
         }
     }
     {
         const act = data.getActCustomNameId();
         if (act != null) {
-            actTextArray.push(getText(TextType.CustomNameId));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CustomNameId));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0254,
-        getText(TextType.Tiles),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0254,
+        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: Undefinable<WeaSetTileStateSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetTileStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -116,153 +94,153 @@ export function getDetailDesc(data: Undefinable<WeaSetTileStateSimple>): string 
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${getTilesDescForEmbed(filter)}`);
+            conTextArray.push(`- ${Tiles_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1421)}) ${getPlayersDescForEmbed(filter)}`);
+            conTextArray.push(`- (${Lang_Utils.getText(Lang_Constants.TextType.B1421)}) ${Players_Utils_Filter.getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${getDesc(
+            conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                getText(data.getConUnitFilter() == null ? TextType.B1418 : TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${getText(TextType.A0944)}`);
+        conTextArray.push(`- ${Lang_Utils.getText(Lang_Constants.TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         const act = data.getActPlayerIndex();
         if (act != null) {
-            actTextArray.push(getText(TextType.PlayerIndex));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
         }
     }
     {
         const act = data.getActCurrentHp();
         if (act != null) {
-            actTextArray.push(getText(TextType.Hp));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Hp));
         }
     }
     {
         const act = data.getActCurrentBuildPoint();
         if (act != null) {
-            actTextArray.push(getText(TextType.BuildPoint));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.BuildPoint));
         }
     }
     {
         const act = data.getActCurrentCapturePoint();
         if (act != null) {
-            actTextArray.push(getText(TextType.CapturePoint));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CapturePoint));
         }
     }
     {
         const act = data.getActIsHighlighted();
         if (act != null) {
-            actTextArray.push(getText(TextType.IsHighlighted));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.IsHighlighted));
         }
     }
     {
         const act = data.getActLocationIdArray();
         if (act != null) {
-            actTextArray.push(getText(TextType.Location));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.Location));
         }
     }
     {
         const act = data.getActCustomNameId();
         if (act != null) {
-            actTextArray.push(getText(TextType.CustomNameId));
+            actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.CustomNameId));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(getText(TextType.A0957));
+        actTextArray.push(Lang_Utils.getText(Lang_Constants.TextType.A0957));
     }
 
-    return getFormattedText(
-        TextType.F0255,
-        getText(TextType.Tiles),
+    return Lang_Utils.getFormattedText(
+        Lang_Constants.TextType.F0255,
+        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
         conTextArray.join(`\n`),
-        getText(TextType.Tiles),
+        Lang_Utils.getText(Lang_Constants.TextType.Tiles),
         actTextArray.join(`, `),
     );
 }
 
-export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
+export function getErrorTip(data: WeaSetTileStateSimple, mapSize: AuxiliaryTypes_MapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
+            if (!Units_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+                return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
+            (!Players_Utils_Filter.checkIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!Tiles_Utils_Filter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.TileFilter));
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!checkIsValidValueAndComparator(comparator))
+            (!ValueAndComparators_Utils.checkIsValid(comparator))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Comparator));
         }
     }
 
     {
         const act = data.getActPlayerIndex();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.PlayerIndex));
         }
     }
     {
         const act = data.getActCurrentHp();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.Hp));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.Hp));
         }
     }
     {
         const act = data.getActCurrentBuildPoint();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.BuildPoint));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.BuildPoint));
         }
     }
     {
         const act = data.getActCurrentCapturePoint();
         if ((act != null)                                       &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.CapturePoint));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CapturePoint));
         }
     }
     {
@@ -272,17 +250,17 @@ export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playe
     {
         const act = data.getActLocationIdArray();
         if ((act != null)                                                                                           &&
-            (!checkIsValidArrayModifier(act, AllLocationIdSet))
+            (!ArrayModifiers_Utils.checkIsValid(act, Locations_Constants.AllLocationIdSet))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.FlareAmmo));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.FlareAmmo));
         }
     }
     {
         const act = data.getActCustomNameId();
         if ((act != null)                                           &&
-            (!checkIsValidMultiplierAndOffset(act))
+            (!MultiplierAndOffsets_Utils.checkIsValid(act))
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.CustomNameId));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.CustomNameId));
         }
     }
 
@@ -294,7 +272,7 @@ export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playe
         (data.getActLocationIdArray() == null)       &&
         (data.getActCustomNameId() == null)
     ) {
-        return getText(TextType.A0957);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0957);
     }
 
     return null;
@@ -304,17 +282,17 @@ export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playe
 export async function applyWithExtraData(_action: WeaSetTileStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
-    const targetTileArray: ITile[] = [];
+export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
+    const targetTileArray: Tiles_ITile.ITile[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = data.getConTileFilter();
         const conPlayerFilter   = data.getConPlayerFilter();
         const conUnitFilter     = data.getConUnitFilter();
         const conUnitComparator = data.getConUnitComparator();
-        const playerFilterDict  = new Map<IPlayer, boolean>();
+        const playerFilterDict  = new Map<Players_IPlayer.IPlayer, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
-            if ((conTileFilter != null) && (!checkIsMeetTileFilter(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!Tiles_Utils_Filter.checkIsMeet(conTileFilter, tile))) {
                 continue;
             }
 
@@ -325,11 +303,11 @@ export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastE
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (checkIsMeetUnitFilter(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (Units_Utils_Filter.checkIsMeet(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!checkIsMeetValueAndComparator(conUnitComparator, count)) {
+                if (!ValueAndComparators_Utils.checkIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -344,7 +322,7 @@ export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastE
 
     {
         for (const tile of targetTileArray) {
-            const tileData = create({
+            const tileData = Tiles_Utils_Serialization.create({
                 baseType          : tile.getBaseType(),
                 baseShapeId       : tile.getBaseShapeId(),
                 objectType        : tile.getObjectType(),
@@ -378,86 +356,86 @@ export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastE
         }
     }
 }
-function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
+function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
+        resultDict.set(player, Players_Utils_Filter.checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
-function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: ITile): number {
+function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getPlayerIndex();
     const act           = action.getActPlayerIndex();
     if (!act) {
         return defaultValue;
     }
 
-    const newValue = getMultiplierAndOffsetsResultValue(act, defaultValue);
+    const newValue = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue);
     if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) &&
-        (checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
+        (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
     ) {
         return newValue;
     } else {
         return defaultValue;
     }
 }
-function evalActCurrentHp(action: WeaSetTileStateSimple, tile: ITile): number {
+function evalActCurrentHp(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getCurrentHp();
     const act           = action.getActCurrentHp();
     if (!act) {
         return defaultValue;
     }
 
-    const newValue  = getMultiplierAndOffsetsResultValue(act, defaultValue);
+    const newValue  = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue);
     return (newValue > (tile.getMaxHp() ?? 0))
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActCurrentBuildPoint(action: WeaSetTileStateSimple, tile: ITile): number {
+function evalActCurrentBuildPoint(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getCurrentBuildPoint();
     const act           = action.getActCurrentBuildPoint();
     if (!act) {
         return defaultValue;
     }
 
-    const newValue  = getMultiplierAndOffsetsResultValue(act, defaultValue);
+    const newValue  = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue);
     return (newValue > (tile.getMaxBuildPoint() ?? 0))
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActCurrentCapturePoint(action: WeaSetTileStateSimple, tile: ITile): number {
+function evalActCurrentCapturePoint(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number {
     const defaultValue  = tile.getCurrentCapturePoint();
     const act           = action.getActCurrentCapturePoint();
     if (!act) {
         return defaultValue;
     }
 
-    const newValue  = getMultiplierAndOffsetsResultValue(act, defaultValue);
+    const newValue  = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue);
     return (newValue > (tile.getMaxCapturePoint() ?? 0))
         ? defaultValue
         : (newValue < 0 ? 0 : newValue);
 }
-function evalActIsHighlighted(action: WeaSetTileStateSimple, tile: ITile): boolean {
+function evalActIsHighlighted(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): boolean {
     return action.getActIsHighlighted() ?? tile.getIsHighlighted();
 }
-function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: ITile): number[] {
+function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): number[] {
     const act = action.getActLocationIdArray();
     if (act == null) {
         return tile.getGroupedLocationIdArray();
     } else {
-        return encode(
-            getArrayModifiersResultValue(act, tile.getLocationIdList(true))
+        return Locations_Utils.encode(
+            ArrayModifiers_Utils.getResultValue(act, tile.getLocationIdList(true))
         );
     }
 }
-function evalActCustomNameId(action: WeaSetTileStateSimple, tile: ITile): Undefinable<number> {
+function evalActCustomNameId(action: WeaSetTileStateSimple, tile: Tiles_ITile.ITile): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     const defaultValue  = tile.getCustomNameId();
     const act           = action.getActCustomNameId();
     if (act == null) {
         return defaultValue;
     }
 
-    const value = getMultiplierAndOffsetsResultValue(act, defaultValue ?? 0);
-    return checkIsValidCustomNameId(value)
+    const value = MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0);
+    return Tiles_Utils_Common.checkIsValidCustomNameId(value)
         ? value
         : (value < 0 ? null : defaultValue);
 }

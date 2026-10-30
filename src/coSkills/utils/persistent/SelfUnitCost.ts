@@ -1,9 +1,11 @@
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+} from "../../../internal.ts";
 import type { SelfUnitCost } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCost.ts";
 
 export function getTotalMultiplier({ cfg, gameConfig, unitTypeId }: {
     cfg        : SelfUnitCost | null | undefined;
-    gameConfig : GameConfig;
+    gameConfig : GameConfigs_GameConfig.GameConfig;
     unitTypeId : number;
 }): number {
     if (cfg == null) {

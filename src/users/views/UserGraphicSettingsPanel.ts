@@ -1,93 +1,70 @@
 import {
-    stopUnitAnimationTick,
-    startUnitAnimationTick,
-    stopTileAnimationTick,
-    startTileAnimationTick,
-} from "../../common/model/CommonModel.ts";
-import { showLang } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
-import {
-    TextureResolutionId,
-    TextureVersionId,
-} from "../../graphics/Constants.ts";
-import { isPc } from "../../helpers/Compatibility.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import {
-    getShowUnitAnimation,
-    setShowUnitAnimation,
-    getShowTileAnimation,
-    setShowTileAnimation,
-    setShowWeatherAnimation,
-    getShowWeatherAnimation,
-    setScreenRotation,
-} from "../../localData/Storage.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiSwitch } from "../../ui/interfaces/IUiSwitch.ts";
-import {
-    getSelfSettingsTextureVersion,
-    getSelfSettingsIsShowGridBorder,
-    getSelfSettingsIsUnitFlickeringOnFullEnergy,
-    getSelfSettingsUnitMoveAniSpeedMultiplierPct,
-    getSelfSettingsIsScreenVibrationEnabled,
-} from "../Model.ts";
-import { reqUserSetSettings } from "../Proxy.ts";
+    Notifications_Dispatcher,
+    GameVersions_Utils,
+    GamePanels_Dict,
+    Users_Model,
+    LocalData_Storage,
+    Lang_Utils,
+    Helpers_Compatibility,
+    GamePanels_Manager,
+    Users_Proxy,
+    FloatText,
+    Common_Model_CommonModel,
+    Lang_Constants,
+    Graphics_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiSwitch,
+} from "../../internal.ts";
 
 export type OpenData = void;
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                  : IUiImage;
-    private readonly _labelTitle!               : IUiLabel;
-    private readonly _btnClose!                 : IUiButton;
-    private readonly _group!                    : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _group!                    : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _labelNewTexture!          : IUiLabel;
-    private readonly _uiSwitchNewTexture!       : IUiSwitch;
+    private readonly _labelNewTexture!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchNewTexture!       : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelShowGridBorder!      : IUiLabel;
-    private readonly _uiSwitchShowGridBorder!   : IUiSwitch;
+    private readonly _labelShowGridBorder!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchShowGridBorder!   : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelUnitFlickering!      : IUiLabel;
-    private readonly _uiSwitchUnitFlickering!   : IUiSwitch;
+    private readonly _labelUnitFlickering!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchUnitFlickering!   : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelUnitMoveFaster!      : IUiLabel;
-    private readonly _uiSwitchUnitMoveFaster!   : IUiSwitch;
+    private readonly _labelUnitMoveFaster!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchUnitMoveFaster!   : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelUnitAnimation!       : IUiLabel;
-    private readonly _uiSwitchUnitAnimation!    : IUiSwitch;
+    private readonly _labelUnitAnimation!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchUnitAnimation!    : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelTileAnimation!       : IUiLabel;
-    private readonly _uiSwitchTileAnimation!    : IUiSwitch;
+    private readonly _labelTileAnimation!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchTileAnimation!    : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelWeatherAnimation!    : IUiLabel;
-    private readonly _uiSwitchWeatherAnimation! : IUiSwitch;
+    private readonly _labelWeatherAnimation!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchWeatherAnimation! : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _labelScreenVibration!     : IUiLabel;
-    private readonly _uiSwitchScreenVibration!  : IUiSwitch;
+    private readonly _labelScreenVibration!     : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _uiSwitchScreenVibration!  : Ui_Interfaces_IUiSwitch.IUiSwitch;
 
-    private readonly _groupButtons!             : IUiContainer;
-    private readonly _btnSetOpacity!            : IUiButton;
-    private readonly _btnSetOrientation!        : IUiButton;
-    private readonly _btnSetStageScaler!        : IUiButton;
+    private readonly _groupButtons!             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnSetOpacity!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetOrientation!        : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetStageScaler!        : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.UnitAndTileTextureVersionChanged,                    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyUserSettingsIsShowGridBorderChanged },
-            { type: TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged,     callback: this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
-            { type: TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged,    callback: this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
-            { type: TypeId.UserSettingsIsScreenVibrationEnabledChanged,         callback: this._onNotifyUserSettingIsScreenVibrationEnabled },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,                    callback: this._onNotifyUnitAndTileTextureVersionChanged },
+            { type: Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyUserSettingsIsShowGridBorderChanged },
+            { type: Notifications_TypeId.TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged,     callback: this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
+            { type: Notifications_TypeId.TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged,    callback: this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
+            { type: Notifications_TypeId.TypeId.UserSettingsIsScreenVibrationEnabledChanged,         callback: this._onNotifyUserSettingIsScreenVibrationEnabled },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -101,62 +78,62 @@ export class Panel extends UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
         this._uiSwitchNewTexture.setCallbackOnTouch(() => {
-            if (getCurrentGameEssentialConfig().textureResolutionTypeId === TextureResolutionId.Trilogy) {
-                showLang(TextType.YouCanNotDoThisRightNow);
+            if (GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId === Graphics_Constants.TextureResolutionId.Trilogy) {
+                FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
-                reqUserSetSettings({
-                    unitAndTileTextureVersion   : getSelfSettingsTextureVersion() === TextureVersionId.V1 ? TextureVersionId.V0 : TextureVersionId.V1,
+                Users_Proxy.reqUserSetSettings({
+                    unitAndTileTextureVersion   : Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1 ? Graphics_Constants.TextureVersionId.V0 : Graphics_Constants.TextureVersionId.V1,
                     coBgmSettings               : [],
                 });
             }
         });
         this._uiSwitchUnitAnimation.setCallbackOnTouch(() => {
-            if (getShowUnitAnimation()) {
-                setShowUnitAnimation(false);
-                stopUnitAnimationTick();
+            if (LocalData_Storage.getShowUnitAnimation()) {
+                LocalData_Storage.setShowUnitAnimation(false);
+                Common_Model_CommonModel.stopUnitAnimationTick();
             } else {
-                setShowUnitAnimation(true);
-                startUnitAnimationTick();
+                LocalData_Storage.setShowUnitAnimation(true);
+                Common_Model_CommonModel.startUnitAnimationTick();
             }
             this._updateUiSwitchUnitAnimation(true);
         });
         this._uiSwitchTileAnimation.setCallbackOnTouch(() => {
-            if (getShowTileAnimation()) {
-                setShowTileAnimation(false);
-                stopTileAnimationTick();
+            if (LocalData_Storage.getShowTileAnimation()) {
+                LocalData_Storage.setShowTileAnimation(false);
+                Common_Model_CommonModel.stopTileAnimationTick();
             } else {
-                setShowTileAnimation(true);
-                startTileAnimationTick();
+                LocalData_Storage.setShowTileAnimation(true);
+                Common_Model_CommonModel.startTileAnimationTick();
             }
             this._updateUiSwitchTileAnimation(true);
         });
         this._uiSwitchWeatherAnimation.setCallbackOnTouch(() => {
-            setShowWeatherAnimation(!getShowWeatherAnimation());
-            dispatch(TypeId.UserSettingsIsShowWeatherAnimationChanged);
+            LocalData_Storage.setShowWeatherAnimation(!LocalData_Storage.getShowWeatherAnimation());
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged);
             this._updateUiSwitchWeatherAnimation(true);
         });
         this._uiSwitchShowGridBorder.setCallbackOnTouch(() => {
-            reqUserSetSettings({
-                isShowGridBorder: !getSelfSettingsIsShowGridBorder(),
+            Users_Proxy.reqUserSetSettings({
+                isShowGridBorder: !Users_Model.getSelfSettingsIsShowGridBorder(),
                 coBgmSettings   : [],
             });
         });
         this._uiSwitchUnitFlickering.setCallbackOnTouch(() => {
-            reqUserSetSettings({
-                isUnitFlickeringOnFullEnergy: !getSelfSettingsIsUnitFlickeringOnFullEnergy(),
+            Users_Proxy.reqUserSetSettings({
+                isUnitFlickeringOnFullEnergy: !Users_Model.getSelfSettingsIsUnitFlickeringOnFullEnergy(),
                 coBgmSettings               : [],
             });
         });
         this._uiSwitchUnitMoveFaster.setCallbackOnTouch(() => {
-            const pct = getSelfSettingsUnitMoveAniSpeedMultiplierPct();
-            reqUserSetSettings({
+            const pct = Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct();
+            Users_Proxy.reqUserSetSettings({
                 unitMoveAniSpeedMultiplierPct   : pct === 100 ? 300 : 100,
                 coBgmSettings                   : [],
             });
         });
         this._uiSwitchScreenVibration.setCallbackOnTouch(() => {
-            reqUserSetSettings({
-                isScreenVibrationEnabled: !getSelfSettingsIsScreenVibrationEnabled(),
+            Users_Proxy.reqUserSetSettings({
+                isScreenVibrationEnabled: !Users_Model.getSelfSettingsIsScreenVibrationEnabled(),
                 coBgmSettings           : [],
             });
         });
@@ -183,49 +160,49 @@ export class Panel extends UiPanel<OpenData> {
         this._updateUiSwitchScreenVibration(true);
     }
     private _onTouchedBtnSetOpacity(): void {
-        openPanel(getDict().UserSetOpacityPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetOpacityPanel, void 0);
     }
     private _onTouchedBtnSetOrientation(): void {
         const inject = window.TW_APK_INJECT;
         if (inject == null) {
-            openPanel(getDict().CommonHelpPanel, {
-                getContent : () => getText(isPc ? TextType.A0416 : TextType.A0417),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getContent : () => Lang_Utils.getText(Helpers_Compatibility.isPc ? Lang_Constants.TextType.A0416 : Lang_Constants.TextType.A0417),
             });
         } else {
             let currentRotation: number | null = null;
             try {
                 currentRotation = inject.getScreenOrientation();
             } catch {
-                showLang(TextType.A0840);
+                FloatText.showLang(Lang_Constants.TextType.A0840);
                 return;
             }
 
-            openPanel(getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => getText(TextType.B0159),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
                 currentNumber           : currentRotation,
                 availableNumberArray    : [0, 1, 2, 3],
                 getNumberMainText       : num => {
                     switch (num) {
-                        case 0  : return getText(TextType.B0377);
-                        case 1  : return getText(TextType.B0419);
-                        case 2  : return getText(TextType.B0591);
-                        case 3  : return getText(TextType.B0597);
-                        default : return UndefinedError;
+                        case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0377);
+                        case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0419);
+                        case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0591);
+                        case 3  : return Lang_Utils.getText(Lang_Constants.TextType.B0597);
+                        default : return Lang_Constants.UndefinedError;
                     }
                 },
                 callbackOnConfirm       : num => {
                     try {
-                        setScreenRotation(num);
+                        LocalData_Storage.setScreenRotation(num);
                         inject.setScreenOrientation(num);
                     } catch {
-                        showLang(TextType.A0841);
+                        FloatText.showLang(Lang_Constants.TextType.A0841);
                     }
                 },
             });
         }
     }
     private _onTouchedBtnSetStageScaler(): void {
-        openPanel(getDict().UserSetStageScalePanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetStageScalePanel, void 0);
     }
 
     private async _updateView(): Promise<void> {
@@ -242,41 +219,41 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0984);
-        this._labelNewTexture.setLangText(TextType.B1280);
-        this._labelShowGridBorder.setLangText(TextType.B0584);
-        this._labelUnitFlickering.setLangText(TextType.B1165);
-        this._labelUnitMoveFaster.setLangText(TextType.B1368);
-        this._labelUnitAnimation.setLangText(TextType.B0629);
-        this._labelTileAnimation.setLangText(TextType.B0630);
-        this._labelWeatherAnimation.setLangText(TextType.B0985);
-        this._labelScreenVibration.setLangText(TextType.B1397);
-        this._btnSetOpacity.setLangText(TextType.B0827);
-        this._btnSetOrientation.setLangText(TextType.B0159);
-        this._btnSetStageScaler.setLangText(TextType.B0558);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0984);
+        this._labelNewTexture.setLangText(Lang_Constants.TextType.B1280);
+        this._labelShowGridBorder.setLangText(Lang_Constants.TextType.B0584);
+        this._labelUnitFlickering.setLangText(Lang_Constants.TextType.B1165);
+        this._labelUnitMoveFaster.setLangText(Lang_Constants.TextType.B1368);
+        this._labelUnitAnimation.setLangText(Lang_Constants.TextType.B0629);
+        this._labelTileAnimation.setLangText(Lang_Constants.TextType.B0630);
+        this._labelWeatherAnimation.setLangText(Lang_Constants.TextType.B0985);
+        this._labelScreenVibration.setLangText(Lang_Constants.TextType.B1397);
+        this._btnSetOpacity.setLangText(Lang_Constants.TextType.B0827);
+        this._btnSetOrientation.setLangText(Lang_Constants.TextType.B0159);
+        this._btnSetStageScaler.setLangText(Lang_Constants.TextType.B0558);
     }
     private _updateUiSwitchNewTexture(isTween: boolean): void {
-        this._uiSwitchNewTexture.setIsSwitchOn(getSelfSettingsTextureVersion() === TextureVersionId.V1, isTween);
+        this._uiSwitchNewTexture.setIsSwitchOn(Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1, isTween);
     }
     private _updateUiSwitchShowGridBorder(isTween: boolean): void {
-        this._uiSwitchShowGridBorder.setIsSwitchOn(getSelfSettingsIsShowGridBorder(), isTween);
+        this._uiSwitchShowGridBorder.setIsSwitchOn(Users_Model.getSelfSettingsIsShowGridBorder(), isTween);
     }
     private _updateUiSwitchUnitFlickering(isTween: boolean): void {
-        this._uiSwitchUnitFlickering.setIsSwitchOn(getSelfSettingsIsUnitFlickeringOnFullEnergy(), isTween);
+        this._uiSwitchUnitFlickering.setIsSwitchOn(Users_Model.getSelfSettingsIsUnitFlickeringOnFullEnergy(), isTween);
     }
     private _updateUiSwitchUnitMoveFaster(isTween: boolean): void {
-        this._uiSwitchUnitMoveFaster.setIsSwitchOn(getSelfSettingsUnitMoveAniSpeedMultiplierPct() !== 100, isTween);
+        this._uiSwitchUnitMoveFaster.setIsSwitchOn(Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct() !== 100, isTween);
     }
     private _updateUiSwitchUnitAnimation(isTween: boolean): void {
-        this._uiSwitchUnitAnimation.setIsSwitchOn(getShowUnitAnimation(), isTween);
+        this._uiSwitchUnitAnimation.setIsSwitchOn(LocalData_Storage.getShowUnitAnimation(), isTween);
     }
     private _updateUiSwitchTileAnimation(isTween: boolean): void {
-        this._uiSwitchTileAnimation.setIsSwitchOn(getShowTileAnimation(), isTween);
+        this._uiSwitchTileAnimation.setIsSwitchOn(LocalData_Storage.getShowTileAnimation(), isTween);
     }
     private _updateUiSwitchWeatherAnimation(isTween: boolean): void {
-        this._uiSwitchWeatherAnimation.setIsSwitchOn(getShowWeatherAnimation(), isTween);
+        this._uiSwitchWeatherAnimation.setIsSwitchOn(LocalData_Storage.getShowWeatherAnimation(), isTween);
     }
     private _updateUiSwitchScreenVibration(isTween: boolean): void {
-        this._uiSwitchScreenVibration.setIsSwitchOn(getSelfSettingsIsScreenVibrationEnabled(), isTween);
+        this._uiSwitchScreenVibration.setIsSwitchOn(Users_Model.getSelfSettingsIsScreenVibrationEnabled(), isTween);
     }
 }

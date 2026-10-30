@@ -1,6 +1,8 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 
 export interface UiCoData {
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     coId            : number;
 }

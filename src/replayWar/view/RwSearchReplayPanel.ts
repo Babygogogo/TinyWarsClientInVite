@@ -1,125 +1,113 @@
-import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
-import { Common as MapsCommon } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { ModeId } from "../../gameModes/Constants.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getGameModeHelpText,
-    getGameModeName,
-    getText,
-    getTextForYesOrNo,
-} from "../../lang/Utils.ts";
-import {
-    getEnabledNormalMapIdSet,
-    getMapNameInCurrentLanguage,
-} from "../../normalMap/model/NormalMapModel.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
-import { TurnIndex } from "../../turns/Constants.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import {
-    getSelfUserId,
-    getUserNickname,
-} from "../../users/Model.ts";
-import { Common as WarOperationsCommon } from "../../warOperations/Constants.ts";
+    GamePanels_Dict,
+    NormalMap_Model_NormalMapModel,
+    Lang_Utils,
+    GameConfigs_Provider,
+    Users_Model,
+    Maps_Constants,
+    GameModes_Constants,
+    GamePanels_Manager,
+    Players_Constants,
+    AuxiliaryTypes_ReplayFilter,
+    Lang_Constants,
+    Turns_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    WarOperations_Constants,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+} from "../../internal.ts";
 
 export interface OpenData {
-    replayFilter    : ReplayFilter | null;
+    replayFilter    : AuxiliaryTypes_ReplayFilter.ReplayFilter | null;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _btnReset!                     : IUiButton;
-    private readonly _btnSearch!                    : IUiButton;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnClose!                     : IUiButton;
-    private readonly _btnHelp!                      : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnReset!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSearch!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnHelp!                      : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelReplayIdTitle!           : IUiLabel;
-    private readonly _labelReplayId!                : IUiLabel;
-    private readonly _btnReplayId!                  : IUiButton;
-    private readonly _btnDeleteReplayId!            : IUiButton;
+    private readonly _labelReplayIdTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelReplayId!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnReplayId!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteReplayId!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapNameTitle!            : IUiLabel;
-    private readonly _labelMapName!                 : IUiLabel;
-    private readonly _btnMapName!                   : IUiButton;
-    private readonly _btnDeleteMapName!             : IUiButton;
+    private readonly _labelMapNameTitle!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapName!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMapName!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapName!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayerNameTitle!         : IUiLabel;
-    private readonly _labelPlayerName!              : IUiLabel;
-    private readonly _btnPlayerSelf!                : IUiButton;
-    private readonly _btnPlayerName!                : IUiButton;
-    private readonly _btnDeletePlayerName!          : IUiButton;
+    private readonly _labelPlayerNameTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayerName!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnPlayerSelf!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnPlayerName!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeletePlayerName!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelCoNameTitle!             : IUiLabel;
-    private readonly _labelCoName!                  : IUiLabel;
-    private readonly _btnCoName!                    : IUiButton;
-    private readonly _btnDeleteCoName!              : IUiButton;
+    private readonly _labelCoNameTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelCoName!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnCoName!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteCoName!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMinGlobalRatingTitle!    : IUiLabel;
-    private readonly _labelMinGlobalRating!         : IUiLabel;
-    private readonly _btnMinGlobalRating!           : IUiButton;
-    private readonly _btnDeleteMinGlobalRating!     : IUiButton;
+    private readonly _labelMinGlobalRatingTitle!    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMinGlobalRating!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMinGlobalRating!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMinGlobalRating!     : Ui_Interfaces_IUiButton.IUiButton;
 
     // private readonly _labelMinMyRatingTitle!        : Ui.Interfaces.IUiLabel;
     // private readonly _labelMinMyRating!             : Ui.Interfaces.IUiLabel;
     // private readonly _btnMinMyRating!               : Ui.Interfaces.IUiButton;
 
-    private readonly _labelHasFogTitle!             : IUiLabel;
-    private readonly _labelHasFog!                  : IUiLabel;
-    private readonly _btnHasFog!                    : IUiButton;
-    private readonly _btnDeleteHasFog!              : IUiButton;
+    private readonly _labelHasFogTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelHasFog!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHasFog!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteHasFog!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelIsRankedTitle!           : IUiLabel;
-    private readonly _labelIsRanked!                : IUiLabel;
-    private readonly _btnIsRanked!                  : IUiButton;
-    private readonly _btnDeleteIsRanked!            : IUiButton;
+    private readonly _labelIsRankedTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIsRanked!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnIsRanked!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteIsRanked!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelIsFavoriteTitle!         : IUiLabel;
-    private readonly _labelIsFavorite!              : IUiLabel;
-    private readonly _btnIsFavorite!                : IUiButton;
-    private readonly _btnDeleteIsFavorite!          : IUiButton;
+    private readonly _labelIsFavoriteTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelIsFavorite!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnIsFavorite!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteIsFavorite!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapWidthTitle!           : IUiLabel;
-    private readonly _labelMapWidth!                : IUiLabel;
-    private readonly _btnMapWidth!                  : IUiButton;
-    private readonly _btnDeleteMapWidth!            : IUiButton;
+    private readonly _labelMapWidthTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapWidth!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMapWidth!                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapWidth!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelMapHeightTitle!          : IUiLabel;
-    private readonly _labelMapHeight!               : IUiLabel;
-    private readonly _btnMapHeight!                 : IUiButton;
-    private readonly _btnDeleteMapHeight!           : IUiButton;
+    private readonly _labelMapHeightTitle!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapHeight!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMapHeight!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteMapHeight!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelPlayersCountTitle!       : IUiLabel;
-    private readonly _labelPlayersCount!            : IUiLabel;
-    private readonly _btnPlayersCount!              : IUiButton;
-    private readonly _btnDeletePlayersCount!        : IUiButton;
+    private readonly _labelPlayersCountTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelPlayersCount!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnPlayersCount!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeletePlayersCount!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelRankScoreTitle!          : IUiLabel;
-    private readonly _labelRankScore!               : IUiLabel;
-    private readonly _btnRankScore!                 : IUiButton;
-    private readonly _btnDeleteRankScore!           : IUiButton;
+    private readonly _labelRankScoreTitle!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRankScore!               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnRankScore!                 : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteRankScore!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelTurnsCountTitle!         : IUiLabel;
-    private readonly _labelTurnsCount!              : IUiLabel;
-    private readonly _btnTurnsCount!                : IUiButton;
-    private readonly _btnDeleteTurnsCount!          : IUiButton;
+    private readonly _labelTurnsCountTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTurnsCount!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnTurnsCount!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteTurnsCount!          : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelActionsCountTitle!       : IUiLabel;
-    private readonly _labelActionsCount!            : IUiLabel;
-    private readonly _btnActionsCount!              : IUiButton;
-    private readonly _btnDeleteActionsCount!        : IUiButton;
+    private readonly _labelActionsCountTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelActionsCount!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnActionsCount!              : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteActionsCount!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _replayFilter                           = new ReplayFilter();
+    private _replayFilter                           = new AuxiliaryTypes_ReplayFilter.ReplayFilter();
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -174,7 +162,7 @@ export class Panel extends UiPanel<OpenData> {
             // { ui: this._btnMinMyRating,         callback: this._onTouchedBtnMinMyRating },
         ]);
         this._setNotifyListenerArray([
-            { type : TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -182,25 +170,25 @@ export class Panel extends UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._replayFilter = this.getOpenData()?.replayFilter?.clone() ?? new ReplayFilter();
+        this._replayFilter = this.getOpenData()?.replayFilter?.clone() ?? new AuxiliaryTypes_ReplayFilter.ReplayFilter();
 
         this._updateComponentsForLanguage();
         this._updateComponentsForFilter();
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => `${getText(TextType.A0837)}\n\n${getText(TextType.A0063)}`,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.A0837)}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0063)}`,
         });
     }
 
     private _onTouchedBtnReset(): void {
-        this._replayFilter = new ReplayFilter();
+        this._replayFilter = new AuxiliaryTypes_ReplayFilter.ReplayFilter();
         this._updateComponentsForFilter();
     }
 
     private _onTouchedBtnSearch(): void {
-        openPanel(getDict().RwReplayListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayListPanel, {
             filter               : this._replayFilter,
             usePreviousFilter    : false,
             usePreviousPageIndex : false,
@@ -211,8 +199,8 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnMinGlobalRating(): void {
         const filter        = this._replayFilter;
         const ratingArray   = filter.globalRatingRange ?? [];
-        openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText       : () => getText(TextType.B0364),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
+            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0364),
             minNumber          : 0,
             maxNumber          : 10,
             currentLowerNumber : ratingArray[0] ?? 0,
@@ -230,8 +218,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnMinMyRating(): void {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B0082),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0082),
             minValue     : 0,
             maxValue     : 10,
             currentValue : filter.minMyRating ?? 0,
@@ -244,8 +232,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnReplayId(): void {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B0235),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0235),
             minValue     : 1,
             maxValue     : 99999999,
             currentValue : filter.replayId ?? 0,
@@ -282,19 +270,19 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnIsRanked(): void {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             availableNumberArray : [
-                ModeId.AutoTourney,
-                ModeId.Coop,
-                ModeId.Free,
-                ModeId.RankedMatch,
-                ModeId.UnrankedMatch,
-                ModeId.Versus,
+                GameModes_Constants.ModeId.AutoTourney,
+                GameModes_Constants.ModeId.Coop,
+                GameModes_Constants.ModeId.Free,
+                GameModes_Constants.ModeId.RankedMatch,
+                GameModes_Constants.ModeId.UnrankedMatch,
+                GameModes_Constants.ModeId.Versus,
             ],
             currentNumber     : filter.gameMode ?? null,
-            getTitleText      : () => getText(TextType.B1013),
-            getNumberMainText : gameMode => getGameModeName(gameMode) ?? UndefinedError,
-            getNumberHelpText : gameMode => getGameModeHelpText(gameMode),
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1013),
+            getNumberMainText : gameMode => Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError,
+            getNumberHelpText : gameMode => Lang_Utils.getGameModeHelpText(gameMode),
             callbackOnConfirm : gameMode => {
                 filter.gameMode = gameMode;
                 this._updateLabelIsRanked();
@@ -308,13 +296,13 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnPlayerSelf(): void {
         const filter    = this._replayFilter;
-        const userId    = getSelfUserId();
+        const userId    = Users_Model.getSelfUserId();
         filter.userId   = (filter.userId === userId) ? null : userId;
         this._updateLabelPlayerName();
     }
     private _onTouchedBtnPlayerName(): void {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonSearchSingleUserPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
             getTitleText      : null,
             callbackOnConfirm : userId => {
                 filter.userId = userId;
@@ -329,9 +317,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onTouchedBtnMapName(): Promise<void> {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray : [...await getEnabledNormalMapIdSet()],
-            getTitleText              : () => getText(TextType.B0227),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
+            availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
             callback                  : normalMapId => {
                 filter.normalMapId = normalMapId;
                 this._updateLabelMapName();
@@ -344,9 +332,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnCoName(): Promise<void> {
-        const gameConfig    = await getLatestGameConfig();
+        const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
         const filter        = this._replayFilter;
-        openPanel(getDict().CommonChooseSingleCoCategoryIdPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoCategoryIdPanel, {
             gameConfig                 : gameConfig,
             availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
             currentCoCategoryId        : filter.coCategoryId ?? null,
@@ -366,9 +354,9 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapWidth    = filter.maxMapWidth;
         const minValue          = 1;
-        const maxValue          = MapsCommon.MaxGridsCount;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B1389),
+        const maxValue          = Maps_Constants.Common.MaxGridsCount;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1389),
             currentValue : filter.minMapWidth,
             minValue     : minValue,
             maxValue     : oldMaxMapWidth ?? maxValue,
@@ -380,8 +368,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelMapWidth();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => getText(TextType.B1390),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1390),
                     currentValue : oldMaxMapWidth,
                     minValue     : newMinMapWidth ?? minValue,
                     maxValue     : maxValue,
@@ -408,9 +396,9 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapHeight   = filter.maxMapHeight;
         const minValue          = 1;
-        const maxValue          = MapsCommon.MaxGridsCount;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B1391),
+        const maxValue          = Maps_Constants.Common.MaxGridsCount;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1391),
             currentValue : filter.minMapHeight,
             minValue     : minValue,
             maxValue     : oldMaxMapHeight ?? maxValue,
@@ -422,8 +410,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelMapHeight();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => getText(TextType.B1392),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1392),
                     currentValue : oldMaxMapHeight,
                     minValue     : newMinMapHeight ?? minValue,
                     maxValue     : maxValue,
@@ -448,12 +436,12 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnPlayersCount(): void {
         const filter = this._replayFilter;
-        openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText       : () => getText(TextType.B0364),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
+            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0364),
             minNumber          : 2,
-            maxNumber          : PlayerIndex.Max,
+            maxNumber          : Players_Constants.PlayerIndex.Max,
             currentLowerNumber : filter.minPlayersCountUnneutral ?? 2,
-            currentUpperNumber : filter.maxPlayersCountUnneutral ?? PlayerIndex.Max,
+            currentUpperNumber : filter.maxPlayersCountUnneutral ?? Players_Constants.PlayerIndex.Max,
             callback           : (lowerNumber, upperNumber)  => {
                 filter.minPlayersCountUnneutral = lowerNumber;
                 filter.maxPlayersCountUnneutral = upperNumber;
@@ -473,8 +461,8 @@ export class Panel extends UiPanel<OpenData> {
         const oldMaxRankScore   = filter.maxRankScore;
         const minValue          = 0;
         const maxValue          = 9999;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B0687),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0687),
             currentValue : filter.minRankScore,
             minValue     : minValue,
             maxValue     : oldMaxRankScore ?? maxValue,
@@ -486,8 +474,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelRankScore();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => getText(TextType.B0863),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0863),
                     currentValue : oldMaxRankScore,
                     minValue     : newMinRankScore ?? minValue,
                     maxValue     : maxValue,
@@ -513,10 +501,10 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnTurnsCount(): void {
         const filter            = this._replayFilter;
         const oldMaxTurnsCount  = filter.maxTurnsCount;
-        const minValue          = TurnIndex.FirstIndex;
-        const maxValue          = TurnIndex.MaxLimit;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B0611),
+        const minValue          = Turns_Constants.TurnIndex.FirstIndex;
+        const maxValue          = Turns_Constants.TurnIndex.MaxLimit;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0611),
             currentValue : filter.minTurnsCount,
             minValue     : minValue,
             maxValue     : oldMaxTurnsCount ?? maxValue,
@@ -528,8 +516,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelTurnsCount();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => getText(TextType.B0621),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0621),
                     currentValue : oldMaxTurnsCount,
                     minValue     : newMinTurnsCount ?? minValue,
                     maxValue     : maxValue,
@@ -556,9 +544,9 @@ export class Panel extends UiPanel<OpenData> {
         const filter                = this._replayFilter;
         const oldMaxActionsCount    = filter.maxWarOperationsCount;
         const minValue              = 1;
-        const maxValue              = WarOperationsCommon.MaxLimit;
-        openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle     : () => getText(TextType.B1395),
+        const maxValue              = WarOperations_Constants.Common.MaxLimit;
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1395),
             currentValue : filter.minWarOperationsCount,
             minValue     : minValue,
             maxValue     : oldMaxActionsCount ?? maxValue,
@@ -570,8 +558,8 @@ export class Panel extends UiPanel<OpenData> {
                 }
                 this._updateLabelActionsCount();
 
-                openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle     : () => getText(TextType.B1396),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1396),
                     currentValue : oldMaxActionsCount,
                     minValue     : newMinActionsCount ?? minValue,
                     maxValue     : maxValue,
@@ -599,25 +587,25 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0228);
-        this._labelReplayIdTitle.setLangText(TextType.B0235);
-        this._labelMapNameTitle.setLangText(TextType.B0225);
-        this._labelPlayerNameTitle.setLangText(TextType.B0031);
-        this._btnPlayerSelf.setLangText(TextType.B0216);
-        this._labelCoNameTitle.setLangText(TextType.B0394);
-        this._labelMinGlobalRatingTitle.setLangText(TextType.B0083);
-        this._labelHasFogTitle.setLangText(TextType.B0020);
-        this._labelIsRankedTitle.setLangText(TextType.B0153);
-        this._labelIsFavoriteTitle.setLangText(TextType.B1291);
-        this._labelMapWidthTitle.setLangText(TextType.B0034);
-        this._labelMapHeightTitle.setLangText(TextType.B0035);
-        this._labelPlayersCountTitle.setLangText(TextType.B0922);
-        this._labelRankScoreTitle.setLangText(TextType.B0060);
-        this._labelTurnsCountTitle.setLangText(TextType.B1393);
-        this._labelActionsCountTitle.setLangText(TextType.B1394);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0228);
+        this._labelReplayIdTitle.setLangText(Lang_Constants.TextType.B0235);
+        this._labelMapNameTitle.setLangText(Lang_Constants.TextType.B0225);
+        this._labelPlayerNameTitle.setLangText(Lang_Constants.TextType.B0031);
+        this._btnPlayerSelf.setLangText(Lang_Constants.TextType.B0216);
+        this._labelCoNameTitle.setLangText(Lang_Constants.TextType.B0394);
+        this._labelMinGlobalRatingTitle.setLangText(Lang_Constants.TextType.B0083);
+        this._labelHasFogTitle.setLangText(Lang_Constants.TextType.B0020);
+        this._labelIsRankedTitle.setLangText(Lang_Constants.TextType.B0153);
+        this._labelIsFavoriteTitle.setLangText(Lang_Constants.TextType.B1291);
+        this._labelMapWidthTitle.setLangText(Lang_Constants.TextType.B0034);
+        this._labelMapHeightTitle.setLangText(Lang_Constants.TextType.B0035);
+        this._labelPlayersCountTitle.setLangText(Lang_Constants.TextType.B0922);
+        this._labelRankScoreTitle.setLangText(Lang_Constants.TextType.B0060);
+        this._labelTurnsCountTitle.setLangText(Lang_Constants.TextType.B1393);
+        this._labelActionsCountTitle.setLangText(Lang_Constants.TextType.B1394);
 
-        this._btnReset.setLangText(TextType.B0567);
-        this._btnSearch.setLangText(TextType.B0228);
+        this._btnReset.setLangText(Lang_Constants.TextType.B0567);
+        this._btnSearch.setLangText(Lang_Constants.TextType.B0228);
 
         this._updateLabelHasFog();
         this._updateLabelIsFavorite();
@@ -655,7 +643,7 @@ export class Panel extends UiPanel<OpenData> {
         const userId = this._replayFilter.userId;
         this._labelPlayerName.setText(userId == null
             ? ``
-            : (await getUserNickname(userId)) ?? UndefinedError
+            : (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError
         );
     }
 
@@ -663,7 +651,7 @@ export class Panel extends UiPanel<OpenData> {
         const normalMapId = this._replayFilter.normalMapId;
         this._labelMapName.setText(normalMapId == null
             ? ``
-            : (await getMapNameInCurrentLanguage(normalMapId)) ?? UndefinedError
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError
         );
     }
 
@@ -671,7 +659,7 @@ export class Panel extends UiPanel<OpenData> {
         const coCategoryId = this._replayFilter.coCategoryId;
         this._labelCoName.setText(coCategoryId == null
             ? ``
-            : (await getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? UndefinedError
+            : (await GameConfigs_Provider.getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? Lang_Constants.UndefinedError
         );
     }
 
@@ -691,7 +679,7 @@ export class Panel extends UiPanel<OpenData> {
         const hasFog = this._replayFilter.hasFog;
         this._labelHasFog.setText(hasFog == null
             ? ``
-            : getTextForYesOrNo(hasFog)
+            : Lang_Utils.getTextForYesOrNo(hasFog)
         );
     }
 
@@ -699,7 +687,7 @@ export class Panel extends UiPanel<OpenData> {
         const isFavorite = this._replayFilter.isFavorite;
         this._labelIsFavorite.setText(isFavorite == null
             ? ``
-            : getTextForYesOrNo(isFavorite)
+            : Lang_Utils.getTextForYesOrNo(isFavorite)
         );
     }
 
@@ -707,7 +695,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameMode = this._replayFilter.gameMode;
         this._labelIsRanked.setText(gameMode == null
             ? ``
-            : (getGameModeName(gameMode) ?? UndefinedError)
+            : (Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError)
         );
     }
 
@@ -719,7 +707,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minWidth == null) && (maxWidth == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minWidth ?? getText(TextType.B0776)} ~ ${maxWidth ?? getText(TextType.B0776)}`);
+            label.setText(`${minWidth ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxWidth ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 
@@ -731,7 +719,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 
@@ -743,7 +731,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 
@@ -755,7 +743,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 
@@ -767,7 +755,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 
@@ -779,7 +767,7 @@ export class Panel extends UiPanel<OpenData> {
         if ((minHeight == null) && (maxHeight == null)) {
             label.setText(``);
         } else {
-            label.setText(`${minHeight ?? getText(TextType.B0776)} ~ ${maxHeight ?? getText(TextType.B0776)}`);
+            label.setText(`${minHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)} ~ ${maxHeight ?? Lang_Utils.getText(Lang_Constants.TextType.B0776)}`);
         }
     }
 }

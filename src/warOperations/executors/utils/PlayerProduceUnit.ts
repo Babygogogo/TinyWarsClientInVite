@@ -1,58 +1,37 @@
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import {
-    getUnitClass,
-    getHrwWarClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import type { IHrwWar } from "../../../halfwayReplayWar/interface/IHrwWar.ts";
-import {
-    getExisted,
-    createLazyFunc,
-} from "../../../helpers/Misc.ts";
-import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import {
-    getText,
-    getUnitName,
-} from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type { IPlayer } from "../../../players/IPlayer.ts";
+    AuxiliaryTypes_GridIndex,
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    Units_Unit,
+    type GameConfigs_GameConfig,
+    type BaseWar_Interface_IBwWar,
+    type AuxiliaryTypes_MapSize,
+    Units_Constants,
+    TileBuffs_Constants,
+    Utils_ClientErrorCode,
+    Units_Utils_Serialization,
+    Helpers_Misc,
+    Helpers_Team,
+    Units_Utils_Common,
+    Visibilities_Utils,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    type Players_IPlayer,
+} from "../../../internal.ts";
+
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { IRwWar } from "../../../replayWar/interface/IRwWar.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import { ShortSfxCode } from "../../../sounds/Constants.ts";
-import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
-import {
-    Hp,
-    ActionStateId,
-} from "../../../units/Constants.ts";
-import { getNormalizedHp } from "../../../units/utils/Common.ts";
-import { create } from "../../../units/utils/Serialization.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData } from "./Common.ts";
-
-let _hrwWarClass    : new () => IHrwWar;
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarClass     : new () => IRwWar;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExePlayerProduceUnit(war, action);
     } else {
@@ -60,11 +39,11 @@ export async function execute(war: IBwWar, action: WoPlayerProduceUnit, isFast: 
     }
 }
 
-function fastExePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit): void {
+function fastExePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit): void {
     handlePlayerProduceUnit(war, action, true);
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
-function normalExePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit): void {
+function normalExePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit): void {
     // const desc = await war.getDescForExePlayerProduceUnit(action);
     // (desc) && (FloatText.show(desc));
 
@@ -72,11 +51,11 @@ function normalExePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit): v
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
-function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFastExecute: boolean): void {
+function handlePlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, isFastExecute: boolean): void {
     const extraData = action.getExtraData();
     if (extraData) {
-        const commonExtraData = getExisted(extraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_HandlePlayerProduceUnit_00);
-        handleCommonExtraData({
+        const commonExtraData = Helpers_Misc.getExisted(extraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_HandlePlayerProduceUnit_00);
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
             commonExtraData : commonExtraData,
             isFastExecute   : true,
@@ -84,39 +63,39 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
 
         if (!isFastExecute) {
             if (commonExtraData.getUnitArrayAfterAction()?.length) {
-                playShortSfx(ShortSfxCode.UnitProduction);
+                Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.UnitProduction);
             }
         }
 
     } else {
         const unitMap           = war.getUnitMap();
         const unitId            = unitMap.getNextUnitId();
-        const tileGridIndex     = getExisted(GridIndex.convertGridIndex(action.getGridIndex()));
-        const unitType          = getExisted(action.getUnitType());
-        const unitHp            = getExisted(action.getUnitHp());
+        const tileGridIndex     = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
+        const unitType          = Helpers_Misc.getExisted(action.getUnitType());
+        const unitHp            = Helpers_Misc.getExisted(action.getUnitHp());
         const gameConfig        = war.getGcData();
         const playerInTurn      = war.getPlayerInTurn();
         const playerIndex       = playerInTurn.getPlayerIndex();
         const tileMap           = war.getTileMap();
         const skillCfg          = tileMap.getTile(tileGridIndex).getEffectiveSelfUnitProductionSkillCfg(playerIndex);
-        const unitTemplateCfg   = getExisted(gameConfig.getUnitTemplateCfg(unitType));
+        const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
         const cfgCost           = unitTemplateCfg.getProductionCost();
         const cost              = Math.floor(
             cfgCost
             * (skillCfg ? (skillCfg.getCostMultiplierPct()) : 100)
-            * getNormalizedHp(unitHp)
+            * Units_Utils_Common.getNormalizedHp(unitHp)
             * playerInTurn.getUnitCostModifier(unitType)
             / 100
-            / Hp.Normalizer
+            / Units_Constants.Hp.Normalizer
         );
 
-        const unitData = create({
+        const unitData = Units_Utils_Serialization.create({
             unitType                        : unitType,
             unitId                          : unitId,
             playerIndex                     : playerIndex,
             gridIndex                       : tileGridIndex.toProto().toJson(),
 
-            actionState                     : skillCfg?.getUnitActionStateId() ?? ActionStateId.Acted,
+            actionState                     : skillCfg?.getUnitActionStateId() ?? Units_Constants.ActionStateId.Acted,
             currentHp                       : unitHp,
             aiMode                          : null,
             groupedTagId                    : null,
@@ -146,7 +125,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
             const unitCategoryId = cfg.getUnitCategoryId();
             if ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategoryId))) {
                 tileMap.getTile(tileGridIndex).addUnfixedBuff(TileBuff.fromJson({
-                    buffTypeId          : BuffTypeId.NoProduction,
+                    buffTypeId          : TileBuffs_Constants.BuffTypeId.NoProduction,
                     expiringTurnIndex   : war.getTurnManager().getTurnIndex() + 1,
                     expiringPlayerIndex : playerIndex,
                     extraParamArray     : [],
@@ -154,7 +133,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
 
                 const maxCount = cfg.getConMaxCountOfNoProductionBuilding();
                 if ((maxCount == null)                                                                                                                                                  ||
-                    (tileMap.getTilesCount(v => (v.getPlayerIndex() == playerIndex) && (v.checkHasUnfixedBuff(BuffTypeId.NoProduction))) <= maxCount)
+                    (tileMap.getTilesCount(v => (v.getPlayerIndex() == playerIndex) && (v.checkHasUnfixedBuff(TileBuffs_Constants.BuffTypeId.NoProduction))) <= maxCount)
                 ) {
                     const destination = getTeleportDestinationForPlayerProduceUnit(war, playerInTurn, unitType, tileGridIndex, cfg.getConCoUnitActionStateId() ?? null);
                     if (destination != null) {
@@ -171,7 +150,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
             }
         }
 
-        const unit = new (getUnitClass())();
+        const unit = new Units_Unit.Unit();
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();
@@ -180,7 +159,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
         playerInTurn.setFund(playerInTurn.getFund() - cost);
 
         {
-            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
             if (observerTeamIndexes != null) {
                 war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unitType,
@@ -189,7 +168,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
                     normalizedHpLoss            : 0,
                     unitGain                    : 1,
                     unitLoss                    : 0,
-                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
 
@@ -197,18 +176,18 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
                 if ((observerTeamIndexes?.length) &&
                     (war.getPlayerManager().getAllPlayers(false).some(v => (v.getUserId() != null) && (observerTeamIndexes.indexOf(v.getTeamIndex()) >= 0)))
                 ) {
-                    playShortSfx(ShortSfxCode.UnitProduction);
+                    Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.UnitProduction);
                 }
             }
         }
     }
 }
 
-function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: GridIndex, unitType: number): number {
+function getPromotionForPlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitType: number): number {
     const player                    = war.getPlayerInTurn();
     const coZoneRadius              = player.getCoZoneRadius();
     const gameConfig                = war.getGcData();
-    const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
+    const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() => player.getCoGridIndexListOnMap());
     let promotion                   = 0;
     for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
@@ -227,13 +206,13 @@ function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: GridIndex, uni
     return promotion;
 }
 
-function getTeleportDestinationForPlayerProduceUnit(war: IBwWar, player: IPlayer, unitTypeId: number, tileGridIndex: GridIndex, conCoUnitActionStateId: number | null): GridIndex | null {
+function getTeleportDestinationForPlayerProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, player: Players_IPlayer.IPlayer, unitTypeId: number, tileGridIndex: AuxiliaryTypes_GridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypes_GridIndex.GridIndex | null {
     const tileMap           = war.getTileMap();
     const unitMap           = war.getUnitMap();
     const mapSize           = tileMap.getMapSize();
-    const moveTypeId        = getExisted(war.getGcData().getUnitTemplateCfg(unitTypeId)?.getMoveTypeId());
+    const moveTypeId        = Helpers_Misc.getExisted(war.getGcData().getUnitTemplateCfg(unitTypeId)?.getMoveTypeId());
     const checkedGridIdSet  = new Set<number>();
-    let destination         : GridIndex | null = null;
+    let destination         : AuxiliaryTypes_GridIndex.GridIndex | null = null;
     for (const coGridIndex of player.getCoGridIndexListOnMap()) {
         if ((conCoUnitActionStateId != null) && (unitMap.getUnitOnMap(coGridIndex)?.getActionState() !== conCoUnitActionStateId)) {
             continue;
@@ -296,7 +275,7 @@ function getTeleportDestinationForPlayerProduceUnit(war: IBwWar, player: IPlayer
 
     return destination;
 }
-function getDistanceList(gridIndex: GridIndex, mapSize: MapSize): number[] {
+function getDistanceList(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, mapSize: AuxiliaryTypes_MapSize.MapSize): number[] {
     const x = gridIndex.getX();
     const y = gridIndex.getY();
     return [
@@ -318,25 +297,19 @@ function compareDistanceList(list1: number[], list2: number[]): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerProduceUnit, gcData: GameConfig): Promise<string | null> {
-    _hrwWarClass    ??= getHrwWarClass();
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarClass     ??= getRwWarClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerProduceUnit, gcData: GameConfigs_GameConfig.GameConfig): Promise<string | null> {
 
-    if (war instanceof _hrwWarClass) {
-        return `${getText(TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _meWarClass) {
+    if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarClass) {
-        return `${getText(TextType.B0095)} ${getUnitName(getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0095)} ${Lang_Utils.getUnitName(Helpers_Misc.getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

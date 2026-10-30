@@ -1,28 +1,26 @@
-
 import {
-    addListeners,
-    send,
-} from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { dispatch } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    ChangeLogs_Provider,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../internal.ts";
 import type { S as ChangeLogAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogAddMessage/S.ts";
 import type { S as ChangeLogGetMessageListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogGetMessageList/S.ts";
 import type { S as ChangeLogModifyMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../egret/Egret.ts";
-import { setAllMessageList } from "./Provider.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode : MessageCodes.MsgChangeLogAddMessage,         callback : _onMsgChangeLogAddMessage },
-        { msgCode : MessageCodes.MsgChangeLogModifyMessage,      callback : _onMsgChangeLogModifyMessage },
-        { msgCode : MessageCodes.MsgChangeLogGetMessageList,     callback : _onMsgChangeLogGetMessageList, },
+    Networks_Manager.addListeners([
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogAddMessage,         callback : _onMsgChangeLogAddMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogModifyMessage,      callback : _onMsgChangeLogModifyMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogGetMessageList,     callback : _onMsgChangeLogGetMessageList, },
     ], null);
 }
 
 export function reqChangeLogAddMessage(textList: LanguageText[]): void {
-    send({
+    Networks_Manager.send({
         MsgChangeLogAddMessage : {
             c : {
                 textList : textList.map(v => v.toJson()),
@@ -30,15 +28,15 @@ export function reqChangeLogAddMessage(textList: LanguageText[]): void {
         },
     });
 }
-function _onMsgChangeLogAddMessage(e: Event): void {
+function _onMsgChangeLogAddMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChangeLogAddMessageResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgChangeLogAddMessage, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChangeLogAddMessage, data);
     }
 }
 
 export function reqChangeLogModifyMessage(messageId: number, textList: LanguageText[]): void {
-    send({
+    Networks_Manager.send({
         MsgChangeLogModifyMessage : {
             c : {
                 messageId : messageId,
@@ -47,25 +45,25 @@ export function reqChangeLogModifyMessage(messageId: number, textList: LanguageT
         },
     });
 }
-function _onMsgChangeLogModifyMessage(e: Event): void {
+function _onMsgChangeLogModifyMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChangeLogModifyMessageResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgChangeLogModifyMessage, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChangeLogModifyMessage, data);
     }
 }
 
 export function reqChangeLogGetMessageList(): void {
-    send({
+    Networks_Manager.send({
         MsgChangeLogGetMessageList : {
             c : {
             }
         },
     });
 }
-function _onMsgChangeLogGetMessageList(e: Event): void {
+function _onMsgChangeLogGetMessageList(e: Egret_Egret.Event): void {
     const data = e.data as ChangeLogGetMessageListResponse;
     if (!data.getErrorCode()) {
-        setAllMessageList(data.getMessageList());
-        dispatch(TypeId.MsgChangeLogGetMessageList, data);
+        ChangeLogs_Provider.setAllMessageList(data.getMessageList());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgChangeLogGetMessageList, data);
     }
 }

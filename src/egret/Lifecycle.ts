@@ -1,9 +1,6 @@
-
 import {
-    type Stage,
-    __reflect,
-    Event,
-} from "./EgretCore";
+    Egret_Egret,
+} from "../internal.ts";
 
 export function addLifecycleListener(plugin: (context: LifecycleContext) => void): void {
     const context: LifecycleContext = new LifecycleContext();
@@ -13,7 +10,7 @@ export function addLifecycleListener(plugin: (context: LifecycleContext) => void
 
 export class LifecycleHelper {
     public static readonly contexts: LifecycleContext[] = [];
-    public static stage: Stage | undefined;
+    public static stage: Egret_Egret.Stage | undefined;
     public static onPause: (() => void) | undefined;
     public static onResume: (() => void) | undefined;
 }
@@ -26,16 +23,16 @@ export class LifecycleContext {
     public pause(): void {
         if (LifecycleContext.isActivate) {
             LifecycleContext.isActivate = false;
-            LifecycleHelper.stage!.dispatchEvent(new Event(Event.DEACTIVATE));
+            LifecycleHelper.stage!.dispatchEvent(new Egret_Egret.Event(Egret_Egret.Event.DEACTIVATE));
             LifecycleHelper.onPause?.();
         }
     }
     public resume(): void {
         if (!LifecycleContext.isActivate) {
             LifecycleContext.isActivate = true;
-            LifecycleHelper.stage!.dispatchEvent(new Event(Event.ACTIVATE));
+            LifecycleHelper.stage!.dispatchEvent(new Egret_Egret.Event(Egret_Egret.Event.ACTIVATE));
             LifecycleHelper.onResume?.();
         }
     }
 }
-__reflect(LifecycleContext.prototype, "egret.lifecycle.LifecycleContext");
+Egret_Egret.__reflect(LifecycleContext.prototype, "egret.lifecycle.LifecycleContext");

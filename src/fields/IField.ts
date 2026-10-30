@@ -1,33 +1,35 @@
-import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
-import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwCursor } from "../baseWar/interface/IBwCursor.ts";
-import type { IBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { IFieldView } from "./IFieldView.ts";
-import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GameConfig } from "../gameConfigs/GameConfig.ts";
+import {
+    type GameConfigs_GameConfig,
+    type ActionPlanners_IActionPlanner,
+    type BaseWar_Interface_IBwCursor,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Interface_IBwWar,
+    type Fields_IFieldView,
+    type FogMaps_IFogMap,
+    type Tiles_ITileMap,
+    type Units_IUnitMap,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../internal.ts";
 import type { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type { ITileMap } from "../tiles/ITileMap.ts";
-import type { IUnitMap } from "../units/IUnitMap.ts";
 
 export interface IField {
-    getFogMap(): IFogMap;
-    getTileMap(): ITileMap;
-    getUnitMap(): IUnitMap;
-    getActionPlanner(): IActionPlanner;
+    getFogMap(): FogMaps_IFogMap.IFogMap;
+    getTileMap(): Tiles_ITileMap.ITileMap;
+    getUnitMap(): Units_IUnitMap.IUnitMap;
+    getActionPlanner(): ActionPlanners_IActionPlanner.IActionPlanner;
 
     init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : Undefinable<SerialField>;
-        gameConfig              : GameConfig;
+        data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialField>;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void;
     fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
-        gameConfig              : GameConfig;
+        gameConfig              : GameConfigs_GameConfig.GameConfig;
         playersCountUnneutral   : number;
     }): void;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
@@ -38,11 +40,11 @@ export interface IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): IFieldView;
+    getView(): Fields_IFieldView.IFieldView;
 
-    getCursor(): IBwCursor;
+    getCursor(): BaseWar_Interface_IBwCursor.IBwCursor;
 
-    getGridVisualEffect(): IBwGridVisualEffect;
+    getGridVisualEffect(): BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect;
 
     getMaxPlayerIndex(): number;
 }

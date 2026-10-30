@@ -1,47 +1,46 @@
-import { CoId } from "../../cos/Constants.ts";
-import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    getCoEye,
-    getSkinCircle,
-} from "../../helpers/ImageSource.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+    Cos_Constants,
+    Helpers_ImageSource,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    ForceSkins_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+} from "../../internal.ts";
 
 export interface OpenData {
-    gcData                  : GameConfig;
+    gcData                  : GameConfigs_GameConfig.GameConfig;
     availableCoIdArray      : number[];
     availableSkinIdArray    : number[];
     currentCoId             : number;
     currentSkinId           : number;
     callback                : (coId: number, unitAndTileSkinId: number) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _layoutCo!         : IUiLayout;
-    private readonly _btnCo!            : IUiButton;
-    private readonly _imgCo!            : IUiImage;
+    private readonly _layoutCo!         : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnCo!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _imgCo!            : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _layoutColor!      : IUiLayout;
-    private readonly _btnColor!         : IUiButton;
-    private readonly _imgColor!         : IUiImage;
+    private readonly _layoutColor!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnColor!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _imgColor!         : Ui_Interfaces_IUiImage.IUiImage;
 
-    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _coId                       = CoId.Empty;
-    private _skinId                     = SkinId.First;
+    private _coId                       = Cos_Constants.CoId.Empty;
+    private _skinId                     = ForceSkins_Constants.SkinId.First;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -52,7 +51,7 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnConfirm,                         callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -83,7 +82,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleCoIdPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
             gameConfig          : openData.gcData,
             availableCoIdArray  : openData.availableCoIdArray,
             currentCoId         : this._coId,
@@ -100,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
             availableSkinIdArray    : openData.availableSkinIdArray,
             currentSkinId           : this._skinId,
             callback                : skinId => {
@@ -123,10 +122,10 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0560);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0560);
         this._btnCo.setText(`CO`);
-        this._btnColor.setLangText(TextType.B0397);
-        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnColor.setLangText(Lang_Constants.TextType.B0397);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
     }
 
     private _updateLayoutCo(): void {
@@ -135,12 +134,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._imgCo.loadSource(getCoEye(gcData, this._coId, true) ?? ``);
+        this._imgCo.loadSource(Helpers_ImageSource.getCoEye(gcData, this._coId, true) ?? ``);
         this._layoutCo.arrangeItems();
     }
 
     private _updateLayoutColor(): void {
-        this._imgColor.loadSource(getSkinCircle(this._skinId, true));
+        this._imgColor.loadSource(Helpers_ImageSource.getSkinCircle(this._skinId, true));
         this._layoutColor.arrangeItems();
     }
 }

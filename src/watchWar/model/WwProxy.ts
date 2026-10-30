@@ -1,10 +1,11 @@
 import {
-    addListeners,
-    send,
-} from "../../networks/Manager.ts";
-import { MessageCodes } from "../../networks/MessageCodes.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Networks_Manager,
+    Notifications_Dispatcher,
+    Networks_MessageCodes,
+    WatchWar_Model_WwModel,
+    Notifications_TypeId,
+    type Egret_Egret,
+} from "../../internal.ts";
 import type { S as MpwWatchContinueWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchContinueWar/S.ts";
 import type { S as MpwWatchDeleteWatcherResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchDeleteWatcher/S.ts";
 import type { S as MpwWatchGetIncomingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetIncomingInfo/S.ts";
@@ -15,32 +16,19 @@ import type { S as MpwWatchGetRequestedWarIdArrayResponse } from "../../proto/sc
 import type { S as MpwWatchGetWatchedWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetWatchedWarIdArray/S.ts";
 import type { S as MpwWatchHandleRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchHandleRequest/S.ts";
 import type { S as MpwWatchMakeRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchMakeRequest/S.ts";
-import type { Event } from "../../egret/Egret.ts";
-import {
-    setRequestableWarIdArray,
-    setOngoingWarIdArray,
-    setRequestedWarIdArray,
-    setWatchedWarIdArray,
-    updateOnFailedMsgMpwWatchContinueWar,
-    updateOnMsgMpwWatchContinueWar,
-    updateOnFailedMpwWatchGetIncomingInfo,
-    updateOnMsgMpwWatchGetIncomingInfo,
-    updateOnFailedMpwWatchGetOutgoingInfo,
-    updateOnMsgMpwWatchGetOutgoingInfo,
-} from "./WwModel.ts";
 
 export function init(): void {
-    addListeners([
-        { msgCode: MessageCodes.MsgMpwWatchGetRequestableWarIdArray,     callback: _onMsgMpwWatchGetRequestableWarIdArray },
-        { msgCode: MessageCodes.MsgMpwWatchGetOngoingWarIdArray,         callback: _onMsgMpwWatchGetOngoingWarIdArray },
-        { msgCode: MessageCodes.MsgMpwWatchGetRequestedWarIdArray,       callback: _onMsgMpwWatchGetRequestedWarIdArray },
-        { msgCode: MessageCodes.MsgMpwWatchGetWatchedWarIdArray,         callback: _onMsgMpwWatchGetWatchedWarIdArray },
-        { msgCode: MessageCodes.MsgMpwWatchMakeRequest,                  callback: _onMsgMpwWatchMakeRequest },
-        { msgCode: MessageCodes.MsgMpwWatchHandleRequest,                callback: _onMsgMpwWatchHandleRequest },
-        { msgCode: MessageCodes.MsgMpwWatchDeleteWatcher,                callback: _onMsgMpwWatchDeleteWatcher },
-        { msgCode: MessageCodes.MsgMpwWatchContinueWar,                  callback: _onMsgMpwWatchContinueWar },
-        { msgCode: MessageCodes.MsgMpwWatchGetIncomingInfo,              callback: _onMsgMpwWatchGetIncomingInfo },
-        { msgCode: MessageCodes.MsgMpwWatchGetOutgoingInfo,              callback: _onMsgMpwWatchGetOutgoingInfo },
+    Networks_Manager.addListeners([
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestableWarIdArray,     callback: _onMsgMpwWatchGetRequestableWarIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOngoingWarIdArray,         callback: _onMsgMpwWatchGetOngoingWarIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestedWarIdArray,       callback: _onMsgMpwWatchGetRequestedWarIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetWatchedWarIdArray,         callback: _onMsgMpwWatchGetWatchedWarIdArray },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchMakeRequest,                  callback: _onMsgMpwWatchMakeRequest },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchHandleRequest,                callback: _onMsgMpwWatchHandleRequest },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchDeleteWatcher,                callback: _onMsgMpwWatchDeleteWatcher },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchContinueWar,                  callback: _onMsgMpwWatchContinueWar },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetIncomingInfo,              callback: _onMsgMpwWatchGetIncomingInfo },
+        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOutgoingInfo,              callback: _onMsgMpwWatchGetOutgoingInfo },
     ], null);
 }
 
@@ -52,7 +40,7 @@ export function reqMpwWatchGetRequestableWarIdArray({ warId, coCategoryId, norma
     playersCountUnneutral?  : number | null;
     warName?                : string | null;
 }): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetRequestableWarIdArray: { c: {
             warId,
             coCategoryId,
@@ -63,73 +51,73 @@ export function reqMpwWatchGetRequestableWarIdArray({ warId, coCategoryId, norma
         } },
     });
 }
-function _onMsgMpwWatchGetRequestableWarIdArray(e: Event): void {
+function _onMsgMpwWatchGetRequestableWarIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetRequestableWarIdArrayResponse;
     if (!data.getErrorCode()) {
-        setRequestableWarIdArray(data.getWarIdArray());
-        dispatch(TypeId.MsgMpwWatchGetRequestableWarIdArray, data);
+        WatchWar_Model_WwModel.setRequestableWarIdArray(data.getWarIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetRequestableWarIdArray, data);
     }
 }
 
 export function reqMpwWatchGetOngoingWarIdArray(): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetOngoingWarIdArray: { c: {
         } },
     });
 }
-function _onMsgMpwWatchGetOngoingWarIdArray(e: Event): void {
+function _onMsgMpwWatchGetOngoingWarIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetOngoingWarIdArrayResponse;
     if (!data.getErrorCode()) {
-        setOngoingWarIdArray(data.getWarIdArray());
-        dispatch(TypeId.MsgMpwWatchGetOngoingWarInfos, data);
+        WatchWar_Model_WwModel.setOngoingWarIdArray(data.getWarIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetOngoingWarInfos, data);
     }
 }
 
 export function reqMpwWatchRequestedWarIdArray(): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetRequestedWarIdArray: { c: {
         }, }
     });
 }
-function _onMsgMpwWatchGetRequestedWarIdArray(e: Event): void {
+function _onMsgMpwWatchGetRequestedWarIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetRequestedWarIdArrayResponse;
     if (!data.getErrorCode()) {
-        setRequestedWarIdArray(data.getWarIdArray());
-        dispatch(TypeId.MsgMpwWatchGetRequestedWarIdArray, data);
+        WatchWar_Model_WwModel.setRequestedWarIdArray(data.getWarIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray, data);
     }
 }
 
 export function reqMpwWatchWatchedWarIdArray(): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetWatchedWarIdArray: { c: {
         }, }
     });
 }
-function _onMsgMpwWatchGetWatchedWarIdArray(e: Event): void {
+function _onMsgMpwWatchGetWatchedWarIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetWatchedWarIdArrayResponse;
     if (!data.getErrorCode()) {
-        setWatchedWarIdArray(data.getWarIdArray());
-        dispatch(TypeId.MsgMpwWatchGetWatchedWarInfos, data);
+        WatchWar_Model_WwModel.setWatchedWarIdArray(data.getWarIdArray());
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetWatchedWarInfos, data);
     }
 }
 
 export function reqWatchMakeRequest(warId: number, dstUserIds: number[]): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchMakeRequest: { c: {
             warId,
             dstUserIds,
         }, }
     });
 }
-function _onMsgMpwWatchMakeRequest(e: Event): void {
+function _onMsgMpwWatchMakeRequest(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchMakeRequestResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMpwWatchMakeRequest, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchMakeRequest, data);
     }
 }
 
 export function reqWatchHandleRequest(warId: number, acceptSrcUserIds: number[], declineSrcUserIds: number[]): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchHandleRequest: { c: {
             warId,
             acceptSrcUserIds,
@@ -137,75 +125,75 @@ export function reqWatchHandleRequest(warId: number, acceptSrcUserIds: number[],
         }, }
     });
 }
-function _onMsgMpwWatchHandleRequest(e: Event): void {
+function _onMsgMpwWatchHandleRequest(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchHandleRequestResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMpwWatchHandleRequest, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchHandleRequest, data);
     }
 }
 
 export function reqWatchDeleteWatcher(warId: number, watcherUserIds: number[]): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchDeleteWatcher: { c: {
             warId,
             watcherUserIds,
         }, }
     });
 }
-function _onMsgMpwWatchDeleteWatcher(e: Event): void {
+function _onMsgMpwWatchDeleteWatcher(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchDeleteWatcherResponse;
     if (!data.getErrorCode()) {
-        dispatch(TypeId.MsgMpwWatchDeleteWatcher, data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchDeleteWatcher, data);
     }
 }
 
 export function reqWatchContinueWar(warId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchContinueWar: { c: {
             warId,
         }, }
     });
 }
-async function _onMsgMpwWatchContinueWar(e: Event): Promise<void> {
+async function _onMsgMpwWatchContinueWar(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MpwWatchContinueWarResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMsgMpwWatchContinueWar(data);
+        WatchWar_Model_WwModel.updateOnFailedMsgMpwWatchContinueWar(data);
     } else {
-        await updateOnMsgMpwWatchContinueWar(data);
-        dispatch(TypeId.MsgMpwWatchContinueWar, data);
+        await WatchWar_Model_WwModel.updateOnMsgMpwWatchContinueWar(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchContinueWar, data);
     }
 }
 
 export function reqMpwWatchGetIncomingInfo(warId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetIncomingInfo: { c: {
             warId,
         } },
     });
 }
-function _onMsgMpwWatchGetIncomingInfo(e: Event): void {
+function _onMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetIncomingInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMpwWatchGetIncomingInfo(data);
+        WatchWar_Model_WwModel.updateOnFailedMpwWatchGetIncomingInfo(data);
     } else {
-        updateOnMsgMpwWatchGetIncomingInfo(data);
-        dispatch(TypeId.MsgMpwWatchGetIncomingInfo, data);
+        WatchWar_Model_WwModel.updateOnMsgMpwWatchGetIncomingInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo, data);
     }
 }
 
 export function reqMpwWatchGetOutgoingInfo(warId: number): void {
-    send({
+    Networks_Manager.send({
         MsgMpwWatchGetOutgoingInfo: { c: {
             warId,
         } },
     });
 }
-function _onMsgMpwWatchGetOutgoingInfo(e: Event): void {
+function _onMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event): void {
     const data = e.data as MpwWatchGetOutgoingInfoResponse;
     if (data.getErrorCode()) {
-        updateOnFailedMpwWatchGetOutgoingInfo(data);
+        WatchWar_Model_WwModel.updateOnFailedMpwWatchGetOutgoingInfo(data);
     } else {
-        updateOnMsgMpwWatchGetOutgoingInfo(data);
-        dispatch(TypeId.MsgMpwWatchGetOutgoingInfo, data);
+        WatchWar_Model_WwModel.updateOnMsgMpwWatchGetOutgoingInfo(data);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo, data);
     }
 }

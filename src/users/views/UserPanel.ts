@@ -1,121 +1,94 @@
 import {
-    UserWarHistoryType,
-    type Undefinable,
-} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import {
-    getMedal,
-    getUserAvatar,
-    getUserOnlineState as getImageSourceUserOnlineState,
-} from "../../helpers/ImageSource.ts";
-import {
-    format,
-    getSuffixForRankIndex,
-} from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getFormattedText,
-    getMedalDesc,
-    getText,
-    getTimeDurationText2,
-    getTimestampShortText,
-} from "../../lang/Utils.ts";
-import {
-    getMrwRankIndex,
-    getSpmOverallRankInfo,
-} from "../../leaderboard/model/LeaderboardModel.ts";
-import { Common as MultiRankedWarsCommon } from "../../multiRankedWars/Constants.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getUiLayoutBaseClass } from "../../ui/utils/UiFactory.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
-import {
-    getSelfUserId,
-    getSelfUserPrivilege,
-    getUserMrwRankScoreInfo,
-    getUserNickname,
-    getUserPublicInfo,
-    getUserOnlineState as getModelUserOnlineState,
-} from "../Model.ts";
-import { reqUserGetPublicInfo } from "../Proxy.ts";
+    AuxiliaryTypes_ChatToTarget,
+    Helpers_Text,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_ImageSource,
+    Leaderboard_Model_LeaderboardModel,
+    MultiRankedWars_Constants,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiLayoutBase,
+    Ui_Components_UiPanel,
+    AuxiliaryTypes_AuxiliaryTypes,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    Users_Model,
+    Users_Proxy,
+    WarTypes_Constants,
+} from "../../internal.ts";
 
 export interface OpenData {
     userId  : number;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                      : IUiImage;
-    private readonly _group!                        : IUiContainer;
-    private readonly _imgOnlineState!               : IUiImage;
-    private readonly _labelTitle!                   : IUiLabel;
-    private readonly _btnSwitch!                    : IUiButton;
-    private readonly _btnClose!                     : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgOnlineState!               : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnSwitch!                    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupTopButtons!              : IUiLayout;
-    private readonly _btnChat!                      : IUiButton;
-    private readonly _btnSetProfile!                : IUiButton;
-    private readonly _btnSetRelation!               : IUiButton;
+    private readonly _groupTopButtons!              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _btnChat!                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetProfile!                : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetRelation!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _imgAvatar!                    : IUiImage;
-    private readonly _imgLogo!                      : IUiImage;
-    private readonly _btnMedal!                     : IUiButton;
-    private readonly _btnSetPrivilege!              : IUiButton;
+    private readonly _imgAvatar!                    : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgLogo!                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _btnMedal!                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSetPrivilege!              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelStdRank!                 : IUiLabel;
-    private readonly _labelStdRankScoreTitle!       : IUiLabel;
-    private readonly _labelStdRankScore!            : IUiLabel;
-    private readonly _labelStdGamesTitle!           : IUiLabel;
-    private readonly _labelStdGames!                : IUiLabel;
-    private readonly _btnRankStdHistory!            : IUiButton;
-    private readonly _btnStdStatistics!             : IUiButton;
+    private readonly _labelStdRank!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdRankScoreTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdRankScore!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdGamesTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelStdGames!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnRankStdHistory!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnStdStatistics!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelFogRank!                 : IUiLabel;
-    private readonly _labelFogRankScoreTitle!       : IUiLabel;
-    private readonly _labelFogRankScore!            : IUiLabel;
-    private readonly _labelFogGamesTitle!           : IUiLabel;
-    private readonly _labelFogGames!                : IUiLabel;
-    private readonly _btnRankFogHistory!            : IUiButton;
-    private readonly _btnFogStatistics!             : IUiButton;
+    private readonly _labelFogRank!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFogRankScoreTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFogRankScore!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFogGamesTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelFogGames!                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnRankFogHistory!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnFogStatistics!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelSpmRank!                 : IUiLabel;
-    private readonly _labelSpmRankScoreTitle!       : IUiLabel;
-    private readonly _labelSpmRankScore!            : IUiLabel;
-    private readonly _btnMyWarRoomRecord!           : IUiButton;
+    private readonly _labelSpmRank!                 : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSpmRankScoreTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSpmRankScore!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnMyWarRoomRecord!           : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelRegisterTimeTitle!       : IUiLabel;
-    private readonly _labelRegisterTime1!           : IUiLabel;
-    private readonly _labelRegisterTime2!           : IUiLabel;
-    private readonly _labelLastLoginTimeTitle!      : IUiLabel;
-    private readonly _labelLastLoginTime1!          : IUiLabel;
-    private readonly _labelLastLoginTime2!          : IUiLabel;
-    private readonly _labelOnlineTimeTitle!         : IUiLabel;
-    private readonly _labelOnlineTime!              : IUiLabel;
-    private readonly _labelLoginCountTitle!         : IUiLabel;
-    private readonly _labelLoginCount!              : IUiLabel;
-    private readonly _labelUserId!                  : IUiLabel;
-    private readonly _labelUserIdTitle!             : IUiLabel;
-    private readonly _labelLastActivityTimeTitle!   : IUiLabel;
-    private readonly _labelLastActivityTime1!       : IUiLabel;
-    private readonly _labelLastActivityTime2!       : IUiLabel;
+    private readonly _labelRegisterTimeTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRegisterTime1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelRegisterTime2!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastLoginTimeTitle!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastLoginTime1!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastLoginTime2!          : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOnlineTimeTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelOnlineTime!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLoginCountTitle!         : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLoginCount!              : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUserId!                  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelUserIdTitle!             : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastActivityTimeTitle!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastActivityTime1!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelLastActivityTime2!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
-            { type : TypeId.MsgUserGetPublicInfo,        callback : this._onNotifyMsgUserGetPublicInfo },
-            { type : TypeId.MsgUserSetNickname,          callback : this._onNotifyMsgUserSetNickname },
-            { type : TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,        callback : this._onNotifyMsgUserGetPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,          callback : this._onNotifyMsgUserSetNickname },
+            { type : Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
         ]);
         this._setUiListenerArray([
             { ui : this._labelTitle,             callback : this._onTouchedLabelTitle },
@@ -142,7 +115,7 @@ export class Panel extends UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         const userId = this.getOpenData()?.userId;
         if (userId != null) {
-            reqUserGetPublicInfo(userId);
+            Users_Proxy.reqUserGetPublicInfo(userId);
         }
     }
 
@@ -154,14 +127,14 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onNotifyMsgUserSetNickname(): void {
         const userId = this.getOpenData()?.userId;
-        if ((userId != null) && (userId === getSelfUserId())) {
-            reqUserGetPublicInfo(userId);
+        if ((userId != null) && (userId === Users_Model.getSelfUserId())) {
+            Users_Proxy.reqUserGetPublicInfo(userId);
         }
     }
     private _onNotifyMsgUserSetAvatarId(): void {
         const userId = this.getOpenData()?.userId;
-        if ((userId != null) && (userId === getSelfUserId())) {
-            reqUserGetPublicInfo(userId);
+        if ((userId != null) && (userId === Users_Model.getSelfUserId())) {
+            Users_Proxy.reqUserGetPublicInfo(userId);
         }
     }
 
@@ -171,31 +144,31 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const nickname = await getUserNickname(userId);
+        const nickname = await Users_Model.getUserNickname(userId);
         if (nickname == null) {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (navigator?.clipboard?.writeText == null) {
-            show(getText(TextType.A0275));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
         } else {
             try {
                 navigator.clipboard.writeText(nickname);
-                show(getText(TextType.A0839));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0839));
             } catch {
-                show(getText(TextType.A0275));
+                FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0275));
             }
         }
     }
     private _onTouchedBtnChat(): void {
         const userId = this.getOpenData()?.userId;
         this.closePanel();
-        openPanel(getDict().ChatPanel, { toTarget : new ChatToTarget({ toUserId : userId }) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toUserId : userId }) });
     }
     private _onTouchedBtnSetProfile(): void {
-        openPanel(getDict().UserProfileSettingsPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserProfileSettingsPanel, void 0);
     }
     private _onTouchedBtnSetRelation(): void {
         const userId = this.getOpenData()?.userId;
@@ -203,7 +176,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserSetRelationPanel, { userId : userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetRelationPanel, { userId : userId });
     }
     private _onTouchedBtnSetPrivilege(): void {
         const userId = this.getOpenData()?.userId;
@@ -211,7 +184,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().GmSetUserFullPrivilegePanel, { userId : userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, { userId : userId });
         this.closePanel();
     }
     private async _onTouchedBtnMedal(): Promise<void> {
@@ -220,11 +193,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const medalIdArray  = (await getUserPublicInfo(userId))?.getShowMedalIdArray();
+        const medalIdArray  = (await Users_Model.getUserPublicInfo(userId))?.getShowMedalIdArray();
         const medalId       = medalIdArray ? medalIdArray[0] : null;
-        const desc          = medalId == null ? null : getMedalDesc(medalId);
+        const desc          = medalId == null ? null : Lang_Utils.getMedalDesc(medalId);
         if (desc) {
-            openPanel(getDict().CommonHelpPanel, {
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => desc,
             });
         }
@@ -235,7 +208,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserMpwStatisticsPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserMpwStatisticsPanel, {
             userId : userId,
         });
     }
@@ -245,9 +218,9 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserWarHistoryPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserWarHistoryPanel, {
             userId      : userId,
-            historyType : UserWarHistoryType.RankStd,
+            historyType : AuxiliaryTypes_AuxiliaryTypes.UserWarHistoryType.RankStd,
         });
     }
     private _onTouchedBtnFogStatistics(): void {
@@ -256,7 +229,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserMpwStatisticsPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserMpwStatisticsPanel, {
             userId : userId,
         });
     }
@@ -266,19 +239,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserWarHistoryPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserWarHistoryPanel, {
             userId      : userId,
-            historyType : UserWarHistoryType.RankFow,
+            historyType : AuxiliaryTypes_AuxiliaryTypes.UserWarHistoryType.RankFow,
         });
     }
     private _onTouchedBtnMyWarRoomRecord(): void {
-        openPanel(getDict().SpmMyWarRoomRecordPanel, void 0);
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmMyWarRoomRecordPanel, void 0);
     }
     private _onTouchedBtnSwitch(): void {
         this.closePanel();
-        openPanel(getDict().CommonSearchSingleUserPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
             getTitleText      : null,
-            callbackOnConfirm : userId => openPanel(getDict().UserPanel, {
+            callbackOnConfirm : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
                 userId : userId,
             }),
         });
@@ -302,7 +275,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const info = await getUserPublicInfo(userId);
+        const info = await Users_Model.getUserPublicInfo(userId);
         if (info) {
             updateLabelsForTime(info.getRegisterTime(), this._labelRegisterTime1, this._labelRegisterTime2);
             updateLabelsForTime(info.getLastLoginTime(), this._labelLastLoginTime1, this._labelLastLoginTime2);
@@ -318,7 +291,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const userOnlineState = await getModelUserOnlineState(userId);
+        const userOnlineState = await Users_Model.getUserOnlineState(userId);
         if (userOnlineState) {
             updateLabelsForTime(userOnlineState.lastActivityTimestamp, this._labelLastActivityTime1, this._labelLastActivityTime2);
         }
@@ -328,14 +301,14 @@ export class Panel extends UiPanel<OpenData> {
         const group = this._groupTopButtons;
         group.removeAllItems(false);
 
-        const privilege = getSelfUserPrivilege();
+        const privilege = Users_Model.getSelfUserPrivilege();
         if ((privilege != null)                                             &&
             ((privilege.getIsAdmin()) || (privilege.getIsChatManager()))
         ) {
             group.addItem(this._btnSetPrivilege, false);
         }
 
-        if (this.getOpenData()?.userId !== getSelfUserId()) {
+        if (this.getOpenData()?.userId !== Users_Model.getSelfUserId()) {
             group.addItem(this._btnChat, false);
             group.addItem(this._btnSetRelation, false);
         }
@@ -349,8 +322,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const info = await getUserPublicInfo(userId);
-        return this._imgAvatar.loadSource(getUserAvatar(info?.getAvatarId() ?? 1));
+        const info = await Users_Model.getUserPublicInfo(userId);
+        return this._imgAvatar.loadSource(Helpers_ImageSource.getUserAvatar(info?.getAvatarId() ?? 1));
     }
 
     private async _updateImgOnlineState(): Promise<void> {
@@ -359,7 +332,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        return this._imgOnlineState.loadSource(getImageSourceUserOnlineState(await getModelUserOnlineState(userId)));
+        return this._imgOnlineState.loadSource(Helpers_ImageSource.getUserOnlineState(await Users_Model.getUserOnlineState(userId)));
     }
 
     private async _updateBtnMedal(): Promise<void> {
@@ -368,39 +341,39 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const medalIdArray  = (await getUserPublicInfo(userId))?.getShowMedalIdArray();
+        const medalIdArray  = (await Users_Model.getUserPublicInfo(userId))?.getShowMedalIdArray();
         const medalId       = medalIdArray ? medalIdArray[0] : null;
         const btnMedal      = this._btnMedal;
         if (medalId == null) {
             btnMedal.setIsVisible(false);
         } else {
             btnMedal.setIsVisible(true);
-            btnMedal.setIconSource(getMedal(medalId));
+            btnMedal.setIconSource(Helpers_ImageSource.getMedal(medalId));
         }
     }
 
     private _updateBtnSetProfile(): void {
-        this._btnSetProfile.setIsVisible(this.getOpenData()?.userId === getSelfUserId());
+        this._btnSetProfile.setIsVisible(this.getOpenData()?.userId === Users_Model.getSelfUserId());
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelStdRank.setLangText(TextType.B1328);
-        this._labelStdRankScoreTitle.setLangText(TextType.B0060);
-        this._labelStdGamesTitle.setLangText(TextType.B0252);
+        this._labelStdRank.setLangText(Lang_Constants.TextType.B1328);
+        this._labelStdRankScoreTitle.setLangText(Lang_Constants.TextType.B0060);
+        this._labelStdGamesTitle.setLangText(Lang_Constants.TextType.B0252);
 
-        this._labelFogRank.setLangText(TextType.B1329);
-        this._labelFogRankScoreTitle.setLangText(TextType.B0060);
-        this._labelFogGamesTitle.setLangText(TextType.B0252);
+        this._labelFogRank.setLangText(Lang_Constants.TextType.B1329);
+        this._labelFogRankScoreTitle.setLangText(Lang_Constants.TextType.B0060);
+        this._labelFogGamesTitle.setLangText(Lang_Constants.TextType.B0252);
 
-        this._labelSpmRankScoreTitle.setLangText(TextType.B0819);
-        this._labelUserIdTitle.setLangText(TextType.B0640);
-        this._labelRegisterTimeTitle.setLangText(TextType.B0194);
-        this._labelLastLoginTimeTitle.setLangText(TextType.B0195);
-        this._labelOnlineTimeTitle.setLangText(TextType.B0196);
-        this._labelLoginCountTitle.setLangText(TextType.B0197);
-        this._labelLastActivityTimeTitle.setLangText(TextType.B0917);
-        this._btnSetProfile.setLangText(TextType.B0560);
-        this._labelSpmRank.setLangText(TextType.B0614);
+        this._labelSpmRankScoreTitle.setLangText(Lang_Constants.TextType.B0819);
+        this._labelUserIdTitle.setLangText(Lang_Constants.TextType.B0640);
+        this._labelRegisterTimeTitle.setLangText(Lang_Constants.TextType.B0194);
+        this._labelLastLoginTimeTitle.setLangText(Lang_Constants.TextType.B0195);
+        this._labelOnlineTimeTitle.setLangText(Lang_Constants.TextType.B0196);
+        this._labelLoginCountTitle.setLangText(Lang_Constants.TextType.B0197);
+        this._labelLastActivityTimeTitle.setLangText(Lang_Constants.TextType.B0917);
+        this._btnSetProfile.setLangText(Lang_Constants.TextType.B0560);
+        this._labelSpmRank.setLangText(Lang_Constants.TextType.B0614);
 
         this._updateLabelTitle();
         this._updateComponentsForMultiPlayerStd();
@@ -414,8 +387,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const nickname = await getUserNickname(userId);
-        this._labelTitle.setText(getFormattedText(TextType.F0009, nickname));
+        const nickname = await Users_Model.getUserNickname(userId);
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0009, nickname));
     }
     private async _updateComponentsForMultiPlayerStd(): Promise<void> {
         const userId = this.getOpenData()?.userId;
@@ -423,12 +396,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
+        const data          = await Users_Model.getUserMrwRankScoreInfo(userId, WarTypes_Constants.WarTypeId.MrwStd, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWarsCommon.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWars_Constants.Common.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
-        const rankIndex     = await getMrwRankIndex(WarTypeId.MrwStd, userId);
-        const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;
+        const rankIndex     = await Leaderboard_Model_LeaderboardModel.getMrwRankIndex(WarTypes_Constants.WarTypeId.MrwStd, userId);
+        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_Constants.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
         this._labelStdRankScore.setText(`${score} (${textForRank})`);
         this._labelStdGames.setText(`${await getUserMpwGamesCount(userId, false)}`);
     }
@@ -438,12 +411,12 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
+        const data          = await Users_Model.getUserMrwRankScoreInfo(userId, WarTypes_Constants.WarTypeId.MrwFog, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWarsCommon.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWars_Constants.Common.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
-        const rankIndex     = await getMrwRankIndex(WarTypeId.MrwFog, userId);
-        const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;
+        const rankIndex     = await Leaderboard_Model_LeaderboardModel.getMrwRankIndex(WarTypes_Constants.WarTypeId.MrwFog, userId);
+        const textForRank   = rankIndex == null ? Lang_Utils.getText(Lang_Constants.TextType.B0435) : `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}`;
         this._labelFogRankScore.setText(`${score} (${textForRank})`);
         this._labelFogGames.setText(`${await getUserMpwGamesCount(userId, true)}`);
     }
@@ -453,14 +426,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._btnMyWarRoomRecord.setIsVisible(userId === getSelfUserId());
+        this._btnMyWarRoomRecord.setIsVisible(userId === Users_Model.getSelfUserId());
 
-        const rankInfo      = await getSpmOverallRankInfo(userId);
+        const rankInfo      = await Leaderboard_Model_LeaderboardModel.getSpmOverallRankInfo(userId);
         const rankScore     = rankInfo?.score ?? 0;
         const rankIndex     = rankInfo?.rankIndex ?? 0;
         const isRankValid   = (rankIndex > 0) && (rankScore > 0);
-        const textForRank   = isRankValid ? `${rankIndex}${getSuffixForRankIndex(rankIndex)}` : getText(TextType.B0435);
-        const textForScore  = rankScore > 0 ? format(`%.2f`, rankScore) : `--`;
+        const textForRank   = isRankValid ? `${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)}` : Lang_Utils.getText(Lang_Constants.TextType.B0435);
+        const textForScore  = rankScore > 0 ? Helpers_Text.format(`%.2f`, rankScore) : `--`;
         this._labelSpmRankScore.setText(`${textForScore} (${textForRank})`);
     }
     private async _updateLabelOnlineTime(): Promise<void> {
@@ -469,49 +442,49 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const info          = await getUserPublicInfo(userId);
+        const info          = await Users_Model.getUserPublicInfo(userId);
         const onlineTime    = info?.getOnlineTime();
-        this._labelOnlineTime.setText(onlineTime == null ? UndefinedError : getTimeDurationText2(onlineTime));
+        this._labelOnlineTime.setText(onlineTime == null ? Lang_Constants.UndefinedError : Lang_Utils.getTimeDurationText2(onlineTime));
     }
 }
 
-function updateLabelsForTime(time: Undefinable<number>, label1: IUiLabel, label2: IUiLabel): void {
+function updateLabelsForTime(time: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>, label1: Ui_Interfaces_IUiLabel.IUiLabel, label2: Ui_Interfaces_IUiLabel.IUiLabel): void {
     if (time == null) {
-        label1.setText(UndefinedError);
-        label2.setText(UndefinedError);
+        label1.setText(Lang_Constants.UndefinedError);
+        label2.setText(Lang_Constants.UndefinedError);
     } else {
-        label1.setText(getTimestampShortText(time, { hour : false, minute : false, second : false }));
-        label2.setText(getTimestampShortText(time, { year : false, month : false, date : false }));
+        label1.setText(Lang_Utils.getTimestampShortText(time, { hour : false, minute : false, second : false }));
+        label2.setText(Lang_Utils.getTimestampShortText(time, { year : false, month : false, date : false }));
     }
 
     const parent = label1.getParent();
-    if (parent instanceof getUiLayoutBaseClass()) {
+    if (parent instanceof Ui_Components_UiLayoutBase.UiLayoutBase) {
         parent.arrangeItems();
     }
 }
 
 async function getUserMpwGamesCount(userId: number, hasFog: boolean): Promise<number> {
     let totalCount = 0;
-    for (const data of (await getUserPublicInfo(userId))?.getUserMpwStatisticsArray() ?? []) {
+    for (const data of (await Users_Model.getUserPublicInfo(userId))?.getUserMpwStatisticsArray() ?? []) {
         const warType   = data.getWarType() ?? 0;
         const count     = (data.getDraws() ?? 0) + (data.getLoses() ?? 0) + (data.getWins() ?? 0);
         if (hasFog) {
-            if ((warType === WarTypeId.AtwFog)   ||
-                (warType === WarTypeId.CcwFog)   ||
-                (warType === WarTypeId.McwFog)   ||
-                (warType === WarTypeId.MfwFog)   ||
-                (warType === WarTypeId.MmwFog)   ||
-                (warType === WarTypeId.MrwFog)
+            if ((warType === WarTypes_Constants.WarTypeId.AtwFog)   ||
+                (warType === WarTypes_Constants.WarTypeId.CcwFog)   ||
+                (warType === WarTypes_Constants.WarTypeId.McwFog)   ||
+                (warType === WarTypes_Constants.WarTypeId.MfwFog)   ||
+                (warType === WarTypes_Constants.WarTypeId.MmwFog)   ||
+                (warType === WarTypes_Constants.WarTypeId.MrwFog)
             ) {
                 totalCount += count;
             }
         } else {
-            if ((warType === WarTypeId.AtwStd)   ||
-                (warType === WarTypeId.CcwStd)   ||
-                (warType === WarTypeId.McwStd)   ||
-                (warType === WarTypeId.MfwStd)   ||
-                (warType === WarTypeId.MmwStd)   ||
-                (warType === WarTypeId.MrwStd)
+            if ((warType === WarTypes_Constants.WarTypeId.AtwStd)   ||
+                (warType === WarTypes_Constants.WarTypeId.CcwStd)   ||
+                (warType === WarTypes_Constants.WarTypeId.McwStd)   ||
+                (warType === WarTypes_Constants.WarTypeId.MfwStd)   ||
+                (warType === WarTypes_Constants.WarTypeId.MmwStd)   ||
+                (warType === WarTypes_Constants.WarTypeId.MrwStd)
             ) {
                 totalCount += count;
             }

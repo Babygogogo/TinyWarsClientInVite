@@ -1,9 +1,11 @@
-import { Constants } from "./Constants.ts";
-import { checkIsCharInRange } from "../helpers/Text.ts";
+import {
+    Helpers_Text,
+    CustomCounters_Constants,
+} from "../internal.ts";
 import type { CustomCounter } from "../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
 
 export function checkIsValidId(customCounterId: number): boolean {
-    return (customCounterId >= Constants.MinId) && (customCounterId <= Constants.MaxId);
+    return (customCounterId >= CustomCounters_Constants.Constants.MinId) && (customCounterId <= CustomCounters_Constants.Constants.MaxId);
 }
 export function checkIsValidValue(customCounterValue: number): boolean {
     return isFinite(customCounterValue);
@@ -39,13 +41,13 @@ export function checkIsValidName(name: string): boolean {
     }
 
     const tempName = name.toLocaleLowerCase();
-    if (!checkIsCharInRange(tempName[0], `a`, `z`)) {
+    if (!Helpers_Text.checkIsCharInRange(tempName[0], `a`, `z`)) {
         return false;
     }
     for (let i = 1; i < length; ++i) {
         const char = tempName[i];
-        if ((!checkIsCharInRange(char, `a`, `z`))   &&
-            (!checkIsCharInRange(char, `0`, `9`))
+        if ((!Helpers_Text.checkIsCharInRange(char, `a`, `z`))   &&
+            (!Helpers_Text.checkIsCharInRange(char, `0`, `9`))
         ) {
             return false;
         }

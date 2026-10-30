@@ -1,13 +1,9 @@
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
-import {
-    AliveStateId,
-    PlayerIndex,
-} from "../../players/Constants.ts";
+    Players_Constants,
+    Helpers_Misc,
+    MultiPlayerRooms_RoomCreatorBase,
+    type GameConfigs_GameConfig,
+} from "../../internal.ts";
 import { C as MfrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
 import type { C as MfrJoinRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/C.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -15,21 +11,21 @@ import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/Setti
 
 export type DataForJoinRoom = MfrJoinRoomRequest;
 
-export class MfrRoomCreator extends RoomCreatorBase {
+export class MfrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreatorBase {
     private readonly _settingsForMfw = new SettingsForMfw();
 
-    public constructor(gcData: GameConfig, warData: SerialWar) {
-        super(gcData, getExisted(warData.getSettingsForCommon()));
+    public constructor(gcData: GameConfigs_GameConfig.GameConfig, warData: SerialWar) {
+        super(gcData, Helpers_Misc.getExisted(warData.getSettingsForCommon()));
 
         if (gcData.getVersion() !== this.getSettingsForCommon().getConfigVersion()) {
-            throw newError(`MfrRoomCreator.constructor() the config version is not correct.`);
+            throw Helpers_Misc.newError(`MfrRoomCreator.constructor() the config version is not correct.`);
         }
 
         this.getSettingsForMfw().setInitialWarData(warData);
 
-        const playerData = getExisted(warData.getPlayerManager()?.getPlayers().find(v => {
-            return (v.getAliveState() !== AliveStateId.Dead)
-                && (v.getPlayerIndex() !== PlayerIndex.Neutral)
+        const playerData = Helpers_Misc.getExisted(warData.getPlayerManager()?.getPlayers().find(v => {
+            return (v.getAliveState() !== Players_Constants.AliveStateId.Dead)
+                && (v.getPlayerIndex() !== Players_Constants.PlayerIndex.Neutral)
                 && (v.getUserId() != null);
         }));
         this.setSelfPlayerIndex(playerData.getPlayerIndex());
@@ -54,7 +50,7 @@ export class MfrRoomCreator extends RoomCreatorBase {
     }
 
     public getInitialWarData(): SerialWar {
-        return getExisted(this.getSettingsForMfw().getInitialWarData());
+        return Helpers_Misc.getExisted(this.getSettingsForMfw().getInitialWarData());
     }
     private getSettingsForMfw(): SettingsForMfw {
         return this._settingsForMfw;

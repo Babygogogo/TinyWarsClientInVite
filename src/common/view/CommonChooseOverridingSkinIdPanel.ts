@@ -1,61 +1,55 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { showLang } from "../../FloatText.ts";
 import {
-    getOriginSkinIdArray,
-    getRevisedOverridingSkinIdArray,
-    getAllSkinIdArray,
-} from "../../forceSkins/Utils.ts";
-import {
-    getMpwWarClass,
-    getHrwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getSkinCircle } from "../../helpers/ImageSource.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import {
-    setMpwOverridingSkinIdArray,
-    setRwOverridingSkinIdArray,
-} from "../../localData/Storage.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    ForceSkins_Utils,
+    HalfwayReplayWar_Model_HrwWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    FloatText,
+    SinglePlayerWar_Model_SpwWar,
+    type BaseWar_Interface_IBwWar,
+    Notifications_Dispatcher,
+    GamePanels_Dict,
+    Helpers_ImageSource,
+    Lang_Utils,
+    GamePanels_Manager,
+    LocalData_Storage,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiListItemRenderer,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
+
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    war         : IBwWar;
+    war         : BaseWar_Interface_IBwWar.IBwWar;
     callback?   : (overridingSkinIdArray: number[] | undefined) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _btnHelp!          : IUiButton;
-    private readonly _btnClose!         : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnHelp!          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _labelOrigin!      : IUiLabel;
-    private readonly _labelTarget!      : IUiLabel;
-    private readonly _listSkin!         : IUiScrollList<DataForSkinRenderer>;
+    private readonly _labelOrigin!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelTarget!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listSkin!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForSkinRenderer>;
 
-    private readonly _btnConfirm!       : IUiButton;
-    private readonly _btnReset!         : IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnReset!         : Ui_Interfaces_IUiButton.IUiButton;
 
     private _targetSkinIdArray          : number[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
@@ -91,8 +85,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => getText(TextType.A0951),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0951),
         });
     }
 
@@ -104,16 +98,16 @@ export class Panel extends UiPanel<OpenData> {
 
         const war = openData.war;
         if (war.getActionPlanner().checkIsStateRequesting()) {
-            showLang(TextType.YouCanNotDoThisRightNow);
+            FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const rawArray      = this._targetSkinIdArray;
-        const revisedArray  = checkIsSame(getOriginSkinIdArray(openData.war, false), rawArray) ? undefined : rawArray;
+        const revisedArray  = checkIsSame(ForceSkins_Utils.getOriginSkinIdArray(openData.war, false), rawArray) ? undefined : rawArray;
         this._checkAnsSaveTargetSkinIdArray(revisedArray);
 
         war.getTileMap().forEachTile(t => t.flushDataToView());
-        dispatch(TypeId.BwOverridingSkinIdChanged);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwOverridingSkinIdChanged);
 
         openData.callback?.(revisedArray);
         this.closePanel();
@@ -126,7 +120,7 @@ export class Panel extends UiPanel<OpenData> {
 
         // this._resetTargetSkinIdArray();
 
-        this._targetSkinIdArray = getOriginSkinIdArray(openData.war, false);
+        this._targetSkinIdArray = ForceSkins_Utils.getOriginSkinIdArray(openData.war, false);
         this._updateListSkin();
     }
 
@@ -135,11 +129,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0609);
-        this._labelOrigin.setLangText(TextType.B0543);
-        this._labelTarget.setLangText(TextType.B1388);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnReset.setLangText(TextType.B0543);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0609);
+        this._labelOrigin.setLangText(Lang_Constants.TextType.B0543);
+        this._labelTarget.setLangText(Lang_Constants.TextType.B1388);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnReset.setLangText(Lang_Constants.TextType.B0543);
     }
 
     private async _updateListSkin(): Promise<void> {
@@ -148,7 +142,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const originSkinIdArray = getOriginSkinIdArray(openData.war, false);
+        const originSkinIdArray = ForceSkins_Utils.getOriginSkinIdArray(openData.war, false);
         const length            = originSkinIdArray.length;
         const dataArray         : DataForSkinRenderer[] = [];
         for (let i = 0; i < length; ++i) {
@@ -171,7 +165,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._targetSkinIdArray = getRevisedOverridingSkinIdArray(openData.war);
+        this._targetSkinIdArray = ForceSkins_Utils.getRevisedOverridingSkinIdArray(openData.war);
     }
     private _checkAnsSaveTargetSkinIdArray(arr: number[] | undefined): void {
         const openData = this.getOpenData();
@@ -180,31 +174,31 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const war = openData.war;
-        if (war instanceof getMpwWarClass()) {
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             const warId = war.getWarId();
             if (warId != null) {
-                setMpwOverridingSkinIdArray(warId, arr);
+                LocalData_Storage.setMpwOverridingSkinIdArray(warId, arr);
             }
             return;
         }
 
-        if (war instanceof getHrwWarClass()) {
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
             const warId = war.getWarId();
             if (warId != null) {
-                setMpwOverridingSkinIdArray(warId, arr);
+                LocalData_Storage.setMpwOverridingSkinIdArray(warId, arr);
             }
             return;
         }
 
-        if (war instanceof getRwWarClass()) {
+        if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             const replayId = war.getReplayId();
             if (replayId != null) {
-                setRwOverridingSkinIdArray(replayId, arr);
+                LocalData_Storage.setRwOverridingSkinIdArray(replayId, arr);
             }
             return;
         }
 
-        if (war instanceof getSpwWarClass()) {
+        if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
             const extraData = war.getSaveSlotExtraData();
             if (extraData != null) {
                 extraData.setOverridingSkinIdArray(arr ?? []);
@@ -218,20 +212,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForSkinRenderer extends UiListItemData {
+interface DataForSkinRenderer extends Ui_Types_UiListItemData.UiListItemData {
     playerIndex     : number;
     originSkinId    : number;
     showSeparator   : boolean;
     panel           : Panel;
 }
 class SkinRenderer
-    extends     UiListItemRenderer<DataForSkinRenderer>
-    implements  IUiListItemRenderer<DataForSkinRenderer>
+    extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSkinRenderer>
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer>
 {
-    private readonly _labelPlayerIndex! : IUiLabel;
-    private readonly _imgSrcSkin!       : IUiImage;
-    private readonly _imgDstSkin!       : IUiImage;
-    private readonly _imgSeparator!     : IUiImage;
+    private readonly _labelPlayerIndex! : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _imgSrcSkin!       : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgDstSkin!       : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _imgSeparator!     : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -249,8 +243,8 @@ class SkinRenderer
 
         const playerIndex   = openData.playerIndex;
         const panel         = openData.panel;
-        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            availableSkinIdArray    : getAllSkinIdArray(false),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
+            availableSkinIdArray    : ForceSkins_Utils.getAllSkinIdArray(false),
             currentSkinId           : panel.getTargetSkinId(playerIndex) ?? openData.originSkinId,
             callback                : skinId => {
                 panel.setTargetSkinId(playerIndex, skinId);
@@ -268,8 +262,8 @@ class SkinRenderer
         const playerIndex   = openData.playerIndex;
         const originSkinId  = openData.originSkinId;
         this._labelPlayerIndex.setText(`P${playerIndex}`);
-        this._imgSrcSkin.loadSource(getSkinCircle(openData.originSkinId, true));
-        this._imgDstSkin.loadSource(getSkinCircle(openData.panel.getTargetSkinId(playerIndex) ?? originSkinId, true));
+        this._imgSrcSkin.loadSource(Helpers_ImageSource.getSkinCircle(openData.originSkinId, true));
+        this._imgDstSkin.loadSource(Helpers_ImageSource.getSkinCircle(openData.panel.getTargetSkinId(playerIndex) ?? originSkinId, true));
         this._imgSeparator.setIsVisible(openData.showSeparator);
     }
 }

@@ -1,274 +1,98 @@
-import { ActionPlanner } from "../actionPlanners/ActionPlanner.ts";
-import { ActionPlannerView } from "../actionPlanners/ActionPlannerView.ts";
-import { init as initAutoTourneys } from "../autoTourneys/mains/Gateway.ts";
-import { init as initRoomsAutoTourneys } from "../autoTourneys/rooms/Gateway.ts";
-import { War as AutoTourneysWar } from "../autoTourneys/wars/War.ts";
-import type {
-    Undefinable,
-    CustomError,
-} from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { BwCommonSettingManager } from "../baseWar/model/BwCommonSettingManager.ts";
-import { BwCursor } from "../baseWar/model/BwCursor.ts";
-import { BwDrawVoteManager } from "../baseWar/model/BwDrawVoteManager.ts";
-import { BwExecutedOperationManager } from "../baseWar/model/BwExecutedOperationManager.ts";
-import { BwGridVisualEffect } from "../baseWar/model/BwGridVisualEffect.ts";
-import { BwRandomNumberManager } from "../baseWar/model/BwRandomNumberManager.ts";
-import { BwWarEventManager } from "../baseWar/model/BwWarEventManager.ts";
-import { BwWarStatisticsManager } from "../baseWar/model/BwWarStatisticsManager.ts";
-import { BwCursorView } from "../baseWar/view/BwCursorView.ts";
-import { BwGridVisualEffectView } from "../baseWar/view/BwGridVisualEffectView.ts";
-import { BwWarView } from "../baseWar/view/BwWarView.ts";
-import { init as initBroadcasts } from "../broadcasts/Gateway.ts";
-import { init as initCampaigns } from "../campaigns/mains/Gateway.ts";
-import { init as initManagements } from "../campaigns/managements/Gateway.ts";
-import { War as CampaignsWar } from "../campaigns/wars/War.ts";
-import { init as initChangeLogs } from "../changeLogs/Gateway.ts";
 import {
-    Common as ChatCommon,
-    ToCategoryId,
-} from "../chat/Constants.ts";
-import {
-    init as initProxy,
-    reqChatAddMessage,
-} from "../chat/Proxy.ts";
-import { init as initCommonModel } from "../common/model/CommonModel.ts";
-import { init as initCommonProxy } from "../common/model/CommonProxy.ts";
-import { init as initCcrProxy } from "../coopCustomRoom/model/CcrProxy.ts";
-import { CcwWar } from "../coopCustomWar/model/CcwWar.ts";
-import { Field } from "../fields/Field.ts";
-import { FieldView } from "../fields/FieldView.ts";
-import { show } from "../FloatText.ts";
-import { FogMap } from "../fogMaps/FogMap.ts";
-import { ReviewStatus } from "../maps/Constants.ts";
-import {
-    init as initGameConfigProvider,
-    getGameConfig,
-    getLatestGameConfig,
-} from "../gameConfigs/Provider.ts";
-import { init as initGameConfigGateway } from "../gameConfigs/Gateway.ts";
-import {
-    init as initGhFactory,
-    getTwWarClass,
-    getMeWarClass,
-} from "../gameHelpers/GhFactory.ts";
-import { getDict } from "../gamePanels/Dict.ts";
-import {
-    closeAllPanelsExcept,
-    openPanel,
-} from "../gamePanels/Manager.ts";
-import { init as initGmProxy } from "../gm/model/GmProxy.ts";
-import {
-    init as initHrwModel,
-    unloadWar as unloadHrwModelWar,
-    loadWar as loadHrwModelWar,
-    getWar as getHrwModelWar,
-} from "../halfwayReplayWar/model/HrwModel.ts";
-import { HrwWar } from "../halfwayReplayWar/model/HrwWar.ts";
-import { init as initCompatibility } from "./Compatibility.ts";
-import * as HelpersGameFlow from "./GameFlow.ts";
-import {
-    getExisted,
-    newError,
-} from "./Misc.ts";
-import { init as initKbManager } from "../keyboard/KbManager.ts";
-import { CommonText } from "../lang/CommonText.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../lang/Constants.ts";
-import {
-    init as initLang,
-    getText,
-    getErrorText,
-    getLanguageText,
-} from "../lang/Utils.ts";
-import { init as initLeaderboardProxy } from "../leaderboard/model/LeaderboardProxy.ts";
-import { init as initDeprecatedStorage } from "../localData/DeprecatedStorage.ts";
-import {
-    init as initStorage,
-    getStageScale,
-    getScreenOrientation,
-} from "../localData/Storage.ts";
-import { init as initMailProxy } from "../mail/model/MailProxy.ts";
-import { MeDrawer } from "../mapEditor/model/MeDrawer.ts";
-import {
-    reviseInstanceWarRuleForAi,
-    getWarData as getMeMfwModelWarData,
-    resetData as resetMeMfwModelData,
-} from "../mapEditor/model/MeMfwModel.ts";
-import {
-    init as initMeModel,
-    unloadWar as unloadMeModelWar,
-    loadWar as loadMeModelWar,
-    getMapEditorData,
-    getWar as getMeModelWar,
-} from "../mapEditor/model/MeModel.ts";
-import { init as initMeProxy } from "../mapEditor/model/MeProxy.ts";
-import {
-    getWarData as getMeSimModelWarData,
-    resetData as resetMeSimModelData,
-} from "../mapEditor/model/MeSimModel.ts";
-import { MeWar } from "../mapEditor/model/MeWar.ts";
-import { init as initMcrProxy } from "../multiCustomRoom/model/McrProxy.ts";
-import { McwWar } from "../multiCustomWar/model/McwWar.ts";
-import { init as initMfrProxy } from "../multiFreeRoom/model/MfrProxy.ts";
-import { MfrRoomCreator } from "../multiFreeRoom/model/MfrRoomCreator.ts";
-import { MfwWar } from "../multiFreeWar/model/MfwWar.ts";
-import { init as initMmrProxy } from "../multiMatchRoom/model/MmrProxy.ts";
-import { MmwWar } from "../multiMatchWar/model/MmwWar.ts";
-import type { IMpwWar } from "../multiPlayerWar/interface/IMpwWar.ts";
-import {
-    init as initMpwModel,
-    unloadWar as unloadMpwModelWar,
-    loadWar as loadMpwModelWar,
-    getWar as getMpwModelWar,
-} from "../multiPlayerWar/model/MpwModel.ts";
-import {
-    init as initMpwProxy,
-    reqMpwCommonSyncWar,
-} from "../multiPlayerWar/model/MpwProxy.ts";
-import { MpwWar } from "../multiPlayerWar/model/MpwWar.ts";
-import { init as initMrrProxy } from "../multiRankRoom/model/MrrProxy.ts";
-import { MrwWar } from "../multiRankWar/model/MrwWar.ts";
-import {
-    checkAndOverrideGameVersion,
-    addListeners,
-    init as initNetworks,
-} from "../networks/Manager.ts";
-import { MessageCodes } from "../networks/MessageCodes.ts";
-import { init as initNormalMapModel } from "../normalMap/model/NormalMapModel.ts";
-import { init as initNormalMapProxy } from "../normalMap/model/NormalMapProxy.ts";
-import { addEventListeners } from "../notifications/Dispatcher.ts";
-import { TypeId } from "../notifications/TypeId.ts";
-import { Player } from "../players/Player.ts";
-import { PlayerManager } from "../players/PlayerManager.ts";
+    Chat_Constants,
+    GameConfigs_Provider,
+    AutoTourneys_Mains_Gateway,
+    Broadcasts_Gateway,
+    Campaigns_Mains_Gateway,
+    CoopCustomRoom_Model_CcrProxy,
+    ChangeLogs_Gateway,
+    Common_Model_CommonModel,
+    Common_Model_CommonProxy,
+    GameConfigs_Gateway,
+    Campaigns_Managements_Gateway,
+    Chat_Proxy,
+    AutoTourneys_Rooms_Gateway,
+    Maps_Constants,
+    FloatText,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type BaseWar_Interface_IBwWar,
+    Notifications_Dispatcher,
+    Networks_Manager,
+    SinglePlayerWar_Model_SpwModel,
+    ResManager,
+    GamePanels_Manager,
+    Lang_CommonText,
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Misc,
+    HalfwayReplayWar_Model_HrwModel,
+    MapEditor_Model_MeModel,
+    MapEditor_Model_MeMfwModel,
+    MapEditor_Model_MeSimModel,
+    MultiPlayerWar_Model_MpwModel,
+    ReplayWar_Model_RwModel,
+    LocalData_Storage,
+    Helpers_GameFlow,
+    Helpers_Compatibility,
+    LocalData_DeprecatedStorage,
+    Gm_Model_GmProxy,
+    Keyboard_KbManager,
+    Leaderboard_Model_LeaderboardProxy,
+    Mail_Model_MailProxy,
+    MultiCustomRoom_Model_McrProxy,
+    MapEditor_Model_MeProxy,
+    MultiFreeRoom_Model_MfrProxy,
+    MultiMatchRoom_Model_MmrProxy,
+    MultiPlayerWar_Model_MpwProxy,
+    MultiRankRoom_Model_MrrProxy,
+    NormalMap_Model_NormalMapModel,
+    NormalMap_Model_NormalMapProxy,
+    ReplayWar_Model_RwProxy,
+    SinglePlayerMode_Model_SpmModel,
+    SinglePlayerMode_Model_SpmProxy,
+    Stages_StageManager,
+    Timer_TimerModel,
+    Timer_TimerProxy,
+    Networks_MessageCodes,
+    MultiFreeRoom_Model_MfrRoomCreator,
+    Sounds_SoundPlayer,
+    Lang_Constants,
+    Notifications_TypeId,
+    type ReplayWar_View_RwReplayListPanel,
+    Utils_ClientErrorCode,
+    Users_Model,
+    Ui_Utils_UiSizerHelpers,
+    Users_Proxy,
+    WatchWar_Model_WwProxy,
+    Wars_Constants,
+    Users_Constants,
+    WarTypes_Constants,
+    type Egret_Egret,
+    MapEditor_Model_MeWar,
+    TestWar_Model_TwWar,
+} from "../internal.ts";
+
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { IRwWarBase } from "../replayWar/interface/IRwWarBase.ts";
-import {
-    init as initRwModel,
-    unloadWar as unloadRwModelWar,
-    loadWar as loadRwModelWar,
-    getWar as getRwModelWar,
-} from "../replayWar/model/RwModel.ts";
-import { init as initRwProxy } from "../replayWar/model/RwProxy.ts";
-import { RwWar } from "../replayWar/model/RwWar.ts";
-import { RwWarBase } from "../replayWar/model/RwWarBase.ts";
-import type { OpenData } from "../replayWar/view/RwReplayListPanel.ts";
-import {
-    init as initResManager,
-    loadMainRes,
-    checkIsLoadedMainResource,
-} from "../ResManager.ts";
-import { ScwWar } from "../singleCustomWar/model/ScwWar.ts";
-import { SfwWar } from "../singleFreeWar/model/SfwWar.ts";
-import { init as initSpmModel } from "../singlePlayerMode/model/SpmModel.ts";
-import { init as initSpmProxy } from "../singlePlayerMode/model/SpmProxy.ts";
-import type { ISpwWar } from "../singlePlayerWar/interface/ISpwWar.ts";
-import {
-    init as initSpwModel,
-    unloadWar as unloadSpwModelWar,
-    loadWar as loadSpwModelWar,
-    checkAndHandleAutoActionsAndRobotRecursively,
-    getWar as getSpwModelWar,
-} from "../singlePlayerWar/model/SpwModel.ts";
-import { SpwRetractManager } from "../singlePlayerWar/model/SpwRetractManager.ts";
-import { SpwWar } from "../singlePlayerWar/model/SpwWar.ts";
-import { SrwWar } from "../singleRankWar/model/SrwWar.ts";
-import {
-    playBgm,
-    playCoBgmWithWar,
-} from "../sounds/SoundPlayer.ts";
-import {
-    init as initStageManager,
-    setStageScale,
-} from "../stages/StageManager.ts";
-import { TaskObjectiveManager } from "../taskObjectives/TaskObjectiveManager.ts";
-import { TwWar } from "../testWar/model/TwWar.ts";
-import { Tile } from "../tiles/Tile.ts";
-import { TileMap } from "../tiles/TileMap.ts";
-import { TileMapView } from "../tiles/TileMapView.ts";
-import { TileView } from "../tiles/TileView.ts";
-import { init as initTimerModel } from "../timer/TimerModel.ts";
-import { init as initTimerProxy } from "../timer/TimerProxy.ts";
-import { TurnManager } from "../turns/TurnManager.ts";
-import { UiButton } from "../ui/components/UiButton.ts";
-import { UiCoInfo } from "../ui/components/UiCoInfo.ts";
-import { UiContainer } from "../ui/components/UiContainer.ts";
-import { UiContainerBase } from "../ui/components/UiContainerBase.ts";
-import { UiImage } from "../ui/components/UiImage.ts";
-import { UiLabel } from "../ui/components/UiLabel.ts";
-import { UiLayer } from "../ui/components/UiLayer.ts";
-import { UiLayout } from "../ui/components/UiLayout.ts";
-import { UiLayoutBase } from "../ui/components/UiLayoutBase.ts";
-import { UiList } from "../ui/components/UiList.ts";
-import { UiListItemRenderer } from "../ui/components/UiListItemRenderer.ts";
-import { UiMapInfo } from "../ui/components/UiMapInfo.ts";
-import { UiOpenableComponent } from "../ui/components/UiOpenableComponent.ts";
-import { UiPanel } from "../ui/components/UiPanel.ts";
-import { UiProgressBar } from "../ui/components/UiProgressBar.ts";
-import { UiPromptedInput } from "../ui/components/UiPromptedInput.ts";
-import { UiRadioButton } from "../ui/components/UiRadioButton.ts";
-import { UiScroller } from "../ui/components/UiScroller.ts";
-import { UiScrollerBase } from "../ui/components/UiScrollerBase.ts";
-import { UiScrollList } from "../ui/components/UiScrollList.ts";
-import { UiSwitch } from "../ui/components/UiSwitch.ts";
-import { UiTab } from "../ui/components/UiTab.ts";
-import { UiTextInput } from "../ui/components/UiTextInput.ts";
-import { UiTileView } from "../ui/components/UiTileView.ts";
-import { UiUnitView } from "../ui/components/UiUnitView.ts";
-import { UiZoomableComponent } from "../ui/components/UiZoomableComponent.ts";
-import { UiZoomableMap } from "../ui/components/UiZoomableMap.ts";
-import { init as initUiFactory } from "../ui/utils/UiFactory.ts";
-import { init as initUiSizerHelpers } from "../ui/utils/UiSizerHelpers.ts";
-import { Unit } from "../units/Unit.ts";
-import { UnitMap } from "../units/UnitMap.ts";
-import { UnitMapView } from "../units/UnitMapView.ts";
-import { UnitView } from "../units/UnitView.ts";
-import { Common as UsersCommon } from "../users/Constants.ts";
-import {
-    init as initModel,
-    getSelfSettingsBgmCodeForLobby,
-    getSelfSettingsCoBgmCodeArray,
-    getSelfSettingsBgmCodeForMapEditor,
-    getIsLoggedIn,
-    getSelfAccount,
-    getSelfPassword,
-    getSelfGuestUserId,
-    updateOnMsgUserLogout,
-} from "../users/Model.ts";
-import {
-    init as initUsersProxy,
-    reqLogin,
-    reqUserLoginAsGuest,
-} from "../users/Proxy.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { Stage } from "../egret/Egret.ts";
-import { WarTypeId } from "../warTypes/Constants.ts";
-import { init as initWwProxy } from "../watchWar/model/WwProxy.ts";
-import { Manager } from "../weathers/Manager.ts";
-import { View } from "../weathers/View.ts";
-import { SyncRequestTypeId } from "../wars/Constants.ts";
 
 const _NET_EVENTS = [
-    { msgCode: MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },
+    { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },
 ];
 const _NOTIFY_EVENTS = [
-    { type: TypeId.NetworkConnected,                callback: _onNotifyNetworkConnected, },
-    { type: TypeId.MsgUserLogin,                    callback: _onMsgUserLogin },
-    { type: TypeId.MsgUserLoginAsGuest,             callback: _onMsgUserLoginAsGuest },
-    { type: TypeId.MsgUserLogout,                   callback: _onMsgUserLogout },
-    { type: TypeId.MsgCommonLatestConfigVersion,    callback: _onMsgCommonLatestConfigVersion },
+    { type: Notifications_TypeId.TypeId.NetworkConnected,                callback: _onNotifyNetworkConnected, },
+    { type: Notifications_TypeId.TypeId.MsgUserLogin,                    callback: _onMsgUserLogin },
+    { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest,             callback: _onMsgUserLoginAsGuest },
+    { type: Notifications_TypeId.TypeId.MsgUserLogout,                   callback: _onMsgUserLogout },
+    { type: Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,    callback: _onMsgCommonLatestConfigVersion },
 ];
 
 let _hasOnceWentToLobby = false;
 
-export function startGame(stage: Stage): void {
+export function startGame(stage: Egret_Egret.Stage): void {
     bootUpTest();
-    checkAndOverrideGameVersion();
+    Networks_Manager.checkAndOverrideGameVersion();
 
     doStartGame(stage);
 }
@@ -278,7 +102,7 @@ function bootUpTest(): void {
     }
     console.warn("Boot Up Test begin.");
 
-    const rawDict       = CommonText;
+    const rawDict       = Lang_CommonText.CommonText;
     const dict          = new Map<string, Map<string, string>>();   // text1, text2, key
     const emptyIdSet    = new Set<string>();
     for (const key in rawDict) {
@@ -302,7 +126,7 @@ function bootUpTest(): void {
                 dict.set(text1, new Map());
             }
 
-            const dict1 = getExisted(dict.get(text1));
+            const dict1 = Helpers_Misc.getExisted(dict.get(text1));
             if (!dict1.has(text2)) {
                 dict1.set(text2, key);
             } else {
@@ -320,294 +144,192 @@ function bootUpTest(): void {
     console.warn("Boot Up Test end.");
 }
 
-async function doStartGame(stage: Stage): Promise<void> {
+async function doStartGame(stage: Egret_Egret.Stage): Promise<void> {
     initListenerForWindowOnError();
 
-    initKbManager();
-    initCompatibility();
-    addListeners(_NET_EVENTS);
-    addEventListeners(_NOTIFY_EVENTS, HelpersGameFlow);
-    initUiSizerHelpers();
-    initUiFactory({
-        uiButton            : UiButton,
-        uiCoInfo            : UiCoInfo,
-        uiContainer         : UiContainer,
-        uiContainerBase     : UiContainerBase as unknown as any,
-        uiImage             : UiImage,
-        uiLabel             : UiLabel,
-        uiLayer             : UiLayer,
-        uiLayout            : UiLayout,
-        uiLayoutBase        : UiLayoutBase as unknown as any,
-        uiList              : UiList,
-        uiListItemRenderer  : UiListItemRenderer as unknown as any,
-        uiMapInfo           : UiMapInfo,
-        uiOpenableComponent : UiOpenableComponent as unknown as any,
-        uiPanel             : UiPanel as unknown as any,
-        uiProgressBar       : UiProgressBar,
-        uiPromptedInput     : UiPromptedInput,
-        uiRadioButton       : UiRadioButton,
-        uiScroller          : UiScroller,
-        uiScrollerBase      : UiScrollerBase as unknown as any,
-        uiScrollList        : UiScrollList,
-        uiSwitch            : UiSwitch,
-        uiTab               : UiTab,
-        uiTextInput         : UiTextInput,
-        uiTileView          : UiTileView,
-        uiUnitView          : UiUnitView,
-        uiZoomableComponent : UiZoomableComponent,
-        uiZoomableMap       : UiZoomableMap,
-    });
-    initGhFactory({
-        actionPlanner               : ActionPlanner,
-        actionPlannerView           : ActionPlannerView,
-        bwCommonSettingManager      : BwCommonSettingManager,
-        bwCursor                    : BwCursor,
-        bwCursorView                : BwCursorView,
-        bwDrawVoteManager           : BwDrawVoteManager,
-        bwExecutedOperationManager  : BwExecutedOperationManager,
-        bwGridVisualEffect          : BwGridVisualEffect,
-        bwGridVisualEffectView      : BwGridVisualEffectView,
-        bwRandomNumberManager       : BwRandomNumberManager,
-        bwWarEventManager           : BwWarEventManager,
-        bwWarStatisticsManager      : BwWarStatisticsManager,
-        bwWarView                   : BwWarView,
-        bwWeatherManager            : Manager,
-        bwWeatherManagerView        : View,
+    Keyboard_KbManager.init();
+    Helpers_Compatibility.init();
+    Networks_Manager.addListeners(_NET_EVENTS);
+    Notifications_Dispatcher.addEventListeners(_NOTIFY_EVENTS, Helpers_GameFlow);
+    Ui_Utils_UiSizerHelpers.init();
 
-        atwWar                      : AutoTourneysWar,
-
-        cawWar                      : CampaignsWar,
-
-        ccwWar                      : CcwWar,
-
-        field                       : Field,
-        fieldView                   : FieldView,
-
-        fogMap                      : FogMap,
-
-        hrwWar                      : HrwWar,
-
-        mcwWar                      : McwWar,
-
-        meDrawer                    : MeDrawer,
-        meWar                       : MeWar,
-
-        mfwWar                      : MfwWar,
-
-        mmwWar                      : MmwWar,
-
-        mpwWar                      : MpwWar as unknown as new () => IMpwWar,
-
-        mrwWar                      : MrwWar,
-
-        player                      : Player,
-        playerManager               : PlayerManager,
-
-        rwWar                       : RwWar,
-        rwWarBase                   : RwWarBase as unknown as new () => IRwWarBase,
-
-        scwWar                      : ScwWar,
-
-        sfwWar                      : SfwWar,
-
-        spwRetractManager           : SpwRetractManager,
-        spwWar                      : SpwWar as unknown as new () => ISpwWar,
-
-        srwWar                      : SrwWar,
-
-        taskObjectiveManager        : TaskObjectiveManager,
-
-        tile                        : Tile,
-        tileMap                     : TileMap,
-        tileMapView                 : TileMapView,
-        tileView                    : TileView,
-
-        turnManager                 : TurnManager,
-
-        twWar                       : TwWar,
-
-        unit                        : Unit,
-        unitMap                     : UnitMap,
-        unitMapView                 : UnitMapView,
-        unitView                    : UnitView,
-    });
-    initStageManager(stage);
+    Stages_StageManager.init(stage);
     await Promise.all([
-        initStorage(),
-        initDeprecatedStorage(),
-        initResManager(),
+        LocalData_Storage.init(),
+        LocalData_DeprecatedStorage.init(),
+        ResManager.init(),
     ]);
-    setStageScale(getStageScale());
+    Stages_StageManager.setStageScale(LocalData_Storage.getStageScale());
     try {
-        window.TW_APK_INJECT?.setScreenOrientation(getScreenOrientation());
+        window.TW_APK_INJECT?.setScreenOrientation(LocalData_Storage.getScreenOrientation());
     } catch {
         // nothing to do
     }
 
-    initLang();
-    initGameConfigGateway();
-    initGameConfigProvider();
-    initNetworks();
-    initMpwProxy();
-    initMpwModel();
-    initTimerProxy();
-    initTimerModel();
-    initUsersProxy();
-    initModel();
-    initNormalMapProxy();
-    initNormalMapModel();
-    initMcrProxy();
-    initMrrProxy();
-    initMmrProxy();
-    initMfrProxy();
-    initCcrProxy();
-    initWwProxy();
-    initRwProxy();
-    initRwModel();
-    initHrwModel();
-    initSpmProxy();
-    initSpmModel();
-    initSpwModel();
-    initMeProxy();
-    initMeModel();
-    initProxy();
-    initCommonProxy();
-    initCommonModel();
-    initBroadcasts();
-    initChangeLogs();
-    initMailProxy();
-    initLeaderboardProxy();
-    initAutoTourneys();
-    initRoomsAutoTourneys();
-    initCampaigns();
-    initManagements();
-    initGmProxy();
+    Lang_Utils.init();
+    GameConfigs_Gateway.init();
+    GameConfigs_Provider.init();
+    Networks_Manager.init();
+    MultiPlayerWar_Model_MpwProxy.init();
+    MultiPlayerWar_Model_MpwModel.init();
+    Timer_TimerProxy.init();
+    Timer_TimerModel.init();
+    Users_Proxy.init();
+    Users_Model.init();
+    NormalMap_Model_NormalMapProxy.init();
+    NormalMap_Model_NormalMapModel.init();
+    MultiCustomRoom_Model_McrProxy.init();
+    MultiRankRoom_Model_MrrProxy.init();
+    MultiMatchRoom_Model_MmrProxy.init();
+    MultiFreeRoom_Model_MfrProxy.init();
+    CoopCustomRoom_Model_CcrProxy.init();
+    WatchWar_Model_WwProxy.init();
+    ReplayWar_Model_RwProxy.init();
+    ReplayWar_Model_RwModel.init();
+    HalfwayReplayWar_Model_HrwModel.init();
+    SinglePlayerMode_Model_SpmProxy.init();
+    SinglePlayerMode_Model_SpmModel.init();
+    SinglePlayerWar_Model_SpwModel.init();
+    MapEditor_Model_MeProxy.init();
+    MapEditor_Model_MeModel.init();
+    Chat_Proxy.init();
+    Common_Model_CommonProxy.init();
+    Common_Model_CommonModel.init();
+    Broadcasts_Gateway.init();
+    ChangeLogs_Gateway.init();
+    Mail_Model_MailProxy.init();
+    Leaderboard_Model_LeaderboardProxy.init();
+    AutoTourneys_Mains_Gateway.init();
+    AutoTourneys_Rooms_Gateway.init();
+    Campaigns_Mains_Gateway.init();
+    Campaigns_Managements_Gateway.init();
+    Gm_Model_GmProxy.init();
 
     _removeLoadingDom();
     gotoLogin();
 
-    await loadMainRes();
+    await ResManager.loadMainRes();
     (_checkCanFirstGoToLobby()) && (gotoLobby());
 }
 
 export function gotoLogin(): void {
-    unloadMpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().UserLoginBackgroundPanel,
-        getDict().UserLoginPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().UserLoginBackgroundPanel,
+        GamePanels_Dict.getDict().UserLoginPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().UserLoginBackgroundPanel, void 0);
-    openPanel(getDict().UserLoginPanel, void 0);
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserLoginBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserLoginPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playBgm(getSelfSettingsBgmCodeForLobby());
+    Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForLobby());
 }
 export function gotoLobby(): void {
     _hasOnceWentToLobby = true;
 
-    unloadMpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
-    closeAllPanelsExcept([
-        getDict().BroadcastPanel,
-        getDict().LobbyBackgroundPanel,
-        getDict().LobbyBottomPanel,
-        getDict().LobbyTopPanel,
-        getDict().LobbyTopRightPanel,
-        getDict().LobbyPanel,
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BroadcastPanel,
+        GamePanels_Dict.getDict().LobbyBackgroundPanel,
+        GamePanels_Dict.getDict().LobbyBottomPanel,
+        GamePanels_Dict.getDict().LobbyTopPanel,
+        GamePanels_Dict.getDict().LobbyTopRightPanel,
+        GamePanels_Dict.getDict().LobbyPanel,
     ]);
-    openPanel(getDict().BroadcastPanel, void 0);
-    openPanel(getDict().LobbyBackgroundPanel, void 0);
-    openPanel(getDict().LobbyBottomPanel, void 0);
-    openPanel(getDict().LobbyTopPanel, void 0);
-    openPanel(getDict().LobbyTopRightPanel, void 0);
-    openPanel(getDict().LobbyPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBottomPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopRightPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyPanel, void 0);
 
-    playBgm(getSelfSettingsBgmCodeForLobby());
+    Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForLobby());
 }
 
 export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
-    const war = await loadMpwModelWar(data);
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    const war = await MultiPlayerWar_Model_MpwModel.loadWar(data);
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BwBackgroundPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BwBackgroundPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().BwBackgroundPanel, void 0);
-    openPanel(getDict().MpwTopPanel, { war });
-    openPanel(getDict().MpwSidePanel, { war });
-    openPanel(getDict().BwWarPanel, { war });
-    openPanel(getDict().ActionPlannerPanel, { war });
-    openPanel(getDict().BwTileBriefPanel, { war });
-    openPanel(getDict().BwUnitBriefPanel, { war });
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwTopPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwSidePanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playCoBgmWithWar({
+    Sounds_SoundPlayer.playCoBgmWithWar({
         war                             : war,
         force                           : true,
-        coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoReplayWar(warData: SerialWar, replayId: number): Promise<void> {
-    const war = await loadRwModelWar(warData, replayId);
-    unloadHrwModelWar();
-    unloadMpwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    const war = await ReplayWar_Model_RwModel.loadWar(warData, replayId);
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BwBackgroundPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BwBackgroundPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().BwBackgroundPanel, void 0);
-    openPanel(getDict().RwTopPanel, { war });
-    openPanel(getDict().BwWarPanel, { war });
-    openPanel(getDict().ActionPlannerPanel, { war });
-    openPanel(getDict().BwTileBriefPanel, { war });
-    openPanel(getDict().BwUnitBriefPanel, { war });
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwTopPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playCoBgmWithWar({
+    Sounds_SoundPlayer.playCoBgmWithWar({
         war                             : war,
         force                           : true,
-        coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
-    const war = await loadHrwModelWar(warData);
-    unloadRwModelWar();
-    unloadMpwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    const war = await HalfwayReplayWar_Model_HrwModel.loadWar(warData);
+    ReplayWar_Model_RwModel.unloadWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BwBackgroundPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BwBackgroundPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().BwBackgroundPanel, void 0);
-    openPanel(getDict().HrwTopPanel, { war });
-    openPanel(getDict().BwWarPanel, { war });
-    openPanel(getDict().ActionPlannerPanel, { war });
-    openPanel(getDict().BwTileBriefPanel, { war });
-    openPanel(getDict().BwUnitBriefPanel, { war });
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().HrwTopPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playCoBgmWithWar({
+    Sounds_SoundPlayer.playCoBgmWithWar({
         war                             : war,
         force                           : true,
-        coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, overridingBgmCode }: {
@@ -616,103 +338,103 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    const war = await loadSpwModelWar({ warData, slotIndex, slotExtraData });
+    const war = await SinglePlayerWar_Model_SpwModel.loadWar({ warData, slotIndex, slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
-    unloadMpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadMeModelWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BwBackgroundPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BwBackgroundPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().BwBackgroundPanel, void 0);
-    openPanel(getDict().SpwTopPanel, { war });
-    openPanel(getDict().SpwSidePanel, { war });
-    openPanel(getDict().BwWarPanel, { war });
-    openPanel(getDict().ActionPlannerPanel, { war });
-    openPanel(getDict().BwTileBriefPanel, { war });
-    openPanel(getDict().BwUnitBriefPanel, { war });
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwTopPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpwSidePanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playCoBgmWithWar({
+    Sounds_SoundPlayer.playCoBgmWithWar({
         war                             : war,
         force                           : true,
-        coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 
-    await checkAndHandleAutoActionsAndRobotRecursively(war);
+    await SinglePlayerWar_Model_SpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
 }
 export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNormalMapIdForAddEvent, gridMarkData }: {
-    mapRawData                  : Undefinable<MapRawData>;
+    mapRawData                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapRawData>;
     slotIndex                   : number;
     isReview                    : boolean;
     srcNormalMapIdForAddEvent   : number | null;
-    gridMarkData                : Undefinable<GridMarkData>;
+    gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
  }): Promise<void> {
-    const war = await loadMeModelWar({
+    const war = await MapEditor_Model_MeModel.loadWar({
         mapRawData                  : mapRawData,
         slotIndex                   : slotIndex,
         isReview                    : isReview,
         srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
         gridMarkData                : gridMarkData,
     });
-    unloadMpwModelWar();
-    unloadSpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BwBackgroundPanel,
-        getDict().BroadcastPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BwBackgroundPanel,
+        GamePanels_Dict.getDict().BroadcastPanel,
     ]);
-    openPanel(getDict().BwBackgroundPanel, void 0);
-    openPanel(getDict().MeTopPanel, void 0);
-    openPanel(getDict().BwWarPanel, { war });
-    openPanel(getDict().ActionPlannerPanel, { war });
-    openPanel(getDict().BwTileBriefPanel, { war });
-    openPanel(getDict().BwUnitBriefPanel, { war });
-    openPanel(getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTopPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwWarPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ActionPlannerPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitBriefPanel, { war });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
-    playBgm(getSelfSettingsBgmCodeForMapEditor());
+    Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForMapEditor());
 }
 
-export function gotoMyWarListPanel(warType: WarTypeId): void {
-    if ((warType === WarTypeId.AtwFog) || (warType === WarTypeId.AtwStd)    ||
-        (warType === WarTypeId.CcwFog) || (warType === WarTypeId.CcwStd)    ||
-        (warType === WarTypeId.McwFog) || (warType === WarTypeId.McwStd)    ||
-        (warType === WarTypeId.MfwFog) || (warType === WarTypeId.MfwStd)    ||
-        (warType === WarTypeId.MmwFog) || (warType === WarTypeId.MmwStd)    ||
-        (warType === WarTypeId.MrwFog) || (warType === WarTypeId.MrwStd)
+export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void {
+    if ((warType === WarTypes_Constants.WarTypeId.AtwFog) || (warType === WarTypes_Constants.WarTypeId.AtwStd)    ||
+        (warType === WarTypes_Constants.WarTypeId.CcwFog) || (warType === WarTypes_Constants.WarTypeId.CcwStd)    ||
+        (warType === WarTypes_Constants.WarTypeId.McwFog) || (warType === WarTypes_Constants.WarTypeId.McwStd)    ||
+        (warType === WarTypes_Constants.WarTypeId.MfwFog) || (warType === WarTypes_Constants.WarTypeId.MfwStd)    ||
+        (warType === WarTypes_Constants.WarTypeId.MmwFog) || (warType === WarTypes_Constants.WarTypeId.MmwStd)    ||
+        (warType === WarTypes_Constants.WarTypeId.MrwFog) || (warType === WarTypes_Constants.WarTypeId.MrwStd)
     ) {
         _gotoMpwMyWarListPanel();
     } else if (
-        (warType === WarTypeId.ScwFog)  || (warType === WarTypeId.ScwStd)   ||
-        (warType === WarTypeId.SfwFog)  || (warType === WarTypeId.SfwStd)   ||
-        (warType === WarTypeId.SrwFog)  || (warType === WarTypeId.SrwStd)   ||
-        (warType === WarTypeId.CampFog) || (warType === WarTypeId.CampStd)
+        (warType === WarTypes_Constants.WarTypeId.ScwFog)  || (warType === WarTypes_Constants.WarTypeId.ScwStd)   ||
+        (warType === WarTypes_Constants.WarTypeId.SfwFog)  || (warType === WarTypes_Constants.WarTypeId.SfwStd)   ||
+        (warType === WarTypes_Constants.WarTypeId.SrwFog)  || (warType === WarTypes_Constants.WarTypeId.SrwStd)   ||
+        (warType === WarTypes_Constants.WarTypeId.CampFog) || (warType === WarTypes_Constants.WarTypeId.CampStd)
     ) {
         _gotoSpmWarListPanel();
-    } else if (warType === WarTypeId.Me) {
-        openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
+    } else if (warType === WarTypes_Constants.WarTypeId.Me) {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
             currentSlotIndex        : 0,
             needConfirmOverwrite    : false,
             needNonEmptySlot        : false,
             allowPlay               : true,
             getHelpText             : null,
             callback                : async slotIndex => {
-                const mapEditorData             = await getMapEditorData(slotIndex);
+                const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const reviewStatus              = mapEditorData?.reviewStatus;
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
-                if (reviewStatus === ReviewStatus.Rejected) {
-                    openPanel(getDict().CommonAlertPanel, {
-                        getTitle   : () => getText(TextType.B0305),
-                        getContent : () => mapEditorData?.reviewComment || getText(TextType.None),
+                if (reviewStatus === Maps_Constants.ReviewStatus.Rejected) {
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0305),
+                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
                         callback: () => {
                             gotoMapEditorWar({
-                                mapRawData                  : getExisted(mapEditorData?.mapRawData),
+                                mapRawData                  : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
                                 slotIndex                   : slotIndex,
                                 isReview                    : false,
                                 srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
@@ -720,13 +442,13 @@ export function gotoMyWarListPanel(warType: WarTypeId): void {
                             });
                         },
                     });
-                } else if (reviewStatus === ReviewStatus.Accepted) {
-                    openPanel(getDict().CommonAlertPanel, {
-                        getTitle   : () => getText(TextType.B0326),
-                        getContent : () => mapEditorData?.reviewComment || getText(TextType.None),
+                } else if (reviewStatus === Maps_Constants.ReviewStatus.Accepted) {
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+                        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0326),
+                        getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
                         callback: () => {
                             gotoMapEditorWar({
-                                mapRawData                  : getExisted(mapEditorData?.mapRawData),
+                                mapRawData                  : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
                                 slotIndex                   : slotIndex,
                                 isReview                    : false,
                                 srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
@@ -744,8 +466,8 @@ export function gotoMyWarListPanel(warType: WarTypeId): void {
                             gridMarkData                : mapEditorData?.gridMarkData,
                         });
                     } else {
-                        openPanel(getDict().CommonConfirmPanel, {
-                            getContent     : () => getText(TextType.R0015),
+                        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
                             callback    : () => {
                                 gotoMapEditorWar({
                                     mapRawData                  : mapEditorData?.mapRawData,
@@ -761,12 +483,12 @@ export function gotoMyWarListPanel(warType: WarTypeId): void {
             },
         });
     } else {
-        throw newError(`gotoMyWarListPanel() invalid warType: ${warType}.`, ClientErrorCode.FlowManager_GotoMyWarListPanel_00);
+        throw Helpers_Misc.newError(`gotoMyWarListPanel() invalid warType: ${warType}.`, Utils_ClientErrorCode.ClientErrorCode.FlowManager_GotoMyWarListPanel_00);
     }
 }
-export function gotoRwReplayListPanel(openData?: OpenData): void {
+export function gotoRwReplayListPanel(openData?: ReplayWar_View_RwReplayListPanel.OpenData): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().RwReplayListPanel, openData ?? {
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayListPanel, openData ?? {
         filter                  : null,
         usePreviousFilter       : true,
         usePreviousPageIndex    : true,
@@ -774,51 +496,51 @@ export function gotoRwReplayListPanel(openData?: OpenData): void {
 }
 export function gotoWatchWarListPanel(): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().WwOngoingWarsPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwOngoingWarsPanel, void 0);
 }
 
 export function gotoMcrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().McrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, { roomId });
 }
 export function gotoCcrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().CcrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, { roomId });
 }
 export function gotoMfrRoomInfoPanel(roomId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().MfrRoomInfoPanel, { roomId });
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, { roomId });
 }
 
 export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<void> {
-    unloadMpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BroadcastPanel,
-        getDict().LobbyTopRightPanel,
-        getDict().LobbyBackgroundPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BroadcastPanel,
+        GamePanels_Dict.getDict().LobbyTopRightPanel,
+        GamePanels_Dict.getDict().LobbyBackgroundPanel,
     ]);
-    openPanel(getDict().BroadcastPanel, void 0);
-    openPanel(getDict().LobbyTopRightPanel, void 0);
-    openPanel(getDict().LobbyBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopRightPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBackgroundPanel, void 0);
 
-    openPanel(getDict().MfrCreateSettingsPanel, {
-        roomCreator: new MfrRoomCreator(
-            await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())),
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrCreateSettingsPanel, {
+        roomCreator: new MultiFreeRoom_Model_MfrRoomCreator.MfrRoomCreator(
+            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())),
             warData
         ),
     });
 
-    playBgm(getSelfSettingsBgmCodeForLobby());
+    Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForLobby());
 }
 
 export function gotoSrrCreateMapListPanel(): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().SrrCreateMapListPanel, {
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
         mapFilter               : null,
         mapSorter               : null,
         usePreviousFilter       : true,
@@ -828,7 +550,7 @@ export function gotoSrrCreateMapListPanel(): void {
 
 export function gotoCampaignCreateMapsPanel(campaignId: number): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().CampaignCreateMapsPanel, {
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateMapsPanel, {
         campaignId  : campaignId,
     });
 }
@@ -837,20 +559,20 @@ export function gotoCampaignCreateMapsPanel(campaignId: number): void {
 // Callbacks.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function _onNotifyNetworkConnected(): void {
-    if ((_hasOnceWentToLobby) && (!getIsLoggedIn())) {
+    if ((_hasOnceWentToLobby) && (!Users_Model.getIsLoggedIn())) {
         {
-            const account   = getSelfAccount();
-            const password  = getSelfPassword();
+            const account   = Users_Model.getSelfAccount();
+            const password  = Users_Model.getSelfPassword();
             if ((account != null) && (password != null)) {
-                reqLogin(account, password, true);
+                Users_Proxy.reqLogin(account, password, true);
                 return;
             }
         }
 
         {
-            const guestUserId = getSelfGuestUserId();
+            const guestUserId = Users_Model.getSelfGuestUserId();
             if (guestUserId != null) {
-                reqUserLoginAsGuest(guestUserId, true);
+                Users_Proxy.reqUserLoginAsGuest(guestUserId, true);
                 return;
             }
         }
@@ -862,9 +584,9 @@ function _onMsgCommonServerDisconnect(): void {
     // UserModel.clearLoginInfo();
     // gotoLogin();
 
-    openPanel(getDict().CommonAlertPanel, {
-        getTitle   : () => getText(TextType.B0025),
-        getContent : () => getText(TextType.A0020),
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
+        getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0025),
+        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0020),
     });
 }
 
@@ -872,9 +594,9 @@ function _onMsgUserLogin(): void {
     if (_checkCanFirstGoToLobby()) {
         gotoLobby();
     } else {
-        const mcwWar = getMpwModelWar();
+        const mcwWar = MultiPlayerWar_Model_MpwModel.getWar();
         if (mcwWar) {
-            reqMpwCommonSyncWar(mcwWar, SyncRequestTypeId.ReconnectionRequest);
+            MultiPlayerWar_Model_MpwProxy.reqMpwCommonSyncWar(mcwWar, Wars_Constants.SyncRequestTypeId.ReconnectionRequest);
         }
     }
 }
@@ -884,7 +606,7 @@ function _onMsgUserLoginAsGuest(): void {
 
 function _onMsgUserLogout(): void {
     _hasOnceWentToLobby = false;
-    updateOnMsgUserLogout();
+    Users_Model.updateOnMsgUserLogout();
     gotoLogin();
 }
 
@@ -899,8 +621,8 @@ function _onMsgCommonLatestConfigVersion(): void {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function _checkCanFirstGoToLobby(): boolean {
     return (!_hasOnceWentToLobby)
-        && (getIsLoggedIn())
-        && (checkIsLoadedMainResource());
+        && (Users_Model.getIsLoggedIn())
+        && (ResManager.checkIsLoadedMainResource());
 }
 
 function _removeLoadingDom(): void {
@@ -912,45 +634,45 @@ function _removeLoadingDom(): void {
 }
 
 export function unloadAllWarsAndOpenCommonPanels(): void {
-    unloadMpwModelWar();
-    unloadRwModelWar();
-    unloadHrwModelWar();
-    unloadSpwModelWar();
-    unloadMeModelWar();
+    MultiPlayerWar_Model_MpwModel.unloadWar();
+    ReplayWar_Model_RwModel.unloadWar();
+    HalfwayReplayWar_Model_HrwModel.unloadWar();
+    SinglePlayerWar_Model_SpwModel.unloadWar();
+    MapEditor_Model_MeModel.unloadWar();
 
-    closeAllPanelsExcept([
-        getDict().BroadcastPanel,
-        getDict().LobbyBackgroundPanel,
-        getDict().LobbyTopRightPanel,
+    GamePanels_Manager.closeAllPanelsExcept([
+        GamePanels_Dict.getDict().BroadcastPanel,
+        GamePanels_Dict.getDict().LobbyBackgroundPanel,
+        GamePanels_Dict.getDict().LobbyTopRightPanel,
     ]);
-    openPanel(getDict().BroadcastPanel, void 0);
-    openPanel(getDict().LobbyBackgroundPanel, void 0);
-    openPanel(getDict().LobbyTopRightPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBackgroundPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyTopRightPanel, void 0);
 
-    playBgm(getSelfSettingsBgmCodeForLobby());
+    Sounds_SoundPlayer.playBgm(Users_Model.getSelfSettingsBgmCodeForLobby());
 }
 
 function _gotoMpwMyWarListPanel(): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().MpwMyWarListPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyWarListPanel, void 0);
 }
 function _gotoSpmWarListPanel(): void {
     unloadAllWarsAndOpenCommonPanels();
-    openPanel(getDict().SpmWarListPanel, void 0);
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SpmWarListPanel, void 0);
 }
 
-export function getOngoingWar(): Undefinable<IBwWar> {
-    return (getMpwModelWar())
-        ?? (getRwModelWar())
-        ?? (getHrwModelWar())
-        ?? (getSpwModelWar())
-        ?? (getMeModelWar());
+export function getOngoingWar(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseWar_Interface_IBwWar.IBwWar> {
+    return (MultiPlayerWar_Model_MpwModel.getWar())
+        ?? (ReplayWar_Model_RwModel.getWar())
+        ?? (HalfwayReplayWar_Model_HrwModel.getWar())
+        ?? (SinglePlayerWar_Model_SpwModel.getWar())
+        ?? (MapEditor_Model_MeModel.getWar());
 }
 
 function initListenerForWindowOnError(): void {
     window.onerror = (message, filename, row, col, err) => {
         if (err) {
-            showErrorText(`Code: ${(err as CustomError).errorCode ?? `--`}\n${message}\n${err.stack ?? "No available call stack."}`);
+            showErrorText(`Code: ${(err as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? `--`}\n${message}\n${err.stack ?? "No available call stack."}`);
         } else {
             showErrorText(`Unknown error.`);
         }
@@ -958,7 +680,7 @@ function initListenerForWindowOnError(): void {
     window.addEventListener('unhandledrejection', (err) => {
         const reason = err.reason;
         if (reason instanceof Error) {
-            showErrorText(`Code: ${(reason as CustomError).errorCode ?? `--`}\n${reason.message}\n${reason.stack ?? "No available call stack."}`);
+            showErrorText(`Code: ${(reason as AuxiliaryTypes_AuxiliaryTypes.CustomError).errorCode ?? `--`}\n${reason.message}\n${reason.stack ?? "No available call stack."}`);
         } else {
             showErrorText(`Unhandled rejection in promise, reason:\n${reason}`);
         }
@@ -966,25 +688,25 @@ function initListenerForWindowOnError(): void {
 }
 function showErrorText(text: string): void {
     console.warn(text);
-    openPanel(getDict().CommonErrorPanel, {
+    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonErrorPanel, {
         content: text,
     });
-    reqChatAddMessage(
-        text.substring(0, ChatCommon.MaxErrorLength),
-        ToCategoryId.Private,
-        UsersCommon.AdminUserId,
+    Chat_Proxy.reqChatAddMessage(
+        text.substring(0, Chat_Constants.Common.MaxErrorLength),
+        Chat_Constants.ToCategoryId.Private,
+        Users_Constants.Common.AdminUserId,
     );
 }
 
-export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkData: Undefinable<GridMarkData>): Promise<void> {
+export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>): Promise<void> {
     const callbackForChosenWarRule = async () => {
-        const warData   = getMeSimModelWarData();
-        const errorCode = new (getTwWarClass())().getErrorCodeForInitForSfw(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+        const warData   = MapEditor_Model_MeSimModel.getWarData();
+        const errorCode = new TestWar_Model_TwWar.TwWar().getErrorCodeForInitForSfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
         if (errorCode) {
-            show(getErrorText(errorCode));
+            FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent     : () => getText(TextType.A0931),
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
                 callback    : () => {
                     warData.createIfNotExistsSettingsForSfw();
                     gotoSinglePlayerWar({
@@ -1001,11 +723,11 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
         }
     };
 
-    const war = new (getMeWarClass())();
+    const war = new MapEditor_Model_MeWar.MeWar();
     await war.initWithMapRawData({
         mapRawData                  : mapRawData,
         slotIndex                   : 0,
-        gameConfig                  : await getLatestGameConfig(),
+        gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
         srcNormalMapIdForAddEvent   : null,
         gridMarkData                : null,
     });
@@ -1013,20 +735,20 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
 
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
-        resetMeSimModelData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(templateWarRuleArray[0]));
+        MapEditor_Model_MeSimModel.resetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(templateWarRuleArray[0]));
         war.stopRunning();
         callbackForChosenWarRule();
     } else {
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : null,
             availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber              : true,
-            getTitleText            : () => getText(TextType.B1242),
-            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getNumberMainText       : ruleId => Lang_Utils.getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
-                    resetMeSimModelData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
+                    MapEditor_Model_MeSimModel.resetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
                     war.stopRunning();
                     callbackForChosenWarRule();
                 }
@@ -1036,24 +758,24 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
 }
 export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promise<void> {
     const callbackForChosenWarRule = async () => {
-        reviseInstanceWarRuleForAi();
-        const warData   = getMeMfwModelWarData();
-        const errorCode = new (getTwWarClass())().getErrorCodeForInitForMfw(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+        MapEditor_Model_MeMfwModel.reviseInstanceWarRuleForAi();
+        const warData   = MapEditor_Model_MeMfwModel.getWarData();
+        const errorCode = new TestWar_Model_TwWar.TwWar().getErrorCodeForInitForMfw(warData, await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
         if (errorCode) {
-            show(getErrorText(errorCode));
+            FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
-            openPanel(getDict().CommonConfirmPanel, {
-                getContent     : () => `${getText(TextType.R0007)}\n\n\n${getText(TextType.A0201)}`,
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                getContent     : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
                 callback    : () => gotoMfrCreateSettingsPanel(warData),
             });
         }
     };
 
-    const war = new (getMeWarClass())();
+    const war = new MapEditor_Model_MeWar.MeWar();
     await war.initWithMapRawData({
         mapRawData                  : mapRawData,
         slotIndex                   : 0,
-        gameConfig                  : await getLatestGameConfig(),
+        gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
         srcNormalMapIdForAddEvent   : null,
         gridMarkData                : null,
     });
@@ -1061,20 +783,20 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
 
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
-        resetMeMfwModelData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(templateWarRuleArray[0]));
+        MapEditor_Model_MeMfwModel.resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(templateWarRuleArray[0]));
         war.stopRunning();
         callbackForChosenWarRule();
     } else {
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : null,
             availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber              : true,
-            getTitleText            : () => getText(TextType.B1242),
-            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getNumberMainText       : ruleId => Lang_Utils.getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
             callbackOnConfirm       : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
-                    resetMeMfwModelData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
+                    MapEditor_Model_MeMfwModel.resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
                     war.stopRunning();
                     callbackForChosenWarRule();
                 }

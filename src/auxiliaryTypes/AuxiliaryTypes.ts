@@ -1,4 +1,8 @@
-import type { SortType } from "../maps/Constants.ts";
+import {
+    type Utils_ClientErrorCode,
+    type Egret_Egret,
+    type Maps_Constants,
+} from "../internal.ts";
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
@@ -6,15 +10,10 @@ import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/Instan
 import type { TemplateWarRule } from "../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type {
-    DisplayObject,
-    Event,
-} from "../egret/Egret.ts";
 
 export interface UiListener {
-    ui          : DisplayObject,
-    callback    : (e: Event) => void,
+    ui          : Egret_Egret.DisplayObject,
+    callback    : (e: Egret_Egret.Event) => void,
     eventType?  : string,
     thisObject? : any,
 }
@@ -99,7 +98,7 @@ export interface PlayerInfo2 {
 }
 
 export interface MapSorter {
-    sortType            : SortType;
+    sortType            : Maps_Constants.SortType;
     isAscending         : boolean;
 }
 
@@ -119,5 +118,5 @@ export type Undefinable<T> = T | null | undefined;
 
 export interface CustomError extends Error {
     isShown?    : boolean;
-    errorCode?  : ClientErrorCode;
+    errorCode?  : Utils_ClientErrorCode.ClientErrorCode;
 }

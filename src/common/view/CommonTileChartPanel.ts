@@ -1,106 +1,84 @@
-import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
-import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { getSignedNumText } from "../../helpers/Text.ts";
-import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getTileName,
-    getSecondaryLanguageType,
-    getUnitCategoryName,
-    getText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Tiles_Constants_DefaultCustomTileData,
+    ForceSkins_Utils,
+    GamePanels_Dict,
+    Helpers_Misc,
+    Helpers_Collection,
+    Lang_Utils,
+    Helpers_Text,
+    Common_Model_CommonModel,
+    Tiles_Constants_Common,
+    Tiles_Constants_MapWeapon,
+    GamePanels_Manager,
+    Players_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    Ui_Components_UiTileView,
+    Ui_Components_UiUnitView,
+    Ui_Types_UiUnitViewData,
+    type GameConfigs_GameConfig,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiItemTapEventData,
+    type Ui_Types_UiListItemData,
+    Units_Constants,
+    Units_Utils_Serialization,
+} from "../../internal.ts";
 import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { InfoTypeId } from "../../tiles/constants/Common.ts";
-import {
-    Crystal,
-    CannonUp,
-    CannonRight,
-    CannonDown,
-    CannonLeft,
-    CustomCannon,
-    CustomLaserTurret,
-} from "../../tiles/constants/DefaultCustomTileData.ts";
-import { TypeId as MapWeaponTypeId } from "../../tiles/constants/MapWeapon.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiItemTapEventData } from "../../ui/types/UiItemTapEventData.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import {
-    getUiTileViewClass,
-    getUiUnitViewClass,
-} from "../../ui/utils/UiFactory.ts";
-import {
-    WeaponTypeId,
-    CategoryId,
-} from "../../units/Constants.ts";
-import { createDefault } from "../../units/utils/Serialization.ts";
 
 export interface OpenData {
-    gameConfig   : GameConfig;
+    gameConfig   : GameConfigs_GameConfig.GameConfig;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnSwitch!            : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnSwitch!            : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listTile!             : IUiScrollList<DataForTileRenderer>;
+    private readonly _listTile!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForTileRenderer>;
 
-    private readonly _groupInfo!            : IUiContainer;
-    private readonly _layoutName!           : IUiLayout;
-    private readonly _labelName!            : IUiLabel;
-    private readonly _labelName1!           : IUiLabel;
-    private readonly _conTileView!          : IUiContainer;
-    private readonly _listInfo!             : IUiScrollList<DataForInfoRenderer>;
+    private readonly _groupInfo!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutName!           : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelName!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _conTileView!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _listInfo!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForInfoRenderer>;
 
-    private readonly _groupMoveCost!        : IUiContainer;
-    private readonly _layoutMoveCost1!      : IUiLayout;
-    private readonly _labelMoveCostTitle1!  : IUiLabel;
-    private readonly _labelMoveCostTitle2!  : IUiLabel;
-    private readonly _layoutMoveCost2!      : IUiLayout;
-    private readonly _labelMoveCost1!       : IUiLabel;
-    private readonly _labelMoveCost2!       : IUiLabel;
-    private readonly _listMoveCost!         : IUiScrollList<DataForMoveCostRenderer>;
+    private readonly _groupMoveCost!        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutMoveCost1!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMoveCostTitle1!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMoveCostTitle2!  : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutMoveCost2!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelMoveCost1!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMoveCost2!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listMoveCost!         : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForMoveCostRenderer>;
 
-    private readonly _groupDamageChart!     : IUiContainer;
-    private readonly _layoutDefense1!       : IUiLayout;
-    private readonly _labelDefense1!        : IUiLabel;
-    private readonly _labelMain1!           : IUiLabel;
-    private readonly _labelSub1!            : IUiLabel;
-    private readonly _layoutDefense2!       : IUiLayout;
-    private readonly _labelDefense2!        : IUiLabel;
-    private readonly _labelMain2!           : IUiLabel;
-    private readonly _labelSub2!            : IUiLabel;
-    private readonly _listDamageChart!      : IUiScrollList<DataForDamageRenderer>;
+    private readonly _groupDamageChart!     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _layoutDefense1!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDefense1!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMain1!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSub1!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _layoutDefense2!       : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDefense2!        : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMain2!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSub2!            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _listDamageChart!      : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForDamageRenderer>;
 
-    private readonly _tileView              = new (getUiTileViewClass())();
+    private readonly _tileView              = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TileAnimationTick,           callback: this._onNotifyTileAnimationTick },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.TileAnimationTick,           callback: this._onNotifyTileAnimationTick },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
@@ -165,7 +143,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSwitch(): void {
-        openPanel(getDict().CommonDamageChartPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageChartPanel, {
             gameConfig  : this.getOpenData()?.gameConfig,
         });
         this.closePanel();
@@ -175,17 +153,17 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B0899);
-        this._labelMoveCostTitle1.setLangText(TextType.B0351);
-        this._labelMoveCostTitle2.setLangText(TextType.B0351);
-        this._labelMoveCost1.setLangText(TextType.B1282);
-        this._labelMoveCost2.setLangText(TextType.B1282);
-        this._labelDefense1.setLangText(TextType.B0695);
-        this._labelMain1.setLangText(TextType.B0692);
-        this._labelSub1.setLangText(TextType.B0693);
-        this._labelDefense2.setLangText(TextType.B0695);
-        this._labelMain2.setLangText(TextType.B0692);
-        this._labelSub2.setLangText(TextType.B0693);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0899);
+        this._labelMoveCostTitle1.setLangText(Lang_Constants.TextType.B0351);
+        this._labelMoveCostTitle2.setLangText(Lang_Constants.TextType.B0351);
+        this._labelMoveCost1.setLangText(Lang_Constants.TextType.B1282);
+        this._labelMoveCost2.setLangText(Lang_Constants.TextType.B1282);
+        this._labelDefense1.setLangText(Lang_Constants.TextType.B0695);
+        this._labelMain1.setLangText(Lang_Constants.TextType.B0692);
+        this._labelSub1.setLangText(Lang_Constants.TextType.B0693);
+        this._labelDefense2.setLangText(Lang_Constants.TextType.B0695);
+        this._labelMain2.setLangText(Lang_Constants.TextType.B0692);
+        this._labelSub2.setLangText(Lang_Constants.TextType.B0693);
         this._updateLabelName();
 
         this._layoutMoveCost1.arrangeItems();
@@ -203,8 +181,8 @@ export class Panel extends UiPanel<OpenData> {
             labelName.setText(``);
             labelName1.setText(``);
         } else {
-            labelName.setText(getTileName(tileType, gameConfig) ?? UndefinedError);
-            labelName1.setText(getTileName(tileType, gameConfig, getSecondaryLanguageType()) ?? UndefinedError);
+            labelName.setText(Lang_Utils.getTileName(tileType, gameConfig) ?? Lang_Constants.UndefinedError);
+            labelName1.setText(Lang_Utils.getTileName(tileType, gameConfig, Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
         }
 
         this._layoutName.arrangeItems();
@@ -229,7 +207,7 @@ export class Panel extends UiPanel<OpenData> {
             tileDecorationShapeId   : null,
             tileObjectType          : gameConfig.getTileTemplateCfg(tileType)?.getToTileObjectTypeId() ?? null,
             tileObjectShapeId       : 0,
-            skinId                  : PlayerIndex.Neutral,
+            skinId                  : Players_Constants.PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : gameConfig,
         });
@@ -256,7 +234,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const dataArray: DataForInfoRenderer[] = getNonNullElements([
+        const dataArray: DataForInfoRenderer[] = Helpers_Collection.getNonNullElements([
             createInfoDefenseBonus(tileTemplateCfg, gameConfig),
             createInfoIncome(tileTemplateCfg, gameConfig),
             createInfoVision(tileTemplateCfg, gameConfig),
@@ -349,7 +327,7 @@ export class Panel extends UiPanel<OpenData> {
             return [];
         }
 
-        const tileCfg       = getExisted(gameConfig.getTileTemplateCfg(tileType));
+        const tileCfg       = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(tileType));
         const dataArray     : DataForMoveCostRenderer[] = [];
         let index           = 0;
         for (const unitType of gameConfig.getAllUnitTypeArray()) {
@@ -375,7 +353,7 @@ export class Panel extends UiPanel<OpenData> {
             return [];
         }
 
-        const playerIndex   = PlayerIndex.First;
+        const playerIndex   = Players_Constants.PlayerIndex.First;
         const dataArray     : DataForDamageRenderer[] = [];
         let index           = 0;
         for (const attackerUnitType of gameConfig.getAllUnitTypeArray()) {
@@ -410,23 +388,23 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForTileRenderer extends UiListItemData {
+interface DataForTileRenderer extends Ui_Types_UiListItemData.UiListItemData {
     tileType        : number;
     panel           : Panel;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
 }
-class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
-    private readonly _conTileView!  : IUiContainer;
+class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTileRenderer> {
+    private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName!    : IUiLabel;
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _tileView      = new (getUiTileViewClass())();
+    private readonly _tileView      = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type: Notifications_TypeId.TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -449,7 +427,7 @@ class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
         const gameConfig    = openData.gameConfig;
         const tileType      = openData.tileType;
         this._labelId.setText(`#${tileType}`);
-        this._labelName.setText(getTileName(tileType, gameConfig) ?? UndefinedError);
+        this._labelName.setText(Lang_Utils.getTileName(tileType, gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
 
         const tileView = this._tileView;
@@ -460,34 +438,34 @@ class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
             tileDecorationShapeId   : null,
             tileObjectType          : gameConfig.getTileTemplateCfg(tileType)?.getToTileObjectTypeId() ?? null,
             tileObjectShapeId       : 0,
-            skinId                  : PlayerIndex.Neutral,
+            skinId                  : Players_Constants.PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : gameConfig,
         });
         tileView.updateView();
     }
 
-    public onItemTapEvent(e: UiItemTapEventData): void {
+    public onItemTapEvent(e: Ui_Types_UiItemTapEventData.UiItemTapEventData): void {
         this.getOpenData()?.panel.setSelectedIndexAndUpdateView(e.itemIndex, false);
     }
 }
 
-interface DataForInfoRenderer extends UiListItemData {
-    gameConfig      : GameConfig;
+interface DataForInfoRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     index           : number;
-    infoType        : InfoTypeId;
+    infoType        : Tiles_Constants_Common.InfoTypeId;
     tileTemplateCfg : TileTemplateCfg;
 }
-class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
-    private readonly _imgBg!            : IUiImage;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _labelValue!       : IUiLabel;
-    private readonly _groupExtra!       : IUiContainer;
-    private readonly _labelExtraInfo!   : IUiLabel;
+class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForInfoRenderer> {
+    private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelValue!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _groupExtra!       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelExtraInfo!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -505,59 +483,59 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        if      (infoType === InfoTypeId.DefenseBonus)                            { this._showHelpAsDefenseBonus(); }
-        else if (infoType === InfoTypeId.Income)                                  { this._showHelpAsIncome(); }
-        else if (infoType === InfoTypeId.Vision)                                  { this._showHelpAsVision(); }
-        else if (infoType === InfoTypeId.HideUnitCategory)                        { this._showHelpAsHideUnitCategory(); }
-        else if (infoType === InfoTypeId.IsDefeatedOnCapture)                     { this._showHelpAsIsDefeatedOnCapture(); }
-        else if (infoType === InfoTypeId.ProduceUnitCategory)                     { this._showHelpAsProduceUnitCategory(); }
-        else if (infoType === InfoTypeId.GlobalBonus)                             { this._showHelpAsGlobalBonus(); }
-        else if (infoType === InfoTypeId.RepairUnitCategory)                      { this._showHelpAsRepairUnitCategory(); }
-        else if (infoType === InfoTypeId.BlockEnemyUnit)                          { this._showHelpAsBlockEnemyUnit(); }
-        else if (infoType === InfoTypeId.CoBoardUnit)                             { this._showHelpAsCoBoardUnit(); }
-        else if (infoType === InfoTypeId.Hp)                                      { this._showHelpAsHp(); }
-        else if (infoType === InfoTypeId.CapturePoint)                            { this._showHelpAsCapturePoint(); }
-        else if (infoType === InfoTypeId.BuildPoint)                              { this._showHelpAsBuildPoint(); }
-        else if (infoType === InfoTypeId.IsHighlighted)                           { this._showHelpAsIsHighlighted(); }
-        else if (infoType === InfoTypeId.Buff)                                    { this._showHelpAsBuff(); }
+        if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            { this._showHelpAsDefenseBonus(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  { this._showHelpAsIncome(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  { this._showHelpAsVision(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        { this._showHelpAsHideUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     { this._showHelpAsIsDefeatedOnCapture(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     { this._showHelpAsProduceUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             { this._showHelpAsGlobalBonus(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      { this._showHelpAsRepairUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          { this._showHelpAsBlockEnemyUnit(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             { this._showHelpAsCoBoardUnit(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      { this._showHelpAsHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            { this._showHelpAsCapturePoint(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              { this._showHelpAsBuildPoint(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           { this._showHelpAsIsHighlighted(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    { this._showHelpAsBuff(); }
 
-        else if (infoType === InfoTypeId.CrystalRadius)                           { this._showHelpAsCrystalRadius(); }
-        else if (infoType === InfoTypeId.CrystalPriority)                         { this._showHelpAsCrystalPriority(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectSelf)                    { this._showHelpAsCrystalCanAffectSelf(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectAlly)                    { this._showHelpAsCrystalCanAffectAlly(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectEnemy)                   { this._showHelpAsCrystalCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.CrystalDeltaFund)                        { this._showHelpAsCrystalDeltaFund(); }
-        else if (infoType === InfoTypeId.CrystalDeltaEnergyPercentage)            { this._showHelpAsCrystalDeltaEnergyPercentage(); }
-        else if (infoType === InfoTypeId.CrystalDeltaHp)                          { this._showHelpAsCrystalDeltaHp(); }
-        else if (infoType === InfoTypeId.CrystalDeltaFuelPercentage)              { this._showHelpAsCrystalDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       { this._showHelpAsCrystalDeltaPrimaryAmmoPercentage(); }
-        else if (infoType === InfoTypeId.CannonRangeForUp)                        { this._showHelpAsCannonRangeForUp(); }
-        else if (infoType === InfoTypeId.CannonRangeForRight)                     { this._showHelpAsCannonRangeForRight(); }
-        else if (infoType === InfoTypeId.CannonRangeForLeft)                      { this._showHelpAsCannonRangeForLeft(); }
-        else if (infoType === InfoTypeId.CannonRangeForDown)                      { this._showHelpAsCannonRangeForDown(); }
-        else if (infoType === InfoTypeId.CannonPriority)                          { this._showHelpAsCannonPriority(); }
-        else if (infoType === InfoTypeId.CannonMaxTargetCount)                    { this._showHelpAsCannonMaxTargetCount(); }
-        else if (infoType === InfoTypeId.CannonCanAffectSelf)                     { this._showHelpAsCannonCanAffectSelf(); }
-        else if (infoType === InfoTypeId.CannonCanAffectAlly)                     { this._showHelpAsCannonCanAffectAlly(); }
-        else if (infoType === InfoTypeId.CannonCanAffectEnemy)                    { this._showHelpAsCannonCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.CannonDeltaHp)                           { this._showHelpAsCannonDeltaHp(); }
-        else if (infoType === InfoTypeId.CannonDeltaFuelPercentage)               { this._showHelpAsCannonDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        { this._showHelpAsCannonDeltaPrimaryAmmoPercentage(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForUp)                   { this._showHelpAsLaserTurretRangeForUp(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForRight)                { this._showHelpAsLaserTurretRangeForRight(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForLeft)                 { this._showHelpAsLaserTurretRangeForLeft(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForDown)                 { this._showHelpAsLaserTurretRangeForDown(); }
-        else if (infoType === InfoTypeId.LaserTurretPriority)                     { this._showHelpAsLaserTurretPriority(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectSelf)                { this._showHelpAsLaserTurretCanAffectSelf(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectAlly)                { this._showHelpAsLaserTurretCanAffectAlly(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectEnemy)               { this._showHelpAsLaserTurretCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaHp)                      { this._showHelpAsLaserTurretDeltaHp(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaFuelPercentage)          { this._showHelpAsLaserTurretDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   { this._showHelpAsLaserTurretDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           { this._showHelpAsCrystalRadius(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         { this._showHelpAsCrystalPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    { this._showHelpAsCrystalCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    { this._showHelpAsCrystalCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   { this._showHelpAsCrystalCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        { this._showHelpAsCrystalDeltaFund(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            { this._showHelpAsCrystalDeltaEnergyPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          { this._showHelpAsCrystalDeltaHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              { this._showHelpAsCrystalDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       { this._showHelpAsCrystalDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        { this._showHelpAsCannonRangeForUp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     { this._showHelpAsCannonRangeForRight(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      { this._showHelpAsCannonRangeForLeft(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      { this._showHelpAsCannonRangeForDown(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          { this._showHelpAsCannonPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    { this._showHelpAsCannonMaxTargetCount(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     { this._showHelpAsCannonCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     { this._showHelpAsCannonCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    { this._showHelpAsCannonCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           { this._showHelpAsCannonDeltaHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               { this._showHelpAsCannonDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        { this._showHelpAsCannonDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   { this._showHelpAsLaserTurretRangeForUp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                { this._showHelpAsLaserTurretRangeForRight(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 { this._showHelpAsLaserTurretRangeForLeft(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 { this._showHelpAsLaserTurretRangeForDown(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     { this._showHelpAsLaserTurretPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                { this._showHelpAsLaserTurretCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                { this._showHelpAsLaserTurretCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               { this._showHelpAsLaserTurretCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      { this._showHelpAsLaserTurretDeltaHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          { this._showHelpAsLaserTurretDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   { this._showHelpAsLaserTurretDeltaPrimaryAmmoPercentage(); }
         else {
-            throw newError(`Invalid infoType: ${infoType}`);
+            throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
     }
 
@@ -570,57 +548,57 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._imgBg.setIsVisible(openData.index % 2 === 0);
 
         const infoType = openData.infoType;
-        if      (infoType === InfoTypeId.DefenseBonus)                            { this._updateViewAsDefenseBonus(); }
-        else if (infoType === InfoTypeId.Income)                                  { this._updateViewAsIncome(); }
-        else if (infoType === InfoTypeId.Vision)                                  { this._updateViewAsVision(); }
-        else if (infoType === InfoTypeId.HideUnitCategory)                        { this._updateViewAsHideUnitCategory(); }
-        else if (infoType === InfoTypeId.IsDefeatedOnCapture)                     { this._updateViewAsIsDefeatedOnCapture(); }
-        else if (infoType === InfoTypeId.ProduceUnitCategory)                     { this._updateViewAsProduceUnitCategory(); }
-        else if (infoType === InfoTypeId.GlobalBonus)                             { this._updateViewAsGlobalBonus(); }
-        else if (infoType === InfoTypeId.RepairUnitCategory)                      { this._updateViewAsRepairUnitCategory(); }
-        else if (infoType === InfoTypeId.BlockEnemyUnit)                          { this._updateViewAsBlockEnemyUnit(); }
-        else if (infoType === InfoTypeId.CoBoardUnit)                             { this._updateViewAsCoBoardUnit(); }
-        else if (infoType === InfoTypeId.Hp)                                      { this._updateViewAsHp(); }
-        else if (infoType === InfoTypeId.CapturePoint)                            { this._updateViewAsCapturePoint(); }
-        else if (infoType === InfoTypeId.BuildPoint)                              { this._updateViewAsBuildPoint(); }
-        else if (infoType === InfoTypeId.IsHighlighted)                           { this._updateViewAsIsHighlighted(); }
-        else if (infoType === InfoTypeId.Buff)                                    { this._updateViewAsBuff(); }
+        if      (infoType === Tiles_Constants_Common.InfoTypeId.DefenseBonus)                            { this._updateViewAsDefenseBonus(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Income)                                  { this._updateViewAsIncome(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Vision)                                  { this._updateViewAsVision(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.HideUnitCategory)                        { this._updateViewAsHideUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture)                     { this._updateViewAsIsDefeatedOnCapture(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory)                     { this._updateViewAsProduceUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.GlobalBonus)                             { this._updateViewAsGlobalBonus(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.RepairUnitCategory)                      { this._updateViewAsRepairUnitCategory(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit)                          { this._updateViewAsBlockEnemyUnit(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CoBoardUnit)                             { this._updateViewAsCoBoardUnit(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Hp)                                      { this._updateViewAsHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CapturePoint)                            { this._updateViewAsCapturePoint(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.BuildPoint)                              { this._updateViewAsBuildPoint(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.IsHighlighted)                           { this._updateViewAsIsHighlighted(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.Buff)                                    { this._updateViewAsBuff(); }
 
-        else if (infoType === InfoTypeId.CrystalRadius)                           { this._updateViewAsCrystalRadius(); }
-        else if (infoType === InfoTypeId.CrystalPriority)                         { this._updateViewAsCrystalPriority(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectSelf)                    { this._updateViewAsCrystalCanAffectSelf(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectAlly)                    { this._updateViewAsCrystalCanAffectAlly(); }
-        else if (infoType === InfoTypeId.CrystalCanAffectEnemy)                   { this._updateViewAsCrystalCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.CrystalDeltaFund)                        { this._updateViewAsCrystalDeltaFund(); }
-        else if (infoType === InfoTypeId.CrystalDeltaEnergyPercentage)            { this._updateViewAsCrystalDeltaEnergyPercentage(); }
-        else if (infoType === InfoTypeId.CrystalDeltaHp)                          { this._updateViewAsCrystalDeltaHp(); }
-        else if (infoType === InfoTypeId.CrystalDeltaFuelPercentage)              { this._updateViewAsCrystalDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       { this._updateViewAsCrystalDeltaPrimaryAmmoPercentage(); }
-        else if (infoType === InfoTypeId.CannonRangeForUp)                        { this._updateViewAsCannonRangeForUp(); }
-        else if (infoType === InfoTypeId.CannonRangeForRight)                     { this._updateViewAsCannonRangeForRight(); }
-        else if (infoType === InfoTypeId.CannonRangeForLeft)                      { this._updateViewAsCannonRangeForLeft(); }
-        else if (infoType === InfoTypeId.CannonRangeForDown)                      { this._updateViewAsCannonRangeForDown(); }
-        else if (infoType === InfoTypeId.CannonPriority)                          { this._updateViewAsCannonPriority(); }
-        else if (infoType === InfoTypeId.CannonMaxTargetCount)                    { this._updateViewAsCannonMaxTargetCount(); }
-        else if (infoType === InfoTypeId.CannonCanAffectSelf)                     { this._updateViewAsCannonCanAffectSelf(); }
-        else if (infoType === InfoTypeId.CannonCanAffectAlly)                     { this._updateViewAsCannonCanAffectAlly(); }
-        else if (infoType === InfoTypeId.CannonCanAffectEnemy)                    { this._updateViewAsCannonCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.CannonDeltaHp)                           { this._updateViewAsCannonDeltaHp(); }
-        else if (infoType === InfoTypeId.CannonDeltaFuelPercentage)               { this._updateViewAsCannonDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        { this._updateViewAsCannonDeltaPrimaryAmmoPercentage(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForUp)                   { this._updateViewAsLaserTurretRangeForUp(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForRight)                { this._updateViewAsLaserTurretRangeForRight(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForLeft)                 { this._updateViewAsLaserTurretRangeForLeft(); }
-        else if (infoType === InfoTypeId.LaserTurretRangeForDown)                 { this._updateViewAsLaserTurretRangeForDown(); }
-        else if (infoType === InfoTypeId.LaserTurretPriority)                     { this._updateViewAsLaserTurretPriority(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectSelf)                { this._updateViewAsLaserTurretCanAffectSelf(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectAlly)                { this._updateViewAsLaserTurretCanAffectAlly(); }
-        else if (infoType === InfoTypeId.LaserTurretCanAffectEnemy)               { this._updateViewAsLaserTurretCanAffectEnemy(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaHp)                      { this._updateViewAsLaserTurretOffsetHp(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaFuelPercentage)          { this._updateViewAsLaserTurretDeltaFuelPercentage(); }
-        else if (infoType === InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   { this._updateViewAsLaserTurretDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalRadius)                           { this._updateViewAsCrystalRadius(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalPriority)                         { this._updateViewAsCrystalPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf)                    { this._updateViewAsCrystalCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly)                    { this._updateViewAsCrystalCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy)                   { this._updateViewAsCrystalCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund)                        { this._updateViewAsCrystalDeltaFund(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage)            { this._updateViewAsCrystalDeltaEnergyPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp)                          { this._updateViewAsCrystalDeltaHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage)              { this._updateViewAsCrystalDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage)       { this._updateViewAsCrystalDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForUp)                        { this._updateViewAsCannonRangeForUp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForRight)                     { this._updateViewAsCannonRangeForRight(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft)                      { this._updateViewAsCannonRangeForLeft(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonRangeForDown)                      { this._updateViewAsCannonRangeForDown(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonPriority)                          { this._updateViewAsCannonPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount)                    { this._updateViewAsCannonMaxTargetCount(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf)                     { this._updateViewAsCannonCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly)                     { this._updateViewAsCannonCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy)                    { this._updateViewAsCannonCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaHp)                           { this._updateViewAsCannonDeltaHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage)               { this._updateViewAsCannonDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage)        { this._updateViewAsCannonDeltaPrimaryAmmoPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp)                   { this._updateViewAsLaserTurretRangeForUp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight)                { this._updateViewAsLaserTurretRangeForRight(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft)                 { this._updateViewAsLaserTurretRangeForLeft(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown)                 { this._updateViewAsLaserTurretRangeForDown(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretPriority)                     { this._updateViewAsLaserTurretPriority(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf)                { this._updateViewAsLaserTurretCanAffectSelf(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly)                { this._updateViewAsLaserTurretCanAffectAlly(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy)               { this._updateViewAsLaserTurretCanAffectEnemy(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp)                      { this._updateViewAsLaserTurretOffsetHp(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage)          { this._updateViewAsLaserTurretDeltaFuelPercentage(); }
+        else if (infoType === Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage)   { this._updateViewAsLaserTurretDeltaPrimaryAmmoPercentage(); }
         else {
-            throw newError(`Invalid infoType: ${infoType}`);
+            throw Helpers_Misc.newError(`Invalid infoType: ${infoType}`);
         }
     }
     private _updateViewAsDefenseBonus(): void {
@@ -630,13 +608,13 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const tileTemplateCfg = openData.tileTemplateCfg;
-        this._labelTitle.setLangText(TextType.B0352);
-        this._labelValue.setText(getUnitCategoryName(
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0352);
+        this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             tileTemplateCfg.getDefenseUnitCategoryId(),
             openData.gameConfig
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
         this._groupExtra.setIsVisible(true);
-        this._labelExtraInfo.setText(`${getSignedNumText(tileTemplateCfg.getDefenseAmount())}`);
+        this._labelExtraInfo.setText(`${Helpers_Text.getSignedNumText(tileTemplateCfg.getDefenseAmount())}`);
     }
     private _updateViewAsIncome(): void {
         const openData = this.getOpenData();
@@ -645,7 +623,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const tileTemplateCfg = openData.tileTemplateCfg;
-        this._labelTitle.setLangText(TextType.Income);
+        this._labelTitle.setLangText(Lang_Constants.TextType.Income);
         this._labelValue.setText(`${tileTemplateCfg.getIncomePerTurn()}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -655,7 +633,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        this._labelTitle.setLangText(TextType.VisionRange);
+        this._labelTitle.setLangText(Lang_Constants.TextType.VisionRange);
         this._labelValue.setText(`${tileTemplateCfg.getVisionRange()}`);
 
         const groupExtra = this._groupExtra;
@@ -663,7 +641,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setLangText(TextType.B1130);
+            this._labelExtraInfo.setLangText(Lang_Constants.TextType.B1130);
         }
     }
     private _updateViewAsHideUnitCategory(): void {
@@ -673,10 +651,10 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const unitCategory = openData.tileTemplateCfg.getHideUnitCategoryId();
-        this._labelTitle.setLangText(TextType.HidableUnits);
+        this._labelTitle.setLangText(Lang_Constants.TextType.HidableUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
-            : (getUnitCategoryName(unitCategory, openData.gameConfig) ?? UndefinedError)
+            : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError)
         );
         this._groupExtra.setIsVisible(false);
     }
@@ -686,8 +664,8 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        this._labelTitle.setLangText(TextType.DefeatIfCaptured);
-        this._labelValue.setLangText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? TextType.Yes : TextType.No);
+        this._labelTitle.setLangText(Lang_Constants.TextType.DefeatIfCaptured);
+        this._labelValue.setLangText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsProduceUnitCategory(): void {
@@ -697,10 +675,10 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const unitCategory = openData.tileTemplateCfg.getProduceUnitCategoryId();
-        this._labelTitle.setLangText(TextType.ProducibleUnits);
+        this._labelTitle.setLangText(Lang_Constants.TextType.ProducibleUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
-            : (getUnitCategoryName(unitCategory, openData.gameConfig) ?? UndefinedError)
+            : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError)
         );
         this._groupExtra.setIsVisible(false);
     }
@@ -712,7 +690,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const offenseBonus  = tileTemplateCfg.getGlobalAttackBonus();
         const defenseBonus  = tileTemplateCfg.getGlobalDefenseBonus();
-        this._labelTitle.setLangText(TextType.B0359);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0359);
         this._labelValue.setText(`${offenseBonus} / ${defenseBonus}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -725,13 +703,13 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const tileTemplateCfg       = openData.tileTemplateCfg;
         const unitCategory          = tileTemplateCfg.getRepairUnitCategoryId();
         const repairNormalizedHp    = tileTemplateCfg.getRepairAmount();
-        this._labelTitle.setLangText(TextType.RepairableUnits);
+        this._labelTitle.setLangText(Lang_Constants.TextType.RepairableUnits);
         this._labelValue.setText(unitCategory == null
             ? `--`
-            : (getUnitCategoryName(unitCategory, openData.gameConfig) ?? UndefinedError)
+            : (Lang_Utils.getUnitCategoryName(unitCategory, openData.gameConfig) ?? Lang_Constants.UndefinedError)
         );
         this._groupExtra.setIsVisible(true);
-        this._labelExtraInfo.setText(repairNormalizedHp == null ? getText(TextType.B0044) : `${getSignedNumText(repairNormalizedHp * 10)}`);
+        this._labelExtraInfo.setText(repairNormalizedHp == null ? Lang_Utils.getText(Lang_Constants.TextType.B0044) : `${Helpers_Text.getSignedNumText(repairNormalizedHp * 10)}`);
     }
     private _updateViewAsHp(): void {
         const tileTemplateCfg = this.getOpenData()?.tileTemplateCfg;
@@ -740,7 +718,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const maxHp = tileTemplateCfg.getMaxHp();
-        this._labelTitle.setLangText(TextType.Hp);
+        this._labelTitle.setLangText(Lang_Constants.TextType.Hp);
         this._labelValue.setText(`${maxHp} / ${maxHp}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -751,7 +729,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const maxCapturePoint = tileTemplateCfg.getMaxCapturePoint();
-        this._labelTitle.setLangText(TextType.CapturePoint);
+        this._labelTitle.setLangText(Lang_Constants.TextType.CapturePoint);
         this._labelValue.setText(`${maxCapturePoint} / ${maxCapturePoint}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -762,18 +740,18 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const maxBuildPoint = tileTemplateCfg.getMaxBuildPoint();
-        this._labelTitle.setLangText(TextType.BuildPoint);
+        this._labelTitle.setLangText(Lang_Constants.TextType.BuildPoint);
         this._labelValue.setText(`${maxBuildPoint} / ${maxBuildPoint}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsIsHighlighted(): void {
-        this._labelTitle.setLangText(TextType.B0847);
-        this._labelValue.setLangText(TextType.No);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B0847);
+        this._labelValue.setLangText(Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsBuff(): void {
-        this._labelTitle.setLangText(TextType.AbnormalStates);
-        this._labelValue.setLangText(TextType.None);
+        this._labelTitle.setLangText(Lang_Constants.TextType.AbnormalStates);
+        this._labelValue.setLangText(Lang_Constants.TextType.None);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsBlockEnemyUnit(): void {
@@ -782,11 +760,11 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        this._labelTitle.setLangText(TextType.BlockableEnemyUnits);
-        this._labelValue.setText(getUnitCategoryName(
+        this._labelTitle.setLangText(Lang_Constants.TextType.BlockableEnemyUnits);
+        this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             openData.tileTemplateCfg.getBlockEnemyUnitCategoryId() ?? 0,
             openData.gameConfig
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCoBoardUnit(): void {
@@ -795,325 +773,325 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        this._labelTitle.setLangText(TextType.CoBoardableUnit);
-        this._labelValue.setText(getUnitCategoryName(
+        this._labelTitle.setLangText(Lang_Constants.TextType.CoBoardableUnit);
+        this._labelValue.setText(Lang_Utils.getUnitCategoryName(
             openData.tileTemplateCfg.getCoBoardUnitCategoryId() ?? 0,
             openData.gameConfig
-        ) ?? UndefinedError);
+        ) ?? Lang_Constants.UndefinedError);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalRadius(): void {
-        const currentValue          = Crystal.getRadius();
-        this._labelTitle.setLangText(TextType.EffectiveRadius);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getRadius();
+        this._labelTitle.setLangText(Lang_Constants.TextType.EffectiveRadius);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalPriority(): void {
-        const currentValue          = Crystal.getPriority();
-        this._labelTitle.setLangText(TextType.Priority);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getPriority();
+        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectSelf(): void {
-        const currentValue          = Crystal.getCanAffectSelf();
-        this._labelTitle.setLangText(TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectSelf();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectAlly(): void {
-        const currentValue          = Crystal.getCanAffectAlly();
-        this._labelTitle.setLangText(TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectAlly();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalCanAffectEnemy(): void {
-        const currentValue          = Crystal.getCanAffectEnemy();
-        this._labelTitle.setLangText(TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getCanAffectEnemy();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaFund(): void {
-        const currentValue          = Crystal.getOffsetFund();
-        this._labelTitle.setLangText(TextType.FundOffset);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetFund();
+        this._labelTitle.setLangText(Lang_Constants.TextType.FundOffset);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaEnergyPercentage(): void {
-        const currentValue          = Crystal.getOffsetEnergyPercentage();
-        this._labelTitle.setLangText(TextType.CoEnergyOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetEnergyPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.CoEnergyOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaHp(): void {
-        const data          = Crystal;
+        const data          = Tiles_Constants_DefaultCustomTileData.Crystal;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
     }
     private _updateViewAsCrystalDeltaFuelPercentage(): void {
-        const currentValue          = Crystal.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(TextType.UnitsFuelOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetFuelPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCrystalDeltaPrimaryAmmoPercentage(): void {
-        const currentValue          = Crystal.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(TextType.UnitsPriAmmoOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.Crystal.getOffsetPrimaryAmmoPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForUp(): void {
-        const currentValue          = CannonUp.getRangeForUp();
-        this._labelTitle.setLangText(TextType.RangeUp);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonUp.getRangeForUp();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForRight(): void {
-        const currentValue          = CannonRight.getRangeForRight();
-        this._labelTitle.setLangText(TextType.RangeRight);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonRight.getRangeForRight();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForDown(): void {
-        const currentValue          = CannonDown.getRangeForDown();
-        this._labelTitle.setLangText(TextType.RangeDown);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonDown.getRangeForDown();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonRangeForLeft(): void {
-        const currentValue          = CannonLeft.getRangeForLeft();
-        this._labelTitle.setLangText(TextType.RangeLeft);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CannonLeft.getRangeForLeft();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonPriority(): void {
-        const currentValue          = CustomCannon.getPriority();
-        this._labelTitle.setLangText(TextType.Priority);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getPriority();
+        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonMaxTargetCount(): void {
-        const currentValue          = CustomCannon.getMaxTargetCount();
-        this._labelTitle.setLangText(TextType.MaxTargets);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getMaxTargetCount();
+        this._labelTitle.setLangText(Lang_Constants.TextType.MaxTargets);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectSelf(): void {
-        const currentValue          = CustomCannon.getCanAffectSelf();
-        this._labelTitle.setLangText(TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectSelf();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectAlly(): void {
-        const currentValue          = CustomCannon.getCanAffectAlly();
-        this._labelTitle.setLangText(TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectAlly();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonCanAffectEnemy(): void {
-        const currentValue          = CustomCannon.getCanAffectEnemy();
-        this._labelTitle.setLangText(TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getCanAffectEnemy();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonDeltaHp(): void {
-        const data          = CustomCannon;
+        const data          = Tiles_Constants_DefaultCustomTileData.CustomCannon;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
     }
     private _updateViewAsCannonDeltaFuelPercentage(): void {
-        const currentValue          = CustomCannon.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(TextType.UnitsFuelOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getOffsetFuelPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsCannonDeltaPrimaryAmmoPercentage(): void {
-        const currentValue          = CustomCannon.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(TextType.UnitsPriAmmoOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomCannon.getOffsetPrimaryAmmoPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForUp(): void {
-        const currentValue          = CustomLaserTurret.getRangeForUp();
-        this._labelTitle.setLangText(TextType.RangeUp);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForUp();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeUp);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForRight(): void {
-        const currentValue          = CustomLaserTurret.getRangeForRight();
-        this._labelTitle.setLangText(TextType.RangeRight);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForRight();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeRight);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForDown(): void {
-        const currentValue          = CustomLaserTurret.getRangeForDown();
-        this._labelTitle.setLangText(TextType.RangeDown);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForDown();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeDown);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretRangeForLeft(): void {
-        const currentValue          = CustomLaserTurret.getRangeForLeft();
-        this._labelTitle.setLangText(TextType.RangeLeft);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getRangeForLeft();
+        this._labelTitle.setLangText(Lang_Constants.TextType.RangeLeft);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretPriority(): void {
-        const currentValue          = CustomLaserTurret.getPriority();
-        this._labelTitle.setLangText(TextType.Priority);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getPriority();
+        this._labelTitle.setLangText(Lang_Constants.TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectSelf(): void {
-        const currentValue          = CustomLaserTurret.getCanAffectSelf();
-        this._labelTitle.setLangText(TextType.AffectOwner);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectSelf();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectOwner);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectAlly(): void {
-        const currentValue          = CustomLaserTurret.getCanAffectAlly();
-        this._labelTitle.setLangText(TextType.AffectAlly);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectAlly();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectAlly);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretCanAffectEnemy(): void {
-        const currentValue          = CustomLaserTurret.getCanAffectEnemy();
-        this._labelTitle.setLangText(TextType.AffectEnemy);
-        this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getCanAffectEnemy();
+        this._labelTitle.setLangText(Lang_Constants.TextType.AffectEnemy);
+        this._labelValue.setLangText(currentValue ? Lang_Constants.TextType.Yes : Lang_Constants.TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretOffsetHp(): void {
-        const data          = CustomLaserTurret;
+        const data          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret;
         const offsetHp      = data.getOffsetHp();
         const canBeFatal    = data.getCanBeFatal();
-        this._labelTitle.setLangText(TextType.UnitsHpOffset);
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsHpOffset);
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
-        this._labelExtraInfo.setLangText(TextType.CanBeFatal);
+        this._labelExtraInfo.setLangText(Lang_Constants.TextType.CanBeFatal);
     }
     private _updateViewAsLaserTurretDeltaFuelPercentage(): void {
-        const currentValue          = CustomLaserTurret.getOffsetFuelPercentage();
-        this._labelTitle.setLangText(TextType.UnitsFuelOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getOffsetFuelPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLaserTurretDeltaPrimaryAmmoPercentage(): void {
-        const currentValue          = CustomLaserTurret.getOffsetPrimaryAmmoPercentage();
-        this._labelTitle.setLangText(TextType.UnitsPriAmmoOffset$);
+        const currentValue          = Tiles_Constants_DefaultCustomTileData.CustomLaserTurret.getOffsetPrimaryAmmoPercentage();
+        this._labelTitle.setLangText(Lang_Constants.TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
 
     private _showHelpAsDefenseBonus(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.B0352),
-            getContent : () => getText(TextType.A0088),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0352),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0088),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIncome(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.Income),
-            getContent : () => getText(TextType.A0086),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Income),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0086),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsVision(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.VisionRange),
-            getContent : () => getText(TextType.A0082),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.VisionRange),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0082),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHideUnitCategory(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.HidableUnits),
-            getContent : () => getText(TextType.A0079),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.HidableUnits),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0079),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsDefeatedOnCapture(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.DefeatIfCaptured),
-            getContent : () => getText(TextType.A0077),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.DefeatIfCaptured),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0077),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsProduceUnitCategory(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.ProducibleUnits),
-            getContent : () => getText(TextType.A0074),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.ProducibleUnits),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0074),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsGlobalBonus(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.B0359),
-            getContent : () => getText(TextType.A0068),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0359),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0068),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsRepairUnitCategory(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.RepairableUnits),
-            getContent : () => getText(TextType.A0065),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.RepairableUnits),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0065),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBlockEnemyUnit(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.BlockableEnemyUnits),
-            getContent : () => getText(TextType.A0012),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BlockableEnemyUnits),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0012),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCoBoardUnit(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.CoBoardableUnit),
-            getContent : () => getText(TextType.A0011),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CoBoardableUnit),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0011),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsHp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.Hp),
-            getContent : () => getText(TextType.A0059),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0059),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCapturePoint(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.CapturePoint),
-            getContent : () => getText(TextType.A0052),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0052),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuildPoint(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.BuildPoint),
-            getContent : () => getText(TextType.A0051),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0051),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsIsHighlighted(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.B0847),
-            getContent : () => getText(TextType.A0050),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0847),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0050),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsBuff(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getTitle   : () => getText(TextType.AbnormalStates),
-            getContent : () => getText(TextType.A0737),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0737),
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _showHelpAsCrystalRadius(): void {
         // nothing to do
@@ -1216,24 +1194,24 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
     }
 }
 
-interface DataForMoveCostRenderer extends UiListItemData {
+interface DataForMoveCostRenderer extends Ui_Types_UiListItemData.UiListItemData {
     index           : number;
-    gameConfig      : GameConfig;
+    gameConfig      : GameConfigs_GameConfig.GameConfig;
     unitType        : number;
     tileCfg         : TileTemplateCfg;
 }
-class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
-    private readonly _group!            : IUiContainer;
-    private readonly _imgBg!            : IUiImage;
-    private readonly _conView!          : IUiContainer;
-    private readonly _labelMoveCost!    : IUiLabel;
+class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMoveCostRenderer> {
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!            : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _conView!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelMoveCost!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView          = new (getUiUnitViewClass())();
+    private readonly _unitView          = new Ui_Components_UiUnitView.UiUnitView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-            { type: TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type: Notifications_TypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -1241,7 +1219,7 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
     }
 
     private _onNotifyUnitStateIndicatorTick(): void {
@@ -1263,46 +1241,46 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 
         const gameConfig    = openData.gameConfig;
         const unitType      = openData.unitType;
-        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(openData.tileCfg.getTileTypeId()));
-        const moveCost      = moveCostCfg[getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId())].getCost();
-        const playerIndex   = PlayerIndex.First;
+        const moveCostCfg   = Helpers_Misc.getExisted(gameConfig.getMoveCostCfg(openData.tileCfg.getTileTypeId()));
+        const moveCost      = moveCostCfg[Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId())].getCost();
+        const playerIndex   = Players_Constants.PlayerIndex.First;
         this._imgBg.setIsVisible(openData.index % 4 === 2);
         this._labelMoveCost.setText(moveCost != null ? `${moveCost}` : `--`);
-        this._unitView.update(new UiUnitViewData({
+        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
             gameConfig          : gameConfig,
-            skinId              : getDefaultSkinId(playerIndex),
+            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
             overridingSkinId    : undefined,
-            unitData            : createDefault({
+            unitData            : Units_Utils_Serialization.createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 playerIndex : playerIndex,
                 unitTypeId  : openData.unitType,
                 unitId      : -1,
                 gcData      : gameConfig,
             }),
-        }), getUnitAnimationTickCount());
+        }), Common_Model_CommonModel.getUnitAnimationTickCount());
     }
 }
 
-interface DataForDamageRenderer extends UiListItemData {
-    gameConfig          : GameConfig;
+interface DataForDamageRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gameConfig          : GameConfigs_GameConfig.GameConfig;
     index               : number;
     targetTileType      : number;
     playerIndex         : number;
     attackerUnitType    : number;
 }
-class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
-    private readonly _group!                : IUiContainer;
-    private readonly _imgBg!                : IUiImage;
-    private readonly _conView!              : IUiContainer;
-    private readonly _labelPrimaryAttack!   : IUiLabel;
-    private readonly _labelSecondaryAttack! : IUiLabel;
+class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForDamageRenderer> {
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _imgBg!                : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _conView!              : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelPrimaryAttack!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelSecondaryAttack! : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _unitView              = new (getUiUnitViewClass())();
+    private readonly _unitView              = new Ui_Components_UiUnitView.UiUnitView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-            { type: TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type: Notifications_TypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -1310,7 +1288,7 @@ class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(Common_Model_CommonModel.getUnitAnimationTickCount());
     }
 
     private _onNotifyUnitStateIndicatorTick(): void {
@@ -1336,505 +1314,505 @@ class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
         const targetTileType    = openData.targetTileType;
         const attackerUnitType  = openData.attackerUnitType;
         const playerIndex       = openData.playerIndex;
-        this._unitView.update(new UiUnitViewData({
+        this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
             gameConfig          : gameConfig,
-            skinId              : getDefaultSkinId(playerIndex),
+            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
             overridingSkinId    : undefined,
-            unitData            : createDefault({
+            unitData            : Units_Utils_Serialization.createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 unitTypeId  : attackerUnitType,
                 playerIndex : playerIndex,
                 unitId      : -1,
                 gcData      : gameConfig,
             }),
-        }), getUnitAnimationTickCount());
+        }), Common_Model_CommonModel.getUnitAnimationTickCount());
 
-        const attackCfg             = getExisted(gameConfig.getDamageChartCfgs(attackerUnitType));
-        const targetArmorType       = getExisted(gameConfig.getTileTemplateCfg(targetTileType)?.getArmorTypeId());
-        const primaryAttackDamage   = attackCfg[targetArmorType][WeaponTypeId.Primary].getDamage();
-        const secondaryAttackDamage = attackCfg[targetArmorType][WeaponTypeId.Secondary].getDamage();
+        const attackCfg             = Helpers_Misc.getExisted(gameConfig.getDamageChartCfgs(attackerUnitType));
+        const targetArmorType       = Helpers_Misc.getExisted(gameConfig.getTileTemplateCfg(targetTileType)?.getArmorTypeId());
+        const primaryAttackDamage   = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Primary].getDamage();
+        const secondaryAttackDamage = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Secondary].getDamage();
         this._labelPrimaryAttack.setText(primaryAttackDamage == null ? `--` : `${primaryAttackDamage}`);
         this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
     }
 }
 
-function createInfoDefenseBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getDefenseUnitCategoryId() === CategoryId.None)
+function createInfoDefenseBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getDefenseUnitCategoryId() === Units_Constants.CategoryId.None)
         ? null
         : {
             index           : 0,
-            infoType        : InfoTypeId.DefenseBonus,
+            infoType        : Tiles_Constants_Common.InfoTypeId.DefenseBonus,
             tileTemplateCfg : tileTemplateCfg,
             gameConfig      : gameConfig,
         };
 }
-function createInfoIncome(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoIncome(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const income = tileTemplateCfg.getIncomePerTurn();
     return income == 0
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.Income,
+            infoType    : Tiles_Constants_Common.InfoTypeId.Income,
             tileTemplateCfg,
             gameConfig
         };
 }
-function createInfoVision(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoVision(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return ((!tileTemplateCfg.getVisionRange()) && (!tileTemplateCfg.getIsVisionEnabledForAllPlayers()) && (tileTemplateCfg.getMaxCapturePoint() == null))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.Vision,
+            infoType    : Tiles_Constants_Common.InfoTypeId.Vision,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoHideUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoHideUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getHideUnitCategoryId() == null)
         ? null
         :  {
             index           : 0,
-            infoType        : InfoTypeId.HideUnitCategory,
+            infoType        : Tiles_Constants_Common.InfoTypeId.HideUnitCategory,
             tileTemplateCfg : tileTemplateCfg,
             gameConfig      : gameConfig,
         };
 }
-function createInfoIsDefeatOnCapture(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoIsDefeatOnCapture(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return !tileTemplateCfg.getIsDefeatedOnCapture()
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.IsDefeatedOnCapture,
+            infoType    : Tiles_Constants_Common.InfoTypeId.IsDefeatedOnCapture,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoProduceUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoProduceUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return !tileTemplateCfg.getProduceUnitCategoryId()
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.ProduceUnitCategory,
+            infoType    : Tiles_Constants_Common.InfoTypeId.ProduceUnitCategory,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoGlobalBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoGlobalBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return ((!tileTemplateCfg.getGlobalAttackBonus()) && (!tileTemplateCfg.getGlobalDefenseBonus()))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.GlobalBonus,
+            infoType    : Tiles_Constants_Common.InfoTypeId.GlobalBonus,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoRepairUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getRepairUnitCategoryId() == CategoryId.None)
+function createInfoRepairUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getRepairUnitCategoryId() == Units_Constants.CategoryId.None)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.RepairUnitCategory,
+            infoType    : Tiles_Constants_Common.InfoTypeId.RepairUnitCategory,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoBlockEnemyUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoBlockEnemyUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getBlockEnemyUnitCategoryId() == null)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.BlockEnemyUnit,
+            infoType    : Tiles_Constants_Common.InfoTypeId.BlockEnemyUnit,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCoBoardUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCoBoardUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getCoBoardUnitCategoryId() == null)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CoBoardUnit,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CoBoardUnit,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxHp() == null)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.Hp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.Hp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCapturePoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCapturePoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxCapturePoint() == null)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CapturePoint,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CapturePoint,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoBuildPoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoBuildPoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxBuildPoint() == null)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.BuildPoint,
+            infoType    : Tiles_Constants_Common.InfoTypeId.BuildPoint,
             tileTemplateCfg,
             gameConfig,
         };
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function createInfoIsHighlighted(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoIsHighlighted(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return null;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function createInfoBuff(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoBuff(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     return null;
 }
-function createInfoCrystalRadius(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCrystalRadius(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.Crystal) && (mapWeaponType !== MapWeaponTypeId.CustomCrystal))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.Crystal) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalRadius,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalRadius,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalPriority,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalPriority,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalCanAffectSelf,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalCanAffectSelf,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalCanAffectAlly,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalCanAffectAlly,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalCanAffectEnemy,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalCanAffectEnemy,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalDeltaFund(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalDeltaFund(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalDeltaFund,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalDeltaFund,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalDeltaEnergyPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalDeltaEnergyPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalDeltaEnergyPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalDeltaEnergyPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCrystalDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.Crystal) && (mapWeaponType !== MapWeaponTypeId.CustomCrystal))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.Crystal) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalDeltaHp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalDeltaHp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalDeltaFuelPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalDeltaFuelPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCrystalDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
+function createInfoCrystalDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CrystalDeltaPrimaryAmmoPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CrystalDeltaPrimaryAmmoPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCannonRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CannonUp) && (mapWeaponType !== MapWeaponTypeId.CustomCannon))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonUp) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonRangeForUp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonRangeForUp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCannonRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CannonDown) && (mapWeaponType !== MapWeaponTypeId.CustomCannon))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonDown) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonRangeForDown,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonRangeForDown,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCannonRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CannonLeft) && (mapWeaponType !== MapWeaponTypeId.CustomCannon))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonLeft) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonRangeForLeft,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonRangeForLeft,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCannonRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CannonRight) && (mapWeaponType !== MapWeaponTypeId.CustomCannon))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonRight) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonRangeForRight,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonRangeForRight,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonPriority,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonPriority,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonMaxTargetCount(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonMaxTargetCount(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonMaxTargetCount,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonMaxTargetCount,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonCanAffectSelf,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonCanAffectSelf,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonCanAffectAlly,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonCanAffectAlly,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonCanAffectEnemy,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonCanAffectEnemy,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoCannonDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CannonRight) && (mapWeaponType !== MapWeaponTypeId.CannonLeft) && (mapWeaponType !== MapWeaponTypeId.CannonDown) && (mapWeaponType !== MapWeaponTypeId.CannonUp) && (mapWeaponType !== MapWeaponTypeId.CustomCannon))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonRight) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonLeft) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonDown) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CannonUp) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomCannon))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonDeltaHp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonDeltaHp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonDeltaFuelPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonDeltaFuelPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoCannonDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
+function createInfoCannonDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomCannon)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.CannonDeltaPrimaryAmmoPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.CannonDeltaPrimaryAmmoPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretRangeForUp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForUp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretRangeForDown,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForDown,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretRangeForLeft,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForLeft,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretRangeForRight,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretRangeForRight,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretPriority,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretPriority,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretCanAffectSelf,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectSelf,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretCanAffectAlly,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectAlly,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretCanAffectEnemy,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretCanAffectEnemy,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
-    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret) && (mapWeaponType !== Tiles_Constants_MapWeapon.TypeId.LaserTurret))
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretDeltaHp,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaHp,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretDeltaFuelPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaFuelPercentage,
             tileTemplateCfg,
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
-    return (tileTemplateCfg.getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
+function createInfoLaserTurretDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer | null {
+    return (tileTemplateCfg.getMapWeaponTypeId() !== Tiles_Constants_MapWeapon.TypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
-            infoType    : InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage,
+            infoType    : Tiles_Constants_Common.InfoTypeId.LaserTurretDeltaPrimaryAmmoPercentage,
             tileTemplateCfg,
             gameConfig,
         };

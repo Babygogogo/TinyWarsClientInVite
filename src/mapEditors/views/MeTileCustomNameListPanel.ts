@@ -1,45 +1,43 @@
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getCurrentLanguageType,
-    getSecondaryLanguageType,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    MapEditor_Model_MeWar,
+    type BaseWar_Interface_IBwWar,
+    Tiles_Constants_Common,
+    Notifications_Dispatcher,
+    Tween_Executor,
+    Lang_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
+
 import { TileCustomName } from "../../proto/schema/CommonProto/Structure/TileCustomName.ts";
-import { CustomName } from "../../tiles/constants/Common.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    war     : IBwWar;
+    war     : BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!              : IUiImage;
-    private readonly _group!                : IUiContainer;
-    private readonly _labelTitle!           : IUiLabel;
-    private readonly _btnClose!             : IUiButton;
-    private readonly _btnBatch!             : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!           : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnBatch!             : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listName!             : IUiScrollList<DataForCustomCounterRenderer>;
-    private readonly _labelTips!            : IUiLabel;
+    private readonly _listName!             : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForCustomCounterRenderer>;
+    private readonly _labelTips!            : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -70,7 +68,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().MeSetTileCustomNamePanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeSetTileCustomNamePanel, {
             war : war,
         });
     }
@@ -82,9 +80,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1430);
-        this._labelTips.setLangText(TextType.A0785);
-        this._btnBatch.setLangText(TextType.B1434);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1430);
+        this._labelTips.setLangText(Lang_Constants.TextType.A0785);
+        this._btnBatch.setLangText(Lang_Constants.TextType.B1434);
     }
     private async _updateListName(): Promise<void> {
         const openData = this.getOpenData();
@@ -94,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const war       = openData.war;
         const dataArray : DataForCustomCounterRenderer[] = [];
-        for (let nameId = CustomName.MinId; nameId <= CustomName.MaxId; ++nameId) {
+        for (let nameId = Tiles_Constants_Common.CustomName.MinId; nameId <= Tiles_Constants_Common.CustomName.MaxId; ++nameId) {
             dataArray.push({
                 war     : war,
                 nameId  : nameId,
@@ -105,24 +103,24 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-interface DataForCustomCounterRenderer extends UiListItemData {
-    war     : IBwWar;
+interface DataForCustomCounterRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    war     : BaseWar_Interface_IBwWar.IBwWar;
     nameId  : number;
 }
-class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
-    private readonly _layoutName!   : IUiLayout;
-    private readonly _labelId!      : IUiLabel;
-    private readonly _labelName1!   : IUiLabel;
-    private readonly _labelName2!   : IUiLabel;
+class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCustomCounterRenderer> {
+    private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName1!   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelName2!   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _imgSelected!  : IUiImage;
+    private readonly _imgSelected!  : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._imgSelected,                        callback: this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.BwTileCustomNameIdChanged,   callback: this._onNotifyBwTileCustomNameIdChanged },
+            { type: Notifications_TypeId.TypeId.BwTileCustomNameIdChanged,   callback: this._onNotifyBwTileCustomNameIdChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -131,13 +129,13 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
+        Tween_Executor.Executor.removeTweens(imgSelected);
+        Tween_Executor.Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        Executor.removeTweens(this._imgSelected);
+        Tween_Executor.Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -153,7 +151,7 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
         }
 
         const war = openData.war;
-        if ((war instanceof getMeWarClass()) &&
+        if ((war instanceof MapEditor_Model_MeWar.MeWar) &&
             (war.getIsReviewingMap())
         ) {
             return;
@@ -164,10 +162,10 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
         const nameArray     = tileMap.getTileCustomNameArray() ?? [];
         const index         = nameArray.findIndex(v => (v.getNameId()) === nameId);
         const nameData      = nameArray[index];
-        openPanel(getDict().CommonInputShortLangTextPanel, {
-            getTitleText        : () => `${getText(TextType.B1430)} #${nameId}`,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
+            getTitleText        : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1430)} #${nameId}`,
             currentTextArray    : nameData?.getNameTextArray() ?? [],
-            maxTextLength       : CustomName.MaxLength,
+            maxTextLength       : Tiles_Constants_Common.CustomName.MaxLength,
             allowEmpty          : true,
             callback            : textArray => {
                 if (!textArray.length) {
@@ -191,7 +189,7 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
                 }
 
                 this._updateView();
-                dispatch(TypeId.BwTileCustomNameArrayChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged);
             },
         });
     }
@@ -208,14 +206,14 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
         const nameId        = openData.nameId;
         const tileMap       = openData.war.getTileMap();
         const nameTextArray = tileMap.getTileCustomNameArray()?.find(v => (v.getNameId()) === nameId)?.getNameTextArray();
-        const languageType1 = getCurrentLanguageType();
-        const languageType2 = getSecondaryLanguageType();
-        this._labelName1.setText(getLanguageText({
+        const languageType1 = Lang_Utils.getCurrentLanguageType();
+        const languageType2 = Lang_Utils.getSecondaryLanguageType();
+        this._labelName1.setText(Lang_Utils.getLanguageText({
             textArray       : nameTextArray,
             languageType    : languageType1,
             useAlternate    : false,
         }) ?? `----`);
-        this._labelName2.setText(getLanguageText({
+        this._labelName2.setText(Lang_Utils.getLanguageText({
             textArray       : nameTextArray,
             languageType    : languageType2,
             useAlternate    : false,
@@ -231,7 +229,7 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
         }
 
         const nameId = openData.nameId;
-        this._labelId.setText(`#${nameId}       ${openData.war.getTileMap().getTilesCount(v => v.getCustomNameId() === nameId)} ${getText(TextType.B1431)}`);
+        this._labelId.setText(`#${nameId}       ${openData.war.getTileMap().getTilesCount(v => v.getCustomNameId() === nameId)} ${Lang_Utils.getText(Lang_Constants.TextType.B1431)}`);
         this._layoutName.arrangeItems();
     }
 }

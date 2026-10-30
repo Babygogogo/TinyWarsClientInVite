@@ -1,27 +1,19 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    checkIsValidLanguageTextArray,
-    getFormattedText,
-    getText,
-} from "../../lang/Utils.ts";
+    Lang_Utils,
+    WarEvents_Conditions_Utils_Common,
+    WarEvents_Constants,
+    WarEvents_FullDatas_Utils,
+    Helpers_Misc,
+    WarEvents_Actions_Constants_Common,
+    Lang_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
 import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { MaxCounts } from "../actions/constants/Common.ts";
-import { cloneCondition } from "../conditions/utils/Common.ts";
-import {
-    Event,
-    ConditionNode,
-} from "../Constants.ts";
-import {
-    getNode,
-    getEvent,
-} from "../fullDatas/Utils.ts";
 
 export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict }: {    // DONE
     conditionNode   : WarEventConditionNode;
@@ -33,9 +25,9 @@ export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict
         return false;
     }
 
-    if (!checkIsValidLanguageTextArray({
+    if (!Lang_Utils.checkIsValidLanguageTextArray({
         list            : conditionNode.getNodeNameArray(),
-        maxTextLength   : Event.MaxNameLength,
+        maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
         minTextLength   : 1,
         minTextCount    : 0,
     })) {
@@ -95,31 +87,31 @@ export function getErrorTipForConditionNode(fullData: WarEventFullData, node: Wa
             if (rootNodeAndActions.getNodeIdAndFlags()?.getNodeId() === nodeId) {
                 const count     = rootNodeAndActions.getActionIdArray().length;
                 const minCount  = 1;
-                const maxCount  = MaxCounts.PerEvent;
+                const maxCount  = WarEvents_Actions_Constants_Common.MaxCounts.PerEvent;
                 if ((count < minCount) || (count > maxCount)) {
-                    return getFormattedText(TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
+                    return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
                 }
             }
         }
     }
 
     const nodesCount = fullData.getConditionNodeArray().length;
-    if (nodesCount > ConditionNode.MaxCountPerMap) {
-        return `${getText(TextType.A0183)} (${nodesCount}/${ConditionNode.MaxCountPerMap})`;
+    if (nodesCount > WarEvents_Constants.ConditionNode.MaxCountPerMap) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.A0183)} (${nodesCount}/${WarEvents_Constants.ConditionNode.MaxCountPerMap})`;
     }
 
     if ((node.getSubNodeIdAndFlagsArray().length + node.getConditionIdAndFlagsArray().length) <= 0) {
-        return getText(TextType.A0161);
+        return Lang_Utils.getText(Lang_Constants.TextType.A0161);
     }
 
     const duplicatedNodeId  = getDuplicatedSubNodeId(fullData, nodeId);
     if (duplicatedNodeId != null) {
-        return getFormattedText(TextType.F0061, `N${duplicatedNodeId}`);
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0061, `N${duplicatedNodeId}`);
     }
 
     const duplicatedConditionId = getDuplicatedConditionId(fullData, nodeId);
     if (duplicatedConditionId != null) {
-        return getFormattedText(TextType.F0062, `C${duplicatedConditionId}`);
+        return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0062, `C${duplicatedConditionId}`);
     }
 
     return null;
@@ -134,7 +126,7 @@ function getDuplicatedSubNodeId(fullData: WarEventFullData, parentNodeId: number
         }
         usedNodeIdSet.add(nodeId);
 
-        nodeIdArray.push(...getNode(fullData, nodeId)?.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()) ?? []);
+        nodeIdArray.push(...WarEvents_FullDatas_Utils.getNode(fullData, nodeId)?.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()) ?? []);
     }
     return null;
 }
@@ -142,7 +134,7 @@ function getDuplicatedConditionId(fullData: WarEventFullData, parentNodeId: numb
     const nodeIdArray           = [parentNodeId];
     const usedConditionIdSet    = new Set<number>();
     for (const nodeId of nodeIdArray) {
-        const node = getNode(fullData, nodeId);
+        const node = WarEvents_FullDatas_Utils.getNode(fullData, nodeId);
         if (node) {
             nodeIdArray.push(...node.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()));
             for (const conditionId of node.getConditionIdAndFlagsArray().map(v => v.getConditionId())) {
@@ -158,7 +150,7 @@ function getDuplicatedConditionId(fullData: WarEventFullData, parentNodeId: numb
 
 export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShallowClone: boolean): number {
     const nodeArray = fullData.getConditionNodeArray();
-    const srcNode   = getExisted(nodeArray.find(v => v.getNodeId() === srcNodeId));
+    const srcNode   = Helpers_Misc.getExisted(nodeArray.find(v => v.getNodeId() === srcNodeId));
     for (let nodeId = 1; ; ++nodeId) {
         if (nodeArray.some(v => v.getNodeId() === nodeId)) {
             continue;
@@ -172,7 +164,7 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
                 const newConditionIdAndFlagsArray: ConditionIdAndFlags[] = [];
                 for (const conditionIdAndFlags of srcNode.getConditionIdAndFlagsArray()) {
                     newConditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({
-                        conditionId : cloneCondition(fullData, conditionIdAndFlags.getConditionId()),
+                        conditionId : WarEvents_Conditions_Utils_Common.cloneCondition(fullData, conditionIdAndFlags.getConditionId()),
                         isNegated   : conditionIdAndFlags.getIsNegated(),
                     }));
                 }
@@ -199,18 +191,18 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
 export function createAndAddRootNodeInEvent({ fullData, eventId, isNeedAnd, isNeedFalse, conditionIdAndFlagsArray = [], subNodeIdAndFlagsArray = [] }: {   // DONE
     fullData                    : WarEventFullData;
     eventId                     : number;
-    isNeedAnd                   : Undefinable<boolean>;
-    isNeedFalse                 : Undefinable<boolean>;
+    isNeedAnd                   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<boolean>;
+    isNeedFalse                 : AuxiliaryTypes_AuxiliaryTypes.Undefinable<boolean>;
     conditionIdAndFlagsArray?   : ConditionIdAndFlags[];
     subNodeIdAndFlagsArray?     : NodeIdAndFlags[];
 }): number | null {
-    const event = getEvent(fullData, eventId);
+    const event = WarEvents_FullDatas_Utils.getEvent(fullData, eventId);
     if (event == null) {
         return null;
     }
 
     const rootNodeAndActionsArray = event.getRootNodeAndActionsArray();
-    if (rootNodeAndActionsArray.length >= ConditionNode.MaxCountPerEventRoot) {
+    if (rootNodeAndActionsArray.length >= WarEvents_Constants.ConditionNode.MaxCountPerEventRoot) {
         return null;
     }
 
@@ -247,12 +239,12 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
     fullData                    : WarEventFullData;
     eventId                     : number;
     oldRootNodeId               : number;
-    isNeedAnd                   : Undefinable<boolean>;
-    isNeedFalse                 : Undefinable<boolean>;
+    isNeedAnd                   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<boolean>;
+    isNeedFalse                 : AuxiliaryTypes_AuxiliaryTypes.Undefinable<boolean>;
     conditionIdAndFlagsArray?   : ConditionIdAndFlags[];
     subNodeIdAndFlagsArray?     : NodeIdAndFlags[];
 }): number | null {
-    const event = getEvent(fullData, eventId);
+    const event = WarEvents_FullDatas_Utils.getEvent(fullData, eventId);
     if (event == null) {
         return null;
     }

@@ -1,20 +1,19 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwExecutedOperationManager } from "../interface/IBwExecutedOperationManager.ts";
 import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
+    Helpers_Misc,
+    type BaseWar_Interface_IBwExecutedOperationManager,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
-export class BwExecutedOperationManager implements IBwExecutedOperationManager {
+export class BwExecutedOperationManager implements BaseWar_Interface_IBwExecutedOperationManager.IBwExecutedOperationManager {
     private _isNeedExecutedOperations?  : boolean;
     private _executedOperationArray?    : WoContainer[];
     private _executedOperationsCount    = 0;
 
     public init({ isNeedExecutedOperations, data }: {
         isNeedExecutedOperations    : boolean;
-        data                        : Undefinable<SerialExecutedOperationManager>;
+        data                        : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialExecutedOperationManager>;
     }): void {
         this._setIsNeedExecutedOperations(isNeedExecutedOperations);
 
@@ -22,7 +21,7 @@ export class BwExecutedOperationManager implements IBwExecutedOperationManager {
         this._setAllExecutedOperationArray(executedOperationArray);
         this.setExecutedOperationsCount(data?.getExecutedOperationsCount() ?? executedOperationArray.length);
     }
-    public fastInit(data: Undefinable<SerialExecutedOperationManager>): void {
+    public fastInit(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialExecutedOperationManager>): void {
         const executedOperationArray = data?.getExecutedOperationArray() ?? [];
         this._setAllExecutedOperationArray(executedOperationArray);
         this.setExecutedOperationsCount(data?.getExecutedOperationsCount() ?? executedOperationArray.length);
@@ -61,7 +60,7 @@ export class BwExecutedOperationManager implements IBwExecutedOperationManager {
         this._isNeedExecutedOperations = isNeedReplay;
     }
     private _getIsNeedExecutedOperations(): boolean {
-        return getExisted(this._isNeedExecutedOperations);
+        return Helpers_Misc.getExisted(this._isNeedExecutedOperations);
     }
 
     public setExecutedOperationsCount(count: number): void {
@@ -78,7 +77,7 @@ export class BwExecutedOperationManager implements IBwExecutedOperationManager {
         this._executedOperationArray = operations;
     }
     public getAllExecutedOperationArray(): WoContainer[] {
-        return getExisted(this._executedOperationArray);
+        return Helpers_Misc.getExisted(this._executedOperationArray);
     }
 
     public getExecutedOperation(operationId: number): WoContainer | null {
@@ -89,7 +88,7 @@ export class BwExecutedOperationManager implements IBwExecutedOperationManager {
 
         return array[operationId - (array[0].getOperationId() ?? 0)];
     }
-    public getLastExecutedOperation(): Undefinable<WoContainer> {
+    public getLastExecutedOperation(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WoContainer> {
         const arr = this.getAllExecutedOperationArray();
         if (arr == null) {
             return null;
@@ -114,7 +113,7 @@ export class BwExecutedOperationManager implements IBwExecutedOperationManager {
         const executedOperationsCount   = this.getExecutedOperationsCount();
         const operationId               = rawOperation.getOperationId();
         if (operationId !== executedOperationsCount - 1) {
-            throw newError(`Invalid operationId: ${operationId}, expected: ${executedOperationsCount}`);
+            throw Helpers_Misc.newError(`Invalid operationId: ${operationId}, expected: ${executedOperationsCount}`);
         }
 
         if (this._getIsNeedExecutedOperations()) {

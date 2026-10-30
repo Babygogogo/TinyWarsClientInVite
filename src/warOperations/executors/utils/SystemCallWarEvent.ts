@@ -1,7 +1,9 @@
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { show } from "../../../FloatText.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
+import {
+    Lang_Utils,
+    FloatText,
+    Lang_Constants,
+    type BaseWar_Interface_IBwWar,
+} from "../../../internal.ts";
 import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
 // let _meWarClass     : new () => MapEditor.IMeWar;
@@ -11,7 +13,7 @@ import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/War
 // let _twWarClass     : new () => TestWar.ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemCallWarEvent, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeSystemCallWarEvent(war, action);
     } else {
@@ -19,7 +21,7 @@ export async function execute(war: IBwWar, action: WoSystemCallWarEvent, isFast:
     }
 }
 
-async function fastExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarEvent): Promise<void> {
+async function fastExeSystemCallWarEvent(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemCallWarEvent): Promise<void> {
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
     await warEventManager.callWarEvent(action, true);
@@ -27,9 +29,9 @@ async function fastExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarEve
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarEvent): Promise<void> {
+async function normalExeSystemCallWarEvent(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemCallWarEvent): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (show(desc));
+    (desc) && (FloatText.show(desc));
 
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
@@ -40,12 +42,7 @@ async function normalExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarE
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoSystemCallWarEvent): Promise<string | null> {
-    // _meWarClass     ??= GameHelpers.GhFactory.getMeWarClass();
-    // _mpwWarClass    ??= GameHelpers.GhFactory.getMpwWarClass();
-    // _rwWarBaseClass ??= GameHelpers.GhFactory.getRwWarBaseClass();
-    // _spwWarClass    ??= GameHelpers.GhFactory.getSpwWarClass();
-    // _twWarClass     ??= GameHelpers.GhFactory.getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemCallWarEvent): Promise<string | null> {
 
     // if (war instanceof _meWarClass) {
     //     return null;
@@ -61,5 +58,5 @@ async function getDesc(war: IBwWar, action: WoSystemCallWarEvent): Promise<strin
     //     return null;
     // }
 
-    return `${getText(TextType.B0451)} (E${action.getWarEventId()})`;
+    return `${Lang_Utils.getText(Lang_Constants.TextType.B0451)} (E${action.getWarEventId()})`;
 }

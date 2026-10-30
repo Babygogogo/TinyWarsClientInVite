@@ -1,22 +1,21 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
 import {
-    IsNeedVisibility,
-    getBestScoreAndAction,
-} from "../Utils.ts";
-import { getExisted } from "../../helpers/Misc.ts";
+    Utils_ClientErrorCode,
+    Bots_Utils,
+    Timer_TimerModel,
+    Helpers_Misc,
+    type Bots_CommonParams,
+    type AuxiliaryTypes_GridIndex,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export async function getScoreAndActionUnitLaunchFlare(commonParams: CommonParams, unit: IUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     const war = commonParams.getWar();
-    if ((!IsNeedVisibility)               ||
+    if ((!Bots_Utils.IsNeedVisibility)               ||
         (!war.getFogMap().checkHasFogCurrently())   ||
         (!unit.getFlareCurrentAmmo())               ||
         (pathNodes.length !== 1)
@@ -24,8 +23,8 @@ export async function getScoreAndActionUnitLaunchFlare(commonParams: CommonParam
         return null;
     }
 
-    const flareMaxRange     = getExisted(unit.getFlareMaxRange(destination), ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchFlare_00);
-    const promiseArray      : Promise<ScoreAndAction | null>[] = [];
+    const flareMaxRange     = Helpers_Misc.getExisted(unit.getFlareMaxRange(destination), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchFlare_00);
+    const promiseArray      : Promise<Bots_Types.ScoreAndAction | null>[] = [];
     for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: 0, maxDistance: flareMaxRange, mapSize: commonParams.getMapSize() })) {
         promiseArray.push((async () => {
             return {
@@ -43,13 +42,13 @@ export async function getScoreAndActionUnitLaunchFlare(commonParams: CommonParam
         })());
     }
 
-    return getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
+    return Bots_Utils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
 }
 
-async function getScoreForActionUnitLaunchFlare(commonParams: CommonParams, unit: IUnit, destination: GridIndex, targetGridIndex: GridIndex): Promise<number> {
-    await checkAndCallLater();
+async function getScoreForActionUnitLaunchFlare(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, destination: AuxiliaryTypes_GridIndex.GridIndex, targetGridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<number> {
+    await Timer_TimerModel.checkAndCallLater();
 
-    const flareRadius   = getExisted(unit.getFlareRadius(destination), ClientErrorCode.SpwRobot_GetScoreForUnitLaunchFlare_00);
+    const flareRadius   = Helpers_Misc.getExisted(unit.getFlareRadius(destination), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForUnitLaunchFlare_00);
     const visibleUnits  = commonParams.getVisibleUnits();
     const war           = commonParams.getWar();
     const unitMap       = war.getUnitMap();

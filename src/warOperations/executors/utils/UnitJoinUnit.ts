@@ -1,43 +1,27 @@
-import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarBaseClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType } from "../../../lang/Constants.ts";
-import { getText } from "../../../lang/Utils.ts";
-import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
-import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
+    AuxiliaryTypes_GridIndex,
+    MapEditor_Model_MeWar,
+    AuxiliaryTypes_MovePath,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWarBase,
+    SinglePlayerWar_Model_SpwWar,
+    TestWar_Model_TwWar,
+    type BaseWar_Interface_IBwWar,
+    Units_Constants,
+    Utils_ClientErrorCode,
+    Helpers_Team,
+    Helpers_Misc,
+    Visibilities_Utils,
+    Lang_Utils,
+    WarOperations_Executors_Utils_Common,
+    Lang_Constants,
+} from "../../../internal.ts";
+
 import type { WoUnitJoinUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitJoinUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
-import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-import {
-    ActionStateId,
-    Hp,
-} from "../../../units/Constants.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import {
-    handleCommonExtraData,
-    handlePostOperationPlunder,
-} from "./Common.ts";
-
-let _meWarClass     : new () => IMeWar;
-let _mpwWarClass    : new () => IMpwWar;
-let _rwWarBaseClass : new () => IRwWarBase;
-let _spwWarClass    : new () => ISpwWar;
-let _twWarClass     : new () => ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function execute(war: IBwWar, action: WoUnitJoinUnit, isFast: boolean): Promise<void> {
+export async function execute(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitJoinUnit, isFast: boolean): Promise<void> {
     if (isFast) {
         await fastExeUnitJoinUnit(war, action);
     } else {
@@ -45,38 +29,38 @@ export async function execute(war: IBwWar, action: WoUnitJoinUnit, isFast: boole
     }
 }
 
-function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
+function fastExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitJoinUnit): void {
     const actionExtraData = action.getExtraData();
     if (actionExtraData) {
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war             : war,
-            commonExtraData : getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_FastExeUnitJoinUnit_00),
+            commonExtraData : Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitJoinUnit_00),
             isFastExecute   : true,
             isUnitJoinUnit  : true,
         });
     } else {
-        const path              = MovePath.create(getExisted(action.getPath()));
+        const path              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId      = action.getLaunchUnitId();
         const pathNodes         = path.nodes;
         const endingGridIndex   = pathNodes[pathNodes.length - 1];
         const unitMap           = war.getUnitMap();
-        const focusUnit         = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
 
         if (path.isBlocked) {
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         } else {
-            const targetUnit    = getExisted(unitMap.getUnitOnMap(endingGridIndex));
+            const targetUnit    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(endingGridIndex));
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
             unitMap.removeUnitOnMap(endingGridIndex, true)?.stopRunning();
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             {
-                const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
+                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
@@ -86,7 +70,7 @@ function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
                         unitLoss                    : 1,
                         normalizedHpGain            : 0,
                         normalizedHpLoss            : Math.max(0, normalizedHpLoss),
-                        groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -104,7 +88,7 @@ function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
 
             focusUnit.setCurrentHp(Math.min(
                 focusUnit.getMaxHp(),
-                (focusUnit.getNormalizedCurrentHp() + targetUnit.getNormalizedCurrentHp()) * Hp.Normalizer,
+                (focusUnit.getNormalizedCurrentHp() + targetUnit.getNormalizedCurrentHp()) * Units_Constants.Hp.Normalizer,
             ));
 
             focusUnit.setCurrentFuel(Math.min(
@@ -141,19 +125,19 @@ function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
             focusUnit.setGroupedTagId(focusUnit.getGroupedTagId() | targetUnit.getGroupedTagId());
         }
 
-        handlePostOperationPlunder(focusUnit, true);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, true);
     }
     war.updateTilesAndUnitsOnVisibilityChanged(true);
 }
 
-async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promise<void> {
+async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitJoinUnit): Promise<void> {
     // const desc = await war.getDescForExeUnitJoinUnit(action);
     // (desc) && (FloatText.show(desc));
 
     const unitMap           = war.getUnitMap();
     const actionExtraData   = action.getExtraData();
     if (actionExtraData) {
-        const commonExtraData   = getExisted(actionExtraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_00);
+        const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
             movingUnitAndPath,
@@ -164,13 +148,13 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
         const movingPath    = movingUnitAndPath?.getPath();
         const lastNode      = movingPath ? movingPath[movingPath?.length - 1] : null;
         if ((lastNode?.getIsVisible()) && (!lastNode.getIsBlocked())) {
-            const gridIndex = getExisted(GridIndex.convertGridIndex(lastNode.getGridIndex()), ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_01);
+            const gridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(lastNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitJoinUnit_01);
             if (unitMap.getUnitOnMap(gridIndex)) {
                 unitMap.removeUnitOnMap(gridIndex, true)?.stopRunning();
             }
         }
 
-        handleCommonExtraData({
+        WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war                 : war,
             commonExtraData     : commonExtraData,
             isFastExecute       : false,
@@ -178,16 +162,16 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
         });
 
     } else {
-        const path              = MovePath.create(getExisted(action.getPath()));
+        const path              = AuxiliaryTypes_MovePath.MovePath.create(Helpers_Misc.getExisted(action.getPath()));
         const launchUnitId      = action.getLaunchUnitId();
         const pathNodes         = path.nodes;
         const endingGridIndex   = pathNodes[pathNodes.length - 1];
-        const focusUnit         = getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
+        const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
 
         if (path.isBlocked) {
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             await focusUnit.moveViewAlongPath({
                 pathNodes           : pathNodes,
@@ -199,13 +183,13 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
 
         } else {
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
-            const targetUnit    = getExisted(unitMap.removeUnitOnMap(endingGridIndex, false));
+            const targetUnit    = Helpers_Misc.getExisted(unitMap.removeUnitOnMap(endingGridIndex, false));
             war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
-            focusUnit.setActionState(ActionStateId.Acted);
+            focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             {
-                const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
+                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
@@ -215,7 +199,7 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
                         unitLoss                    : 1,
                         normalizedHpGain            : 0,
                         normalizedHpLoss            : Math.max(0, normalizedHpLoss),
-                        groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
+                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -233,7 +217,7 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
 
             focusUnit.setCurrentHp(Math.min(
                 focusUnit.getMaxHp(),
-                (focusUnit.getNormalizedCurrentHp() + targetUnit.getNormalizedCurrentHp()) * Hp.Normalizer,
+                (focusUnit.getNormalizedCurrentHp() + targetUnit.getNormalizedCurrentHp()) * Units_Constants.Hp.Normalizer,
             ));
 
             focusUnit.setCurrentFuel(Math.min(
@@ -293,29 +277,24 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
             targetUnit.stopRunning();
         }
 
-        handlePostOperationPlunder(focusUnit, false);
+        WarOperations_Executors_Utils_Common.handlePostOperationPlunder(focusUnit, false);
     }
 
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoUnitJoinUnit): Promise<string | null> {
-    _meWarClass     ??= getMeWarClass();
-    _mpwWarClass    ??= getMpwWarClass();
-    _rwWarBaseClass ??= getRwWarBaseClass();
-    _spwWarClass    ??= getSpwWarClass();
-    _twWarClass     ??= getTwWarClass();
+async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitJoinUnit): Promise<string | null> {
 
-    if (war instanceof _meWarClass) {
+    if (war instanceof MapEditor_Model_MeWar.MeWar) {
         return null;
-    } else if (war instanceof _mpwWarClass) {
+    } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return null;
-    } else if (war instanceof _rwWarBaseClass) {
-        return `${getText(TextType.B0103)} ${war.getWarOperationDescSuffix()}`;
-    } else if (war instanceof _spwWarClass) {
+    } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
+        return `${Lang_Utils.getText(Lang_Constants.TextType.B0103)} ${war.getWarOperationDescSuffix()}`;
+    } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         return null;
-    } else if (war instanceof _twWarClass) {
+    } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;
     } else {
         return null;

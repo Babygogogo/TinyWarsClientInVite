@@ -1,125 +1,121 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { ContextType } from "../../expressionParsers/Enums.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Graphics_Constants,
+    ExpressionParsers_Enums,
+    Notifications_Dispatcher,
+    WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr,
+    WarEvents_Actions_Utils_Common,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaSetCustomLaserTurretStateExpr } from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { ExpressionInfoDict } from "../../warEvents/actions/constants/SetCustomLaserTurretStateExpr.ts";
-import {
-    getErrorTipForAction,
-    getBriefDescForAction,
-} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                      : IUiImage;
-    private readonly _group!                                        : IUiContainer;
-    private readonly _labelTitle!                                   : IUiLabel;
-    private readonly _btnType!                                      : IUiButton;
-    private readonly _btnClose!                                     : IUiButton;
-    private readonly _btnIdentifier!                                : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                      : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                                   : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                                      : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                     : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnIdentifier!                                : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                                    : IUiLayout;
-    private readonly _labelDesc!                                    : IUiLabel;
-    private readonly _labelError!                                   : IUiLabel;
+    private readonly _groupDesc!                                    : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                    : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                                   : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _scrExpression!                                : IUiScroller<IUiLayout>;
-    private readonly _groupExpression!                              : IUiLayout;
-    private readonly _groupCon!                                     : IUiLayout;
-    private readonly _groupAct!                                     : IUiLayout;
+    private readonly _scrExpression!                                : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupExpression!                              : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupCon!                                     : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupAct!                                     : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupConTileFilter!                           : IUiContainer;
-    private readonly _groupModifyConTileFilter!                     : IUiContainer;
-    private readonly _btnConTileFilter!                             : IUiButton;
-    private readonly _labelConTileFilter!                           : IUiLabel;
+    private readonly _groupConTileFilter!                           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyConTileFilter!                     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnConTileFilter!                             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelConTileFilter!                           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActRangeForUp!                           : IUiContainer;
-    private readonly _groupModifyActRangeForUp!                     : IUiContainer;
-    private readonly _btnActRangeForUp!                             : IUiButton;
-    private readonly _labelActRangeForUp!                           : IUiLabel;
+    private readonly _groupActRangeForUp!                           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActRangeForUp!                     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActRangeForUp!                             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActRangeForUp!                           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActRangeForDown!                         : IUiContainer;
-    private readonly _groupModifyActRangeForDown!                   : IUiContainer;
-    private readonly _btnActRangeForDown!                           : IUiButton;
-    private readonly _labelActRangeForDown!                         : IUiLabel;
+    private readonly _groupActRangeForDown!                         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActRangeForDown!                   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActRangeForDown!                           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActRangeForDown!                         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActRangeForLeft!                         : IUiContainer;
-    private readonly _groupModifyActRangeForLeft!                   : IUiContainer;
-    private readonly _btnActRangeForLeft!                           : IUiButton;
-    private readonly _labelActRangeForLeft!                         : IUiLabel;
+    private readonly _groupActRangeForLeft!                         : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActRangeForLeft!                   : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActRangeForLeft!                           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActRangeForLeft!                         : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActRangeForRight!                        : IUiContainer;
-    private readonly _groupModifyActRangeForRight!                  : IUiContainer;
-    private readonly _btnActRangeForRight!                          : IUiButton;
-    private readonly _labelActRangeForRight!                        : IUiLabel;
+    private readonly _groupActRangeForRight!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActRangeForRight!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActRangeForRight!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActRangeForRight!                        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActPriority!                             : IUiContainer;
-    private readonly _groupModifyActPriority!                       : IUiContainer;
-    private readonly _btnActPriority!                               : IUiButton;
-    private readonly _labelActPriority!                             : IUiLabel;
+    private readonly _groupActPriority!                             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActPriority!                       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActPriority!                               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActPriority!                             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActCanAffectSelf!                        : IUiContainer;
-    private readonly _groupModifyActCanAffectSelf!                  : IUiContainer;
-    private readonly _btnActCanAffectSelf!                          : IUiButton;
-    private readonly _labelActCanAffectSelf!                        : IUiLabel;
+    private readonly _groupActCanAffectSelf!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActCanAffectSelf!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActCanAffectSelf!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActCanAffectSelf!                        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActCanAffectAlly!                        : IUiContainer;
-    private readonly _groupModifyActCanAffectAlly!                  : IUiContainer;
-    private readonly _btnActCanAffectAlly!                          : IUiButton;
-    private readonly _labelActCanAffectAlly!                        : IUiLabel;
+    private readonly _groupActCanAffectAlly!                        : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActCanAffectAlly!                  : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActCanAffectAlly!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActCanAffectAlly!                        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActCanAffectEnemy!                       : IUiContainer;
-    private readonly _groupModifyActCanAffectEnemy!                 : IUiContainer;
-    private readonly _btnActCanAffectEnemy!                         : IUiButton;
-    private readonly _labelActCanAffectEnemy!                       : IUiLabel;
+    private readonly _groupActCanAffectEnemy!                       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActCanAffectEnemy!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActCanAffectEnemy!                         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActCanAffectEnemy!                       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActOffsetHp!                             : IUiContainer;
-    private readonly _groupModifyActOffsetHp!                       : IUiContainer;
-    private readonly _btnActOffsetHp!                               : IUiButton;
-    private readonly _labelActOffsetHp!                             : IUiLabel;
+    private readonly _groupActOffsetHp!                             : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActOffsetHp!                       : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActOffsetHp!                               : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActOffsetHp!                             : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActCanBeFatal!                           : IUiContainer;
-    private readonly _groupModifyActCanBeFatal!                     : IUiContainer;
-    private readonly _btnActCanBeFatal!                             : IUiButton;
-    private readonly _labelActCanBeFatal!                           : IUiLabel;
+    private readonly _groupActCanBeFatal!                           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActCanBeFatal!                     : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActCanBeFatal!                             : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActCanBeFatal!                           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActOffsetFuelPercentage!                 : IUiContainer;
-    private readonly _groupModifyActOffsetFuelPercentage!           : IUiContainer;
-    private readonly _btnActOffsetFuelPercentage!                   : IUiButton;
-    private readonly _labelActOffsetFuelPercentage!                 : IUiLabel;
+    private readonly _groupActOffsetFuelPercentage!                 : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActOffsetFuelPercentage!           : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActOffsetFuelPercentage!                   : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActOffsetFuelPercentage!                 : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _groupActOffsetPrimaryAmmoPercentage!          : IUiContainer;
-    private readonly _groupModifyActOffsetPrimaryAmmoPercentage!    : IUiContainer;
-    private readonly _btnActOffsetPrimaryAmmoPercentage!            : IUiButton;
-    private readonly _labelActOffsetPrimaryAmmoPercentage!          : IUiLabel;
+    private readonly _groupActOffsetPrimaryAmmoPercentage!          : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _groupModifyActOffsetPrimaryAmmoPercentage!    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _btnActOffsetPrimaryAmmoPercentage!            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelActOffsetPrimaryAmmoPercentage!          : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -186,21 +182,21 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeActionTypeListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
             fullData    : openData.fullData,
             action      : openData.action,
             war         : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
-        openPanel(getDict().CommonApiPanel, {
-            contextType : ContextType.Tile,
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonApiPanel, {
+            contextType : ExpressionParsers_Enums.ContextType.Tile,
         });
     }
 
     private _onTouchedBtnConTileFilter(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ConTileFilter.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ConTileFilter.getHelpText(),
         });
     }
     private _onTouchedGroupModifyConTileFilter(): void {
@@ -214,24 +210,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
-            expressionInfo  : ExpressionInfoDict.ConTileFilter,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ConTileFilter,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActRangeForUp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActRangeForUp.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActRangeForUp(): void {
@@ -245,24 +241,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForUp(),
-            expressionInfo  : ExpressionInfoDict.ActRangeForUp,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForUp() != text) {
                     action.setActRangeForUp(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActRangeForDown(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActRangeForDown.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActRangeForDown(): void {
@@ -276,24 +272,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForDown(),
-            expressionInfo  : ExpressionInfoDict.ActRangeForDown,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForDown() != text) {
                     action.setActRangeForDown(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActRangeForLeft(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActRangeForLeft.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActRangeForLeft(): void {
@@ -307,24 +303,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForLeft(),
-            expressionInfo  : ExpressionInfoDict.ActRangeForLeft,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForLeft() != text) {
                     action.setActRangeForLeft(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActRangeForRight(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActRangeForRight.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActRangeForRight(): void {
@@ -338,24 +334,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForRight(),
-            expressionInfo  : ExpressionInfoDict.ActRangeForRight,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForRight() != text) {
                     action.setActRangeForRight(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActPriority(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActPriority.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActPriority(): void {
@@ -369,24 +365,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActPriority(),
-            expressionInfo  : ExpressionInfoDict.ActPriority,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActPriority() != text) {
                     action.setActPriority(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectSelf(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActCanAffectSelf.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActCanAffectSelf(): void {
@@ -400,24 +396,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectSelf(),
-            expressionInfo  : ExpressionInfoDict.ActCanAffectSelf,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectSelf() != text) {
                     action.setActCanAffectSelf(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectAlly(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActCanAffectAlly.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActCanAffectAlly(): void {
@@ -431,24 +427,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectAlly(),
-            expressionInfo  : ExpressionInfoDict.ActCanAffectAlly,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectAlly() != text) {
                     action.setActCanAffectAlly(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectEnemy(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActCanAffectEnemy.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActCanAffectEnemy(): void {
@@ -462,24 +458,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectEnemy(),
-            expressionInfo  : ExpressionInfoDict.ActCanAffectEnemy,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectEnemy() != text) {
                     action.setActCanAffectEnemy(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetHp(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActOffsetHp.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActOffsetHp(): void {
@@ -493,24 +489,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetHp(),
-            expressionInfo  : ExpressionInfoDict.ActOffsetHp,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetHp() != text) {
                     action.setActOffsetHp(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanBeFatal(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActCanBeFatal.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActCanBeFatal(): void {
@@ -524,24 +520,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanBeFatal(),
-            expressionInfo  : ExpressionInfoDict.ActCanBeFatal,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanBeFatal() != text) {
                     action.setActCanBeFatal(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetFuelPercentage(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActOffsetFuelPercentage.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActOffsetFuelPercentage(): void {
@@ -555,24 +551,24 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetFuelPercentage(),
-            expressionInfo  : ExpressionInfoDict.ActOffsetFuelPercentage,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetFuelPercentage() != text) {
                     action.setActOffsetFuelPercentage(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetPrimaryAmmoPercentage(): void {
-        openPanel(getDict().CommonHelpPanel, {
-            getContent : () => ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getHelpText(),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            getContent : () => WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActOffsetPrimaryAmmoPercentage(): void {
@@ -586,19 +582,19 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputExpressionPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo  : ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            expressionInfo  : WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
             fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetPrimaryAmmoPercentage() != text) {
                     action.setActOffsetPrimaryAmmoPercentage(text);
-                    dispatch(TypeId.WarEventFullDataChanged);
+                    Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     private _updateView(): void {
@@ -610,24 +606,24 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setLangText(TextType.B0146);
-        this._btnType.setLangText(TextType.B0516);
-        this._btnIdentifier.setLangText(TextType.B0131);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0146);
+        this._btnType.setLangText(Lang_Constants.TextType.B0516);
+        this._btnIdentifier.setLangText(Lang_Constants.TextType.B0131);
 
-        this._btnConTileFilter.setText(ExpressionInfoDict.ConTileFilter.getTitleText());
-        this._btnActRangeForUp.setText(ExpressionInfoDict.ActRangeForUp.getTitleText());
-        this._btnActRangeForDown.setText(ExpressionInfoDict.ActRangeForDown.getTitleText());
-        this._btnActRangeForLeft.setText(ExpressionInfoDict.ActRangeForLeft.getTitleText());
-        this._btnActRangeForRight.setText(ExpressionInfoDict.ActRangeForRight.getTitleText());
-        this._btnActPriority.setText(ExpressionInfoDict.ActPriority.getTitleText());
-        this._btnActCanAffectSelf.setText(ExpressionInfoDict.ActCanAffectSelf.getTitleText());
-        this._btnActCanAffectAlly.setText(ExpressionInfoDict.ActCanAffectAlly.getTitleText());
-        this._btnActCanAffectEnemy.setText(ExpressionInfoDict.ActCanAffectEnemy.getTitleText());
-        this._btnActOffsetHp.setText(ExpressionInfoDict.ActOffsetHp.getTitleText());
-        this._btnActCanBeFatal.setText(ExpressionInfoDict.ActCanBeFatal.getTitleText());
-        this._btnActOffsetFuelPercentage.setText(ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText());
-        this._btnActOffsetPrimaryAmmoPercentage.setText(ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText());
+        this._btnConTileFilter.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ConTileFilter.getTitleText());
+        this._btnActRangeForUp.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp.getTitleText());
+        this._btnActRangeForDown.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown.getTitleText());
+        this._btnActRangeForLeft.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft.getTitleText());
+        this._btnActRangeForRight.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight.getTitleText());
+        this._btnActPriority.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority.getTitleText());
+        this._btnActCanAffectSelf.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf.getTitleText());
+        this._btnActCanAffectAlly.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly.getTitleText());
+        this._btnActCanAffectEnemy.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy.getTitleText());
+        this._btnActOffsetHp.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp.getTitleText());
+        this._btnActCanBeFatal.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal.getTitleText());
+        this._btnActOffsetFuelPercentage.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText());
+        this._btnActOffsetPrimaryAmmoPercentage.setText(WarEvents_Actions_Constants_SetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText());
 
         this._updateLabelDescAndLabelError();
     }
@@ -640,11 +636,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
-        this._labelDesc.setText(getBriefDescForAction(action, war.getGcData()) || UndefinedError);
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Red : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -729,7 +725,7 @@ export class Panel extends UiPanel<OpenData> {
         scrExpression.setUnscaledManualHeight(Math.min(380, groupExpression.getScaledHeight()));
     }
 
-    private getAction(): Undefinable<WeaSetCustomLaserTurretStateExpr> {
+    private getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateExpr> {
         return this.getOpenData()?.action.getWeaSetCustomLaserTurretStateExpr();
     }
 }

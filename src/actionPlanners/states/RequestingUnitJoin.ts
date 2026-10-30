@@ -1,36 +1,37 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
 import {
-    getMpwWarClass,
-    getSpwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import { newError } from "../../helpers/Misc.ts";
-import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
-import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { reqUnitJoin } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
+    MultiPlayerWar_Model_MpwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    MultiPlayerWar_Model_MpwProxy,
+    SinglePlayerWar_Model_SpwLocalProxy,
+} from "../../internal.ts";
 
-export class RequestingUnitJoin implements IState {
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+
+export class RequestingUnitJoin implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new RequestingUnitJoin();
 
     public static getInstance(): RequestingUnitJoin {
         return RequestingUnitJoin._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.RequestingUnitJoin;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.RequestingUnitJoin;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(): StateId {
+    public getNextStateIdOnTap(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
@@ -41,21 +42,21 @@ export class RequestingUnitJoin implements IState {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public doApplyOnTap(): void {
-        throw newError(`Not expected to apply on tap!`);
+        throw Helpers_Misc.newError(`Not expected to apply on tap!`);
     }
 
     public doApplyOnDrag(): void {
-        throw newError(`Not expected to apply on drag!`);
+        throw Helpers_Misc.newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`RequestingUnitJoinState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`RequestingUnitJoinState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const war = actionPlanner.getWar();
-        if (war instanceof getMpwWarClass()) {
-            reqMpwExecuteWarOperation(war, WoContainer.fromJson({
+        if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
+            MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitJoinUnit  : {
                     path    : {
@@ -65,14 +66,14 @@ export class RequestingUnitJoin implements IState {
                 },
             }));
 
-            actionPlanner.setStateId(StateId.RequestingUnitJoin);
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitJoin);
             actionPlanner.updateView();
 
-        } else if (war instanceof getSpwWarClass()) {
-            actionPlanner.setStateId(StateId.RequestingUnitJoin);
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            actionPlanner.setStateId(ActionPlanners_Constants.StateId.RequestingUnitJoin);
             actionPlanner.updateView();
 
-            reqUnitJoin(
+            SinglePlayerWar_Model_SpwLocalProxy.reqUnitJoin(
                 war,
                 actionPlanner.generateProtoMovePath(),
                 actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null

@@ -1,49 +1,48 @@
-import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { show } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+    GamePanels_Dict,
+    Lang_Utils,
+    Helpers_Collection,
+    AuxiliaryTypes_GridIndex,
+    GamePanels_Manager,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiListItemRenderer,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScrollList,
+    type AuxiliaryTypes_MapSize,
+    type Ui_Types_UiListItemData,
+} from "../../internal.ts";
 
 export interface OpenData {
-    currentGridIndexArray   : GridIndex[];
-    mapSize                 : MapSize;
-    callbackOnConfirm       : (teamIndexArray: GridIndex[]) => void;
+    currentGridIndexArray   : AuxiliaryTypes_GridIndex.GridIndex[];
+    mapSize                 : AuxiliaryTypes_MapSize.MapSize;
+    callbackOnConfirm       : (teamIndexArray: AuxiliaryTypes_GridIndex.GridIndex[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private readonly _layoutTitle!      : IUiLayout;
-    private readonly _labelTitle!       : IUiLabel;
-    private readonly _labelMapSize!     : IUiLabel;
+    private readonly _layoutTitle!      : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelMapSize!     : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnClose!         : IUiButton;
-    private readonly _btnAdd!           : IUiButton;
-    private readonly _btnDeleteAll!     : IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnAdd!           : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnDeleteAll!     : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _listLocation!     : IUiScrollList<DataForLocationRenderer>;
+    private readonly _listLocation!     : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForLocationRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnAdd,             callback: this._onTouchedBtnAdd },
@@ -52,7 +51,7 @@ export class Panel extends UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel(() => {
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -70,9 +69,9 @@ export class Panel extends UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public async updateOnDeleteGridIndex(gridIndex: GridIndex): Promise<void> {
+    public async updateOnDeleteGridIndex(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Promise<void> {
         const list      = this._listLocation;
-        const dataArray = getNonNullElements(list.getBoundDataArray() ?? []);
+        const dataArray = Helpers_Collection.getNonNullElements(list.getBoundDataArray() ?? []);
         await list.bindData(dataArray.filter(v => !gridIndex.checkIsEqual(v.gridIndex)));
     }
 
@@ -82,23 +81,23 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => getText(TextType.B1071),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
             minValue        : 0,
             maxValue        : mapSize.getWidth() - 1,
             currentValue    : 0,
             callback        : x => {
-                openPanel(getDict().CommonInputIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1072),
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                    getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
                     minValue        : 0,
                     maxValue        : mapSize.getHeight() - 1,
                     currentValue    : 0,
                     callback        : async y => {
                         const list              = this._listLocation;
-                        const gridIndexArray    = getNonNullElements(list.getBoundDataArray()?.map(v => v?.gridIndex) ?? []);
-                        const gridIndex         = new GridIndex(x, y);
+                        const gridIndexArray    = Helpers_Collection.getNonNullElements(list.getBoundDataArray()?.map(v => v?.gridIndex) ?? []);
+                        const gridIndex         = new AuxiliaryTypes_GridIndex.GridIndex(x, y);
                         if (gridIndexArray.some(v => v.checkIsEqual(gridIndex))) {
-                            show(getText(TextType.A0268));
+                            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0268));
                             return;
                         }
 
@@ -110,18 +109,18 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeleteAll(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.A0851),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0851),
             callback: () => this._listLocation.removeAllItems(),
         });
     }
     private _onTouchedBtnClose(): void {
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent             : () => getText(TextType.A0418),
-            getTextForConfirm      : () => getText(TextType.Yes),
-            getTextForCancel       : () => getText(TextType.No),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
+            getTextForConfirm      : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
+            getTextForCancel       : () => Lang_Utils.getText(Lang_Constants.TextType.No),
             callback            : () => {
-                this.getOpenData()?.callbackOnConfirm(getNonNullElements(this._listLocation.getBoundDataArray()?.map(v => v?.gridIndex) ?? []).sort(gridIndexSorter));
+                this.getOpenData()?.callbackOnConfirm(Helpers_Collection.getNonNullElements(this._listLocation.getBoundDataArray()?.map(v => v?.gridIndex) ?? []).sort(gridIndexSorter));
                 this.closePanel();
             },
             callbackOnCancel    : () => this.closePanel(),
@@ -134,9 +133,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getFormattedText(TextType.F0092, getText(TextType.B0531)));
-        this._btnAdd.setLangText(TextType.B0320);
-        this._btnDeleteAll.setLangText(TextType.B0762);
+        this._labelTitle.setText(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0531)));
+        this._btnAdd.setLangText(Lang_Constants.TextType.B0320);
+        this._btnDeleteAll.setLangText(Lang_Constants.TextType.B0762);
         this._layoutTitle.arrangeItems();
 
         this._updateLabelMapSize();
@@ -156,25 +155,25 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateLabelMapSize(): void {
         const mapSize = this.getOpenData()?.mapSize;
-        this._labelMapSize.setText(`(${getText(TextType.B0300)}: ${mapSize?.getWidth()} x ${mapSize?.getHeight()})`);
+        this._labelMapSize.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0300)}: ${mapSize?.getWidth()} x ${mapSize?.getHeight()})`);
         this._layoutTitle.arrangeItems();
     }
 }
 
-interface DataForLocationRenderer extends UiListItemData {
-    gridIndex   : GridIndex;
+interface DataForLocationRenderer extends Ui_Types_UiListItemData.UiListItemData {
+    gridIndex   : AuxiliaryTypes_GridIndex.GridIndex;
     panel       : Panel;
 }
-class GridIndexRenderer extends UiListItemRenderer<DataForLocationRenderer> {
-    private readonly _btnDelete!    : IUiButton;
-    private readonly _labelName!    : IUiLabel;
+class GridIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForLocationRenderer> {
+    private readonly _btnDelete!    : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnDelete, callback: this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -186,8 +185,8 @@ class GridIndexRenderer extends UiListItemRenderer<DataForLocationRenderer> {
             return;
         }
 
-        openPanel(getDict().CommonConfirmPanel, {
-            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 openData.panel.updateOnDeleteGridIndex(openData.gridIndex);
             },
@@ -203,11 +202,11 @@ class GridIndexRenderer extends UiListItemRenderer<DataForLocationRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setLangText(TextType.B0220);
+        this._btnDelete.setLangText(Lang_Constants.TextType.B0220);
     }
 }
 
-function gridIndexSorter(g1: GridIndex, g2: GridIndex): number {
+function gridIndexSorter(g1: AuxiliaryTypes_GridIndex.GridIndex, g2: AuxiliaryTypes_GridIndex.GridIndex): number {
     const x1 = g1.getX();
     const x2 = g2.getX();
     if (x1 !== x2) {

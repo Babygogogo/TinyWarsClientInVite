@@ -1,9 +1,8 @@
-import { newError } from "../helpers/Misc.ts";
 import {
-    MinInt32,
-    MaxInt32,
-} from "./Constants.ts";
-import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+    Utils_ClientErrorCode,
+    Numbers_Constants,
+    Helpers_Misc,
+} from "../internal.ts";
 
 export function getValueInRange({ minValue, maxValue, rawValue }: {
     minValue    : number;
@@ -11,7 +10,7 @@ export function getValueInRange({ minValue, maxValue, rawValue }: {
     rawValue    : number;
 }): number {
     if (minValue > maxValue) {
-        throw newError(`Helpers.getValueInRange() invalid minValue and maxValue: ${minValue}, ${maxValue}`, ClientErrorCode.Helpers_GetValueInRange_00);
+        throw Helpers_Misc.newError(`Helpers.getValueInRange() invalid minValue and maxValue: ${minValue}, ${maxValue}`, Utils_ClientErrorCode.ClientErrorCode.Helpers_GetValueInRange_00);
     }
 
     if (rawValue > maxValue) {
@@ -24,8 +23,8 @@ export function getValueInRange({ minValue, maxValue, rawValue }: {
 }
 export function getValueInInt32(rawValue: number): number {
     return getValueInRange({
-        minValue    : MinInt32,
-        maxValue    : MaxInt32,
+        minValue    : Numbers_Constants.MinInt32,
+        maxValue    : Numbers_Constants.MaxInt32,
         rawValue    : Math.floor(rawValue),
     });
 }

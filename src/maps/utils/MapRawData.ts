@@ -1,40 +1,37 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { getErrorCode as getMapSmallDialogueErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
-import { Common } from "../Constants.ts";
-import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import {
-    getLanguageText,
-    checkIsValidLanguageTextArray,
-} from "../../lang/Utils.ts";
-import { PlayerIndex } from "../../players/Constants.ts";
+    Maps_Constants,
+    GameConfigs_Provider,
+    Dialogues_Utils_MapSmallDialogue,
+    AuxiliaryTypes_MapSize,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    Units_Utils_Common,
+    Lang_Utils,
+    Utils_ClientErrorCode,
+    WarEvents_FullDatas_Utils,
+    TaskObjectives_Utils,
+    WarRules_Utils_Template,
+    Tiles_Utils_CustomName,
+    Units_Utils_CustomName,
+    Players_Constants,
+} from "../../internal.ts";
+
 import type { MapExtraText } from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import { getErrorCodeForFullData } from "../../taskObjectives/Utils.ts";
-import { getErrorCodeForTileCustomNameArray } from "../../tiles/utils/CustomName.ts";
-import { checkIsUnitIdCompact } from "../../units/utils/Common.ts";
-import { getErrorCodeForUnitCustomNameArray } from "../../units/utils/CustomName.ts";
-import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import {
-    getAllWarEventIdArray,
-    getErrorCodeForWarEventFullData,
-} from "../../warEvents/fullDatas/Utils.ts";
-import { getErrorCodeForTemplateWarRuleArray } from "../../warRules/utils/Template.ts";
 
 /** 此函数允许 WarRuleAvailability 全空 */
 export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowRedundantMapSimpleDialogues }: {
     mapRawData                          : MapRawData;
     allowRedundantWarEvents             : boolean;
     allowRedundantMapSimpleDialogues    : boolean;
-}): Promise<ClientErrorCode> {
-    const gameConfig = await getLatestGameConfig();
+}): Promise<Utils_ClientErrorCode.ClientErrorCode> {
+    const gameConfig = await GameConfigs_Provider.getLatestGameConfig();
     if (gameConfig == null) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_00;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_00;
     }
 
     const designerNameError = getErrorCodeForMapDesigner(mapRawData.getDesignerName());
@@ -63,14 +60,14 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
     }
 
     {
-        const errorCode = getErrorCodeForTileCustomNameArray(mapRawData.getTileCustomNameArray());
+        const errorCode = Tiles_Utils_CustomName.getErrorCodeForTileCustomNameArray(mapRawData.getTileCustomNameArray());
         if (errorCode) {
             return errorCode;
         }
     }
 
     {
-        const errorCode = getErrorCodeForUnitCustomNameArray(mapRawData.getUnitCustomNameArray());
+        const errorCode = Units_Utils_CustomName.getErrorCodeForUnitCustomNameArray(mapRawData.getUnitCustomNameArray());
         if (errorCode) {
             return errorCode;
         }
@@ -78,24 +75,24 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
 
     const playersCountUnneutral = mapRawData.getPlayersCountUnneutral();
     if (playersCountUnneutral == null) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_02;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_02;
     }
 
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (!templateWarRuleArray?.length) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_03;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_03;
     }
 
     const isCampaignMap = mapRawData.getCampaignMapData() != null;
-    if ((isCampaignMap) && (!getLanguageText({ textArray: mapRawData.getMapExtraText()?.getMapDescription() }))) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_04;
+    if ((isCampaignMap) && (!Lang_Utils.getLanguageText({ textArray: mapRawData.getMapExtraText()?.getMapDescription() }))) {
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_04;
     }
 
     const warEventFullData  = mapRawData.getWarEventFullData();
-    const warRuleError      = getErrorCodeForTemplateWarRuleArray({
+    const warRuleError      = WarRules_Utils_Template.getErrorCodeForTemplateWarRuleArray({
         templateWarRuleArray        : templateWarRuleArray,
         playersCountUnneutral       : mapRawData.getPlayersCountUnneutral(),
-        allWarEventIdArray          : getAllWarEventIdArray(warEventFullData),
+        allWarEventIdArray          : WarEvents_FullDatas_Utils.getAllWarEventIdArray(warEventFullData),
         gameConfig                  : gameConfig,
         allMapSimpleDialogueIdArray : mapRawData.getMapSimpleDialogueArray()?.map(v => v.getDialogueId()),
         isCampaignMap               : isCampaignMap,
@@ -105,34 +102,34 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         return warRuleError;
     }
 
-    const mapSize = MapSize.createWithMapRawData(mapRawData);
+    const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithMapRawData(mapRawData);
     if (mapSize == null) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_05;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_05;
     }
 
-    const warEventError = getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, mapSize, playersCountUnneutral });
+    const warEventError = WarEvents_FullDatas_Utils.getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, mapSize, playersCountUnneutral });
     if (warEventError) {
         return warEventError;
     }
 
     if ((!allowRedundantWarEvents) && (!checkIsEveryWarEventInUse(warEventFullData, templateWarRuleArray))) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_06;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_06;
     }
 
     {
         const mapSimpleDialogueArray    = mapRawData.getMapSimpleDialogueArray();
         const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId());
         if (mapSimpleDialogueArray.length != new Set(simpleDialogueIdArray).size) {
-            return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_07;
+            return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_07;
         }
         if ((!allowRedundantMapSimpleDialogues)                                                                                     &&
             (simpleDialogueIdArray.some(v => !templateWarRuleArray.some(r => r.getMapSimpleDialogueIdArray().indexOf(v) >= 0)))
         ) {
-            return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_08;
+            return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_08;
         }
 
         for (const mapSimpleDialogue of mapSimpleDialogueArray) {
-            const errorCode = getMapSmallDialogueErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
+            const errorCode = Dialogues_Utils_MapSmallDialogue.getErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
             if (errorCode) {
                 return errorCode;
             }
@@ -142,7 +139,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
     {
         const taskObjectiveFullData = mapRawData.getTaskObjectiveFullData();
         if (taskObjectiveFullData != null) {
-            const errorCode = getErrorCodeForFullData(
+            const errorCode = TaskObjectives_Utils.getErrorCodeForFullData(
                 taskObjectiveFullData,
                 new Set(mapRawData.getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``))
             );
@@ -152,93 +149,93 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         }
     }
 
-    return await new (getTwWarClass())().getErrorCodeForInitByMapRawData(mapRawData, gameConfig);
+    return await new TestWar_Model_TwWar.TwWar().getErrorCodeForInitByMapRawData(mapRawData, gameConfig);
 }
-function getErrorCodeForMapDesigner(mapDesigner: Undefinable<string>): ClientErrorCode {
+function getErrorCodeForMapDesigner(mapDesigner: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>): Utils_ClientErrorCode.ClientErrorCode {
     if ((mapDesigner == null)                                       ||
         (mapDesigner.length <= 0)                                   ||
-        (mapDesigner.length > Common.MaxDesignerLength)
+        (mapDesigner.length > Maps_Constants.Common.MaxDesignerLength)
     ) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapDesigner_00;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapDesigner_00;
     } else {
-        return ClientErrorCode.NoError;
+        return Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 }
-function getErrorCodeForMapNameArray(mapNameList: Undefinable<LanguageText[]>): ClientErrorCode {
-    if (!checkIsValidLanguageTextArray({
+function getErrorCodeForMapNameArray(mapNameList: AuxiliaryTypes_AuxiliaryTypes.Undefinable<LanguageText[]>): Utils_ClientErrorCode.ClientErrorCode {
+    if (!Lang_Utils.checkIsValidLanguageTextArray({
         list            : mapNameList ?? [],
-        maxTextLength   : Common.MaxNameLength,
+        maxTextLength   : Maps_Constants.Common.MaxNameLength,
         minTextLength   : 1,
         minTextCount    : 1,
     })) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapNameArray_00;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapNameArray_00;
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
-function getErrorCodeForMapExtraText(mapExtraText: Undefinable<MapExtraText>): ClientErrorCode {
+function getErrorCodeForMapExtraText(mapExtraText: AuxiliaryTypes_AuxiliaryTypes.Undefinable<MapExtraText>): Utils_ClientErrorCode.ClientErrorCode {
     if (mapExtraText == null) {
-        return ClientErrorCode.NoError;
+        return Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 
     const mapDescription = mapExtraText.getMapDescription();
     if ((mapDescription?.length)                &&
-        (!checkIsValidLanguageTextArray({
+        (!Lang_Utils.checkIsValidLanguageTextArray({
             list            : mapDescription,
             minTextCount    : 1,
             minTextLength   : 1,
-            maxTextLength   : Common.MaxDescLength,
+            maxTextLength   : Maps_Constants.Common.MaxDescLength,
         }))
     ) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForMapExtraText_00;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapExtraText_00;
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
-function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawData): ClientErrorCode {
+function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawData): Utils_ClientErrorCode.ClientErrorCode {
     const playersCountUnneutral = mapRawData.getPlayersCountUnneutral();
     if ((playersCountUnneutral == null)                                 ||
-        (playersCountUnneutral <= PlayerIndex.First)  ||
-        (playersCountUnneutral > PlayerIndex.Max)
+        (playersCountUnneutral <= Players_Constants.PlayerIndex.First)  ||
+        (playersCountUnneutral > Players_Constants.PlayerIndex.Max)
     ) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_00;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_00;
     }
 
     const playerIndexSet = new Set<number>();
     for (const tileData of mapRawData.getTileDataArray()) {
         const playerIndex = tileData.getPlayerIndex();
-        if ((playerIndex < PlayerIndex.Neutral)   ||
+        if ((playerIndex < Players_Constants.PlayerIndex.Neutral)   ||
             (playerIndex > playersCountUnneutral)
         ) {
-            return ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_01;
+            return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_01;
         }
         playerIndexSet.add(playerIndex);
     }
     for (const unitData of mapRawData.getUnitDataArray()) {
         const playerIndex = unitData.getPlayerIndex();
-        if ((playerIndex < PlayerIndex.First)     ||
+        if ((playerIndex < Players_Constants.PlayerIndex.First)     ||
             (playerIndex > playersCountUnneutral)
         ) {
-            return ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_02;
+            return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_02;
         }
         playerIndexSet.add(playerIndex);
     }
 
     for (const playerIndex of playerIndexSet) {
-        if ((playerIndex > PlayerIndex.First) &&
+        if ((playerIndex > Players_Constants.PlayerIndex.First) &&
             (!playerIndexSet.has(playerIndex - 1))
         ) {
-            return ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_03;
+            return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_03;
         }
     }
 
     if (Math.max(...playerIndexSet) !== playersCountUnneutral) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_04;
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForPlayersCountUnneutral_04;
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }
-function checkIsEveryWarEventInUse(warEventFullData: Undefinable<WarEventFullData>, templateWarRuleArray: TemplateWarRule[]): boolean {  // DONE
+function checkIsEveryWarEventInUse(warEventFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WarEventFullData>, templateWarRuleArray: TemplateWarRule[]): boolean {  // DONE
     const eventArray = warEventFullData?.getEventArray();
     return (!eventArray?.length)
         || (eventArray.every(warEvent => {
@@ -246,10 +243,10 @@ function checkIsEveryWarEventInUse(warEventFullData: Undefinable<WarEventFullDat
             return (eventId != null) && (templateWarRuleArray.some(v => (v.getWarEventIdArray().indexOf(eventId)) >= 0));
         }));
 }
-function getErrorCodeForUnitArray(unitArray: Undefinable<SerialUnit[]>): ClientErrorCode {
-    if (!checkIsUnitIdCompact(unitArray?.map(v => v.getUnitId()) ?? [])) {
-        return ClientErrorCode.MeHelpers_GetErrorCodeForUnitArray_00;
+function getErrorCodeForUnitArray(unitArray: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialUnit[]>): Utils_ClientErrorCode.ClientErrorCode {
+    if (!Units_Utils_Common.checkIsUnitIdCompact(unitArray?.map(v => v.getUnitId()) ?? [])) {
+        return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForUnitArray_00;
     }
 
-    return ClientErrorCode.NoError;
+    return Utils_ClientErrorCode.ClientErrorCode.NoError;
 }

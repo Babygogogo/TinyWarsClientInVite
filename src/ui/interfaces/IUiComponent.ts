@@ -1,25 +1,24 @@
-import type { Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { MouseStyleType } from "../../helpers/PointerInput.ts";
-import type { IUiEventAgent } from "./IUiEventAgent.ts";
-import type { IUiSizerInfo } from "./IUiSizerInfo.ts";
-import type { IUiSkinInfo } from "./IUiSkinInfo.ts";
-import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-import type {
-    DisplayObjectContainer,
-    Point,
-} from "../../egret/Egret.ts";
+import {
+    type Egret_Egret,
+    type Ui_Interfaces_IUiEventAgent,
+    type Ui_Interfaces_IUiSizerInfo,
+    type Ui_Interfaces_IUiSkinInfo,
+    type Helpers_PointerInput,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Ui_Types_UiSkinAttrs,
+} from "../../internal.ts";
 
 export interface IUiComponent {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // event
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getEventAgent(): IUiEventAgent;
+    getEventAgent(): Ui_Interfaces_IUiEventAgent.IUiEventAgent;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // sizer
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkAndInitSizerInfo(): IUiSizerInfo;
-    getSizerInfo(): IUiSizerInfo | undefined;
+    checkAndInitSizerInfo(): Ui_Interfaces_IUiSizerInfo.IUiSizerInfo;
+    getSizerInfo(): Ui_Interfaces_IUiSizerInfo.IUiSizerInfo | undefined;
     destroySizerInfo(): void;
 
     applySizeFromSizerInfo(width: number | undefined, height: number | undefined): boolean;
@@ -31,10 +30,10 @@ export interface IUiComponent {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // skin
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    checkAndInitSkinInfo(): IUiSkinInfo;
-    getSkinInfo(): IUiSkinInfo | undefined;
+    checkAndInitSkinInfo(): Ui_Interfaces_IUiSkinInfo.IUiSkinInfo;
+    getSkinInfo(): Ui_Interfaces_IUiSkinInfo.IUiSkinInfo | undefined;
 
-    loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void;
+    loadSkinAttrs(oldSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined, newSkinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void;
     updateOnLoadedSkinChildren?(): void;
     updateOnLoadedSkin?(): void;
 
@@ -43,12 +42,12 @@ export interface IUiComponent {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     getIsTouchEnabled(): boolean;
     setIsTouchEnabled(enabled: boolean): void;
-    getMouseStyle(): MouseStyleType | undefined;
-    setMouseStyle(style: MouseStyleType): void;
-    getParent(): DisplayObjectContainer | undefined | null;
-    getAabbToParent(): Rectangle;
-    localToGlobal(x: number, y: number, resultPoint?: Point): Point;
-    globalToLocal(x: number, y: number, resultPoint?: Point): Point;
+    getMouseStyle(): Helpers_PointerInput.MouseStyleType | undefined;
+    setMouseStyle(style: Helpers_PointerInput.MouseStyleType): void;
+    getParent(): Egret_Egret.DisplayObjectContainer | undefined | null;
+    getAabbToParent(): AuxiliaryTypes_AuxiliaryTypes.Rectangle;
+    localToGlobal(x: number, y: number, resultPoint?: Egret_Egret.Point): Egret_Egret.Point;
+    globalToLocal(x: number, y: number, resultPoint?: Egret_Egret.Point): Egret_Egret.Point;
 
     getX(): number;
     setX(x: number): void;

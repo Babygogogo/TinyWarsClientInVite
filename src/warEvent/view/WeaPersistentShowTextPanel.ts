@@ -1,72 +1,61 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList } from "../../helpers/Collection.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getCurrentLanguageType,
-    getText,
-    getFormattedText,
-    getSecondaryLanguageType,
-    getLanguageTypeName,
-    getLanguageText,
-} from "../../lang/Utils.ts";
-import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Graphics_Constants,
+    WarEvents_Actions_Constants_PersistentShowText,
+    Helpers_Collection,
+    Notifications_Dispatcher,
+    WarEvents_Actions_Utils_Common,
+    Lang_Utils,
+    GamePanels_Dict,
+    GamePanels_Manager,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type MapEditor_Interface_IMeWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiLayout,
+    type Ui_Interfaces_IUiScroller,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaPersistentShowText } from "../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { Common } from "../../warEvents/actions/constants/PersistentShowText.ts";
-import {
-    getErrorTipForAction,
-    getBriefDescForAction,
-} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
-    war         : IMeWar;
+    war         : MapEditor_Interface_IMeWar.IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnType!                                  : IUiButton;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnType!                                  : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupDesc!                                : IUiLayout;
-    private readonly _labelDesc!                                : IUiLabel;
-    private readonly _labelError!                               : IUiLabel;
+    private readonly _groupDesc!                                : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _labelDesc!                                : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _labelError!                               : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _scrExpression!                            : IUiScroller<IUiLayout>;
-    private readonly _groupExpression!                          : IUiLayout;
-    private readonly _groupAct!                                 : IUiLayout;
+    private readonly _scrExpression!                            : Ui_Interfaces_IUiScroller.IUiScroller<Ui_Interfaces_IUiLayout.IUiLayout>;
+    private readonly _groupExpression!                          : Ui_Interfaces_IUiLayout.IUiLayout;
+    private readonly _groupAct!                                 : Ui_Interfaces_IUiLayout.IUiLayout;
 
-    private readonly _groupActLang1!                            : IUiContainer;
-    private readonly _labelActLang1!                            : IUiLabel;
-    private readonly _btnActLang1!                              : IUiButton;
+    private readonly _groupActLang1!                            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelActLang1!                            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnActLang1!                              : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _groupActLang2!                            : IUiContainer;
-    private readonly _labelActLang2!                            : IUiLabel;
-    private readonly _btnActLang2!                              : IUiButton;
+    private readonly _groupActLang2!                            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelActLang2!                            : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnActLang2!                              : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -96,7 +85,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeActionTypeListPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
             fullData    : openData.fullData,
             action      : openData.action,
             war         : openData.war,
@@ -109,17 +98,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const languageType1     = getCurrentLanguageType();
+        const languageType1     = Lang_Utils.getCurrentLanguageType();
         const textArray         = action.getTextArray();
         const textData          = textArray.find(v => (v.getLanguageType()) === languageType1);
         const currentText       = textData?.getText();
 
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0455),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0455),
             currentValue    : currentText || ``,
             charRestrict    : null,
-            maxChars        : Common.MaxLength,
-            tips            : getFormattedText(TextType.F0020, Common.MaxLength),
+            maxChars        : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
+            tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
             canBeEmpty      : true,
             isMultiLine     : true,
             callback        : panel => {
@@ -129,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
 
                 if (!text.length) {
-                    deleteElementFromList(textArray, textData);
+                    Helpers_Collection.deleteElementFromList(textArray, textData);
                 } else {
                     if (textData) {
                         textData.setText(text);
@@ -140,7 +129,7 @@ export class Panel extends UiPanel<OpenData> {
                         }));
                     }
                 }
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -150,17 +139,17 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const languageType1     = getSecondaryLanguageType();
+        const languageType1     = Lang_Utils.getSecondaryLanguageType();
         const textArray         = action.getTextArray();
         const textData          = textArray.find(v => (v.getLanguageType()) === languageType1);
         const currentText       = textData?.getText();
 
-        openPanel(getDict().CommonInputPanel, {
-            title           : getText(TextType.B0455),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
+            title           : Lang_Utils.getText(Lang_Constants.TextType.B0455),
             currentValue    : currentText || ``,
             charRestrict    : null,
-            maxChars        : Common.MaxLength,
-            tips            : getFormattedText(TextType.F0020, Common.MaxLength),
+            maxChars        : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
+            tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
             canBeEmpty      : true,
             isMultiLine     : true,
             callback        : panel => {
@@ -170,7 +159,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
 
                 if (!text.length) {
-                    deleteElementFromList(textArray, textData);
+                    Helpers_Collection.deleteElementFromList(textArray, textData);
                 } else {
                     if (textData) {
                         textData.setText(text);
@@ -181,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
                         }));
                     }
                 }
-                dispatch(TypeId.WarEventFullDataChanged);
+                Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -195,11 +184,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(TextType.B0516);
+        this._labelTitle.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(Lang_Constants.TextType.B0516);
 
-        this._btnActLang1.setText(getLanguageTypeName(getCurrentLanguageType()) ?? UndefinedError);
-        this._btnActLang2.setText(getLanguageTypeName(getSecondaryLanguageType()) ?? UndefinedError);
+        this._btnActLang1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
+        this._btnActLang2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
 
         this._updateLabelDescAndLabelError();
     }
@@ -212,11 +201,11 @@ export class Panel extends UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = WarEvents_Actions_Utils_Common.getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || getText(TextType.B0493));
-        labelError.setTextColor(errorTip ? ColorValue.Yellow : ColorValue.Green);
-        this._labelDesc.setText(getBriefDescForAction(action, war.getGcData()) || UndefinedError);
+        labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
+        labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
+        this._labelDesc.setText(WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData()) || Lang_Constants.UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -227,17 +216,17 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const textArray = action.getTextArray();
-        const langType1 = getCurrentLanguageType();
-        const langType2 = getSecondaryLanguageType();
+        const langType1 = Lang_Utils.getCurrentLanguageType();
+        const langType2 = Lang_Utils.getSecondaryLanguageType();
 
         {
             const label = this._labelActLang1;
-            label.setText(getLanguageText({ textArray, languageType: langType1, useAlternate: false }) ?? ``);
+            label.setText(Lang_Utils.getLanguageText({ textArray, languageType: langType1, useAlternate: false }) ?? ``);
             this._groupActLang1.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
         {
             const label = this._labelActLang2;
-            label.setText(getLanguageText({ textArray, languageType: langType2, useAlternate: false }) ?? ``);
+            label.setText(Lang_Utils.getLanguageText({ textArray, languageType: langType2, useAlternate: false }) ?? ``);
             this._groupActLang2.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
 
@@ -249,7 +238,7 @@ export class Panel extends UiPanel<OpenData> {
         scrExpression.setUnscaledManualHeight(Math.min(380, groupExpression.getScaledHeight()));
     }
 
-    private getAction(): Undefinable<WeaPersistentShowText> {
+    private getAction(): AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaPersistentShowText> {
         return this.getOpenData()?.action.getWeaPersistentShowText();
     }
 }

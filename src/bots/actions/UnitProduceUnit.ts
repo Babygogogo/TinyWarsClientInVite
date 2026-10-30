@@ -1,17 +1,16 @@
-import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
-import type { CommonParams } from "../CommonParams.ts";
-import type { ScoreAndAction } from "../Types.ts";
 import {
-    MinValue,
-    MaxValue,
-} from "../../numbers/Constants.ts";
-import { getValueInRange } from "../../numbers/Utils.ts";
+    Timer_TimerModel,
+    Numbers_Utils,
+    Numbers_Constants,
+    type Bots_CommonParams,
+    type Units_IUnit,
+    type AuxiliaryTypes_MovePathNode,
+    type Bots_Types,
+} from "../../internal.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import type { IUnit } from "../../units/IUnit.ts";
 
-export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParams, unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
-    await checkAndCallLater();
+export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_CommonParams.CommonParams, unit: Units_IUnit.IUnit, pathNodes: AuxiliaryTypes_MovePathNode.MovePathNode[]): Promise<Bots_Types.ScoreAndAction | null> {
+    await Timer_TimerModel.checkAndCallLater();
 
     if ((pathNodes.length !== 1) || (unit.getLoaderUnitId() != null)) {
         return null;
@@ -63,9 +62,9 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParam
         return null;
     }
 
-    const score = getValueInRange({
-        minValue    : MinValue,
-        maxValue    : MaxValue,
+    const score = Numbers_Utils.getValueInRange({
+        minValue    : Numbers_Constants.MinValue,
+        maxValue    : Numbers_Constants.MaxValue,
         rawValue    : (
             ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd())) +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(

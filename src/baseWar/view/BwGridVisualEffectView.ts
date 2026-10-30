@@ -1,64 +1,51 @@
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwGridVisualEffect } from "../interface/IBwGridVisualEffect.ts";
-import type { IBwGridVisualEffectView } from "../interface/IBwGridVisualEffectView.ts";
-import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import {
-    getUnitBlock,
-    getArrayUnitDive,
-    getArrayUnitExplosion,
-    getArrayUnitDamage,
-    getUnitSupply,
-    getUnitRepair,
-    getArrayUnitScop,
-    getArrayUnitCop,
-    getArrayTileCharge,
-    getArrayUnitSurface,
-    getArrayCursorAiming,
-} from "../../helpers/ImageSource.ts";
-import { createLazyFunc } from "../../helpers/Misc.ts";
-import { Executor } from "../../tween/Executor.ts";
-import { UiContainer } from "../../ui/components/UiContainer.ts";
-import type { IUiComponent } from "../../ui/interfaces/IUiComponent.ts";
-import {
-    getUiContainerClass,
-    getUiImageClass,
-} from "../../ui/utils/UiFactory.ts";
-import type { DisplayObject } from "../../egret/Egret.ts";
+    Helpers_Misc,
+    Tween_Executor,
+    Helpers_ImageSource,
+    Graphics_Utils,
+    Ui_Components_UiContainer,
+    Ui_Components_UiImage,
+    type AuxiliaryTypes_GridIndex,
+    type BaseWar_Interface_IBwGridVisualEffect,
+    type BaseWar_Interface_IBwGridVisualEffectView,
+    type Ui_Interfaces_IUiComponent,
+    type Egret_Egret,
+} from "../../internal.ts";
 
-const getGridWidth                      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight                     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
-const getBlockOffsetX                   = createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
-const getBlockOffsetY                   = createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
-const getDiveOffsetX                    = createLazyFunc(() => -getGridWidth());
-const getDiveOffsetY                    = createLazyFunc(() => -getGridHeight());
-const getExplosionOffsetX               = createLazyFunc(() => -getGridWidth());
-const getExplosionOffsetY               = createLazyFunc(() => -getGridHeight() * 2);
-const getDamageOffsetX                  = createLazyFunc(() => -getGridWidth());
-const getDamageOffsetY                  = createLazyFunc(() => -getGridHeight());
-const getSupplyOffsetX                  = createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
-const getSupplyOffsetY                  = createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
-const getRepairOffsetX                  = createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
-const getRepairOffsetY                  = createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
-const getCoPowerActivationOffsetX       = createLazyFunc(() => - getGridWidth() / 6 * 5);
-const getCoPowerActivationOffsetY       = createLazyFunc(() => - getGridHeight() / 6 * 5);
-const getCoSuperPowerActivationOffsetX  = createLazyFunc(() => - getGridWidth() / 6 * 11);
-const getCoSuperPowerActivationOffsetY  = createLazyFunc(() => - getGridHeight() / 6 * 11);
-const getAimingFrameDuration            = createLazyFunc(() => 100);
+const getGridWidth                      = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight                     = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig().gridHeight);
+const getBlockOffsetX                   = Helpers_Misc.createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
+const getBlockOffsetY                   = Helpers_Misc.createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
+const getDiveOffsetX                    = Helpers_Misc.createLazyFunc(() => -getGridWidth());
+const getDiveOffsetY                    = Helpers_Misc.createLazyFunc(() => -getGridHeight());
+const getExplosionOffsetX               = Helpers_Misc.createLazyFunc(() => -getGridWidth());
+const getExplosionOffsetY               = Helpers_Misc.createLazyFunc(() => -getGridHeight() * 2);
+const getDamageOffsetX                  = Helpers_Misc.createLazyFunc(() => -getGridWidth());
+const getDamageOffsetY                  = Helpers_Misc.createLazyFunc(() => -getGridHeight());
+const getSupplyOffsetX                  = Helpers_Misc.createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
+const getSupplyOffsetY                  = Helpers_Misc.createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
+const getRepairOffsetX                  = Helpers_Misc.createLazyFunc(() => Math.floor(getGridWidth() * 0.3));
+const getRepairOffsetY                  = Helpers_Misc.createLazyFunc(() => Math.floor(getGridHeight() * 0.3));
+const getCoPowerActivationOffsetX       = Helpers_Misc.createLazyFunc(() => - getGridWidth() / 6 * 5);
+const getCoPowerActivationOffsetY       = Helpers_Misc.createLazyFunc(() => - getGridHeight() / 6 * 5);
+const getCoSuperPowerActivationOffsetX  = Helpers_Misc.createLazyFunc(() => - getGridWidth() / 6 * 11);
+const getCoSuperPowerActivationOffsetY  = Helpers_Misc.createLazyFunc(() => - getGridHeight() / 6 * 11);
+const getAimingFrameDuration            = Helpers_Misc.createLazyFunc(() => 100);
 
-export class BwGridVisualEffectView extends UiContainer implements IBwGridVisualEffectView {
-    private _gridVisualEffect!          : IBwGridVisualEffect;
+export class BwGridVisualEffectView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView {
+    private _gridVisualEffect!          : BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect;
 
-    private _layerForBlock              = new (getUiContainerClass())();
-    private _layerForDive               = new (getUiContainerClass())();
-    private _layerForSurface            = new (getUiContainerClass())();
-    private _layerForExplosion          = new (getUiContainerClass())();
-    private _layerForDamage             = new (getUiContainerClass())();
-    private _layerForFlare              = new (getUiContainerClass())();
-    private _layerForSupply             = new (getUiContainerClass())();
-    private _layerForRepair             = new (getUiContainerClass())();
-    private _layerForSkillActivation    = new (getUiContainerClass())();
-    private _layerForCharge             = new (getUiContainerClass())();
-    private _layerForAiming             = new (getUiContainerClass())();
+    private _layerForBlock              = new Ui_Components_UiContainer.UiContainer();
+    private _layerForDive               = new Ui_Components_UiContainer.UiContainer();
+    private _layerForSurface            = new Ui_Components_UiContainer.UiContainer();
+    private _layerForExplosion          = new Ui_Components_UiContainer.UiContainer();
+    private _layerForDamage             = new Ui_Components_UiContainer.UiContainer();
+    private _layerForFlare              = new Ui_Components_UiContainer.UiContainer();
+    private _layerForSupply             = new Ui_Components_UiContainer.UiContainer();
+    private _layerForRepair             = new Ui_Components_UiContainer.UiContainer();
+    private _layerForSkillActivation    = new Ui_Components_UiContainer.UiContainer();
+    private _layerForCharge             = new Ui_Components_UiContainer.UiContainer();
+    private _layerForAiming             = new Ui_Components_UiContainer.UiContainer();
 
     public constructor() {
         super();
@@ -78,10 +65,10 @@ export class BwGridVisualEffectView extends UiContainer implements IBwGridVisual
         this.setIsTouchChildrenEnabled(false);
     }
 
-    public init(gridVisualEffect: IBwGridVisualEffect): void {
+    public init(gridVisualEffect: BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect): void {
         this._gridVisualEffect = gridVisualEffect;
     }
-    public fastInit(gridVisualEffect: IBwGridVisualEffect): void {
+    public fastInit(gridVisualEffect: BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect): void {
         this._gridVisualEffect = gridVisualEffect;
     }
 
@@ -95,61 +82,61 @@ export class BwGridVisualEffectView extends UiContainer implements IBwGridVisual
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public showEffectBlock(gridIndex: GridIndex): void {
+    public showEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForBlock.addUiChild(createEffectBlock(gridIndex));
     }
 
-    public showEffectDive(gridIndex: GridIndex): void {
+    public showEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForDive.addUiChild(createEffectDive(gridIndex));
     }
 
-    public showEffectExplosion(gridIndex: GridIndex): void {
+    public showEffectExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForExplosion.addUiChild(createEffectExplosion(gridIndex));
     }
 
-    public showEffectFlare(gridIndex: GridIndex): void {
+    public showEffectFlare(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForFlare.addUiChild(createEffectFlare(gridIndex));
     }
 
-    public showEffectDamage(gridIndex: GridIndex): void {
+    public showEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForDamage.addUiChild(createEffectDamage(gridIndex));
     }
 
-    public showEffectSupply(gridIndex: GridIndex): void {
+    public showEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForSupply.addUiChild(createEffectSupply(gridIndex));
     }
 
-    public showEffectRepair(gridIndex: GridIndex): void {
+    public showEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForRepair.addUiChild(createEffectRepair(gridIndex));
     }
 
-    public showEffectSiloExplosion(gridIndex: GridIndex): void {
+    public showEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForExplosion.addUiChild(createEffectSiloExplosion(gridIndex));
     }
 
-    public showEffectCoPowerActivation(gridIndex: GridIndex): void {
+    public showEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForSkillActivation.addUiChild(createEffectCoPowerActivation(gridIndex));
     }
 
-    public showEffectCoSuperPowerActivation(gridIndex: GridIndex): void {
+    public showEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForSkillActivation.addUiChild(createEffectCoSuperPowerActivation(gridIndex));
     }
 
-    public showEffectCharge(gridIndex: GridIndex): void {
+    public showEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForCharge.addUiChild(createEffectCharge(gridIndex));
     }
 
-    public showEffectSurface(gridIndex: GridIndex): void {
+    public showEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): void {
         this._layerForSurface.addUiChild(createEffectSurface(gridIndex));
     }
 
-    public showEffectAiming(gridIndex: GridIndex, timeMs: number): void {
+    public showEffectAiming(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, timeMs: number): void {
         this._layerForAiming.addUiChild(createEffectAiming(gridIndex, timeMs));
     }
 }
 
-function createEffectBlock(gridIndex: GridIndex): IUiComponent {
-    const img = new (getUiImageClass())({ textureSourceName: getUnitBlock() });
+function createEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitBlock() });
     img.setAnchorOffsetX(58);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -159,71 +146,71 @@ function createEffectBlock(gridIndex: GridIndex): IUiComponent {
     img.setX(getBlockOffsetX() + pos.x);
     img.setY(getBlockOffsetY() + pos.y);
 
-    Executor.get(img)
+    Tween_Executor.Executor.get(img)
         .to({ customScaleX: 1, customScaleY: 1 }, 100)
         .wait(600)
-        .call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+        .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectDive(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitDive();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitDive();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDiveOffsetX() + pos.x);
     img.setY(getDiveOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectExplosion(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitExplosion();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitExplosion();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getExplosionOffsetX() + pos.x);
     img.setY(getExplosionOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectFlare(gridIndex: GridIndex): IUiComponent {
+function createEffectFlare(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     return createEffectDamage(gridIndex);
 }
 
-function createEffectDamage(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitDamage();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitDamage();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
     img.setY(getDamageOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectSupply(gridIndex: GridIndex): IUiComponent {
-    const img = new (getUiImageClass())({ textureSourceName: getUnitSupply() });
+function createEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitSupply() });
     img.setAnchorOffsetX(60);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -233,16 +220,16 @@ function createEffectSupply(gridIndex: GridIndex): IUiComponent {
     img.setX(getSupplyOffsetX() + pos.x);
     img.setY(getSupplyOffsetY() + pos.y);
 
-    Executor.get(img)
+    Tween_Executor.Executor.get(img)
         .to({ customScaleX: 1, customScaleY: 1 }, 100)
         .wait(600)
-        .call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+        .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectRepair(gridIndex: GridIndex): IUiComponent {
-    const img = new (getUiImageClass())({ textureSourceName: getUnitRepair() });
+function createEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitRepair() });
     img.setAnchorOffsetX(60);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -252,23 +239,23 @@ function createEffectRepair(gridIndex: GridIndex): IUiComponent {
     img.setX(getRepairOffsetX() + pos.x);
     img.setY(getRepairOffsetY() + pos.y);
 
-    Executor.get(img)
+    Tween_Executor.Executor.get(img)
         .to({ customScaleX: 1, customScaleY: 1 }, 100)
         .wait(600)
-        .call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+        .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectSiloExplosion(gridIndex: GridIndex): IUiComponent {
-    const arrForDamage  = getArrayUnitDamage();
-    const img           = new (getUiImageClass())({ textureSourceName: arrForDamage[0] });
+function createEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arrForDamage  = Helpers_ImageSource.getArrayUnitDamage();
+    const img           = new Ui_Components_UiImage.UiImage({ textureSourceName: arrForDamage[0] });
     const pos           = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
     img.setY(getDamageOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arrForDamage.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arrForDamage[i]));
     }
@@ -278,106 +265,106 @@ function createEffectSiloExplosion(gridIndex: GridIndex): IUiComponent {
         customY: getExplosionOffsetY() + pos.y
     });
 
-    const arrForExplosion = getArrayUnitExplosion();
+    const arrForExplosion = Helpers_ImageSource.getArrayUnitExplosion();
     tween.call(() => img.loadSource(arrForExplosion[0]));
     for (let i = 1; i < arrForExplosion.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arrForExplosion[i]));
     }
 
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectCoSuperPowerActivation(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitScop();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitScop();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoSuperPowerActivationOffsetX() + pos.x);
     img.setY(getCoSuperPowerActivationOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(34).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectCoPowerActivation(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitCop();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitCop();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoPowerActivationOffsetX() + pos.x);
     img.setY(getCoPowerActivationOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(34).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectCharge(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayTileCharge();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayTileCharge();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoSuperPowerActivationOffsetX() + pos.x);
     img.setY(getCoSuperPowerActivationOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(34).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectSurface(gridIndex: GridIndex): IUiComponent {
-    const arr = getArrayUnitSurface();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayUnitSurface();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
     img.setY(getDamageOffsetY() + pos.y);
 
-    const tween = Executor.get(img);
+    const tween = Tween_Executor.Executor.get(img);
     for (let i = 1; i < arr.length; ++i) {
         tween.wait(50).call(() => img.loadSource(arr[i]));
     }
-    tween.call(() => img.getParent()?.removeChild(img as unknown as DisplayObject));
+    tween.call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
     return img;
 }
 
-function createEffectAiming(gridIndex: GridIndex, timeMs: number): IUiComponent {
-    const arr = getArrayCursorAiming();
-    const img = new (getUiImageClass())({ textureSourceName: arr[0] });
+function createEffectAiming(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, timeMs: number): Ui_Interfaces_IUiComponent.IUiComponent {
+    const arr = Helpers_ImageSource.getArrayCursorAiming();
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
     img.setIsSmoothing(false);
     img.setX(getGridWidth() * (gridIndex.getX() - 1));
     img.setY(getGridHeight() * (gridIndex.getY() - 1));
 
     const totalFramesCount  = arr.length;
     let frameIndex          = 0;
-    Executor.get(img, { loop: true })
+    Tween_Executor.Executor.get(img, { loop: true })
         .wait(getAimingFrameDuration())
         .call(() => {
             frameIndex = (frameIndex + 1) % totalFramesCount;
             img.loadSource(arr[frameIndex]);
         });
 
-    Executor.get(img)
+    Tween_Executor.Executor.get(img)
         .wait(timeMs)
         .call(() => {
-            img.getParent()?.removeChild(img as unknown as DisplayObject);
-            Executor.removeTweens(img);
+            img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject);
+            Tween_Executor.Executor.removeTweens(img);
         });
 
     return img;

@@ -1,40 +1,37 @@
-import { StateId } from "../Constants.ts";
-import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { IState } from "./IState.ts";
-import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
-    getHrwWarClass,
-    getMeWarClass,
-    getMpwWarClass,
-    getRwWarClass,
-    getSpwWarClass,
-    getTwWarClass,
-} from "../../gameHelpers/GhFactory.ts";
-import {
-    getExisted,
-    newError,
-} from "../../helpers/Misc.ts";
-import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import type { IUnit } from "../../units/IUnit.ts";
+    HalfwayReplayWar_Model_HrwWar,
+    MapEditor_Model_MeWar,
+    MultiPlayerWar_Model_MpwWar,
+    ReplayWar_Model_RwWar,
+    SinglePlayerWar_Model_SpwWar,
+    ActionPlanners_Constants,
+    TestWar_Model_TwWar,
+    type AuxiliaryTypes_GridIndex,
+    type ActionPlanners_IActionPlanner,
+    type ActionPlanners_States_IState,
+    Helpers_Misc,
+    Sounds_SoundPlayer,
+    Sounds_Constants,
+    type Units_IUnit,
+} from "../../internal.ts";
 
-export class ChoosingUnitDropDestination implements IState {
+export class ChoosingUnitDropDestination implements ActionPlanners_States_IState.IState {
     private static readonly _instance = new ChoosingUnitDropDestination();
 
     public static getInstance(): ChoosingUnitDropDestination {
         return ChoosingUnitDropDestination._instance;
     }
 
-    public getStateId(): StateId {
-        return StateId.ChoosingUnitDropDestination;
+    public getStateId(): ActionPlanners_Constants.StateId {
+        return ActionPlanners_Constants.StateId.ChoosingUnitDropDestination;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+    public getNextStateIdOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, gridIndex: AuxiliaryTypes_GridIndex.GridIndex): ActionPlanners_Constants.StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof getHrwWarClass()) {
-            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return StateId.ChoosingUnitAction;
+        if (war instanceof HalfwayReplayWar_Model_HrwWar.HrwWar) {
+            if (Helpers_Misc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -43,22 +40,22 @@ export class ChoosingUnitDropDestination implements IState {
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return StateId.ChoosingUnitAction;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     }
                 }
 
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             }
 
-        } else if (war instanceof getMeWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof MapEditor_Model_MeWar.MeWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
-        } else if (war instanceof getMpwWarClass()) {
+        } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             if ((actionPlanner.getAvailableDropDestinations() || []).every(g => !g.checkIsEqual(gridIndex))) {
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -67,20 +64,20 @@ export class ChoosingUnitDropDestination implements IState {
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const focusUnit         = getExisted(actionPlanner.getFocusUnit());
+                const focusUnit         = Helpers_Misc.getExisted(actionPlanner.getFocusUnit());
                 const restLoadedUnits   = focusUnit.getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return StateId.ChoosingUnitAction;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     }
                 }
 
-                return StateId.RequestingUnitDrop;
+                return ActionPlanners_Constants.StateId.RequestingUnitDrop;
             }
 
-        } else if (war instanceof getRwWarClass()) {
-            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return StateId.ChoosingUnitAction;
+        } else if (war instanceof ReplayWar_Model_RwWar.RwWar) {
+            if (Helpers_Misc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -89,19 +86,19 @@ export class ChoosingUnitDropDestination implements IState {
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return StateId.ChoosingUnitAction;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     }
                 }
 
-                return StateId.ChoosingUnitAction;
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             }
 
-        } else if (war instanceof getSpwWarClass()) {
-            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return StateId.ChoosingUnitAction;
+        } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
+            if (Helpers_Misc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return ActionPlanners_Constants.StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -110,87 +107,87 @@ export class ChoosingUnitDropDestination implements IState {
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return StateId.ChoosingUnitAction;
+                        return ActionPlanners_Constants.StateId.ChoosingUnitAction;
                     }
                 }
 
-                return StateId.RequestingUnitDrop;
+                return ActionPlanners_Constants.StateId.RequestingUnitDrop;
             }
 
-        } else if (war instanceof getTwWarClass()) {
-            return StateId.Idle;
+        } else if (war instanceof TestWar_Model_TwWar.TwWar) {
+            return ActionPlanners_Constants.StateId.Idle;
 
         } else {
-            throw newError(`Unknown actionPlanner.`);
+            throw Helpers_Misc.newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): StateId {
+    public getNextStateIdOnDrag(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): StateId {
+    public getNextStateIdOnDragEnded(): ActionPlanners_Constants.StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: IActionPlanner): void {
+    public cancel(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearChoosingUnitForDrop();
         actionPlanner.clearAvailableDropDestinations();
 
-        actionPlanner.setStateId(StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        playShortSfx(ShortSfxCode.ButtonCancel01);
+        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitAction) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitAction) {
             const data = actionPlanner.popBackChosenUnitForDrop();
             actionPlanner.setChoosingUnitForDrop(data.unit);
             actionPlanner.setAvailableDropDestinations(actionPlanner.calculateAvailableDropDestination(data.unit, actionPlanner.getChosenDropDestinations()));
-            playShortSfx(ShortSfxCode.ButtonCancel01);
+            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === StateId.ChoosingUnitDropDestination) {
+        if (currState === ActionPlanners_Constants.StateId.ChoosingUnitDropDestination) {
             // Nothing to do.
 
         } else {
-            throw newError(`Invalid currState: ${currState}`);
+            throw Helpers_Misc.newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw newError(`ChoosingUnitDropDestinationState: Not expected to apply on drag ended!`);
+        throw Helpers_Misc.newError(`ChoosingUnitDropDestinationState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner, unitForDrop: IUnit): void {
+    public doApplyOnChooseAction(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner, unitForDrop: Units_IUnit.IUnit): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId !== StateId.ChoosingUnitAction) {
-            throw newError(`Invalid currState: ${currStateId}`);
+        if (currStateId !== ActionPlanners_Constants.StateId.ChoosingUnitAction) {
+            throw Helpers_Misc.newError(`Invalid currState: ${currStateId}`);
         } else {
             actionPlanner.setChoosingUnitForDrop(unitForDrop);
             actionPlanner.setAvailableDropDestinations(actionPlanner.calculateAvailableDropDestination(unitForDrop, actionPlanner.getChosenDropDestinations()));
         }
 
-        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(ActionPlanners_Constants.StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 }

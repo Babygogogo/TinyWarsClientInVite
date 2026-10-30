@@ -1,15 +1,14 @@
-import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
-import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import { TextType } from "../lang/Constants.ts";
 import {
-    getFormattedText,
-    getText,
-} from "../lang/Utils.ts";
+    Units_Constants,
+    Lang_Utils,
+    AuxiliaryTypes_GridIndex,
+    AuxiliaryTypes_GridIndexAndWeight,
+    Lang_Constants,
+    type AuxiliaryTypes_MapSize,
+} from "../internal.ts";
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-import { AiDestination } from "../units/Constants.ts";
 
-export function checkIsValid(data: WeightedGridIndex, mapSize: MapSize): boolean {
+export function checkIsValid(data: WeightedGridIndex, mapSize: AuxiliaryTypes_MapSize.MapSize): boolean {
     return getErrorTip(data, mapSize) == null;
 }
 
@@ -18,28 +17,28 @@ export function getDesc(data: WeightedGridIndex): string {
     return `(${gridIndex?.getX()}, ${gridIndex?.getY()}), ${data.getWeight()}`;
 }
 
-export function getErrorTip(data: WeightedGridIndex, mapSize: MapSize): string | null {
+export function getErrorTip(data: WeightedGridIndex, mapSize: AuxiliaryTypes_MapSize.MapSize): string | null {
     {
-        const gridIndex = GridIndex.convertGridIndex(data.getGridIndex());
+        const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex());
         if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
-            return getFormattedText(TextType.F0091, getText(TextType.B0531));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0531));
         }
     }
     {
         const weight = data.getWeight();
-        if ((weight > AiDestination.MaxWeight) ||
-            (weight < AiDestination.MinWeight)
+        if ((weight > Units_Constants.AiDestination.MaxWeight) ||
+            (weight < Units_Constants.AiDestination.MinWeight)
         ) {
-            return getFormattedText(TextType.F0091, getText(TextType.B1094));
+            return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1094));
         }
     }
 
     return null;
 }
 
-export function toGridIndexAndWeight(data: WeightedGridIndex): GridIndexAndWeight | null {
-    const gridIndex = GridIndex.convertGridIndex(data.getGridIndex());
+export function toGridIndexAndWeight(data: WeightedGridIndex): AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight | null {
+    const gridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(data.getGridIndex());
     return gridIndex == null
         ? null
-        : new GridIndexAndWeight(gridIndex, data.getWeight());
+        : new AuxiliaryTypes_GridIndexAndWeight.GridIndexAndWeight(gridIndex, data.getWeight());
 }

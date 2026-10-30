@@ -1,43 +1,41 @@
-import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { showLang } from "../../FloatText.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { createRange } from "../../helpers/Collection.ts";
-import { TextType } from "../../lang/Constants.ts";
 import {
-    getText,
-    getLanguageText,
-    getFormattedText,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Units_Utils_Filter,
+    Helpers_Collection,
+    Units_Constants,
+    GamePanels_Dict,
+    Lang_Utils,
+    GamePanels_Manager,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type BaseWar_Interface_IBwWar,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type AuxiliaryTypes_AuxiliaryTypes,
+} from "../../internal.ts";
 import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { CustomName } from "../../units/Constants.ts";
-import { checkIsMeet } from "../../units/utils/Filter.ts";
 
 export interface OpenData {
-    war         : IBwWar;
+    war         : BaseWar_Interface_IBwWar.IBwWar;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!                                  : IUiImage;
-    private readonly _group!                                    : IUiContainer;
-    private readonly _labelTitle!                               : IUiLabel;
-    private readonly _btnClose!                                 : IUiButton;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!                                  : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!                                    : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!                               : Ui_Interfaces_IUiLabel.IUiLabel;
+    private readonly _btnClose!                                 : Ui_Interfaces_IUiButton.IUiButton;
 
-    private readonly _btnUnitFilter!                            : IUiButton;
-    private readonly _labelUnitFilter!                          : IUiLabel;
+    private readonly _btnUnitFilter!                            : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelUnitFilter!                          : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnCustomNameId!                          : IUiButton;
-    private readonly _labelCustomNameId!                        : IUiLabel;
+    private readonly _btnCustomNameId!                          : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _labelCustomNameId!                        : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnConfirm!                               : IUiButton;
+    private readonly _btnConfirm!                               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _unitFilter     : Undefinable<UnitFilter>;
+    private _unitFilter     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<UnitFilter>;
     private _customNameId   = 0;
 
     public updateOnLoadedSkin(): void {
@@ -50,8 +48,8 @@ export class Panel extends UiPanel<OpenData> {
             { ui: this._btnConfirm,                             callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -82,11 +80,11 @@ export class Panel extends UiPanel<OpenData> {
         const filter        = this._unitFilter;
         const customNameId  = this._customNameId;
         for (const unit of unitMap.getAllUnits()) {
-            if ((filter == null) || (checkIsMeet(filter, unit))) {
+            if ((filter == null) || (Units_Utils_Filter.checkIsMeet(filter, unit))) {
                 unit.setCustomNameId(customNameId == 0 ? null : customNameId);
             }
         }
-        showLang(TextType.OperationSucceeded);
+        FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
     }
 
     private _onTouchedBtnUnitFilter(): void {
@@ -95,7 +93,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().WeUnitFilterPanel, {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
             gameConfig              : war.getGcData(),
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             mapSize                 : war.getUnitMap().getMapSize(),
@@ -114,17 +112,17 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const arr = war.getUnitMap().getUnitCustomNameArray();
-        openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B1433),
-            availableNumberArray    : createRange(0, CustomName.MaxId + 1, 1),
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1433),
+            availableNumberArray    : Helpers_Collection.createRange(0, Units_Constants.CustomName.MaxId + 1, 1),
             currentNumber           : this._customNameId,
             columnsCount            : 4,
             showNumber              : true,
             getNumberMainText       : num => {
                 if (num === 0) {
-                    return `(${getText(TextType.B0391)})`;
+                    return `(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`;
                 } else {
-                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
+                    return Lang_Utils.getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
             },
             callbackOnConfirm       : num => {
@@ -142,10 +140,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(TextType.B1373);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._btnUnitFilter.setLangText(TextType.UnitFilter);
-        this._btnCustomNameId.setLangText(TextType.B0162);
+        this._labelTitle.setLangText(Lang_Constants.TextType.B1373);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._btnUnitFilter.setLangText(Lang_Constants.TextType.UnitFilter);
+        this._btnCustomNameId.setLangText(Lang_Constants.TextType.B0162);
 
         this._updateLabelUnitFilter();
         this._updateLabelCustomNameId();
@@ -158,12 +156,12 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const filter = this._unitFilter;
-        this._labelUnitFilter.setText(getFormattedText(
-            TextType.F0257,
+        this._labelUnitFilter.setText(Lang_Utils.getFormattedText(
+            Lang_Constants.TextType.F0257,
             filter == null
                 ? allUnits.length
-                : allUnits.filter(v => checkIsMeet(filter, v)).length,
-            getText(TextType.Units),
+                : allUnits.filter(v => Units_Utils_Filter.checkIsMeet(filter, v)).length,
+            Lang_Utils.getText(Lang_Constants.TextType.Units),
         ));
     }
 
@@ -171,9 +169,9 @@ export class Panel extends UiPanel<OpenData> {
         const customNameId  = this._customNameId;
         const label         = this._labelCustomNameId;
         if (customNameId === 0) {
-            label.setText(`(${getText(TextType.B0391)})`);
+            label.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`);
         } else {
-            label.setText(getLanguageText({
+            label.setText(Lang_Utils.getLanguageText({
                 textArray   : this.getOpenData()?.war.getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId()) === customNameId)?.getNameTextArray(),
             }) ?? `----`);
         }

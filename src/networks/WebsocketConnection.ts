@@ -1,19 +1,14 @@
-import { log } from "../Logger.ts";
-import { MessageContainer } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 import {
-    WebSocket,
-    Event,
-    IOErrorEvent,
-    ProgressEvent,
-    ByteArray,
-} from "../egret/Egret.ts";
+    Egret_Egret,
+    Logger,
+} from "../internal.ts";
+import { MessageContainer } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 
-export class WebsocketConnection extends WebSocket {
+export class WebsocketConnection extends Egret_Egret.WebSocket {
     private _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;
     private _callbackOnConnectionClosed     : (connection: WebsocketConnection) => void;
     private _callbackOnConnectionErrored    : (connection: WebsocketConnection) => void;
     private _callbackOnConnectionData       : (connection: WebsocketConnection, container: MessageContainer) => void;
-
 
     public constructor({ callbackOnConnectionOpened, callbackOnConnectionClosed, callbackOnConnectionErrored, callbackOnConnectionData }: {
         callbackOnConnectionOpened  : (connection: WebsocketConnection) => void;
@@ -23,11 +18,11 @@ export class WebsocketConnection extends WebSocket {
     }) {
         super();
 
-        this.type = WebSocket.TYPE_BINARY;
-        this.addEventListener(Event.CONNECT,              this._onWebSocketConnectionOpened,  this);
-        this.addEventListener(Event.CLOSE,                this._onWebSocketConnectionClosed,  this);
-        this.addEventListener(IOErrorEvent.IO_ERROR,      this._onWebSocketConnectionError,   this);
-        this.addEventListener(ProgressEvent.SOCKET_DATA,  this._onWebSocketConnectionData,    this);
+        this.type = Egret_Egret.WebSocket.TYPE_BINARY;
+        this.addEventListener(Egret_Egret.Event.CONNECT,              this._onWebSocketConnectionOpened,  this);
+        this.addEventListener(Egret_Egret.Event.CLOSE,                this._onWebSocketConnectionClosed,  this);
+        this.addEventListener(Egret_Egret.IOErrorEvent.IO_ERROR,      this._onWebSocketConnectionError,   this);
+        this.addEventListener(Egret_Egret.ProgressEvent.SOCKET_DATA,  this._onWebSocketConnectionData,    this);
 
         this._callbackOnConnectionOpened    = callbackOnConnectionOpened;
         this._callbackOnConnectionClosed    = callbackOnConnectionClosed;
@@ -36,10 +31,10 @@ export class WebsocketConnection extends WebSocket {
     }
 
     public destroy(): void {
-        this.removeEventListener(Event.CONNECT,               this._onWebSocketConnectionOpened,  this);
-        this.removeEventListener(Event.CLOSE,                 this._onWebSocketConnectionClosed,  this);
-        this.removeEventListener(IOErrorEvent.IO_ERROR,       this._onWebSocketConnectionError,   this);
-        this.removeEventListener(ProgressEvent.SOCKET_DATA,   this._onWebSocketConnectionData,    this);
+        this.removeEventListener(Egret_Egret.Event.CONNECT,               this._onWebSocketConnectionOpened,  this);
+        this.removeEventListener(Egret_Egret.Event.CLOSE,                 this._onWebSocketConnectionClosed,  this);
+        this.removeEventListener(Egret_Egret.IOErrorEvent.IO_ERROR,       this._onWebSocketConnectionError,   this);
+        this.removeEventListener(Egret_Egret.ProgressEvent.SOCKET_DATA,   this._onWebSocketConnectionData,    this);
 
         this.close();
     }
@@ -54,12 +49,12 @@ export class WebsocketConnection extends WebSocket {
         this._callbackOnConnectionErrored(this);
     }
     private _onWebSocketConnectionData(): void {
-        const data = new ByteArray();
+        const data = new Egret_Egret.ByteArray();
         this.readBytes(data);
 
         const msgContainer  = MessageContainer.decode(new Uint8Array(data.rawBuffer));
         const msgData       = msgContainer.getMessageData();
-        log(
+        Logger.log(
             "%cNetManager receive: ",
             "background:#FFD777",
             msgData?.getSchemaName(),

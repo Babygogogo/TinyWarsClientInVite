@@ -1,25 +1,17 @@
-import { show } from "../../FloatText.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import {
-    TextType,
-    UndefinedError,
-} from "../../lang/Constants.ts";
-import {
-    getText,
-    getCurrentLanguageType,
-    getSecondaryLanguageType,
-    getFormattedText,
-    getLanguageText,
-    getLanguageTypeName,
-} from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+    Lang_Utils,
+    Helpers_Misc,
+    FloatText,
+    Lang_Constants,
+    Notifications_TypeId,
+    Ui_Components_UiPanel,
+    type Ui_Interfaces_IUiButton,
+    type Ui_Interfaces_IUiContainer,
+    type Ui_Interfaces_IUiImage,
+    type Ui_Interfaces_IUiLabel,
+    type Ui_Interfaces_IUiPromptedInput,
+} from "../../internal.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export interface OpenData {
     maxLength           : number;
@@ -28,25 +20,25 @@ export interface OpenData {
     getTitle            : () => string;
     callback            : (languageTextArray: LanguageText[]) => void;
 }
-export class Panel extends UiPanel<OpenData> {
-    private readonly _imgMask!          : IUiImage;
-    private readonly _group!            : IUiContainer;
-    private readonly _labelTitle!       : IUiLabel;
+export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!          : Ui_Interfaces_IUiImage.IUiImage;
+    private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
+    private readonly _labelTitle!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _input1!           : IUiPromptedInput;
-    private readonly _btnDelete1!       : IUiButton;
-    private readonly _label1!           : IUiLabel;
+    private readonly _input1!           : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnDelete1!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _label1!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _input2!           : IUiPromptedInput;
-    private readonly _btnDelete2!       : IUiButton;
-    private readonly _label2!           : IUiLabel;
+    private readonly _input2!           : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
+    private readonly _btnDelete2!       : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _label2!           : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private readonly _btnClose!         : IUiButton;
-    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnClose!         : Ui_Interfaces_IUiButton.IUiButton;
+    private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -90,16 +82,16 @@ export class Panel extends UiPanel<OpenData> {
         const text1 = this._input1.trimInputText() ?? ``;
         const text2 = this._input2.trimInputText() ?? ``;
         if ((!text1) && (!text2)) {
-            show(getText(TextType.A0156));
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0156));
             return;
         }
 
         const textArray : LanguageText[] = [];
         if (text1) {
-            textArray.push(LanguageText.fromJson({ languageType: getCurrentLanguageType(), text: text1 }));
+            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getCurrentLanguageType(), text: text1 }));
         }
         if (text2) {
-            textArray.push(LanguageText.fromJson({ languageType: getSecondaryLanguageType(), text: text2 }));
+            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getSecondaryLanguageType(), text: text2 }));
         }
 
         const openData = this.getOpenData();
@@ -108,10 +100,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const maxLength = openData.maxLength;
-        if (textArray.every(v => getExisted(v.getText()).length <= 0)) {
-            show(getText(TextType.A0155));
-        } else if (textArray.some(v => getExisted(v.getText()).length > maxLength)) {
-            show(getFormattedText(TextType.F0034, maxLength));
+        if (textArray.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
+            FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
+        } else if (textArray.some(v => Helpers_Misc.getExisted(v.getText()).length > maxLength)) {
+            FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0034, maxLength));
         } else {
             openData.callback(textArray);
             this.closePanel();
@@ -122,15 +114,15 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
 
         const textArray = this.getOpenData()?.currentTextArray ?? [];
-        this._input1.setInputText(getLanguageText({ textArray, languageType: getCurrentLanguageType(), useAlternate: false }) ?? ``);
-        this._input2.setInputText(getLanguageText({ textArray, languageType: getSecondaryLanguageType(), useAlternate: false }) ?? ``);
+        this._input1.setInputText(Lang_Utils.getLanguageText({ textArray, languageType: Lang_Utils.getCurrentLanguageType(), useAlternate: false }) ?? ``);
+        this._input2.setInputText(Lang_Utils.getLanguageText({ textArray, languageType: Lang_Utils.getSecondaryLanguageType(), useAlternate: false }) ?? ``);
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClose.setLangText(TextType.B0154);
-        this._btnConfirm.setLangText(TextType.B0026);
-        this._label1.setText(getLanguageTypeName(getCurrentLanguageType()) ?? UndefinedError);
-        this._label2.setText(getLanguageTypeName(getSecondaryLanguageType()) ?? UndefinedError);
-        this._labelTitle.setText(this.getOpenData()?.getTitle() ?? UndefinedError);
+        this._btnClose.setLangText(Lang_Constants.TextType.B0154);
+        this._btnConfirm.setLangText(Lang_Constants.TextType.B0026);
+        this._label1.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getCurrentLanguageType()) ?? Lang_Constants.UndefinedError);
+        this._label2.setText(Lang_Utils.getLanguageTypeName(Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
+        this._labelTitle.setText(this.getOpenData()?.getTitle() ?? Lang_Constants.UndefinedError);
     }
 }
