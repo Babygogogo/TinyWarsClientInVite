@@ -601,7 +601,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
     private _onNotifyBwPlayerFundChanged(e: Egret_Egret.Event): void {
         const eventData = e.data as Notifications_DataTypes.BwPlayerFundChanged;
         const openData  = this.getOpenData();
-        if (eventData === openData?.war.getPlayer(openData.playerIndex)) {
+        if (eventData.player === openData?.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();
         }
     }

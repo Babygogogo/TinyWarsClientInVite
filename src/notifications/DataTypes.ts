@@ -1,21 +1,19 @@
 import {
+    type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
     type BaseWar_Interface_IBwCursor,
     type BaseWar_Interface_IBwWar,
+    type PlayerRules_Constants,
     type Players_IPlayer,
     type Tiles_ITile,
     type Units_IUnit,
-    type AuxiliaryTypes_AuxiliaryTypes,
-    type PlayerRules_Constants,
 } from "../internal.ts";
 
-export type McwPlayerIndexInTurnChanged                         = number;
-export type BwPlayerFundChanged                                 = Players_IPlayer.IPlayer;
-export type McwPlayerEnergyChanged                              = Players_IPlayer.IPlayer;
-export type BwCoIdChanged                                       = Players_IPlayer.IPlayer;
-export type BwCursorGridIndexChanged                            = BaseWar_Interface_IBwCursor.IBwCursor;
-export type BwTileHasLocationIdSet                              = Tiles_ITile.ITile;
-export type BwTileIsHighlightChanged                            = Tiles_ITile.ITile;
+export type BwPlayerFundChanged                                 = { player: Players_IPlayer.IPlayer };
+export type BwCoIdChanged                                       = { player: Players_IPlayer.IPlayer };
+export type BwCursorGridIndexChanged                            = { cursor: BaseWar_Interface_IBwCursor.IBwCursor };
+export type BwTileHasLocationIdSet                              = { tile: Tiles_ITile.ITile };
+export type BwTileIsHighlightedChanged                          = { tile: Tiles_ITile.ITile };
 export type BwCursorTapped                                      = { current: AuxiliaryTypes_GridIndex.GridIndex, tappedOn: AuxiliaryTypes_GridIndex.GridIndex };
 export type BwCursorDragged                                     = { current: AuxiliaryTypes_GridIndex.GridIndex, draggedTo: AuxiliaryTypes_GridIndex.GridIndex };
 export type BwFieldZoomedByTouch                                = { previous: AuxiliaryTypes_AuxiliaryTypes.TouchPoints, current: AuxiliaryTypes_AuxiliaryTypes.TouchPoints };

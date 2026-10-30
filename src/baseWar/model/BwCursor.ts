@@ -122,7 +122,7 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
 
         this._gridX = gridIndex.getX();
         this._gridY = gridIndex.getY();
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorGridIndexChanged, this);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorGridIndexChanged, { cursor: this });
     }
     public getGridIndex(): AuxiliaryTypes_GridIndex.GridIndex {
         return new AuxiliaryTypes_GridIndex.GridIndex(this.getGridX(), this.getGridY());

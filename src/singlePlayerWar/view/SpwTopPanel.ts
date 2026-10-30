@@ -188,7 +188,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onNotifyBwCoIdChanged(e: Egret_Egret.Event): void {
         const eventData = e.data as Notifications_DataTypes.BwCoIdChanged;
-        if (eventData === this.getOpenData()?.war.getPlayerInTurn()) {
+        if (eventData.player === this.getOpenData()?.war.getPlayerInTurn()) {
             this._updateImgSkinAndCo();
         }
     }
@@ -690,7 +690,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         }
 
         const eventData = e.data as Notifications_DataTypes.BwPlayerFundChanged;
-        if (eventData === openData.war.getPlayer(openData.playerIndex)) {
+        if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateLabelFundAndAddFund();
         }
     }
@@ -714,7 +714,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         }
 
         const eventData = e.data as Notifications_DataTypes.BwCoIdChanged;
-        if (eventData === openData.war.getPlayer(openData.playerIndex)) {
+        if (eventData.player === openData.war.getPlayer(openData.playerIndex)) {
             this._updateImgCo();
         }
     }

@@ -31,13 +31,9 @@ export const enum TypeId {
     MouseRightButtonClicked,
     ZoomableContentsMoved,
 
-    TileModelUpdated,
     LanguageChanged,
 
     SoundManagerPlayingBgmCodeChanged,
-
-    ChatPanelOpened,
-    ChatPanelClosed,
 
     RoomCreator_SelfCoIdChanged,
     RoomCreator_SelfSkinIdChanged,
@@ -47,22 +43,12 @@ export const enum TypeId {
 
     MfrCreatePlayerSkinIdChanged,
 
-    MrrMyRoomAdded,
-    MrrMyRoomDeleted,
     RoomSelfSettingsCoIdChanged,
     RoomSelfSettingsSkinIdChanged,
-
-    MmrMyRoomAdded,
-    MmrMyRoomDeleted,
-
-    AtrMyRoomAdded,
-    AtrMyRoomDeleted,
 
     WarCreator_SaveSlotIndexChanged,
     WarCreator_PlayerInfoChanged,
     WarCreator_TemplateWarRuleIdChanged,
-
-    BroadcastOngoingMessagesChanged,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     RwNextOperationIdChanged,
@@ -101,17 +87,11 @@ export const enum TypeId {
     BwProduceUnitPanelOpened,
     BwProduceUnitPanelClosed,
 
-    BwUnitBeDestroyed,
-    BwUnitBeAttacked,
-    BwUnitBeSupplied,
-    BwUnitBeRepaired,
     BwUnitChanged,
     BwUnitBuffChanged,
     BwUnitCustomNameArrayChanged,
     BwUnitCustomNameIdChanged,
 
-    BwTileBeDestroyed,
-    BwTileBeAttacked,
     BwTileHasLocationIdSet,
     BwTileIsHighlightedChanged,
     BwTileChanged,
@@ -122,8 +102,6 @@ export const enum TypeId {
     BwTileMapLocationVisibleSet,
 
     WarOperationNormalExecuted,
-
-    BwSiloExploded,
 
     ReplayAutoReplayChanged,
     ReplayTick,
@@ -193,15 +171,11 @@ export const enum TypeId {
     MsgAtRegister,
 
     MsgMapGetRawData,
-    MsgMapGetRawDataFailed,
-    MsgMapGetEnabledNormalMapIdArray,
     MsgMapGetMapTag,
-    MsgMapGetEnabledRawDataList,
     MsgNormalMapGetAllEnabledBriefDataVersions,
     MsgNormalMapGetBriefData,
     MsgNormalMapGetBriefDataArray,
     MsgNormalMapGetBriefDataVersion,
-    MsgMapGetBriefDataFailed,
 
     MsgChatGetAllMessages,
     MsgChatAddMessage,
@@ -234,7 +208,6 @@ export const enum TypeId {
     MsgUserVerifyEmail,
     MsgGmSetUserPrivilege,
     MsgUserSetPassword,
-    MsgUserGetSettings,
     MsgUserSetSettings,
     MsgUserSetMapRating,
     MsgUserSetRelation,
@@ -352,7 +325,6 @@ export const enum TypeId {
     MsgMrrGetBootTimerDaysRange,
     MsgMrrSetBootTimerDaysRange,
     MsgMrrGetRoomPublicInfo,
-    MsgMrrGetRoomPublicInfoFailed,
     MsgMrrGetJoinedRoomIdArray,
     MsgMrrSetBannedCoIdArray,
     MsgMrrSetSelfSettings,
@@ -365,23 +337,19 @@ export const enum TypeId {
     MsgMmrGetBootTimerDaysRange,
     MsgMmrSetBootTimerDaysRange,
     MsgMmrGetRoomPublicInfo,
-    MsgMmrGetRoomPublicInfoFailed,
     MsgMmrGetJoinedRoomIdArray,
     MsgMmrSetBannedCoIdArray,
     MsgMmrSetSelfSettings,
     MsgMmrDeleteRoomByServer,
 
     MsgAtrGetRoomPublicInfo,
-    MsgAtrGetRoomPublicInfoFailed,
     MsgAtrGetJoinedRoomIdArray,
     MsgAtrSetBannedCoIdArray,
     MsgAtrSetSelfSettings,
     MsgAtrDeleteRoomByServer,
 
-    MsgReplayGetReplayIdArray,
     MsgReplayGetReplayInfo,
     MsgReplayGetData,
-    MsgReplayGetDataFailed,
     MsgReplayGetSelfRating,
     MsgReplaySetSelfRating,
     MsgReplayGetAllInfoVersions,
@@ -396,15 +364,12 @@ export const enum TypeId {
     MsgMpwCommonSyncWar,
     MsgMpwCommonHandleBoot,
     MsgMpwCommonGetWarSettings,
-    MsgMpwCommonGetWarSettingsFailed,
     MsgMpwCommonGetWarProgressInfo,
     MsgMpwCommonMarkTile,
     MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,
     MsgMpwCommonSetGridMarkList,
     MsgMpwWatchGetIncomingInfo,
-    MsgMpwWatchGetIncomingInfoFailed,
     MsgMpwWatchGetOutgoingInfo,
-    MsgMpwWatchGetOutgoingInfoFailed,
     MsgMpwGetHalfwayReplayData,
     MsgMpwGetHalfwayReplayDataFailed,
     MsgMpwCommonGetUnitStatistics,
@@ -418,36 +383,8 @@ export const enum TypeId {
     MsgMpwWatchHandleRequest,
     MsgMpwWatchDeleteWatcher,
     MsgMpwWatchContinueWar,
-    MsgMpwWatchContinueWarFailed,
-
-    MsgMpwActionSystemBeginTurn,
-    MsgMpwActionSystemCallWarEvent,
-    MsgMpwActionSystemDestroyPlayerForce,
-    MsgMpwActionSystemEndWar,
-    MsgMpwActionSystemEndTurn,
-    MsgMpwActionSystemHandleBootPlayer,
 
     MsgMpwExecuteWarOperation,
-    MsgMpwActionPlayerEndTurn,
-    MsgMpwActionPlayerProduceUnit,
-    MsgMpwActionPlayerSurrender,
-    MsgMpwActionPlayerVoteForDraw,
-    MsgMpwActionUnitAttackUnit,
-    MsgMpwActionUnitAttackTile,
-    MsgMpwActionUnitBeLoaded,
-    MsgMpwActionUnitBuildTile,
-    MsgMpwActionUnitCaptureTile,
-    MsgMpwActionUnitDive,
-    MsgMpwActionUnitDropUnit,
-    MsgMpwActionUnitJoinUnit,
-    MsgMpwActionUnitLaunchFlare,
-    MsgMpwActionUnitLaunchSilo,
-    MsgMpwActionUnitBoardedByCo,
-    MsgMpwActionUnitProduceUnit,
-    MsgMpwActionUnitSupplyUnit,
-    MsgMpwActionUnitSurface,
-    MsgMpwActionUnitUseCoSkill,
-    MsgMpwActionUnitWait,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     MsgSpmCreateScw,
@@ -462,10 +399,8 @@ export const enum TypeId {
     MsgSpmSaveSfw,
     MsgSpmSaveSrw,
     MsgSpmGetRankList,
-    MsgSpmGetRankListFailed,
     MsgSpmValidateSrw,
     MsgSpmGetReplayData,
-    MsgSpmGetReplayDataFailed,
 
     MsgGmDeleteSpmAllScoreAndReplay,
     MsgGmAddUserMedal,

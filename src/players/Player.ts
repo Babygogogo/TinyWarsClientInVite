@@ -212,7 +212,7 @@ export class Player implements Players_IPlayer.IPlayer {
     public setFund(fund: number): void {
         if (this._fund !== fund) {
             this._fund = fund;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerFundChanged, this);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwPlayerFundChanged, { player: this });
         }
     }
     public getFund(): number {
@@ -393,7 +393,7 @@ export class Player implements Players_IPlayer.IPlayer {
     public setCoId(coId: number): void {
         if (this._coId !== coId) {
             this._coId = coId;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCoIdChanged, this);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCoIdChanged, { player: this });
         }
     }
     public getCoId(): number {

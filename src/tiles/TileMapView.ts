@@ -540,7 +540,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
     private _onNotifyBwTileHasLocationIdSet(e: Egret_Egret.Event): void {
         const tileMap   = Helpers_Misc.getExisted(this._tileMap);
-        const tile      = e.data as Notifications_DataTypes.BwTileHasLocationIdSet;
+        const { tile }  = e.data as Notifications_DataTypes.BwTileHasLocationIdSet;
         const img       = this._locationLayer.getUiChildAt(tile.getGridIndex().getGridId(tileMap.getMapSize()));
         for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             if ((tileMap.getIsLocationVisible(locationId)) && (tile.getHasLocationId(locationId))) {

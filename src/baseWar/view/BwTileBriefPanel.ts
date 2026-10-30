@@ -98,7 +98,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyBwCursorGridIndexChanged(e: Egret_Egret.Event): void {
         const data  = e.data as Notifications_DataTypes.BwCursorGridIndexChanged;
         const war   = this.getOpenData()?.war;
-        if ((war?.getIsRunning()) && (data === war.getCursor())) {
+        if ((war?.getIsRunning()) && (data.cursor === war.getCursor())) {
             this._updateView();
         }
     }

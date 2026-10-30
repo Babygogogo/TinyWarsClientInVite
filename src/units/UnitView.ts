@@ -1,26 +1,27 @@
 import {
-    Common_Model_CommonModel,
-    ForceSkins_Utils,
     AuxiliaryTypes_GridIndex,
-    ReplayWar_Model_RwWarBase,
+    Common_Model_CommonModel,
     CoSkills_Constants,
-    Ui_Components_UiImage,
-    Notifications_Dispatcher,
-    Helpers_Misc,
-    Tween_Executor,
-    Sounds_SoundPlayer,
-    Sounds_Utils,
+    ForceSkins_Utils,
     Graphics_Utils,
     Helpers_ImageSource,
-    Numbers_Constants,
-    Sounds_Constants,
+    Helpers_Misc,
+    Notifications_Dispatcher,
     Notifications_TypeId,
+    Numbers_Constants,
+    ReplayWar_Model_RwWarBase,
+    Sounds_Constants,
+    Sounds_SoundPlayer,
+    Sounds_Utils,
+    Tween_Executor,
     Ui_Components_UiContainer,
-    type Notifications_Types,
+    Ui_Components_UiImage,
     Units_Constants,
-    Visibilities_Utils,
-    Utils_ClientErrorCode,
     Users_Model,
+    Utils_ClientErrorCode,
+    Visibilities_Utils,
+    type AuxiliaryTypes_AuxiliaryTypes,
+    type Notifications_Types,
     type Units_IUnit,
     type Units_IUnitView,
 } from "../internal.ts";
@@ -257,7 +258,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         path                : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
-        aiming              : AuxiliaryTypes_GridIndex.GridIndex | null;
+        aiming              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         updateViewAfterMove : boolean;
     }): Promise<void> {
         this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
@@ -279,7 +280,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         }
 
         const moveSfxCfg = Helpers_Misc.getExisted(Sounds_Utils.getBgmSfxCfg(Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveSfx())));
-        if ((path.length > 0) || (aiming)) {
+        if ((path.length > 0) || (aiming?.length)) {
             Sounds_SoundPlayer.playLongSfxForMoveUnit(moveSfxCfg);
         }
 
@@ -367,7 +368,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
 
         const endingGridIndex = path[path.length - 1];
         return new Promise<void>(resolve => {
-            if (!aiming) {
+            if (!aiming?.length) {
                 tween.call(() => {
                     this._resetImgUnitFlippedX();
                     if ((isBlocked)                                         &&
@@ -397,7 +398,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                 tween.call(() => {
                     cursor.setIsMovableByTouches(false);
                     cursor.setIsVisible(false);
-                    war.getGridVisualEffect().showEffectAiming(aiming, AIMING_TIME_MS);
+                    for (const g of aiming) {
+                        war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
+                    }
                 })
                     .wait(AIMING_TIME_MS)
                     .call(() => {
@@ -431,7 +434,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
     }
     public moveAlongExtraPath({ path, aiming, deleteViewAfterMoving }: {
         path                    : GridIndexAndPathInfo[];
-        aiming                  : AuxiliaryTypes_GridIndex.GridIndex | null;
+        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         deleteViewAfterMoving   : boolean;
     }): Promise<void> {
         this.showUnitAnimation(Units_Constants.AnimationTypeId.MoveHorizontal);
@@ -446,7 +449,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const tween         = Tween_Executor.Executor.get(this as Units_IUnitView.IUnitView);
         const gameConfig    = war.getGcData();
         const moveSfxCfg    = Helpers_Misc.getExisted(Sounds_Utils.getBgmSfxCfg(Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveSfx())));
-        if ((path.length > 0) || (aiming)) {
+        if ((path.length > 0) || (aiming?.length)) {
             Sounds_SoundPlayer.playLongSfxForMoveUnit(moveSfxCfg);
         }
 
@@ -508,14 +511,16 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
 
         const endingGridIndex = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(endingNode.getGridIndex()), Utils_ClientErrorCode.ClientErrorCode.BwUnitView_MoveAlongExtraPath_03);
         return new Promise<void>(resolve => {
-            if (!aiming) {
+            if (!aiming?.length) {
                 tween.call(() => {
                     this._resetImgUnitFlippedX();
                     if ((isBlockedInEnd) && (isVisibleInEnd)) {
                         war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                     }
-                    (deleteViewAfterMoving) && (unitMapView.removeUnit(this));
+                    if (deleteViewAfterMoving)  {
+                        unitMapView.removeUnit(this);
+                    }
 
                     Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
@@ -526,7 +531,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                 tween.call(() => {
                     cursor.setIsMovableByTouches(false);
                     cursor.setIsVisible(false);
-                    war.getGridVisualEffect().showEffectAiming(aiming, AIMING_TIME_MS);
+                    for (const g of aiming) {
+                        war.getGridVisualEffect().showEffectAiming(g, AIMING_TIME_MS);
+                    }
                 })
                     .wait(AIMING_TIME_MS)
                     .call(() => {
@@ -538,7 +545,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                             war.getGridVisualEffect().showEffectBlock(endingGridIndex);
                             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
                         }
-                        (deleteViewAfterMoving) && (unitMapView.removeUnit(this));
+                        if (deleteViewAfterMoving)  {
+                            unitMapView.removeUnit(this);
+                        }
 
                         Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 

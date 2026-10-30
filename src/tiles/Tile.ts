@@ -490,7 +490,7 @@ export class Tile implements Tiles_ITile.ITile {
             groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % Locations_Constants.GroupSize));
         }
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, this as Notifications_DataTypes.BwTileHasLocationIdSet);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, { tile: this } satisfies Notifications_DataTypes.BwTileHasLocationIdSet);
     }
     public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean): void {
         const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(Locations_Constants.GroupCount).fill(0);
@@ -503,7 +503,7 @@ export class Tile implements Tiles_ITile.ITile {
             }
         }
 
-        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, this as Notifications_DataTypes.BwTileHasLocationIdSet);
+        Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileHasLocationIdSet, { tile: this } satisfies Notifications_DataTypes.BwTileHasLocationIdSet);
     }
     public getLocationIdList(hasId: boolean): number[] {
         const locationIdArray: number[] = [];
@@ -524,7 +524,7 @@ export class Tile implements Tiles_ITile.ITile {
     public setIsHighlighted(isHighlighted: boolean): void {
         if (this._isHighlighted !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileIsHighlightedChanged, this as Notifications_DataTypes.BwTileIsHighlightChanged);
+            Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwTileIsHighlightedChanged, { tile: this } satisfies Notifications_DataTypes.BwTileIsHighlightedChanged);
         }
     }
 

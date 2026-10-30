@@ -1,9 +1,9 @@
 import {
-    type Units_Constants,
+    type AuxiliaryTypes_AuxiliaryTypes,
     type AuxiliaryTypes_GridIndex,
     type Ui_Interfaces_IUiContainer,
+    type Units_Constants,
     type Units_IUnit,
-    type AuxiliaryTypes_AuxiliaryTypes,
 } from "../internal.ts";
 import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
 
@@ -25,12 +25,12 @@ export interface IUnitView extends Ui_Interfaces_IUiContainer.IUiContainer {
         path                : AuxiliaryTypes_GridIndex.GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
-        aiming              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
+        aiming              : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         updateViewAfterMove : boolean;
     }): Promise<void>;
     moveAlongExtraPath({ path, aiming, deleteViewAfterMoving }: {
         path                    : GridIndexAndPathInfo[];
-        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex>;
+        aiming                  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<AuxiliaryTypes_GridIndex.GridIndex[]>;
         deleteViewAfterMoving   : boolean;
     }): Promise<void>;
 }
