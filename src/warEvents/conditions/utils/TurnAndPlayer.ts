@@ -56,7 +56,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 
     return [
         Lang_Utils.getText(Lang_Constants.TextType.A0942),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecTurnAndPlayer, war: BaseWar_Interface_IBwWar.IBwWar): string | null {

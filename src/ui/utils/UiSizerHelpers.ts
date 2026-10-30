@@ -23,16 +23,16 @@ export function init(): void {
 
 export function loadSizerOptions(sizer: Ui_Interfaces_IUiComponent.IUiComponent, skinAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs): void {
     const options = createSizerOptions({
-        left                : skinAttrs?.left,
-        right               : skinAttrs?.right,
-        top                 : skinAttrs?.top,
-        bottom              : skinAttrs?.bottom,
-        horizontalCenter    : skinAttrs?.horizontalCenter,
-        verticalCenter      : skinAttrs?.verticalCenter,
-        minWidth            : skinAttrs?.minWidth,
-        maxWidth            : skinAttrs?.maxWidth,
-        minHeight           : skinAttrs?.minHeight,
-        maxHeight           : skinAttrs?.maxHeight,
+        left             : skinAttrs?.left,
+        right            : skinAttrs?.right,
+        top              : skinAttrs?.top,
+        bottom           : skinAttrs?.bottom,
+        horizontalCenter : skinAttrs?.horizontalCenter,
+        verticalCenter   : skinAttrs?.verticalCenter,
+        minWidth         : skinAttrs?.minWidth,
+        maxWidth         : skinAttrs?.maxWidth,
+        minHeight        : skinAttrs?.minHeight,
+        maxHeight        : skinAttrs?.maxHeight,
     });
     if (options != null) {
         sizer.checkAndInitSizerInfo().setSizerOptions(options);
@@ -64,56 +64,56 @@ function createSizerOptions({
     let sizerWidth: Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined = undefined;
     if ((left != null) && (right != null)) {
         sizerWidth = {
-            percentage  : 100,
-            extension   : -(left + right),
-            minValue    : minWidth,
-            maxValue    : maxWidth,
+            percentage : 100,
+            extension  : -(left + right),
+            minValue   : minWidth,
+            maxValue   : maxWidth,
         };
     }
 
     let sizerHeight: Ui_Types_UiSizerDimensionOptions.UiSizerDimensionOptions | undefined = undefined;
     if ((top != null) && (bottom != null)) {
         sizerHeight = {
-            percentage  : 100,
-            extension   : -(top + bottom),
-            minValue    : minHeight,
-            maxValue    : maxHeight,
+            percentage : 100,
+            extension  : -(top + bottom),
+            minValue   : minHeight,
+            maxValue   : maxHeight,
         };
     }
 
     let horizontalAlign: Ui_Types_UiSizerHorizontalAlignOptions.UiSizerHorizontalAlignOptions | undefined = undefined;
     if (left != null) {
         horizontalAlign = {
-            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left,
-            offset  : left,
+            align  : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Left,
+            offset : left,
         };
     } else if (right != null) {
         horizontalAlign = {
-            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right,
-            offset  : right,
+            align  : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right,
+            offset : right,
         };
     } else if (horizontalCenter != null) {
         horizontalAlign = {
-            align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center,
-            offset  : horizontalCenter,
+            align  : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center,
+            offset : horizontalCenter,
         };
     }
 
     let verticalAlign: Ui_Types_UiSizerVerticalAlignOptions.UiSizerVerticalAlignOptions | undefined = undefined;
     if (top != null) {
         verticalAlign = {
-            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Top,
-            offset  : top,
+            align  : Ui_Types_UiVerticalAlign.UiVerticalAlign.Top,
+            offset : top,
         };
     } else if (bottom != null) {
         verticalAlign = {
-            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom,
-            offset  : bottom,
+            align  : Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom,
+            offset : bottom,
         };
     } else if (verticalCenter != null) {
         verticalAlign = {
-            align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle,
-            offset  : verticalCenter,
+            align  : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle,
+            offset : verticalCenter,
         };
     }
 
@@ -169,9 +169,9 @@ function applyAutoSizerInfoDict(): void {
         const depth = getNestedDepth(info);
         if (depth != null) {
             infoAndDepthArray.push({
-                info                    : info,
-                isSizeChangedManually   : sizeChanged,
-                depth                   : depth,
+                info                  : info,
+                isSizeChangedManually : sizeChanged,
+                depth                 : depth,
             });
         }
     }
@@ -222,18 +222,18 @@ function applySizerInfo(appliedInfoSet: Set<Ui_Interfaces_IUiSizerInfo.IUiSizerI
         if ((sizerInfo.getIsEnabled()) && (options != null)) {
             const { width, height } = getParentSize(sizer.getParent());
             isSizeUpdated = updateSize({
-                sizer           : sizer,
-                parentWidth     : width,
-                widthOptions    : options?.width,
-                parentHeight    : height,
-                heightOptions   : options?.height,
+                sizer         : sizer,
+                parentWidth   : width,
+                widthOptions  : options?.width,
+                parentHeight  : height,
+                heightOptions : options?.height,
             });
             updatePosition({
-                sizer           : sizer,
-                parentWidth     : width,
-                widthOptions    : options?.horizontalAlign,
-                parentHeight    : height,
-                heightOptions   : options.verticalAlign,
+                sizer         : sizer,
+                parentWidth   : width,
+                widthOptions  : options?.horizontalAlign,
+                parentHeight  : height,
+                heightOptions : options.verticalAlign,
             });
             sizerInfo.setHasEverApplied(true);
         }
@@ -253,8 +253,8 @@ function applySizerInfo(appliedInfoSet: Set<Ui_Interfaces_IUiSizerInfo.IUiSizerI
 function getParentSize(parent: Egret_Egret.DisplayObjectContainer | null | undefined): Partial<AuxiliaryTypes_AuxiliaryTypes.Size> {
     if (parent instanceof Ui_Components_UiContainer.UiContainer) {
         return {
-            width   : parent.getUnscaledManualWidth(),
-            height  : parent.getUnscaledManualHeight(),
+            width  : parent.getUnscaledManualWidth(),
+            height : parent.getUnscaledManualHeight(),
         };
     } else {
         return {};
@@ -272,16 +272,16 @@ function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOpti
     const aabbWidth = ((widthOptions == null) || (parentWidth == null))
         ? undefined
         : Numbers_Utils.getValueInRange({
-            rawValue    : parentWidth * (widthOptions.percentage ?? 0) / 100 + (widthOptions.extension ?? 0),
-            minValue    : widthOptions.minValue ?? 0,
-            maxValue    : widthOptions.maxValue ?? Numbers_Constants.MaxValue,
+            rawValue : parentWidth * (widthOptions.percentage ?? 0) / 100 + (widthOptions.extension ?? 0),
+            minValue : widthOptions.minValue ?? 0,
+            maxValue : widthOptions.maxValue ?? Numbers_Constants.MaxValue,
         });
     const aabbHeight = ((heightOptions == null) || (parentHeight == null))
         ? undefined
         : Numbers_Utils.getValueInRange({
-            rawValue    : parentHeight * (heightOptions.percentage ?? 0) / 100 + (heightOptions.extension ?? 0),
-            minValue    : heightOptions.minValue ?? 0,
-            maxValue    : heightOptions.maxValue ?? Numbers_Constants.MaxValue,
+            rawValue : parentHeight * (heightOptions.percentage ?? 0) / 100 + (heightOptions.extension ?? 0),
+            minValue : heightOptions.minValue ?? 0,
+            maxValue : heightOptions.maxValue ?? Numbers_Constants.MaxValue,
         });
 
     const rotationInRadian  = sizer.getRotationInDegree() * Numbers_Constants.DegToRad;

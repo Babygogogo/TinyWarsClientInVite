@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum WarTypeId {
     Undefined   = 0,
     McwStd      = 1,    // 多人常规

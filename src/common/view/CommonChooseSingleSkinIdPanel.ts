@@ -35,11 +35,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,   callback : this.closePanel },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -109,8 +109,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForItemRenderer[] = [];
         for (const skinId of openData.availableSkinIdArray) {
             dataArray.push({
-                skinId      : skinId,
-                callback    : callback,
+                skinId   : skinId,
+                callback : callback,
             });
         }
 
@@ -130,7 +130,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgConfirm,  callback: this._onTouchedImgConfirm },
+            { ui : this._imgConfirm,  callback : this._onTouchedImgConfirm },
         ]);
         this._applySettingsForWholeTouch(true, true);
 

@@ -15,7 +15,7 @@ export function init(): void {
     Networks_Manager.addListeners([
         { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogAddMessage,         callback : _onMsgChangeLogAddMessage },
         { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogModifyMessage,      callback : _onMsgChangeLogModifyMessage },
-        { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogGetMessageList,     callback : _onMsgChangeLogGetMessageList, },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChangeLogGetMessageList,     callback : _onMsgChangeLogGetMessageList },
     ], null);
 }
 
@@ -24,7 +24,7 @@ export function reqChangeLogAddMessage(textList: LanguageText[]): void {
         MsgChangeLogAddMessage : {
             c : {
                 textList : textList.map(v => v.toJson()),
-            }
+            },
         },
     });
 }
@@ -41,7 +41,7 @@ export function reqChangeLogModifyMessage(messageId: number, textList: LanguageT
             c : {
                 messageId : messageId,
                 textList  : textList.map(v => v.toJson()),
-            }
+            },
         },
     });
 }
@@ -56,7 +56,7 @@ export function reqChangeLogGetMessageList(): void {
     Networks_Manager.send({
         MsgChangeLogGetMessageList : {
             c : {
-            }
+            },
         },
     });
 }

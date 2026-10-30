@@ -39,7 +39,7 @@ class UiFloatText extends Ui_Components_UiContainer.UiContainer {
         super();
 
         const width = Stages_Constants.Dimension.DesignWidth;
-        const label = new Ui_Components_UiLabel.UiLabel;
+        const label = new Ui_Components_UiLabel.UiLabel();
         label.setTextColor(0xFFFFFF);
         label.setStrokeWidth(2);
         label.setFontSize(16);
@@ -49,12 +49,12 @@ class UiFloatText extends Ui_Components_UiContainer.UiContainer {
         this.addUiChild(label);
 
         this.checkAndInitSizerInfo().setSizerOptions({
-            horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
         });
 
         Tween_Executor.Executor.get(label)
             .wait(4000)
-            .to({ customAlpha: 0 }, 1000)
+            .to({ customAlpha : 0 }, 1000)
             .call(() => this.getParent()?.removeChild(this));
 
         const height = label.getScaledHeight();
@@ -64,7 +64,7 @@ class UiFloatText extends Ui_Components_UiContainer.UiContainer {
         this.setAnchorOffsetY(height);
 
         Tween_Executor.Executor.get(this as Ui_Components_UiContainer.UiContainer)
-            .set({ customScaleX: 0.5, customScaleY: 0.5 })
-            .to({ customScaleX: 1, customScaleY: 1 }, 100);
+            .set({ customScaleX : 0.5, customScaleY : 0.5 })
+            .to({ customScaleX : 1, customScaleY : 1 }, 100);
     }
 }

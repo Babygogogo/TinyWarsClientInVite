@@ -21,7 +21,7 @@ export function checkIsValid(
     data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddTileBuffSimple>,
     gameConfig              : GameConfigs_GameConfig.GameConfig,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
-    playersCountUnneutral   : number
+    playersCountUnneutral   : number,
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
@@ -34,7 +34,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0260,
         Lang_Utils.getText(Lang_Constants.TextType.Tiles),
-        Lang_Utils.getTileBuffName(data.getActBuffType())
+        Lang_Utils.getTileBuffName(data.getActBuffType()),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddTileBuffSimple>): string | null {
@@ -61,7 +61,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
             if (comparator != null) {
                 conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                     comparator,
-                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
                 )}`);
             }
         }
@@ -114,7 +114,7 @@ export function getErrorTip(
     data                    : WeaAddTileBuffSimple,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gameConfig              : GameConfigs_GameConfig.GameConfig
+    gameConfig              : GameConfigs_GameConfig.GameConfig,
 ): string | null {
     {
         const filter = data.getConUnitFilter();
@@ -258,7 +258,7 @@ function calculateExpiringTime(
     action              : WeaAddTileBuffSimple,
     currentTurnIndex    : number,
     currentPlayerIndex  : number,
-    playersCountNeutral : number
+    playersCountNeutral : number,
 ): (number | null)[] {
     const rawEndTurnIndex = action.getActEndTurnIndex();
     if (rawEndTurnIndex == null) {

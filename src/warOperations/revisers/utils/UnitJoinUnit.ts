@@ -23,7 +23,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitJo
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId, 
+    });
     const unitMap       = war.getUnitMap();
     const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(revisedPath.nodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitJoinUnit_02);
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
@@ -33,9 +35,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitJo
     }
 
     return WoContainer.fromJson({
-        WoUnitJoinUnit   : {
-            path            : revisedPath.toProto().toJson(),
-            launchUnitId    : launchUnitId,
+        WoUnitJoinUnit : {
+            path         : revisedPath.toProto().toJson(),
+            launchUnitId : launchUnitId,
         },
     });
 }

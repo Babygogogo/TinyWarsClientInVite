@@ -650,9 +650,6 @@ export function toColorString(value: number): string {
     return "#" + color;
 }
 
-
-
-
 export function runEgret(options: Egret_Web.RunEgretOptions) {
     Recycler.$init();
 
@@ -664,7 +661,6 @@ export function updateAllScreens() {
 export function getOption(key: string) {
     return Egret_Web.getOption(key);
 }
-
 
 export function setInterval<TThis, TArgs extends unknown[], TResult>(
     listener: (this: TThis, ...args: TArgs) => TResult, thisObject: TThis, delay: number, ...args: TArgs

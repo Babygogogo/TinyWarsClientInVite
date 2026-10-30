@@ -33,10 +33,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -85,8 +85,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray             : DataForItemRenderer[] = [];
         for (const mapTagId of enabledMapTagIdArray.sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                mapTagId    : mapTagId,
-                panel       : this,
+                mapTagId : mapTagId,
+                panel    : this,
             });
         }
 
@@ -110,7 +110,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
 
         this._setShortSfxCode(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -139,7 +139,7 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         this._labelId.setText(`#${mapTagId}`);
-        this._labelName.setText(Lang_Utils.getLanguageText({ textArray: mapTagData?.getNameArray() }) ?? Lang_Constants.UndefinedError);
+        this._labelName.setText(Lang_Utils.getLanguageText({ textArray : mapTagData?.getNameArray() }) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }
 }

@@ -45,15 +45,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnWeatherType,                         callback: this._onTouchedBtnWeatherType },
-            { ui: this._btnWeatherTurnsCount,                   callback: this._onTouchedBtnWeatherTurnsCount },
+            { ui : this._btnWeatherType,                         callback : this._onTouchedBtnWeatherType },
+            { ui : this._btnWeatherTurnsCount,                   callback : this._onTouchedBtnWeatherTurnsCount },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -82,9 +82,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -100,11 +100,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
-            availableNumberArray    : gameConfig.getAllWeatherTypeArray(),
-            currentNumber           : action.getWeatherType(),
-            getNumberMainText       : num => Lang_Utils.getWeatherName(num, gameConfig) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : weatherType => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            availableNumberArray : gameConfig.getAllWeatherTypeArray(),
+            currentNumber        : action.getWeatherType(),
+            getNumberMainText    : num => Lang_Utils.getWeatherName(num, gameConfig) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : weatherType => {
                 action.setWeatherType(weatherType);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -123,11 +123,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
-            minValue        : 0,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : action.getWeatherTurnsCount(),
-            callback        : turnsCount => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+            minValue     : 0,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : action.getWeatherTurnsCount(),
+            callback     : turnsCount => {
                 action.setWeatherTurnsCount(turnsCount);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -175,7 +175,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = this.getOpenData()?.war.getGcData();
         this._labelWeatherType.setText(((weatherType == null) || (gameConfig == null))
             ? Lang_Constants.UndefinedError
-            : (Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError)
+            : (Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError),
         );
     }
 
@@ -186,7 +186,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             : (turnsCount == 0
                 ? Lang_Utils.getText(Lang_Constants.TextType.B0141)
                 : `${turnsCount}`
-            )
+            ),
         );
     }
 

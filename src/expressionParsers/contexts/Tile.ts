@@ -53,21 +53,21 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Variables    = Tile.generateVariables();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Tile.VnX,            { desc: Lang_Constants.TextType.A0131, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnY,            { desc: Lang_Constants.TextType.A0135, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnPos,          { desc: Lang_Constants.TextType.A0576, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnPlayerIndex,  { desc: Lang_Constants.TextType.A0146, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnTeamIndex,    { desc: Lang_Constants.TextType.A0152, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnType,         { desc: Lang_Constants.TextType.A0164, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnCustomNameId, { desc: Lang_Constants.TextType.A0962, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnBaseType,     { desc: Lang_Constants.TextType.A0879, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnObjectType,   { desc: Lang_Constants.TextType.A0880, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnHighlighted,  { desc: Lang_Constants.TextType.A0174, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnLocationIds,  { desc: Lang_Constants.TextType.A0707, resultType: ExpressionParsers_Enums.ResultType.NumberArray, isExtension: false });
-        variables.set(Tile.VnHasUnit,      { desc: Lang_Constants.TextType.A0465, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(Tile.VnUnit,         { desc: Lang_Constants.TextType.A0466, resultType: ExpressionParsers_Enums.ResultType.Unit,        isExtension: false });
-        variables.set(Tile.VnPlayer,       { desc: Lang_Constants.TextType.A0470, resultType: ExpressionParsers_Enums.ResultType.Player,      isExtension: false });
-        variables.set(Tile.VnWar,          { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,         isExtension: false });
+        variables.set(Tile.VnX,            { desc : Lang_Constants.TextType.A0131, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnY,            { desc : Lang_Constants.TextType.A0135, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnPos,          { desc : Lang_Constants.TextType.A0576, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnPlayerIndex,  { desc : Lang_Constants.TextType.A0146, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnTeamIndex,    { desc : Lang_Constants.TextType.A0152, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnType,         { desc : Lang_Constants.TextType.A0164, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnCustomNameId, { desc : Lang_Constants.TextType.A0962, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnBaseType,     { desc : Lang_Constants.TextType.A0879, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnObjectType,   { desc : Lang_Constants.TextType.A0880, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnHighlighted,  { desc : Lang_Constants.TextType.A0174, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnLocationIds,  { desc : Lang_Constants.TextType.A0707, resultType : ExpressionParsers_Enums.ResultType.NumberArray, isExtension : false });
+        variables.set(Tile.VnHasUnit,      { desc : Lang_Constants.TextType.A0465, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(Tile.VnUnit,         { desc : Lang_Constants.TextType.A0466, resultType : ExpressionParsers_Enums.ResultType.Unit,        isExtension : false });
+        variables.set(Tile.VnPlayer,       { desc : Lang_Constants.TextType.A0470, resultType : ExpressionParsers_Enums.ResultType.Player,      isExtension : false });
+        variables.set(Tile.VnWar,          { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,         isExtension : false });
 
         return variables;
     }
@@ -81,21 +81,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnHp, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_00,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnHp, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_01,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnIncome,
@@ -105,21 +107,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnIncome, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_02
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_02,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnIncome, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_03
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_03,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnCapturePoint,
@@ -129,21 +133,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnCapturePoint, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_04
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_04,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnCapturePoint, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_05
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_05,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnBuildPoint,
@@ -153,21 +159,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnBuildPoint, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_06
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_06,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnBuildPoint, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_07
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_07,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnInLocation,
@@ -177,21 +185,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnInLocation, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_08
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_08,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnInLocation, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_09
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_09,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnDistanceToGrid,
@@ -201,23 +211,25 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnDistanceToGrid, 2, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_10
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_10,
                         );
                     }
 
                     for (let i = 0; i < argArray.length; ++i) {
-                        const argType = argArray[i].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                        const argType = argArray[i].getResultType({
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
                                 ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnDistanceToGrid, i + 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                                Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_11
+                                Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_11,
                             );
                         }
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnDistanceToLocation,
@@ -227,21 +239,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnDistanceToLocation, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_12
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_12,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnDistanceToLocation, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_13
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_13,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnAllAbnormalStates,
@@ -252,13 +266,13 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnAllAbnormalStates, 0, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_14
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_14,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.TileBuffArray;
                 },
-            )
+            ),
         );
         functions.set(
             Tile.FnCanHideUnitType,
@@ -268,21 +282,23 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Tile.FnCanHideUnitType, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_15
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_15,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Tile.FnCanHideUnitType, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_16
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextTile_GenerateFunctions_16,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
 
         return functions;
@@ -352,13 +368,13 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         if (argNum === 1) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                rawMaxValue == null ? -1 : rawMaxValue
+                rawMaxValue == null ? -1 : rawMaxValue,
             );
 
         } else if (argNum == 2) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                (rawMaxValue ?? 0) - currentValue
+                (rawMaxValue ?? 0) - currentValue,
             );
 
         } else if (argNum == 3) {
@@ -411,13 +427,13 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         if (argNum === 1) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                rawMaxValue == null ? -1 : rawMaxValue
+                rawMaxValue == null ? -1 : rawMaxValue,
             );
 
         } else if (argNum == 2) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                (rawMaxValue ?? 0) - currentValue
+                (rawMaxValue ?? 0) - currentValue,
             );
 
         } else if (argNum == 3) {
@@ -453,13 +469,13 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         if (argNum === 1) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                rawMaxValue == null ? -1 : rawMaxValue
+                rawMaxValue == null ? -1 : rawMaxValue,
             );
 
         } else if (argNum == 2) {
             return new ExpressionParsers_Results_Num.Num(
                 war,
-                (rawMaxValue ?? 0) - currentValue
+                (rawMaxValue ?? 0) - currentValue,
             );
 
         } else if (argNum == 3) {
@@ -534,14 +550,14 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         const gridIndexList = this._tile.getWar().getTileMap().getGridIndexListWithAnyLocationId([locationId]);
         return new ExpressionParsers_Results_Num.Num(
             war,
-            (gridIndexList.length <= 0) ? -1 : this._tile.getGridIndex().getMinDistance(gridIndexList)
+            (gridIndexList.length <= 0) ? -1 : this._tile.getGridIndex().getMinDistance(gridIndexList),
         );
     }
     private callAllAbnormalStates(): ExpressionParsers_Results_TileBuffArray.TileBuffArray {
         const tile = this._tile;
         return new ExpressionParsers_Results_TileBuffArray.TileBuffArray(
             this.getWar(),
-            tile.getUnfixedBuffList()?.map(v => new ExpressionParsers_Results_TileBuff.TileBuff(v, tile))
+            tile.getUnfixedBuffList()?.map(v => new ExpressionParsers_Results_TileBuff.TileBuff(v, tile)),
         );
     }
     private callCanHideUnitType(arg: ExpressionParsers_Results_Base.Base): ExpressionParsers_Results_Num.Num {
@@ -557,7 +573,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
 
         return new ExpressionParsers_Results_Num.Num(
             war,
-            this._tile.checkCanHideUnitType(unitTypeId) ? 1 : 0
+            this._tile.checkCanHideUnitType(unitTypeId) ? 1 : 0,
         );
     }
 }

@@ -57,19 +57,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmAddWarEvent,                callback: this._onNotifyMsgMmAddWarEvent },
-            { type: Notifications_TypeId.TypeId.MsgMmSubmitMapSimpleDialogue,    callback: this._onNotifyMsgMmSubmitMapSimpleDialogue },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmAddWarEvent,                callback : this._onNotifyMsgMmAddWarEvent },
+            { type : Notifications_TypeId.TypeId.MsgMmSubmitMapSimpleDialogue,    callback : this._onNotifyMsgMmSubmitMapSimpleDialogue },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel, },
-            { ui: this._btnSave,                callback: this._onTouchedBtnSave, },
-            { ui: this._btnHelpSave,            callback: this._onTouchedBtnHelpSave },
-            { ui: this._btnSaveAndSubmit,       callback: this._onTouchedBtnSaveAndSubmit },
-            { ui: this._btnHelpSaveAndSubmit,   callback: this._onTouchedBtnHelpSaveAndSubmit },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSave,                callback : this._onTouchedBtnSave },
+            { ui : this._btnHelpSave,            callback : this._onTouchedBtnHelpSave },
+            { ui : this._btnSaveAndSubmit,       callback : this._onTouchedBtnSaveAndSubmit },
+            { ui : this._btnHelpSaveAndSubmit,   callback : this._onTouchedBtnHelpSaveAndSubmit },
 
-            { ui: this._btnAddWarEvent,         callback: this._onTouchedBtnAddWarEvent },
-            { ui: this._btnSubmitDialogue,      callback: this._onTouchedBtnSubmitDialogue },
+            { ui : this._btnAddWarEvent,         callback : this._onTouchedBtnAddWarEvent },
+            { ui : this._btnSubmitDialogue,      callback : this._onTouchedBtnSubmitDialogue },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -103,24 +103,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (reviewingSlotIndex === slotIndex) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
-                callback: () => {
+                callback   : () => {
                     MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                        slotIndex                   : slotIndex,
-                        mapRawData                  : mapRawData,
-                        needReview                  : false,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : war.getGridMarkData(),
+                        slotIndex                 : slotIndex,
+                        mapRawData                : mapRawData,
+                        needReview                : false,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : war.getGridMarkData(),
                     });
                     this.closePanel();
                 },
             });
         } else {
             MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                slotIndex                   : slotIndex,
-                mapRawData                  : mapRawData,
-                needReview                  : false,
-                srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                gridMarkData                : war.getGridMarkData(),
+                slotIndex                 : slotIndex,
+                mapRawData                : mapRawData,
+                needReview                : false,
+                srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                gridMarkData              : war.getGridMarkData(),
             });
             this.closePanel();
         }
@@ -168,7 +168,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getFormattedText(
+            getContent : () => Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0157,
                 incrementalEventArray.length,
                 incrementalEventArray.length ? incrementalEventArray.map(v => `E${v.getEventId()}`).join(`, `) : `----`,
@@ -179,16 +179,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 incrementalActionArray.length,
                 incrementalActionArray.length ? incrementalActionArray.map(v => `A${v.getWeaCommonData()?.getActionId()}`).join(`, `) : `----`,
             ),
-            callback    : () => {
+            callback : () => {
                 NormalMap_Model_NormalMapProxy.reqMmAddWarEvent(
                     srcNormalMapIdForAddEvent,
                     WarEventFullData.fromJson({
-                        eventArray              : incrementalEventArray.map(v => v.toJson()),
-                        actionArray             : incrementalActionArray.map(v => v.toJson()),
-                        conditionArray          : incrementalConditionArray.map(v => v.toJson()),
-                        conditionNodeArray      : incrementalNodeArray.map(v => v.toJson()),
-                        customCounterNameArray  : [],
-                    })
+                        eventArray             : incrementalEventArray.map(v => v.toJson()),
+                        actionArray            : incrementalActionArray.map(v => v.toJson()),
+                        conditionArray         : incrementalConditionArray.map(v => v.toJson()),
+                        conditionNodeArray     : incrementalNodeArray.map(v => v.toJson()),
+                        customCounterNameArray : [],
+                    }),
                 );
             },
         });
@@ -210,15 +210,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1100),
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1100),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
                 const mapRawData                = Helpers_Misc.getExisted(this._mapRawData);
                 const warRuleDialogueInfoArray  : WarRuleDialogueInfo[] = [];
                 for (const warRule of mapRawData.getTemplateWarRuleArray()) {
                     warRuleDialogueInfoArray.push(WarRuleDialogueInfo.fromJson({
-                        templateWarRuleId           : warRule.getRuleId(),
-                        mapSimpleDialogueIdArray    : warRule.getMapSimpleDialogueIdArray(),
+                        templateWarRuleId        : warRule.getRuleId(),
+                        mapSimpleDialogueIdArray : warRule.getMapSimpleDialogueIdArray(),
                     }));
                 }
                 NormalMap_Model_NormalMapProxy.reqMmSubmitMapSimpleDialogue(
@@ -257,13 +257,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (reviewingSlotIndex === slotIndex) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0245),
-                callback: () => {
+                callback   : () => {
                     MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                        slotIndex                   : slotIndex,
-                        mapRawData                  : mapRawData,
-                        needReview                  : true,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : war.getGridMarkData(),
+                        slotIndex                 : slotIndex,
+                        mapRawData                : mapRawData,
+                        needReview                : true,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : war.getGridMarkData(),
                     });
                     this.closePanel();
                 },
@@ -271,23 +271,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             if (reviewingSlotIndex == null) {
                 MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                    slotIndex                   : slotIndex,
-                    mapRawData                  : mapRawData,
-                    needReview                  : true,
-                    srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                    gridMarkData                : war.getGridMarkData(),
+                    slotIndex                 : slotIndex,
+                    mapRawData                : mapRawData,
+                    needReview                : true,
+                    srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                    gridMarkData              : war.getGridMarkData(),
                 });
                 this.closePanel();
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0084),
-                    callback: () => {
+                    callback   : () => {
                         MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                            slotIndex                   : slotIndex,
-                            mapRawData                  : mapRawData,
-                            needReview                  : true,
-                            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                            gridMarkData                : war.getGridMarkData(),
+                            slotIndex                 : slotIndex,
+                            mapRawData                : mapRawData,
+                            needReview                : true,
+                            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                            gridMarkData              : war.getGridMarkData(),
                         });
                         this.closePanel();
                     },
@@ -347,9 +347,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const errorCode     = await Maps_Utils_MapRawData.getErrorCode({
-            mapRawData                          : mapRawData,
-            allowRedundantWarEvents             : srcNormalMapIdForAddEvent != null,
-            allowRedundantMapSimpleDialogues    : srcNormalMapIdForAddEvent != null,
+            mapRawData                       : mapRawData,
+            allowRedundantWarEvents          : srcNormalMapIdForAddEvent != null,
+            allowRedundantMapSimpleDialogues : srcNormalMapIdForAddEvent != null,
         });
         this._mapErrorCode  = errorCode;
         this._mapRawData    = mapRawData;

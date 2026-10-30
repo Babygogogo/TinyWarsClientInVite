@@ -34,10 +34,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -92,8 +92,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray: DataForItemRenderer[] = [];
         for (const gameMode of this.getOpenData()?.availableGameModeArray.concat().sort((v1, v2) => v1 - v2) ?? []) {
             dataArray.push({
-                gameMode    : gameMode,
-                panel       : this,
+                gameMode : gameMode,
+                panel    : this,
             });
         }
 
@@ -114,10 +114,10 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupHelp,      callback: this._onTouchedGroupHelp },
+            { ui : this._groupHelp,      callback : this._onTouchedGroupHelp },
         ]);
     }
 

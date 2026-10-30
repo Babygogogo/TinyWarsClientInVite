@@ -136,16 +136,16 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
 
     public serialize(): SerialWarEventManager {
         return SerialWarEventManager.fromJson({
-            calledCountList                 : this._getCalledCountList()?.map(v => v.toJson()) ?? [],
-            customCounterArray              : this._getCustomCounterArray()?.map(v => v.toJson()) ?? [],
-            ongoingPersistentActionIdArray  : [...this.getOpaIdArray()],
+            calledCountList                : this._getCalledCountList()?.map(v => v.toJson()) ?? [],
+            customCounterArray             : this._getCustomCounterArray()?.map(v => v.toJson()) ?? [],
+            ongoingPersistentActionIdArray : [...this.getOpaIdArray()],
         });
     }
     public serializeForCreateSfw(): SerialWarEventManager {
         return SerialWarEventManager.fromJson({
-            calledCountList                 : this._getCalledCountList()?.map(v => v.clone().toJson()) ?? [],
-            customCounterArray              : this._getCustomCounterArray()?.map(v => v.clone().toJson()) ?? [],
-            ongoingPersistentActionIdArray  : [...this.getOpaIdArray()],
+            calledCountList                : this._getCalledCountList()?.map(v => v.clone().toJson()) ?? [],
+            customCounterArray             : this._getCustomCounterArray()?.map(v => v.clone().toJson()) ?? [],
+            ongoingPersistentActionIdArray : [...this.getOpaIdArray()],
         });
     }
     public serializeForCreateMfr(): SerialWarEventManager {
@@ -584,7 +584,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
             : await this._callWarEventWithoutExtraData(
                 action.getWarEventId(),
                 action.getNodeAndActionsIndex(),
-                isFastExecute
+                isFastExecute,
             );
     }
     private async _callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
@@ -1328,7 +1328,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
             const warEventId    = warEvent.getEventId();
             const dataIndex     = this._getCallableNodeAndActionsIndex(warEventId, nodeResultDict, conditionResultDict);
             if (dataIndex != null) {
-                result = { warEventId: warEventId, dataIndex: dataIndex };
+                result = { warEventId : warEventId, dataIndex : dataIndex };
                 break;
             }
         }
@@ -1357,7 +1357,7 @@ export class BwWarEventManager implements BaseWar_Interface_IBwWarEventManager.I
             if (this._checkIsMeetConditionNode(
                 Helpers_Misc.getExisted(rootNodeAndActionsArray[index].getNodeIdAndFlags()),
                 nodeResultDict,
-                conditionResultDict
+                conditionResultDict,
             )) {
                 return index;
             }

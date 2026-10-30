@@ -23,8 +23,8 @@ export function getValueInRange({ minValue, maxValue, rawValue }: {
 }
 export function getValueInInt32(rawValue: number): number {
     return getValueInRange({
-        minValue    : Numbers_Constants.MinInt32,
-        maxValue    : Numbers_Constants.MaxInt32,
-        rawValue    : Math.floor(rawValue),
+        minValue : Numbers_Constants.MinInt32,
+        maxValue : Numbers_Constants.MaxInt32,
+        rawValue : Math.floor(rawValue),
     });
 }

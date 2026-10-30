@@ -123,7 +123,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             MultiMatchRoom_Model_MmrProxy.reqMmrSetBootTimerDaysRange(
                 [stdLowerDays, stdUpperDays],
-                [fogLowerDays, fogUpperDays]
+                [fogLowerDays, fogUpperDays],
             );
         }
         this.closePanel();

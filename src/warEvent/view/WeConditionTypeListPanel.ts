@@ -35,10 +35,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -104,10 +104,10 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSwitch,              callback: this._onTouchedBtnSwitch },
+            { ui : this._btnSwitch,              callback : this._onTouchedBtnSwitch },
         ]);
 
         this._updateComponentsForLanguage();
@@ -129,7 +129,7 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const war           = openData.war;
         if (conditionType !== getConditionType(condition)) {
             WarEvents_Conditions_Utils_Common.resetCondition(condition, conditionType);
-            WarEvents_Conditions_Utils_Common.openConditionModifyPanel({ fullData: openData.fullData, condition, war });
+            WarEvents_Conditions_Utils_Common.openConditionModifyPanel({ fullData : openData.fullData, condition, war });
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionTypeListPanel);
 
             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -166,15 +166,27 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 }
 
 function getConditionType(condition: WarEventCondition): WarEvents_Conditions_Constants.ConditionTypeId | null {
-    if      (condition.getWecPlayerPresence())                  { return WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence; }
-    else if (condition.getWecTurnAndPlayer())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer; }
-    else if (condition.getWecEventCalledCount())                { return WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount; }
-    else if (condition.getWecWeatherAndFog())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog; }
-    else if (condition.getWecTilePresence())                    { return WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence; }
-    else if (condition.getWecUnitPresence())                    { return WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence; }
-    else if (condition.getWecExpression())                      { return WarEvents_Conditions_Constants.ConditionTypeId.WecExpression; }
-    else if (condition.getWecCustomCounter())                   { return WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter; }
-    else if (condition.getWecOngoingPersistentActionPresence()) { return WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence; }
-    else if (condition.getWecManualActionStatistics())          { return WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics; }
-    else                                                        { return null; }
+    if      (condition.getWecPlayerPresence())                  {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecPlayerPresence; 
+    } else if (condition.getWecTurnAndPlayer())                   {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecTurnAndPlayer; 
+    } else if (condition.getWecEventCalledCount())                {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecEventCalledCount; 
+    } else if (condition.getWecWeatherAndFog())                   {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecWeatherAndFog; 
+    } else if (condition.getWecTilePresence())                    {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecTilePresence; 
+    } else if (condition.getWecUnitPresence())                    {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecUnitPresence; 
+    } else if (condition.getWecExpression())                      {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecExpression; 
+    } else if (condition.getWecCustomCounter())                   {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecCustomCounter; 
+    } else if (condition.getWecOngoingPersistentActionPresence()) {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecOngoingPersistentActionPresence; 
+    } else if (condition.getWecManualActionStatistics())          {
+        return WarEvents_Conditions_Constants.ConditionTypeId.WecManualActionStatistics; 
+    } else                                                        {
+        return null; 
+    }
 }

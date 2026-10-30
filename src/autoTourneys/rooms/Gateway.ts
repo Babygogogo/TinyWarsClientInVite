@@ -14,18 +14,22 @@ import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonP
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrGetRoomPublicInfo,             callback: _onMsgAtrGetRoomPublicInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrGetJoinedRoomIdArray,          callback: _onMsgAtrGetJoinedRoomIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrSetBannedCoIdArray,            callback: _onMsgAtrSetBannedCoIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrSetSelfSettings,               callback: _onMsgAtrSetSelfSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtrDeleteRoomByServer,            callback: _onMsgAtrDeleteRoomByServer },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtrGetRoomPublicInfo,             callback : _onMsgAtrGetRoomPublicInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtrGetJoinedRoomIdArray,          callback : _onMsgAtrGetJoinedRoomIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtrSetBannedCoIdArray,            callback : _onMsgAtrSetBannedCoIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtrSetSelfSettings,               callback : _onMsgAtrSetSelfSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtrDeleteRoomByServer,            callback : _onMsgAtrDeleteRoomByServer },
     ]);
 }
 
 export function reqAtrGetRoomPublicInfo(roomId: number): void {
-    Networks_Manager.send({ MsgAtrGetRoomPublicInfo: { c: {
-        roomId,
-    } }, });
+    Networks_Manager.send({
+        MsgAtrGetRoomPublicInfo : {
+            c : {
+                roomId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrGetRoomPublicInfoResponse;
@@ -38,8 +42,12 @@ async function _onMsgAtrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqAtrGetJoinedRoomIdArray(): void {
-    Networks_Manager.send({ MsgAtrGetJoinedRoomIdArray: { c: {
-    }, }, });
+    Networks_Manager.send({
+        MsgAtrGetJoinedRoomIdArray : {
+            c : {
+            }, 
+        }, 
+    });
 }
 function _onMsgAtrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as AtrGetJoinedRoomIdArrayResponse;
@@ -48,10 +56,14 @@ function _onMsgAtrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqAtrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
-    Networks_Manager.send({ MsgAtrSetBannedCoIdArray: { c: {
-        roomId          : roomId,
-        bannedCoIdArray : bannedCoIdArray,
-    } }, });
+    Networks_Manager.send({
+        MsgAtrSetBannedCoIdArray : {
+            c : {
+                roomId          : roomId,
+                bannedCoIdArray : bannedCoIdArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrSetBannedCoIdArrayResponse;
@@ -62,11 +74,15 @@ async function _onMsgAtrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> 
 }
 
 export function reqAtrSetSelfSettings(roomId: number, coId: number, unitAndTileSkinId: number): void {
-    Networks_Manager.send({ MsgAtrSetSelfSettings: { c: {
-        roomId,
-        coId,
-        unitAndTileSkinId,
-    }, }, });
+    Networks_Manager.send({
+        MsgAtrSetSelfSettings : {
+            c : {
+                roomId,
+                coId,
+                unitAndTileSkinId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgAtrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtrSetSelfSettingsResponse;

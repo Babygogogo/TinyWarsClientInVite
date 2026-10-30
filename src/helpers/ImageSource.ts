@@ -136,7 +136,7 @@ export function getTileBase({ version, themeType, skinId, baseType, isDark, shap
         : `frame00`;
     return `tileBase_${textForResolution}_${textForVersion}_${textForTheme}_${textForType}_${textForDark}_${textForShapeId}_${textForSkin}_${textForFrame}`;
 }
-export function getTileDecoration({version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount}: {
+export function getTileDecoration({ version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount }: {
     version             : Graphics_Constants.TextureVersionId;
     themeType           : number;
     skinId              : number;

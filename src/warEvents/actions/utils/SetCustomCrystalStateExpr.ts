@@ -23,9 +23,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTileFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -33,9 +33,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActRadius(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActRadius(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -43,9 +43,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActPriority(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActPriority(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -53,9 +53,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCanAffectSelf(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCanAffectSelf(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -63,9 +63,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCanAffectAlly(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCanAffectAlly(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -73,9 +73,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCanAffectEnemy(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCanAffectEnemy(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -83,9 +83,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActOffsetFund(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActOffsetFund(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -93,9 +93,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActOffsetEnergyPercentage(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActOffsetEnergyPercentage(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -103,9 +103,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActOffsetHp(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActOffsetHp(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -113,9 +113,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCanBeFatal(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCanBeFatal(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -123,9 +123,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActOffsetFuelPercentage(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActOffsetFuelPercentage(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -133,9 +133,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActOffsetPrimaryAmmoPercentage(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -176,9 +176,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -188,9 +188,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActRadius(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActRadius(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -200,9 +200,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActPriority(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPriority(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -212,9 +212,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCanAffectSelf(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCanAffectSelf(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -224,9 +224,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCanAffectAlly(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCanAffectAlly(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -236,9 +236,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCanAffectEnemy(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCanAffectEnemy(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -248,9 +248,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActOffsetFund(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActOffsetFund(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -260,9 +260,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActOffsetEnergyPercentage(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActOffsetEnergyPercentage(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -272,9 +272,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActOffsetHp(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActOffsetHp(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -284,9 +284,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCanBeFatal(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCanBeFatal(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -296,9 +296,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActOffsetFuelPercentage(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActOffsetFuelPercentage(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -308,9 +308,9 @@ export function getErrorTip(data: WeaSetCustomCrystalStateExpr, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActOffsetPrimaryAmmoPercentage(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -339,9 +339,9 @@ function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile.I
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.Radius.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.Radius.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -361,9 +361,9 @@ function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.Priority.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.Priority.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -437,9 +437,9 @@ function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITi
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -459,9 +459,9 @@ function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, til
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -481,9 +481,9 @@ function evalActOffsetHp(action: WeaSetCustomCrystalStateExpr, tile: Tiles_ITile
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -521,9 +521,9 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile:
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -543,9 +543,9 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -590,45 +590,45 @@ function createNewTileCustomCrystalData(action: WeaSetCustomCrystalStateExpr, ti
     const offsetPrimaryAmmoPercentage   = evalActOffsetPrimaryAmmoPercentage(action, tile, customCrystalData);
 
     return TileCustomCrystalData.fromJson({
-        radius                          : radius,
-        priority                        : priority,
-        canAffectSelf                   : canAffectSelf,
-        canAffectAlly                   : canAffectAlly,
-        canAffectEnemy                  : canAffectEnemy,
-        offsetFund                      : offsetFund,
-        offsetEnergyPercentage          : offsetEnergyPercentage,
-        offsetHp                        : offsetHp,
-        canBeFatal                      : canBeFatal,
-        offsetFuelPercentage            : offsetFuelPercentage,
-        offsetPrimaryAmmoPercentage     : offsetPrimaryAmmoPercentage,
+        radius                      : radius,
+        priority                    : priority,
+        canAffectSelf               : canAffectSelf,
+        canAffectAlly               : canAffectAlly,
+        canAffectEnemy              : canAffectEnemy,
+        offsetFund                  : offsetFund,
+        offsetEnergyPercentage      : offsetEnergyPercentage,
+        offsetHp                    : offsetHp,
+        canBeFatal                  : canBeFatal,
+        offsetFuelPercentage        : offsetFuelPercentage,
+        offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
 function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, TileCustomCrystalData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomCrystalData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({
-            gridIndex               : tile.getGridIndex().toProto().toJson(),
-            playerIndex             : tile.getPlayerIndex(),
-            baseType                : tile.getBaseType(),
-            baseShapeId             : tile.getBaseShapeId(),
-            decorationType          : tile.getDecorationType(),
-            decorationShapeId       : tile.getDecorationShapeId(),
-            objectType              : tile.getObjectType(),
-            objectShapeId           : tile.getObjectShapeId(),
+            gridIndex         : tile.getGridIndex().toProto().toJson(),
+            playerIndex       : tile.getPlayerIndex(),
+            baseType          : tile.getBaseType(),
+            baseShapeId       : tile.getBaseShapeId(),
+            decorationType    : tile.getDecorationType(),
+            decorationShapeId : tile.getDecorationShapeId(),
+            objectType        : tile.getObjectType(),
+            objectShapeId     : tile.getObjectShapeId(),
 
-            customNameId            : tile.getCustomNameId() ?? null,
-            unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-            groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-            isHighlighted           : tile.getIsHighlighted(),
+            customNameId           : tile.getCustomNameId() ?? null,
+            unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+            groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+            isHighlighted          : tile.getIsHighlighted(),
 
-            currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
-            currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
-            currentHp               : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
+            currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
+            currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
+            currentHp           : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
 
-            customBuildingData      : null,
-            customCrystalData       : tileCustomCrystalData.toJson(),
-            customCannonData        : null,
-            customLaserTurretData   : null,
+            customBuildingData    : null,
+            customCrystalData     : tileCustomCrystalData.toJson(),
+            customCannonData      : null,
+            customLaserTurretData : null,
         });
 
         tile.init(newData, tile.getGameConfig());

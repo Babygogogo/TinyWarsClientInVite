@@ -15,8 +15,8 @@ import {
 const RATIO_FOR_MIN_HEIGHT = Stages_Constants.Dimension.DesignWidth / Stages_Constants.Dimension.DesignMinHeight;
 
 const _canvasBoundsInfo = {
-    isUpdated   : false,
-    rect        : new DOMRect(),
+    isUpdated : false,
+    rect      : new DOMRect(),
 };
 
 let   _stage        : Egret_Egret.Stage;
@@ -123,18 +123,18 @@ class ScreenAdapter implements Egret_Sys.IScreenAdapter {
         if (screenWidth / screenHeight > RATIO_FOR_MIN_HEIGHT) {
             // 屏幕高度不足
             return {
-                stageWidth      : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * screenWidth / screenHeight * scaler),
-                stageHeight     : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * scaler),
-                displayWidth    : reviseStageDisplaySize(screenWidth),
-                displayHeight   : reviseStageDisplaySize(screenHeight),
+                stageWidth    : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * screenWidth / screenHeight * scaler),
+                stageHeight   : reviseStageDisplaySize(Stages_Constants.Dimension.DesignMinHeight * scaler),
+                displayWidth  : reviseStageDisplaySize(screenWidth),
+                displayHeight : reviseStageDisplaySize(screenHeight),
             };
         } else {
             // 屏幕高度充足
             return {
-                stageWidth      : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * scaler),
-                stageHeight     : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * screenHeight / screenWidth * scaler),
-                displayWidth    : reviseStageDisplaySize(screenWidth),
-                displayHeight   : reviseStageDisplaySize(screenHeight),
+                stageWidth    : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * scaler),
+                stageHeight   : reviseStageDisplaySize(Stages_Constants.Dimension.DesignWidth * screenHeight / screenWidth * scaler),
+                displayWidth  : reviseStageDisplaySize(screenWidth),
+                displayHeight : reviseStageDisplaySize(screenHeight),
             };
         }
     }

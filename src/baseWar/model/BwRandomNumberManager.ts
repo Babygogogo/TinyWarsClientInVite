@@ -6,7 +6,7 @@ import {
     Helpers_Misc,
 } from "../../internal.ts";
 import type {
-SeedRandomState,
+    SeedRandomState,
     SeedRandomStateJson,
 } from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 
@@ -32,7 +32,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
             if (currentState == null) {
                 throw Helpers_Misc.newError(`Empty currentState.`);
             }
-            this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state: currentState.toJson() }));
+            this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : currentState.toJson() }));
         }
     }
 
@@ -65,7 +65,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
         const generator = Helpers_Misc.getExisted(this._getRandomNumberGenerator());
         const state     = generator.state();
         const number    = generator.getNext();
-        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state: state }));
+        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : state }));
         return number;
     }
 
@@ -73,7 +73,7 @@ export class BwRandomNumberManager implements BaseWar_Interface_IBwRandomNumberM
         return Helpers_Misc.getExisted(this._getRandomNumberGenerator()).state();
     }
     public setSeedRandomCurrentStateJson(state: SeedRandomStateJson): void {
-        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state: state }));
+        this._setRandomNumberGenerator(new Helpers_SeedRandom.Generator("", { state : state }));
     }
 
     private _setSeedRandomInitialState(state: SeedRandomState): void {

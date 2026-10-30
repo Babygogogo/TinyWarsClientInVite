@@ -63,21 +63,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConUnitComparator,                   callback: this._onTouchedBtnConUnitComparator },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConUnitComparator,                   callback : this._onTouchedBtnConUnitComparator },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._btnActNeedFocusEffect,                  callback: this._onTouchedBtnActNeedFocusEffect },
-            { ui: this._btnActIsOneByOne,                       callback: this._onTouchedBtnActIsOneByOne },
-            { ui: this._btnActInterval,                         callback: this._onTouchedBtnActInterval },
+            { ui : this._btnActNeedFocusEffect,                  callback : this._onTouchedBtnActNeedFocusEffect },
+            { ui : this._btnActIsOneByOne,                       callback : this._onTouchedBtnActIsOneByOne },
+            { ui : this._btnActInterval,                         callback : this._onTouchedBtnActInterval },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -106,9 +106,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -124,10 +124,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -146,17 +146,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
 
                 if ((filter != null) && (action.getConUnitComparator() == null)) {
                     action.setConUnitComparator(ValueAndComparator.fromJson({
-                        comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
-                        value       : 0,
+                        comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                        value      : 0,
                     }));
                 }
 
@@ -178,17 +178,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = action.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon?.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
-                    currentValue    : oldCon?.getValue() ?? 0,
-                    minValue        : 0,
-                    maxValue        : 10,
-                    callback        : unitsCount => {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    currentValue : oldCon?.getValue() ?? 0,
+                    minValue     : 0,
+                    maxValue     : 10,
+                    callback     : unitsCount => {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
@@ -199,8 +199,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 oldCon.setComparator(sign);
                             } else {
                                 action.setConUnitComparator(ValueAndComparator.fromJson({
-                                    value       : unitsCount,
-                                    comparator  : sign,
+                                    value      : unitsCount,
+                                    comparator : sign,
                                 }));
                             }
 
@@ -208,7 +208,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         }
                     },
                 });
-            }
+            },
         });
     }
 
@@ -224,11 +224,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -270,11 +270,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1035),
-            minValue        : WarEvents_Actions_Constants_SetViewpointSimple.Common.MinInterval,
-            maxValue        : WarEvents_Actions_Constants_SetViewpointSimple.Common.MaxInterval,
-            currentValue    : action.getActInterval(),
-            callback        : interval => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1035),
+            minValue     : WarEvents_Actions_Constants_SetViewpointSimple.Common.MinInterval,
+            maxValue     : WarEvents_Actions_Constants_SetViewpointSimple.Common.MaxInterval,
+            currentValue : action.getActInterval(),
+            callback     : interval => {
                 if (interval === WarEvents_Actions_Constants_SetViewpointSimple.Common.DefaultInterval) {
                     action.setActInterval(null);
                 } else {

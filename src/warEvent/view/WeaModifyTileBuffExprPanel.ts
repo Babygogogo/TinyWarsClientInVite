@@ -79,31 +79,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                              callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                              callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConTileFilter,                   callback: this._onTouchedGroupModifyConTileFilter },
-            { ui: this._btnConTileFilter,                           callback: this._onTouchedBtnConTileFilter },
+            { ui : this._groupModifyConTileFilter,                   callback : this._onTouchedGroupModifyConTileFilter },
+            { ui : this._btnConTileFilter,                           callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._groupModifyConBuffFilter,                   callback: this._onTouchedGroupModifyConBuffFilter },
-            { ui: this._btnConBuffFilter,                           callback: this._onTouchedBtnConBuffFilter },
+            { ui : this._groupModifyConBuffFilter,                   callback : this._onTouchedGroupModifyConBuffFilter },
+            { ui : this._btnConBuffFilter,                           callback : this._onTouchedBtnConBuffFilter },
 
-            { ui: this._groupModifyActBuffType,                     callback: this._onTouchedGroupModifyActBuffType },
-            { ui: this._btnActBuffType,                             callback: this._onTouchedBtnActBuffType },
+            { ui : this._groupModifyActBuffType,                     callback : this._onTouchedGroupModifyActBuffType },
+            { ui : this._btnActBuffType,                             callback : this._onTouchedBtnActBuffType },
 
-            { ui: this._groupModifyActExpiringTurnIndex,            callback: this._onTouchedGroupModifyActExpiringTurnIndex },
-            { ui: this._btnActExpiringTurnIndex,                    callback: this._onTouchedBtnActExpiringTurnIndex },
+            { ui : this._groupModifyActExpiringTurnIndex,            callback : this._onTouchedGroupModifyActExpiringTurnIndex },
+            { ui : this._btnActExpiringTurnIndex,                    callback : this._onTouchedBtnActExpiringTurnIndex },
 
-            { ui: this._groupModifyActExpiringPlayerIndex,          callback: this._onTouchedGroupModifyActExpiringPlayerIndex },
-            { ui: this._btnActExpiringPlayerIndex,                  callback: this._onTouchedBtnActExpiringPlayerIndex },
+            { ui : this._groupModifyActExpiringPlayerIndex,          callback : this._onTouchedGroupModifyActExpiringPlayerIndex },
+            { ui : this._btnActExpiringPlayerIndex,                  callback : this._onTouchedBtnActExpiringPlayerIndex },
 
-            { ui: this._groupModifyActExtraParams,                  callback: this._onTouchedGroupModifyActExtraParams },
-            { ui: this._btnActExtraParams,                          callback: this._onTouchedBtnActExtraParams },
+            { ui : this._groupModifyActExtraParams,                  callback : this._onTouchedGroupModifyActExtraParams },
+            { ui : this._btnActExtraParams,                          callback : this._onTouchedBtnActExtraParams },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -127,9 +127,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -155,11 +155,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTileFilter(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ConTileFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -186,11 +186,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConBuffFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ConBuffFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConBuffFilter(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ConBuffFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConBuffFilter() != text) {
                     action.setConBuffFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -217,11 +217,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActBuffType(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActBuffType,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActBuffType(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActBuffType,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActBuffType() != text) {
                     action.setActBuffType(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -248,11 +248,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActExpiringTurnIndex(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringTurnIndex,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActExpiringTurnIndex(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringTurnIndex,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActExpiringTurnIndex() != text) {
                     action.setActExpiringTurnIndex(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -279,11 +279,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActExpiringPlayerIndex(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringPlayerIndex,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActExpiringPlayerIndex(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExpiringPlayerIndex,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActExpiringPlayerIndex() != text) {
                     action.setActExpiringPlayerIndex(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -310,11 +310,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActExtraParams(),
-            expressionInfo  : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExtraParams,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActExtraParams(),
+            expressionInfo : WarEvents_Actions_Constants_ModifyTileBuffExpr.ExpressionInfoDict.ActExtraParams,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActExtraParams() != text) {
                     action.setActExtraParams(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

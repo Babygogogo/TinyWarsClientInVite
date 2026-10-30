@@ -314,7 +314,7 @@ export function getDesc(data: TileFilter, gameConfig: GameConfigs_GameConfig.Gam
         Lang_Utils.getText(Lang_Constants.TextType.B1144),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : Lang_Utils.getText(Lang_Constants.TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
     );
 }
 export function getDescForEmbed(data: TileFilter): string | null {
@@ -338,7 +338,7 @@ export function getDescForEmbed(data: TileFilter): string | null {
         : Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0231,
             Lang_Utils.getText(Lang_Constants.TextType.B1144),
-            textArrayForSubConditions.join(`, `)
+            textArrayForSubConditions.join(`, `),
         );
 }
 

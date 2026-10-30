@@ -18,7 +18,7 @@ export interface OpenData {
     getContent  : () => string;
     callback?   : () => any;
 }
-// eslint-disable-next-line no-shadow
+ 
 export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _imgMask!      : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
@@ -29,10 +29,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnConfirm, callback: this._onTouchedBtnClose },
+            { ui : this._btnConfirm, callback : this._onTouchedBtnClose },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel(() => {
@@ -56,9 +56,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         labelContent.setText(openData.getContent());
 
         this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            rawValue    : labelContent.getScaledHeight() + 140,
-            minValue    : 200,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : labelContent.getScaledHeight() + 140,
+            minValue : 200,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
 

@@ -41,7 +41,7 @@ async function normalExeSystemCallWarEvent(war: BaseWar_Interface_IBwWar.IBwWar,
     war.getView().updatePersistentText();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoSystemCallWarEvent): Promise<string | null> {
 
     // if (war instanceof _meWarClass) {

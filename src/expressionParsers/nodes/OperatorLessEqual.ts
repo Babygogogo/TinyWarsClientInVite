@@ -39,19 +39,23 @@ export class OperatorLessEqual extends ExpressionParsers_Nodes_Base.Base {
         localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
     }): ExpressionParsers_Enums.ResultType {
-        const lhsType = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const lhsType = this._lhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (lhsType !== ExpressionParsers_Enums.ResultType.Number) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("<=", 1, ExpressionParsers_Enums.ResultType.Number, lhsType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_00
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_00,
             );
         }
 
-        const rhsType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const rhsType = this._rhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (rhsType !== ExpressionParsers_Enums.ResultType.Number) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("<=", 2, ExpressionParsers_Enums.ResultType.Number, rhsType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_01
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_01,
             );
         }
 

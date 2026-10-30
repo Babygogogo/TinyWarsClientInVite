@@ -55,7 +55,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -173,12 +173,12 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
     }
 
     return WarEvents_Actions_Utils_SetViewpointExpr.doApply({
-        gridIndexArray      : targetGridIndexArray,
-        isNeedFocusEffect   : !!data.getActNeedFocusEffect(),
-        isOneByOne          : !!data.getActIsOneByOne(),
-        interval            : data.getActInterval(),
-        war                 : war,
-        isFastExecute       : isFastExecute,
+        gridIndexArray    : targetGridIndexArray,
+        isNeedFocusEffect : !!data.getActNeedFocusEffect(),
+        isOneByOne        : !!data.getActIsOneByOne(),
+        interval          : data.getActInterval(),
+        war               : war,
+        isFastExecute     : isFastExecute,
     });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<Players_IPlayer.IPlayer, boolean>, filter: PlayerFilter, player: Players_IPlayer.IPlayer): boolean {

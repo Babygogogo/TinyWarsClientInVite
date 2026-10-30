@@ -56,7 +56,7 @@ const _slotFullDataAccessor         = new AuxiliaryTypes_CachedDataAccessor.Cach
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type : Notifications_TypeId.TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw, },
+        { type : Notifications_TypeId.TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw },
     ], null);
 }
 
@@ -204,28 +204,28 @@ export function updateOnMsgSpmSaveScw(data: SpmSaveScwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
         Helpers_Misc.getExisted(data.getSlotExtraData()),
-        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData()))),
     );
 }
 export function updateOnMsgSpmSaveSfw(data: SpmSaveSfwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
         Helpers_Misc.getExisted(data.getSlotExtraData()),
-        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData()))),
     );
 }
 export function updateOnMsgSpmSaveSrw(data: SpmSaveSrwResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
         Helpers_Misc.getExisted(data.getSlotExtraData()),
-        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData()))),
     );
 }
 export function updateOnMsgCampaignSaveWar(data: CampaignSaveWarResponse): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
         Helpers_Misc.getExisted(data.getSlotExtraData()),
-        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData())))
+        SerialWar.decode(Helpers_Gzip.decompress(Helpers_Misc.getExisted(data.getCompressedWarData()))),
     );
 }
 export async function updateOnMsgSpmDeleteWarSaveSlot(slotIndex: number): Promise<void> {

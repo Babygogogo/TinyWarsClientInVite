@@ -36,9 +36,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTileFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ConTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ConTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -46,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActUnitType(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActUnitType(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -56,9 +56,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActPlayerIndex(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActPlayerIndex(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -66,9 +66,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActActionState(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActActionState(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -76,9 +76,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCurrentHp(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentHp(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -86,9 +86,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActPrimaryWeaponCurrentAmmo(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActPrimaryWeaponCurrentAmmo(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -96,9 +96,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActFlareCurrentAmmo(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActFlareCurrentAmmo(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -106,9 +106,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCurrentFuel(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentFuel(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -116,9 +116,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsCapturingTile(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsCapturingTile(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -126,9 +126,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsDiving(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsDiving(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -136,9 +136,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCurrentBuildMaterial(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentBuildMaterial(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -146,9 +146,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCurrentProduceMaterial(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentProduceMaterial(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -156,9 +156,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCurrentPromotion(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentPromotion(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -166,9 +166,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsBuildingTile(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsBuildingTile(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -176,9 +176,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsCoOnboard(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsCoOnboard(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -186,9 +186,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActAiMode(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActAiMode(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -196,9 +196,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActGroupedTagId(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActGroupedTagId(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -206,9 +206,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActForbiddenGroupedLocationIdArray(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActForbiddenGroupedLocationIdArray(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -216,9 +216,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActAiWeightedDestination(),
-            expressionInfo          : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActAiWeightedDestination(),
+            expressionInfo       : WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -266,9 +266,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ConTileFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -278,9 +278,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActUnitType;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActUnitType(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActUnitType(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -290,9 +290,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPlayerIndex;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActPlayerIndex(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPlayerIndex(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -302,9 +302,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActActionState;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActActionState(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActActionState(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -314,9 +314,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentHp;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCurrentHp(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentHp(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -326,9 +326,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActPrimaryWeaponCurrentAmmo(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPrimaryWeaponCurrentAmmo(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -338,9 +338,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActFlareCurrentAmmo;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActFlareCurrentAmmo(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActFlareCurrentAmmo(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -350,9 +350,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentFuel;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCurrentFuel(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentFuel(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -362,9 +362,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCapturingTile;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsCapturingTile(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsCapturingTile(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -374,9 +374,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsDiving;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsDiving(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsDiving(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -386,9 +386,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentBuildMaterial;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCurrentBuildMaterial(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentBuildMaterial(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -398,9 +398,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentProduceMaterial;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCurrentProduceMaterial(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentProduceMaterial(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -410,9 +410,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActCurrentPromotion;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCurrentPromotion(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentPromotion(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -422,9 +422,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsBuildingTile;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsBuildingTile(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsBuildingTile(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -434,9 +434,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActIsCoOnboard;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsCoOnboard(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsCoOnboard(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -446,9 +446,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiMode;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActAiMode(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActAiMode(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -458,9 +458,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActGroupedTagId;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActGroupedTagId(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActGroupedTagId(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -470,9 +470,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActForbiddenGroupedLocationIdArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActForbiddenGroupedLocationIdArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -482,9 +482,9 @@ export function getErrorTip(data: WeaFillUnitOnMapExpr, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_FillUnitOnMapExpr.ExpressionInfoDict.ActAiWeightedDestination;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActAiWeightedDestination(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActAiWeightedDestination(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -572,9 +572,9 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Til
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -594,9 +594,9 @@ function evalActCurrentHp(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile,
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 1,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 1,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -665,9 +665,9 @@ function evalActFlareCurrentAmmo(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -687,9 +687,9 @@ function evalActCurrentFuel(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITil
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -713,9 +713,9 @@ function evalActCurrentBuildMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles_I
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -739,9 +739,9 @@ function evalActCurrentProduceMaterial(action: WeaFillUnitOnMapExpr, tile: Tiles
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -761,9 +761,9 @@ function evalActCurrentPromotion(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : defaultValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : 0,
+                maxValue : defaultValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -843,9 +843,9 @@ function evalActGroupedTagId(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITi
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             return Units_Utils_Common.getEncodedTagId(epResult.numberArray.map(v => Numbers_Utils.getValueInRange({
-                minValue    : Units_Constants.TagId.MinTagId,
-                maxValue    : Units_Constants.TagId.MaxTagId,
-                rawValue    : Math.floor(v),
+                minValue : Units_Constants.TagId.MinTagId,
+                maxValue : Units_Constants.TagId.MaxTagId,
+                rawValue : Math.floor(v),
             })));
         } else {
             return defaultValue;
@@ -864,9 +864,9 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaFillUnitOnMapExpr, ti
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_NumArray.NumArray) {
             return Locations_Utils.encode(epResult.numberArray.map(v => Numbers_Utils.getValueInRange({
-                minValue    : Locations_Constants.MinId,
-                maxValue    : Locations_Constants.MaxId,
-                rawValue    : Math.floor(v),
+                minValue : Locations_Constants.MinId,
+                maxValue : Locations_Constants.MaxId,
+                rawValue : Math.floor(v),
             })));
         } else {
             return [];
@@ -959,31 +959,31 @@ function createNewUnitData(action: WeaFillUnitOnMapExpr, tile: Tiles_ITile.ITile
     const currentFuel                       = evalActCurrentFuel(action, tile, unitType);
 
     return Units_Utils_Serialization.create({
-        unitType                        : unitType,
-        unitId                          : unitId,
-        playerIndex                     : playerIndex,
-        gridIndex                       : tile.getGridIndex().getXY(),
+        unitType    : unitType,
+        unitId      : unitId,
+        playerIndex : playerIndex,
+        gridIndex   : tile.getGridIndex().getXY(),
 
-        actionState                     : actionState,
-        currentHp                       : currentHp,
-        aiMode                          : aiMode,
-        groupedTagId                    : groupedTagId,
-        customNameId                    : null,
+        actionState  : actionState,
+        currentHp    : currentHp,
+        aiMode       : aiMode,
+        groupedTagId : groupedTagId,
+        customNameId : null,
 
-        currentPromotion                : currentPromotion,
-        isDiving                        : isDiving,
-        isCoOnboard                     : isCoOnboard,
-        currentBuildMaterial            : currentBuildMaterial,
+        currentPromotion     : currentPromotion,
+        isDiving             : isDiving,
+        isCoOnboard          : isCoOnboard,
+        currentBuildMaterial : currentBuildMaterial,
 
         aiWeightedDestination           : aiWeightedDestination?.toJson() ?? null,
         forbiddenGroupedLocationIdArray : forbiddenGroupedLocationIdArray,
         buffArray                       : [],
 
-        primaryWeaponCurrentAmmo        : primaryWeaponCurrentAmmo,
-        flareCurrentAmmo                : flareCurrentAmmo,
-        currentProduceMaterial          : currentProduceMaterial,
-        currentFuel                     : currentFuel,
-        loaderUnitId                    : null,
+        primaryWeaponCurrentAmmo : primaryWeaponCurrentAmmo,
+        flareCurrentAmmo         : flareCurrentAmmo,
+        currentProduceMaterial   : currentProduceMaterial,
+        currentFuel              : currentFuel,
+        loaderUnitId             : null,
     });
 }
 function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
@@ -1003,16 +1003,16 @@ function applyNewUnitDataArray(unitDataArray: SerialUnit[], war: BaseWar_Interfa
 
     const warStatisticsManager = war.getWarStatisticsManager();
     for (const unit of unitArray) {
-        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
         if (observerTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : unit.getUnitType(),
-                dstPlayerIndex              : unit.getPlayerIndex(),
-                unitGain                    : 1,
-                unitLoss                    : 0,
-                normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                normalizedHpLoss            : 0,
-                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                unitType                   : unit.getUnitType(),
+                dstPlayerIndex             : unit.getPlayerIndex(),
+                unitGain                   : 1,
+                unitLoss                   : 0,
+                normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                normalizedHpLoss           : 0,
+                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }

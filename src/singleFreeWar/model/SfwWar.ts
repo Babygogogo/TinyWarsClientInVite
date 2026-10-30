@@ -23,23 +23,23 @@ export class SfwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements Singl
 
     public serialize(): SerialWar {
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForSfw              : this.getSettingsForSfw().toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSfw    : this.getSettingsForSfw().toJson(),
 
-            warId                       : this.getWarId(),
-            isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serialize().toJson(),
-            warEventManager             : this.getWarEventManager().serialize().toJson(),
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : this.getTurnManager().serialize().toJson(),
-            field                       : this.getField().serialize().toJson(),
-            executedOperationManager    : this.getExecutedOperationManager().serialize().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serialize().toJson(),
+            warEventManager          : this.getWarEventManager().serialize().toJson(),
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : this.getTurnManager().serialize().toJson(),
+            field                    : this.getField().serialize().toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
 

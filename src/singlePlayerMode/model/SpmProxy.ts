@@ -30,25 +30,29 @@ import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmCreateScw,                     callback: _onMsgSpmCreateScw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmCreateSfw,                     callback: _onMsgSpmCreateSfw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmCreateSrw,                     callback: _onMsgSpmCreateSrw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmGetAllWarSaveSlotTimestamps,   callback: _onMsgSpmGetAllWarSaveSlotTimestamps },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullData,        callback: _onMsgSpmGetWarSaveSlotFullData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullDataArray,   callback: _onMsgSpmGetWarSaveSlotFullDataArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmDeleteWarSaveSlot,             callback: _onMsgSpmDeleteWarSaveSlot },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmSaveScw,                       callback: _onMsgSpmSaveScw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmSaveSfw,                       callback: _onMsgSpmSaveSfw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmSaveSrw,                       callback: _onMsgSpmSaveSrw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmGetRankList,                   callback: _onMsgSpmGetRankList },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmValidateSrw,                   callback: _onMsgSpmValidateSrw },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgSpmGetReplayData,                 callback: _onMsgSpmGetReplayData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateScw,                     callback : _onMsgSpmCreateScw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateSfw,                     callback : _onMsgSpmCreateSfw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmCreateSrw,                     callback : _onMsgSpmCreateSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetAllWarSaveSlotTimestamps,   callback : _onMsgSpmGetAllWarSaveSlotTimestamps },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullData,        callback : _onMsgSpmGetWarSaveSlotFullData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetWarSaveSlotFullDataArray,   callback : _onMsgSpmGetWarSaveSlotFullDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmDeleteWarSaveSlot,             callback : _onMsgSpmDeleteWarSaveSlot },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveScw,                       callback : _onMsgSpmSaveScw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveSfw,                       callback : _onMsgSpmSaveSfw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmSaveSrw,                       callback : _onMsgSpmSaveSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetRankList,                   callback : _onMsgSpmGetRankList },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmValidateSrw,                   callback : _onMsgSpmValidateSrw },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgSpmGetReplayData,                 callback : _onMsgSpmGetReplayData },
     ], null);
 }
 
 export function reqSpmGetAllWarSaveSlotTimestamps(): void {
-    Networks_Manager.send({ MsgSpmGetAllWarSaveSlotTimestamps: { c: {
-    } } });
+    Networks_Manager.send({
+        MsgSpmGetAllWarSaveSlotTimestamps : {
+            c : {
+            }, 
+        }, 
+    });
 }
 function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Egret_Egret.Event): void {
     const data = e.data as SpmGetAllWarSaveSlotTimestampsResponse;
@@ -61,9 +65,13 @@ function _onMsgSpmGetAllWarSaveSlotTimestamps(e: Egret_Egret.Event): void {
 }
 
 export function reqSpmGetWarSaveSlotFullDataArray(slotIndexArray: number[]): void {
-    Networks_Manager.send({ MsgSpmGetWarSaveSlotFullDataArray: { c: {
-        slotIndexArray: slotIndexArray,
-    }, }, });
+    Networks_Manager.send({
+        MsgSpmGetWarSaveSlotFullDataArray : {
+            c : {
+                slotIndexArray : slotIndexArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as SpmGetWarSaveSlotFullDataArrayResponse;
@@ -75,9 +83,11 @@ async function _onMsgSpmGetWarSaveSlotFullDataArray(e: Egret_Egret.Event): Promi
 
 export function reqSpmGetWarSaveSlotFullData(slotIndex: number): void {
     Networks_Manager.send({
-        MsgSpmGetWarSaveSlotFullData: { c: {
-            slotIndex,
-        }, },
+        MsgSpmGetWarSaveSlotFullData : {
+            c : {
+                slotIndex,
+            }, 
+        },
     });
 }
 async function _onMsgSpmGetWarSaveSlotFullData(e: Egret_Egret.Event): Promise<void> {
@@ -92,7 +102,7 @@ async function _onMsgSpmGetWarSaveSlotFullData(e: Egret_Egret.Event): Promise<vo
 
 export function reqSpmCreateScw(param: SpmCreateScwRequest): void {
     Networks_Manager.send({
-        MsgSpmCreateScw: { c: param.toJson() },
+        MsgSpmCreateScw : { c : param.toJson() },
     });
 }
 async function _onMsgSpmCreateScw(e: Egret_Egret.Event): Promise<void> {
@@ -109,11 +119,13 @@ export function reqSpmCreateSfw({ slotIndex, slotExtraData, warData }: {
     warData         : SerialWar;
 }): void {
     Networks_Manager.send({
-        MsgSpmCreateSfw: { c: {
-            slotIndex       : slotIndex,
-            slotExtraData   : slotExtraData.toJson(),
-            warData         : warData.toJson(),
-        }, },
+        MsgSpmCreateSfw : {
+            c : {
+                slotIndex     : slotIndex,
+                slotExtraData : slotExtraData.toJson(),
+                warData       : warData.toJson(),
+            }, 
+        },
     });
 }
 async function _onMsgSpmCreateSfw(e: Egret_Egret.Event): Promise<void> {
@@ -126,7 +138,7 @@ async function _onMsgSpmCreateSfw(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmCreateSrw(data: SpmCreateSrwRequest): void {
     Networks_Manager.send({
-        MsgSpmCreateSrw: { c: data.toJson() },
+        MsgSpmCreateSrw : { c : data.toJson() },
     });
 }
 async function _onMsgSpmCreateSrw(e: Egret_Egret.Event): Promise<void> {
@@ -139,11 +151,13 @@ async function _onMsgSpmCreateSrw(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmSaveScw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): void {
     Networks_Manager.send({
-        MsgSpmSaveScw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : Helpers_Gzip.compress(war.serialize().encode()),
-        }, },
+        MsgSpmSaveScw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            }, 
+        },
     });
 }
 async function _onMsgSpmSaveScw(e: Egret_Egret.Event): Promise<void> {
@@ -156,11 +170,13 @@ async function _onMsgSpmSaveScw(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmSaveSfw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): void {
     Networks_Manager.send({
-        MsgSpmSaveSfw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : Helpers_Gzip.compress(war.serialize().encode()),
-        }, },
+        MsgSpmSaveSfw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            }, 
+        },
     });
 }
 async function _onMsgSpmSaveSfw(e: Egret_Egret.Event): Promise<void> {
@@ -173,11 +189,13 @@ async function _onMsgSpmSaveSfw(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmSaveSrw(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): void {
     Networks_Manager.send({
-        MsgSpmSaveSrw: { c: {
-            slotIndex           : war.getSaveSlotIndex(),
-            slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-            compressedWarData   : Helpers_Gzip.compress(war.serialize().encode()),
-        }, },
+        MsgSpmSaveSrw : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            }, 
+        },
     });
 }
 async function _onMsgSpmSaveSrw(e: Egret_Egret.Event): Promise<void> {
@@ -190,9 +208,11 @@ async function _onMsgSpmSaveSrw(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmDeleteWarSaveSlot(slotIndex: number): void {
     Networks_Manager.send({
-        MsgSpmDeleteWarSaveSlot: { c: {
-            slotIndex,
-        } },
+        MsgSpmDeleteWarSaveSlot : {
+            c : {
+                slotIndex,
+            }, 
+        },
     });
 }
 async function _onMsgSpmDeleteWarSaveSlot(e: Egret_Egret.Event): Promise<void> {
@@ -205,9 +225,11 @@ async function _onMsgSpmDeleteWarSaveSlot(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSpmGetRankList(normalMapId: number): void {
     Networks_Manager.send({
-        MsgSpmGetRankList: { c: {
-            normalMapId,
-        } },
+        MsgSpmGetRankList : {
+            c : {
+                normalMapId,
+            }, 
+        },
     });
 }
 function _onMsgSpmGetRankList(e: Egret_Egret.Event): void {
@@ -220,9 +242,11 @@ function _onMsgSpmGetRankList(e: Egret_Egret.Event): void {
 
 export function reqSpmValidateSrw(war: SingleRankWar_Interface_ISrwWar.ISrwWar): void {
     Networks_Manager.send({
-        MsgSpmValidateSrw: { c: {
-            warData     : war.serializeForValidation().toJson(),
-        } },
+        MsgSpmValidateSrw : {
+            c : {
+                warData : war.serializeForValidation().toJson(),
+            }, 
+        },
     });
 }
 function _onMsgSpmValidateSrw(e: Egret_Egret.Event): void {
@@ -234,9 +258,11 @@ function _onMsgSpmValidateSrw(e: Egret_Egret.Event): void {
 
 export function reqSpmGetReplayData(rankId: number): void {
     Networks_Manager.send({
-        MsgSpmGetReplayData: { c: {
-            rankId,
-        } },
+        MsgSpmGetReplayData : {
+            c : {
+                rankId,
+            }, 
+        },
     });
 }
 async function _onMsgSpmGetReplayData(e: Egret_Egret.Event): Promise<void> {

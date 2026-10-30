@@ -27,7 +27,7 @@ function fastExeSystemVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: 
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }
 
@@ -36,20 +36,20 @@ async function normalExeSystemVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeSystemVoteForDraw_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
     }
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }

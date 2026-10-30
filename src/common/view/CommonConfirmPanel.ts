@@ -38,14 +38,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnCancel,      callback: this._onTouchedBtnCancel, },
-            { ui: this._btnConfirm1,    callback: this._onTouchedBtnConfirm, },
-            { ui: this._btnConfirm2,    callback: this._onTouchedBtnConfirm, },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnCancel,      callback : this._onTouchedBtnCancel },
+            { ui : this._btnConfirm1,    callback : this._onTouchedBtnConfirm },
+            { ui : this._btnConfirm2,    callback : this._onTouchedBtnConfirm },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
+            callback   : this._onKeyboard,
+            thisObject : this,
         });
         this._setIsTouchMaskEnabled();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -68,9 +68,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         labelContent.setText(openData.getContent());
 
         this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            rawValue    : labelContent.getScaledHeight() + 130,
-            minValue    : 190,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : labelContent.getScaledHeight() + 130,
+            minValue : 190,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
 

@@ -114,13 +114,15 @@ export class MemberVariable extends ExpressionParsers_Nodes_Base.Base {
         localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
     }): ExpressionParsers_Enums.ResultType {
-        const lhsResultType     = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const lhsResultType     = this._lhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         const newContextType    = ExpressionParsers_Utils.getContextType(lhsResultType);
         const identifierName    = this._identifierName;
         if ((newContextType == null) || (newContextType === ExpressionParsers_Enums.ContextType.Unknown)) {
             throw Helpers_Misc.newError(
                 Lang_Utils.getFormattedText(Lang_Constants.TextType.F0037, identifierName),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberVariable_GetResultType_00
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberVariable_GetResultType_00,
             );
         }
 
@@ -128,7 +130,7 @@ export class MemberVariable extends ExpressionParsers_Nodes_Base.Base {
         if (info == null) {
             throw Helpers_Misc.newError(
                 Lang_Utils.getFormattedText(Lang_Constants.TextType.F0038, Lang_Utils.getExpressionParserContextName(newContextType), identifierName),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberVariable_GetResultType_01
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeMemberVariable_GetResultType_01,
             );
         }
 

@@ -25,8 +25,8 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = Num.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Num.VnSelf,   { desc: Lang_Constants.TextType.A0965, resultType: ExpressionParsers_Enums.ResultType.Number,    isExtension: false } );
-        variables.set(Num.VnWar,    { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,       isExtension: false } );
+        variables.set(Num.VnSelf,   { desc : Lang_Constants.TextType.A0965, resultType : ExpressionParsers_Enums.ResultType.Number,    isExtension : false } );
+        variables.set(Num.VnWar,    { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,       isExtension : false } );
 
         return variables;
     }
@@ -41,13 +41,13 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Num.FnAbs, 0, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_00,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Num.FnFloor,
@@ -58,13 +58,13 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Num.FnFloor, 0, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_01,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             Num.FnCeil,
@@ -75,7 +75,7 @@ export class Num extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Num.FnCeil, 0, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_02
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_02,
                         );
                     }
 

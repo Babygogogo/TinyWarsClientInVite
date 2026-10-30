@@ -42,19 +42,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnIdentifier,      callback: this._onTouchedBtnIdentifier },
-            { ui: this._btnCustomCounter,   callback: this._onTouchedBtnCustomCounter },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
+            { ui : this._btnIdentifier,      callback : this._onTouchedBtnIdentifier },
+            { ui : this._btnCustomCounter,   callback : this._onTouchedBtnCustomCounter },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
 
-            { ui: this._btnDelete,          callback: this._onTouchedBtnDelete },
-            { ui: this._btnCancel,          callback: this.closePanel, },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm, },
+            { ui : this._btnDelete,          callback : this._onTouchedBtnDelete },
+            { ui : this._btnCancel,          callback : this.closePanel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setInputListenerArray([
-            { ui: this._input,              callback: this._onFocusOutInput,            eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._input,              callback : this._onFocusOutInput,            eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -88,8 +88,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeCustomCounterNameListPanel, {
-            isReviewingMap  : openData.isReviewingMap,
-            fullData        : openData.fullData,
+            isReviewingMap : openData.isReviewingMap,
+            fullData       : openData.fullData,
         });
     }
 
@@ -151,9 +151,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const expressionInfo    = openData.expressionInfo;
         const errorData         = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : this._input.trimInputText(),
-            expressionInfo          : expressionInfo,
-            customCounterNameSet    : new Set(openData.fullData.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
+            str                  : this._input.trimInputText(),
+            expressionInfo       : expressionInfo,
+            customCounterNameSet : new Set(openData.fullData.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
         });
         const errorText = errorData.errorCode
             ? `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, expressionInfo.getTitleText())} ${errorData.errorText}`

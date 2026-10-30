@@ -22,10 +22,10 @@ export class UiZoomableMap extends Ui_Components_UiContainer.UiContainer impleme
 
         const zoom = this._zoomableComponent;
         zoom.checkAndInitSizerInfo().setSizerOptions({
-            width           : { percentage: 100 },
-            height          : { percentage: 100 },
-            horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
         });
         zoom.addContent(this._mapView);
         this.addUiChild(zoom);

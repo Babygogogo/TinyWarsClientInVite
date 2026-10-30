@@ -21,9 +21,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onMsgBroadcastGetAllMessageIdArray },
+            { type : Notifications_TypeId.TypeId.TimeTick,                            callback : this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback : this._onMsgBroadcastGetAllMessageIdArray },
         ]);
 
         this.setIsTouchChildrenEnabled(false);
@@ -60,7 +60,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const textList: string[] = [];
         for (const messageId of messageIdArray) {
             ongoingSet.add(messageId);
-            textList.push(Lang_Utils.getLanguageText({ textArray: (await Broadcasts_Provider.getMessageData(messageId))?.getTextList() }) ?? Lang_Constants.UndefinedError);
+            textList.push(Lang_Utils.getLanguageText({ textArray : (await Broadcasts_Provider.getMessageData(messageId))?.getTextList() }) ?? Lang_Constants.UndefinedError);
         }
 
         const group = this._groupLamp;
@@ -75,9 +75,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             label.setText(textList.join("    "));
             const stageWidth    = Stages_StageManager.getStage().stageWidth;
             const textWidth     = label.getScaledWidth();
-            Tween_Executor.Executor.get(label, { loop: true })
-                .set({ customX: stageWidth })
-                .to({ customX: -textWidth }, (stageWidth + textWidth) / _FLOW_SPEED * 1000);
+            Tween_Executor.Executor.get(label, { loop : true })
+                .set({ customX : stageWidth })
+                .to({ customX : -textWidth }, (stageWidth + textWidth) / _FLOW_SPEED * 1000);
         }
     }
 }

@@ -34,13 +34,13 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         slotExtraData.setSlotComment(this.getSlotComment());
 
         return SpmCreateScwRequest.fromJson({
-            settingsForCommon   : this.getSettingsForCommon().toJson(),
-            settingsForScw      : this.getSettingsForScw().toJson(),
+            settingsForCommon : this.getSettingsForCommon().toJson(),
+            settingsForScw    : this.getSettingsForScw().toJson(),
 
-            playerInfoList      : this._getPlayerInfoList().map(v => v.toJson()),
+            playerInfoList : this._getPlayerInfoList().map(v => v.toJson()),
 
-            slotIndex           : this.getSaveSlotIndex(),
-            slotExtraData       : slotExtraData.toJson(),
+            slotIndex     : this.getSaveSlotIndex(),
+            slotExtraData : slotExtraData.toJson(),
         });
     }
 
@@ -52,10 +52,10 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         const mapRawData        = this.getMapRawData();
         const settingsForCommon = this.getSettingsForCommon();
         settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
-            templateWarRule             : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         }));
 
         const oldPlayerInfoList = this._getPlayerInfoList();
@@ -75,19 +75,19 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
             if (oldInfo) {
                 const coId = oldInfo.getCoId();
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
-                    playerIndex         : playerIndex,
-                    isReady             : true,
-                    userId              : oldInfo.getUserId(),
-                    unitAndTileSkinId   : oldInfo.getUnitAndTileSkinId(),
-                    coId                : availableCoIdSet.has(coId) ? coId : newCoId,
+                    playerIndex       : playerIndex,
+                    isReady           : true,
+                    userId            : oldInfo.getUserId(),
+                    unitAndTileSkinId : oldInfo.getUnitAndTileSkinId(),
+                    coId              : availableCoIdSet.has(coId) ? coId : newCoId,
                 }));
             } else {
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
-                    playerIndex         : playerIndex,
-                    isReady             : true,
-                    userId              : playerIndex === 1 ? Users_Model.getSelfUserId() : null,
-                    unitAndTileSkinId   : playerIndex,
-                    coId                : newCoId,
+                    playerIndex       : playerIndex,
+                    isReady           : true,
+                    userId            : playerIndex === 1 ? Users_Model.getSelfUserId() : null,
+                    unitAndTileSkinId : playerIndex,
+                    coId              : newCoId,
                 }));
             }
         }
@@ -128,7 +128,7 @@ export class ScrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
             existingPlayerData.setUnitAndTileSkinId(oldSkinId);
             Notifications_Dispatcher.dispatch(
                 Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,
-                { playerIndex: existingPlayerData.getPlayerIndex() } as Notifications_DataTypes.ScrCreatePlayerInfoChanged
+                { playerIndex : existingPlayerData.getPlayerIndex() } as Notifications_DataTypes.ScrCreatePlayerInfoChanged,
             );
         }
 

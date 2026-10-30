@@ -11,15 +11,17 @@ export async function getScoreAndActionUnitWait(unit: Units_IUnit.IUnit, pathNod
 
     const score = await getScoreForActionUnitWait();
     return {
-        score   : score,
-        action  : WoContainer.fromJson({ WoUnitWait: {
-            path        : {
-                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                isBlocked       : false,
-            },
-            launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-        } }),
+        score  : score,
+        action : WoContainer.fromJson({
+            WoUnitWait : {
+                path : {
+                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                    isBlocked       : false,
+                },
+                launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+            }, 
+        }),
     };
 }
 

@@ -50,15 +50,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
-            { ui: this._btnActionId,                    callback: this._onTouchedBtnActionId },
-            { ui: this._btnActionCount,                 callback: this._onTouchedBtnActionCount },
-            { ui: this._btnActionCountComparator,       callback: this._onTouchedBtnActionCountComparator },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
+            { ui : this._btnActionId,                    callback : this._onTouchedBtnActionId },
+            { ui : this._btnActionCount,                 callback : this._onTouchedBtnActionCount },
+            { ui : this._btnActionCountComparator,       callback : this._onTouchedBtnActionCountComparator },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -82,9 +82,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnActionId(): void {
@@ -97,12 +97,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const warEventFullData  = openData.fullData;
         const gameConfig        = openData.war.getGcData();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : condition.getOngoingActionIdArray(),
-            availableNumberArray    : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
-            showNumber              : true,
-            getNumberMainText       : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
-            callbackOnConfirm       : actionIdArray => {
+            currentNumberArray   : condition.getOngoingActionIdArray(),
+            availableNumberArray : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
+            showNumber           : true,
+            getNumberMainText    : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
+            callbackOnConfirm    : actionIdArray => {
                 condition.setOngoingActionIdArray(actionIdArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -111,11 +111,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnActionCount(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0902),
-            minValue        : 0,
-            maxValue        : WarEvents_Actions_Constants_Common.MaxCounts.PerMap,
-            currentValue    : condition.getOngoingActionsCount(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0902),
+            minValue     : 0,
+            maxValue     : WarEvents_Actions_Constants_Common.MaxCounts.PerMap,
+            currentValue : condition.getOngoingActionsCount(),
+            callback     : value => {
                 condition.setOngoingActionsCount(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },

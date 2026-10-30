@@ -65,12 +65,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBanMap,      callback: this._onTouchedBtnBanMap },
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
+            { ui : this._btnBanMap,      callback : this._onTouchedBtnBanMap },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -132,7 +132,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSwitch(): void {
         const hasFog = this.getOpenData()?.hasFog;
         this.closePanel();
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrPreviewMapListPanel, { hasFog: !hasFog });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrPreviewMapListPanel, { hasFog : !hasFog });
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -142,17 +142,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -249,9 +249,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 return (v.getRuleAvailability()?.getCanMrw()) && (hasFog === v.getWarRuleCommonData()?.getHasFogByDefault());
             })) {
                 dataArray.push({
-                    normalMapId   : mapRawData.getNormalMapId(),
-                    mapName : Lang_Utils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) || Lang_Constants.UndefinedError,
-                    panel   : this,
+                    normalMapId : mapRawData.getNormalMapId(),
+                    mapName     : Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) || Lang_Constants.UndefinedError,
+                    panel       : this,
                 });
             }
         }
@@ -265,10 +265,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ? null
             : {
                 mapInfo : {
-                    hasFog              : !!this.getOpenData()?.hasFog,
-                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                    overridingPlayers   : null,
+                    hasFog            : !!this.getOpenData()?.hasFog,
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    overridingPlayers : null,
                 },
             };
     }
@@ -293,101 +293,101 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const instanceWarRule   = WarRules_Utils_Instance.create({
-            templateWarRule             : templateWarRuleArray[0],
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : templateWarRuleArray[0],
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         });
         const bootTimerParams   = BootTimers_Constants.DefaultParams.concat();
         const timerType         = bootTimerParams[0] as BootTimers_Constants.TimerTypeId;
         const gameConfig        = await GameConfigs_Provider.getLatestGameConfig();
         const warEventFullData  = mapRawData.getWarEventFullData() ?? null;
         const openData          : Common_View_CommonWarBasicSettingsPage.OpenData = {
-            dataArrayForListSettings    : [
+            dataArrayForListSettings : [
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.NormalMapId,
-                    currentValue    : normalMapId,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.NormalMapId,
+                    currentValue     : normalMapId,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
-                    currentValue    : null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
+                    currentValue     : null,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.HasFog,
-                    currentValue    : null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.HasFog,
+                    currentValue     : null,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.Weather,
-                    currentValue    : null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.Weather,
+                    currentValue     : null,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType        : Wars_Constants.BasicSettingsTypeId.TileTheme,
-                    currentValue        : null,
-                    instanceWarRule     : instanceWarRule,
-                    gameConfig          : gameConfig,
-                    warEventFullData    : warEventFullData,
-                    callbackOnModify    : null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.TileTheme,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gameConfig,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarEvent,
-                    currentValue    : null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.WarEvent,
+                    currentValue     : null,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
-                    currentValue    : `${Turns_Constants.TurnIndex.DefaultLimit}, ${WarOperations_Constants.Common.DefaultLimit}`,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                    currentValue     : `${Turns_Constants.TurnIndex.DefaultLimit}, ${WarOperations_Constants.Common.DefaultLimit}`,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.TimerType,
-                    currentValue    : timerType,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.TimerType,
+                    currentValue     : timerType,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
             ],
         };
         if (timerType === BootTimers_Constants.TimerTypeId.Regular) {
             openData.dataArrayForListSettings.push({
-                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
-                currentValue    : bootTimerParams[1],
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
+                currentValue     : bootTimerParams[1],
                 instanceWarRule,
                 gameConfig,
                 warEventFullData,
-                callbackOnModify: null,
+                callbackOnModify : null,
             });
         } else if (timerType === BootTimers_Constants.TimerTypeId.Incremental) {
             openData.dataArrayForListSettings.push(
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
-                    currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
+                    currentValue     : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
-                    callbackOnModify: null,
+                    callbackOnModify : null,
                 },
             );
         } else {
@@ -416,12 +416,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             canModify       : false,
             gcData          : await GameConfigs_Provider.getLatestGameConfig(),
             instanceWarRule : WarRules_Utils_Instance.create({
-                templateWarRule             : templateWarRuleArray[0],
-                warEventFullData            : mapRawData.getWarEventFullData(),
-                allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-                taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+                templateWarRule           : templateWarRuleArray[0],
+                warEventFullData          : mapRawData.getWarEventFullData(),
+                allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+                taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
             }),
-            gameModeId      : GameModes_Constants.ModeId.RankedMatch,
+            gameModeId : GameModes_Constants.ModeId.RankedMatch,
         };
     }
 
@@ -431,58 +431,58 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupBottomButton,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupBottomButton,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupBottomButton,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupBottomButton,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -494,8 +494,7 @@ interface DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData 
 }
 class TabItemRenderer
     extends     Ui_Components_UiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer>
-    implements  Ui_Interfaces_IUiTabItemRenderer.IUiTabItemRenderer<DataForTabItemRenderer>
-{
+    implements  Ui_Interfaces_IUiTabItemRenderer.IUiTabItemRenderer<DataForTabItemRenderer> {
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     protected override _doApplyOpenData(): void {
@@ -510,8 +509,7 @@ interface DataForMapNameRenderer extends Ui_Types_UiListItemData.UiListItemData 
 }
 class MapNameRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMapNameRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMapNameRenderer> {
     private readonly _layoutName!       : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelName!        : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelId!          : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -537,7 +535,7 @@ class MapNameRenderer
             return;
         }
 
-        this._labelName.setText(Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+        this._labelName.setText(Lang_Utils.getLanguageText({ textArray : mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
         this._labelId.setText(`#${normalMapId}`);
         this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();

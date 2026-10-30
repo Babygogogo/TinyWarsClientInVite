@@ -73,13 +73,13 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
         const existingUnit = unitMap.getUnitOnMap(gridIndex);
         if ((existingUnit) && (existingUnit.getTeamIndex() !== teamIndexInTurn)) {
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
-                war                 : war,
-                gridIndex           : gridIndex,
-                unitType            : existingUnit.getUnitType(),
-                isDiving            : existingUnit.getIsDiving(),
-                isInvisible         : existingUnit.checkIsInvisible(gridIndex),
-                unitPlayerIndex     : existingUnit.getPlayerIndex(),
-                observerTeamIndex   : teamIndexInTurn,
+                war               : war,
+                gridIndex         : gridIndex,
+                unitType          : existingUnit.getUnitType(),
+                isDiving          : existingUnit.getIsDiving(),
+                isInvisible       : existingUnit.checkIsInvisible(gridIndex),
+                unitPlayerIndex   : existingUnit.getPlayerIndex(),
+                observerTeamIndex : teamIndexInTurn,
             })) {
                 throw Helpers_Misc.newError(`There is a blocking visible unit.`, Utils_ClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_08);
             } else {
@@ -108,12 +108,12 @@ export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: BaseWar_In
         } else {
             return Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
                 war,
-                gridIndex           : destination,
-                unitType            : unit.getUnitType(),
-                isDiving            : unit.getIsDiving(),
-                isInvisible         : unit.checkIsInvisible(destination),
-                unitPlayerIndex     : unit.getPlayerIndex(),
-                observerTeamIndex   : Helpers_Misc.getExisted(unitMap.getUnitOnMap(rawPath[0])).getTeamIndex(),
+                gridIndex         : destination,
+                unitType          : unit.getUnitType(),
+                isDiving          : unit.getIsDiving(),
+                isInvisible       : unit.checkIsInvisible(destination),
+                unitPlayerIndex   : unit.getPlayerIndex(),
+                observerTeamIndex : Helpers_Misc.getExisted(unitMap.getUnitOnMap(rawPath[0])).getTeamIndex(),
             });
         }
     }

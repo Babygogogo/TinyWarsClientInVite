@@ -2,13 +2,13 @@ import {
     Helpers_Collection,
 } from "../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum CategoryId {
     None    = 0,
     All     = 1,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum TagId {
     MinTagId        = 1,
     MaxTagId        = 30,
@@ -16,7 +16,7 @@ export const enum TagId {
 }
 export const AllTagIdArray = Helpers_Collection.createRange(TagId.MinTagId, TagId.MaxTagId + 1, 1);
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum AiModeId {
     Normal              = 0,
     WaitUntilCanAttack  = 1,
@@ -28,13 +28,13 @@ export const AllAiModeIdArray = [
     AiModeId.NoMove,
 ];
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum AiDestination {
     MinWeight   = -99999999,
     MaxWeight   = 99999999,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ActionStateId {
     Idle    = 0,
     Acted   = 1,
@@ -44,7 +44,7 @@ export const AllActionStateIdArray = [
     ActionStateId.Acted,
 ];
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum CustomName {
     MinId       = 1,
     MaxId       = 30,
@@ -52,7 +52,7 @@ export const enum CustomName {
     MaxLength   = 15,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum CornerStateIconTypeId {
     LowFuel                 = 1,
     LowPrimaryAmmo          = 2,
@@ -69,14 +69,14 @@ export const enum CornerStateIconTypeId {
     Moved                   = 15,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum DisplayLayerId {
     Air         = 3,
     Ground      = 2,
     Sea         = 1,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum AnimationTypeId {
     Stand           = 0,
     MoveHorizontal  = 1,
@@ -84,7 +84,7 @@ export const enum AnimationTypeId {
     MoveUp          = 3,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ActionTypeId {
     Attack,
     BeLoaded,
@@ -108,38 +108,38 @@ export const enum ActionTypeId {
     Wait,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum UnitTypeId {
     First       = 0,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum Hp  {
     Normalizer          = 10,
     MaxHp               = 100,
     MaxNormalizedHp     = MaxHp / Normalizer,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum LoadedStateId {
     AnyState       = 0,
     IsNotLoaded    = 1,
     IsLoaded       = 2,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum WeaponTypeId {
     Primary     = 0,
     Secondary   = 1,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ProduceMaterialHardLimit {
     Min     = -100,
     Max     = 100,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum PrimaryAmmoHardLimit {
     Min     = -100,
     Max     = 100,

@@ -65,7 +65,7 @@ function fastExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
                 visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
             }
         }
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -76,9 +76,9 @@ function fastExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
             const unitForDrop   = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
             if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
                 fogMap.updateMapFromPathsByUnitAndPath({
-                    unit            : unitForDrop,
-                    unitVisionInfo  : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
-                    path            : [endingGridIndex, gridIndex],
+                    unit           : unitForDrop,
+                    unitVisionInfo : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
+                    path           : [endingGridIndex, gridIndex],
                 });
             }
 
@@ -110,8 +110,8 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         const extraUnit         = await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : false,
+            aiming                : null,
+            deleteViewAfterMoving : false,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
@@ -133,9 +133,9 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
 
         const droppingUnitAndPathArray = actionExtraData.getDroppingUnitAndPathArray();
         await Promise.all((droppingUnitAndPathArray).map(v => war.moveExtraUnit({
-            movingUnitAndPath       : v,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : v,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         })));
         if (extraUnit) {
             unitMapView.removeUnit(extraUnit.getView());
@@ -145,7 +145,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
         {
@@ -178,7 +178,7 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 visionInfoDictForDroppedUnits.set(unitId, Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId)?.getVisionInfo()));
             }
         }
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -190,9 +190,9 @@ async function normalExeUnitDropUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
             const unitForDrop   = Helpers_Misc.getExisted(unitMap.getUnitLoadedById(unitId));
             if ((shouldUpdateFogMap) && (canDroppedUnitGetVisionOnStart)) {
                 fogMap.updateMapFromPathsByUnitAndPath({
-                    unit            : unitForDrop,
-                    unitVisionInfo  : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
-                    path            : [endingGridIndex, gridIndex]
+                    unit           : unitForDrop,
+                    unitVisionInfo : Helpers_Misc.getExisted(visionInfoDictForDroppedUnits.get(unitId)),
+                    path           : [endingGridIndex, gridIndex],
                 });
             }
 

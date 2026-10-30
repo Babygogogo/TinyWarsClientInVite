@@ -34,15 +34,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnDelete,  callback: this._onTouchedBtnDelete },
-            { ui: this._btnCancel,  callback: this.closePanel, },
-            { ui: this._btnConfirm, callback: this._onTouchedBtnConfirm, },
+            { ui : this._btnDelete,  callback : this._onTouchedBtnDelete },
+            { ui : this._btnCancel,  callback : this.closePanel },
+            { ui : this._btnConfirm, callback : this._onTouchedBtnConfirm },
         ]);
         this._setInputListenerArray([
-            { ui: this._input,      callback: this._onFocusOutInput,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._input,      callback : this._onFocusOutInput,    eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();

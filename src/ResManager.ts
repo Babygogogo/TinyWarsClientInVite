@@ -20,7 +20,7 @@ const _modules              = import.meta.glob(
     {
         query : "?url",
         eager : true,
-    }
+    },
 );
 
 export async function init(): Promise<void> {
@@ -44,7 +44,7 @@ export function loadMainRes(): Promise<void> {
                 Logger.error("ResManager.loadMainRes() error! ", reason);
                 FloatText.show("Error loading main resource! " + reason);
                 reject();
-            }
+            },
         );
     });
 }

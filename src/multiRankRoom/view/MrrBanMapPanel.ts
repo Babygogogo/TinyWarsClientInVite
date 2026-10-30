@@ -51,26 +51,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMrrGetBannedNormalMapIdArray, callback: this._onMsgMrrGetBannedNormalMapIdArray },
-            { type: Notifications_TypeId.TypeId.MsgMrrSetBannedNormalMapIdArray, callback: this._onMsgMrrSetBannedNormalMapIdArray },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMrrGetBannedNormalMapIdArray, callback : this._onMsgMrrGetBannedNormalMapIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMrrSetBannedNormalMapIdArray, callback : this._onMsgMrrSetBannedNormalMapIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnCancel,          callback: this._onTouchedBtnCancel },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnCancel,          callback : this._onTouchedBtnCancel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
 
-            { ui: this._btnStdMap0,         callback: this._onTouchedBtnStdMap0 },
-            { ui: this._btnDeleteStdMap0,   callback: this._onTouchedBtnDeleteStdMap0 },
+            { ui : this._btnStdMap0,         callback : this._onTouchedBtnStdMap0 },
+            { ui : this._btnDeleteStdMap0,   callback : this._onTouchedBtnDeleteStdMap0 },
 
-            { ui: this._btnStdMap1,         callback: this._onTouchedBtnStdMap1 },
-            { ui: this._btnDeleteStdMap1,   callback: this._onTouchedBtnDeleteStdMap1 },
+            { ui : this._btnStdMap1,         callback : this._onTouchedBtnStdMap1 },
+            { ui : this._btnDeleteStdMap1,   callback : this._onTouchedBtnDeleteStdMap1 },
 
-            { ui: this._btnFogMap0,         callback: this._onTouchedBtnFogMap0 },
-            { ui: this._btnDeleteFogMap0,   callback: this._onTouchedBtnDeleteFogMap0 },
+            { ui : this._btnFogMap0,         callback : this._onTouchedBtnFogMap0 },
+            { ui : this._btnDeleteFogMap0,   callback : this._onTouchedBtnDeleteFogMap0 },
 
-            { ui: this._btnFogMap1,         callback: this._onTouchedBtnFogMap1 },
-            { ui: this._btnDeleteFogMap1,   callback: this._onTouchedBtnDeleteFogMap1 },
+            { ui : this._btnFogMap1,         callback : this._onTouchedBtnFogMap1 },
+            { ui : this._btnDeleteFogMap1,   callback : this._onTouchedBtnDeleteFogMap1 },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -99,12 +99,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnStdMap0(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            callback                  : normalMapId => {
                 this._normalMapIdArrayForStd[0] = normalMapId;
                 this._updateComponentsForStd();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteStdMap0(): void {
@@ -114,12 +114,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnStdMap1(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(false),
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            callback                  : normalMapId => {
                 this._normalMapIdArrayForStd[1] = normalMapId;
                 this._updateComponentsForStd();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteStdMap1(): void {
@@ -129,12 +129,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnFogMap0(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            callback                  : normalMapId => {
                 this._normalMapIdArrayForFog[0] = normalMapId;
                 this._updateComponentsForFog();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteFogMap0(): void {
@@ -144,12 +144,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnFogMap1(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : await NormalMap_Model_NormalMapModel.getNormalMapIdArrayForRankedMatch(true),
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0084),
+            callback                  : normalMapId => {
                 this._normalMapIdArrayForFog[1] = normalMapId;
                 this._updateComponentsForFog();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteFogMap1(): void {

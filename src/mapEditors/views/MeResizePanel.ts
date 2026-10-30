@@ -51,16 +51,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnCancel,          callback: this.closePanel, },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm, },
-            { ui: this._btnDeltaTop,        callback: this._onTouchedBtnDeltaTop },
-            { ui: this._btnDeltaBottom,     callback: this._onTouchedBtnDeltaBottom },
-            { ui: this._btnDeltaLeft,       callback: this._onTouchedBtnDeltaLeft },
-            { ui: this._btnDeltaRight,      callback: this._onTouchedBtnDeltaRight },
+            { ui : this._btnCancel,          callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._btnDeltaTop,        callback : this._onTouchedBtnDeltaTop },
+            { ui : this._btnDeltaBottom,     callback : this._onTouchedBtnDeltaBottom },
+            { ui : this._btnDeltaLeft,       callback : this._onTouchedBtnDeltaLeft },
+            { ui : this._btnDeltaRight,      callback : this._onTouchedBtnDeltaRight },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -78,7 +78,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount),
+            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0023, Maps_Constants.Common.MaxGridsCount),
         });
     }
 
@@ -128,28 +128,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const gameConfig    = war.getGcData();
         const tempData      = MapEditor_Model_MeHelpers.resizeMap({
-            mapRawData  : await war.serializeForMap(),
-            newWidth    : width + Math.max(0, deltaLeft) + Math.max(0, deltaRight),
-            newHeight   : height + Math.max(0, deltaTop) + Math.max(0, deltaBottom),
+            mapRawData : await war.serializeForMap(),
+            newWidth   : width + Math.max(0, deltaLeft) + Math.max(0, deltaRight),
+            newHeight  : height + Math.max(0, deltaTop) + Math.max(0, deltaBottom),
             gameConfig,
         });
         war.stopRunning();
         await war.initWithMapRawData({
-            mapRawData: MapEditor_Model_MeHelpers.resizeMap({
-                mapRawData: MapEditor_Model_MeHelpers.addOffset({
-                    mapRawData  : tempData,
-                    offsetX     : deltaLeft,
-                    offsetY     : deltaTop,
-                    gameConfig  : gameConfig,
+            mapRawData : MapEditor_Model_MeHelpers.resizeMap({
+                mapRawData : MapEditor_Model_MeHelpers.addOffset({
+                    mapRawData : tempData,
+                    offsetX    : deltaLeft,
+                    offsetY    : deltaTop,
+                    gameConfig : gameConfig,
                 }),
-                newWidth    : newWidth,
-                newHeight   : newHeight,
-                gameConfig  : gameConfig,
+                newWidth   : newWidth,
+                newHeight  : newHeight,
+                gameConfig : gameConfig,
             }),
-            slotIndex                   : war.getMapSlotIndex(),
-            gameConfig                  : war.getGcData(),
-            srcNormalMapIdForAddEvent   : war.getSrcNormalMapIdForAddEvent(),
-            gridMarkData                : generateNewGridMarkData({
+            slotIndex                 : war.getMapSlotIndex(),
+            gameConfig                : war.getGcData(),
+            srcNormalMapIdForAddEvent : war.getSrcNormalMapIdForAddEvent(),
+            gridMarkData              : generateNewGridMarkData({
                 oldData     : war.getGridMarkData(),
                 deltaLeft   : deltaLeft,
                 deltaRight  : deltaRight,
@@ -172,11 +172,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaTop;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0857),
+            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0857),
             currentValue,
             minValue,
             maxValue,
-            callback        : value => {
+            callback : value => {
                 if (value !== currentValue) {
                     this._deltaTop = value;
                     this._updateComponentsForData();
@@ -189,11 +189,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaBottom;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0858),
+            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0858),
             currentValue,
             minValue,
             maxValue,
-            callback        : value => {
+            callback : value => {
                 if (value !== currentValue) {
                     this._deltaBottom = value;
                     this._updateComponentsForData();
@@ -206,11 +206,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaLeft;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0859),
+            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0859),
             currentValue,
             minValue,
             maxValue,
-            callback        : value => {
+            callback : value => {
                 if (value !== currentValue) {
                     this._deltaLeft = value;
                     this._updateComponentsForData();
@@ -223,11 +223,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = Maps_Constants.Common.MaxGridsCount;
         const currentValue  = this._deltaRight;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0860),
+            getTitle : () => Lang_Utils.getText(Lang_Constants.TextType.B0860),
             currentValue,
             minValue,
             maxValue,
-            callback        : value => {
+            callback : value => {
                 if (value !== currentValue) {
                     this._deltaRight = value;
                     this._updateComponentsForData();
@@ -295,7 +295,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             btn.setText(value > 0
                 ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value),
             );
         }
     }
@@ -307,7 +307,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             btn.setText(value > 0
                 ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0086, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0087, -value),
             );
         }
     }
@@ -319,7 +319,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             btn.setText(value > 0
                 ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value),
             );
         }
 
@@ -332,7 +332,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             btn.setText(value > 0
                 ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0089, value)
-                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value)
+                : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0116, -value),
             );
         }
     }
@@ -357,8 +357,8 @@ function generateNewGridMarkData({ oldData, deltaLeft, deltaRight, deltaTop, del
 
         if (gridIndex.checkIsInsideMap(newMapSize)) {
             newList.push(GridIdAndMarkTypeId.fromJson({
-                gridId      : gridIndex.getGridId(newMapSize),
-                markTypeId  : item.getMarkTypeId(),
+                gridId     : gridIndex.getGridId(newMapSize),
+                markTypeId : item.getMarkTypeId(),
             }));
         }
     }

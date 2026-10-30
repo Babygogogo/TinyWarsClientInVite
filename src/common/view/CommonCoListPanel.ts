@@ -34,10 +34,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -120,8 +120,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (selectedData) {
             const uiCoInfo = this._uiCoInfo;
             uiCoInfo.setOpenData({
-                gameConfig  : selectedData.gameConfig,
-                coId        : selectedData.coId,
+                gameConfig : selectedData.gameConfig,
+                coId       : selectedData.coId,
             });
             await uiCoInfo.applyOpenData();
         }
@@ -151,9 +151,9 @@ class CoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Dat
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);

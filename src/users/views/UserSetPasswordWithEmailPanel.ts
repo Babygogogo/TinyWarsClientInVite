@@ -50,21 +50,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCode,          callback: this._onNotifyMsgUserRequestPasswordVerificationCode },
-            { type: Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed,    callback: this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
-            { type: Notifications_TypeId.TypeId.MsgUserResetPasswordWithEmail,                   callback: this._onNotifyMsgUserResetPasswordWithEmail },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCode,          callback : this._onNotifyMsgUserRequestPasswordVerificationCode },
+            { type : Notifications_TypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed,    callback : this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
+            { type : Notifications_TypeId.TypeId.MsgUserResetPasswordWithEmail,                   callback : this._onNotifyMsgUserResetPasswordWithEmail },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnRequest,             callback: this._onTouchedBtnRequest },
-            { ui: this._btnReset,               callback: this._onTouchedBtnReset },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnRequest,             callback : this._onTouchedBtnRequest },
+            { ui : this._btnReset,               callback : this._onTouchedBtnReset },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputAccount,           callback: this._onFocusOutInputAccount,             eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputPassword0,         callback: this._onFocusOutInputPassword0,           eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputPassword1,         callback: this._onFocusOutInputPassword1,           eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputAccount,           callback : this._onFocusOutInputAccount,             eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputVerificationCode,  callback : this._onFocusOutInputVerificationCode,    eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputPassword0,         callback : this._onFocusOutInputPassword0,           eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputPassword1,         callback : this._onFocusOutInputPassword1,           eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();

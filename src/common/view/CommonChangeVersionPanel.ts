@@ -31,13 +31,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnDownload,    callback: this._onTouchedBtnDownload },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnDownload,    callback : this._onTouchedBtnDownload },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -99,7 +99,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0555),
-            callback    : () => {
+            callback   : () => {
                 downloadFile(filename);
                 this.closePanel();
             },
@@ -161,7 +161,7 @@ class VersionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

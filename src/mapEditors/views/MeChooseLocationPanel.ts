@@ -45,13 +45,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnCancel,              callback: this._onTouchedBtnCancel },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._groupSelectAll,         callback: this._onTouchedGroupSelectAll },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,              callback : this._onTouchedBtnCancel },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._groupSelectAll,         callback : this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0781),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0781),
         });
     }
 
@@ -148,12 +148,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray                     : DataForLocationRenderer[] = [];
         for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             dataArray.push({
-                war                             : war,
-                needChangeLocationVisibility    : needChangeLocationVisibility,
-                locationId                      : locationId,
-                useCount                        : inUseDict.get(locationId) ?? 0,
-                noEntryCount                    : noEntryDict.get(locationId) ?? 0,
-                panel                           : this,
+                war                          : war,
+                needChangeLocationVisibility : needChangeLocationVisibility,
+                locationId                   : locationId,
+                useCount                     : inUseDict.get(locationId) ?? 0,
+                noEntryCount                 : noEntryDict.get(locationId) ?? 0,
+                panel                        : this,
             });
             if (locationIdList.includes(locationId)) {
                 selectedItemIndexes.push(index);

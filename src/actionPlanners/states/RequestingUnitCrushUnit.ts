@@ -45,10 +45,10 @@ export class RequestingUnitCrushUnit implements ActionPlanners_States_IState.ISt
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitCrushUnit     : {
-                    path            : {
-                        nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitCrushUnit : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
                     launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
                     targetGridIndex : Helpers_Misc.getExisted(actionPlanner.getUnitCrushTargetGridIndex()).toProto().toJson(),

@@ -51,20 +51,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback : this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
 
-            { ui: this._btnClearNickname,       callback: this._onTouchedBtnClearNickname },
+            { ui : this._btnClearNickname,       callback : this._onTouchedBtnClearNickname },
 
-            { ui: this._btnSearchFollowing,     callback: this._onTouchedBtnSearchFollowed },
-            { ui: this._btnSearchNotFollowing,  callback: this._onTouchedBtnSearchNotFollowing },
-            { ui: this._btnSearchAll,           callback: this._onTouchedBtnSearchAll },
+            { ui : this._btnSearchFollowing,     callback : this._onTouchedBtnSearchFollowed },
+            { ui : this._btnSearchNotFollowing,  callback : this._onTouchedBtnSearchNotFollowing },
+            { ui : this._btnSearchAll,           callback : this._onTouchedBtnSearchAll },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputNickname,          callback : this._onFocusOutInputNickname,    eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -176,7 +176,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const userId of this._candidateUserIdArray) {
             dataArray.push({
                 userId,
-                panel   : this,
+                panel : this,
             });
         }
 
@@ -199,8 +199,8 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupHelp,        callback: this._onTouchedGroupHelp },
-            { ui: this._groupSelect,      callback: this._onTouchedGroupSelect },
+            { ui : this._groupHelp,        callback : this._onTouchedGroupHelp },
+            { ui : this._groupSelect,      callback : this._onTouchedGroupSelect },
         ]);
     }
     protected override async _onOpened(): Promise<void> {
@@ -209,9 +209,9 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -226,7 +226,7 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private _onTouchedGroupHelp(e: Egret_Egret.Event): void {
         e.stopPropagation();
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : this.getOpenData()?.userId });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupSelect(e: Egret_Egret.Event): void {

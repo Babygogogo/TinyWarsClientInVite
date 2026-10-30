@@ -14,8 +14,8 @@ export function addGridMark(list: GridIdAndMarkTypeId[], gridId: number, markTyp
         }
     } else {
         list.push(GridIdAndMarkTypeId.fromJson({
-            gridId      : gridId,
-            markTypeId  : markTypeId,
+            gridId     : gridId,
+            markTypeId : markTypeId,
         }));
         return true;
     }
@@ -30,8 +30,8 @@ export function updateGridMarkList(list: GridIdAndMarkTypeId[], gridIdArrayForAd
             data.setMarkTypeId(markTypeId);
         } else {
             list.push(GridIdAndMarkTypeId.fromJson({
-                gridId      : gridId,
-                markTypeId  : markTypeId,
+                gridId     : gridId,
+                markTypeId : markTypeId,
             }));
         }
     }

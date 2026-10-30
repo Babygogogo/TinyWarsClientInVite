@@ -275,7 +275,7 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     callback     : panel => {
                         openData.callback(openData.slotIndex, panel.getInputText());
                         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel);
-                    }
+                    },
                 });
             }
         };

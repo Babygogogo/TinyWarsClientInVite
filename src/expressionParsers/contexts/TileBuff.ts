@@ -26,12 +26,12 @@ export class TileBuff extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = TileBuff.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(TileBuff.VnType,                 { desc: Lang_Constants.TextType.A0748, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExpiringPlayerIndex,  { desc: Lang_Constants.TextType.A0749, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExpiringTurnIndex,    { desc: Lang_Constants.TextType.A0750, resultType: ExpressionParsers_Enums.ResultType.Number,      isExtension: false });
-        variables.set(TileBuff.VnExtraParams,          { desc: Lang_Constants.TextType.A0751, resultType: ExpressionParsers_Enums.ResultType.NumberArray, isExtension: false });
-        variables.set(TileBuff.VnTile,                 { desc: Lang_Constants.TextType.A0752, resultType: ExpressionParsers_Enums.ResultType.Tile,        isExtension: false });
-        variables.set(TileBuff.VnWar,                  { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,         isExtension: false });
+        variables.set(TileBuff.VnType,                 { desc : Lang_Constants.TextType.A0748, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(TileBuff.VnExpiringPlayerIndex,  { desc : Lang_Constants.TextType.A0749, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(TileBuff.VnExpiringTurnIndex,    { desc : Lang_Constants.TextType.A0750, resultType : ExpressionParsers_Enums.ResultType.Number,      isExtension : false });
+        variables.set(TileBuff.VnExtraParams,          { desc : Lang_Constants.TextType.A0751, resultType : ExpressionParsers_Enums.ResultType.NumberArray, isExtension : false });
+        variables.set(TileBuff.VnTile,                 { desc : Lang_Constants.TextType.A0752, resultType : ExpressionParsers_Enums.ResultType.Tile,        isExtension : false });
+        variables.set(TileBuff.VnWar,                  { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,         isExtension : false });
 
         return variables;
     }

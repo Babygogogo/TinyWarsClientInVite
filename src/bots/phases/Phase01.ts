@@ -39,9 +39,9 @@ export async function getActionForPhase01(commonParams: Bots_CommonParams.Common
             }
 
             return WoContainer.fromJson({
-                WoPlayerUseCoSkill: {
-                    skillType               : CoSkills_Constants.SkillTypeId.SuperPower,
-                    targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
+                WoPlayerUseCoSkill : {
+                    skillType            : CoSkills_Constants.SkillTypeId.SuperPower,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
                 },
             });
 
@@ -66,9 +66,9 @@ export async function getActionForPhase01(commonParams: Bots_CommonParams.Common
             }
 
             return WoContainer.fromJson({
-                WoPlayerUseCoSkill: {
-                    skillType               : CoSkills_Constants.SkillTypeId.Power,
-                    targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
+                WoPlayerUseCoSkill : {
+                    skillType            : CoSkills_Constants.SkillTypeId.Power,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
                 },
             });
 

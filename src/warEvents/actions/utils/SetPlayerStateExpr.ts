@@ -24,9 +24,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConPlayerFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ConPlayerFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConPlayerFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ConPlayerFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -34,9 +34,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActAliveState(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActAliveState,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActAliveState(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActAliveState,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -44,9 +44,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCoId(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoId,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCoId(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoId,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -54,9 +54,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCoEnergy(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCoEnergy(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -64,9 +64,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActFund(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActFund,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActFund(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActFund,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -74,9 +74,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsSkipTurn(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsSkipTurn(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -84,9 +84,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActCoUsingSkillType(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCoUsingSkillType(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -94,9 +94,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActActivateCoSkillType(),
-            expressionInfo          : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActActivateCoSkillType(),
+            expressionInfo       : WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -134,9 +134,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ConPlayerFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConPlayerFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConPlayerFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -146,9 +146,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActAliveState;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActAliveState(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActAliveState(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -158,9 +158,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoId;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCoId(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCoId(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -170,9 +170,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCoEnergy(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCoEnergy(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -182,9 +182,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActFund;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActFund(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActFund(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -194,9 +194,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsSkipTurn(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsSkipTurn(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -206,9 +206,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActCoUsingSkillType(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCoUsingSkillType(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -218,9 +218,9 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_SetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActActivateCoSkillType(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActActivateCoSkillType(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -275,9 +275,9 @@ function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: Players_IPl
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Player.Player(player), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Players_Constants.Fund.MinFund,
-                maxValue    : Players_Constants.Fund.MaxFund,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Players_Constants.Fund.MinFund,
+                maxValue : Players_Constants.Fund.MaxFund,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return null;

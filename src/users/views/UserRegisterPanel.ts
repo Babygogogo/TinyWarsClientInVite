@@ -40,13 +40,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserRegister, callback: this._onMsgUserRegister },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserRegister, callback : this._onMsgUserRegister },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnRegister,    callback: this._onTouchedBtnRegister },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnRegister,    callback : this._onTouchedBtnRegister },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

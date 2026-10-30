@@ -35,8 +35,7 @@ export type OpenData = {
 } | null;
 export class Page
     extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData>
-{
+    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
     private readonly _groupInfo!    : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _listPlayer!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForPlayerRenderer>;
 
@@ -48,15 +47,15 @@ export class Page
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback: this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback : this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listPlayer.setItemRendererClass(PlayerRenderer);
@@ -138,13 +137,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
-            { ui: this._btnChangeCo,            callback: this._onTouchedBtnChangeCo },
-            { ui: this._btnChangeSkinId,        callback: this._onTouchedBtnChangeSkinId },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
+            { ui : this._btnChangeCo,            callback : this._onTouchedBtnChangeCo },
+            { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback: this._onNotifySrrCreatePlayerInfoChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback : this._onNotifySrrCreatePlayerInfoChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -175,8 +174,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const coId          = playerData ? playerData.getCoId() : null;
         if ((coId != null) && (coId !== Cos_Constants.CoId.Empty)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-                gameConfig  : openData.warCreator.getGcData(),
-                coId        : coId,
+                gameConfig : openData.warCreator.getGcData(),
+                coId       : coId,
             });
         }
     }
@@ -203,16 +202,16 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const playerInfo        = warCreator.getPlayerInfo(playerIndex);
         const currentCoId       = playerInfo.getCoId();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : gcData,
-            currentCoId         : currentCoId,
-            availableCoIdArray  : [...PlayerRules_Utils.getFinalSrwHumanCoIdSet({
+            gameConfig         : gcData,
+            currentCoId        : currentCoId,
+            availableCoIdArray : [...PlayerRules_Utils.getFinalSrwHumanCoIdSet({
                 playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : gcData,
                 hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                 includeRandom   : false,
             })],
-            isBan               : false,
-            callbackOnConfirm   : newCoId => {
+            isBan             : false,
+            callbackOnConfirm : newCoId => {
                 if (newCoId != currentCoId) {
                     playerInfo.setCoId(newCoId);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.WarCreator_PlayerInfoChanged);

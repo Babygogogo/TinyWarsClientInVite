@@ -57,9 +57,9 @@ export class RequestingPlayerDeleteUnit implements ActionPlanners_States_IState.
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoPlayerDeleteUnit  : {
-                    gridIndex   : war.getCursor().getGridIndex().toProto().toJson(),
+                operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoPlayerDeleteUnit : {
+                    gridIndex : war.getCursor().getGridIndex().toProto().toJson(),
                 },
             }));
 

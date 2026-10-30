@@ -26,16 +26,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmReloadAllMaps,      callback: this._onMsgMmReloadAllMaps },
-            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmReloadAllMaps,      callback : this._onMsgMmReloadAllMaps },
+            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
 
-            { ui: this._btnReviewMap,       callback: this._onTouchedBtnReviewMap },
-            { ui: this._btnModifyMap,       callback: this._onTouchedBtnModifyMap },
-            { ui: this._btnModifyMapTag,    callback: this._onTouchedBtnModifyMapTag },
+            { ui : this._btnReviewMap,       callback : this._onTouchedBtnReviewMap },
+            { ui : this._btnModifyMap,       callback : this._onTouchedBtnModifyMap },
+            { ui : this._btnModifyMapTag,    callback : this._onTouchedBtnModifyMapTag },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -80,10 +80,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnModifyMap(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
-            isAutoClose                 : false,
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
+            isAutoClose               : false,
+            callback                  : normalMapId => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmCommandPanel, { normalMapId });
             },
         });

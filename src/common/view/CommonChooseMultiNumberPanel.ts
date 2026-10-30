@@ -60,14 +60,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,           callback : this.closePanel },
 
-            { ui: this._groupSelectAll,     callback: this._onTouchedGroupSelectAll },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
+            { ui : this._groupSelectAll,     callback : this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -203,12 +203,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray                 : DataForItemRenderer[] = [];
         for (const num of openData.availableNumberArray.concat().sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                num                     : num,
-                showNumber              : showNumber,
-                getNumberMainText       : getNumberMainText,
-                getNumberMainTextColor  : getNumberMainTextColor,
-                callbackOnHelp          : callbackOnHelp,
-                panel                   : this,
+                num                    : num,
+                showNumber             : showNumber,
+                getNumberMainText      : getNumberMainText,
+                getNumberMainTextColor : getNumberMainTextColor,
+                callbackOnHelp         : callbackOnHelp,
+                panel                  : this,
             });
         }
 
@@ -217,17 +217,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         await this._list.bindData(dataArray);
 
         const columnsCount  = Numbers_Utils.getValueInRange({
-            rawValue    : openData.columnsCount ?? 2,
-            minValue    : 2,
-            maxValue    : 4,
+            rawValue : openData.columnsCount ?? 2,
+            minValue : 2,
+            maxValue : 4,
         });
         const rowsCount     = Math.ceil(dataCount / columnsCount);
         const group         = this._group;
         group.setUnscaledManualWidth(columnsCount * 200 + (columnsCount - 1) * 20 + 40);
         group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            rawValue    : rowsCount * 30 + (rowsCount - 1) * 10 + 130,
-            minValue    : 210,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : rowsCount * 30 + (rowsCount - 1) * 10 + 130,
+            minValue : 210,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
     private _updateGroupSelectAll(): void {
@@ -266,11 +266,11 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupSelect,    callback: this._onTouchedGroupSelect },
-            { ui: this._groupHelp,      callback: this._onTouchedGroupHelp },
+            { ui : this._groupSelect,    callback : this._onTouchedGroupSelect },
+            { ui : this._groupHelp,      callback : this._onTouchedGroupHelp },
         ]);
     }
 

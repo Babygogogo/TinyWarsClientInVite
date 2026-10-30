@@ -43,21 +43,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnClose,                   callback : this.closePanel },
 
-            { ui: this._btnLbMrw,                   callback: this._onTouchedBtnLbMrw },
-            { ui: this._btnLbSpmOverall,            callback: this._onTouchedBtnLbSpmOverall },
-            { ui: this._btnUnit,                    callback: this._onTouchedBtnUnit },
-            { ui: this._btnTile,                    callback: this._onTouchedBtnTile },
-            { ui: this._btnCo,                      callback: this._onTouchedBtnCo },
-            { ui: this._btnCoStatistics,            callback: this._onTouchedBtnCoStatistics },
-            { ui: this._btnTutorial,                callback: this._onTouchedBtnTutorial },
-            { ui: this._btnOnlineUsers,             callback: this._onTouchedBtnOnlineUsers },
-            { ui: this._btnChangeLog,               callback: this._onTouchedBtnChangeLog },
-            { ui: this._btnServerStatus,            callback: this._onTouchedBtnServerStatus },
+            { ui : this._btnLbMrw,                   callback : this._onTouchedBtnLbMrw },
+            { ui : this._btnLbSpmOverall,            callback : this._onTouchedBtnLbSpmOverall },
+            { ui : this._btnUnit,                    callback : this._onTouchedBtnUnit },
+            { ui : this._btnTile,                    callback : this._onTouchedBtnTile },
+            { ui : this._btnCo,                      callback : this._onTouchedBtnCo },
+            { ui : this._btnCoStatistics,            callback : this._onTouchedBtnCoStatistics },
+            { ui : this._btnTutorial,                callback : this._onTouchedBtnTutorial },
+            { ui : this._btnOnlineUsers,             callback : this._onTouchedBtnOnlineUsers },
+            { ui : this._btnChangeLog,               callback : this._onTouchedBtnChangeLog },
+            { ui : this._btnServerStatus,            callback : this._onTouchedBtnServerStatus },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -78,30 +78,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnUnit(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageChartPanel, {
-            gameConfig: await GameConfigs_Provider.getLatestGameConfig(),
+            gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
     private async _onTouchedBtnTile(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonTileChartPanel, {
-            gameConfig: await GameConfigs_Provider.getLatestGameConfig(),
+            gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
     private async _onTouchedBtnCo(): Promise<void> {
         const gameConfig = await GameConfigs_Provider.getLatestGameConfig();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowCoIdPanel, {
-            gameConfig          : gameConfig,
-            currentCoIdArray    : [],
-            isBan               : false,
-            getTitleText        : null,
-            availableCoIdArray  : gameConfig.getAllEnabledCoArray()
+            gameConfig         : gameConfig,
+            currentCoIdArray   : [],
+            isBan              : false,
+            getTitleText       : null,
+            availableCoIdArray : gameConfig.getAllEnabledCoArray()
                 .filter(v => (v.getCoCategoryId() !== Cos_Constants.CategoryId.Empty) && (v.getCoCategoryId() !== Cos_Constants.CategoryId.Random))
                 .map(v => v.getCoId()),
         });
     }
     private _onTouchedBtnCoStatistics(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoStatisticsPanel, {
-            filter              : undefined,
-            usePreviousFilter   : true,
+            filter            : undefined,
+            usePreviousFilter : true,
         });
     }
     private _onTouchedBtnTutorial(): void {

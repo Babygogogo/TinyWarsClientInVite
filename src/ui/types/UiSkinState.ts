@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum UiSkinState {
     Default     = "",
     Up          = "up",

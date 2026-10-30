@@ -10,15 +10,17 @@ import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/N
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonHeartbeat,              callback: _onMsgCommonHeartbeat },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonHeartbeat,              callback : _onMsgCommonHeartbeat },
     ], null);
 }
 
 export function reqCommonHeartbeat(counter: number): void {
     Networks_Manager.send({
-        MsgCommonHeartbeat: { c: {
-            counter,
-        } },
+        MsgCommonHeartbeat : {
+            c : {
+                counter,
+            }, 
+        },
     });
 }
 function _onMsgCommonHeartbeat(e: Egret_Egret.Event): void {

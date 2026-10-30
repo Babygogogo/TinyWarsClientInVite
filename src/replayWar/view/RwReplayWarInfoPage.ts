@@ -49,15 +49,15 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         this._setUiListenerArray([
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgReplayGetReplayInfo,  callback: this._onNotifyMsgReplayGetBriefInfo },
-            { type: Notifications_TypeId.TypeId.MsgReplayGetSelfRating,  callback: this._onNotifyMsgReplayGetSelfRating },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgReplayGetReplayInfo,  callback : this._onNotifyMsgReplayGetBriefInfo },
+            { type : Notifications_TypeId.TypeId.MsgReplayGetSelfRating,  callback : this._onNotifyMsgReplayGetSelfRating },
         ]);
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._updateComponentsForLanguage();
@@ -131,7 +131,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const normalMapId = (await this._getReplayInfo())?.getNormalMapId();
         this._labelMapName.setText(normalMapId == null
             ? `----`
-            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError,
         );
     }
 
@@ -139,7 +139,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const replayBriefInfo = await this._getReplayInfo();
         this._labelTurnIndex.setText(replayBriefInfo
             ? `${replayBriefInfo.getTurnIndex()}, ${replayBriefInfo.getExecutedActionsCount()}`
-            : `??`
+            : `??`,
         );
     }
 
@@ -147,7 +147,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const replayBriefInfo   = await this._getReplayInfo();
         this._labelEndTime.setText(replayBriefInfo
             ? Lang_Utils.getTimestampShortText(replayBriefInfo.getWarEndTime())
-            : `??`
+            : `??`,
         );
     }
 

@@ -96,7 +96,7 @@ export function getDesc(data: UnitBuffFilter): string {
             textArrayForSubConditions.push(ValueArrayAndPredicates_Utils.getDesc(
                 conBuffTypeId,
                 Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
-                v => Lang_Utils.getUnitBuffName(v)
+                v => Lang_Utils.getUnitBuffName(v),
             ));
         }
     }
@@ -139,7 +139,7 @@ export function getDesc(data: UnitBuffFilter): string {
         Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : Lang_Utils.getText(Lang_Constants.TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
     );
 }
 export function getDescForEmbed(data: UnitBuffFilter): string | null {
@@ -163,7 +163,7 @@ export function getDescForEmbed(data: UnitBuffFilter): string | null {
         : Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0231,
             Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
-            textArrayForSubConditions.join(`, `)
+            textArrayForSubConditions.join(`, `),
         );
 }
 

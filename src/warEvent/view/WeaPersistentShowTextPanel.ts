@@ -54,15 +54,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
 
-            { ui: this._btnActLang1,                                callback: this._onTouchedBtnActLang1 },
-            { ui: this._btnActLang2,                                callback: this._onTouchedBtnActLang2 },
+            { ui : this._btnActLang1,                                callback : this._onTouchedBtnActLang1 },
+            { ui : this._btnActLang2,                                callback : this._onTouchedBtnActLang2 },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -86,9 +86,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
 
@@ -104,14 +104,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0455),
-            currentValue    : currentText || ``,
-            charRestrict    : null,
-            maxChars        : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
-            tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
-            canBeEmpty      : true,
-            isMultiLine     : true,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0455),
+            currentValue : currentText || ``,
+            charRestrict : null,
+            maxChars     : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
+            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
+            canBeEmpty   : true,
+            isMultiLine  : true,
+            callback     : panel => {
                 const text = (panel.getInputText() || ``).trim();
                 if (text === currentText) {
                     return;
@@ -124,8 +124,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         textData.setText(text);
                     } else {
                         textArray.push(LanguageText.fromJson({
-                            languageType    : languageType1,
-                            text            : text,
+                            languageType : languageType1,
+                            text         : text,
                         }));
                     }
                 }
@@ -145,14 +145,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentText       = textData?.getText();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0455),
-            currentValue    : currentText || ``,
-            charRestrict    : null,
-            maxChars        : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
-            tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
-            canBeEmpty      : true,
-            isMultiLine     : true,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0455),
+            currentValue : currentText || ``,
+            charRestrict : null,
+            maxChars     : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
+            tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0020, WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength),
+            canBeEmpty   : true,
+            isMultiLine  : true,
+            callback     : panel => {
                 const text = (panel.getInputText() || ``).trim();
                 if (text === currentText) {
                     return;
@@ -165,8 +165,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         textData.setText(text);
                     } else {
                         textArray.push(LanguageText.fromJson({
-                            languageType    : languageType1,
-                            text            : text,
+                            languageType : languageType1,
+                            text         : text,
                         }));
                     }
                 }
@@ -221,12 +221,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         {
             const label = this._labelActLang1;
-            label.setText(Lang_Utils.getLanguageText({ textArray, languageType: langType1, useAlternate: false }) ?? ``);
+            label.setText(Lang_Utils.getLanguageText({ textArray, languageType : langType1, useAlternate : false }) ?? ``);
             this._groupActLang1.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
         {
             const label = this._labelActLang2;
-            label.setText(Lang_Utils.getLanguageText({ textArray, languageType: langType2, useAlternate: false }) ?? ``);
+            label.setText(Lang_Utils.getLanguageText({ textArray, languageType : langType2, useAlternate : false }) ?? ``);
             this._groupActLang2.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
 

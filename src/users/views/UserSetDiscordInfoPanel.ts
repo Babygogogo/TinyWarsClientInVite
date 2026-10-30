@@ -49,20 +49,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
-            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfoFailed,     callback: this._onMsgUserSetDiscordIdFailed },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,           callback : this._onMsgUserSetDiscordId },
+            { type : Notifications_TypeId.TypeId.MsgUserSetDiscordInfoFailed,     callback : this._onMsgUserSetDiscordIdFailed },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
 
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
-            { ui: this._btnDiscord,         callback: this._onTouchedBtnDiscord },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._btnDiscord,         callback : this._onTouchedBtnDiscord },
 
-            { ui: this._groupTurn,          callback: this._onTouchedGroupTurn },
-            { ui: this._groupRankPhase,     callback: this._onTouchedGroupRankPhase },
-            { ui: this._groupRoom,          callback: this._onTouchedGroupRoom },
+            { ui : this._groupTurn,          callback : this._onTouchedGroupTurn },
+            { ui : this._groupRankPhase,     callback : this._onTouchedGroupRankPhase },
+            { ui : this._groupRoom,          callback : this._onTouchedGroupRoom },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -109,7 +109,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if ((window) && (window.open)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0065, `Discord`),
-                callback: () => {
+                callback   : () => {
                     window.open(Urls_Constants.Constants.DiscordUrl);
                 },
             });

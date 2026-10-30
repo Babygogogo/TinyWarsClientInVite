@@ -19,9 +19,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTaskObjectiveFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTaskObjectiveFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -29,9 +29,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActProgress(),
-            expressionInfo          : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActProgress,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActProgress(),
+            expressionInfo       : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActProgress,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -39,9 +39,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsHidden(),
-            expressionInfo          : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsHidden,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsHidden(),
+            expressionInfo       : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsHidden,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -49,9 +49,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsProgressUpdaterDisabled(),
-            expressionInfo          : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsProgressUpdaterDisabled(),
+            expressionInfo       : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -85,9 +85,9 @@ export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet
     {
         const info      = WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTaskObjectiveFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTaskObjectiveFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -97,9 +97,9 @@ export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet
     {
         const info      = WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActProgress;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActProgress(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActProgress(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -109,9 +109,9 @@ export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet
     {
         const info      = WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsHidden;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsHidden(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsHidden(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -121,9 +121,9 @@ export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet
     {
         const info      = WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsProgressUpdaterDisabled(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsProgressUpdaterDisabled(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -222,9 +222,9 @@ function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: Base
     const isHidden                  = evalActIsHidden(action, war, objectiveId);
     const isProgressUpdaterDisabled = evalActIsProgressUpdaterDisabled(action, war, objectiveId);
     return TaskObjectiveState.fromJson({
-        objectiveId                 : objectiveId,
-        currentProgress             : progress,
-        isHidden                    : isHidden,
-        isProgressUpdaterDisabled   : isProgressUpdaterDisabled,
+        objectiveId               : objectiveId,
+        currentProgress           : progress,
+        isHidden                  : isHidden,
+        isProgressUpdaterDisabled : isProgressUpdaterDisabled,
     });
 }

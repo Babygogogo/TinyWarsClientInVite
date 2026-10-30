@@ -63,12 +63,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnSearch,              callback: this._onTouchedBtnSearch },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnSearch,              callback : this._onTouchedBtnSearch },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -95,11 +95,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSearch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoStatisticsFilterPanel, {
-            filter              : this._coStatisticsFilter,
-            callbackOnConfirm   : filter => {
+            filter            : this._coStatisticsFilter,
+            callbackOnConfirm : filter => {
                 this.setOpenData({
-                    filter              : filter,
-                    usePreviousFilter   : false,
+                    filter            : filter,
+                    usePreviousFilter : false,
                 });
                 this._doApplyOpenData();
             },
@@ -212,13 +212,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const coId = pickedCoIdArray[i];
                 if (!coDataDict.has(coId)) {
                     coDataDict.set(coId, {
-                        rankedBan       : 0,
-                        rankedWin       : 0,
-                        rankedDraw      : 0,
-                        rankedLose      : 0,
-                        allWin          : 0,
-                        allLose         : 0,
-                        allDraw         : 0,
+                        rankedBan  : 0,
+                        rankedWin  : 0,
+                        rankedDraw : 0,
+                        rankedLose : 0,
+                        allWin     : 0,
+                        allLose    : 0,
+                        allDraw    : 0,
                     });
                 }
 
@@ -270,17 +270,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                     const coData = coDataDict.get(coId);
                     dataArray.push({
-                        gameConfig          : gameConfig,
-                        coId                : coId,
-                        allReplaysCount     : allReplaysCount,
-                        rankedReplaysCount  : rankedReplaysCount,
-                        rankedBanCount      : coData?.rankedBan ?? 0,
-                        rankedWin           : coData?.rankedWin ?? 0,
-                        rankedLose          : coData?.rankedLose ?? 0,
-                        rankedDraw          : coData?.rankedDraw ?? 0,
-                        allWin              : coData?.allWin ?? 0,
-                        allLose             : coData?.allLose ?? 0,
-                        allDraw             : coData?.allDraw ?? 0,
+                        gameConfig         : gameConfig,
+                        coId               : coId,
+                        allReplaysCount    : allReplaysCount,
+                        rankedReplaysCount : rankedReplaysCount,
+                        rankedBanCount     : coData?.rankedBan ?? 0,
+                        rankedWin          : coData?.rankedWin ?? 0,
+                        rankedLose         : coData?.rankedLose ?? 0,
+                        rankedDraw         : coData?.rankedDraw ?? 0,
+                        allWin             : coData?.allWin ?? 0,
+                        allLose            : coData?.allLose ?? 0,
+                        allDraw            : coData?.allDraw ?? 0,
                     });
                 }
             }
@@ -305,8 +305,7 @@ interface DataForCoRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class CoRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCoRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCoRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCoRenderer> {
     private readonly _imgCoForce!       : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgCoHead!        : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _labelCoId!        : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -324,7 +323,7 @@ class CoRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -346,8 +345,8 @@ class CoRenderer
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-            coId        : openData.coId,
-            gameConfig  : openData.gameConfig,
+            coId       : openData.coId,
+            gameConfig : openData.gameConfig,
         });
     }
 
@@ -373,7 +372,7 @@ class CoRenderer
             openData.rankedBanCount,
             openData.rankedWin,
             openData.rankedLose,
-            openData.rankedDraw
+            openData.rankedDraw,
         );
         updateLabelStatistics(
             this._labelAllCount,
@@ -382,7 +381,7 @@ class CoRenderer
             null,
             openData.allWin,
             openData.allLose,
-            openData.allDraw
+            openData.allDraw,
         );
     }
 
@@ -400,7 +399,7 @@ function updateLabelStatistics(
     banCount        : number | null,
     win             : number,
     lose            : number,
-    draw            : number
+    draw            : number,
 ): void {
     const gamesCount = win + lose + draw;
     labelCount.setText(`${gamesCount}\n${banCount ?? `--`}\n${win}\n${lose}\n${draw}`);

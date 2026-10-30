@@ -13,10 +13,10 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : action.getTextArray(),
-        minTextCount    : 1,
-        minTextLength   : 1,
-        maxTextLength   : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
+        list          : action.getTextArray(),
+        minTextCount  : 1,
+        minTextLength : 1,
+        maxTextLength : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
     })) {
         return false;
     }
@@ -29,7 +29,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
         return null;
     }
 
-    const rawText = Lang_Utils.getLanguageText({ textArray: data.getTextArray() });
+    const rawText = Lang_Utils.getLanguageText({ textArray : data.getTextArray() });
     if (rawText == null) {
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0131, Lang_Constants.UndefinedError);
     } else {
@@ -42,10 +42,10 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
 
 export function getErrorTip(data: WeaPersistentShowText): string | null {
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getTextArray(),
-        minTextCount    : 1,
-        minTextLength   : 1,
-        maxTextLength   : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength
+        list          : data.getTextArray(),
+        minTextCount  : 1,
+        minTextLength : 1,
+        maxTextLength : WarEvents_Actions_Constants_PersistentShowText.Common.MaxLength,
     })) {
         return Lang_Utils.getText(Lang_Constants.TextType.A0308);
     }

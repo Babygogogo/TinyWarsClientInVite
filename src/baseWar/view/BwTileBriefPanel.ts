@@ -58,20 +58,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,            callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,             callback: this._onNotifyGlobalTouchMove },
-            { type: Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback: this._onNotifyActionPlannerStateChanged },
-            { type: Notifications_TypeId.TypeId.BwTileChanged,                   callback: this._onNotifyMeTileChanged },
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
-            { type: Notifications_TypeId.TypeId.BwTileIsHighlightedChanged,      callback: this._onNotifyTileIsHighlightedChanged },
-            { type: Notifications_TypeId.TypeId.BwTileBuffChanged,               callback: this._onNotifyTileBuffChanged },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,    callback: this._onNotifyBwTileCustomNameArrayChanged },
-            { type: Notifications_TypeId.TypeId.BwTileCustomNameIdChanged,       callback: this._onNotifyBwTileCustomNameIdChanged },
+            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback : this._onNotifyActionPlannerStateChanged },
+            { type : Notifications_TypeId.TypeId.BwTileChanged,                   callback : this._onNotifyMeTileChanged },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,               callback : this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,              callback : this._onNotifyStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.BwTileIsHighlightedChanged,      callback : this._onNotifyTileIsHighlightedChanged },
+            { type : Notifications_TypeId.TypeId.BwTileBuffChanged,               callback : this._onNotifyTileBuffChanged },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,    callback : this._onNotifyBwTileCustomNameArrayChanged },
+            { type : Notifications_TypeId.TypeId.BwTileCustomNameIdChanged,       callback : this._onNotifyBwTileCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._group, callback: this._onTouchedGroup, },
+            { ui : this._group, callback : this._onTouchedGroup },
         ]);
 
         const tileView      = this._tileView;
@@ -161,16 +161,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         ) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileDetailPanel, {
                 tile,
-                callbackForAddUnit  : null,
+                callbackForAddUnit : null,
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwTileDetailPanel, {
-                tile                : tile,
-                callbackForAddUnit  : () => {
+                tile               : tile,
+                callbackForAddUnit : () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseUnitAttrPanel, {
-                        getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0535),
-                        war             : war,
-                        callback        : unitData => {
+                        getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0535),
+                        war          : war,
+                        callback     : unitData => {
                             const unitMap = war.getUnitMap();
                             if (unitMap.getUnitOnMap(gridIndex)) {
                                 Destructions_Utils.destroyUnitOnMap(war, gridIndex, false);
@@ -243,7 +243,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelName.setText(
             tile.getCustomName() ??
             Lang_Utils.getTileName(tile.getTileTypeId(), tile.getGameConfig()) ??
-            Lang_Constants.UndefinedError
+            Lang_Constants.UndefinedError,
         );
     }
     private _updateTileView(): void {
@@ -255,13 +255,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const tile      = war.getTileMap().getTile(war.getCursor().getGridIndex());
         const tileView  = this._tileView;
         tileView.setData({
-            gameConfig          : tile.getGameConfig(),
-            tileData            : tile.serialize(),
-            hasFog              : tile.getHasFog(),
-            skinId              : tile.getSkinId(),
-            overridingSkinId    : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
-            themeType           : tile.getTileThemeType(),
-            isFullReplay        : war instanceof ReplayWar_Model_RwWar.RwWar,
+            gameConfig       : tile.getGameConfig(),
+            tileData         : tile.serialize(),
+            hasFog           : tile.getHasFog(),
+            skinId           : tile.getSkinId(),
+            overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
+            themeType        : tile.getTileThemeType(),
+            isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
         });
         tileView.updateView();
     }
@@ -294,20 +294,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            tweenTime   : 50,
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            tweenTime  : 50,
         });
 
         await Timer_TimerModel.wait(50);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
-            tweenTime   : 50,
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
+            tweenTime  : 50,
         });
 
         await Timer_TimerModel.wait(50);

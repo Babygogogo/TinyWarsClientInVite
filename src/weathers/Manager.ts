@@ -36,9 +36,9 @@ export class Manager implements Weathers_IManager.IManager {
 
     public serialize(): SerialWeatherManager {
         return SerialWeatherManager.fromJson({
-            forceWeatherType    : this.getForceWeatherType(),
-            expireTurnIndex     : this.getExpireTurnIndex(),
-            expirePlayerIndex   : this.getExpirePlayerIndex(),
+            forceWeatherType  : this.getForceWeatherType(),
+            expireTurnIndex   : this.getExpireTurnIndex(),
+            expirePlayerIndex : this.getExpirePlayerIndex(),
         });
     }
     public serializeForCreateMfr(): SerialWeatherManager {

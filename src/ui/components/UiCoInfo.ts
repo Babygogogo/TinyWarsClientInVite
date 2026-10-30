@@ -103,24 +103,24 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupDorCoType,             callback: this._onTouchedGroupDorCoType },
-            { ui: this._groupDorBoardCost,          callback: this._onTouchedGroupDorBoardCost },
-            { ui: this._groupDorZoneRadius,         callback: this._onTouchedGroupDorZoneRadius },
-            { ui: this._groupDorZoneExpansion,      callback: this._onTouchedGroupDorZoneExpansion },
-            { ui: this._groupDorMaxEnergy,          callback: this._onTouchedGroupDorMaxEnergy },
-            { ui: this._groupDorEnergyBar,          callback: this._onTouchedGroupDorEnergyBar },
-            { ui: this._btnDorReplay,               callback: this._onTouchedBtnDorReplay },
+            { ui : this._groupDorCoType,             callback : this._onTouchedGroupDorCoType },
+            { ui : this._groupDorBoardCost,          callback : this._onTouchedGroupDorBoardCost },
+            { ui : this._groupDorZoneRadius,         callback : this._onTouchedGroupDorZoneRadius },
+            { ui : this._groupDorZoneExpansion,      callback : this._onTouchedGroupDorZoneExpansion },
+            { ui : this._groupDorMaxEnergy,          callback : this._onTouchedGroupDorMaxEnergy },
+            { ui : this._groupDorEnergyBar,          callback : this._onTouchedGroupDorEnergyBar },
+            { ui : this._btnDorReplay,               callback : this._onTouchedBtnDorReplay },
 
-            { ui: this._groupTriCoType,             callback: this._onTouchedGroupTriCoType },
-            { ui: this._groupTriEnergyBar,          callback: this._onTouchedGroupTriEnergyBar },
-            { ui: this._groupTriMaxEnergy,          callback: this._onTouchedGroupTriMaxEnergy },
-            { ui: this._btnTriReplay,               callback: this._onTouchedBtnTriReplay },
+            { ui : this._groupTriCoType,             callback : this._onTouchedGroupTriCoType },
+            { ui : this._groupTriEnergyBar,          callback : this._onTouchedGroupTriEnergyBar },
+            { ui : this._groupTriMaxEnergy,          callback : this._onTouchedGroupTriMaxEnergy },
+            { ui : this._btnTriReplay,               callback : this._onTouchedBtnTriReplay },
 
-            { ui: this._groupSkillType,             callback: this._onTouchedGroupSkillType },
-            { ui: this._layoutSkillDescTitle,       callback: this._onTouchedLayoutSkillDescTitle },
+            { ui : this._groupSkillType,             callback : this._onTouchedGroupSkillType },
+            { ui : this._layoutSkillDescTitle,       callback : this._onTouchedLayoutSkillDescTitle },
         ]);
         this._listSkillDesc.setItemRendererClass(SkillDescRenderer);
         this._listInfoType.setItemRendererClass(InfoTypeRenderer);
@@ -216,12 +216,12 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
-            callback    : () => Helpers_GameFlow.gotoRwReplayListPanel({
-                usePreviousFilter       : false,
-                usePreviousPageIndex    : false,
-                filter                  : new AuxiliaryTypes_ReplayFilter.ReplayFilter({
-                    coCategoryId    : coCategoryId,
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
+            callback   : () => Helpers_GameFlow.gotoRwReplayListPanel({
+                usePreviousFilter    : false,
+                usePreviousPageIndex : false,
+                filter               : new AuxiliaryTypes_ReplayFilter.ReplayFilter({
+                    coCategoryId : coCategoryId,
                 }),
             }),
         });
@@ -271,12 +271,12 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
-            callback    : () => Helpers_GameFlow.gotoRwReplayListPanel({
-                usePreviousFilter       : false,
-                usePreviousPageIndex    : false,
-                filter                  : new AuxiliaryTypes_ReplayFilter.ReplayFilter({
-                    coCategoryId    : coCategoryId,
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0953),
+            callback   : () => Helpers_GameFlow.gotoRwReplayListPanel({
+                usePreviousFilter    : false,
+                usePreviousPageIndex : false,
+                filter               : new AuxiliaryTypes_ReplayFilter.ReplayFilter({
+                    coCategoryId : coCategoryId,
                 }),
             }),
         });
@@ -300,11 +300,11 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         }
 
         const extraDesc     = Lang_Utils.getCoSkillDescArray({
-            coId            : openData.coId,
-            skillType       : skillType,
-            gameConfig      : openData.gameConfig,
-            languageType    : Lang_Utils.getCurrentLanguageType(),
-            isExtra         : true,
+            coId         : openData.coId,
+            skillType    : skillType,
+            gameConfig   : openData.gameConfig,
+            languageType : Lang_Utils.getCurrentLanguageType(),
+            isExtra      : true,
         });
         if (extraDesc) {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -337,28 +337,28 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         const coBasicCfg = openData.gameConfig.getCoBasicCfg(openData.coId);
         await this._listInfoType.bindData([
             {
-                infoType    : Ui_Types_UiCoInfoType.UiCoInfoType.Basic,
-                skillType   : null,
-                component   : this,
-                isDark      : false,
+                infoType  : Ui_Types_UiCoInfoType.UiCoInfoType.Basic,
+                skillType : null,
+                component : this,
+                isDark    : false,
             },
             {
-                infoType    : Ui_Types_UiCoInfoType.UiCoInfoType.Passive,
-                skillType   : CoSkills_Constants.SkillTypeId.Passive,
-                component   : this,
-                isDark      : !coBasicCfg?.getPassiveSkillIds()?.length,
+                infoType  : Ui_Types_UiCoInfoType.UiCoInfoType.Passive,
+                skillType : CoSkills_Constants.SkillTypeId.Passive,
+                component : this,
+                isDark    : !coBasicCfg?.getPassiveSkillIds()?.length,
             },
             {
-                infoType    : Ui_Types_UiCoInfoType.UiCoInfoType.Power,
-                skillType   : CoSkills_Constants.SkillTypeId.Power,
-                component   : this,
-                isDark      : !coBasicCfg?.getPowerSkillIds()?.length,
+                infoType  : Ui_Types_UiCoInfoType.UiCoInfoType.Power,
+                skillType : CoSkills_Constants.SkillTypeId.Power,
+                component : this,
+                isDark    : !coBasicCfg?.getPowerSkillIds()?.length,
             },
             {
-                infoType    : Ui_Types_UiCoInfoType.UiCoInfoType.SuperPower,
-                skillType   : CoSkills_Constants.SkillTypeId.SuperPower,
-                component   : this,
-                isDark      : !coBasicCfg?.getSuperPowerSkillIds()?.length,
+                infoType  : Ui_Types_UiCoInfoType.UiCoInfoType.SuperPower,
+                skillType : CoSkills_Constants.SkillTypeId.SuperPower,
+                component : this,
+                isDark    : !coBasicCfg?.getSuperPowerSkillIds()?.length,
             },
         ], undefined, true);
     }
@@ -497,7 +497,7 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
             label.setText(`${boardCostPercentage}%`);
             label.setTextColor(boardCostPercentage === 50
                 ? 0xFFFFFF
-                : (boardCostPercentage > 50 ? 0xFFFF00 : 0x00FF00)
+                : (boardCostPercentage > 50 ? 0xFFFF00 : 0x00FF00),
             );
         }
 
@@ -573,11 +573,11 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
 
         {
             const hasExtraDesc = Lang_Utils.getCoSkillDescArray({
-                coId            : coId,
-                skillType       : skillType,
-                gameConfig      : gameConfig,
-                languageType    : Lang_Utils.getCurrentLanguageType(),
-                isExtra         : true,
+                coId         : coId,
+                skillType    : skillType,
+                gameConfig   : gameConfig,
+                languageType : Lang_Utils.getCurrentLanguageType(),
+                isExtra      : true,
             }) != null;
             this._groupSkillDescHelp.setIsVisible(hasExtraDesc);
             this._layoutSkillDescTitle.setIsTouchEnabled(hasExtraDesc);
@@ -586,18 +586,18 @@ export class UiCoInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompon
         {
             const dataArrayForListSkillDesc : DataForSkillDescRenderer[] = [];
             const descArray                 = Lang_Utils.getCoSkillDescArray({
-                coId            : coId,
-                skillType       : skillType,
-                gameConfig      : gameConfig,
-                languageType    : Lang_Utils.getCurrentLanguageType(),
-                isExtra         : false
+                coId         : coId,
+                skillType    : skillType,
+                gameConfig   : gameConfig,
+                languageType : Lang_Utils.getCurrentLanguageType(),
+                isExtra      : false,
             });
             if (!descArray?.length) {
-                dataArrayForListSkillDesc.push({ desc: Lang_Constants.UndefinedError });
+                dataArrayForListSkillDesc.push({ desc : Lang_Constants.UndefinedError });
             } else {
                 for (const desc of descArray) {
                     dataArrayForListSkillDesc.push({
-                        desc    : desc,
+                        desc : desc,
                     });
                 }
             }
@@ -619,8 +619,7 @@ interface DataForInfoTypeRenderer extends Ui_Types_UiListItemData.UiListItemData
 }
 class InfoTypeRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForInfoTypeRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForInfoTypeRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForInfoTypeRenderer> {
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {

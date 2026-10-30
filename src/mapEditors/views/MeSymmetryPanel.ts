@@ -80,26 +80,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeDrawerSymmetricalPlayerIndexChanged,   callback: this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeDrawerSymmetricalPlayerIndexChanged,   callback : this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnClose,                   callback : this.closePanel },
 
-            { ui: this._labelStatus,                callback: this._onTouchedLabelStatus },
-            { ui: this._labelAutoDraw,              callback: this._onTouchedLabelAutoDraw },
+            { ui : this._labelStatus,                callback : this._onTouchedLabelStatus },
+            { ui : this._labelAutoDraw,              callback : this._onTouchedLabelAutoDraw },
 
-            { ui: this._groupLeftRightBox,          callback: this._onTouchedGroupLeftRightBox, },
-            { ui: this._groupUpDownBox,             callback: this._onTouchedGroupUpDownBox, },
-            { ui: this._groupRotationalBox,         callback: this._onTouchedGroupRotationalBox },
-            { ui: this._groupUpLeftDownRightBox,    callback: this._onTouchedGroupUpLeftDownRightBox },
-            { ui: this._groupUpRightDownLeftBox,    callback: this._onTouchedGroupUpRightDownLeftBox },
+            { ui : this._groupLeftRightBox,          callback : this._onTouchedGroupLeftRightBox },
+            { ui : this._groupUpDownBox,             callback : this._onTouchedGroupUpDownBox },
+            { ui : this._groupRotationalBox,         callback : this._onTouchedGroupRotationalBox },
+            { ui : this._groupUpLeftDownRightBox,    callback : this._onTouchedGroupUpLeftDownRightBox },
+            { ui : this._groupUpRightDownLeftBox,    callback : this._onTouchedGroupUpRightDownLeftBox },
 
-            { ui: this._btnColorSymmetry,           callback: this._onTouchedBtnColorSymmetry },
-            { ui: this._btnHelpColorSymmetry,       callback: this._onTouchedBtnHelpColorSymmetry },
-            { ui: this._groupColorSymmetry,         callback: this._onTouchedGroupColorSymmetry },
+            { ui : this._btnColorSymmetry,           callback : this._onTouchedBtnColorSymmetry },
+            { ui : this._btnHelpColorSymmetry,       callback : this._onTouchedBtnHelpColorSymmetry },
+            { ui : this._groupColorSymmetry,         callback : this._onTouchedGroupColorSymmetry },
 
-            { ui: this._btnFillTile,                callback: this._onTouchedBtnFillTile },
+            { ui : this._btnFillTile,                callback : this._onTouchedBtnFillTile },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -402,8 +402,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForColorSymmetryRenderer[] = [];
         for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
             dataArray.push({
-                dstPlayerIndex  : drawer.getSymmetricalPlayerIndex(playerIndex),
-                isEnabled       : isEnabled,
+                dstPlayerIndex : drawer.getSymmetricalPlayerIndex(playerIndex),
+                isEnabled      : isEnabled,
             });
         }
         await this._listColorSymmetry.bindData(dataArray);

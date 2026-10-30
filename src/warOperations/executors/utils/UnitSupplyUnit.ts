@@ -40,7 +40,7 @@ function fastExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -72,9 +72,9 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitSupplyUnit_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -89,7 +89,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -101,7 +101,7 @@ async function normalExeUnitSupplyUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
                 isBlocked           : isBlocked,
                 aiming              : null,
                 updateViewAfterMove : true,
-             });
+            });
 
         } else {
             const suppliedUnits : Units_IUnit.IUnit[] = [];

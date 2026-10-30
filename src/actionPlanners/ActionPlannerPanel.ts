@@ -28,12 +28,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback: this._onNotifyActionPlannerStateChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged,       callback : this._onNotifyActionPlannerStateChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupAlly,                              callback: this._onTouchedGroupAlly },
-            { ui: this._groupEnemy,                             callback: this._onTouchedGroupEnemy },
+            { ui : this._groupAlly,                              callback : this._onTouchedGroupAlly },
+            { ui : this._groupEnemy,                             callback : this._onTouchedGroupEnemy },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -65,7 +65,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(isOn
             ? Sounds_Constants.ShortSfxCode.CursorConfirm01
-            : Sounds_Constants.ShortSfxCode.ButtonCancel01
+            : Sounds_Constants.ShortSfxCode.ButtonCancel01,
         );
     }
 
@@ -87,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(isOn
             ? Sounds_Constants.ShortSfxCode.CursorConfirm01
-            : Sounds_Constants.ShortSfxCode.ButtonCancel01
+            : Sounds_Constants.ShortSfxCode.ButtonCancel01,
         );
     }
 

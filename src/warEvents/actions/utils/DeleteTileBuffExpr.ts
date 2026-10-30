@@ -20,9 +20,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTileFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -30,9 +30,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTileBuffFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileBuffFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -63,9 +63,9 @@ export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -75,9 +75,9 @@ export function getErrorTip(data: WeaDeleteTileBuffExpr, customCounterNameSet: S
     {
         const info      = WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTileBuffFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileBuffFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;

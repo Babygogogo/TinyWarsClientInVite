@@ -26,27 +26,27 @@ import type { S as CcrStartWarResponse } from "../../proto/schema/CommonProto/Ne
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrCreateRoom,                callback: _onMsgCcrCreateRoom },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrJoinRoom,                  callback: _onMsgCcrJoinRoom },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrDeleteRoom,                callback: _onMsgCcrDeleteRoom },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrExitRoom,                  callback: _onMsgCcrExitRoom },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrDeletePlayer,              callback: _onMsgCcrDeletePlayer },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrAddDummy,                  callback: _onMsgCcrAddDummy },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrSetDummySettings,          callback: _onMsgCcrSetDummySettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrInvite,                    callback: _onMsgCcrInvite },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrSetReady,                  callback: _onMsgCcrSetReady },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrSetSelfSettings,           callback: _onMsgCcrSetSelfSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrGetRoomStaticInfo,         callback: _onMsgCcrGetRoomStaticInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrGetRoomPlayerInfo,         callback: _onMsgCcrGetRoomPlayerInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrGetJoinableRoomIdArray,    callback: _onMsgCcrGetJoinableRoomIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrGetJoinedRoomIdArray,      callback: _onMsgCcrGetJoinedRoomIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCcrStartWar,                  callback: _onMsgCcrStartWar },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrCreateRoom,                callback : _onMsgCcrCreateRoom },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrJoinRoom,                  callback : _onMsgCcrJoinRoom },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrDeleteRoom,                callback : _onMsgCcrDeleteRoom },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrExitRoom,                  callback : _onMsgCcrExitRoom },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrDeletePlayer,              callback : _onMsgCcrDeletePlayer },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrAddDummy,                  callback : _onMsgCcrAddDummy },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrSetDummySettings,          callback : _onMsgCcrSetDummySettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrInvite,                    callback : _onMsgCcrInvite },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrSetReady,                  callback : _onMsgCcrSetReady },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrSetSelfSettings,           callback : _onMsgCcrSetSelfSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrGetRoomStaticInfo,         callback : _onMsgCcrGetRoomStaticInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrGetRoomPlayerInfo,         callback : _onMsgCcrGetRoomPlayerInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrGetJoinableRoomIdArray,    callback : _onMsgCcrGetJoinableRoomIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrGetJoinedRoomIdArray,      callback : _onMsgCcrGetJoinedRoomIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCcrStartWar,                  callback : _onMsgCcrStartWar },
     ], null);
 }
 
 export function reqCreateRoom(param: CcrCreateRoomRequest): void {
     Networks_Manager.send({
-        MsgCcrCreateRoom: { c: param.toJson() },
+        MsgCcrCreateRoom : { c : param.toJson() },
     });
 }
 function _onMsgCcrCreateRoom(e: Egret_Egret.Event): void {
@@ -58,9 +58,11 @@ function _onMsgCcrCreateRoom(e: Egret_Egret.Event): void {
 
 export function reqCcrJoinRoom(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrJoinRoom: { c: {
-            roomId  : roomId,
-        } },
+        MsgCcrJoinRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        },
     });
 }
 async function _onMsgCcrJoinRoom(e: Egret_Egret.Event): Promise<void> {
@@ -72,9 +74,11 @@ async function _onMsgCcrJoinRoom(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrDeleteRoom(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrDeleteRoom: { c: {
-            roomId,
-        } },
+        MsgCcrDeleteRoom : {
+            c : {
+                roomId,
+            }, 
+        },
     });
 }
 function _onMsgCcrDeleteRoom(e: Egret_Egret.Event): void {
@@ -86,9 +90,11 @@ function _onMsgCcrDeleteRoom(e: Egret_Egret.Event): void {
 
 export function reqCcrExitRoom(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrExitRoom: { c: {
-            roomId,
-        }, },
+        MsgCcrExitRoom : {
+            c : {
+                roomId,
+            }, 
+        },
     });
 }
 async function _onMsgCcrExitRoom(e: Egret_Egret.Event): Promise<void> {
@@ -100,11 +106,13 @@ async function _onMsgCcrExitRoom(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrDeletePlayer(roomId: number, playerIndex: number, forbidReentrance: boolean): void {
     Networks_Manager.send({
-        MsgCcrDeletePlayer: { c: {
-            roomId,
-            playerIndex,
-            forbidReentrance
-        }, },
+        MsgCcrDeletePlayer : {
+            c : {
+                roomId,
+                playerIndex,
+                forbidReentrance,
+            }, 
+        },
     });
 }
 async function _onMsgCcrDeletePlayer(e: Egret_Egret.Event): Promise<void> {
@@ -116,12 +124,14 @@ async function _onMsgCcrDeletePlayer(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrAddDummy(roomId: number, playerIndex: number, coId: number, unitAndTileSkinId: number): void {
     Networks_Manager.send({
-        MsgCcrAddDummy: { c: {
-            roomId              : roomId,
-            playerIndex         : playerIndex,
-            coId                : coId,
-            unitAndTileSkinId   : unitAndTileSkinId,
-        }, },
+        MsgCcrAddDummy : {
+            c : {
+                roomId            : roomId,
+                playerIndex       : playerIndex,
+                coId              : coId,
+                unitAndTileSkinId : unitAndTileSkinId,
+            }, 
+        },
     });
 }
 function _onMsgCcrAddDummy(e: Egret_Egret.Event): void {
@@ -133,12 +143,14 @@ function _onMsgCcrAddDummy(e: Egret_Egret.Event): void {
 
 export function reqCcrSetDummySettings(roomId: number, playerIndex: number, coId: number, unitAndTileSkinId: number): void {
     Networks_Manager.send({
-        MsgCcrSetDummySettings: { c: {
-            roomId              : roomId,
-            playerIndex         : playerIndex,
-            coId                : coId,
-            unitAndTileSkinId   : unitAndTileSkinId,
-        }, },
+        MsgCcrSetDummySettings : {
+            c : {
+                roomId            : roomId,
+                playerIndex       : playerIndex,
+                coId              : coId,
+                unitAndTileSkinId : unitAndTileSkinId,
+            }, 
+        },
     });
 }
 function _onMsgCcrSetDummySettings(e: Egret_Egret.Event): void {
@@ -150,10 +162,12 @@ function _onMsgCcrSetDummySettings(e: Egret_Egret.Event): void {
 
 export function reqCcrInvite(roomId: number, userIdArray: number[]): void {
     Networks_Manager.send({
-        MsgCcrInvite: { c: {
-            roomId      : roomId,
-            userIdArray : userIdArray,
-        }}
+        MsgCcrInvite : {
+            c : {
+                roomId      : roomId,
+                userIdArray : userIdArray,
+            }, 
+        },
     });
 }
 function _onMsgCcrInvite(e: Egret_Egret.Event): void {
@@ -165,10 +179,12 @@ function _onMsgCcrInvite(e: Egret_Egret.Event): void {
 
 export function reqCcrSetReady(roomId: number, isReady: boolean): void {
     Networks_Manager.send({
-        MsgCcrSetReady: { c: {
-            roomId,
-            isReady,
-        }, },
+        MsgCcrSetReady : {
+            c : {
+                roomId,
+                isReady,
+            }, 
+        },
     });
 }
 async function _onMsgCcrSetReady(e: Egret_Egret.Event): Promise<void> {
@@ -180,7 +196,7 @@ async function _onMsgCcrSetReady(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrSetSelfSettings(data: CcrSetSelfSettingsRequest): void {
     Networks_Manager.send({
-        MsgCcrSetSelfSettings: { c: data.toJson() },
+        MsgCcrSetSelfSettings : { c : data.toJson() },
     });
 }
 async function _onMsgCcrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
@@ -192,9 +208,11 @@ async function _onMsgCcrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrGetRoomStaticInfo(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrGetRoomStaticInfo: { c: {
-            roomId,
-        }, },
+        MsgCcrGetRoomStaticInfo : {
+            c : {
+                roomId,
+            }, 
+        },
     });
 }
 async function _onMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): Promise<void> {
@@ -209,9 +227,11 @@ async function _onMsgCcrGetRoomStaticInfo(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCcrGetRoomPlayerInfo(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrGetRoomPlayerInfo: { c: {
-            roomId,
-        }, },
+        MsgCcrGetRoomPlayerInfo : {
+            c : {
+                roomId,
+            }, 
+        },
     });
 }
 function _onMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
@@ -226,8 +246,10 @@ function _onMsgCcrGetRoomPlayerInfo(e: Egret_Egret.Event): void {
 
 export function reqCcrGetJoinableRoomIdArray(): void {
     Networks_Manager.send({
-        MsgCcrGetJoinableRoomIdArray: { c: {
-        } }
+        MsgCcrGetJoinableRoomIdArray : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgCcrGetJoinableRoomIdArray(e: Egret_Egret.Event): void {
@@ -240,8 +262,10 @@ function _onMsgCcrGetJoinableRoomIdArray(e: Egret_Egret.Event): void {
 
 export function reqCcrGetJoinedRoomIdArray(): void {
     Networks_Manager.send({
-        MsgCcrGetJoinedRoomIdArray: { c: {
-        } }
+        MsgCcrGetJoinedRoomIdArray : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgCcrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
@@ -254,9 +278,11 @@ function _onMsgCcrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
 
 export function reqCcrStartWar(roomId: number): void {
     Networks_Manager.send({
-        MsgCcrStartWar: { c: {
-            roomId,
-        }, },
+        MsgCcrStartWar : {
+            c : {
+                roomId,
+            }, 
+        },
     });
 }
 function _onMsgCcrStartWar(e: Egret_Egret.Event): void {

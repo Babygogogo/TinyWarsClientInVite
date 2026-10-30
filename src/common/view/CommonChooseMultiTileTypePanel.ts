@@ -54,13 +54,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupSelectAll,     callback: this._onTouchedGroupSelectAll },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
+            { ui : this._groupSelectAll,     callback : this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -175,9 +175,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForTileTypeRenderer[] = [];
         for (const num of openData.availableTileTypeArray.concat().sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                tileType            : num,
-                gameConfig          : gameConfig,
-                panel               : this,
+                tileType   : num,
+                gameConfig : gameConfig,
+                panel      : this,
             });
         }
 
@@ -185,9 +185,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const list          = this._listTileType;
         const rowsCount     = Math.ceil(dataCount / 4);
         const listHeight    = Numbers_Utils.getValueInRange({
-            rawValue    : rowsCount * 34 + (rowsCount - 1) * 6,
-            minValue    : 80,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight - 130,
+            rawValue : rowsCount * 34 + (rowsCount - 1) * 6,
+            minValue : 80,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight - 130,
         });
         list.setUnscaledManualHeight(listHeight);
         this._group.setUnscaledManualHeight(listHeight + 130);
@@ -232,8 +232,8 @@ class TileTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -286,15 +286,15 @@ class TileTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._imgSelected.setIsVisible(openData.panel.checkHasSelectedNumber(tileType));
 
         this._tileView.init({
-            tileBaseType            : baseType,
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : objectType,
-            tileObjectShapeId       : 0,
-            skinId                  : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId        : undefined,
-            gameConfig              : gameConfig,
+            tileBaseType          : baseType,
+            tileBaseShapeId       : 0,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectType        : objectType,
+            tileObjectShapeId     : 0,
+            skinId                : Players_Constants.PlayerIndex.Neutral,
+            overridingSkinId      : undefined,
+            gameConfig            : gameConfig,
         });
     }
 }

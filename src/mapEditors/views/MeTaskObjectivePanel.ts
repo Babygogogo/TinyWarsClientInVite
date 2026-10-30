@@ -73,30 +73,30 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyTaskObjectiveFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback : this._onNotifyTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this.closePanel },
-            { ui: this._btnIdentifier,                          callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                               callback : this.closePanel },
+            { ui : this._btnIdentifier,                          callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyDesc,                        callback: this._onTouchedGroupModifyDesc },
-            { ui: this._btnHelpDesc,                            callback: this._onTouchedBtnHelpDesc  },
+            { ui : this._groupModifyDesc,                        callback : this._onTouchedGroupModifyDesc },
+            { ui : this._btnHelpDesc,                            callback : this._onTouchedBtnHelpDesc  },
 
-            { ui: this._groupModifyIsMain,                      callback: this._onTouchedGroupModifyIsMain },
-            { ui: this._btnHelpIsMain,                          callback: this._onTouchedBtnHelpIsMain  },
+            { ui : this._groupModifyIsMain,                      callback : this._onTouchedGroupModifyIsMain },
+            { ui : this._btnHelpIsMain,                          callback : this._onTouchedBtnHelpIsMain  },
 
-            { ui: this._groupModifyMaxProgress,                 callback: this._onTouchedGroupModifyMaxProgress },
-            { ui: this._btnHelpMaxProgress,                     callback: this._onTouchedBtnHelpMaxProgress  },
+            { ui : this._groupModifyMaxProgress,                 callback : this._onTouchedGroupModifyMaxProgress },
+            { ui : this._btnHelpMaxProgress,                     callback : this._onTouchedBtnHelpMaxProgress  },
 
-            { ui: this._groupModifyScoreForCompletion,          callback: this._onTouchedGroupModifyScoreForCompletion },
-            { ui: this._btnHelpScoreForCompletion,              callback: this._onTouchedBtnHelpScoreForCompletion },
+            { ui : this._groupModifyScoreForCompletion,          callback : this._onTouchedGroupModifyScoreForCompletion },
+            { ui : this._btnHelpScoreForCompletion,              callback : this._onTouchedBtnHelpScoreForCompletion },
 
-            { ui: this._groupModifyScoreForProgress,            callback: this._onTouchedGroupModifyScoreForProgress },
-            { ui: this._btnHelpScoreForProgress,                callback: this._onTouchedBtnHelpScoreForProgress  },
+            { ui : this._groupModifyScoreForProgress,            callback : this._onTouchedGroupModifyScoreForProgress },
+            { ui : this._btnHelpScoreForProgress,                callback : this._onTouchedBtnHelpScoreForProgress  },
 
-            { ui: this._groupModifyUpdaterForCurrentProgress,   callback: this._onTouchedGroupModifyUpdaterForCurrentProgress },
-            { ui: this._btnHelpUpdaterForCurrentProgress,       callback: this._onTouchedBtnUpdaterForCurrentProgress },
+            { ui : this._groupModifyUpdaterForCurrentProgress,   callback : this._onTouchedGroupModifyUpdaterForCurrentProgress },
+            { ui : this._btnHelpUpdaterForCurrentProgress,       callback : this._onTouchedBtnUpdaterForCurrentProgress },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -123,10 +123,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-            getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B1215),
-            currentTextArray    : taskObjective.getDesc(),
-            maxLength           : TaskObjectives_Constants.Common.MaxDescLength,
-            callback            : newValue => {
+            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1215),
+            currentTextArray : taskObjective.getDesc(),
+            maxLength        : TaskObjectives_Constants.Common.MaxDescLength,
+            callback         : newValue => {
                 taskObjective.setDesc(newValue);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
             },
@@ -174,11 +174,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue = taskObjective.getMaxProgress();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1216),
-            minValue        : 1,
-            maxValue        : Numbers_Constants.MaxInt32,
-            currentValue    : currentValue ?? 0,
-            callback        : newValue => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1216),
+            minValue     : 1,
+            maxValue     : Numbers_Constants.MaxInt32,
+            currentValue : currentValue ?? 0,
+            callback     : newValue => {
                 if (newValue != currentValue) {
                     taskObjective.setMaxProgress(newValue);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);
@@ -202,11 +202,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue  = taskObjective.getScoreForCompletion();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1218),
-            minValue        : Numbers_Constants.MinInt32,
-            maxValue        : Numbers_Constants.MaxInt32,
-            currentValue    : currentValue,
-            callback        : newValue => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1218),
+            minValue     : Numbers_Constants.MinInt32,
+            maxValue     : Numbers_Constants.MaxInt32,
+            currentValue : currentValue,
+            callback     : newValue => {
                 if (newValue != currentValue) {
                     if (newValue === 0) {
                         taskObjective.setScoreForCompletion(null);
@@ -234,11 +234,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentValue = taskObjective.getScoreForProgress();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1219),
-            minValue        : Numbers_Constants.MinInt32,
-            maxValue        : Numbers_Constants.MaxInt32,
-            currentValue    : currentValue,
-            callback        : newValue => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1219),
+            minValue     : Numbers_Constants.MinInt32,
+            maxValue     : Numbers_Constants.MaxInt32,
+            currentValue : currentValue,
+            callback     : newValue => {
                 if (newValue != currentValue) {
                     if (newValue === 0) {
                         taskObjective.setScoreForProgress(null);
@@ -271,11 +271,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const taskObjective = openData.taskObjective;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : taskObjective.getUpdaterForCurrentProgress(),
-            expressionInfo  : TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress,
-            fullData        : openData.warEventFullData,
-            isReviewingMap  : openData.isReviewingMap,
-            callback        : text => {
+            currentValue   : taskObjective.getUpdaterForCurrentProgress(),
+            expressionInfo : TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress,
+            fullData       : openData.warEventFullData,
+            isReviewingMap : openData.isReviewingMap,
+            callback       : text => {
                 taskObjective.setUpdaterForCurrentProgress(text);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged);
             },

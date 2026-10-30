@@ -57,12 +57,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnModifyWarRule,   callback: this._onTouchedBtnModifyWarRule },
-            { ui: this._btnStart,           callback: this._onTouchedBtnStart },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnModifyWarRule,   callback : this._onTouchedBtnModifyWarRule },
+            { ui : this._btnStart,           callback : this._onTouchedBtnStart },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -111,10 +111,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const warCreator = openData.warCreator;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-            currentSlotIndex        : warCreator.getSaveSlotIndex(),
-            needComment             : false,
-            needConfirmOverwrite    : true,
-            callback                : slotIndex => {
+            currentSlotIndex     : warCreator.getSaveSlotIndex(),
+            needComment          : false,
+            needConfirmOverwrite : true,
+            callback             : slotIndex => {
                 warCreator.setSaveSlotIndex(slotIndex);
                 SinglePlayerMode_Model_SpmProxy.reqSpmCreateSrw(warCreator.generateData());
             },
@@ -161,8 +161,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const templateWarRuleId = warCreator.getInstanceWarRule().getTemplateWarRuleId();
         const templateWarRule   = (await warCreator.getMapRawData()).getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId);
         this._labelWarRule.setText(templateWarRule
-            ? `#${templateWarRuleId} ${Lang_Utils.getLanguageText({ textArray: templateWarRule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError}`
-            : Lang_Constants.UndefinedError
+            ? `#${templateWarRuleId} ${Lang_Utils.getLanguageText({ textArray : templateWarRule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError}`
+            : Lang_Constants.UndefinedError,
         );
     }
     private async _updateLabelHighScore(): Promise<void> {
@@ -190,7 +190,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const rankIndex = await SinglePlayerMode_Model_SpmModel.getRankIndex(normalMapId, ruleId, score);
             label.setText(((rankIndex != null) && (rankIndex > 0))
                 ? `${score} (${rankIndex}${Helpers_Text.getSuffixForRankIndex(rankIndex)})`
-                : `${score} (--)`
+                : `${score} (--)`,
             );
         }
         layout.arrangeItems();
@@ -209,9 +209,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const count = dataArray.length;
         this._group.setUnscaledManualWidth(Numbers_Utils.getValueInRange({
-            maxValue    : Stages_Constants.Dimension.DesignWidth,
-            minValue    : 330,
-            rawValue    : count * 140 + (count - 1) * 10 + 40,
+            maxValue : Stages_Constants.Dimension.DesignWidth,
+            minValue : 330,
+            rawValue : count * 140 + (count - 1) * 10 + 40,
         }));
     }
 
@@ -253,13 +253,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
-            { ui: this._btnChangeCo,            callback: this._onTouchedBtnChangeCo },
-            { ui: this._btnChangeSkinId,        callback: this._onTouchedBtnChangeSkinId },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
+            { ui : this._btnChangeCo,            callback : this._onTouchedBtnChangeCo },
+            { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback: this._onNotifySrrCreatePlayerInfoChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback : this._onNotifySrrCreatePlayerInfoChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -291,8 +291,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const coId          = playerData ? playerData.getCoId() : null;
         if ((coId != null) && (coId !== Cos_Constants.CoId.Empty)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-                gameConfig  : warCreator.getGcData(),
-                coId        : coId,
+                gameConfig : warCreator.getGcData(),
+                coId       : coId,
             });
         }
     }
@@ -319,16 +319,16 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const currentCoId       = playerInfo.getCoId();
         const warRuleCommonData = Helpers_Misc.getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : gcData,
-            currentCoId         : currentCoId,
-            isBan               : false,
-            availableCoIdArray  : [...PlayerRules_Utils.getFinalSrwHumanCoIdSet({
+            gameConfig         : gcData,
+            currentCoId        : currentCoId,
+            isBan              : false,
+            availableCoIdArray : [...PlayerRules_Utils.getFinalSrwHumanCoIdSet({
                 playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : gcData,
                 hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                 includeRandom   : false,
             })],
-            callbackOnConfirm   : newCoId => {
+            callbackOnConfirm : newCoId => {
                 if (newCoId != currentCoId) {
                     playerInfo.setCoId(newCoId);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.WarCreator_PlayerInfoChanged);

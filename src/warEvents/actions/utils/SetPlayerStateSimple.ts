@@ -94,7 +94,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConTileFilter() == null ? Lang_Constants.TextType.B1406 : Lang_Constants.TextType.B1407)
+                Lang_Utils.getText(data.getConTileFilter() == null ? Lang_Constants.TextType.B1406 : Lang_Constants.TextType.B1407),
             )}`);
         }
     }
@@ -103,7 +103,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1404 : Lang_Constants.TextType.B1405)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1404 : Lang_Constants.TextType.B1405),
             )}`);
         }
     }
@@ -351,9 +351,9 @@ function evalActFund(action: WeaSetPlayerStateSimple, player: Players_IPlayer.IP
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Players_Constants.Fund.MinFund,
-        maxValue    : Players_Constants.Fund.MaxFund,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, player.getFund()),
+        minValue : Players_Constants.Fund.MinFund,
+        maxValue : Players_Constants.Fund.MaxFund,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, player.getFund()),
     });
 }
 

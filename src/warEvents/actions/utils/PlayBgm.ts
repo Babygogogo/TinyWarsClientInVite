@@ -61,9 +61,9 @@ export async function applyWithoutExtraData(action: WeaPlayBgm, isFast: boolean,
 
     if (action.getUseCoBgm()) {
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     } else {
         Sounds_SoundPlayer.playBgm(Helpers_Misc.getExisted(action.getBgmCode()));

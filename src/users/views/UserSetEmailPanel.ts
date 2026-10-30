@@ -49,21 +49,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCode,         callback: this._onNotifyMsgUserRequestEmailVerificationCode },
-            { type: Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed,   callback: this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
-            { type: Notifications_TypeId.TypeId.MsgUserVerifyEmail,                          callback: this._onNotifyMsgUserVerifyEmail },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCode,         callback : this._onNotifyMsgUserRequestEmailVerificationCode },
+            { type : Notifications_TypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed,   callback : this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
+            { type : Notifications_TypeId.TypeId.MsgUserVerifyEmail,                          callback : this._onNotifyMsgUserVerifyEmail },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
 
-            { ui: this._btnRequest,             callback: this._onTouchedBtnRequest },
-            { ui: this._btnVerify,              callback: this._onTouchedBtnVerify },
+            { ui : this._btnRequest,             callback : this._onTouchedBtnRequest },
+            { ui : this._btnVerify,              callback : this._onTouchedBtnVerify },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputEmail,             callback: this._onFocusOutInputEmail,               eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputEmail,             callback : this._onFocusOutInputEmail,               eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputVerificationCode,  callback : this._onFocusOutInputVerificationCode,    eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -188,6 +188,6 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
 function validateEmail(email: string): RegExpMatchArray | null {
     return email.toLocaleLowerCase().match(
-        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
     );
 }

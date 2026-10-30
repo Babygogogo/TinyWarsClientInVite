@@ -44,12 +44,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupSelectAll,         callback: this._onTouchedGroupSelectAll },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._groupSelectAll,         callback : this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -78,7 +78,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const list = this._list;
         list.setSelectedItemIndexes(this._imgSelectAll.getIsVisible()
             ? []
-            : Helpers_Collection.createRange(0, list.getBoundDataArray()?.length ?? 0, 1)
+            : Helpers_Collection.createRange(0, list.getBoundDataArray()?.length ?? 0, 1),
         );
         this._updateGroupSelectAll();
         this._updateLabelSelected();
@@ -131,9 +131,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const list                  = this._list;
         const rowsCount             = Math.ceil(dataCount / 6);
         const listHeight            = Numbers_Utils.getValueInRange({
-            rawValue    : rowsCount * 30 + (rowsCount - 1) * 6,
-            minValue    : 80,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight - 130,
+            rawValue : rowsCount * 30 + (rowsCount - 1) * 6,
+            minValue : 80,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight - 130,
         });
         list.setUnscaledManualHeight(listHeight);
         this._labelNoData.setIsVisible(!dataCount);
@@ -170,7 +170,7 @@ class IntegerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

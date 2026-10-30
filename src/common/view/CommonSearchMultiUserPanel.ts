@@ -52,21 +52,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetUsersByNickname,   callback : this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
 
-            { ui: this._btnClearNickname,       callback: this._onTouchedBtnClearNickname },
+            { ui : this._btnClearNickname,       callback : this._onTouchedBtnClearNickname },
 
-            { ui: this._btnSearchFollowing,     callback: this._onTouchedBtnSearchFollowed },
-            { ui: this._btnSearchNotFollowing,  callback: this._onTouchedBtnSearchNotFollowing },
-            { ui: this._btnSearchAll,           callback: this._onTouchedBtnSearchAll },
+            { ui : this._btnSearchFollowing,     callback : this._onTouchedBtnSearchFollowed },
+            { ui : this._btnSearchNotFollowing,  callback : this._onTouchedBtnSearchNotFollowing },
+            { ui : this._btnSearchAll,           callback : this._onTouchedBtnSearchAll },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputNickname,          callback : this._onFocusOutInputNickname,    eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -237,7 +237,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const userId of this._candidateUserIdArray) {
             dataArray.push({
                 userId,
-                panel   : this,
+                panel : this,
             });
         }
 
@@ -260,8 +260,8 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupHelp,        callback: this._onTouchedGroupHelp },
-            { ui: this._groupSelect,      callback: this._onTouchedGroupSelect },
+            { ui : this._groupHelp,        callback : this._onTouchedGroupHelp },
+            { ui : this._groupSelect,      callback : this._onTouchedGroupSelect },
         ]);
     }
 
@@ -271,7 +271,7 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     }
 
     private _onTouchedGroupHelp(): void {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : this.getOpenData()?.userId });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupSelect(): void {

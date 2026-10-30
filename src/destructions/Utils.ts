@@ -34,13 +34,13 @@ export function destroyUnitOnMap(war: BaseWar_Interface_IBwWar.IBwWar, gridIndex
             const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : u.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : u.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }
@@ -109,13 +109,13 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         const playerIndex             = unit.getPlayerIndex();
         for (const u of destroyedUnits) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : u.getUnitType(),
-                normalizedHpGain            : 0,
-                normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                unitGain                    : 0,
-                unitLoss                    : 1,
-                dstPlayerIndex              : playerIndex,
-                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                unitType                   : u.getUnitType(),
+                normalizedHpGain           : 0,
+                normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                unitGain                   : 0,
+                unitLoss                   : 1,
+                dstPlayerIndex             : playerIndex,
+                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }
@@ -136,20 +136,20 @@ export function destroyUnitLoaded(war: BaseWar_Interface_IBwWar.IBwWar, unitId: 
     }
 
     {
-        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetUnit.getGridIndex() });
+        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetUnit.getGridIndex() });
         if (observerTeamIndexes != null) {
             const warStatisticsManager          = war.getWarStatisticsManager();
             const playerIndex                   = targetUnit.getPlayerIndex();
             const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
             for (const u of destroyedUnits) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : u.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : u.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : u.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : u.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }
@@ -173,7 +173,7 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: Units_IUnit.IUnit[]): void
             * destroyedCoUnitsCount
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * destroyedUnits[0].getWar().getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
-            / 100
+            / 100,
         );
         if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
             player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
@@ -202,7 +202,7 @@ function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: Auxiliar
             * destroyedCoUnitsCount
             / (restCoUnitsCount + destroyedCoUnitsCount)
             * war.getCommonSettingManager().getPlayerRule(playerIndex).getEnergyLossPctOnCoDie()
-            / 100
+            / 100,
         );
         if ((restCoUnitsCount <= 0) && (player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Dor)) {
             player.setCoUsingSkillType(CoSkills_Constants.SkillTypeId.Passive);
@@ -232,13 +232,13 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
 
         if (groupedObserverTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : unit.getUnitType(),
-                normalizedHpGain            : 0,
-                normalizedHpLoss            : unit.getNormalizedCurrentHp(),
-                unitGain                    : 0,
-                unitLoss                    : 1,
-                dstPlayerIndex              : playerIndex,
-                groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                unitType                   : unit.getUnitType(),
+                normalizedHpGain           : 0,
+                normalizedHpLoss           : unit.getNormalizedCurrentHp(),
+                unitGain                   : 0,
+                unitLoss                   : 1,
+                dstPlayerIndex             : playerIndex,
+                groupedObserverTeamIndexes : groupedObserverTeamIndexes,
             }));
         }
 
@@ -247,13 +247,13 @@ export function destroyPlayerForce(war: BaseWar_Interface_IBwWar.IBwWar, playerI
 
             if (groupedObserverTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : loadedUnit.getUnitType(),
-                    normalizedHpGain            : 0,
-                    normalizedHpLoss            : loadedUnit.getNormalizedCurrentHp(),
-                    unitGain                    : 0,
-                    unitLoss                    : 1,
-                    dstPlayerIndex              : playerIndex,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                    unitType                   : loadedUnit.getUnitType(),
+                    normalizedHpGain           : 0,
+                    normalizedHpLoss           : loadedUnit.getNormalizedCurrentHp(),
+                    unitGain                   : 0,
+                    unitLoss                   : 1,
+                    dstPlayerIndex             : playerIndex,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
             }
         }

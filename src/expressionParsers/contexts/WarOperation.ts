@@ -39,22 +39,22 @@ export class WarOperation extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = WarOperation.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(WarOperation.VnId,                       { desc: Lang_Constants.TextType.A0704, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnType,                     { desc: Lang_Constants.TextType.A0705, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnWar,                      { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,           isExtension: false });
-        variables.set(WarOperation.VnTargetWarEventId,         { desc: Lang_Constants.TextType.A0906, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetPlayerIndex,        { desc: Lang_Constants.TextType.A0907, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnAgreeToDraw,              { desc: Lang_Constants.TextType.A0908, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetPosition,           { desc: Lang_Constants.TextType.A0909, resultType: ExpressionParsers_Enums.ResultType.Position,      isExtension: false });
-        variables.set(WarOperation.VnTargetUnitHp,             { desc: Lang_Constants.TextType.A0910, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetUnitType,           { desc: Lang_Constants.TextType.A0911, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetCoSkillType,        { desc: Lang_Constants.TextType.A0912, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetPositionArray,      { desc: Lang_Constants.TextType.A0913, resultType: ExpressionParsers_Enums.ResultType.PositionArray, isExtension: false });
-        variables.set(WarOperation.VnUnitMovePath,             { desc: Lang_Constants.TextType.A0914, resultType: ExpressionParsers_Enums.ResultType.PositionArray, isExtension: false });
-        variables.set(WarOperation.VnIsUnitMovePathBlocked,    { desc: Lang_Constants.TextType.A0915, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnLaunchedUnitId,           { desc: Lang_Constants.TextType.A0916, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnIsDerivedActionBlocked,   { desc: Lang_Constants.TextType.A0917, resultType: ExpressionParsers_Enums.ResultType.Number,        isExtension: false });
-        variables.set(WarOperation.VnTargetUnitIdArray,        { desc: Lang_Constants.TextType.A0918, resultType: ExpressionParsers_Enums.ResultType.NumberArray,   isExtension: false });
+        variables.set(WarOperation.VnId,                       { desc : Lang_Constants.TextType.A0704, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnType,                     { desc : Lang_Constants.TextType.A0705, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnWar,                      { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,           isExtension : false });
+        variables.set(WarOperation.VnTargetWarEventId,         { desc : Lang_Constants.TextType.A0906, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetPlayerIndex,        { desc : Lang_Constants.TextType.A0907, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnAgreeToDraw,              { desc : Lang_Constants.TextType.A0908, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetPosition,           { desc : Lang_Constants.TextType.A0909, resultType : ExpressionParsers_Enums.ResultType.Position,      isExtension : false });
+        variables.set(WarOperation.VnTargetUnitHp,             { desc : Lang_Constants.TextType.A0910, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetUnitType,           { desc : Lang_Constants.TextType.A0911, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetCoSkillType,        { desc : Lang_Constants.TextType.A0912, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetPositionArray,      { desc : Lang_Constants.TextType.A0913, resultType : ExpressionParsers_Enums.ResultType.PositionArray, isExtension : false });
+        variables.set(WarOperation.VnUnitMovePath,             { desc : Lang_Constants.TextType.A0914, resultType : ExpressionParsers_Enums.ResultType.PositionArray, isExtension : false });
+        variables.set(WarOperation.VnIsUnitMovePathBlocked,    { desc : Lang_Constants.TextType.A0915, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnLaunchedUnitId,           { desc : Lang_Constants.TextType.A0916, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnIsDerivedActionBlocked,   { desc : Lang_Constants.TextType.A0917, resultType : ExpressionParsers_Enums.ResultType.Number,        isExtension : false });
+        variables.set(WarOperation.VnTargetUnitIdArray,        { desc : Lang_Constants.TextType.A0918, resultType : ExpressionParsers_Enums.ResultType.NumberArray,   isExtension : false });
 
         return variables;
     }
@@ -726,37 +726,71 @@ export class WarOperation extends ExpressionParsers_Contexts_Base.Base {
 }
 
 function getWarOperationType(woContainer: WoContainer): WarOperations_Constants.OperationTypeId | null {
-    if      (woContainer.getWoSystemBeginTurn())            { return WarOperations_Constants.OperationTypeId.SystemBeginTurn; }
-    else if (woContainer.getWoSystemCallWarEvent())         { return WarOperations_Constants.OperationTypeId.SystemCallWarEvent; }
-    else if (woContainer.getWoSystemDestroyPlayerForce())   { return WarOperations_Constants.OperationTypeId.SystemDestroyPlayerForce; }
-    else if (woContainer.getWoSystemEndTurn())              { return WarOperations_Constants.OperationTypeId.SystemEndTurn; }
-    else if (woContainer.getWoSystemEndWar())               { return WarOperations_Constants.OperationTypeId.SystemEndWar; }
-    else if (woContainer.getWoSystemHandleBootPlayer())     { return WarOperations_Constants.OperationTypeId.SystemHandleBootPlayer; }
-    else if (woContainer.getWoSystemVoteForDraw())          { return WarOperations_Constants.OperationTypeId.SystemVoteForDraw; }
-    else if (woContainer.getWoPlayerDeleteUnit())           { return WarOperations_Constants.OperationTypeId.PlayerDeleteUnit; }
-    else if (woContainer.getWoPlayerEndTurn())              { return WarOperations_Constants.OperationTypeId.PlayerEndTurn; }
-    else if (woContainer.getWoPlayerProduceUnit())          { return WarOperations_Constants.OperationTypeId.PlayerProduceUnit; }
-    else if (woContainer.getWoPlayerSurrender())            { return WarOperations_Constants.OperationTypeId.PlayerSurrender; }
-    else if (woContainer.getWoPlayerUseCoSkill())           { return WarOperations_Constants.OperationTypeId.PlayerUseCoSkill; }
-    else if (woContainer.getWoPlayerVoteForDraw())          { return WarOperations_Constants.OperationTypeId.PlayerVoteForDraw; }
-    else if (woContainer.getWoUnitAttackTile())             { return WarOperations_Constants.OperationTypeId.UnitAttackTile; }
-    else if (woContainer.getWoUnitAttackUnit())             { return WarOperations_Constants.OperationTypeId.UnitAttackUnit; }
-    else if (woContainer.getWoUnitBeLoaded())               { return WarOperations_Constants.OperationTypeId.UnitBeLoaded; }
-    else if (woContainer.getWoUnitBoardedByCo())            { return WarOperations_Constants.OperationTypeId.UnitBoardedByCo; }
-    else if (woContainer.getWoUnitBuildTile())              { return WarOperations_Constants.OperationTypeId.UnitBuildTile; }
-    else if (woContainer.getWoUnitCaptureTile())            { return WarOperations_Constants.OperationTypeId.UnitCaptureTile; }
-    else if (woContainer.getWoUnitCrushUnit())              { return WarOperations_Constants.OperationTypeId.UnitCrushUnit; }
-    else if (woContainer.getWoUnitDive())                   { return WarOperations_Constants.OperationTypeId.UnitDive; }
-    else if (woContainer.getWoUnitDropUnit())               { return WarOperations_Constants.OperationTypeId.UnitDropUnit; }
-    else if (woContainer.getWoUnitJoinUnit())               { return WarOperations_Constants.OperationTypeId.UnitJoinUnit; }
-    else if (woContainer.getWoUnitLaunchFlare())            { return WarOperations_Constants.OperationTypeId.UnitLaunchFlare; }
-    else if (woContainer.getWoUnitLaunchSilo())             { return WarOperations_Constants.OperationTypeId.UnitLaunchSilo; }
-    else if (woContainer.getWoUnitProduceUnit())            { return WarOperations_Constants.OperationTypeId.UnitProduceUnit; }
-    else if (woContainer.getWoUnitRepairUnit())             { return WarOperations_Constants.OperationTypeId.UnitRepairUnit; }
-    else if (woContainer.getWoUnitSelfDetonate())           { return WarOperations_Constants.OperationTypeId.UnitSelfDetonate; }
-    else if (woContainer.getWoUnitSupplyUnit())             { return WarOperations_Constants.OperationTypeId.UnitSupplyUnit; }
-    else if (woContainer.getWoUnitSurface())                { return WarOperations_Constants.OperationTypeId.UnitSurface; }
-    else if (woContainer.getWoUnitUseCoSkill())             { return WarOperations_Constants.OperationTypeId.UnitUseCoSkill; }
-    else if (woContainer.getWoUnitWait())                   { return WarOperations_Constants.OperationTypeId.UnitWait; }
-    else                                                    { return null; }
+    if      (woContainer.getWoSystemBeginTurn())            {
+        return WarOperations_Constants.OperationTypeId.SystemBeginTurn; 
+    } else if (woContainer.getWoSystemCallWarEvent())         {
+        return WarOperations_Constants.OperationTypeId.SystemCallWarEvent; 
+    } else if (woContainer.getWoSystemDestroyPlayerForce())   {
+        return WarOperations_Constants.OperationTypeId.SystemDestroyPlayerForce; 
+    } else if (woContainer.getWoSystemEndTurn())              {
+        return WarOperations_Constants.OperationTypeId.SystemEndTurn; 
+    } else if (woContainer.getWoSystemEndWar())               {
+        return WarOperations_Constants.OperationTypeId.SystemEndWar; 
+    } else if (woContainer.getWoSystemHandleBootPlayer())     {
+        return WarOperations_Constants.OperationTypeId.SystemHandleBootPlayer; 
+    } else if (woContainer.getWoSystemVoteForDraw())          {
+        return WarOperations_Constants.OperationTypeId.SystemVoteForDraw; 
+    } else if (woContainer.getWoPlayerDeleteUnit())           {
+        return WarOperations_Constants.OperationTypeId.PlayerDeleteUnit; 
+    } else if (woContainer.getWoPlayerEndTurn())              {
+        return WarOperations_Constants.OperationTypeId.PlayerEndTurn; 
+    } else if (woContainer.getWoPlayerProduceUnit())          {
+        return WarOperations_Constants.OperationTypeId.PlayerProduceUnit; 
+    } else if (woContainer.getWoPlayerSurrender())            {
+        return WarOperations_Constants.OperationTypeId.PlayerSurrender; 
+    } else if (woContainer.getWoPlayerUseCoSkill())           {
+        return WarOperations_Constants.OperationTypeId.PlayerUseCoSkill; 
+    } else if (woContainer.getWoPlayerVoteForDraw())          {
+        return WarOperations_Constants.OperationTypeId.PlayerVoteForDraw; 
+    } else if (woContainer.getWoUnitAttackTile())             {
+        return WarOperations_Constants.OperationTypeId.UnitAttackTile; 
+    } else if (woContainer.getWoUnitAttackUnit())             {
+        return WarOperations_Constants.OperationTypeId.UnitAttackUnit; 
+    } else if (woContainer.getWoUnitBeLoaded())               {
+        return WarOperations_Constants.OperationTypeId.UnitBeLoaded; 
+    } else if (woContainer.getWoUnitBoardedByCo())            {
+        return WarOperations_Constants.OperationTypeId.UnitBoardedByCo; 
+    } else if (woContainer.getWoUnitBuildTile())              {
+        return WarOperations_Constants.OperationTypeId.UnitBuildTile; 
+    } else if (woContainer.getWoUnitCaptureTile())            {
+        return WarOperations_Constants.OperationTypeId.UnitCaptureTile; 
+    } else if (woContainer.getWoUnitCrushUnit())              {
+        return WarOperations_Constants.OperationTypeId.UnitCrushUnit; 
+    } else if (woContainer.getWoUnitDive())                   {
+        return WarOperations_Constants.OperationTypeId.UnitDive; 
+    } else if (woContainer.getWoUnitDropUnit())               {
+        return WarOperations_Constants.OperationTypeId.UnitDropUnit; 
+    } else if (woContainer.getWoUnitJoinUnit())               {
+        return WarOperations_Constants.OperationTypeId.UnitJoinUnit; 
+    } else if (woContainer.getWoUnitLaunchFlare())            {
+        return WarOperations_Constants.OperationTypeId.UnitLaunchFlare; 
+    } else if (woContainer.getWoUnitLaunchSilo())             {
+        return WarOperations_Constants.OperationTypeId.UnitLaunchSilo; 
+    } else if (woContainer.getWoUnitProduceUnit())            {
+        return WarOperations_Constants.OperationTypeId.UnitProduceUnit; 
+    } else if (woContainer.getWoUnitRepairUnit())             {
+        return WarOperations_Constants.OperationTypeId.UnitRepairUnit; 
+    } else if (woContainer.getWoUnitSelfDetonate())           {
+        return WarOperations_Constants.OperationTypeId.UnitSelfDetonate; 
+    } else if (woContainer.getWoUnitSupplyUnit())             {
+        return WarOperations_Constants.OperationTypeId.UnitSupplyUnit; 
+    } else if (woContainer.getWoUnitSurface())                {
+        return WarOperations_Constants.OperationTypeId.UnitSurface; 
+    } else if (woContainer.getWoUnitUseCoSkill())             {
+        return WarOperations_Constants.OperationTypeId.UnitUseCoSkill; 
+    } else if (woContainer.getWoUnitWait())                   {
+        return WarOperations_Constants.OperationTypeId.UnitWait; 
+    } else                                                    {
+        return null; 
+    }
 }

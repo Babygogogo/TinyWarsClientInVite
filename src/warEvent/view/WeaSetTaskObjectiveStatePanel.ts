@@ -69,25 +69,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConTaskObjectiveFilter,              callback: this._onTouchedGroupModifyConTaskObjectiveFilter },
-            { ui: this._btnConTaskObjectiveFilter,                      callback: this._onTouchedBtnConTaskObjectiveFilter },
+            { ui : this._groupModifyConTaskObjectiveFilter,              callback : this._onTouchedGroupModifyConTaskObjectiveFilter },
+            { ui : this._btnConTaskObjectiveFilter,                      callback : this._onTouchedBtnConTaskObjectiveFilter },
 
-            { ui: this._groupModifyActProgress,                         callback: this._onTouchedGroupModifyActProgress },
-            { ui: this._btnActProgress,                                 callback: this._onTouchedBtnActProgress },
+            { ui : this._groupModifyActProgress,                         callback : this._onTouchedGroupModifyActProgress },
+            { ui : this._btnActProgress,                                 callback : this._onTouchedBtnActProgress },
 
-            { ui: this._groupModifyActIsHidden,                         callback: this._onTouchedGroupModifyActIsHidden },
-            { ui: this._btnActIsHidden,                                 callback: this._onTouchedBtnActIsHidden },
+            { ui : this._groupModifyActIsHidden,                         callback : this._onTouchedGroupModifyActIsHidden },
+            { ui : this._btnActIsHidden,                                 callback : this._onTouchedBtnActIsHidden },
 
-            { ui: this._groupModifyActIsProgressUpdaterDisabled,        callback: this._onTouchedGroupModifyActIsProgressUpdaterDisabled },
-            { ui: this._btnActIsProgressUpdaterDisabled,                callback: this._onTouchedBtnActIsProgressUpdaterDisabled },
+            { ui : this._groupModifyActIsProgressUpdaterDisabled,        callback : this._onTouchedGroupModifyActIsProgressUpdaterDisabled },
+            { ui : this._btnActIsProgressUpdaterDisabled,                callback : this._onTouchedBtnActIsProgressUpdaterDisabled },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -111,9 +111,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -139,11 +139,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTaskObjectiveFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTaskObjectiveFilter(),
+            expressionInfo : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTaskObjectiveFilter() != text) {
                     action.setConTaskObjectiveFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -170,11 +170,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActProgress(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActProgress,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActProgress(),
+            expressionInfo : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActProgress,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActProgress() != text) {
                     action.setActProgress(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -201,11 +201,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActIsHidden(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsHidden,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActIsHidden(),
+            expressionInfo : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsHidden,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActIsHidden() != text) {
                     action.setActIsHidden(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -232,11 +232,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActIsProgressUpdaterDisabled(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActIsProgressUpdaterDisabled(),
+            expressionInfo : WarEvents_Actions_Constants_SetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActIsProgressUpdaterDisabled() != text) {
                     action.setActIsProgressUpdaterDisabled(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

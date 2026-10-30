@@ -60,8 +60,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
         }
         if (props && props.paused) {
             this.paused = true;
-        }
-        else {
+        } else {
             Executor._register(this, true);
         }
         if (props && props.position != null) {
@@ -72,7 +71,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     public static get<Target extends TweenTarget>(
         target      : Target,
         props?      : TweenProps,
-        override?   : boolean | undefined
+        override?   : boolean | undefined,
     ): Executor<Target> {
         if (override) {
             Executor.removeTweens(target);
@@ -138,7 +137,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     }
 
     private static tick(timeStamp: number, paused?: boolean | undefined): boolean {
-        if (paused === void 0) { paused = false; }
+        if (paused === void 0) {
+            paused = false; 
+        }
         const delta = timeStamp - Executor._lastTime;
         Executor._lastTime = timeStamp;
         const tweens = AllTweens.concat();
@@ -166,8 +167,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
                 Timer_TimerModel.addTickCallback(Executor.tick);
                 Executor._initialized = true;
             }
-        }
-        else {
+        } else {
             if (target) {
                 target.tween_count!--;
             }
@@ -192,7 +192,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     }
 
     private setPosition(value: number, actionsMode?: number | undefined): boolean {
-        if (actionsMode === void 0) { actionsMode = 1; }
+        if (actionsMode === void 0) {
+            actionsMode = 1; 
+        }
         if (value < 0) {
             value = 0;
         }
@@ -204,12 +206,10 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
                 const newTime = t % this.duration;
                 if (t > 0 && newTime === 0) {
                     t = this.duration;
-                }
-                else {
+                } else {
                     t = newTime;
                 }
-            }
-            else {
+            } else {
                 t = this.duration;
                 end = true;
             }
@@ -242,19 +242,16 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
                         if (actionsMode != 0) {
                             if (this._useTicks) {
                                 this._runAction(this._steps[i], t, t);
-                            }
-                            else if (actionsMode == 1 && t < prevPos) {
+                            } else if (actionsMode == 1 && t < prevPos) {
                                 if (prevPos != this.duration) {
                                     this._runAction(this._steps[i], prevPos, this.duration);
                                 }
                                 this._runAction(this._steps[i], 0, t, true);
-                            }
-                            else {
+                            } else {
                                 this._runAction(this._steps[i], prevPos, t);
                             }
                         }
-                    }
-                    else if (this._steps[i].type == "step") {
+                    } else if (this._steps[i].type == "step") {
                         if (stepIndex == i) {
                             const step = this._steps[stepIndex];
                             this._updateTargetProps(step, Math.min((t - step.t) / step.d, 1));
@@ -268,7 +265,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     }
 
     private _runAction(action: { t: any; f: { apply: (arg0: any, arg1: any) => void; }; o: any; p: any; }, startPos: number, endPos: number, includeStart?: boolean | undefined): void {
-        if (includeStart === void 0) { includeStart = false; }
+        if (includeStart === void 0) {
+            includeStart = false; 
+        }
         let sPos = startPos;
         let ePos = endPos;
         if (startPos > endPos) {
@@ -287,8 +286,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
         if (!step && ratio == 1) {
             this.passive = false;
             p0 = p1 = this._curQueueProps;
-        }
-        else {
+        } else {
             this.passive = !!step.v;
             //不更新props.
             if (this.passive) {
@@ -310,8 +308,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
             }
             if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
                 v = ratio == 1 ? v1 : v0;
-            }
-            else {
+            } else {
                 v = v0 + (v1 - v0) * ratio;
             }
             let ignore = false;
@@ -321,8 +318,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
                     const v2: any = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
                     if (v2 == IGNORE) {
                         ignore = true;
-                    }
-                    else {
+                    } else {
                         v = v2;
                     }
                 }
@@ -330,7 +326,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
             if (!ignore) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                 
                 this._target![n] = v;
             }
         }
@@ -376,8 +372,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
                     }
                 }
                 this._initQueueProps[n] = this._curQueueProps[n] = (oldValue === undefined) ? null : oldValue;
-            }
-            else {
+            } else {
                 oldValue = this._curQueueProps[n];
             }
         }
@@ -418,7 +413,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
             return this;
         }
         const o = this._cloneProps(this._curQueueProps);
-        return this._addStep({ d: duration, p0: o, p1: o, v: passive });
+        return this._addStep({
+            d : duration, p0 : o, p1 : o, v : passive, 
+        });
     }
 
     public to(props: { [K in keyof T]?: T[K] }, duration: number, ease?: (num: number) => number): this {
@@ -428,7 +425,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
         if (isNaN(duration) || duration < 0) {
             duration = 0;
         }
-        this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+        this._addStep({
+            d : duration || 0, p0 : this._cloneProps(this._curQueueProps), e : ease, p1 : this._cloneProps(this._appendQueueProps(props)), 
+        });
         //加入一步set，防止游戏极其卡顿时候，to后面的call取到的属性值不对
         return this.set(props);
     }
@@ -436,8 +435,8 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     public toPromise(): Promise<this> {
         return new Promise<this>(resolve =>
             this.call(() =>
-                resolve(this)
-            )
+                resolve(this),
+            ),
         );
     }
 
@@ -449,7 +448,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
             params = undefined;
         }
 
-        return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
+        return this._addAction({ f : callback, p : params ? params : [], o : thisObj ? thisObj : this._target });
     }
 
     public set(props: { [K in keyof T]?: T[K] }, target?: null | undefined): this {
@@ -458,7 +457,7 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
         }
         //更新当前数据，保证缓动流畅性
         this._appendQueueProps(props);
-        return this._addAction({ f: this._set, o: this, p: [props, target ? target : this._target] });
+        return this._addAction({ f : this._set, o : this, p : [props, target ? target : this._target] });
     }
 
     public play(tween = this): this {

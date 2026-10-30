@@ -57,8 +57,8 @@ export class RequestingPlayerSurrender implements ActionPlanners_States_IState.I
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoPlayerSurrender   : {
+                operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoPlayerSurrender : {
                     playerIndex : playerIndex,
                 },
             }));

@@ -34,7 +34,7 @@ function fastExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -72,15 +72,15 @@ async function normalExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war                 : war,
-            commonExtraData     : commonExtraData,
-            isFastExecute       : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -89,7 +89,7 @@ async function normalExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -127,16 +127,16 @@ async function normalExeUnitRepairUnit(war: BaseWar_Interface_IBwWar.IBwWar, act
                     targetUnit.setCurrentHp((normalizedCurrentHp + 1) * Units_Constants.Hp.Normalizer);
 
                     {
-                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                         if (observerTeamIndexes != null) {
                             war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                    : targetUnit.getUnitType(),
-                                dstPlayerIndex              : targetUnit.getPlayerIndex(),
-                                unitGain                    : 0,
-                                unitLoss                    : 0,
-                                normalizedHpGain            : 1,
-                                normalizedHpLoss            : 0,
-                                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                unitType                   : targetUnit.getUnitType(),
+                                dstPlayerIndex             : targetUnit.getPlayerIndex(),
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : 1,
+                                normalizedHpLoss           : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                             }));
                         }
                     }

@@ -18,18 +18,22 @@ import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/Grid
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeGetAllMapDataTimestamps,    callback: _onMsgMeGetAllMapDataTimestamps },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeGetMapDataTimestamp,        callback: _onMsgMeGetMapDataTimestamp },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeGetMapData,                 callback: _onMsgMeGetMapData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeGetMapDataArray,            callback: _onMsgMeGetMapDataArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeSubmitNormalMap,            callback: _onMsgMeSubmitNormalMap },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMeDeleteSlot,                 callback: _onMsgMeDeleteSlot },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeGetAllMapDataTimestamps,    callback : _onMsgMeGetAllMapDataTimestamps },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeGetMapDataTimestamp,        callback : _onMsgMeGetMapDataTimestamp },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeGetMapData,                 callback : _onMsgMeGetMapData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeGetMapDataArray,            callback : _onMsgMeGetMapDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeSubmitNormalMap,            callback : _onMsgMeSubmitNormalMap },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMeDeleteSlot,                 callback : _onMsgMeDeleteSlot },
     ], null);
 }
 
 export function reqMeGetAllMapDataTimestamps(): void {
-    Networks_Manager.send({ MsgMeGetAllMapDataTimestamps: { c: {
-    } }, });
+    Networks_Manager.send({
+        MsgMeGetAllMapDataTimestamps : {
+            c : {
+            }, 
+        }, 
+    });
 }
 async function _onMsgMeGetAllMapDataTimestamps(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MeGetAllMapDataTimestampsResponse;
@@ -42,9 +46,13 @@ async function _onMsgMeGetAllMapDataTimestamps(e: Egret_Egret.Event): Promise<vo
 }
 
 export function reqMeGetMapDataArray(slotIndexArray: number[]): void {
-    Networks_Manager.send({ MsgMeGetMapDataArray: { c:{
-        slotIndexArray  : slotIndexArray,
-    } } });
+    Networks_Manager.send({
+        MsgMeGetMapDataArray : {
+            c : {
+                slotIndexArray : slotIndexArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMeGetMapDataArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MeGetMapDataArrayResponse;
@@ -55,9 +63,13 @@ async function _onMsgMeGetMapDataArray(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqMeGetMapDataTimestamp(slotIndex: number): void {
-    Networks_Manager.send({ MsgMeGetMapDataTimestamp: { c: {
-        slotIndex   : slotIndex,
-    } } });
+    Networks_Manager.send({
+        MsgMeGetMapDataTimestamp : {
+            c : {
+                slotIndex : slotIndex,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMeGetMapDataTimestamp(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MeGetMapDataTimestampResponse;
@@ -68,9 +80,13 @@ async function _onMsgMeGetMapDataTimestamp(e: Egret_Egret.Event): Promise<void> 
 }
 
 export function reqMeGetMapData(slotIndex: number): void {
-    Networks_Manager.send({ MsgMeGetMapData: { c: {
-        slotIndex   : slotIndex,
-    }, } });
+    Networks_Manager.send({
+        MsgMeGetMapData : {
+            c : {
+                slotIndex : slotIndex,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMeGetMapData(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MeGetMapDataResponse;
@@ -90,13 +106,15 @@ export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNor
     gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
 }): void {
     Networks_Manager.send({
-        MsgMeSubmitNormalMap: { c: {
-            slotIndex                   : slotIndex,
-            needReview                  : needReview,
-            mapRawData                  : mapRawData.toJson(),
-            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-            gridMarkData                : gridMarkData?.toJson(),
-        }, }
+        MsgMeSubmitNormalMap : {
+            c : {
+                slotIndex                 : slotIndex,
+                needReview                : needReview,
+                mapRawData                : mapRawData.toJson(),
+                srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                gridMarkData              : gridMarkData?.toJson(),
+            }, 
+        },
     });
 }
 function _onMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
@@ -108,9 +126,11 @@ function _onMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
 
 export function reqMeDeleteSlot(slotIndex: number): void {
     Networks_Manager.send({
-        MsgMeDeleteSlot: { c: {
-            slotIndex,
-        } },
+        MsgMeDeleteSlot : {
+            c : {
+                slotIndex,
+            }, 
+        },
     });
 }
 async function _onMsgMeDeleteSlot(e: Egret_Egret.Event): Promise<void> {

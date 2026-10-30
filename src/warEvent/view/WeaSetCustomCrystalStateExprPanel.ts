@@ -109,49 +109,49 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                              callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                              callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConTileFilter,                   callback: this._onTouchedGroupModifyConTileFilter },
-            { ui: this._btnConTileFilter,                           callback: this._onTouchedBtnConTileFilter },
+            { ui : this._groupModifyConTileFilter,                   callback : this._onTouchedGroupModifyConTileFilter },
+            { ui : this._btnConTileFilter,                           callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._groupModifyActRadius,                       callback: this._onTouchedGroupModifyActRadius },
-            { ui: this._btnActRadius,                               callback: this._onTouchedBtnActRadius },
+            { ui : this._groupModifyActRadius,                       callback : this._onTouchedGroupModifyActRadius },
+            { ui : this._btnActRadius,                               callback : this._onTouchedBtnActRadius },
 
-            { ui: this._groupModifyActPriority,                     callback: this._onTouchedGroupModifyActPriority },
-            { ui: this._btnActPriority,                             callback: this._onTouchedBtnActPriority },
+            { ui : this._groupModifyActPriority,                     callback : this._onTouchedGroupModifyActPriority },
+            { ui : this._btnActPriority,                             callback : this._onTouchedBtnActPriority },
 
-            { ui: this._groupModifyActCanAffectSelf,                callback: this._onTouchedGroupModifyActCanAffectSelf },
-            { ui: this._btnActCanAffectSelf,                        callback: this._onTouchedBtnActCanAffectSelf },
+            { ui : this._groupModifyActCanAffectSelf,                callback : this._onTouchedGroupModifyActCanAffectSelf },
+            { ui : this._btnActCanAffectSelf,                        callback : this._onTouchedBtnActCanAffectSelf },
 
-            { ui: this._groupModifyActCanAffectAlly,                callback: this._onTouchedGroupModifyActCanAffectAlly },
-            { ui: this._btnActCanAffectAlly,                        callback: this._onTouchedBtnActCanAffectAlly },
+            { ui : this._groupModifyActCanAffectAlly,                callback : this._onTouchedGroupModifyActCanAffectAlly },
+            { ui : this._btnActCanAffectAlly,                        callback : this._onTouchedBtnActCanAffectAlly },
 
-            { ui: this._groupModifyActCanAffectEnemy,               callback: this._onTouchedGroupModifyActCanAffectEnemy },
-            { ui: this._btnActCanAffectEnemy,                       callback: this._onTouchedBtnActCanAffectEnemy },
+            { ui : this._groupModifyActCanAffectEnemy,               callback : this._onTouchedGroupModifyActCanAffectEnemy },
+            { ui : this._btnActCanAffectEnemy,                       callback : this._onTouchedBtnActCanAffectEnemy },
 
-            { ui: this._groupModifyActOffsetFund,                   callback: this._onTouchedGroupModifyActOffsetFund },
-            { ui: this._btnActOffsetFund,                           callback: this._onTouchedBtnActOffsetFund },
+            { ui : this._groupModifyActOffsetFund,                   callback : this._onTouchedGroupModifyActOffsetFund },
+            { ui : this._btnActOffsetFund,                           callback : this._onTouchedBtnActOffsetFund },
 
-            { ui: this._groupModifyActOffsetEnergyPercentage,       callback: this._onTouchedGroupModifyActOffsetEnergyPercentage },
-            { ui: this._btnActOffsetEnergyPercentage,               callback: this._onTouchedBtnActOffsetEnergyPercentage },
+            { ui : this._groupModifyActOffsetEnergyPercentage,       callback : this._onTouchedGroupModifyActOffsetEnergyPercentage },
+            { ui : this._btnActOffsetEnergyPercentage,               callback : this._onTouchedBtnActOffsetEnergyPercentage },
 
-            { ui: this._groupModifyActOffsetHp,                     callback: this._onTouchedGroupModifyActOffsetHp },
-            { ui: this._btnActOffsetHp,                             callback: this._onTouchedBtnActOffsetHp },
+            { ui : this._groupModifyActOffsetHp,                     callback : this._onTouchedGroupModifyActOffsetHp },
+            { ui : this._btnActOffsetHp,                             callback : this._onTouchedBtnActOffsetHp },
 
-            { ui: this._groupModifyActOffsetFuelPercentage,         callback: this._onTouchedGroupModifyActOffsetFuelPercentage },
-            { ui: this._btnActOffsetFuelPercentage,                 callback: this._onTouchedBtnActOffsetFuelPercentage },
+            { ui : this._groupModifyActOffsetFuelPercentage,         callback : this._onTouchedGroupModifyActOffsetFuelPercentage },
+            { ui : this._btnActOffsetFuelPercentage,                 callback : this._onTouchedBtnActOffsetFuelPercentage },
 
-            { ui: this._groupModifyActOffsetPrimaryAmmoPercentage,  callback: this._onTouchedGroupModifyActOffsetPrimaryAmmoPercentage },
-            { ui: this._btnActOffsetPrimaryAmmoPercentage,          callback: this._onTouchedBtnActOffsetPrimaryAmmoPercentage },
+            { ui : this._groupModifyActOffsetPrimaryAmmoPercentage,  callback : this._onTouchedGroupModifyActOffsetPrimaryAmmoPercentage },
+            { ui : this._btnActOffsetPrimaryAmmoPercentage,          callback : this._onTouchedBtnActOffsetPrimaryAmmoPercentage },
 
-            { ui: this._groupModifyActCanBeFatal,                   callback: this._onTouchedGroupModifyActCanBeFatal },
-            { ui: this._btnActCanBeFatal,                           callback: this._onTouchedBtnActCanBeFatal },
+            { ui : this._groupModifyActCanBeFatal,                   callback : this._onTouchedGroupModifyActCanBeFatal },
+            { ui : this._btnActCanBeFatal,                           callback : this._onTouchedBtnActCanBeFatal },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -175,9 +175,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -203,11 +203,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTileFilter(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -234,11 +234,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActRadius(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActRadius(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActRadius() != text) {
                     action.setActRadius(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -265,11 +265,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActPriority(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActPriority(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActPriority() != text) {
                     action.setActPriority(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -296,11 +296,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCanAffectSelf(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCanAffectSelf(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCanAffectSelf() != text) {
                     action.setActCanAffectSelf(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -327,11 +327,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCanAffectAlly(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCanAffectAlly(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCanAffectAlly() != text) {
                     action.setActCanAffectAlly(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -358,11 +358,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCanAffectEnemy(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCanAffectEnemy(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCanAffectEnemy() != text) {
                     action.setActCanAffectEnemy(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -389,11 +389,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActOffsetFund(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActOffsetFund(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActOffsetFund() != text) {
                     action.setActOffsetFund(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -420,11 +420,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActOffsetEnergyPercentage(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActOffsetEnergyPercentage(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActOffsetEnergyPercentage() != text) {
                     action.setActOffsetEnergyPercentage(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -451,11 +451,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActOffsetHp(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActOffsetHp(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActOffsetHp() != text) {
                     action.setActOffsetHp(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -482,11 +482,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActOffsetFuelPercentage(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActOffsetFuelPercentage(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActOffsetFuelPercentage() != text) {
                     action.setActOffsetFuelPercentage(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -513,11 +513,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActOffsetPrimaryAmmoPercentage(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActOffsetPrimaryAmmoPercentage() != text) {
                     action.setActOffsetPrimaryAmmoPercentage(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -544,11 +544,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCanBeFatal(),
-            expressionInfo  : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCanBeFatal(),
+            expressionInfo : WarEvents_Actions_Constants_SetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCanBeFatal() != text) {
                     action.setActCanBeFatal(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

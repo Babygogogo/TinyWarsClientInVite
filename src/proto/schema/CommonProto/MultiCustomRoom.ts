@@ -1,14 +1,14 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../$runtime.js";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 export interface MultiCustomRoomJson extends $ProtoSchemaJsonBase {
 }
 
 export class MultiCustomRoom extends $ProtoSchemaBase {
     // No member data.
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     public static fromJson(obj: MultiCustomRoomJson): MultiCustomRoom {
         return new MultiCustomRoom().loadJson(obj);
     }

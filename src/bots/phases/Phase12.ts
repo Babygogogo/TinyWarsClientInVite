@@ -7,6 +7,6 @@ export async function getActionForPhase12(): Promise<WoContainer> {
     await Timer_TimerModel.checkAndCallLater();
 
     return WoContainer.fromJson({
-        WoPlayerEndTurn: {},
+        WoPlayerEndTurn : {},
     });
 }

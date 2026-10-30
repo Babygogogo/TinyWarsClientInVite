@@ -47,14 +47,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnShowDetail,          callback: this._onTouchedBtnShowDetail },
-            { ui: this._btnShowBrief,           callback: this._onTouchedBtnIsShowBrief },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnShowDetail,          callback : this._onTouchedBtnShowDetail },
+            { ui : this._btnShowBrief,           callback : this._onTouchedBtnIsShowBrief },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback: this._onNotifyMeWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback : this._onNotifyMeWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -172,9 +172,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const eventId   = this._listWarEventId.getFirstSelectedData()?.eventId;
         if (eventId != null) {
             dataArray.push(...generateDataArrayForListWarEventDesc({
-                fullData    : fullData,
-                eventId     : eventId,
-                gameConfig  : gameConfig,
+                fullData   : fullData,
+                eventId    : eventId,
+                gameConfig : gameConfig,
             }));
         }
 
@@ -190,11 +190,11 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
 }): DataForWarEventDetailRenderer[] {
     const prefixArray   = [`E${eventId}`];
     const dataArray     : DataForWarEventDetailRenderer[] = [{
-        fullData        : fullData,
-        descType        : WarEvents_Constants.DescType.EventName,
-        gameConfig      : gameConfig,
-        prefixArray     : prefixArray,
-        eventId         : eventId,
+        fullData    : fullData,
+        descType    : WarEvents_Constants.DescType.EventName,
+        gameConfig  : gameConfig,
+        prefixArray : prefixArray,
+        eventId     : eventId,
     }];
 
     const warEvent = fullData.getEventArray()?.find(v => v.getEventId() === eventId);
@@ -204,18 +204,18 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
 
     dataArray.push(
         {
-            fullData        : fullData,
-            descType        : WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn,
-            gameConfig      : gameConfig,
-            prefixArray     : prefixArray,
-            eventId         : eventId,
+            fullData    : fullData,
+            descType    : WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn,
+            gameConfig  : gameConfig,
+            prefixArray : prefixArray,
+            eventId     : eventId,
         },
         {
-            fullData        : fullData,
-            descType        : WarEvents_Constants.DescType.EventMaxCallCountTotal,
-            gameConfig      : gameConfig,
-            prefixArray     : prefixArray,
-            eventId         : eventId,
+            fullData    : fullData,
+            descType    : WarEvents_Constants.DescType.EventMaxCallCountTotal,
+            gameConfig  : gameConfig,
+            prefixArray : prefixArray,
+            eventId     : eventId,
         },
     );
 
@@ -224,12 +224,12 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
             const nodeIdAndFlags = rootNodeAndActionsArray.getNodeIdAndFlags();
             if (nodeIdAndFlags != null) {
                 dataArray.push(...generateNodeDataArrayForListWarEventDesc({
-                    fullData        : fullData,
-                    eventId         : eventId,
-                    gameConfig      : gameConfig,
-                    parentNodeId    : null,
-                    nodeIdAndFlags  : nodeIdAndFlags,
-                    prefixArray     : prefixArray.concat(`${nodeIdAndFlags.getIsNegated() ? `! ` : ``}N${nodeIdAndFlags.getNodeId()}`),
+                    fullData       : fullData,
+                    eventId        : eventId,
+                    gameConfig     : gameConfig,
+                    parentNodeId   : null,
+                    nodeIdAndFlags : nodeIdAndFlags,
+                    prefixArray    : prefixArray.concat(`${nodeIdAndFlags.getIsNegated() ? `! ` : ``}N${nodeIdAndFlags.getNodeId()}`),
                 }));
             }
         }
@@ -237,13 +237,13 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
         let actionIndex = 0;
         for (const actionId of rootNodeAndActionsArray.getActionIdArray()) {
             dataArray.push({
-                fullData        : fullData,
-                descType        : WarEvents_Constants.DescType.Action,
-                gameConfig      : gameConfig,
-                prefixArray     : prefixArray.concat(`A${actionId}`),
-                eventId         : eventId,
-                actionId        : actionId,
-                actionIndex     : actionIndex++,
+                fullData    : fullData,
+                descType    : WarEvents_Constants.DescType.Action,
+                gameConfig  : gameConfig,
+                prefixArray : prefixArray.concat(`A${actionId}`),
+                eventId     : eventId,
+                actionId    : actionId,
+                actionIndex : actionIndex++,
             });
         }
     }
@@ -259,13 +259,13 @@ function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfi
     prefixArray     : string[];
 }): DataForWarEventDetailRenderer[] {
     const dataArray: DataForWarEventDetailRenderer[] = [{
-        fullData                : fullData,
-        descType                : WarEvents_Constants.DescType.ConditionNode,
-        gameConfig              : gameConfig,
-        prefixArray             : prefixArray,
-        eventId                 : eventId,
-        parentNodeIdAndFlags    : parentNodeId ?? void 0,
-        nodeId                  : nodeId,
+        fullData             : fullData,
+        descType             : WarEvents_Constants.DescType.ConditionNode,
+        gameConfig           : gameConfig,
+        prefixArray          : prefixArray,
+        eventId              : eventId,
+        parentNodeIdAndFlags : parentNodeId ?? void 0,
+        nodeId               : nodeId,
     }];
 
     const node = fullData.getConditionNodeArray().find(v => v.getNodeId() === nodeId.getNodeId());
@@ -275,24 +275,24 @@ function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfi
 
     for (const conditionIdAndFlags of node.getConditionIdAndFlagsArray()) {
         dataArray.push({
-            fullData                : fullData,
-            descType                : WarEvents_Constants.DescType.Condition,
-            gameConfig              : gameConfig,
-            prefixArray             : prefixArray.concat([`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionIdAndFlags.getConditionId()}`]),
-            eventId                 : eventId,
-            parentNodeIdAndFlags    : nodeId,
-            conditionIdAndFlags     : conditionIdAndFlags,
+            fullData             : fullData,
+            descType             : WarEvents_Constants.DescType.Condition,
+            gameConfig           : gameConfig,
+            prefixArray          : prefixArray.concat([`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionIdAndFlags.getConditionId()}`]),
+            eventId              : eventId,
+            parentNodeIdAndFlags : nodeId,
+            conditionIdAndFlags  : conditionIdAndFlags,
         });
     }
 
     for (const subNodeIdAndFlags of node.getSubNodeIdAndFlagsArray()) {
         dataArray.push(...generateNodeDataArrayForListWarEventDesc({
-            fullData        : fullData,
-            eventId         : eventId,
-            gameConfig      : gameConfig,
-            parentNodeId    : nodeId,
-            nodeIdAndFlags  : subNodeIdAndFlags,
-            prefixArray     : prefixArray.concat([`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeIdAndFlags.getNodeId()}`]),
+            fullData       : fullData,
+            eventId        : eventId,
+            gameConfig     : gameConfig,
+            parentNodeId   : nodeId,
+            nodeIdAndFlags : subNodeIdAndFlags,
+            prefixArray    : prefixArray.concat([`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeIdAndFlags.getNodeId()}`]),
         }));
     }
 
@@ -305,8 +305,7 @@ interface DataForWarEventIdRenderer extends Ui_Types_UiListItemData.UiListItemDa
 }
 class WarEventIdRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarEventIdRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarEventIdRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarEventIdRenderer> {
     private readonly _labelId! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
@@ -342,7 +341,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._updateComponentsForLanguage();
 
@@ -396,7 +395,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         const event                     = Helpers_Misc.getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray               = data.prefixArray;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-        this._labelDesc.setText(`${Lang_Utils.getLanguageText({ textArray: event.getEventNameArray() })}`);
+        this._labelDesc.setText(`${Lang_Utils.getLanguageText({ textArray : event.getEventNameArray() })}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForEventCallCountInPlayerTurn(data: DataForWarEventDetailRenderer): void { // DONE
@@ -427,7 +426,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         const desc                      = Lang_Utils.getWarEventConditionNodeDesc(node.getIsNeedAnd(), node.getIsNeedFalse());
         this._labelDesc.setText((_isShowDetail
             ? desc
-            : (Lang_Utils.getLanguageText({ textArray: node.getNodeNameArray() }) ?? desc)
+            : (Lang_Utils.getLanguageText({ textArray : node.getNodeNameArray() }) ?? desc)
         ));
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
@@ -440,7 +439,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         this._labelDesc.setText((_isShowDetail
             ? WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, data.gameConfig)
             : (
-                Lang_Utils.getLanguageText({ textArray: condition.getWecCommonData()?.getConditionNameArray() })        ??
+                Lang_Utils.getLanguageText({ textArray : condition.getWecCommonData()?.getConditionNameArray() })        ??
                 WarEvents_Conditions_Utils_Common.getBriefDescForCondition(condition, data.gameConfig)
             )
         ) ?? Lang_Constants.UndefinedError);
@@ -455,7 +454,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         this._labelDesc.setText((_isShowDetail
             ? WarEvents_Actions_Utils_Common.getDetailDescForAction(action, data.gameConfig)
             : (
-                Lang_Utils.getLanguageText({ textArray: action.getWeaCommonData()?.getActionNameArray() })      ??
+                Lang_Utils.getLanguageText({ textArray : action.getWeaCommonData()?.getActionNameArray() })      ??
                 WarEvents_Actions_Utils_Common.getBriefDescForAction(action, data.gameConfig)
             )
         ) ?? Lang_Constants.UndefinedError);

@@ -70,24 +70,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
-            { ui: this._btnClear,                               callback: this._onTouchedBtnClear },
-            { ui: this._imgInnerTouchMask,                      callback: this._onTouchedImgInnerTouchMask },
+            { ui : this._btnClose,                               callback : this._onTouchedBtnClose },
+            { ui : this._btnClear,                               callback : this._onTouchedBtnClear },
+            { ui : this._imgInnerTouchMask,                      callback : this._onTouchedImgInnerTouchMask },
 
-            { ui: this._btnGridIndex,                           callback: this._onTouchedBtnGridIndex },
-            { ui: this._btnLocation,                            callback: this._onTouchedBtnLocation },
-            { ui: this._btnGridX,                               callback: this._onTouchedBtnGridX },
-            { ui: this._btnGridY,                               callback: this._onTouchedBtnGridY },
+            { ui : this._btnGridIndex,                           callback : this._onTouchedBtnGridIndex },
+            { ui : this._btnLocation,                            callback : this._onTouchedBtnLocation },
+            { ui : this._btnGridX,                               callback : this._onTouchedBtnGridX },
+            { ui : this._btnGridY,                               callback : this._onTouchedBtnGridY },
 
-            { ui: this._btnConLocationMinDistanceComparator,    callback: this._onTouchedBtnConLocationMinDistanceComparator },
-            { ui: this._btnConLocationMinDistance,              callback: this._onTouchedBtnConLocationMinDistance },
+            { ui : this._btnConLocationMinDistanceComparator,    callback : this._onTouchedBtnConLocationMinDistanceComparator },
+            { ui : this._btnConLocationMinDistance,              callback : this._onTouchedBtnConLocationMinDistance },
 
-            { ui: this._btnConGridIndexMinDistanceComparator,   callback: this._onTouchedBtnConGridIndexMinDistanceComparator },
-            { ui: this._btnConGridIndexMinDistance,             callback: this._onTouchedBtnConGridIndexMinDistance },
+            { ui : this._btnConGridIndexMinDistanceComparator,   callback : this._onTouchedBtnConGridIndexMinDistanceComparator },
+            { ui : this._btnConGridIndexMinDistance,             callback : this._onTouchedBtnConGridIndexMinDistance },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
@@ -117,26 +117,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this.closePanel();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
-                getTextForConfirm      : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel       : () => Lang_Utils.getText(Lang_Constants.TextType.No),
-                callback            : () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                callback          : () => {
                     const filter = this._getPositionFilter();
                     callback(DeprecatedPositionFilter_Utils.checkIsEmpty(filter) ? null : filter);
                     this.closePanel();
                 },
-                callbackOnCancel    : () => this.closePanel(),
-                showButtonClose     : true,
+                callbackOnCancel : () => this.closePanel(),
+                showButtonClose  : true,
             });
         }
     }
     private _onTouchedBtnClear(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
                 this._positionFilter = new AuxiliaryTypes_PositionFilter.PositionFilter();
                 this._updateView();
-            }
+            },
         });
     }
 
@@ -151,9 +151,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getPositionFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseGridIndexPanel, {
-            currentGridIndexArray   : Helpers_Collection.getNonNullElements(condition.getConGridIndexArray().map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))),
-            mapSize                 : mapSize,
-            callbackOnConfirm       : gridIndexArray => {
+            currentGridIndexArray : Helpers_Collection.getNonNullElements(condition.getConGridIndexArray().map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))),
+            mapSize               : mapSize,
+            callbackOnConfirm     : gridIndexArray => {
                 condition.setConGridIndexArray(gridIndexArray.map(v => v.toProto()));
                 this._updateView();
             },
@@ -163,10 +163,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnLocation(): void {
         const filter = this._getPositionFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
-            availableIntegerArray   : Locations_Constants.AllLocationIdArray,
-            currentIntegerArray     : filter.getConLocationIdArray(),
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
-            callbackOnConfirm       : locationIdArray => {
+            availableIntegerArray : Locations_Constants.AllLocationIdArray,
+            currentIntegerArray   : filter.getConLocationIdArray(),
+            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
+            callbackOnConfirm     : locationIdArray => {
                 filter.setConLocationIdArray(locationIdArray);
                 this._updateView();
             },
@@ -181,10 +181,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const filter = this._getPositionFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
-            currentIntegerArray     : filter.getConGridXArray(),
-            availableIntegerArray   : mapSize.getValidGridXArray(),
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
-            callbackOnConfirm       : gridXArray => {
+            currentIntegerArray   : filter.getConGridXArray(),
+            availableIntegerArray : mapSize.getValidGridXArray(),
+            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.B1071),
+            callbackOnConfirm     : gridXArray => {
                 filter.setConGridXArray(gridXArray);
                 this._updateView();
             },
@@ -198,10 +198,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const filter = this._getPositionFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
-            currentIntegerArray     : filter.getConGridYArray(),
-            availableIntegerArray   : mapSize.getValidGridYArray(),
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
-            callbackOnConfirm       : gridYArray => {
+            currentIntegerArray   : filter.getConGridYArray(),
+            availableIntegerArray : mapSize.getValidGridYArray(),
+            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.B1072),
+            callbackOnConfirm     : gridYArray => {
                 filter.setConGridYArray(gridYArray);
                 this._updateView();
             },
@@ -215,8 +215,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ValueAndComparators_Utils.tickComparator(con);
         } else {
             filter.setConLocationMinDistance(ValueAndComparator.fromJson({
-                value       : 0,
-                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                value      : 0,
+                comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
             }));
         }
 
@@ -227,11 +227,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConLocationMinDistance();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1062),
-            minValue        : 0,
-            maxValue        : Maps_Constants.Common.MaxGridsCount,
-            currentValue    : oldCon == null ? null : oldCon.getValue(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1062),
+            minValue     : 0,
+            maxValue     : Maps_Constants.Common.MaxGridsCount,
+            currentValue : oldCon == null ? null : oldCon.getValue(),
+            callback     : value => {
                 if (value == null) {
                     filter.setConLocationMinDistance(null);
                 } else {
@@ -239,8 +239,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         oldCon.setValue(value);
                     } else {
                         filter.setConLocationMinDistance(ValueAndComparator.fromJson({
-                            value       : value,
-                            comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                            value      : value,
+                            comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
                         }));
                     }
                 }
@@ -256,8 +256,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ValueAndComparators_Utils.tickComparator(con);
         } else {
             filter.setConGridIndexMinDistance(ValueAndComparator.fromJson({
-                value       : 0,
-                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                value      : 0,
+                comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
             }));
         }
 
@@ -268,11 +268,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConGridIndexMinDistance();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B1063),
-            minValue        : 0,
-            maxValue        : Maps_Constants.Common.MaxGridsCount,
-            currentValue    : oldCon?.getValue(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1063),
+            minValue     : 0,
+            maxValue     : Maps_Constants.Common.MaxGridsCount,
+            currentValue : oldCon?.getValue(),
+            callback     : value => {
                 if (value == null) {
                     filter.setConGridIndexMinDistance(null);
                 } else {
@@ -280,8 +280,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         oldCon.setValue(value);
                     } else {
                         filter.setConGridIndexMinDistance(ValueAndComparator.fromJson({
-                            value       : value,
-                            comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                            value      : value,
+                            comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
                         }));
                     }
                 }

@@ -57,27 +57,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
-            { type: Notifications_TypeId.TypeId.MsgSpmDeleteWarSaveSlot,             callback: this._onNotifyMsgSpmDeleteWarSaveSlot },
-            { type: Notifications_TypeId.TypeId.MsgUserSetMapRating,                 callback: this._onNotifyMsgUserSetMapRating },
-            { type: Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
+            { type : Notifications_TypeId.TypeId.MsgSpmDeleteWarSaveSlot,             callback : this._onNotifyMsgSpmDeleteWarSaveSlot },
+            { type : Notifications_TypeId.TypeId.MsgUserSetMapRating,                 callback : this._onNotifyMsgUserSetMapRating },
+            { type : Notifications_TypeId.TypeId.MsgMeSubmitNormalMap,                callback : this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnDeleteUnit,                              callback: this._onTouchedBtnDeleteUnit },
-            { ui: this._btnFreeMode,                                callback: this._onTouchedBtnFreeMode },
-            { ui: this._btnDeleteGame,                              callback: this._onTouchedBtnDeleteGame },
-            { ui: this._btnUnitOpacity,                             callback: this._onTouchedBtnUnitOpacity },
-            { ui: this._btnMapRating,                               callback: this._onTouchedBtnMapRating },
-            { ui: this._btnMarkGrid,                                callback: this._onTouchedBtnMarkGrid },
-            { ui: this._btnEditMap,                                 callback: this._onTouchedBtnEditMap },
-            { ui: this._btnOverrideSkin,                            callback: this._onTouchedBtnOverrideSkin },
-            { ui: this._btnCustomCounter,                           callback: this._onTouchedBtnCustomCounter },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnDeleteUnit,                              callback : this._onTouchedBtnDeleteUnit },
+            { ui : this._btnFreeMode,                                callback : this._onTouchedBtnFreeMode },
+            { ui : this._btnDeleteGame,                              callback : this._onTouchedBtnDeleteGame },
+            { ui : this._btnUnitOpacity,                             callback : this._onTouchedBtnUnitOpacity },
+            { ui : this._btnMapRating,                               callback : this._onTouchedBtnMapRating },
+            { ui : this._btnMarkGrid,                                callback : this._onTouchedBtnMarkGrid },
+            { ui : this._btnEditMap,                                 callback : this._onTouchedBtnEditMap },
+            { ui : this._btnOverrideSkin,                            callback : this._onTouchedBtnOverrideSkin },
+            { ui : this._btnCustomCounter,                           callback : this._onTouchedBtnCustomCounter },
 
-            { ui: this._btnSetDraw,                                 callback: this._onTouchedBtnSetDraw },
-            { ui: this._btnSurrender,                               callback: this._onTouchedBtnSurrender },
+            { ui : this._btnSetDraw,                                 callback : this._onTouchedBtnSetDraw },
+            { ui : this._btnSurrender,                               callback : this._onTouchedBtnSurrender },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -110,27 +110,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMeSubmitNormalMap(e: Egret_Egret.Event): void {
         const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
-            callback    : async () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0872),
+            callback   : async () => {
                 const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
                 if (srcNormalMapIdForAddEvent == null) {
                     Helpers_GameFlow.gotoMapEditorWar({
-                        mapRawData                  : mapEditorData?.mapRawData,
-                        slotIndex                   : slotIndex,
-                        isReview                    : false,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : mapEditorData?.gridMarkData,
+                        mapRawData                : mapEditorData?.mapRawData,
+                        slotIndex                 : slotIndex,
+                        isReview                  : false,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : mapEditorData?.gridMarkData,
                     });
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
-                        callback    : () => Helpers_GameFlow.gotoMapEditorWar({
-                            mapRawData                  : mapEditorData?.mapRawData,
-                            slotIndex                   : slotIndex,
-                            isReview                    : false,
-                            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                            gridMarkData                : mapEditorData?.gridMarkData,
+                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                        callback   : () => Helpers_GameFlow.gotoMapEditorWar({
+                            mapRawData                : mapEditorData?.mapRawData,
+                            slotIndex                 : slotIndex,
+                            isReview                  : false,
+                            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                            gridMarkData              : mapEditorData?.gridMarkData,
                         }),
                     });
                 }
@@ -167,9 +167,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0076));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0081),
-                getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
-                callback    : () => ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0081),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0029),
+                callback   : () => ActionPlanners_States_RequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
             });
         }
     }
@@ -199,9 +199,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
-            callback: () => {
+            callback   : () => {
                 Helpers_GameFlow.gotoMfrCreateSettingsPanel(warData);
-            }
+            },
         });
     }
 
@@ -218,8 +218,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0140),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0140),
+            callback   : () => {
                 SinglePlayerMode_Model_SpmProxy.reqSpmDeleteWarSaveSlot(saveSlotIndex);
             },
         });
@@ -239,11 +239,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue      = Maps_Constants.Common.MinRating;
         const maxValue      = Maps_Constants.Common.MaxRating;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
-            currentValue    : Users_Model.getMapRating(normalMapId) || 0,
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
+            currentValue : Users_Model.getMapRating(normalMapId) || 0,
             minValue,
             maxValue,
-            callback        : value => {
+            callback     : value => {
                 Users_Proxy.reqUserSetMapRating(normalMapId, value);
             },
         });
@@ -255,7 +255,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMarkGridPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMarkGridPanel, { war : war });
         this.closePanel();
     }
 
@@ -266,16 +266,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
-            currentSlotIndex        : 0,
-            needConfirmOverwrite    : true,
-            needNonEmptySlot        : false,
-            getHelpText             : null,
-            callback                : async slotIndex => MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                slotIndex                   : slotIndex,
-                mapRawData                  : await war.serializeForMap(),
-                needReview                  : false,
-                srcNormalMapIdForAddEvent   : null,
-                gridMarkData                : null,
+            currentSlotIndex     : 0,
+            needConfirmOverwrite : true,
+            needNonEmptySlot     : false,
+            getHelpText          : null,
+            callback             : async slotIndex => MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
+                slotIndex                 : slotIndex,
+                mapRawData                : await war.serializeForMap(),
+                needReview                : false,
+                srcNormalMapIdForAddEvent : null,
+                gridMarkData              : null,
             }),
         });
     }
@@ -322,20 +322,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const state         = ActionPlanners_States_RequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
         if (!drawVoteManager.checkHasOngoingVote()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0031),
-                callback    : () => state.doApplyOnChooseAction(actionPlanner, playerIndex, true),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0031),
+                callback   : () => state.doApplyOnChooseAction(actionPlanner, playerIndex, true),
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0241),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0214),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0215),
-                showButtonClose     : true,
-                callback            : () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0241),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0214),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0215),
+                showButtonClose   : true,
+                callback          : () => {
                     state.doApplyOnChooseAction(actionPlanner, playerIndex, true);
                     this.closePanel();
                 },
-                callbackOnCancel    : () => {
+                callbackOnCancel : () => {
                     state.doApplyOnChooseAction(actionPlanner, playerIndex, false);
                     this.closePanel();
                 },
@@ -357,7 +357,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0055),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0026),
-            callback: () => {
+            callback   : () => {
                 ActionPlanners_States_RequestingPlayerSurrender.RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(war.getActionPlanner(), war.getPlayerIndexInTurn());
                 this.closePanel();
             },
@@ -406,7 +406,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _updateBtnSetDraw(): void {
         this._btnSetDraw.setLangText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote()
             ? Lang_Constants.TextType.B0690
-            : Lang_Constants.TextType.B0841
+            : Lang_Constants.TextType.B0841,
         );
     }
 

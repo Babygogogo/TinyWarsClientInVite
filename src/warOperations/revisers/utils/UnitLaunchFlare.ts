@@ -44,8 +44,10 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitLa
     }
 
     return WoContainer.fromJson({
-        WoUnitLaunchFlare: {
-            path            : WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }).toProto().toJson(),
+        WoUnitLaunchFlare : {
+            path : WarOperations_Revisers_Utils_Common.getRevisedPath({
+                war, rawPath, launchUnitId, requesterUserId, 
+            }).toProto().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),
         },

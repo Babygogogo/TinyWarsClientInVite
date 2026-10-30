@@ -333,7 +333,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
             toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
                 toCcrRoomId : this.getOpenData()?.roomId,
-            })
+            }),
         });
     }
 
@@ -552,7 +552,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const selfPlayerData    = roomPlayerInfo?.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         this._imgCo.loadSource(((gameConfig == null) || (selfPlayerData == null))
             ? ``
-            : Helpers_ImageSource.getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``
+            : Helpers_ImageSource.getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``,
         );
     }
 
@@ -667,8 +667,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 0, },
-            endProps   : { customAlpha : 1, },
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
@@ -701,8 +701,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 1, },
-            endProps   : { customAlpha : 0, },
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

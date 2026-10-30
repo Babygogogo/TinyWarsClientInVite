@@ -54,17 +54,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                           callback: this.closePanel },
+            { ui : this._btnClose,                           callback : this.closePanel },
 
-            { ui: this._btnCo,                              callback: this._onTouchedBtnCo },
-            { ui: this._btnReset,                           callback: this._onTouchedBtnReset },
-            { ui: this._btnPassive,                         callback: this._onTouchedBtnPassive },
-            { ui: this._btnPower,                           callback: this._onTouchedBtnPower },
-            { ui: this._btnSuperPower,                      callback: this._onTouchedBtnSuperPower },
+            { ui : this._btnCo,                              callback : this._onTouchedBtnCo },
+            { ui : this._btnReset,                           callback : this._onTouchedBtnReset },
+            { ui : this._btnPassive,                         callback : this._onTouchedBtnPassive },
+            { ui : this._btnPower,                           callback : this._onTouchedBtnPower },
+            { ui : this._btnSuperPower,                      callback : this._onTouchedBtnSuperPower },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetCoBgmSettings,     callback: this._onNotifyMsgUserSetCoBgmSettings },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetCoBgmSettings,     callback : this._onNotifyMsgUserSetCoBgmSettings },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -102,11 +102,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoCategoryIdPanel, {
-            availableCoCategoryIdArray  : gameConfig.getAllEnabledCoCategoryIdArray(),
-            currentCoCategoryId         : this._coCategoryId,
-            gameConfig                  : gameConfig,
-            isBan                       : false,
-            callbackOnConfirm           : coCategoryId => {
+            availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
+            currentCoCategoryId        : this._coCategoryId,
+            gameConfig                 : gameConfig,
+            isBan                      : false,
+            callbackOnConfirm          : coCategoryId => {
                 this._coCategoryId = coCategoryId;
                 this._updateComponentsForCoAndBgm();
             },
@@ -119,8 +119,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
                 Users_Proxy.reqUserSetCoBgmSettings(coCategoryId, null);
             },
         });
@@ -139,9 +139,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const coCategoryCfg = Helpers_Misc.getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
         const bgmCodeArray  = (Users_Model.getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : bgmCodeArray[0],
-            callbackOnConfirm   : bgmCode => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : bgmCodeArray[0],
+            callbackOnConfirm : bgmCode => {
                 Users_Proxy.reqUserSetCoBgmSettings(coCategoryId, [bgmCode, bgmCodeArray[1], bgmCodeArray[2]]);
             },
         });
@@ -160,9 +160,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const coCategoryCfg = Helpers_Misc.getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
         const bgmCodeArray  = (Users_Model.getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : bgmCodeArray[1],
-            callbackOnConfirm   : bgmCode => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : bgmCodeArray[1],
+            callbackOnConfirm : bgmCode => {
                 Users_Proxy.reqUserSetCoBgmSettings(coCategoryId, [bgmCodeArray[0], bgmCode, bgmCodeArray[2]]);
             },
         });
@@ -181,9 +181,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const coCategoryCfg = Helpers_Misc.getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
         const bgmCodeArray  = (Users_Model.getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : bgmCodeArray[2],
-            callbackOnConfirm   : bgmCode => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : bgmCodeArray[2],
+            callbackOnConfirm : bgmCode => {
                 Users_Proxy.reqUserSetCoBgmSettings(coCategoryId, [bgmCodeArray[0], bgmCodeArray[1], bgmCode]);
             },
         });

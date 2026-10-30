@@ -41,12 +41,12 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
     }
 
     const unitData = rawUnitData.clone();
-    unitData.createIfNotExistsGridIndex().loadJson({x: 0, y: 0});
+    unitData.createIfNotExistsGridIndex().loadJson({ x : 0, y : 0 });
     if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-        unitData                : unitData,
-        gameConfig              : gameConfig,
-        mapSize                 : mapSize,
-        playersCountUnneutral   : playersCountUnneutral,
+        unitData              : unitData,
+        gameConfig            : gameConfig,
+        mapSize               : mapSize,
+        playersCountUnneutral : playersCountUnneutral,
     })) {
         return false;
     }
@@ -106,12 +106,12 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
     }
 
     const unitData = rawUnitData.clone();
-    unitData.createIfNotExistsGridIndex().loadJson({ x: 0, y: 0 });
+    unitData.createIfNotExistsGridIndex().loadJson({ x : 0, y : 0 });
     if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-        unitData                : unitData,
-        mapSize                 : mapSize,
-        playersCountUnneutral   : playersCountUnneutral,
-        gameConfig              : gameConfig,
+        unitData              : unitData,
+        mapSize               : mapSize,
+        playersCountUnneutral : playersCountUnneutral,
+        gameConfig            : gameConfig,
     })) {
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1058));
     }
@@ -146,12 +146,12 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
 
     for (const gridIndex of candidateGridIndexArray) {
         const targetGridIndex = getGridIndexForAddUnit({
-            origin              : gridIndex,
-            tileMap             : tileMap,
-            unitMap             : unitMap,
-            canBeBlockedByUnit  : canBeBlockedByUnit,
-            needMovableTile     : needMovableTile,
-            moveType            : moveType
+            origin             : gridIndex,
+            tileMap            : tileMap,
+            unitMap            : unitMap,
+            canBeBlockedByUnit : canBeBlockedByUnit,
+            needMovableTile    : needMovableTile,
+            moveType           : moveType,
         });
         if (targetGridIndex == null) {
             continue;
@@ -175,13 +175,13 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : unit.getUnitType(),
-                    dstPlayerIndex              : playerIndex,
-                    unitGain                    : 1,
-                    unitLoss                    : 0,
-                    normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                    normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                    unitType                   : unit.getUnitType(),
+                    dstPlayerIndex             : playerIndex,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }
@@ -224,7 +224,7 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
                 }
 
                 return true;
-            }
+            },
         })[0];
         if (gridIndex) {
             return gridIndex;

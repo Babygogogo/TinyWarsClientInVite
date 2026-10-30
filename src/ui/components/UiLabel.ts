@@ -364,7 +364,7 @@ export class UiLabel extends Ui_Components_UiContainerBase.UiContainerBase imple
                 : Math.min(
                     (this.getUnscaledManualWidth() ?? Number.MAX_SAFE_INTEGER) / textWidth,
                     (this.getAutoShrinkWidth() ?? Number.MAX_SAFE_INTEGER) / textWidth,
-                    1
+                    1,
                 );
         }
 
@@ -375,7 +375,7 @@ export class UiLabel extends Ui_Components_UiContainerBase.UiContainerBase imple
                 : Math.min(
                     (this.getUnscaledManualHeight() ?? Number.MAX_SAFE_INTEGER) / textHeight,
                     (this.getAutoShrinkHeight() ?? Number.MAX_SAFE_INTEGER) / textHeight,
-                    1
+                    1,
                 );
         }
     }

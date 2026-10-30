@@ -68,15 +68,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnSearch,          callback: this._onTouchedBtnSearch },
-            { ui: this._btnSort,            callback: this._onTouchedBtnSort },
-            { ui: this._btnPrevPage,        callback: this._onTouchedBtnPrevPage },
-            { ui: this._btnNextPage,        callback: this._onTouchedBtnNextPage },
-            { ui: this._groupDetail,        callback: this._onTouchedGroupDetail },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnSearch,          callback : this._onTouchedBtnSearch },
+            { ui : this._btnSort,            callback : this._onTouchedBtnSort },
+            { ui : this._btnPrevPage,        callback : this._onTouchedBtnPrevPage },
+            { ui : this._btnNextPage,        callback : this._onTouchedBtnNextPage },
+            { ui : this._groupDetail,        callback : this._onTouchedGroupDetail },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -106,8 +106,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSearch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonMapFilterPanel, {
-            mapFilter           : this._mapFilter,
-            callbackOnConfirm   : async mapFilter => {
+            mapFilter         : this._mapFilter,
+            callbackOnConfirm : async mapFilter => {
                 this._mapFilter             = mapFilter;
                 this._selectedNormalMapId   = -1;
                 this._pageIndex             = 0;
@@ -120,8 +120,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSort(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMapSorterPanel, {
-            currentSorter       : this._mapSorter,
-            callbackOnConfirm   : async mapSorter => {
+            currentSorter     : this._mapSorter,
+            callbackOnConfirm : async mapSorter => {
                 this._mapSorter             = mapSorter;
                 this._selectedNormalMapId   = -1;
                 this._pageIndex             = 0;
@@ -133,9 +133,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnPrevPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : this._pageIndex - 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : this._pageIndex - 1,
         });
         if (newPageIndex !== this._pageIndex) {
             this._pageIndex = newPageIndex;
@@ -144,9 +144,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : this._pageIndex + 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : this._pageIndex + 1,
         });
         if (newPageIndex !== this._pageIndex) {
             this._pageIndex = newPageIndex;
@@ -164,9 +164,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    mapRawData          : mapRawData,
-                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                    overridingPlayers   : null,
+                    mapRawData        : mapRawData,
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    overridingPlayers : null,
                 },
             });
         }
@@ -236,7 +236,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         await Promise.all(promiseArray);
         this._cachedListDataArray = (await NormalMap_Model_NormalMapModel.sortMapArray(
-            dataArray.map(v => ({ normalMapId: v.normalMapId, extraData: v })),
+            dataArray.map(v => ({ normalMapId : v.normalMapId, extraData : v })),
             this._mapSorter,
         )).map(v => v.extraData);
     }
@@ -283,9 +283,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             labelNoData.setIsVisible(false);
             zoomMap.setIsVisible(true);
             zoomMap.showMapByMapData({
-                mapRawData          : mapRawData,
-                gameConfig          : gameConfig,
-                overridingPlayers   : null,
+                mapRawData        : mapRawData,
+                gameConfig        : gameConfig,
+                overridingPlayers : null,
             });
         }
     }
@@ -308,8 +308,8 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgSelected,  callback: this._onTouchedImgSelected },
-            { ui: this._btnDesigner,  callback: this._onTouchedBtnDesigner },
+            { ui : this._imgSelected,  callback : this._onTouchedImgSelected },
+            { ui : this._btnDesigner,  callback : this._onTouchedBtnDesigner },
         ]);
         this._applySettingsForWholeTouch(true, true, Helpers_PointerInput.MouseStyleType.Pointer);
 
@@ -321,9 +321,9 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -356,7 +356,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         const normalMapId   = this.getOpenData()?.normalMapId;
         const userId        = normalMapId == null ? null : (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getDesignerUserId();
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
         }
     }
 
@@ -369,7 +369,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         const mapBriefData  = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
         if ((mapBriefData) && (normalMapId === this.getOpenData()?.normalMapId)) {
             this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
-            this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+            this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
         }
         this._layoutName.arrangeItems();
     }

@@ -13,7 +13,7 @@ export async function getScoreAndActionUnitCrushUnit(
     commonParams    : Bots_CommonParams.CommonParams,
     focusUnit       : Units_IUnit.IUnit,
     destination     : AuxiliaryTypes_GridIndex.GridIndex,
-    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[]
+    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[],
 ): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
     if ((pathNodes.length !== 1)                                        ||
@@ -38,16 +38,18 @@ export async function getScoreAndActionUnitCrushUnit(
         }
 
         candidates.push({
-            score   : targetUnit.getCurrentHp() * targetUnit.getProductionCfgCost(),
-            action  : WoContainer.fromJson({ WoUnitCrushUnit: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                targetGridIndex : targetGridIndex.toProto().toJson(),
-                launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
-            } }),
+            score  : targetUnit.getCurrentHp() * targetUnit.getProductionCfgCost(),
+            action : WoContainer.fromJson({
+                WoUnitCrushUnit : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    targetGridIndex : targetGridIndex.toProto().toJson(),
+                    launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
+                }, 
+            }),
         });
     }
 

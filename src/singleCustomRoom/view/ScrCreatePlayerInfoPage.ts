@@ -36,8 +36,7 @@ export type OpenData = {
 } | null;
 export class Page
     extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData>
-{
+    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
     private readonly _groupInfo!    : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _listPlayer!   : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForPlayerRenderer>;
 
@@ -49,14 +48,14 @@ export class Page
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listPlayer.setItemRendererClass(PlayerRenderer);
@@ -106,9 +105,9 @@ export class Page
         const gameConfig    = warCreator.getGcData();
         for (let playerIndex = 1; playerIndex <= playersCountUnneutral; ++playerIndex) {
             dataList.push({
-                warCreator      : warCreator,
-                gameConfig      : gameConfig,
-                playerIndex     : playerIndex,
+                warCreator  : warCreator,
+                gameConfig  : gameConfig,
+                playerIndex : playerIndex,
             });
         }
 
@@ -138,14 +137,14 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
-            { ui: this._btnChangeCo,            callback: this._onTouchedBtnChangeCo },
-            { ui: this._btnChangeController,    callback: this._onTouchedBtnChangeController },
-            { ui: this._btnChangeSkinId,        callback: this._onTouchedBtnChangeSkinId },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
+            { ui : this._btnChangeCo,            callback : this._onTouchedBtnChangeCo },
+            { ui : this._btnChangeController,    callback : this._onTouchedBtnChangeController },
+            { ui : this._btnChangeSkinId,        callback : this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback: this._onNotifyScrCreatePlayerInfoChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged,     callback : this._onNotifyScrCreatePlayerInfoChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -163,8 +162,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const coId          = playerData ? playerData.getCoId() : null;
         if ((coId != null) && (coId !== Cos_Constants.CoId.Empty)) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-                gameConfig  : openData.warCreator.getGcData(),
-                coId        : coId,
+                gameConfig : openData.warCreator.getGcData(),
+                coId       : coId,
             });
         }
     }
@@ -199,16 +198,16 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const currentCoId       = playerInfo.getCoId();
         const warRuleCommonData = Helpers_Misc.getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : openData.gameConfig,
-            currentCoId         : currentCoId,
-            availableCoIdArray  : [...PlayerRules_Utils.getFinalScwHumanCoIdSet({
+            gameConfig         : openData.gameConfig,
+            currentCoId        : currentCoId,
+            availableCoIdArray : [...PlayerRules_Utils.getFinalScwHumanCoIdSet({
                 playerRule      : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : warCreator.getGcData(),
                 hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                 includeRandom   : false,
             })],
-            isBan               : false,
-            callbackOnConfirm   : newCoId => {
+            isBan             : false,
+            callbackOnConfirm : newCoId => {
                 if (newCoId != currentCoId) {
                     playerInfo.setCoId(newCoId);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as Notifications_DataTypes.ScrCreatePlayerInfoChanged);

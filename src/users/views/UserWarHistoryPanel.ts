@@ -51,14 +51,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback: this._onNotifyMsgUserGetPublicInfo },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback : this._onNotifyMsgUserGetPublicInfo },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnRankFow,     callback: this._onTouchedBtnRankFow },
-            { ui: this._btnRankStd,     callback: this._onTouchedBtnRankStd },
-            { ui: this._btnUnranked,    callback: this._onTouchedBtnUnranked },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnRankFow,     callback : this._onTouchedBtnRankFow },
+            { ui : this._btnRankStd,     callback : this._onTouchedBtnRankStd },
+            { ui : this._btnUnranked,    callback : this._onTouchedBtnUnranked },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -278,7 +278,7 @@ class UnrankedRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnReplay,  callback: this._onTouchedBtnReplay },
+            { ui : this._btnReplay,  callback : this._onTouchedBtnReplay },
         ]);
     }
     protected override _doApplyOpenData(): void {
@@ -341,7 +341,7 @@ class RankedRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnReplay,  callback: this._onTouchedBtnReplay },
+            { ui : this._btnReplay,  callback : this._onTouchedBtnReplay },
         ]);
     }
     protected override _doApplyOpenData(): void {
@@ -386,7 +386,7 @@ class RankedRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 }
 
 function getTextForTimestamp(timestamp: number): string {
-    const text1 = Lang_Utils.getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
-    const text2 = Lang_Utils.getTimestampShortText(timestamp, { year: false, month: false, date: false });
+    const text1 = Lang_Utils.getTimestampShortText(timestamp, { hour : false, minute : false, second : false });
+    const text2 = Lang_Utils.getTimestampShortText(timestamp, { year : false, month : false, date : false });
     return `${text1} ${text2}`;
 }

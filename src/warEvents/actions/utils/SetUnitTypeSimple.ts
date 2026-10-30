@@ -34,7 +34,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     const unitType = data.getActUnitType();
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0252,
-        unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig)
+        unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetUnitTypeSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -70,7 +70,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0253,
         conTextArray.join(`\n`),
-        unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig)
+        unitType == null ? Lang_Constants.UndefinedError : Lang_Utils.getUnitName(unitType, gameConfig),
     );
 }
 
@@ -148,7 +148,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
                 continue;
             }
 
-            unitInfoArray.push({ unit, depth: getLoadDepth(unit) });
+            unitInfoArray.push({ unit, depth : getLoadDepth(unit) });
         }
 
         if (!unitInfoArray.length) {
@@ -206,23 +206,23 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
                 if (observerTeamIndexes != null) {
                     const groupedObserverTeamIndexes = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : unit.getUnitType(),
-                        dstPlayerIndex              : unit.getPlayerIndex(),
-                        normalizedHpGain            : 0,
-                        normalizedHpLoss            : unit.getNormalizedCurrentHp(),
-                        unitGain                    : 0,
-                        unitLoss                    : 1,
-                        groupedObserverTeamIndexes  : groupedObserverTeamIndexes,
+                        unitType                   : unit.getUnitType(),
+                        dstPlayerIndex             : unit.getPlayerIndex(),
+                        normalizedHpGain           : 0,
+                        normalizedHpLoss           : unit.getNormalizedCurrentHp(),
+                        unitGain                   : 0,
+                        unitLoss                   : 1,
+                        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                     }));
 
                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : newUnitType,
-                        dstPlayerIndex              : newUnitData.getPlayerIndex(),
-                        normalizedHpGain            : Units_Utils_Common.getNormalizedHp(newUnitData.getCurrentHp()),
-                        normalizedHpLoss            : 0,
-                        unitGain                    : 1,
-                        unitLoss                    : 0,
-                        groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+                        unitType                   : newUnitType,
+                        dstPlayerIndex             : newUnitData.getPlayerIndex(),
+                        normalizedHpGain           : Units_Utils_Common.getNormalizedHp(newUnitData.getCurrentHp()),
+                        normalizedHpLoss           : 0,
+                        unitGain                   : 1,
+                        unitLoss                   : 0,
+                        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                     }));
                 }
             }

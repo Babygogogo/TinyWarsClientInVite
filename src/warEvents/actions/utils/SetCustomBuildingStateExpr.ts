@@ -26,9 +26,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConTileFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ConTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ConTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -36,9 +36,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActDefenseAmount(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseAmount,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActDefenseAmount(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseAmount,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -46,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActDefenseUnitTypeArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseUnitTypeArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActDefenseUnitTypeArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseUnitTypeArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -56,9 +56,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActMaxCapturePoint(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActMaxCapturePoint,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActMaxCapturePoint(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActMaxCapturePoint,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -66,9 +66,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsDefeatedOnCapture(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsDefeatedOnCapture,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsDefeatedOnCapture(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsDefeatedOnCapture,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -76,9 +76,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActRepairNormalizedHp(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairNormalizedHp,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActRepairNormalizedHp(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairNormalizedHp,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -86,9 +86,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActRepairUnitTypeArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairUnitTypeArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActRepairUnitTypeArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairUnitTypeArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -96,9 +96,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIncomePerTurn(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIncomePerTurn,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIncomePerTurn(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIncomePerTurn,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -106,9 +106,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActVisionRange(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActVisionRange,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActVisionRange(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActVisionRange,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -116,9 +116,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActIsVisionEnabledForAllPlayers(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsVisionEnabledForAllPlayers,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsVisionEnabledForAllPlayers(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsVisionEnabledForAllPlayers,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -126,9 +126,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActHideUnitTypeArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActHideUnitTypeArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActHideUnitTypeArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActHideUnitTypeArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -136,9 +136,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActProduceUnitTypeArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActProduceUnitTypeArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActProduceUnitTypeArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActProduceUnitTypeArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -146,9 +146,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActGlobalAttackBonus(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalAttackBonus,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActGlobalAttackBonus(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalAttackBonus,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -156,9 +156,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActGlobalDefenseBonus(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalDefenseBonus,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActGlobalDefenseBonus(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalDefenseBonus,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -166,9 +166,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActUnitTypeArrayForCoBoard(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActUnitTypeArrayForCoBoard,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActUnitTypeArrayForCoBoard(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActUnitTypeArrayForCoBoard,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -176,9 +176,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActBlockEnemyUnitTypeArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActBlockEnemyUnitTypeArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActBlockEnemyUnitTypeArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActBlockEnemyUnitTypeArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -223,9 +223,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ConTileFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -235,9 +235,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseAmount;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActDefenseAmount(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActDefenseAmount(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -247,9 +247,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActDefenseUnitTypeArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActDefenseUnitTypeArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActDefenseUnitTypeArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -259,9 +259,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActMaxCapturePoint;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActMaxCapturePoint(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActMaxCapturePoint(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -271,9 +271,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsDefeatedOnCapture;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsDefeatedOnCapture(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsDefeatedOnCapture(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -283,9 +283,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairNormalizedHp;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActRepairNormalizedHp(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActRepairNormalizedHp(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -295,9 +295,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActRepairUnitTypeArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActRepairUnitTypeArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActRepairUnitTypeArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -307,9 +307,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIncomePerTurn;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIncomePerTurn(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIncomePerTurn(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -319,9 +319,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActVisionRange;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActVisionRange(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActVisionRange(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -331,9 +331,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActIsVisionEnabledForAllPlayers;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActIsVisionEnabledForAllPlayers(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsVisionEnabledForAllPlayers(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -343,9 +343,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActHideUnitTypeArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActHideUnitTypeArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActHideUnitTypeArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -355,9 +355,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActProduceUnitTypeArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActProduceUnitTypeArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActProduceUnitTypeArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -367,9 +367,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalAttackBonus;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActGlobalAttackBonus(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActGlobalAttackBonus(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -379,9 +379,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActGlobalDefenseBonus;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActGlobalDefenseBonus(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActGlobalDefenseBonus(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -391,9 +391,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActUnitTypeArrayForCoBoard;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActUnitTypeArrayForCoBoard(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActUnitTypeArrayForCoBoard(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -403,9 +403,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateExpr, customCounterNa
     {
         const info      = WarEvents_Actions_Constants_SetCustomBuildingStateExpr.ExpressionInfoDict.ActBlockEnemyUnitTypeArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActBlockEnemyUnitTypeArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActBlockEnemyUnitTypeArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -434,9 +434,9 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Building.DefenseAmount.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Building.DefenseAmount.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Building.DefenseAmount.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Building.DefenseAmount.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -459,9 +459,9 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -490,9 +490,9 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: Til
                 return null;
             } else {
                 return Numbers_Utils.getValueInRange({
-                    minValue    : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MinValue,
-                    maxValue    : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue,
-                    rawValue    : Math.floor(rawValue),
+                    minValue : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MinValue,
+                    maxValue : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue,
+                    rawValue : Math.floor(rawValue),
                 });
             }
         } else {
@@ -535,9 +535,9 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: 
                 return null;
             } else {
                 return Numbers_Utils.getValueInRange({
-                    minValue    : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MinValue,
-                    maxValue    : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue,
-                    rawValue    : Math.floor(rawValue),
+                    minValue : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MinValue,
+                    maxValue : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue,
+                    rawValue : Math.floor(rawValue),
                 });
             }
         } else {
@@ -561,9 +561,9 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile:
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -588,9 +588,9 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: Tiles
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -610,9 +610,9 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: Tiles_I
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Building.VisionRange.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Building.VisionRange.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -653,9 +653,9 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile: T
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -683,9 +683,9 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -710,9 +710,9 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: T
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -732,9 +732,9 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: 
         const epResult = ExpressionParsers_Parser.Parser.getParseResult(act).eval(new ExpressionParsers_Contexts_Tile.Tile(tile), false);
         if (epResult instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MinValue,
-                maxValue    : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MaxValue,
-                rawValue    : Math.floor(epResult.num),
+                minValue : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MinValue,
+                maxValue : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MaxValue,
+                rawValue : Math.floor(epResult.num),
             });
         } else {
             return defaultValue;
@@ -757,9 +757,9 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateExpr, t
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -787,9 +787,9 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateExpr, t
             const unitTypeSet = new Set<number>();
             for (const rawValue of epResult.numberArray) {
                 const unitType = Numbers_Utils.getValueInRange({
-                    minValue: 0,
-                    maxValue: Numbers_Constants.MaxInt32,
-                    rawValue: Math.floor(rawValue),
+                    minValue : 0,
+                    maxValue : Numbers_Constants.MaxInt32,
+                    rawValue : Math.floor(rawValue),
                 });
                 if (gameConfig.checkIsValidUnitType(unitType)) {
                     unitTypeSet.add(unitType);
@@ -838,49 +838,49 @@ function createNewTileCustomBuildingData(action: WeaSetCustomBuildingStateExpr, 
     const unitTypeArrayForCoBoard       = evalActUnitTypeArrayForCoBoard(action, tile, customBuildingData);
     const blockEnemyUnitTypeArray       = evalActBlockEnemyUnitTypeArray(action, tile, customBuildingData);
     return TileCustomBuildingData.fromJson({
-        defenseAmount                   : defenseAmount,
-        defenseUnitTypeArray            : defenseUnitTypeArray,
-        maxCapturePoint                 : maxCapturePoint,
-        isDefeatedOnCapture             : isDefeatedOnCapture,
-        repairNormalizedHp              : repairNormalizedHp,
-        repairUnitTypeArray             : repairUnitTypeArray,
-        incomePerTurn                   : incomePerTurn,
-        visionRange                     : visionRange,
-        isVisionEnabledForAllPlayers    : isVisionEnabledForAllPlayers,
-        hideUnitTypeArray               : hideUnitTypeArray,
-        produceUnitTypeArray            : produceUnitTypeArray,
-        globalAttackBonus               : globalAttackBonus,
-        globalDefenseBonus              : globalDefenseBonus,
-        unitTypeArrayForCoBoard         : unitTypeArrayForCoBoard,
-        blockEnemyUnitTypeArray         : blockEnemyUnitTypeArray,
+        defenseAmount                : defenseAmount,
+        defenseUnitTypeArray         : defenseUnitTypeArray,
+        maxCapturePoint              : maxCapturePoint,
+        isDefeatedOnCapture          : isDefeatedOnCapture,
+        repairNormalizedHp           : repairNormalizedHp,
+        repairUnitTypeArray          : repairUnitTypeArray,
+        incomePerTurn                : incomePerTurn,
+        visionRange                  : visionRange,
+        isVisionEnabledForAllPlayers : isVisionEnabledForAllPlayers,
+        hideUnitTypeArray            : hideUnitTypeArray,
+        produceUnitTypeArray         : produceUnitTypeArray,
+        globalAttackBonus            : globalAttackBonus,
+        globalDefenseBonus           : globalDefenseBonus,
+        unitTypeArrayForCoBoard      : unitTypeArrayForCoBoard,
+        blockEnemyUnitTypeArray      : blockEnemyUnitTypeArray,
     });
 }
 function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, TileCustomBuildingData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomBuildingData] of dict) {
         const cfg       = tile.getTemplateCfg();
         const newData   = Tiles_Utils_Serialization.create({
-            gridIndex               : tile.getGridIndex().toProto().toJson(),
-            playerIndex             : tile.getPlayerIndex(),
-            baseType                : tile.getBaseType(),
-            baseShapeId             : tile.getBaseShapeId(),
-            decorationType          : tile.getDecorationType(),
-            decorationShapeId       : tile.getDecorationShapeId(),
-            objectType              : tile.getObjectType(),
-            objectShapeId           : tile.getObjectShapeId(),
+            gridIndex         : tile.getGridIndex().toProto().toJson(),
+            playerIndex       : tile.getPlayerIndex(),
+            baseType          : tile.getBaseType(),
+            baseShapeId       : tile.getBaseShapeId(),
+            decorationType    : tile.getDecorationType(),
+            decorationShapeId : tile.getDecorationShapeId(),
+            objectType        : tile.getObjectType(),
+            objectShapeId     : tile.getObjectShapeId(),
 
-            customNameId            : tile.getCustomNameId() ?? null,
-            unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-            groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-            isHighlighted           : tile.getIsHighlighted(),
+            customNameId           : tile.getCustomNameId() ?? null,
+            unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+            groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+            isHighlighted          : tile.getIsHighlighted(),
 
-            currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     Tiles_Utils_Common.getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
-            currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   Tiles_Utils_Common.getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
-            currentHp               : Math.min(tile.getCurrentHp(),             Tiles_Utils_Common.getMaxHp(cfg, tileCustomBuildingData) ?? 0),
+            currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     Tiles_Utils_Common.getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
+            currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   Tiles_Utils_Common.getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
+            currentHp           : Math.min(tile.getCurrentHp(),             Tiles_Utils_Common.getMaxHp(cfg, tileCustomBuildingData) ?? 0),
 
-            customBuildingData      : tileCustomBuildingData.toJson(),
-            customCrystalData       : null,
-            customCannonData        : null,
-            customLaserTurretData   : null,
+            customBuildingData    : tileCustomBuildingData.toJson(),
+            customCrystalData     : null,
+            customCannonData      : null,
+            customLaserTurretData : null,
         });
 
         tile.init(newData, tile.getGameConfig());

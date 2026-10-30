@@ -49,16 +49,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserLogin,        callback: this._onMsgUserLogin },
-            { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest, callback: this._onMsgUserLoginAsGuest },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserLogin,        callback : this._onMsgUserLogin },
+            { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest, callback : this._onMsgUserLoginAsGuest },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupLogin,             callback: this._onTouchedGroupLogin,            mouseStyle: Helpers_PointerInput.MouseStyleType.Default },
-            { ui: this._btnLogin,               callback: this._onTouchedBtnLogin },
-            { ui: this._btnRegister,            callback: this._onTouchedBtnRegister },
-            { ui: this._btnForgetPassword,      callback: this._onTouchedBtnForgetPassword },
-            { ui: this._groupRememberPassword,  callback: this._onTouchedGroupRememberPassword },
+            { ui : this._groupLogin,             callback : this._onTouchedGroupLogin,            mouseStyle : Helpers_PointerInput.MouseStyleType.Default },
+            { ui : this._btnLogin,               callback : this._onTouchedBtnLogin },
+            { ui : this._btnRegister,            callback : this._onTouchedBtnRegister },
+            { ui : this._btnForgetPassword,      callback : this._onTouchedBtnForgetPassword },
+            { ui : this._groupRememberPassword,  callback : this._onTouchedGroupRememberPassword },
             // { ui: this._imgTitle,               callback: () => {
             //     this._imgTitle.setIsTouchEnabled(true);
 
@@ -155,63 +155,63 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgTitle,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
-            tweenTime   : 1000,
+            obj        : this._imgTitle,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
+            tweenTime  : 1000,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupAccount,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 800,
+            obj        : this._groupAccount,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 800,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupPassword,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 900,
+            obj        : this._groupPassword,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 900,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupPasswordCommand,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 1000,
+            obj        : this._groupPasswordCommand,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 1000,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupButton,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 1100,
+            obj        : this._groupButton,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 1100,
         });
 
         await Timer_TimerModel.wait(1100 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgTitle,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._imgTitle,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupAccount,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupAccount,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupPassword,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupPassword,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupPasswordCommand,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupPasswordCommand,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupButton,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupButton,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
 
         await Timer_TimerModel.wait();

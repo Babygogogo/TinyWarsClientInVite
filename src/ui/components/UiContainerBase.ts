@@ -114,13 +114,13 @@ export abstract class UiContainerBase extends Egret_Egret.DisplayObjectContainer
     }
     public getAabbToParent(): AuxiliaryTypes_AuxiliaryTypes.Rectangle {
         return (this._aabbCache ??= new Ui_Utils_UiAabbCache.UiAabbCache()).getAabb({
-            unscaledWidth       : this.width,
-            unscaledHeight      : this.height,
-            scaleX              : this.scaleX,
-            scaleY              : this.scaleY,
-            rotationInDegree    : this.rotation,
-            anchorOffsetX       : this.anchorOffsetX,
-            anchorOffsetY       : this.anchorOffsetY,
+            unscaledWidth    : this.width,
+            unscaledHeight   : this.height,
+            scaleX           : this.scaleX,
+            scaleY           : this.scaleY,
+            rotationInDegree : this.rotation,
+            anchorOffsetX    : this.anchorOffsetX,
+            anchorOffsetY    : this.anchorOffsetY,
         });
     }
 

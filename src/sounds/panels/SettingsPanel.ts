@@ -62,32 +62,32 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
 
-            { ui: this._groupMainVolume,        callback: this._onTouchedGroupMainVolume },
-            { ui: this._groupMainVolume,        callback: this._onTouchMoveGroupMainVolume,             eventType: Helpers_PointerInput.PointerEventType.PressMove },
-            { ui: this._groupMainVolume,        callback: this._onTouchEndGroupMainVolume,              eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupMainVolume,        callback: this._onTouchReleaseOutsideGroupMainVolume,   eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
-            { ui: this._imgMainMute,            callback: this._onTouchedGroupMainMute },
+            { ui : this._groupMainVolume,        callback : this._onTouchedGroupMainVolume },
+            { ui : this._groupMainVolume,        callback : this._onTouchMoveGroupMainVolume,             eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupMainVolume,        callback : this._onTouchEndGroupMainVolume,              eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupMainVolume,        callback : this._onTouchReleaseOutsideGroupMainVolume,   eventType : Helpers_PointerInput.PointerEventType.ReleaseOut },
+            { ui : this._imgMainMute,            callback : this._onTouchedGroupMainMute },
 
-            { ui: this._groupBgmVolume,         callback: this._onTouchedGroupBgmVolume },
-            { ui: this._groupBgmVolume,         callback: this._onTouchMoveGroupBgmVolume,              eventType: Helpers_PointerInput.PointerEventType.PressMove },
-            { ui: this._imgBgmMute,             callback: this._onTouchedGroupBgmMute },
+            { ui : this._groupBgmVolume,         callback : this._onTouchedGroupBgmVolume },
+            { ui : this._groupBgmVolume,         callback : this._onTouchMoveGroupBgmVolume,              eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._imgBgmMute,             callback : this._onTouchedGroupBgmMute },
 
-            { ui: this._groupEffectVolume,      callback: this._onTouchedGroupEffectVolume },
-            { ui: this._groupEffectVolume,      callback: this._onTouchMoveGroupEffectVolume,           eventType: Helpers_PointerInput.PointerEventType.PressMove },
-            { ui: this._groupEffectVolume,      callback: this._onTouchEndGroupEffectVolume,            eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupEffectVolume,      callback: this._onTouchReleaseOutsideGroupEffectVolume, eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
-            { ui: this._imgEffectMute,          callback: this._onTouchedGroupEffectMute },
+            { ui : this._groupEffectVolume,      callback : this._onTouchedGroupEffectVolume },
+            { ui : this._groupEffectVolume,      callback : this._onTouchMoveGroupEffectVolume,           eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupEffectVolume,      callback : this._onTouchEndGroupEffectVolume,            eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupEffectVolume,      callback : this._onTouchReleaseOutsideGroupEffectVolume, eventType : Helpers_PointerInput.PointerEventType.ReleaseOut },
+            { ui : this._imgEffectMute,          callback : this._onTouchedGroupEffectMute },
 
-            { ui: this._btnSwitchBgm,           callback: this._onTouchedBtnSwitchBgm },
+            { ui : this._btnSwitchBgm,           callback : this._onTouchedBtnSwitchBgm },
 
-            { ui: this._btnCoBgmSettings,       callback: this._onTouchedBtnCoBgmSettings },
-            { ui: this._btnSceneBgmSettings,    callback: this._onTouchedBtnSceneBgmSettings },
+            { ui : this._btnCoBgmSettings,       callback : this._onTouchedBtnCoBgmSettings },
+            { ui : this._btnSceneBgmSettings,    callback : this._onTouchedBtnSceneBgmSettings },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -196,26 +196,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentBgmCode = Sounds_SoundPlayer.getPlayingBgmCode();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-            currentBgmCode      : currentBgmCode,
-            callbackOnConfirm   : code => {
+            gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+            currentBgmCode    : currentBgmCode,
+            callbackOnConfirm : code => {
                 Helpers_GameFlow.getOngoingWar()?.setOverridingBgmCode(code);
             },
-            callbackOnCancel    : () => {
+            callbackOnCancel : () => {
                 Sounds_SoundPlayer.playBgm(currentBgmCode);
-            }
+            },
         });
     }
 
     private async _onTouchedBtnCoBgmSettings(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetCoBgmSettingsPanel, {
-            gameConfig  : await GameConfigs_Provider.getLatestGameConfig(),
+            gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
 
     private async _onTouchedBtnSceneBgmSettings(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSceneBgmSettingsPanel, {
-            gameConfig  : await GameConfigs_Provider.getLatestGameConfig(),
+            gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
 

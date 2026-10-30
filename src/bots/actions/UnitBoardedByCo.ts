@@ -14,15 +14,17 @@ export async function getScoreAndActionUnitBoardedByCo(unit: Units_IUnit.IUnit, 
     }
 
     return {
-        score   : await getScoreForActionUnitBoardedByCo(unit),
-        action  : WoContainer.fromJson({ WoUnitBoardedByCo: {
-            path        : {
-                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                isBlocked       : false,
-            },
-            launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-        } }),
+        score  : await getScoreForActionUnitBoardedByCo(unit),
+        action : WoContainer.fromJson({
+            WoUnitBoardedByCo : {
+                path : {
+                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                    isBlocked       : false,
+                },
+                launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+            }, 
+        }),
     };
 }
 

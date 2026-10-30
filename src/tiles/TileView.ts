@@ -19,7 +19,7 @@ export class TileView implements Tiles_ITileView.ITileView {
     private readonly _imgDecoration = new Ui_Components_UiImage.UiImage();
     private readonly _imgObject     = new Ui_Components_UiImage.UiImage();
     private readonly _imgBuff       = new Ui_Components_UiImage.UiImage();
-    private readonly _imgHighlight  = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
+    private readonly _imgHighlight  = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
 
     private _data           : BaseWar_Model_BwTypes.DataForTileView | null = null;
     private _framesForBuff  : string[] | null = null;
@@ -81,9 +81,9 @@ export class TileView implements Tiles_ITileView.ITileView {
             const version       = Users_Model.getSelfSettingsTextureVersion();
             const hasFog        = data.hasFog;
             this._framesForBuff = buffTypeArray.map(v => Common_Model_CommonModel.getCachedTileBuffImageSource({
-                version     : version,
-                buffType    : v,
-                isDark      : hasFog,
+                version  : version,
+                buffType : v,
+                isDark   : hasFog,
             }));
         }
     }
@@ -118,15 +118,15 @@ export class TileView implements Tiles_ITileView.ITileView {
 
                 const overridingSkinId = data.overridingSkinId ?? -1;
                 imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
-                    version     : version,
-                    themeType   : themeType,
-                    skinId      : ((hasFog) && (!data.isFullReplay) && (!gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseType, objectType)?.getIsAlwaysShowOwner()))
+                    version   : version,
+                    themeType : themeType,
+                    skinId    : ((hasFog) && (!data.isFullReplay) && (!gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(tileBaseType, objectType)?.getIsAlwaysShowOwner()))
                         ? ForceSkins_Constants.SkinId.Neutral
                         : (overridingSkinId >= Players_Constants.PlayerIndex.First ? overridingSkinId : skinId),
-                    shapeId     : shapeId,
-                    objectType  : objectType,
-                    isDark      : hasFog,
-                    tickCount   : tickCount,
+                    shapeId    : shapeId,
+                    objectType : objectType,
+                    isDark     : hasFog,
+                    tickCount  : tickCount,
                 }));
             }
         }
@@ -140,10 +140,10 @@ export class TileView implements Tiles_ITileView.ITileView {
                 imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
                     version,
                     themeType,
-                    skinId      : ForceSkins_Constants.SkinId.Neutral,
-                    shapeId     : tileData.getBaseShapeId(),
-                    baseType    : tileBaseType,
-                    isDark      : hasFog,
+                    skinId   : ForceSkins_Constants.SkinId.Neutral,
+                    shapeId  : tileData.getBaseShapeId(),
+                    baseType : tileBaseType,
+                    isDark   : hasFog,
                     tickCount,
                 }));
             }
@@ -159,10 +159,10 @@ export class TileView implements Tiles_ITileView.ITileView {
                 imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
                     version,
                     themeType,
-                    skinId              : ForceSkins_Constants.SkinId.Neutral,
-                    tileDecorationType  : decorationType,
-                    shapeId             : tileData.getDecorationShapeId(),
-                    isDark              : hasFog,
+                    skinId             : ForceSkins_Constants.SkinId.Neutral,
+                    tileDecorationType : decorationType,
+                    shapeId            : tileData.getDecorationShapeId(),
+                    isDark             : hasFog,
                     tickCount,
                 }));
             }

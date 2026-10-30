@@ -105,7 +105,7 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_ITurnManager.ITurnMana
 function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, data: WoSystemBeginTurn, isFastExecute: boolean): void {
     // nothing to do
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function runPhaseActivateMapWeapon(turnManager: Turns_ITurnManager.ITurnManager, data: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
@@ -217,7 +217,7 @@ function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, d
 function runPhaseResetVotesForDraw(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
@@ -242,7 +242,7 @@ function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnM
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, data: WoPlayerEndTurn, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView().resetMarkLayer();

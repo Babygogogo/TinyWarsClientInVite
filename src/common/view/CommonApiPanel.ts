@@ -72,18 +72,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClearFilter,             callback: this._onTouchedBtnClearFilter },
-            { ui: this._btnSwitch,                  callback: this._onTouchedBtnSwitch },
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnTypeId,                  callback: this._onTouchedBtnTypeId },
-            { ui: this._btnOperator,                callback: this._onTouchedBtnOperator },
-            { ui: this._btnExpression,              callback: this._onTouchedBtnExpression },
+            { ui : this._btnClearFilter,             callback : this._onTouchedBtnClearFilter },
+            { ui : this._btnSwitch,                  callback : this._onTouchedBtnSwitch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnTypeId,                  callback : this._onTouchedBtnTypeId },
+            { ui : this._btnOperator,                callback : this._onTouchedBtnOperator },
+            { ui : this._btnExpression,              callback : this._onTouchedBtnExpression },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputFilter,                callback: this._onFocusOutInputFilter,      eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputFilter,                callback : this._onFocusOutInputFilter,      eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -121,13 +121,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnSwitch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            currentNumber           : this._contextType,
-            availableNumberArray    : ContextTypeArray,
-            keepOrder               : true,
-            columnsCount            : 3,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0131),
-            getNumberMainText       : num => Lang_Utils.getExpressionParserContextName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : contextType => {
+            currentNumber        : this._contextType,
+            availableNumberArray : ContextTypeArray,
+            keepOrder            : true,
+            columnsCount         : 3,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0131),
+            getNumberMainText    : num => Lang_Utils.getExpressionParserContextName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : contextType => {
                 if (contextType !== this._contextType) {
                     this._contextType       = contextType;
                     this._fullItemDataArray = this._generateFullItemDataArray();
@@ -135,12 +135,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     this._updateListItem();
                     this._updateLabelContent();
                 }
-            }
+            },
         });
     }
     private async _onTouchedBtnTypeId(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonExpressionTypeIdPanel, {
-            gameConfig: await GameConfigs_Provider.getLatestGameConfig(),
+            gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
         });
     }
     private _onTouchedBtnOperator(): void {
@@ -181,7 +181,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             filterString
                 ? fullDataArray.filter(v => v.name.toLocaleLowerCase().includes(filterString))
                 : fullDataArray.concat(),
-            true
+            true,
         );
     }
     private _updateLabelTitle(): void {
@@ -199,19 +199,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const [identifierName, data] of ExpressionParsers_Utils.getVariableInfoDict(contextType)) {
             if (!data.isHidden) {
                 dataArray.push({
-                    name            : identifierName,
-                    langTextType    : data.desc,
-                    isExtension     : data.isExtension,
-                    panel           : this,
+                    name         : identifierName,
+                    langTextType : data.desc,
+                    isExtension  : data.isExtension,
+                    panel        : this,
                 });
             }
         }
         for (const [identifierName, data] of ExpressionParsers_Utils.getFunctionInfoDict(contextType)) {
             dataArray.push({
-                name            : `${identifierName}()`,
-                langTextType    : data.desc,
-                isExtension     : data.isExtension,
-                panel           : this,
+                name         : `${identifierName}()`,
+                langTextType : data.desc,
+                isExtension  : data.isExtension,
+                panel        : this,
             });
         }
         return dataArray.sort((v1, v2) => {

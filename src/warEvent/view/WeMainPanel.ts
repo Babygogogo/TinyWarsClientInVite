@@ -52,18 +52,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnDeleteRedundancy,    callback: this._onTouchedBtnDeleteRedundancy },
-            { ui: this._btnAddEvent,            callback: this._onTouchedBtnAddEvent },
-            { ui: this._btnDeleteEvent,         callback: this._onTouchedBtnDeleteEvent },
-            { ui: this._btnEventList,           callback: this._onTouchedBtnEventList },
-            { ui: this._btnShowDetail,          callback: this._onTouchedBtnShowDetail },
-            { ui: this._btnShowBrief,           callback: this._onTouchedBtnIsShowBrief },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnDeleteRedundancy,    callback : this._onTouchedBtnDeleteRedundancy },
+            { ui : this._btnAddEvent,            callback : this._onTouchedBtnAddEvent },
+            { ui : this._btnDeleteEvent,         callback : this._onTouchedBtnDeleteEvent },
+            { ui : this._btnEventList,           callback : this._onTouchedBtnEventList },
+            { ui : this._btnShowDetail,          callback : this._onTouchedBtnShowDetail },
+            { ui : this._btnShowBrief,           callback : this._onTouchedBtnIsShowBrief },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback: this._onNotifyMeWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,    callback : this._onNotifyMeWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0188),
-            callback: () => {
+            callback   : () => {
                 const result = WarEvents_FullDatas_Utils.checkAndDeleteUnusedComponents(Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()));
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -184,7 +184,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0479)} E${eventId}`,
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0935),
-            callback: () => {
+            callback   : () => {
                 const eventArray = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()?.getEventArray());
                 Helpers_Collection.deleteElementFromList(eventArray, eventArray.find(v => v.getEventId() === eventId));
 
@@ -207,11 +207,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeEventNameListPanel, {
-            war                     : war,
-            gameConfig              : war.getGcData(),
-            templateWarRuleArray    : war.getTemplateWarRuleArray(),
-            fullData                : Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()),
-            selectedEventId         : this._listWarEventId.getFirstSelectedData()?.eventId ?? null,
+            war                  : war,
+            gameConfig           : war.getGcData(),
+            templateWarRuleArray : war.getTemplateWarRuleArray(),
+            fullData             : Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()),
+            selectedEventId      : this._listWarEventId.getFirstSelectedData()?.eventId ?? null,
         });
     }
 
@@ -303,11 +303,11 @@ function generateDataArrayForListWarEventDesc({ war, eventId }: {
 }): DataForWarEventDetailRenderer[] {
     const prefixArray   = [`E${eventId}`];
     const dataArray     : DataForWarEventDetailRenderer[] = [{
-        isSeparator     : false,
-        war             : war,
-        descType        : WarEvents_Constants.DescType.EventName,
-        prefixArray     : prefixArray,
-        eventId         : eventId,
+        isSeparator : false,
+        war         : war,
+        descType    : WarEvents_Constants.DescType.EventName,
+        prefixArray : prefixArray,
+        eventId     : eventId,
     }];
 
     const warEvent = war.getWarEventManager().getWarEventFullData()?.getEventArray().find(v => v.getEventId() === eventId);
@@ -317,28 +317,28 @@ function generateDataArrayForListWarEventDesc({ war, eventId }: {
 
     dataArray.push(
         {
-            isSeparator     : false,
-            war             : war,
-            descType        : WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn,
-            prefixArray     : prefixArray,
-            eventId         : eventId,
+            isSeparator : false,
+            war         : war,
+            descType    : WarEvents_Constants.DescType.EventMaxCallCountInPlayerTurn,
+            prefixArray : prefixArray,
+            eventId     : eventId,
         },
         {
-            isSeparator     : false,
-            war             : war,
-            descType        : WarEvents_Constants.DescType.EventMaxCallCountTotal,
-            prefixArray     : prefixArray,
-            eventId         : eventId,
+            isSeparator : false,
+            war         : war,
+            descType    : WarEvents_Constants.DescType.EventMaxCallCountTotal,
+            prefixArray : prefixArray,
+            eventId     : eventId,
         },
     );
 
     for (const rootNodeAndActionsArray of warEvent.getRootNodeAndActionsArray()) {
         dataArray.push({
-            isSeparator     : true,
-            war             : war,
-            descType        : WarEvents_Constants.DescType.ConditionNode,
-            prefixArray     : prefixArray,
-            eventId         : eventId,
+            isSeparator : true,
+            war         : war,
+            descType    : WarEvents_Constants.DescType.ConditionNode,
+            prefixArray : prefixArray,
+            eventId     : eventId,
         });
 
         {
@@ -346,11 +346,11 @@ function generateDataArrayForListWarEventDesc({ war, eventId }: {
             if (nodeIdAndFlags != null) {
                 const nodeId = nodeIdAndFlags.getNodeId();
                 dataArray.push(...generateNodeDataArrayForListWarEventDesc({
-                    war             : war,
-                    eventId         : eventId,
-                    parentNodeId    : null,
-                    nodeId          : nodeId,
-                    prefixArray     : prefixArray.slice(1).concat(`${nodeIdAndFlags.getIsNegated() ? `! ` : ``}N${nodeId}`),
+                    war          : war,
+                    eventId      : eventId,
+                    parentNodeId : null,
+                    nodeId       : nodeId,
+                    prefixArray  : prefixArray.slice(1).concat(`${nodeIdAndFlags.getIsNegated() ? `! ` : ``}N${nodeId}`),
                 }));
             }
         }
@@ -359,14 +359,14 @@ function generateDataArrayForListWarEventDesc({ war, eventId }: {
             let actionIndex = 0;
             for (const actionId of rootNodeAndActionsArray.getActionIdArray()) {
                 dataArray.push({
-                    isSeparator     : false,
-                    war                 : war,
-                    descType            : WarEvents_Constants.DescType.Action,
-                    prefixArray         : prefixArray.slice(1).concat(`A${actionId}`),
-                    eventId             : eventId,
-                    actionId            : actionId,
-                    actionIndex         : actionIndex++,
-                    actionBoundNodeId   : rootNodeAndActionsArray.getNodeIdAndFlags()?.getNodeId(),
+                    isSeparator       : false,
+                    war               : war,
+                    descType          : WarEvents_Constants.DescType.Action,
+                    prefixArray       : prefixArray.slice(1).concat(`A${actionId}`),
+                    eventId           : eventId,
+                    actionId          : actionId,
+                    actionIndex       : actionIndex++,
+                    actionBoundNodeId : rootNodeAndActionsArray.getNodeIdAndFlags()?.getNodeId(),
                 });
             }
         }
@@ -382,13 +382,13 @@ function generateNodeDataArrayForListWarEventDesc({ war, eventId, parentNodeId, 
     prefixArray : string[];
 }): DataForWarEventDetailRenderer[] {
     const dataArray: DataForWarEventDetailRenderer[] = [{
-        isSeparator     : false,
-        war             : war,
-        descType        : WarEvents_Constants.DescType.ConditionNode,
-        prefixArray     : prefixArray,
-        eventId         : eventId,
-        parentNodeId    : parentNodeId ?? void 0,
-        nodeId          : nodeId,
+        isSeparator  : false,
+        war          : war,
+        descType     : WarEvents_Constants.DescType.ConditionNode,
+        prefixArray  : prefixArray,
+        eventId      : eventId,
+        parentNodeId : parentNodeId ?? void 0,
+        nodeId       : nodeId,
     }];
 
     const node = war.getWarEventManager().getWarEventFullData()?.getConditionNodeArray().find(v => v.getNodeId() === nodeId);
@@ -399,24 +399,24 @@ function generateNodeDataArrayForListWarEventDesc({ war, eventId, parentNodeId, 
     for (const conditionIdAndFlags of node.getConditionIdAndFlagsArray()) {
         const conditionId = conditionIdAndFlags.getConditionId();
         dataArray.push({
-            isSeparator     : false,
-            war             : war,
-            descType        : WarEvents_Constants.DescType.Condition,
-            prefixArray     : prefixArray.concat([`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionId}`]),
-            eventId         : eventId,
-            parentNodeId    : nodeId,
-            conditionId     : conditionId,
+            isSeparator  : false,
+            war          : war,
+            descType     : WarEvents_Constants.DescType.Condition,
+            prefixArray  : prefixArray.concat([`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionId}`]),
+            eventId      : eventId,
+            parentNodeId : nodeId,
+            conditionId  : conditionId,
         });
     }
 
     for (const subNodeIdAndFlags of node.getSubNodeIdAndFlagsArray()) {
         const subNodeId = subNodeIdAndFlags.getNodeId();
         dataArray.push(...generateNodeDataArrayForListWarEventDesc({
-            war             : war,
-            eventId         : eventId,
-            parentNodeId    : nodeId,
-            nodeId          : subNodeId,
-            prefixArray     : prefixArray.concat([`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeId}`]),
+            war          : war,
+            eventId      : eventId,
+            parentNodeId : nodeId,
+            nodeId       : subNodeId,
+            prefixArray  : prefixArray.concat([`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeId}`]),
         }));
     }
 
@@ -429,8 +429,7 @@ interface DataForWarEventIdRenderer extends Ui_Types_UiListItemData.UiListItemDa
 }
 class WarEventIdRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarEventIdRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarEventIdRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarEventIdRenderer> {
     private readonly _labelId! : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
@@ -474,10 +473,10 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnModify, callback: this._onTouchedBtnModify },
+            { ui : this._btnModify, callback : this._onTouchedBtnModify },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._updateComponentsForLanguage();
     }
@@ -489,15 +488,15 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeCommandPanel, {
-            war                 : openData.war,
-            descType            : openData.descType,
-            eventId             : openData.eventId,
-            actionId            : openData.actionId,
-            actionIndex         : openData.actionIndex,
-            actionBoundNodeId   : openData.actionBoundNodeId,
-            conditionId         : openData.conditionId,
-            parentNodeId        : openData.parentNodeId,
-            nodeId              : openData.nodeId,
+            war               : openData.war,
+            descType          : openData.descType,
+            eventId           : openData.eventId,
+            actionId          : openData.actionId,
+            actionIndex       : openData.actionIndex,
+            actionBoundNodeId : openData.actionBoundNodeId,
+            conditionId       : openData.conditionId,
+            parentNodeId      : openData.parentNodeId,
+            nodeId            : openData.nodeId,
         });
     }
 
@@ -560,7 +559,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         labelError.setText(errorTip || Lang_Utils.getText(Lang_Constants.TextType.B0493));
         labelError.setTextColor(errorTip ? Graphics_Constants.ColorValue.Yellow : Graphics_Constants.ColorValue.Green);
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
-        this._labelDesc.setText(`${Lang_Utils.getLanguageText({ textArray: event.getEventNameArray() })}`);
+        this._labelDesc.setText(`${Lang_Utils.getLanguageText({ textArray : event.getEventNameArray() })}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length, false);
     }
     private _updateForEventCallCountInPlayerTurn(data: DataForWarEventDetailRenderer): void { // DONE
@@ -603,7 +602,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         const desc                      = Lang_Utils.getWarEventConditionNodeDesc(node.getIsNeedAnd(), node.getIsNeedFalse());
         this._labelDesc.setText((_isShowDetail
             ? desc
-            : (Lang_Utils.getLanguageText({ textArray: node.getNodeNameArray() }) ?? desc)
+            : (Lang_Utils.getLanguageText({ textArray : node.getNodeNameArray() }) ?? desc)
         ));
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length, false);
     }
@@ -621,7 +620,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         this._labelDesc.setText((_isShowDetail
             ? WarEvents_Conditions_Utils_Common.getDetailedDescForCondition(condition, war.getGcData())
             : (
-                Lang_Utils.getLanguageText({ textArray: condition.getWecCommonData()?.getConditionNameArray() })        ??
+                Lang_Utils.getLanguageText({ textArray : condition.getWecCommonData()?.getConditionNameArray() })        ??
                 WarEvents_Conditions_Utils_Common.getBriefDescForCondition(condition, war.getGcData())
             )
         ) ?? Lang_Constants.UndefinedError);
@@ -641,7 +640,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         this._labelDesc.setText((_isShowDetail
             ? WarEvents_Actions_Utils_Common.getDetailDescForAction(action, war.getGcData())
             : (
-                Lang_Utils.getLanguageText({ textArray: action.getWeaCommonData()?.getActionNameArray() })      ??
+                Lang_Utils.getLanguageText({ textArray : action.getWeaCommonData()?.getActionNameArray() })      ??
                 WarEvents_Actions_Utils_Common.getBriefDescForAction(action, war.getGcData())
             )
         ) ?? Lang_Constants.UndefinedError);
@@ -670,7 +669,7 @@ class WarEventDetailRenderer extends Ui_Components_UiListItemRenderer.UiListItem
         this._groupMain.setIsVisible(!isSeparator);
         this.setUnscaledManualHeight(isSeparator
             ? 1
-            : Math.max(30, labelDesc.getY() + labelDesc.getScaledHeight())
+            : Math.max(30, labelDesc.getY() + labelDesc.getScaledHeight()),
         );
     }
 }

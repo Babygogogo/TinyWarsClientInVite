@@ -60,29 +60,29 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel, },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm, },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
 
-            { ui: this._btnAdd1s,       callback: this._onTouchedBtnAdd1s },
-            { ui: this._btnAdd10s,      callback: this._onTouchedBtnAdd10s },
-            { ui: this._btnAdd1m,       callback: this._onTouchedBtnAdd1m },
-            { ui: this._btnAdd10m,      callback: this._onTouchedBtnAdd10m },
-            { ui: this._btnAdd1h,       callback: this._onTouchedBtnAdd1h },
-            { ui: this._btnAdd10h,      callback: this._onTouchedBtnAdd10h },
-            { ui: this._btnAdd1d,       callback: this._onTouchedBtnAdd1d },
-            { ui: this._btnAdd10d,      callback: this._onTouchedBtnAdd10d },
-            { ui: this._btnSub1s,       callback: this._onTouchedBtnSub1s },
-            { ui: this._btnSub10s,      callback: this._onTouchedBtnSub10s },
-            { ui: this._btnSub1m,       callback: this._onTouchedBtnSub1m },
-            { ui: this._btnSub10m,      callback: this._onTouchedBtnSub10m },
-            { ui: this._btnSub1h,       callback: this._onTouchedBtnSub1h },
-            { ui: this._btnSub10h,      callback: this._onTouchedBtnSub10h },
-            { ui: this._btnSub1d,       callback: this._onTouchedBtnSub1d },
-            { ui: this._btnSub10d,      callback: this._onTouchedBtnSub10d },
+            { ui : this._btnAdd1s,       callback : this._onTouchedBtnAdd1s },
+            { ui : this._btnAdd10s,      callback : this._onTouchedBtnAdd10s },
+            { ui : this._btnAdd1m,       callback : this._onTouchedBtnAdd1m },
+            { ui : this._btnAdd10m,      callback : this._onTouchedBtnAdd10m },
+            { ui : this._btnAdd1h,       callback : this._onTouchedBtnAdd1h },
+            { ui : this._btnAdd10h,      callback : this._onTouchedBtnAdd10h },
+            { ui : this._btnAdd1d,       callback : this._onTouchedBtnAdd1d },
+            { ui : this._btnAdd10d,      callback : this._onTouchedBtnAdd10d },
+            { ui : this._btnSub1s,       callback : this._onTouchedBtnSub1s },
+            { ui : this._btnSub10s,      callback : this._onTouchedBtnSub10s },
+            { ui : this._btnSub1m,       callback : this._onTouchedBtnSub1m },
+            { ui : this._btnSub10m,      callback : this._onTouchedBtnSub10m },
+            { ui : this._btnSub1h,       callback : this._onTouchedBtnSub1h },
+            { ui : this._btnSub10h,      callback : this._onTouchedBtnSub10h },
+            { ui : this._btnSub1d,       callback : this._onTouchedBtnSub1d },
+            { ui : this._btnSub10d,      callback : this._onTouchedBtnSub10d },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -217,9 +217,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this._value = Numbers_Utils.getValueInRange({
-            minValue    : openData.minValue,
-            maxValue    : openData.maxValue,
-            rawValue    : this._value + deltaValue,
+            minValue : openData.minValue,
+            maxValue : openData.maxValue,
+            rawValue : this._value + deltaValue,
         });
         this._updateLabelValue();
     }

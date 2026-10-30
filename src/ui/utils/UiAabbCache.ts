@@ -6,7 +6,9 @@ import {
 
 export class UiAabbCache {
     private _params?    : Ui_Types_UiAabbParams.UiAabbParams;
-    private _result     : AuxiliaryTypes_AuxiliaryTypes.Rectangle = { x: 0, y: 0, width: 0, height: 0 };
+    private _result     : AuxiliaryTypes_AuxiliaryTypes.Rectangle = {
+        x : 0, y : 0, width : 0, height : 0, 
+    };
 
     public getAabb(params: Ui_Types_UiAabbParams.UiAabbParams): AuxiliaryTypes_AuxiliaryTypes.Rectangle {
         if (!checkIsSameParam(this._params, params)) {

@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-shadow
+ 
 export const enum Constants {
     DiscordUrl          = `https://discord.gg/jdtRpY9`,
     GithubUrl           = `https://github.com/Babygogogo/TinyWarsClient`,

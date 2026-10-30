@@ -40,16 +40,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnTileFilter,                          callback: this._onTouchedBtnTileFilter },
-            { ui: this._btnCustomNameId,                        callback: this._onTouchedBtnCustomNameId },
+            { ui : this._btnTileFilter,                          callback : this._onTouchedBtnTileFilter },
+            { ui : this._btnCustomNameId,                        callback : this._onTouchedBtnCustomNameId },
 
-            { ui: this._btnConfirm,                             callback: this._onTouchedBtnConfirm },
+            { ui : this._btnConfirm,                             callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -94,11 +94,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : this._tileFilter,
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : this._tileFilter,
+            callback              : filter => {
                 this._tileFilter = filter;
                 this._updateLabelTileFilter();
             },
@@ -113,19 +113,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const arr = war.getTileMap().getTileCustomNameArray();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1430),
-            availableNumberArray    : Helpers_Collection.createRange(0, Tiles_Constants_Common.CustomName.MaxId + 1, 1),
-            currentNumber           : this._customNameId,
-            columnsCount            : 4,
-            showNumber              : true,
-            getNumberMainText       : num => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1430),
+            availableNumberArray : Helpers_Collection.createRange(0, Tiles_Constants_Common.CustomName.MaxId + 1, 1),
+            currentNumber        : this._customNameId,
+            columnsCount         : 4,
+            showNumber           : true,
+            getNumberMainText    : num => {
                 if (num === 0) {
                     return `(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`;
                 } else {
-                    return Lang_Utils.getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
+                    return Lang_Utils.getLanguageText({ textArray : arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
             },
-            callbackOnConfirm       : num => {
+            callbackOnConfirm : num => {
                 this._customNameId = num;
                 this._updateLabelCustomNameId();
             },
@@ -172,7 +172,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             label.setText(`(${Lang_Utils.getText(Lang_Constants.TextType.B0391)})`);
         } else {
             label.setText(Lang_Utils.getLanguageText({
-                textArray   : this.getOpenData()?.war.getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId()) === customNameId)?.getNameTextArray(),
+                textArray : this.getOpenData()?.war.getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId()) === customNameId)?.getNameTextArray(),
             }) ?? `----`);
         }
     }

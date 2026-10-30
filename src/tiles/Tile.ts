@@ -636,7 +636,7 @@ export class Tile implements Tiles_ITile.ITile {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? unitPlayer.getCoGridIndexListOnMap()
-                : unitPlayer.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
+                : unitPlayer.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet),
         );
 
         for (const skillId of unitPlayer.getCoCurrentSkills()) {
@@ -652,7 +652,7 @@ export class Tile implements Tiles_ITile.ITile {
                     ((isCoOnboard) || (isInCozByPreviewSettings) || (gridIndex.checkIsInsideCoSkillArea({
                         coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                        coZoneRadius             : coZoneRadius
+                        coZoneRadius             : coZoneRadius,
                     })))
                 ) {
                     return rawDefenseAmount;
@@ -823,7 +823,7 @@ export class Tile implements Tiles_ITile.ITile {
             this.getIncomePerTurn()
             * war.getCommonSettingManager().getPlayerRule(playerIndex).getIncomeMultiplier()
             / 100
-            * modifierForSkill
+            * modifierForSkill,
         );
     }
 
@@ -1095,7 +1095,7 @@ export class Tile implements Tiles_ITile.ITile {
 
         return Math.max(
             0,
-            this.getCfgVisionRange() + war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getTileVisionRangeModifier()
+            this.getCfgVisionRange() + war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getTileVisionRangeModifier(),
         );
     }
 

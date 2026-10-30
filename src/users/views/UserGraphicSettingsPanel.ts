@@ -59,18 +59,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,                    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyUserSettingsIsShowGridBorderChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged,     callback: this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged,    callback: this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsScreenVibrationEnabledChanged,         callback: this._onNotifyUserSettingIsScreenVibrationEnabled },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,                    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback : this._onNotifyUserSettingsIsShowGridBorderChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsUnitFlickeringOnFullEnergyChanged,     callback : this._onNotifyUserSettingsIsUnitFlickeringOnFullEnergyChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsUnitMoveAniSpeedMultiplierPctChanged,    callback : this._onNotifyUserSettingsUnitMoveAniSpeedMultiplierPctChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsScreenVibrationEnabledChanged,         callback : this._onNotifyUserSettingIsScreenVibrationEnabled },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnSetOpacity,          callback: this._onTouchedBtnSetOpacity },
-            { ui: this._btnSetOrientation,      callback: this._onTouchedBtnSetOrientation },
-            { ui: this._btnSetStageScaler,      callback: this._onTouchedBtnSetStageScaler },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSetOpacity,          callback : this._onTouchedBtnSetOpacity },
+            { ui : this._btnSetOrientation,      callback : this._onTouchedBtnSetOrientation },
+            { ui : this._btnSetStageScaler,      callback : this._onTouchedBtnSetStageScaler },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -82,8 +82,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
                 Users_Proxy.reqUserSetSettings({
-                    unitAndTileTextureVersion   : Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1 ? Graphics_Constants.TextureVersionId.V0 : Graphics_Constants.TextureVersionId.V1,
-                    coBgmSettings               : [],
+                    unitAndTileTextureVersion : Users_Model.getSelfSettingsTextureVersion() === Graphics_Constants.TextureVersionId.V1 ? Graphics_Constants.TextureVersionId.V0 : Graphics_Constants.TextureVersionId.V1,
+                    coBgmSettings             : [],
                 });
             }
         });
@@ -114,27 +114,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         this._uiSwitchShowGridBorder.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                isShowGridBorder: !Users_Model.getSelfSettingsIsShowGridBorder(),
-                coBgmSettings   : [],
+                isShowGridBorder : !Users_Model.getSelfSettingsIsShowGridBorder(),
+                coBgmSettings    : [],
             });
         });
         this._uiSwitchUnitFlickering.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                isUnitFlickeringOnFullEnergy: !Users_Model.getSelfSettingsIsUnitFlickeringOnFullEnergy(),
-                coBgmSettings               : [],
+                isUnitFlickeringOnFullEnergy : !Users_Model.getSelfSettingsIsUnitFlickeringOnFullEnergy(),
+                coBgmSettings                : [],
             });
         });
         this._uiSwitchUnitMoveFaster.setCallbackOnTouch(() => {
             const pct = Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct();
             Users_Proxy.reqUserSetSettings({
-                unitMoveAniSpeedMultiplierPct   : pct === 100 ? 300 : 100,
-                coBgmSettings                   : [],
+                unitMoveAniSpeedMultiplierPct : pct === 100 ? 300 : 100,
+                coBgmSettings                 : [],
             });
         });
         this._uiSwitchScreenVibration.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                isScreenVibrationEnabled: !Users_Model.getSelfSettingsIsScreenVibrationEnabled(),
-                coBgmSettings           : [],
+                isScreenVibrationEnabled : !Users_Model.getSelfSettingsIsScreenVibrationEnabled(),
+                coBgmSettings            : [],
             });
         });
 
@@ -178,10 +178,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
-                currentNumber           : currentRotation,
-                availableNumberArray    : [0, 1, 2, 3],
-                getNumberMainText       : num => {
+                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
+                currentNumber        : currentRotation,
+                availableNumberArray : [0, 1, 2, 3],
+                getNumberMainText    : num => {
                     switch (num) {
                         case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0377);
                         case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0419);
@@ -190,7 +190,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         default : return Lang_Constants.UndefinedError;
                     }
                 },
-                callbackOnConfirm       : num => {
+                callbackOnConfirm : num => {
                     try {
                         LocalData_Storage.setScreenRotation(num);
                         inject.setScreenOrientation(num);

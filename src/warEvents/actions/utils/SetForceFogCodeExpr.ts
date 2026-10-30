@@ -20,9 +20,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getForceFogCode(),
-            expressionInfo          : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getForceFogCode(),
+            expressionInfo       : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -30,9 +30,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getTurnsCount(),
-            expressionInfo          : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getTurnsCount(),
+            expressionInfo       : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -64,9 +64,9 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
     {
         const info      = WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getForceFogCode(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getForceFogCode(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -76,9 +76,9 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
     {
         const info      = WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getTurnsCount(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getTurnsCount(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -92,7 +92,7 @@ export function getErrorTip(data: WeaSetForceFogCodeExpr, customCounterNameSet: 
 export async function applyWithExtraData(_action: WeaSetForceFogCodeExpr): Promise<void> {
     // nothing to do
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const forceFogCode = getForceFogCode(action.getForceFogCode() ?? ``, war);
     if (forceFogCode == null) {
@@ -115,9 +115,9 @@ export async function applyWithoutExtraData(action: WeaSetForceFogCodeExpr, _isF
         const expirePlayerIndex   = turnManager.getPlayerIndexInTurn();
         const turnIndex           = turnManager.getTurnIndex();
         const expireTurnIndex     = Numbers_Utils.getValueInRange({
-            minValue    : turnIndex,
-            maxValue    : Numbers_Constants.MaxInt32,
-            rawValue    : turnIndex + turnsCount
+            minValue : turnIndex,
+            maxValue : Numbers_Constants.MaxInt32,
+            rawValue : turnIndex + turnsCount,
         });
         fogMap.setForceExpirePlayerIndex(expirePlayerIndex);
         fogMap.setForceExpireTurnIndex(expireTurnIndex);

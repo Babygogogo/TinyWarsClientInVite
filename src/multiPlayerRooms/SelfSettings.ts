@@ -104,27 +104,27 @@ function generateAvailableCoIdArray(roomInfo: RoomInfo, gcData: GameConfigs_Game
     const warRuleCommonData = Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData());
     if (roomInfo instanceof AtrRoomInfo) {
         return [...PlayerRules_Utils.getFinalAtwHumanCoIdSet({
-            playerRule                  : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
-            gameConfig                  : gcData,
-            hasFogByDefault             : warRuleCommonData.getHasFogByDefault(),
-            includeRandom               : true,
-            bannedCoCategoryIdSetByBp   : bannedCoCategoryIdSet,
+            playerRule                : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
+            gameConfig                : gcData,
+            hasFogByDefault           : warRuleCommonData.getHasFogByDefault(),
+            includeRandom             : true,
+            bannedCoCategoryIdSetByBp : bannedCoCategoryIdSet,
         })];
     } else if (roomInfo instanceof MmrRoomInfo) {
         return [...PlayerRules_Utils.getFinalMmwHumanCoIdSet({
-            playerRule                  : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
-            gameConfig                  : gcData,
-            hasFogByDefault             : warRuleCommonData.getHasFogByDefault(),
-            includeRandom               : true,
-            bannedCoCategoryIdSetByBp   : bannedCoCategoryIdSet,
+            playerRule                : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
+            gameConfig                : gcData,
+            hasFogByDefault           : warRuleCommonData.getHasFogByDefault(),
+            includeRandom             : true,
+            bannedCoCategoryIdSetByBp : bannedCoCategoryIdSet,
         })];
     } else if (roomInfo instanceof MrrRoomInfo) {
         return [...PlayerRules_Utils.getFinalMrwHumanCoIdSet({
-            playerRule                  : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
-            gameConfig                  : gcData,
-            hasFogByDefault             : warRuleCommonData.getHasFogByDefault(),
-            includeRandom               : true,
-            bannedCoCategoryIdSetByBp   : bannedCoCategoryIdSet,
+            playerRule                : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex),
+            gameConfig                : gcData,
+            hasFogByDefault           : warRuleCommonData.getHasFogByDefault(),
+            includeRandom             : true,
+            bannedCoCategoryIdSetByBp : bannedCoCategoryIdSet,
         })];
     } else {
         throw Helpers_Misc.newError(`Unknown room type.`);

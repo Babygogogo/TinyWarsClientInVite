@@ -191,7 +191,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         slotIndex     : null,
                         slotExtraData : null,
                     });
-                }
+                },
             });
         }
     }
@@ -217,7 +217,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
             callback   : () => {
                 Helpers_GameFlow.gotoMfrCreateSettingsPanel(warData);
-            }
+            },
         });
     }
     private _onTouchedBtnEditMap(): void {
@@ -263,7 +263,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 } else {
                     Helpers_GameFlow.gotoRwReplayListPanel();
                 }
-            }
+            },
         });
     }
     private _onTouchedBtnLobby(): void {

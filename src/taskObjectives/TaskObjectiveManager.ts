@@ -46,7 +46,7 @@ export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManage
 
     public serialize(): SerialTaskObjectiveManager {
         return SerialTaskObjectiveManager.fromJson({
-            stateArray  : this.getStateArray().map(v => v.toJson()),
+            stateArray : this.getStateArray().map(v => v.toJson()),
         });
     }
     public serializeForCreateMfr(): SerialTaskObjectiveManager {

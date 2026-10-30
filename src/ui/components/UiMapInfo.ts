@@ -79,13 +79,13 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,          callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetMapRating,      callback: this._onNotifyMsgUserSetMapRating },
-            { type: Notifications_TypeId.TypeId.MsgNormalMapGetBriefData, callback: this._onNotifyMsgNormalMapGetBriefData },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,          callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetMapRating,      callback : this._onNotifyMsgUserSetMapRating },
+            { type : Notifications_TypeId.TypeId.MsgNormalMapGetBriefData, callback : this._onNotifyMsgNormalMapGetBriefData },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupMyRating,              callback: this._onTouchedGroupMyRating },
-            { ui: this._groupWarStatistics,         callback: this._onTouchedGroupWarStatistics },
+            { ui : this._groupMyRating,              callback : this._onTouchedGroupMyRating },
+            { ui : this._groupWarStatistics,         callback : this._onTouchedGroupWarStatistics },
         ]);
         this._listTile.setItemRendererClass(TileRenderer);
 
@@ -122,12 +122,12 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
             const minValue = Maps_Constants.Common.MinRating;
             const maxValue = Maps_Constants.Common.MaxRating;
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
-                currentValue    : Users_Model.getMapRating(normalMapId) || 0,
-                minValue        : minValue,
-                maxValue        : maxValue,
-                getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0238),
-                callback        : value => {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0363),
+                currentValue : Users_Model.getMapRating(normalMapId) || 0,
+                minValue     : minValue,
+                maxValue     : maxValue,
+                getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0238),
+                callback     : value => {
                     Users_Proxy.reqUserSetMapRating(normalMapId, value);
                 },
             });
@@ -249,7 +249,7 @@ export class UiMapInfo extends Ui_Components_UiOpenableComponent.UiOpenableCompo
                 } else {
                     imgSetMyRating.setIsVisible(false);
                     imgWarStatistics.setIsVisible(false);
-                    labelMapName.setText(Lang_Utils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+                    labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
                     labelMapId.setText(`${campaignId} - ${campaignMapId}`);
                     labelDesigner.setText(`${Lang_Utils.getText(Lang_Constants.TextType.B0163)}: ${mapRawData.getDesignerName() ?? Lang_Constants.UndefinedError}`);
                     labelPlayersCount.setText(`${mapRawData.getPlayersCountUnneutral()}`);
@@ -324,7 +324,7 @@ function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GameCo
     for (const tileType of gameConfig.getTileTypeArrayForMapInfo()) {
         dataArray.push({
             tileType,
-            num     : tileCountDict.get(tileType) || 0,
+            num : tileCountDict.get(tileType) || 0,
             gameConfig,
         });
     }
@@ -358,7 +358,7 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
         ]);
 
         const tileView      = this._tileView;
@@ -381,15 +381,15 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const tileObjectType    = gameConfig.getTileObjectTypeByTileType(openData.tileType);
         const tileView          = this._tileView;
         tileView.init({
-            tileBaseType            : null,
-            tileBaseShapeId         : null,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : tileObjectType,
-            tileObjectShapeId       : 0,
-            skinId                  : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId        : undefined,
-            gameConfig              : gameConfig,
+            tileBaseType          : null,
+            tileBaseShapeId       : null,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectType        : tileObjectType,
+            tileObjectShapeId     : 0,
+            skinId                : Players_Constants.PlayerIndex.Neutral,
+            overridingSkinId      : undefined,
+            gameConfig            : gameConfig,
         });
         tileView.updateView();
     }

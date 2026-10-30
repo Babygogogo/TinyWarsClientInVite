@@ -102,9 +102,9 @@ export function checkIsValidProduceMaterial(material: number): boolean {
 }
 export function getValidProduceMaterial(material: number): number {
     return Numbers_Utils.getValueInRange({
-        minValue    : Units_Constants.ProduceMaterialHardLimit.Min,
-        maxValue    : Units_Constants.ProduceMaterialHardLimit.Max,
-        rawValue    : Math.floor(material),
+        minValue : Units_Constants.ProduceMaterialHardLimit.Min,
+        maxValue : Units_Constants.ProduceMaterialHardLimit.Max,
+        rawValue : Math.floor(material),
     });
 }
 
@@ -116,8 +116,8 @@ export function checkIsValidPrimaryAmmo(ammo: number): boolean {
 }
 export function getValidPrimaryAmmo(ammo: number): number {
     return Numbers_Utils.getValueInRange({
-        minValue    : Units_Constants.PrimaryAmmoHardLimit.Min,
-        maxValue    : Units_Constants.PrimaryAmmoHardLimit.Max,
-        rawValue    : Math.floor(ammo),
+        minValue : Units_Constants.PrimaryAmmoHardLimit.Min,
+        maxValue : Units_Constants.PrimaryAmmoHardLimit.Max,
+        rawValue : Math.floor(ammo),
     });
 }

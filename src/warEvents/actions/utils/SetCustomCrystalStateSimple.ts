@@ -131,7 +131,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -400,17 +400,17 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomCrystalData.fromJson({
-                radius                          : evalActRadius(action, tile),
-                priority                        : evalActPriority(action, tile),
-                canAffectSelf                   : evalActCanAffectSelf(action, tile),
-                canAffectAlly                   : evalActCanAffectAlly(action, tile),
-                canAffectEnemy                  : evalActCanAffectEnemy(action, tile),
-                offsetFund                      : evalActOffsetFund(action, tile),
-                offsetEnergyPercentage          : evalActOffsetEnergyPercentage(action, tile),
-                offsetHp                        : evalActOffsetHp(action, tile),
-                offsetFuelPercentage            : evalActOffsetFuelPercentage(action, tile),
-                offsetPrimaryAmmoPercentage     : evalActOffsetPrimaryAmmoPercentage(action, tile),
-                canBeFatal                      : evalActCanBeFatal(action, tile),
+                radius                      : evalActRadius(action, tile),
+                priority                    : evalActPriority(action, tile),
+                canAffectSelf               : evalActCanAffectSelf(action, tile),
+                canAffectAlly               : evalActCanAffectAlly(action, tile),
+                canAffectEnemy              : evalActCanAffectEnemy(action, tile),
+                offsetFund                  : evalActOffsetFund(action, tile),
+                offsetEnergyPercentage      : evalActOffsetEnergyPercentage(action, tile),
+                offsetHp                    : evalActOffsetHp(action, tile),
+                offsetFuelPercentage        : evalActOffsetFuelPercentage(action, tile),
+                offsetPrimaryAmmoPercentage : evalActOffsetPrimaryAmmoPercentage(action, tile),
+                canBeFatal                  : evalActCanBeFatal(action, tile),
             }));
         }
     }
@@ -419,28 +419,28 @@ export async function applyWithoutExtraData(action: WeaSetCustomCrystalStateSimp
         for (const [tile, tileCustomCrystalData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
             const newData   = Tiles_Utils_Serialization.create({
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                playerIndex             : tile.getPlayerIndex(),
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                playerIndex       : tile.getPlayerIndex(),
+                baseType          : tile.getBaseType(),
+                baseShapeId       : tile.getBaseShapeId(),
+                decorationType    : tile.getDecorationType(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                objectType        : tile.getObjectType(),
+                objectShapeId     : tile.getObjectShapeId(),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                isHighlighted           : tile.getIsHighlighted(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                isHighlighted          : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
+                currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
+                currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
+                currentHp           : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
 
-                customBuildingData      : null,
-                customCrystalData       : tileCustomCrystalData.toJson(),
-                customCannonData        : null,
-                customLaserTurretData   : null,
+                customBuildingData    : null,
+                customCrystalData     : tileCustomCrystalData.toJson(),
+                customCannonData      : null,
+                customLaserTurretData : null,
             });
 
             tile.init(newData, tile.getGameConfig());
@@ -467,9 +467,9 @@ function evalActRadius(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.Radius.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.Radius.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.Radius.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
@@ -480,9 +480,9 @@ function evalActPriority(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITi
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.Priority.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.Priority.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.Priority.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanAffectSelf(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {
@@ -520,9 +520,9 @@ function evalActOffsetFund(action: WeaSetCustomCrystalStateSimple, tile: Tiles_I
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFund.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
@@ -533,9 +533,9 @@ function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateSimple, t
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetEnergyPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
@@ -546,9 +546,9 @@ function evalActOffsetHp(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITi
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetHp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
@@ -559,9 +559,9 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateSimple, til
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetFuelPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): number {
@@ -572,9 +572,9 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateSimp
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanBeFatal(action: WeaSetCustomCrystalStateSimple, tile: Tiles_ITile.ITile): boolean {

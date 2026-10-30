@@ -24,12 +24,12 @@ export class Turn extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Variables    = Turn.generateVariables();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Turn.VnPlayerIndex,    { desc: Lang_Constants.TextType.A0138, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Turn.VnTeamIndex,      { desc: Lang_Constants.TextType.A0383, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Turn.VnPlayer,         { desc: Lang_Constants.TextType.A0444, resultType: ExpressionParsers_Enums.ResultType.Player, isExtension: false });
-        variables.set(Turn.VnIndex,          { desc: Lang_Constants.TextType.A0445, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Turn.VnPhase,          { desc: Lang_Constants.TextType.A0446, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Turn.VnWar,            { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,    isExtension: false });
+        variables.set(Turn.VnPlayerIndex,    { desc : Lang_Constants.TextType.A0138, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Turn.VnTeamIndex,      { desc : Lang_Constants.TextType.A0383, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Turn.VnPlayer,         { desc : Lang_Constants.TextType.A0444, resultType : ExpressionParsers_Enums.ResultType.Player, isExtension : false });
+        variables.set(Turn.VnIndex,          { desc : Lang_Constants.TextType.A0445, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Turn.VnPhase,          { desc : Lang_Constants.TextType.A0446, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Turn.VnWar,            { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
 
         return variables;
     }

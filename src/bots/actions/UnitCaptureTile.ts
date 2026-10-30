@@ -19,15 +19,17 @@ export async function getScoreAndActionUnitCaptureTile(commonParams: Bots_Common
     } else {
         const score = await getScoreForActionUnitCaptureTile(commonParams, unit, gridIndex);
         return {
-            score   : score,
-            action  : WoContainer.fromJson({ WoUnitCaptureTile: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-            } }),
+            score  : score,
+            action : WoContainer.fromJson({
+                WoUnitCaptureTile : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                }, 
+            }),
         };
     }
 }

@@ -39,8 +39,7 @@ export type OpenData = {
 } | null;
 export class Page
     extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData>
-{
+    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
     private readonly _uiMapInfo!    : Ui_Interfaces_IUiMapInfo.IUiMapInfo;
     private readonly _labelLoading! : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelNoData!  : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -55,22 +54,22 @@ export class Page
             this,
             resTypeId === Graphics_Constants.TextureResolutionId.Dor
                 ? `common/CommonWarMapInfoPage.exml`
-                : `common/CommonWarMapInfoPage_res${Helpers_Text.getNumText(resTypeId)}.exml`
+                : `common/CommonWarMapInfoPage_res${Helpers_Text.getNumText(resTypeId)}.exml`,
         );
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupZoomMap,               callback: this._onTouchedGroupZoomMap },
+            { ui : this._groupZoomMap,               callback : this._onTouchedGroupZoomMap },
         ]);
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._updateComponentsForLanguage();
@@ -149,13 +148,13 @@ export class Page
             const mapInfo = openData.mapInfo;
             if (mapInfo) {
                 uiMapInfo.setOpenData({
-                    mapInfo     : mapInfo,
+                    mapInfo : mapInfo,
                 });
                 uiMapInfo.applyOpenData();
                 zoomMap.showMapByMapData({
-                    mapRawData          : mapInfo.mapRawData,
-                    gameConfig          : mapInfo.gameConfig,
-                    overridingPlayers   : mapInfo.overridingPlayers,
+                    mapRawData        : mapInfo.mapRawData,
+                    gameConfig        : mapInfo.gameConfig,
+                    overridingPlayers : mapInfo.overridingPlayers,
                 });
 
                 return;
@@ -171,9 +170,9 @@ export class Page
                 });
                 uiMapInfo.applyOpenData();
                 await zoomMap.showMapByWarData({
-                    warData             : warData,
-                    showInitialWarData  : warInfo.showInitialWarData,
-                    overridingPlayers   : warInfo.overridingPlayers,
+                    warData            : warData,
+                    showInitialWarData : warInfo.showInitialWarData,
+                    overridingPlayers  : warInfo.overridingPlayers,
                 });
 
                 return;

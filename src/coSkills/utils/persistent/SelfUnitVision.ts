@@ -39,9 +39,9 @@ export function getTotalRangeOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
         return 0;
@@ -84,9 +84,9 @@ export function checkCanSeeThrough({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
         return false;

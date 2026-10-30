@@ -168,7 +168,7 @@ export class Idle implements ActionPlanners_States_IState.IState {
     public doApplyOnTap(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): void {
         this.apply(
             actionPlanner,
-            actionPlanner.getStateId() === ActionPlanners_Constants.StateId.Idle ? Sounds_Constants.ShortSfxCode.CursorMove01 : void 0
+            actionPlanner.getStateId() === ActionPlanners_Constants.StateId.Idle ? Sounds_Constants.ShortSfxCode.CursorMove01 : void 0,
         );
     }
 

@@ -104,13 +104,13 @@ export class UiTileView implements Ui_Interfaces_IUiTileView.IUiTileView {
 
                 const overridingSkinId = this._overridingSkinId ?? -1;
                 imgObject.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
-                    version     : version,
-                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                    skinId      : overridingSkinId > 0 ? overridingSkinId : Helpers_Misc.getExisted(this._skinId),
-                    objectType  : objectType,
-                    isDark      : false,
-                    shapeId     : this._objectShapeId ?? 0,
-                    tickCount   : tickCount,
+                    version    : version,
+                    themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId     : overridingSkinId > 0 ? overridingSkinId : Helpers_Misc.getExisted(this._skinId),
+                    objectType : objectType,
+                    isDark     : false,
+                    shapeId    : this._objectShapeId ?? 0,
+                    tickCount  : tickCount,
                 }));
             }
         }
@@ -124,11 +124,11 @@ export class UiTileView implements Ui_Interfaces_IUiTileView.IUiTileView {
                 imgBase.setIsVisible(true);
                 imgBase.loadSource(Common_Model_CommonModel.getCachedTileBaseImageSource({
                     version,
-                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                    skinId      : ForceSkins_Constants.SkinId.Neutral,
+                    themeType : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId    : ForceSkins_Constants.SkinId.Neutral,
                     baseType,
-                    isDark      : false,
-                    shapeId     : Helpers_Misc.getExisted(this._baseShapeId),
+                    isDark    : false,
+                    shapeId   : Helpers_Misc.getExisted(this._baseShapeId),
                     tickCount,
                 }));
             }
@@ -143,11 +143,11 @@ export class UiTileView implements Ui_Interfaces_IUiTileView.IUiTileView {
                 imgDecoration.setIsVisible(true);
                 imgDecoration.loadSource(Common_Model_CommonModel.getCachedTileDecorationImageSource({
                     version,
-                    themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                    skinId      : ForceSkins_Constants.SkinId.Neutral,
-                    tileDecorationType: decorationType,
-                    isDark      : false,
-                    shapeId     : Helpers_Misc.getExisted(this._decorationShapeId),
+                    themeType          : Tiles_Constants_Common.ThemeTypeId.Normal,
+                    skinId             : ForceSkins_Constants.SkinId.Neutral,
+                    tileDecorationType : decorationType,
+                    isDark             : false,
+                    shapeId            : Helpers_Misc.getExisted(this._decorationShapeId),
                     tickCount,
                 }));
             }

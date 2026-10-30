@@ -37,11 +37,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnBatch,               callback: this._onTouchedBtnBatch },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnBatch,               callback : this._onTouchedBtnBatch },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -94,8 +94,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForCustomCounterRenderer[] = [];
         for (let nameId = Units_Constants.CustomName.MinId; nameId <= Units_Constants.CustomName.MaxId; ++nameId) {
             dataArray.push({
-                war     : war,
-                nameId  : nameId,
+                war    : war,
+                nameId : nameId,
             });
         }
 
@@ -117,10 +117,10 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgSelected,                        callback: this._onTouchedImgSelected },
+            { ui : this._imgSelected,                        callback : this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,   callback: this._onNotifyBwUnitCustomNameIdChanged },
+            { type : Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,   callback : this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -130,9 +130,9 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -163,11 +163,11 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const index         = nameArray.findIndex(v => (v.getNameId()) === nameId);
         const nameData      = nameArray[index];
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            getTitleText        : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1433)} #${nameId}`,
-            currentTextArray    : nameData?.getNameTextArray() ?? [],
-            maxTextLength       : Units_Constants.CustomName.MaxLength,
-            allowEmpty          : true,
-            callback            : textArray => {
+            getTitleText     : () => `${Lang_Utils.getText(Lang_Constants.TextType.B1433)} #${nameId}`,
+            currentTextArray : nameData?.getNameTextArray() ?? [],
+            maxTextLength    : Units_Constants.CustomName.MaxLength,
+            allowEmpty       : true,
+            callback         : textArray => {
                 if (!textArray.length) {
                     nameArray.splice(index, 1);
                 } else {
@@ -176,13 +176,13 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                     } else {
                         if (nameArray.length) {
                             nameArray.push(UnitCustomName.fromJson({
-                                nameId          : nameId,
-                                nameTextArray   : textArray.map(v => v.toJson()),
+                                nameId        : nameId,
+                                nameTextArray : textArray.map(v => v.toJson()),
                             }));
                         } else {
                             unitMap.setUnitCustomNameArray([UnitCustomName.fromJson({
-                                nameId          : nameId,
-                                nameTextArray   : textArray.map(v => v.toJson()),
+                                nameId        : nameId,
+                                nameTextArray : textArray.map(v => v.toJson()),
                             })]);
                         }
                     }
@@ -209,14 +209,14 @@ class NameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const languageType1 = Lang_Utils.getCurrentLanguageType();
         const languageType2 = Lang_Utils.getSecondaryLanguageType();
         this._labelName1.setText(Lang_Utils.getLanguageText({
-            textArray       : nameTextArray,
-            languageType    : languageType1,
-            useAlternate    : false,
+            textArray    : nameTextArray,
+            languageType : languageType1,
+            useAlternate : false,
         }) ?? `----`);
         this._labelName2.setText(Lang_Utils.getLanguageText({
-            textArray       : nameTextArray,
-            languageType    : languageType2,
-            useAlternate    : false,
+            textArray    : nameTextArray,
+            languageType : languageType2,
+            useAlternate : false,
         }) ?? `----`);
 
         this._updateLabelId();

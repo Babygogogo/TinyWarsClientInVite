@@ -55,12 +55,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetOngoingWarInfos,   callback: this._onNotifyMsgMpwWatchGetOngoingWarInfos },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetOngoingWarInfos,   callback : this._onNotifyMsgMpwWatchGetOngoingWarInfos },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -155,7 +155,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const warId of WatchWar_Model_WwModel.getOngoingWarIdArray() || []) {
             dataArray.push({
                 warId,
-                panel   : this,
+                panel : this,
             });
         }
 
@@ -182,22 +182,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -258,58 +258,58 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -333,8 +333,7 @@ interface DataForWarRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class WarRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarRenderer> {
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;

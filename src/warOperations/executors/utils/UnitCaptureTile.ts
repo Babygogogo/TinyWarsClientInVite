@@ -44,7 +44,7 @@ function fastExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -92,8 +92,8 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
         const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
         const extraUnit             = await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : false,
+            aiming                : null,
+            deleteViewAfterMoving : false,
         });
 
         {
@@ -108,20 +108,20 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
                     commonExtraData
                         .getTileArrayAfterAction()
                         .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex())))
+                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
                         ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04
+                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitCaptureTile_04,
                 );
                 const rawNewCapturePoint   = tileDataAfterAction.getCurrentCapturePoint();
 
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue            : maxCapturePoint,
-                        currentValue        : currentCapturePoint,
-                        newValue            : rawNewCapturePoint > currentCapturePoint
+                        maxValue     : maxCapturePoint,
+                        currentValue : currentCapturePoint,
+                        newValue     : rawNewCapturePoint > currentCapturePoint
                             ? rawNewCapturePoint
                             : Math.max(rawNewCapturePoint, maxCapturePoint),
-                        callbackOnFinish    : () => resolve(),
+                        callbackOnFinish : () => resolve(),
                     });
                 });
             }
@@ -135,7 +135,7 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -143,7 +143,7 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -189,10 +189,10 @@ async function normalExeUnitCaptureTile(war: BaseWar_Interface_IBwWar.IBwWar, ac
             if (isSelfInTurn) {
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue            : maxCapturePoint,
-                        newValue            : newCapturePoint,
-                        currentValue        : currentCapturePoint,
-                        callbackOnFinish    : () => resolve(),
+                        maxValue         : maxCapturePoint,
+                        newValue         : newCapturePoint,
+                        currentValue     : currentCapturePoint,
+                        callbackOnFinish : () => resolve(),
                     });
                 });
             }

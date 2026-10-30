@@ -97,14 +97,14 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
     private _imgsForAttackableGrids?        : Ui_Interfaces_IUiImage.IUiImage[][];
     private _imgsForVisibleGrids?           : Ui_Interfaces_IUiImage.IUiImage[][];
     private readonly _imgForMoveDestination = new Ui_Components_UiImage.UiImage({
-        textureSourceName: Helpers_ImageSource.getMovableAreaByTick(0)
+        textureSourceName : Helpers_ImageSource.getMovableAreaByTick(0),
     });
 
     private _conForUnits            = new Ui_Components_UiContainer.UiContainer();
     private _focusUnitViews         = new Map<number, Units_IUnitView.IUnitView>();
 
     private _notifyEvents: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.GridAnimationTick,       callback: this._onNotifyGridAnimationTick },
+        { type : Notifications_TypeId.TypeId.GridAnimationTick,       callback : this._onNotifyGridAnimationTick },
     ];
 
     public constructor() {
@@ -174,7 +174,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
                 const image     = new Ui_Components_UiImage.UiImage({
-                    textureSourceName: Helpers_ImageSource.getMovableAreaByTick(0)
+                    textureSourceName : Helpers_ImageSource.getMovableAreaByTick(0),
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -204,7 +204,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
                 const image     = new Ui_Components_UiImage.UiImage({
-                    textureSourceName: Helpers_ImageSource.getAttackableAreaByTick(0)
+                    textureSourceName : Helpers_ImageSource.getAttackableAreaByTick(0),
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -229,7 +229,7 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
                 const image     = new Ui_Components_UiImage.UiImage({
-                    textureSourceName: Helpers_ImageSource.getVisibleAreaByTick(0)
+                    textureSourceName : Helpers_ImageSource.getVisibleAreaByTick(0),
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -986,7 +986,7 @@ function _createImgForMovePathGrid(prev: AuxiliaryTypes_AuxiliaryTypes.Undefinab
     if (!source) {
         return null;
     } else {
-        const image = new Ui_Components_UiImage.UiImage({ textureSourceName: source });
+        const image = new Ui_Components_UiImage.UiImage({ textureSourceName : source });
         image.setIsSmoothing(false);
         image.setX(curr.getX() * getGridWidth());
         image.setY(curr.getY() * getGridHeight());

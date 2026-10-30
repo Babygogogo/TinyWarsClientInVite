@@ -29,12 +29,12 @@ function fastExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const skillDataArray    = actionExtraData.getSkillDataArray();
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkill({
-                player              : playerInTurn,
-                skillId             : skillIdArray[skillIndex],
-                skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_02),
-                targetGridIndexes   : action.getTargetGridIndexArray(),
-                hasExtraData        : true,
-                isFastExecute       : true,
+                player            : playerInTurn,
+                skillId           : skillIdArray[skillIndex],
+                skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_02),
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                hasExtraData      : true,
+                isFastExecute     : true,
             });
         }
 
@@ -55,17 +55,17 @@ function fastExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: W
 
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkill({
-                player              : playerInTurn,
-                skillId             : skillIdArray[skillIndex],
-                skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
-                    war         : war,
-                    player      : playerInTurn,
-                    skillType   : skillType,
-                    skillIndex  : skillIndex,
+                player    : playerInTurn,
+                skillId   : skillIdArray[skillIndex],
+                skillData : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                    war        : war,
+                    player     : playerInTurn,
+                    skillType  : skillType,
+                    skillIndex : skillIndex,
                 }),
-                targetGridIndexes   : action.getTargetGridIndexArray(),
-                hasExtraData        : false,
-                isFastExecute       : true,
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                hasExtraData      : false,
+                isFastExecute     : true,
             });
         }
 
@@ -104,12 +104,12 @@ function normalExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action:
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkill({
-                player              : playerInTurn,
-                skillId             : skillIdArray[skillIndex],
-                skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_02),
-                targetGridIndexes   : action.getTargetGridIndexArray(),
-                hasExtraData        : true,
-                isFastExecute       : false,
+                player            : playerInTurn,
+                skillId           : skillIdArray[skillIndex],
+                skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_02),
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                hasExtraData      : true,
+                isFastExecute     : false,
             });
         }
 
@@ -141,17 +141,17 @@ function normalExePlayerUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action:
         const skillIdArray = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             CoSkills_Utils_Executor.executeInstantSkill({
-                player              : playerInTurn,
-                skillId             : skillIdArray[skillIndex],
-                skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
-                    war         : war,
-                    player      : playerInTurn,
-                    skillType   : skillType,
-                    skillIndex  : skillIndex,
+                player    : playerInTurn,
+                skillId   : skillIdArray[skillIndex],
+                skillData : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                    war        : war,
+                    player     : playerInTurn,
+                    skillType  : skillType,
+                    skillIndex : skillIndex,
                 }),
-                targetGridIndexes   : action.getTargetGridIndexArray(),
-                hasExtraData        : false,
-                isFastExecute       : false,
+                targetGridIndexes : action.getTargetGridIndexArray(),
+                hasExtraData      : false,
+                isFastExecute     : false,
             });
         }
 

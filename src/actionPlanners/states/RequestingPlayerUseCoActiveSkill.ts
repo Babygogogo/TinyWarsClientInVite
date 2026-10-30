@@ -63,10 +63,10 @@ export class RequestingPlayerUseCoActiveSkill implements ActionPlanners_States_I
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoPlayerUseCoSkill  : {
-                    skillType               : coSkillTypeId,
-                    targetGridIndexArray    : targetGridIndexArray?.map(v => v.toProto().toJson()) ?? [],
+                operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoPlayerUseCoSkill : {
+                    skillType            : coSkillTypeId,
+                    targetGridIndexArray : targetGridIndexArray?.map(v => v.toProto().toJson()) ?? [],
                 },
             }));
 
@@ -78,9 +78,9 @@ export class RequestingPlayerUseCoActiveSkill implements ActionPlanners_States_I
             actionPlanner.updateView();
 
             SinglePlayerWar_Model_SpwLocalProxy.reqPlayerUseCoActiveSkill({
-                war                     : war,
-                skillType               : coSkillTypeId,
-                targetGridIndexArray    : targetGridIndexArray,
+                war                  : war,
+                skillType            : coSkillTypeId,
+                targetGridIndexArray : targetGridIndexArray,
             });
         }
     }

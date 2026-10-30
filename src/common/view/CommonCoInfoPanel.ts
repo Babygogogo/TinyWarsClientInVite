@@ -28,11 +28,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,   callback : this.closePanel },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -74,8 +74,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const uiCoInfo = this._uiCoInfo;
         uiCoInfo.setOpenData({
-            gameConfig   : openData.gameConfig,
-            coId            : openData.coId,
+            gameConfig : openData.gameConfig,
+            coId       : openData.coId,
         });
         await uiCoInfo.applyOpenData();
     }

@@ -487,7 +487,7 @@ function checkShouldDestroyUnit(
     action      : WeaSetTileTypeExpr,
     unitHandler : UnitHandler,
     cfg         : TileTemplateCfg,
-    unit        : Units_IUnit.IUnit | null
+    unit        : Units_IUnit.IUnit | null,
 ): boolean {
     if (unit == null) {
         return false;
@@ -559,7 +559,7 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile):
             autoAdjustBase       : false,
             autoAdjustObject     : false,
             autoAdjustDecoration : false,
-            destroyUnit          : shouldDestroyUnit
+            destroyUnit          : shouldDestroyUnit,
         };
     }
 
@@ -601,7 +601,7 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: Tiles_ITile.ITile):
         autoAdjustBase       : newBaseShapeId < 0,
         autoAdjustObject     : newObjectShapeId < 0,
         autoAdjustDecoration : newDecorationShapeId < 0,
-        destroyUnit          : shouldDestroyUnit
+        destroyUnit          : shouldDestroyUnit,
     };
 }
 function applyNewTileDataDict(dict: Map<Tiles_ITile.ITile, NewTileData>, war: BaseWar_Interface_IBwWar.IBwWar, isFast: boolean): void {

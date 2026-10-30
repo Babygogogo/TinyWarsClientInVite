@@ -61,21 +61,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnStart,           callback: this._onTouchedBtnStart },
-            { ui: this._groupProfile,       callback: this._onTouchedGroupProfile },
-            { ui: this._groupChat,          callback: this._onTouchedGroupChat },
-            { ui: this._groupMapEditor,     callback: this._onTouchedGroupMapEditor },
-            { ui: this._groupGameChart,     callback: this._onTouchedGroupGameChart },
-            { ui: this._groupVersion,       callback: this._onTouchedGroupVersion },
+            { ui : this._btnStart,           callback : this._onTouchedBtnStart },
+            { ui : this._groupProfile,       callback : this._onTouchedGroupProfile },
+            { ui : this._groupChat,          callback : this._onTouchedGroupChat },
+            { ui : this._groupMapEditor,     callback : this._onTouchedGroupMapEditor },
+            { ui : this._groupGameChart,     callback : this._onTouchedGroupGameChart },
+            { ui : this._groupVersion,       callback : this._onTouchedGroupVersion },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.TimeTick,                        callback: this._onNotifyTimeTick },
-            { type: Notifications_TypeId.TypeId.MsgUserLogout,                   callback: this._onMsgUserLogout },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback: this._onMsgChatGetAllReadProgressList },
-            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback: this._onMsgChatUpdateReadProgress },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback: this._onMsgChatGetAllMessages },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,               callback: this._onMsgChatAddMessages },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.TimeTick,                        callback : this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.MsgUserLogout,                   callback : this._onMsgUserLogout },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onMsgChatGetAllReadProgressList },
+            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onMsgChatUpdateReadProgress },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onMsgChatAddMessages },
         ]);
 
         applyTouchEnabled(this._groupProfile);
@@ -89,9 +89,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const imgStart = this._imgStart;
         imgStart.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgStart);
-        Tween_Executor.Executor.get(imgStart, { loop: true })
-            .to({ customAlpha: 0.8 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgStart, { loop : true })
+            .to({ customAlpha : 0.8 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -139,7 +139,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().UserOnlineUsersPanel);
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().ChatPanel);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
-            userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
+            userId : Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
         });
     }
 
@@ -149,7 +149,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().UserOnlineUsersPanel);
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().UserPanel);
         if (!GamePanels_Manager.getRunningPanel(GamePanels_Dict.getDict().ChatPanel)) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
         } else {
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().ChatPanel);
         }
@@ -212,41 +212,41 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupContainer,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+            obj        : this._groupContainer,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupProfile,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+            obj        : this._groupProfile,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupChat,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 66,
+            obj        : this._groupChat,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 66,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupMapEditor,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 132,
+            obj        : this._groupMapEditor,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 132,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupGameChart,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            waitTime    : 200,
+            obj        : this._groupGameChart,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            waitTime   : 200,
         });
 
         await Timer_TimerModel.wait(200 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupContainer,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupContainer,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
 
         await Timer_TimerModel.wait();

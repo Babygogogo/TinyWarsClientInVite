@@ -158,7 +158,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -507,21 +507,21 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomBuildingData.fromJson({
-                defenseAmount                 : evalActDefenseAmount(action, tile),
-                isDefeatedOnCapture           : evalActIsDefeatedOnCapture(action, tile),
-                incomePerTurn                 : evalActIncomePerTurn(action, tile),
-                visionRange                   : evalActVisionRange(action, tile),
-                isVisionEnabledForAllPlayers  : evalActIsVisionEnabledForAllPlayers(action, tile),
-                globalAttackBonus             : evalActGlobalAttackBonus(action, tile),
-                globalDefenseBonus            : evalActGlobalDefenseBonus(action, tile),
-                defenseUnitTypeArray          : evalActDefenseUnitTypeArray(action, tile),
-                maxCapturePoint               : evalActMaxCapturePoint(action, tile),
-                repairNormalizedHp            : evalActRepairNormalizedHp(action, tile),
-                repairUnitTypeArray           : evalActRepairUnitTypeArray(action, tile),
-                hideUnitTypeArray             : evalActHideUnitTypeArray(action, tile),
-                produceUnitTypeArray          : evalActProduceUnitTypeArray(action, tile),
-                unitTypeArrayForCoBoard       : evalActUnitTypeArrayForCoBoard(action, tile),
-                blockEnemyUnitTypeArray       : evalActBlockEnemyUnitTypeArray(action, tile),
+                defenseAmount                : evalActDefenseAmount(action, tile),
+                isDefeatedOnCapture          : evalActIsDefeatedOnCapture(action, tile),
+                incomePerTurn                : evalActIncomePerTurn(action, tile),
+                visionRange                  : evalActVisionRange(action, tile),
+                isVisionEnabledForAllPlayers : evalActIsVisionEnabledForAllPlayers(action, tile),
+                globalAttackBonus            : evalActGlobalAttackBonus(action, tile),
+                globalDefenseBonus           : evalActGlobalDefenseBonus(action, tile),
+                defenseUnitTypeArray         : evalActDefenseUnitTypeArray(action, tile),
+                maxCapturePoint              : evalActMaxCapturePoint(action, tile),
+                repairNormalizedHp           : evalActRepairNormalizedHp(action, tile),
+                repairUnitTypeArray          : evalActRepairUnitTypeArray(action, tile),
+                hideUnitTypeArray            : evalActHideUnitTypeArray(action, tile),
+                produceUnitTypeArray         : evalActProduceUnitTypeArray(action, tile),
+                unitTypeArrayForCoBoard      : evalActUnitTypeArrayForCoBoard(action, tile),
+                blockEnemyUnitTypeArray      : evalActBlockEnemyUnitTypeArray(action, tile),
             }));
         }
     }
@@ -530,28 +530,28 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
         for (const [tile, tileCustomBuildingData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
             const newData   = Tiles_Utils_Serialization.create({
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                playerIndex             : tile.getPlayerIndex(),
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                playerIndex       : tile.getPlayerIndex(),
+                baseType          : tile.getBaseType(),
+                baseShapeId       : tile.getBaseShapeId(),
+                decorationType    : tile.getDecorationType(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                objectType        : tile.getObjectType(),
+                objectShapeId     : tile.getObjectShapeId(),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                isHighlighted           : tile.getIsHighlighted(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                isHighlighted          : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     Tiles_Utils_Common.getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   Tiles_Utils_Common.getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             Tiles_Utils_Common.getMaxHp(cfg, tileCustomBuildingData) ?? 0),
+                currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     Tiles_Utils_Common.getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
+                currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   Tiles_Utils_Common.getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
+                currentHp           : Math.min(tile.getCurrentHp(),             Tiles_Utils_Common.getMaxHp(cfg, tileCustomBuildingData) ?? 0),
 
-                customBuildingData      : tileCustomBuildingData.toJson(),
-                customCrystalData       : null,
-                customCannonData        : null,
-                customLaserTurretData   : null,
+                customBuildingData    : tileCustomBuildingData.toJson(),
+                customCrystalData     : null,
+                customCannonData      : null,
+                customLaserTurretData : null,
             });
 
             tile.init(newData, tile.getGameConfig());
@@ -578,9 +578,9 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: Til
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.DefenseAmount.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.DefenseAmount.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Building.DefenseAmount.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.DefenseAmount.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
@@ -605,9 +605,9 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: T
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
+        minValue : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.MaxCapturePoint.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): boolean {
@@ -631,9 +631,9 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
+        minValue : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.RepairNormalizedHp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {
@@ -654,9 +654,9 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: Til
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.IncomePerTurn.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
@@ -667,9 +667,9 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: Tiles
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.VisionRange.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Building.VisionRange.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.VisionRange.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): boolean {
@@ -709,9 +709,9 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile:
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.GlobalAttackBonus.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number {
@@ -722,9 +722,9 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Building.GlobalDefenseBonus.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple, tile: Tiles_ITile.ITile): number[] {

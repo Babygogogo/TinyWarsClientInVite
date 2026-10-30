@@ -59,10 +59,10 @@ export class RequestingUnitDive implements ActionPlanners_States_IState.IState {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitDive  : {
-                    path    : {
-                        nodes   : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    launchUnitId : actionPlanner.getUnitIdForFocusUnitLoaded(),
                 },
             }));
 
@@ -76,7 +76,7 @@ export class RequestingUnitDive implements ActionPlanners_States_IState.IState {
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitDive(
                 war,
                 actionPlanner.generateProtoMovePath(),
-                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null
+                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
             );
         }
     }

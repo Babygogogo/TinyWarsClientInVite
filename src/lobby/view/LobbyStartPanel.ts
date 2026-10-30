@@ -39,7 +39,7 @@ import {
     type Ui_Types_UiListItemData,
 } from "../../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 const enum CommandType {
     C0_SinglePlayer,
     C0_MultiPlayer,
@@ -111,10 +111,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._group,          callback: this._onTouchedGroup,  mouseStyle: Helpers_PointerInput.MouseStyleType.Default },
+            { ui : this._group,          callback : this._onTouchedGroup,  mouseStyle : Helpers_PointerInput.MouseStyleType.Default },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -167,9 +167,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const group0    = this._group0;
         group0.setY(Math.max(0, ListMaxItems - count0) * (ItemHeight + ItemGap));
         group0.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : ListMaxHeight,
-            rawValue    : count0 * ItemHeight + (count0 - 1) * ItemGap,
+            minValue : 0,
+            maxValue : ListMaxHeight,
+            rawValue : count0 * ItemHeight + (count0 - 1) * ItemGap,
         }));
 
         this._group1.setIsVisible(false);
@@ -201,10 +201,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback        : () => {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
-                                    mapFilter               : null,
-                                    mapSorter               : null,
-                                    usePreviousFilter       : true,
-                                    usePreviousPageIndex    : true,
+                                    mapFilter            : null,
+                                    mapSorter            : null,
+                                    usePreviousFilter    : true,
+                                    usePreviousPageIndex : true,
                                 });
                             },
                         },
@@ -214,10 +214,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback        : () => {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ScrCreateMapListPanel, {
-                                    mapFilter               : null,
-                                    mapSorter               : null,
-                                    usePreviousFilter       : true,
-                                    usePreviousPageIndex    : true,
+                                    mapFilter            : null,
+                                    mapSorter            : null,
+                                    usePreviousFilter    : true,
+                                    usePreviousPageIndex : true,
                                 });
                             },
                         },
@@ -275,7 +275,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : () => {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrPreviewMapListPanel, {
-                                                hasFog: false,
+                                                hasFog : false,
                                             });
                                         },
                                     },
@@ -318,7 +318,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : () => {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmrPreviewMapListPanel, {
-                                                hasFog: false,
+                                                hasFog : false,
                                             });
                                         },
                                     },
@@ -348,7 +348,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                             this.closePanel();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtRegisterPanel, void 0);
                                         },
-                                        checkIsRed      : () => AutoTourneys_Mains_Provider.checkIsRedForRegistration(),
+                                        checkIsRed : () => AutoTourneys_Mains_Provider.checkIsRedForRegistration(),
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_AutoTourney_TourneyInfo,
@@ -375,14 +375,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrPreviewMapListPanel, {
-                                                tourneyId: Math.max(...tourneyIdArray),
+                                                tourneyId : Math.max(...tourneyIdArray),
                                             });
                                         },
                                     },
                                 ]);
                                 this._showGroup2();
                             },
-                            checkIsRed      : () => AutoTourneys_Mains_Provider.checkIsRedForRegistration(),
+                            checkIsRed : () => AutoTourneys_Mains_Provider.checkIsRedForRegistration(),
                         },
                         {
                             commandType     : CommandType.C1_Mp_CreateRoom,
@@ -395,10 +395,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : () => {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrCreateMapListPanel, {
-                                                mapFilter               : null,
-                                                mapSorter               : null,
-                                                usePreviousFilter       : true,
-                                                usePreviousPageIndex    : true,
+                                                mapFilter            : null,
+                                                mapSorter            : null,
+                                                usePreviousFilter    : true,
+                                                usePreviousPageIndex : true,
                                             });
                                         },
                                     },
@@ -408,10 +408,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : () => {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrCreateMapListPanel, {
-                                                mapFilter               : null,
-                                                mapSorter               : null,
-                                                usePreviousFilter       : true,
-                                                usePreviousPageIndex    : true,
+                                                mapFilter            : null,
+                                                mapSorter            : null,
+                                                usePreviousFilter    : true,
+                                                usePreviousPageIndex : true,
                                             });
                                         },
                                     },
@@ -426,8 +426,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback        : () => {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwJoinRoomListPanel, {
-                                    preferredRoomType   : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
-                                    filter              : null
+                                    preferredRoomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
+                                    filter            : null,
                                 });
                             },
                         },
@@ -438,7 +438,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyRoomListPanel, void 0);
                             },
-                            checkIsRed      : () => Helpers_Misc.checkIsAnyPromiseTrue([
+                            checkIsRed : () => Helpers_Misc.checkIsAnyPromiseTrue([
                                 MultiRankRoom_Model_MrrModel.checkIsRed(),
                                 MultiCustomRoom_Model_McrModel.checkIsRed(),
                                 MultiFreeRoom_Model_MfrModel.checkIsRed(),
@@ -454,7 +454,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwMyWarListPanel, void 0);
                             },
-                            checkIsRed      : () => Helpers_Misc.checkIsAnyPromiseTrue([
+                            checkIsRed : () => Helpers_Misc.checkIsAnyPromiseTrue([
                                 MultiPlayerWar_Model_MpwModel.checkIsRedForMyMrwWars(),
                                 MultiPlayerWar_Model_MpwModel.checkIsRedForMyMcwWars(),
                                 MultiPlayerWar_Model_MpwModel.checkIsRedForMyMfwWars(),
@@ -474,7 +474,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                         callback        : () => {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestWarsPanel, {
-                                                filter: null
+                                                filter : null,
                                             });
                                         },
                                     },
@@ -485,7 +485,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                             Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwHandleRequestWarsPanel, void 0);
                                         },
-                                        checkIsRed      : async () => !!WatchWar_Model_WwModel.getRequestedWarIdArray()?.length,
+                                        checkIsRed : async () => !!WatchWar_Model_WwModel.getRequestedWarIdArray()?.length,
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_Spectate_DeleteSpectator,
@@ -507,7 +507,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                                 this._showGroup2();
                             },
-                            checkIsRed      : () => WatchWar_Model_WwModel.checkIsRed(),
+                            checkIsRed : () => WatchWar_Model_WwModel.checkIsRed(),
                         },
                         {
                             commandType     : CommandType.C1_Mp_Replay,
@@ -515,9 +515,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             callback        : () => {
                                 Helpers_GameFlow.unloadAllWarsAndOpenCommonPanels();
                                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayListPanel, {
-                                    filter                  : null,
-                                    usePreviousFilter       : true,
-                                    usePreviousPageIndex    : true,
+                                    filter               : null,
+                                    usePreviousFilter    : true,
+                                    usePreviousPageIndex : true,
                                 });
                             },
                         },
@@ -526,7 +526,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     this._showGroup1();
                     this._hideGroup2();
                 },
-                checkIsRed      : () => Lobby_Model_LobbyModel.checkIsRedForMultiPlayer(true),
+                checkIsRed : () => Lobby_Model_LobbyModel.checkIsRedForMultiPlayer(true),
             },
             {
                 commandType     : CommandType.C0_MapEditor,
@@ -541,9 +541,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
+                    GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
                 },
-                checkIsRed      : async () => Chat_Model.checkHasUnreadMessage(),
+                checkIsRed : async () => Chat_Model.checkHasUnreadMessage(),
             },
             {
                 commandType     : CommandType.C0_MyProfile,
@@ -551,7 +551,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 callback        : () => {
                     this.closePanel();
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
-                        userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
+                        userId : Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
                     });
                 },
             },
@@ -570,35 +570,35 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     this.closePanel();
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSettingsPanel, void 0);
                 },
-                checkIsRed      : () => Lobby_Model_LobbyModel.checkIsRedForGameSettings(),
+                checkIsRed : () => Lobby_Model_LobbyModel.checkIsRedForGameSettings(),
             },
         ];
     }
 
     protected _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgMask,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._imgMask,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupContainer,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+            obj        : this._groupContainer,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
 
         return Timer_TimerModel.wait(TweenTime);
     }
     protected _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgMask,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._imgMask,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupContainer,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
+            obj        : this._groupContainer,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
         });
 
         return Timer_TimerModel.wait(TweenTime);
@@ -617,16 +617,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         // group1.bottom   = offset1 * ItemHeight + offset1 * ItemGap;
         group1.setY(offset1 * (ItemHeight + ItemGap));
         group1.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : ListMaxHeight - group1.getY(),
-            rawValue    : length1 * ItemHeight + (length1 - 1) * ItemGap,
+            minValue : 0,
+            maxValue : ListMaxHeight - group1.getY(),
+            rawValue : length1 * ItemHeight + (length1 - 1) * ItemGap,
         }));
         list1.setSelectedItemIndex(-1);
 
         Tween_Executor.Executor.removeTweens(group1);
         Tween_Executor.Executor.get(group1)
-            .set({ customVisible: true, customX: 150, customAlpha: 0 })
-            .to({ customX: 190, customAlpha: 1 }, TweenTime);
+            .set({ customVisible : true, customX : 150, customAlpha : 0 })
+            .to({ customX : 190, customAlpha : 1 }, TweenTime);
     }
     // private _hideGroup1(): void {
     //     const group1    = this._group1;
@@ -652,16 +652,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         // group2.bottom   = offset2 * ItemHeight + offset2 * ItemGap;
         group2.setY(offset2 * (ItemHeight + ItemGap));
         group2.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : ListMaxHeight - group2.getY(),
-            rawValue    : length2 * ItemHeight + (length2 - 1) * ItemGap,
+            minValue : 0,
+            maxValue : ListMaxHeight - group2.getY(),
+            rawValue : length2 * ItemHeight + (length2 - 1) * ItemGap,
         }));
         list2.setSelectedItemIndex(-1);
 
         Tween_Executor.Executor.removeTweens(group2);
         Tween_Executor.Executor.get(group2)
-            .set({ customVisible: true, customX: 340, customAlpha: 0 })
-            .to({ customX: 380, customAlpha: 1 }, TweenTime);
+            .set({ customVisible : true, customX : 340, customAlpha : 0 })
+            .to({ customX : 380, customAlpha : 1 }, TweenTime);
     }
     private _hideGroup2(): void {
         const group2 = this._group2;
@@ -685,10 +685,10 @@ class CommandRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this,         callback: this._onTouchedSelf },
+            { ui : this,         callback : this._onTouchedSelf },
         ]);
         this._applySettingsForWholeTouch();
     }

@@ -52,18 +52,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._btnActUnitType,                         callback: this._onTouchedBtnActUnitType },
+            { ui : this._btnActUnitType,                         callback : this._onTouchedBtnActUnitType },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -92,9 +92,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -110,10 +110,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -132,11 +132,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -155,11 +155,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -179,14 +179,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const playerIndex = Players_Constants.PlayerIndex.First;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleUnitTypePanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0525),
-            currentUnitType     : action.getActUnitType(),
-            gameConfig          : gameConfig,
-            unitTypeArray       : gameConfig.getAllUnitTypeArray(),
-            playerIndex         : playerIndex,
-            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId    : undefined,
-            callback            : unitType => {
+            getTitleText     : () => Lang_Utils.getText(Lang_Constants.TextType.B0525),
+            currentUnitType  : action.getActUnitType(),
+            gameConfig       : gameConfig,
+            unitTypeArray    : gameConfig.getAllUnitTypeArray(),
+            playerIndex      : playerIndex,
+            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId : undefined,
+            callback         : unitType => {
                 action.setActUnitType(unitType);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -256,7 +256,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const unitType = this._getAction()?.getActUnitType();
         this._labelActUnitType.setText(unitType == null
             ? Lang_Constants.UndefinedError
-            : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError)
+            : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError),
         );
     }
 

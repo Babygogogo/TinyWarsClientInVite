@@ -84,17 +84,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnSearch,      callback: this._onTouchTapBtnSearch },
-            { ui: this._btnSort,        callback: this._onTouchedBtnSort },
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
-            { ui: this._btnPrevPage,    callback: this._onTouchedBtnPrevPage },
-            { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
+            { ui : this._btnSearch,      callback : this._onTouchTapBtnSearch },
+            { ui : this._btnSort,        callback : this._onTouchedBtnSort },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
+            { ui : this._btnPrevPage,    callback : this._onTouchedBtnPrevPage },
+            { ui : this._btnNextPage,    callback : this._onTouchedBtnNextPage },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -147,13 +147,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchTapBtnSearch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonMapFilterPanel, {
-            mapFilter           : this._mapFilter,
-            callbackOnConfirm   : mapFilter => {
+            mapFilter         : this._mapFilter,
+            callbackOnConfirm : mapFilter => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
-                    mapFilter               : mapFilter,
-                    mapSorter               : _mapSorter,
-                    usePreviousFilter       : false,
-                    usePreviousPageIndex    : false,
+                    mapFilter            : mapFilter,
+                    mapSorter            : _mapSorter,
+                    usePreviousFilter    : false,
+                    usePreviousPageIndex : false,
                 });
             },
         });
@@ -161,13 +161,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSort(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMapSorterPanel, {
-            currentSorter       : _mapSorter,
-            callbackOnConfirm   : (mapSorter: AuxiliaryTypes_AuxiliaryTypes.MapSorter) => {
+            currentSorter     : _mapSorter,
+            callbackOnConfirm : (mapSorter: AuxiliaryTypes_AuxiliaryTypes.MapSorter) => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
-                    mapFilter               : null,
-                    mapSorter               : mapSorter,
-                    usePreviousFilter       : true,
-                    usePreviousPageIndex    : false
+                    mapFilter            : null,
+                    mapSorter            : mapSorter,
+                    usePreviousFilter    : true,
+                    usePreviousPageIndex : false,
                 });
             },
         });
@@ -188,13 +188,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const warCreator = new SingleRankRoom_Model_SrrWarCreator.SrrWarCreator(
                 await GameConfigs_Provider.getLatestGameConfig(),
                 Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(selectedNormalMapId)),
-                await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex()
+                await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
             );
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateSettingsPanel, {
-                warCreator: warCreator,
+                warCreator : warCreator,
             });
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateQuickSettingsPanel, {
-                warCreator: warCreator,
+                warCreator : warCreator,
             });
         }
     }
@@ -211,18 +211,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ScrCreateMapListPanel, {
-            mapFilter               : null,
-            mapSorter               : null,
-            usePreviousFilter       : true,
-            usePreviousPageIndex    : true,
+            mapFilter            : null,
+            mapSorter            : null,
+            usePreviousFilter    : true,
+            usePreviousPageIndex : true,
         });
     }
 
     private async _onTouchedBtnPrevPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex - 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex - 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -231,9 +231,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex + 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex + 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -318,12 +318,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0436) },
                 pageClass   : SinglePlayerMode_View_SpmRankPage.Page,
                 pageData    : null,
             },
@@ -347,14 +347,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 dataArray.push({
                     normalMapId,
-                    panel   : this,
+                    panel : this,
                 });
             })());
         }
         await Promise.all(promiseArray);
 
         this._cachedListDataArray = (await NormalMap_Model_NormalMapModel.sortMapArray(
-            dataArray.map(v => ({ normalMapId: v.normalMapId, extraData: v })),
+            dataArray.map(v => ({ normalMapId : v.normalMapId, extraData : v })),
             _mapSorter,
         )).map(v => v.extraData);
     }
@@ -384,92 +384,92 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ? null
             : {
                 mapInfo : {
-                    hasFog              : null,
-                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                    overridingPlayers   : null,
+                    hasFog            : null,
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    overridingPlayers : null,
                 },
             };
     }
 
     private _createDataForCommonWarPlayerInfoPage(): SinglePlayerMode_View_SpmRankPage.OpenData {
-        return { normalMapId: this._listMap.getFirstSelectedData()?.normalMapId ?? null };
+        return { normalMapId : this._listMap.getFirstSelectedData()?.normalMapId ?? null };
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 0, customY: 16 - 40 },
-            endProps    : { customAlpha: 1, customY: 16 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 0, customY : 16 - 40 },
+            endProps   : { customAlpha : 1, customY : 16 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 0, customY: 30 },
-            endProps    : { customAlpha: 1, customY: 70 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 0, customY : 30 },
+            endProps   : { customAlpha : 1, customY : 70 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 1, customY: 16 },
-            endProps    : { customAlpha: 0, customY: 16 - 40 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 1, customY : 16 },
+            endProps   : { customAlpha : 0, customY : 16 - 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 1, customY: 70 },
-            endProps    : { customAlpha: 0, customY: 30 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 1, customY : 70 },
+            endProps   : { customAlpha : 0, customY : 30 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupMapList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupMapList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
 
         await Timer_TimerModel.wait();
@@ -491,8 +491,8 @@ class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
-            { ui: this._groupName,  callback: this._onTouchedGroupName },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
+            { ui : this._groupName,  callback : this._onTouchedGroupName },
         ]);
     }
 
@@ -523,7 +523,7 @@ class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
         const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent : () => Lang_Utils.getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
+            getContent : () => Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
         });
     }
 
@@ -549,7 +549,7 @@ class MapNameRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
             return;
         }
 
-        labelName.setText(Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+        labelName.setText(Lang_Utils.getLanguageText({ textArray : mapBriefData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
         this._labelDesigner.setText(mapBriefData.getDesignerName() ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
     }

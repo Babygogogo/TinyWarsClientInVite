@@ -48,19 +48,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnModify,                  callback: this._onTouchedBtnModify },
-            { ui: this._btnStartTime,               callback: this._onTouchedBtnStartTime },
-            { ui: this._btnStartTimeYear,           callback: this._onTouchedBtnStartTimeYear },
-            { ui: this._btnStartTimeMonth,          callback: this._onTouchedBtnStartTimeMonth },
-            { ui: this._btnStartTimeDay,            callback: this._onTouchedBtnStartTimeDay },
-            { ui: this._btnStartTimeHour,           callback: this._onTouchedBtnStartTimeHour },
-            { ui: this._btnStartTimeMinute,         callback: this._onTouchedBtnStartTimeMinute },
-            { ui: this._btnStartTimeSecond,         callback: this._onTouchedBtnStartTimeSecond },
-            { ui: this._btnDuration,                callback: this._onTouchedBtnDuration },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnModify,                  callback : this._onTouchedBtnModify },
+            { ui : this._btnStartTime,               callback : this._onTouchedBtnStartTime },
+            { ui : this._btnStartTimeYear,           callback : this._onTouchedBtnStartTimeYear },
+            { ui : this._btnStartTimeMonth,          callback : this._onTouchedBtnStartTimeMonth },
+            { ui : this._btnStartTimeDay,            callback : this._onTouchedBtnStartTimeDay },
+            { ui : this._btnStartTimeHour,           callback : this._onTouchedBtnStartTimeHour },
+            { ui : this._btnStartTimeMinute,         callback : this._onTouchedBtnStartTimeMinute },
+            { ui : this._btnStartTimeSecond,         callback : this._onTouchedBtnStartTimeSecond },
+            { ui : this._btnDuration,                callback : this._onTouchedBtnDuration },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -87,10 +87,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const englishText   = this._inputEnglish.trimInputText();
         const textList      : LanguageText[] = [];
         if (chineseText) {
-            textList.push(LanguageText.fromJson({ languageType: Lang_Constants.LanguageType.Chinese, text: chineseText }));
+            textList.push(LanguageText.fromJson({ languageType : Lang_Constants.LanguageType.Chinese, text : chineseText }));
         }
         if (englishText) {
-            textList.push(LanguageText.fromJson({ languageType: Lang_Constants.LanguageType.English, text: englishText }));
+            textList.push(LanguageText.fromJson({ languageType : Lang_Constants.LanguageType.English, text : englishText }));
         }
         if (textList.every(v => Helpers_Misc.getExisted(v.getText()).length <= 0)) {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0155));
@@ -114,11 +114,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 2100;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0059),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0059),
             minValue,
             maxValue,
-            currentValue    : date.getFullYear(),
-            callback        : value => {
+            currentValue : date.getFullYear(),
+            callback     : value => {
                 date.setFullYear(value);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -131,11 +131,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 12;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0058),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0058),
             minValue,
             maxValue,
-            currentValue    : date.getMonth() + 1,
-            callback        : value => {
+            currentValue : date.getMonth() + 1,
+            callback     : value => {
                 date.setMonth(value - 1);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -148,11 +148,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 31;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0057),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0057),
             minValue,
             maxValue,
-            currentValue    : date.getDate(),
-            callback        : value => {
+            currentValue : date.getDate(),
+            callback     : value => {
                 date.setDate(value);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -165,11 +165,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 23;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0884),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0884),
             minValue,
             maxValue,
-            currentValue    : date.getHours(),
-            callback        : value => {
+            currentValue : date.getHours(),
+            callback     : value => {
                 date.setHours(value);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -182,11 +182,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0885),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0885),
             minValue,
             maxValue,
-            currentValue    : date.getMinutes(),
-            callback        : value => {
+            currentValue : date.getMinutes(),
+            callback     : value => {
                 date.setMinutes(value);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -199,11 +199,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0886),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0886),
             minValue,
             maxValue,
-            currentValue    : date.getSeconds(),
-            callback        : value => {
+            currentValue : date.getSeconds(),
+            callback     : value => {
                 date.setSeconds(value);
                 this._startTime = Math.floor(date.getTime() / 1000);
                 this._updateLabelStartTime();
@@ -216,11 +216,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = 30;
         const maxValue  = 3600 * 24;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0883),
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0883),
             minValue,
             maxValue,
-            currentValue    : this._duration,
-            callback        : newValue => {
+            currentValue : this._duration,
+            callback     : newValue => {
                 this._duration = newValue;
                 this._updateLabelDuration();
             },

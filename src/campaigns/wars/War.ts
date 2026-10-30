@@ -109,7 +109,7 @@ export class War extends SinglePlayerWar_Model_SpwWar.SpwWar implements Campaign
                 SinglePlayerWars_Constants.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
-                + this.getTaskObjectiveManager().getScore()
+                + this.getTaskObjectiveManager().getScore(),
             ),
         });
     }

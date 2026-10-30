@@ -36,18 +36,18 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnDesigner,    callback: this._onTouchedBtnDesigner },
-            { ui: this._btnLink,        callback: this._onTouchedBtnLink },
+            { ui : this._btnDesigner,    callback : this._onTouchedBtnDesigner },
+            { ui : this._btnLink,        callback : this._onTouchedBtnLink },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
         this._scroller.setCallbackOnAppliedSizeFromSizerInfo(() => this._updateView());
     }
@@ -79,16 +79,16 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         }
 
         if (designerIdArray.length === 1) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: designerIdArray[0]});
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : designerIdArray[0] });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0163),
-                availableNumberArray    : designerIdArray,
-                currentNumber           : null,
-                columnsCount            : 2,
-                showNumber              : true,
-                getNumberMainText       : async num => await Users_Model.getUserNickname(num) ?? Lang_Constants.UndefinedError,
-                callbackOnConfirm       : num => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: num}),
+                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0163),
+                availableNumberArray : designerIdArray,
+                currentNumber        : null,
+                columnsCount         : 2,
+                showNumber           : true,
+                getNumberMainText    : async num => await Users_Model.getUserNickname(num) ?? Lang_Constants.UndefinedError,
+                callbackOnConfirm    : num => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : num }),
             });
         }
     }
@@ -107,8 +107,8 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const extraLink = (await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getExtraLink() ?? ``;
         if (extraLink.length) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0269, extraLink),
-                callback    : () => window.open(extraLink),
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0269, extraLink),
+                callback   : () => window.open(extraLink),
             });
         }
     }
@@ -133,7 +133,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         if (campaignId != null) {
             const descArray = (await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getDescArray();
             if (campaignId === this.getOpenData()?.campaignId) {
-                labelDesc.setText(Lang_Utils.getLanguageText({ textArray: descArray }) ?? Lang_Constants.UndefinedError);
+                labelDesc.setText(Lang_Utils.getLanguageText({ textArray : descArray }) ?? Lang_Constants.UndefinedError);
             }
         }
 

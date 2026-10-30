@@ -19,16 +19,16 @@ import type { S as MpwWatchMakeRequestResponse } from "../../proto/schema/Common
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestableWarIdArray,     callback: _onMsgMpwWatchGetRequestableWarIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOngoingWarIdArray,         callback: _onMsgMpwWatchGetOngoingWarIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestedWarIdArray,       callback: _onMsgMpwWatchGetRequestedWarIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetWatchedWarIdArray,         callback: _onMsgMpwWatchGetWatchedWarIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchMakeRequest,                  callback: _onMsgMpwWatchMakeRequest },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchHandleRequest,                callback: _onMsgMpwWatchHandleRequest },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchDeleteWatcher,                callback: _onMsgMpwWatchDeleteWatcher },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchContinueWar,                  callback: _onMsgMpwWatchContinueWar },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetIncomingInfo,              callback: _onMsgMpwWatchGetIncomingInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOutgoingInfo,              callback: _onMsgMpwWatchGetOutgoingInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestableWarIdArray,     callback : _onMsgMpwWatchGetRequestableWarIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOngoingWarIdArray,         callback : _onMsgMpwWatchGetOngoingWarIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetRequestedWarIdArray,       callback : _onMsgMpwWatchGetRequestedWarIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetWatchedWarIdArray,         callback : _onMsgMpwWatchGetWatchedWarIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchMakeRequest,                  callback : _onMsgMpwWatchMakeRequest },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchHandleRequest,                callback : _onMsgMpwWatchHandleRequest },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchDeleteWatcher,                callback : _onMsgMpwWatchDeleteWatcher },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchContinueWar,                  callback : _onMsgMpwWatchContinueWar },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetIncomingInfo,              callback : _onMsgMpwWatchGetIncomingInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMpwWatchGetOutgoingInfo,              callback : _onMsgMpwWatchGetOutgoingInfo },
     ], null);
 }
 
@@ -41,14 +41,16 @@ export function reqMpwWatchGetRequestableWarIdArray({ warId, coCategoryId, norma
     warName?                : string | null;
 }): void {
     Networks_Manager.send({
-        MsgMpwWatchGetRequestableWarIdArray: { c: {
-            warId,
-            coCategoryId,
-            normalMapId             : normalMapId,
-            userId,
-            playersCountUnneutral,
-            warName,
-        } },
+        MsgMpwWatchGetRequestableWarIdArray : {
+            c : {
+                warId,
+                coCategoryId,
+                normalMapId : normalMapId,
+                userId,
+                playersCountUnneutral,
+                warName,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetRequestableWarIdArray(e: Egret_Egret.Event): void {
@@ -61,8 +63,10 @@ function _onMsgMpwWatchGetRequestableWarIdArray(e: Egret_Egret.Event): void {
 
 export function reqMpwWatchGetOngoingWarIdArray(): void {
     Networks_Manager.send({
-        MsgMpwWatchGetOngoingWarIdArray: { c: {
-        } },
+        MsgMpwWatchGetOngoingWarIdArray : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetOngoingWarIdArray(e: Egret_Egret.Event): void {
@@ -75,8 +79,10 @@ function _onMsgMpwWatchGetOngoingWarIdArray(e: Egret_Egret.Event): void {
 
 export function reqMpwWatchRequestedWarIdArray(): void {
     Networks_Manager.send({
-        MsgMpwWatchGetRequestedWarIdArray: { c: {
-        }, }
+        MsgMpwWatchGetRequestedWarIdArray : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetRequestedWarIdArray(e: Egret_Egret.Event): void {
@@ -89,8 +95,10 @@ function _onMsgMpwWatchGetRequestedWarIdArray(e: Egret_Egret.Event): void {
 
 export function reqMpwWatchWatchedWarIdArray(): void {
     Networks_Manager.send({
-        MsgMpwWatchGetWatchedWarIdArray: { c: {
-        }, }
+        MsgMpwWatchGetWatchedWarIdArray : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetWatchedWarIdArray(e: Egret_Egret.Event): void {
@@ -103,10 +111,12 @@ function _onMsgMpwWatchGetWatchedWarIdArray(e: Egret_Egret.Event): void {
 
 export function reqWatchMakeRequest(warId: number, dstUserIds: number[]): void {
     Networks_Manager.send({
-        MsgMpwWatchMakeRequest: { c: {
-            warId,
-            dstUserIds,
-        }, }
+        MsgMpwWatchMakeRequest : {
+            c : {
+                warId,
+                dstUserIds,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchMakeRequest(e: Egret_Egret.Event): void {
@@ -118,11 +128,13 @@ function _onMsgMpwWatchMakeRequest(e: Egret_Egret.Event): void {
 
 export function reqWatchHandleRequest(warId: number, acceptSrcUserIds: number[], declineSrcUserIds: number[]): void {
     Networks_Manager.send({
-        MsgMpwWatchHandleRequest: { c: {
-            warId,
-            acceptSrcUserIds,
-            declineSrcUserIds,
-        }, }
+        MsgMpwWatchHandleRequest : {
+            c : {
+                warId,
+                acceptSrcUserIds,
+                declineSrcUserIds,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchHandleRequest(e: Egret_Egret.Event): void {
@@ -134,10 +146,12 @@ function _onMsgMpwWatchHandleRequest(e: Egret_Egret.Event): void {
 
 export function reqWatchDeleteWatcher(warId: number, watcherUserIds: number[]): void {
     Networks_Manager.send({
-        MsgMpwWatchDeleteWatcher: { c: {
-            warId,
-            watcherUserIds,
-        }, }
+        MsgMpwWatchDeleteWatcher : {
+            c : {
+                warId,
+                watcherUserIds,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchDeleteWatcher(e: Egret_Egret.Event): void {
@@ -149,9 +163,11 @@ function _onMsgMpwWatchDeleteWatcher(e: Egret_Egret.Event): void {
 
 export function reqWatchContinueWar(warId: number): void {
     Networks_Manager.send({
-        MsgMpwWatchContinueWar: { c: {
-            warId,
-        }, }
+        MsgMpwWatchContinueWar : {
+            c : {
+                warId,
+            }, 
+        },
     });
 }
 async function _onMsgMpwWatchContinueWar(e: Egret_Egret.Event): Promise<void> {
@@ -166,9 +182,11 @@ async function _onMsgMpwWatchContinueWar(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMpwWatchGetIncomingInfo(warId: number): void {
     Networks_Manager.send({
-        MsgMpwWatchGetIncomingInfo: { c: {
-            warId,
-        } },
+        MsgMpwWatchGetIncomingInfo : {
+            c : {
+                warId,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event): void {
@@ -183,9 +201,11 @@ function _onMsgMpwWatchGetIncomingInfo(e: Egret_Egret.Event): void {
 
 export function reqMpwWatchGetOutgoingInfo(warId: number): void {
     Networks_Manager.send({
-        MsgMpwWatchGetOutgoingInfo: { c: {
-            warId,
-        } },
+        MsgMpwWatchGetOutgoingInfo : {
+            c : {
+                warId,
+            }, 
+        },
     });
 }
 function _onMsgMpwWatchGetOutgoingInfo(e: Egret_Egret.Event): void {

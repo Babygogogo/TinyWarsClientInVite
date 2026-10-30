@@ -20,7 +20,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayer
     }
 
     return WoContainer.fromJson({
-        WoPlayerSurrender: {
+        WoPlayerSurrender : {
             playerIndex : playerIndex,
         },
     });

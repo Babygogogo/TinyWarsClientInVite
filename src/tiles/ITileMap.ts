@@ -17,7 +17,7 @@ export interface ITileMap {
         mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTileMap>;
         gameConfig              : GameConfigs_GameConfig.GameConfig;

@@ -53,9 +53,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayer
     }
 
     return WoContainer.fromJson({
-        WoPlayerUseCoSkill: {
-            skillType               : skillType,
-            targetGridIndexArray    : targetGridIndexArray.map(v => v.toJson()),
+        WoPlayerUseCoSkill : {
+            skillType            : skillType,
+            targetGridIndexArray : targetGridIndexArray.map(v => v.toJson()),
         },
     });
 }

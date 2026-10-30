@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum DirectionId {
     Undefined,
     Left,
@@ -9,7 +9,7 @@ export const enum DirectionId {
     Down,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum SymmetryTypeId {
     None                = -1,
     UpToDown            = 0,

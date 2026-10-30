@@ -54,27 +54,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnClose,                   callback : this.closePanel },
 
-            { ui: this._btnAll,                     callback: this._onTouchedBtnAll },
-            { ui: this._btnRiver,                   callback: this._onTouchedBtnRiver },
-            { ui: this._btnBeach,                   callback: this._onTouchedBtnBeach },
-            { ui: this._btnSea,                     callback: this._onTouchedBtnSea },
-            { ui: this._btnDecoration,              callback: this._onTouchedBtnDecoration },
-            { ui: this._btnRoad,                    callback: this._onTouchedBtnRoad },
-            { ui: this._btnBridge,                  callback: this._onTouchedBtnBridge },
-            { ui: this._btnPlasma,                  callback: this._onTouchedBtnPlasma },
-            { ui: this._btnSuperPlasma,             callback: this._onTouchedBtnSuperPlasma },
+            { ui : this._btnAll,                     callback : this._onTouchedBtnAll },
+            { ui : this._btnRiver,                   callback : this._onTouchedBtnRiver },
+            { ui : this._btnBeach,                   callback : this._onTouchedBtnBeach },
+            { ui : this._btnSea,                     callback : this._onTouchedBtnSea },
+            { ui : this._btnDecoration,              callback : this._onTouchedBtnDecoration },
+            { ui : this._btnRoad,                    callback : this._onTouchedBtnRoad },
+            { ui : this._btnBridge,                  callback : this._onTouchedBtnBridge },
+            { ui : this._btnPlasma,                  callback : this._onTouchedBtnPlasma },
+            { ui : this._btnSuperPlasma,             callback : this._onTouchedBtnSuperPlasma },
 
-            { ui: this._groupRealTimeAdjust,        callback: this._onTouchedGroupRealTimeAdjust },
-            { ui: this._btnHelpRealTimeAdjust,      callback: this._onTouchedBtnHelpRealTimeAdjust },
+            { ui : this._groupRealTimeAdjust,        callback : this._onTouchedGroupRealTimeAdjust },
+            { ui : this._btnHelpRealTimeAdjust,      callback : this._onTouchedBtnHelpRealTimeAdjust },
 
-            { ui: this._groupRealTimeToggle,        callback: this._onTouchedGroupRealTimeToggle },
+            { ui : this._groupRealTimeToggle,        callback : this._onTouchedGroupRealTimeToggle },
 
-            { ui: this._btnHelpGlobalAdjust,        callback: this._onTouchedBtnHelpGlobalAdjust },
+            { ui : this._btnHelpGlobalAdjust,        callback : this._onTouchedBtnHelpGlobalAdjust },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -94,8 +94,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
+            callback   : () => {
                 drawer.autoAdjustBeaches();
                 drawer.autoAdjustBridges(drawer.getBridgeConnectTileTypeArray().concat());
                 drawer.autoAdjustPipes();
@@ -115,7 +115,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoAdjustRivers(),
+            callback   : () => drawer.autoAdjustRivers(),
         });
     }
     private _onTouchedBtnBeach(): void {
@@ -126,7 +126,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoAdjustBeaches(),
+            callback   : () => drawer.autoAdjustBeaches(),
         });
     }
     private _onTouchedBtnSea(): void {
@@ -137,7 +137,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoAdjustSeas(),
+            callback   : () => drawer.autoAdjustSeas(),
         });
     }
     private _onTouchedBtnDecoration(): void {
@@ -148,7 +148,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoFillTileDecorations(),
+            callback   : () => drawer.autoFillTileDecorations(),
         });
     }
     private _onTouchedBtnRoad(): void {
@@ -160,16 +160,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = war.getGcData();
         const drawer        = war.getDrawer();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileTypePanel, {
-            gameConfig              : gameConfig,
-            currentTileTypeArray    : drawer.getRoadConnectTileTypeArray(),
-            availableTileTypeArray  : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0398),
-            callbackOnConfirm       : tileTypeArray => {
+            gameConfig             : gameConfig,
+            currentTileTypeArray   : drawer.getRoadConnectTileTypeArray(),
+            availableTileTypeArray : gameConfig.getAllTileTypeArraySortedByWeight(),
+            getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0398),
+            callbackOnConfirm      : tileTypeArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-                    callback: () => war.getDrawer().autoAdjustRoads(tileTypeArray),
+                    callback   : () => war.getDrawer().autoAdjustRoads(tileTypeArray),
                 });
-            }
+            },
         });
     }
     private _onTouchedBtnBridge(): void {
@@ -181,16 +181,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = war.getGcData();
         const drawer        = war.getDrawer();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileTypePanel, {
-            gameConfig              : gameConfig,
-            currentTileTypeArray    : drawer.getBridgeConnectTileTypeArray(),
-            availableTileTypeArray  : gameConfig.getAllTileTypeArraySortedByWeight(),
-            getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0399),
-            callbackOnConfirm       : tileTypeArray => {
+            gameConfig             : gameConfig,
+            currentTileTypeArray   : drawer.getBridgeConnectTileTypeArray(),
+            availableTileTypeArray : gameConfig.getAllTileTypeArraySortedByWeight(),
+            getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0399),
+            callbackOnConfirm      : tileTypeArray => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                     getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-                    callback: () => war.getDrawer().autoAdjustBridges(tileTypeArray),
+                    callback   : () => war.getDrawer().autoAdjustBridges(tileTypeArray),
                 });
-            }
+            },
         });
     }
     private _onTouchedBtnPlasma(): void {
@@ -201,7 +201,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoAdjustPlasmas(),
+            callback   : () => drawer.autoAdjustPlasmas(),
         });
     }
     private _onTouchedBtnSuperPlasma(): void {
@@ -212,7 +212,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0259),
-            callback: () => drawer.autoAdjustPipes(),
+            callback   : () => drawer.autoAdjustPipes(),
         });
     }
     private _onTouchedGroupRealTimeAdjust(): void {

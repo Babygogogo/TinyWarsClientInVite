@@ -28,26 +28,26 @@ import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/War
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmCreateCampaign,                 callback: _onMsgCmCreateCampaign },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmCreateCampaignMap,              callback: _onMsgCmCreateCampaignMap },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmGetAllCampaignIdArray,          callback: _onMsgCmGetAllCampaignIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmGetDesigningCampaignIdArray,    callback: _onMsgCmGetDesigningCampaignIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignDesc,                callback: _onMsgCmSetCampaignDesc },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignName,                callback: _onMsgCmSetCampaignName },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignEnabled,             callback: _onMsgCmSetCampaignEnabled },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapEnabled,          callback: _onMsgCmSetCampaignMapEnabled },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapRawData,          callback: _onMsgCmSetCampaignMapRawData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapExtraText,        callback: _onMsgCmSetCampaignMapExtraText },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapName,             callback: _onMsgCmSetCampaignMapName },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapWarEventAction,   callback: _onMsgCmSetCampaignMapWarEventAction },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmUpdateCampaignDesigners,        callback: _onMsgCmUpdateCampaignDesigners },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCmSetExtraLink,                   callback: _onMsgCmSetExtraLink },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmCreateCampaign,                 callback : _onMsgCmCreateCampaign },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmCreateCampaignMap,              callback : _onMsgCmCreateCampaignMap },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmGetAllCampaignIdArray,          callback : _onMsgCmGetAllCampaignIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmGetDesigningCampaignIdArray,    callback : _onMsgCmGetDesigningCampaignIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignDesc,                callback : _onMsgCmSetCampaignDesc },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignName,                callback : _onMsgCmSetCampaignName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignEnabled,             callback : _onMsgCmSetCampaignEnabled },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapEnabled,          callback : _onMsgCmSetCampaignMapEnabled },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapRawData,          callback : _onMsgCmSetCampaignMapRawData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapExtraText,        callback : _onMsgCmSetCampaignMapExtraText },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapName,             callback : _onMsgCmSetCampaignMapName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetCampaignMapWarEventAction,   callback : _onMsgCmSetCampaignMapWarEventAction },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmUpdateCampaignDesigners,        callback : _onMsgCmUpdateCampaignDesigners },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCmSetExtraLink,                   callback : _onMsgCmSetExtraLink },
     ]);
 }
 
 export function reqCmCreateCampaign(): void {
     Networks_Manager.send({
-        MsgCmCreateCampaign: { c: {} }
+        MsgCmCreateCampaign : { c : {} },
     });
 }
 async function _onMsgCmCreateCampaign(e: Egret_Egret.Event): Promise<void> {
@@ -60,9 +60,11 @@ async function _onMsgCmCreateCampaign(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCmCreateCampaignMap(campaignId: number): void {
     Networks_Manager.send({
-        MsgCmCreateCampaignMap: { c: {
-            campaignId  : campaignId,
-        } },
+        MsgCmCreateCampaignMap : {
+            c : {
+                campaignId : campaignId,
+            }, 
+        },
     });
 }
 async function _onMsgCmCreateCampaignMap(e: Egret_Egret.Event): Promise<void> {
@@ -75,7 +77,7 @@ async function _onMsgCmCreateCampaignMap(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCmGetAllCampaignIdArray(): void {
     Networks_Manager.send({
-        MsgCmGetAllCampaignIdArray: { c: {} }
+        MsgCmGetAllCampaignIdArray : { c : {} },
     });
 }
 function _onMsgCmGetAllCampaignIdArray(e: Egret_Egret.Event): void {
@@ -90,7 +92,7 @@ function _onMsgCmGetAllCampaignIdArray(e: Egret_Egret.Event): void {
 
 export function reqCmGetDesigningCampaignIdArray(): void {
     Networks_Manager.send({
-        MsgCmGetDesigningCampaignIdArray: { c: {} }
+        MsgCmGetDesigningCampaignIdArray : { c : {} },
     });
 }
 function _onMsgCmGetDesigningCampaignIdArray(e: Egret_Egret.Event): void {
@@ -105,10 +107,12 @@ function _onMsgCmGetDesigningCampaignIdArray(e: Egret_Egret.Event): void {
 
 export function reqCmSetCampaignDesc(campaignId: number, descArray: LanguageText[]): void {
     Networks_Manager.send({
-        MsgCmSetCampaignDesc: { c: {
-            campaignId  : campaignId,
-            descArray   : descArray.map(v => v.toJson()),
-        }}
+        MsgCmSetCampaignDesc : {
+            c : {
+                campaignId : campaignId,
+                descArray  : descArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignDesc(e: Egret_Egret.Event): Promise<void> {
@@ -121,10 +125,12 @@ async function _onMsgCmSetCampaignDesc(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCmSetCampaignName(campaignId: number, nameArray: LanguageText[]): void {
     Networks_Manager.send({
-        MsgCmSetCampaignName: { c: {
-            campaignId  : campaignId,
-            nameArray   : nameArray.map(v => v.toJson()),
-        }}
+        MsgCmSetCampaignName : {
+            c : {
+                campaignId : campaignId,
+                nameArray  : nameArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignName(e: Egret_Egret.Event): Promise<void> {
@@ -137,10 +143,12 @@ async function _onMsgCmSetCampaignName(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCmSetCampaignEnabled(campaignId: number, isEnabled: boolean): void {
     Networks_Manager.send({
-        MsgCmSetCampaignEnabled: { c: {
-            campaignId  : campaignId,
-            isEnabled   : isEnabled,
-        }}
+        MsgCmSetCampaignEnabled : {
+            c : {
+                campaignId : campaignId,
+                isEnabled  : isEnabled,
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignEnabled(e: Egret_Egret.Event): Promise<void> {
@@ -153,11 +161,13 @@ async function _onMsgCmSetCampaignEnabled(e: Egret_Egret.Event): Promise<void> {
 
 export function reqCmSetCampaignMapEnabled(campaignId: number, campaignMapId: number, isEnabled: boolean): void {
     Networks_Manager.send({
-        MsgCmSetCampaignMapEnabled: { c: {
-            campaignId      : campaignId,
-            campaignMapId   : campaignMapId,
-            isEnabled       : isEnabled,
-        }}
+        MsgCmSetCampaignMapEnabled : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+                isEnabled     : isEnabled,
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignMapEnabled(e: Egret_Egret.Event): Promise<void> {
@@ -170,9 +180,11 @@ async function _onMsgCmSetCampaignMapEnabled(e: Egret_Egret.Event): Promise<void
 
 export function reqCmSetCampaignMapRawData(mapRawData: MapRawData): void {
     Networks_Manager.send({
-        MsgCmSetCampaignMapRawData: { c: {
-            mapRawData  : mapRawData.toJson(),
-        }}
+        MsgCmSetCampaignMapRawData : {
+            c : {
+                mapRawData : mapRawData.toJson(),
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignMapRawData(e: Egret_Egret.Event): Promise<void> {
@@ -185,11 +197,13 @@ async function _onMsgCmSetCampaignMapRawData(e: Egret_Egret.Event): Promise<void
 
 export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: number, mapExtraText: MapExtraTextJson): void {
     Networks_Manager.send({
-        MsgCmSetCampaignMapExtraText: { c: {
-            campaignId      : campaignId,
-            campaignMapId   : campaignMapId,
-            mapExtraText    : mapExtraText,
-        }}
+        MsgCmSetCampaignMapExtraText : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+                mapExtraText  : mapExtraText,
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignMapExtraText(e: Egret_Egret.Event): Promise<void> {
@@ -202,11 +216,13 @@ async function _onMsgCmSetCampaignMapExtraText(e: Egret_Egret.Event): Promise<vo
 
 export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: number, mapNameArray: LanguageText[]): void {
     Networks_Manager.send({
-        MsgCmSetCampaignMapName: { c: {
-            campaignId      : campaignId,
-            campaignMapId   : campaignMapId,
-            nameArray       : mapNameArray.map(v => v.toJson()),
-        }}
+        MsgCmSetCampaignMapName : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+                nameArray     : mapNameArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 async function _onMsgCmSetCampaignMapName(e: Egret_Egret.Event): Promise<void> {
@@ -218,11 +234,15 @@ async function _onMsgCmSetCampaignMapName(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqCmSetCampaignMapWarEventAction(campaignId: number, campaignMapId: number, action: WarEventAction): void {
-    Networks_Manager.send({ MsgCmSetCampaignMapWarEventAction: { c: {
-        campaignId      : campaignId,
-        campaignMapId   : campaignMapId,
-        warEventAction  : action.toJson(),
-    } } });
+    Networks_Manager.send({
+        MsgCmSetCampaignMapWarEventAction : {
+            c : {
+                campaignId     : campaignId,
+                campaignMapId  : campaignMapId,
+                warEventAction : action.toJson(),
+            }, 
+        }, 
+    });
 }
 async function _onMsgCmSetCampaignMapWarEventAction(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CmSetCampaignMapWarEventActionResponse;
@@ -234,11 +254,13 @@ async function _onMsgCmSetCampaignMapWarEventAction(e: Egret_Egret.Event): Promi
 
 export function reqCmUpdateCampaignDesigners(campaignId: number, addUserIdArray: number[], deleteUserIdArray: number[]): void {
     Networks_Manager.send({
-        MsgCmUpdateCampaignDesigners: { c: {
-            campaignId          : campaignId,
-            addUserIdArray      : addUserIdArray,
-            deleteUserIdArray   : deleteUserIdArray,
-        } },
+        MsgCmUpdateCampaignDesigners : {
+            c : {
+                campaignId        : campaignId,
+                addUserIdArray    : addUserIdArray,
+                deleteUserIdArray : deleteUserIdArray,
+            }, 
+        },
     });
 }
 async function _onMsgCmUpdateCampaignDesigners(e: Egret_Egret.Event): Promise<void> {
@@ -251,10 +273,12 @@ async function _onMsgCmUpdateCampaignDesigners(e: Egret_Egret.Event): Promise<vo
 
 export function reqCmSetExtraLink(campaignId: number, extraLink: string): void {
     Networks_Manager.send({
-        MsgCmSetExtraLink: { c: {
-            campaignId  : campaignId,
-            extraLink   : extraLink,
-        }}
+        MsgCmSetExtraLink : {
+            c : {
+                campaignId : campaignId,
+                extraLink  : extraLink,
+            }, 
+        },
     });
 }
 async function _onMsgCmSetExtraLink(e: Egret_Egret.Event): Promise<void> {

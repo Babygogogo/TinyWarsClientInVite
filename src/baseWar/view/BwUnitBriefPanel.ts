@@ -51,17 +51,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,                callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,                 callback: this._onNotifyGlobalTouchMove },
-            { type: Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback: this._onNotifyActionPlannerStateSet },
-            { type: Notifications_TypeId.TypeId.BwProduceUnitPanelOpened,        callback: this._onNotifyBwProduceUnitPanelOpened },
-            { type: Notifications_TypeId.TypeId.BwProduceUnitPanelClosed,        callback: this._onNotifyBwProduceUnitPanelClosed },
-            { type: Notifications_TypeId.TypeId.BwUnitChanged,                   callback: this._onNotifyBwUnitChanged },
-            { type: Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,    callback: this._onNotifyBwUnitCustomNameArrayChanged },
-            { type: Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,       callback: this._onNotifyBwUnitCustomNameIdChanged },
+            { type : Notifications_TypeId.TypeId.BwCursorGridIndexChanged,        callback : this._onNotifyBwCursorGridIndexChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,           callback : this._onNotifyActionPlannerStateSet },
+            { type : Notifications_TypeId.TypeId.BwProduceUnitPanelOpened,        callback : this._onNotifyBwProduceUnitPanelOpened },
+            { type : Notifications_TypeId.TypeId.BwProduceUnitPanelClosed,        callback : this._onNotifyBwProduceUnitPanelClosed },
+            { type : Notifications_TypeId.TypeId.BwUnitChanged,                   callback : this._onNotifyBwUnitChanged },
+            { type : Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,    callback : this._onNotifyBwUnitCustomNameArrayChanged },
+            { type : Notifications_TypeId.TypeId.BwUnitCustomNameIdChanged,       callback : this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnExpand,  callback: this._onTouchedBtnExpand },
-            { ui: this._btnNarrow,  callback: this._onTouchedBtnNarrow },
+            { ui : this._btnExpand,  callback : this._onTouchedBtnExpand },
+            { ui : this._btnNarrow,  callback : this._onTouchedBtnNarrow },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -153,8 +153,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (let i = 0; i < this._cellList.length; ++i) {
             if (this._cellList[i] === dispatcher) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitDetailPanel, {
-                    unit        : this._unitList[i],
-                    canDelete   : canDelete,
+                    unit      : this._unitList[i],
+                    canDelete : canDelete,
                 });
                 return;
             }
@@ -198,7 +198,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 isDiving            : unitOnMap.getIsDiving(),
                 isInvisible         : unitOnMap.checkIsInvisible(gridIndex),
                 unitPlayerIndex     : unitOnMap.getPlayerIndex(),
-                observerTeamIndexes : teamIndexes
+                observerTeamIndexes : teamIndexes,
             }))
         ) {
             unitList.push(unitOnMap);
@@ -269,20 +269,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: 40 },
-            endProps    : { customAlpha: 1, customY: 0 },
-            tweenTime   : 50,
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : 40 },
+            endProps   : { customAlpha : 1, customY : 0 },
+            tweenTime  : 50,
         });
 
         await Timer_TimerModel.wait(50);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: 40 },
-            tweenTime   : 50,
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : 40 },
+            tweenTime  : 50,
         });
 
         await Timer_TimerModel.wait(50);
@@ -327,7 +327,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
             this,
             resTypeId === Graphics_Constants.TextureResolutionId.Dor
                 ? `baseWar/BwUnitBriefCell.exml`
-                : `baseWar/BwUnitBriefCell_res${Helpers_Text.getNumText(resTypeId)}.exml`
+                : `baseWar/BwUnitBriefCell_res${Helpers_Text.getNumText(resTypeId)}.exml`,
         );
     }
 
@@ -352,7 +352,7 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
         this._labelName.setText(
             unit.getCustomName()                                        ??
             Lang_Utils.getUnitName(unit.getUnitType(), unit.getGcData())  ??
-            Lang_Constants.UndefinedError
+            Lang_Constants.UndefinedError,
         );
     }
 
@@ -423,10 +423,10 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
         const attackBonusFromOpa            = war.getWarEventManager().getOpaAttackPowerModifier(unit, gridIndex);
         const attackBonusFromWeather        = unit.getAttackModifierByWeather(gridIndex, observerTeamIndexSet, false);
         const attackBonusFromCo             = unit.getAttackModifierByCo({
-            selfGridIndex               : gridIndex,
-            isCounter                   : false,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : false,
+            selfGridIndex            : gridIndex,
+            isCounter                : false,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : false,
         });
         const totalAttackBonus              = Math.floor(attackBonusFromCommonSettings + attackBonusFromGlobalTiles + attackBonusFromPromotion + attackBonusFromOpa + attackBonusFromWeather + attackBonusFromCo);
 
@@ -436,10 +436,10 @@ class BwUnitBriefCell extends Ui_Components_UiContainer.UiContainer {
         const defenseBonusFromOpa           = war.getWarEventManager().getOpaDefenseModifier(unit, gridIndex);
         const defenseBonusFromGlobalTiles   = tileMap.getTotalGlobalDefenseBonus(unitPlayerIndex, observerTeamIndexSet, false);
         const defenseBonusFromCo            = unit.getDefenseModifierByCo({
-            selfGridIndex               : gridIndex,
-            attackerUnitTypeId          : null,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : false,
+            selfGridIndex            : gridIndex,
+            attackerUnitTypeId       : null,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : false,
         });
         const totalDefenseBonus             = Math.floor(defenseBonusFromTile + defenseBonusFromPromotion + defenseBonusFromRule + defenseBonusFromOpa + defenseBonusFromGlobalTiles + defenseBonusFromCo);
 

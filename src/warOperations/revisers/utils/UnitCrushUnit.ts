@@ -27,7 +27,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitCr
     }
 
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId, 
+    });
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
         throw Helpers_Misc.newError(`Destination occupied.`);
     }
@@ -53,7 +55,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitCr
     }
 
     return WoContainer.fromJson({
-        WoUnitCrushUnit: {
+        WoUnitCrushUnit : {
             path            : revisedPath.toProto().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),

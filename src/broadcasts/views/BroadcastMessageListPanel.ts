@@ -31,12 +31,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onNotifyMsgBroadcastGetAllMessageIdArray },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback : this._onNotifyMsgBroadcastGetAllMessageIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnAddMessage,                              callback: this._onTouchedBtnAddMessage },
-            { ui: this._btnClose,                                   callback: this.closePanel },
+            { ui : this._btnAddMessage,                              callback : this._onTouchedBtnAddMessage },
+            { ui : this._btnClose,                                   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -105,10 +105,10 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnDelete,              callback: this._onTouchedBtnDelete },
+            { ui : this._btnDelete,              callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -131,8 +131,8 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const textArray     = messageData.getTextList();
         const labelContent  = this._labelContent;
         labelContent.setText([
-            `${Lang_Utils.getText(Lang_Constants.TextType.B0455)}: ${Lang_Utils.getLanguageText({ textArray, languageType: Lang_Constants.LanguageType.Chinese, useAlternate: false }) ?? `----`}`,
-            `${Lang_Utils.getText(Lang_Constants.TextType.B0456)}: ${Lang_Utils.getLanguageText({ textArray, languageType: Lang_Constants.LanguageType.English, useAlternate: false }) ?? `----`}`,
+            `${Lang_Utils.getText(Lang_Constants.TextType.B0455)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.Chinese, useAlternate : false }) ?? `----`}`,
+            `${Lang_Utils.getText(Lang_Constants.TextType.B0456)}: ${Lang_Utils.getLanguageText({ textArray, languageType : Lang_Constants.LanguageType.English, useAlternate : false }) ?? `----`}`,
         ].join(`\n\n`));
 
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 28);
@@ -149,7 +149,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0220),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 Broadcasts_Gateway.reqBroadcastDeleteMessage(messageId);
             },
         });

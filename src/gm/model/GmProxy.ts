@@ -13,43 +13,67 @@ import type { UserPrivilege } from "../../proto/schema/CommonProto/User/UserPriv
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgGmSetUserPrivilege,               callback: _onMsgGmSetUserPrivilege, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgGmDeleteSpmAllScoreAndReplay,     callback: _onMsgGmDeleteSpmAllScoreAndReplay },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgGmAddUserMedal,                   callback: _onMsgGmAddUserMedal },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgGmSetUserPrivilege,               callback : _onMsgGmSetUserPrivilege },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgGmDeleteSpmAllScoreAndReplay,     callback : _onMsgGmDeleteSpmAllScoreAndReplay },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgGmAddUserMedal,                   callback : _onMsgGmAddUserMedal },
     ]);
 }
 
 export function reqGmDeleteMcrRoom(roomId: number): void {
-    Networks_Manager.send({ MsgGmDeleteMcrRoom: { c: {
-        roomId  : roomId,
-    }}});
+    Networks_Manager.send({
+        MsgGmDeleteMcrRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        }, 
+    });
 }
 export function reqGmDeleteMfrRoom(roomId: number): void {
-    Networks_Manager.send({ MsgGmDeleteMfrRoom: { c: {
-        roomId  : roomId,
-    }}});
+    Networks_Manager.send({
+        MsgGmDeleteMfrRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        }, 
+    });
 }
 export function reqGmDeleteMmrRoom(roomId: number): void {
-    Networks_Manager.send({ MsgGmDeleteMmrRoom: { c: {
-        roomId  : roomId,
-    }}});
+    Networks_Manager.send({
+        MsgGmDeleteMmrRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        }, 
+    });
 }
 export function reqGmDeleteMrrRoom(roomId: number): void {
-    Networks_Manager.send({ MsgGmDeleteMrrRoom: { c: {
-        roomId  : roomId,
-    }}});
+    Networks_Manager.send({
+        MsgGmDeleteMrrRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        }, 
+    });
 }
 export function reqGmDeleteCcrRoom(roomId: number): void {
-    Networks_Manager.send({ MsgGmDeleteCcrRoom: { c: {
-        roomId  : roomId,
-    }}});
+    Networks_Manager.send({
+        MsgGmDeleteCcrRoom : {
+            c : {
+                roomId : roomId,
+            }, 
+        }, 
+    });
 }
 
 export function reqGmSetUserPrivilege(userId: number, userPrivilege: UserPrivilege): void {
-    Networks_Manager.send({ MsgGmSetUserPrivilege: { c: {
-        userId        : userId,
-        userPrivilege : userPrivilege.toJson(),
-    } } });
+    Networks_Manager.send({
+        MsgGmSetUserPrivilege : {
+            c : {
+                userId        : userId,
+                userPrivilege : userPrivilege.toJson(),
+            }, 
+        }, 
+    });
 }
 async function _onMsgGmSetUserPrivilege(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as GmSetUserPrivilegeResponse;
@@ -61,8 +85,10 @@ async function _onMsgGmSetUserPrivilege(e: Egret_Egret.Event): Promise<void> {
 
 export function reqGmDeleteSpmAllScoreAndReplay(): void {
     Networks_Manager.send({
-        MsgGmDeleteSpmAllScoreAndReplay: { c: {
-        } },
+        MsgGmDeleteSpmAllScoreAndReplay : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgGmDeleteSpmAllScoreAndReplay(e: Egret_Egret.Event): void {
@@ -74,11 +100,13 @@ function _onMsgGmDeleteSpmAllScoreAndReplay(e: Egret_Egret.Event): void {
 
 export function reqGmAddUserMedal(userId: number, medalId: number, expireTimestamp: number): void {
     Networks_Manager.send({
-        MsgGmAddUserMedal: { c: {
-            userId          : userId,
-            medalId         : medalId,
-            expireTimestamp : expireTimestamp,
-        } },
+        MsgGmAddUserMedal : {
+            c : {
+                userId          : userId,
+                medalId         : medalId,
+                expireTimestamp : expireTimestamp,
+            }, 
+        },
     });
 }
 function _onMsgGmAddUserMedal(e: Egret_Egret.Event): void {
@@ -90,9 +118,11 @@ function _onMsgGmAddUserMedal(e: Egret_Egret.Event): void {
 
 export function reqGmUpdateReplayInfo(minReplayId: number, maxReplayId: number): void {
     Networks_Manager.send({
-        MsgGmUpdateReplayInfo: { c: {
-            minReplayId : minReplayId,
-            maxReplayId : maxReplayId,
-        } },
+        MsgGmUpdateReplayInfo : {
+            c : {
+                minReplayId : minReplayId,
+                maxReplayId : maxReplayId,
+            }, 
+        },
     });
 }

@@ -76,47 +76,47 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel, },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm, },
-            { ui: this._btnClear,       callback: this._onTouchedBtnClear, },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClear,       callback : this._onTouchedBtnClear },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
 
-            { ui: this._btnMin,         callback: this._onTouchedBtnMin },
-            { ui: this._btnMax,         callback: this._onTouchedBtnMax },
+            { ui : this._btnMin,         callback : this._onTouchedBtnMin },
+            { ui : this._btnMax,         callback : this._onTouchedBtnMax },
 
-            { ui: this._btnAdd1,        callback: this._onTouchedBtnAdd1 },
-            { ui: this._btnAdd10,       callback: this._onTouchedBtnAdd10 },
-            { ui: this._btnAdd100,      callback: this._onTouchedBtnAdd100 },
-            { ui: this._btnAdd1000,     callback: this._onTouchedBtnAdd1000 },
-            { ui: this._btnAdd10000,    callback: this._onTouchedBtnAdd10000 },
-            { ui: this._btnAdd100000,   callback: this._onTouchedBtnAdd100000 },
-            { ui: this._btnSub1,        callback: this._onTouchedBtnSub1 },
-            { ui: this._btnSub10,       callback: this._onTouchedBtnSub10 },
-            { ui: this._btnSub100,      callback: this._onTouchedBtnSub100 },
-            { ui: this._btnSub1000,     callback: this._onTouchedBtnSub1000 },
-            { ui: this._btnSub10000,    callback: this._onTouchedBtnSub10000 },
-            { ui: this._btnSub100000,   callback: this._onTouchedBtnSub100000 },
+            { ui : this._btnAdd1,        callback : this._onTouchedBtnAdd1 },
+            { ui : this._btnAdd10,       callback : this._onTouchedBtnAdd10 },
+            { ui : this._btnAdd100,      callback : this._onTouchedBtnAdd100 },
+            { ui : this._btnAdd1000,     callback : this._onTouchedBtnAdd1000 },
+            { ui : this._btnAdd10000,    callback : this._onTouchedBtnAdd10000 },
+            { ui : this._btnAdd100000,   callback : this._onTouchedBtnAdd100000 },
+            { ui : this._btnSub1,        callback : this._onTouchedBtnSub1 },
+            { ui : this._btnSub10,       callback : this._onTouchedBtnSub10 },
+            { ui : this._btnSub100,      callback : this._onTouchedBtnSub100 },
+            { ui : this._btnSub1000,     callback : this._onTouchedBtnSub1000 },
+            { ui : this._btnSub10000,    callback : this._onTouchedBtnSub10000 },
+            { ui : this._btnSub100000,   callback : this._onTouchedBtnSub100000 },
 
-            { ui: this._btn7,           callback: this._onTouchedBtn7 },
-            { ui: this._btn8,           callback: this._onTouchedBtn8 },
-            { ui: this._btn9,           callback: this._onTouchedBtn9 },
-            { ui: this._btn6,           callback: this._onTouchedBtn6 },
-            { ui: this._btn5,           callback: this._onTouchedBtn5 },
-            { ui: this._btn4,           callback: this._onTouchedBtn4 },
-            { ui: this._btn3,           callback: this._onTouchedBtn3 },
-            { ui: this._btn2,           callback: this._onTouchedBtn2 },
-            { ui: this._btn1,           callback: this._onTouchedBtn1 },
-            { ui: this._btn0,           callback: this._onTouchedBtn0 },
-            { ui: this._btnSign,        callback: this._onTouchedBtnSign },
-            { ui: this._btnBackspace,   callback: this._onTouchedBtnBackspace },
+            { ui : this._btn7,           callback : this._onTouchedBtn7 },
+            { ui : this._btn8,           callback : this._onTouchedBtn8 },
+            { ui : this._btn9,           callback : this._onTouchedBtn9 },
+            { ui : this._btn6,           callback : this._onTouchedBtn6 },
+            { ui : this._btn5,           callback : this._onTouchedBtn5 },
+            { ui : this._btn4,           callback : this._onTouchedBtn4 },
+            { ui : this._btn3,           callback : this._onTouchedBtn3 },
+            { ui : this._btn2,           callback : this._onTouchedBtn2 },
+            { ui : this._btn1,           callback : this._onTouchedBtn1 },
+            { ui : this._btn0,           callback : this._onTouchedBtn0 },
+            { ui : this._btnSign,        callback : this._onTouchedBtnSign },
+            { ui : this._btnBackspace,   callback : this._onTouchedBtnBackspace },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
+            callback   : this._onKeyboard,
+            thisObject : this,
         });
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -445,9 +445,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return undefined;
         }
         return Numbers_Utils.getValueInRange({
-            minValue    : openData.minValue,
-            maxValue    : openData.maxValue,
-            rawValue    : rawValue,
+            minValue : openData.minValue,
+            maxValue : openData.maxValue,
+            rawValue : rawValue,
         });
     }
 

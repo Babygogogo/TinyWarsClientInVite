@@ -41,7 +41,7 @@ function fastExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -50,7 +50,7 @@ function fastExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
             fogMap.updateMapFromPathsByFlare(
                 focusUnit.getPlayerIndex(),
                 Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
-                Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1]))
+                Helpers_Misc.getExisted(focusUnit.getFlareRadius(pathNodes[pathNodes.length - 1])),
             );
         }
 
@@ -71,15 +71,15 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, ac
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         const targetGridIndex   = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         if (targetGridIndex) {
             const flareRadius = Helpers_Misc.getExisted(actionExtraData.getFlareRadius(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_01);
-            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: flareRadius, mapSize })) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
                 gridVisualEffect.showEffectFlare(grid);
             }
         }
@@ -87,7 +87,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, ac
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -96,7 +96,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, ac
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -124,7 +124,7 @@ async function normalExeUnitLaunchFlare(war: BaseWar_Interface_IBwWar.IBwWar, ac
                 throw Helpers_Misc.newError(`Empty targetGridIndex.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_03);
             }
 
-            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: flareRadius, mapSize })) {
+            for (const grid of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize })) {
                 gridVisualEffect.showEffectFlare(grid);
             }
         }

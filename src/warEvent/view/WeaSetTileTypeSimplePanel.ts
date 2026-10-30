@@ -77,29 +77,29 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConUnitComparator,                   callback: this._onTouchedBtnConUnitComparator },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConUnitComparator,                   callback : this._onTouchedBtnConUnitComparator },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._btnChangeTileBase,                      callback: this._onTouchedBtnChangeTileBase },
-            { ui: this._btnClearTileBase,                       callback: this._onTouchedBtnClearTileBase },
+            { ui : this._btnChangeTileBase,                      callback : this._onTouchedBtnChangeTileBase },
+            { ui : this._btnClearTileBase,                       callback : this._onTouchedBtnClearTileBase },
 
-            { ui: this._btnChangeTileDecoration,                callback: this._onTouchedBtnChangeTileDecoration },
-            { ui: this._btnClearTileDecoration,                 callback: this._onTouchedBtnClearTileDecoration },
-            { ui: this._btnActDeleteTileDecoration,             callback: this._onTouchedBtnActDeleteTileDecoration },
+            { ui : this._btnChangeTileDecoration,                callback : this._onTouchedBtnChangeTileDecoration },
+            { ui : this._btnClearTileDecoration,                 callback : this._onTouchedBtnClearTileDecoration },
+            { ui : this._btnActDeleteTileDecoration,             callback : this._onTouchedBtnActDeleteTileDecoration },
 
-            { ui: this._btnChangeTileObject,                    callback: this._onTouchedBtnChangeTileObject },
-            { ui: this._btnClearTileObject,                     callback: this._onTouchedBtnClearTileObject },
-            { ui: this._btnActDeleteTileObject,                 callback: this._onTouchedBtnActDeleteTileObject },
+            { ui : this._btnChangeTileObject,                    callback : this._onTouchedBtnChangeTileObject },
+            { ui : this._btnClearTileObject,                     callback : this._onTouchedBtnClearTileObject },
+            { ui : this._btnActDeleteTileObject,                 callback : this._onTouchedBtnActDeleteTileObject },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,               callback : this._onNotifyTileAnimationTick },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -137,9 +137,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -155,10 +155,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -177,17 +177,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
 
                 if ((filter != null) && (!action.getConUnitComparator())) {
                     action.setConUnitComparator(ValueAndComparator.fromJson({
-                        comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
-                        value       : 0,
+                        comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                        value      : 0,
                     }));
                 }
 
@@ -209,17 +209,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = action.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon?.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
-                    currentValue    : oldCon?.getValue() ?? 0,
-                    minValue        : 0,
-                    maxValue        : 10,
-                    callback        : unitsCount => {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    currentValue : oldCon?.getValue() ?? 0,
+                    minValue     : 0,
+                    maxValue     : 10,
+                    callback     : unitsCount => {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
@@ -230,8 +230,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 oldCon.setComparator(sign);
                             } else {
                                 action.setConUnitComparator(ValueAndComparator.fromJson({
-                                    value       : unitsCount,
-                                    comparator  : sign,
+                                    value      : unitsCount,
+                                    comparator : sign,
                                 }));
                             }
 
@@ -239,7 +239,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         }
                     },
                 });
-            }
+            },
         });
     }
 
@@ -255,11 +255,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -278,8 +278,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileBasePanel, {
-            gameConfig  : war.getGcData(),
-            callback    : (baseType, baseShapeId) => {
+            gameConfig : war.getGcData(),
+            callback   : (baseType, baseShapeId) => {
                 action.setActTileBaseType(baseType);
                 action.setActTileBaseShapeId(baseShapeId);
                 action.setActChangeTileBase(true);
@@ -311,8 +311,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseTileDecorationPanel, {
-            gameConfig  : war.getGcData(),
-            callback    : (decorationType, decorationShapeId) => {
+            gameConfig : war.getGcData(),
+            callback   : (decorationType, decorationShapeId) => {
                 action.setActTileDecorationType(decorationType);
                 action.setActTileDecorationShapeId(decorationShapeId);
                 action.setActChangeTileDecoration(true);
@@ -476,14 +476,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _updateLabelActDeleteTileDecoration(): void {
         this._labelActDeleteTileDecoration.setText(this._getAction()?.getActDeleteTileDecoration()
             ? Lang_Utils.getText(Lang_Constants.TextType.Yes)
-            : ``
+            : ``,
         );
     }
 
     private _updateLabelActDeleteTileObject(): void {
         this._labelActDeleteTileObject.setText(this._getAction()?.getActDeleteTileObject()
             ? Lang_Utils.getText(Lang_Constants.TextType.Yes)
-            : ``
+            : ``,
         );
     }
 
@@ -500,15 +500,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const tileView  = this._tileView;
         tileView.init({
-            tileBaseType            : action.getActTileBaseType(),
-            tileBaseShapeId         : action.getActTileBaseShapeId(),
-            tileObjectType          : action.getActTileObjectType(),
-            tileObjectShapeId       : action.getActTileObjectShapeId(),
-            tileDecorationType      : action.getActTileDecorationType(),
-            tileDecorationShapeId   : action.getActTileDecorationShapeId(),
-            skinId                  : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
-            overridingSkinId        : undefined,
-            gameConfig              : war.getGcData(),
+            tileBaseType          : action.getActTileBaseType(),
+            tileBaseShapeId       : action.getActTileBaseShapeId(),
+            tileObjectType        : action.getActTileObjectType(),
+            tileObjectShapeId     : action.getActTileObjectShapeId(),
+            tileDecorationType    : action.getActTileDecorationType(),
+            tileDecorationShapeId : action.getActTileDecorationShapeId(),
+            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+            overridingSkinId      : undefined,
+            gameConfig            : war.getGcData(),
         });
         tileView.updateView();
     }

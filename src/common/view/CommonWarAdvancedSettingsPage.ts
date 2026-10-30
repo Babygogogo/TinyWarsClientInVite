@@ -48,10 +48,10 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBatch,   callback: this._onTouchedBtnBatch },
+            { ui : this._btnBatch,   callback : this._onTouchedBtnBatch },
         ]);
 
         this._listTitle.setItemRendererClass(RuleTitleRenderer);
@@ -60,10 +60,10 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         this._btnBatch.setIsVisible(false);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
     }
     protected override _doApplyOpenData(): void | Promise<void> {
@@ -92,12 +92,12 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
     }
     private _onTouchedBtnBatch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
-            callback            : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
+            callback   : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
             },
-            callbackOnCancel    : () => {
+            callbackOnCancel : () => {
                 this._setIsBatch(false);
                 this._updateBtnBatch();
             },
@@ -134,7 +134,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const dataArray         : DataForPlayerRenderer[] = [];
         for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playerRuleArray.length; ++playerIndex) {
             dataArray.push({
-                playerIndex: playerIndex,
+                playerIndex : playerIndex,
             });
         }
         await this._listPlayer.bindData(dataArray);
@@ -151,8 +151,8 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const dataArray             : DataForTitleRenderer[] = [];
         for (const playerRuleType of playerRuleTypeArray) {
             dataArray.push({
-                playerRuleType  : playerRuleType,
-                rendererWidth   : rendererWidth,
+                playerRuleType : playerRuleType,
+                rendererWidth  : rendererWidth,
             });
         }
         await this._listTitle.bindData(dataArray);
@@ -176,14 +176,14 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         for (const ruleType of playerRuleTypeArray) {
             for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
                 dataArray.push({
-                    canModify           : canModify,
-                    gcData              : gcData,
-                    gameModeId          : gameModeId,
-                    instanceWarRule     : instanceWarRule,
-                    warRuleCommonData   : warRuleCommonData,
-                    playerRuleType      : ruleType,
-                    playerRule          : Helpers_Misc.getExisted(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)),
-                    getIsBatch          : getIsBatch,
+                    canModify         : canModify,
+                    gcData            : gcData,
+                    gameModeId        : gameModeId,
+                    instanceWarRule   : instanceWarRule,
+                    warRuleCommonData : warRuleCommonData,
+                    playerRuleType    : ruleType,
+                    playerRule        : Helpers_Misc.getExisted(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)),
+                    getIsBatch        : getIsBatch,
                 });
             }
         }
@@ -217,10 +217,10 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
     }
 

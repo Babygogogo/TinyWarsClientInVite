@@ -175,8 +175,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             { ui : this._btnSelect1,                 callback : this._onTouchedBtnSelect1 },
             { ui : this._btnSelect2,                 callback : this._onTouchedBtnSelect2 },
-            { ui : this._imgCo1,                     callback : this._onTouchedImgCo1, },
-            { ui : this._imgCo2,                     callback : this._onTouchedImgCo2, },
+            { ui : this._imgCo1,                     callback : this._onTouchedImgCo1 },
+            { ui : this._imgCo2,                     callback : this._onTouchedImgCo2 },
             { ui : this._btnSkill1,                  callback : this._onTouchedBtnSkill1 },
             { ui : this._btnSkill2,                  callback : this._onTouchedBtnSkill2 },
             { ui : this._btnUnitView1,               callback : this._onTouchedBtnUnitView1 },
@@ -929,7 +929,7 @@ function createTileViewData(war: AuxiliaryTypes_AuxiliaryTypes.Undefinable<BaseW
     const baseType      = Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
     if (TileObjects_Utils.checkIsValidPlayerIndexForTileObject({
         playerIndex    : playerIndex,
-        tileObjectType : objectType
+        tileObjectType : objectType,
     })) {
         return {
             tileBaseType          : baseType,
@@ -973,7 +973,7 @@ function getAttackDamageInfoArray(calculatorData: CalculatorData, isCounter: boo
     const attackerUnitType  = attackerData.unitType;
     const defenderUnitType  = defenderData.unitType;
     const cfgAttackDamage   = getCfgDamage({
-        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType
+        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType,
     });
     if (cfgAttackDamage == null) {
         return [];
@@ -983,7 +983,7 @@ function getAttackDamageInfoArray(calculatorData: CalculatorData, isCounter: boo
     const attackerLuckLimit = getAttackerLuckLimit(calculatorData);
     for (let luckValue = attackerLuckLimit.lower; luckValue <= attackerLuckLimit.upper; ++luckValue) {
         const damage    = getAttackDamage({
-            luckValue, isCounter, calculatorData, cfgAttackDamage
+            luckValue, isCounter, calculatorData, cfgAttackDamage,
         });
         const info      = damageInfoArray.find(v => v.damage === damage);
         if (info) {
@@ -1011,7 +1011,7 @@ function getAttackDamageRange(calculatorData: CalculatorData, isCounter: boolean
     const attackerUnitType  = attackerData.unitType;
     const defenderUnitType  = defenderData.unitType;
     const cfgAttackDamage   = getCfgDamage({
-        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType
+        gameConfig, attackerUnitType, defenderUnitType, weaponType : attackerData.unitWeaponType,
     });
     if (cfgAttackDamage == null) {
         return null;
@@ -1153,7 +1153,7 @@ function getAttackModifierByCo({ isCounter, calculatorData }: {
         gameConfig         : gameConfig,
         templateCfg        : attackerTileCfg,
         customBuildingData : attackerTileCustomBuildingData,
-        unitType           : attackerUnitTypeId
+        unitType           : attackerUnitTypeId,
     });
     const weatherTypeId                     = calculatorData.weatherType;
     const getOwnTilesCount                  = Helpers_Misc.createLazyFunc2(() => attackerData.citiesCount);  // TODO: 这里做了简化处理（因为只有kindle有这个技能），以后如果有类似的新技能，就需要完整实现地形计数逻辑
@@ -1286,7 +1286,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
         gameConfig         : gameConfig,
         templateCfg        : defenderTileCfg,
         customBuildingData : defenderTileCustomBuildingData,
-        unitType           : defenderUnitTypeId
+        unitType           : defenderUnitTypeId,
     });
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, defenderCoId, defenderCoSkillType)) {
@@ -1331,7 +1331,7 @@ function getDefenseBonusMultiplier(calculatorData: CalculatorData): number {
         amountFromPromotion         * (100 - attackerOffensePierce[1]) / 100 +
         amountFromCo                * (100 - attackerOffensePierce[2]) / 100 +
         amountFromGlobalTiles       * (100 - attackerOffensePierce[3]) / 100 +
-        defenderData.defenseBonus   * (100 - attackerOffensePierce[4]) / 100    // TODO 计算器界面没有区分规则/事件导致的防御加成，所以这里无法准确计算
+        defenderData.defenseBonus   * (100 - attackerOffensePierce[4]) / 100,    // TODO 计算器界面没有区分规则/事件导致的防御加成，所以这里无法准确计算
     );
 }
 function getAttackDamage({ luckValue, isCounter, calculatorData, cfgAttackDamage }: {
@@ -1351,6 +1351,6 @@ function getAttackDamage({ luckValue, isCounter, calculatorData, cfgAttackDamage
     return Math.max(0, Math.floor(0.000001 +
         (cfgAttackDamage * attackBonusMultiplier + luckValue)   *
         (Units_Utils_Common.getNormalizedHp(attackerHp) / 10)     *
-        defenseBonusMultiplier
+        defenseBonusMultiplier,
     ));
 }

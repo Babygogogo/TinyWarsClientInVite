@@ -374,7 +374,7 @@ export function resizeMap({ mapRawData, newWidth, newHeight, gameConfig }: {
         mapTagIdFlags          : mapRawData.getMapTagIdFlags(),
         modifiedTime           : Timer_TimerModel.getServerTimestamp(),
         tileDataArray          : getNewTileDataListForResize({
-            mapRawData, newWidth, newHeight, gameConfig
+            mapRawData, newWidth, newHeight, gameConfig,
         }).map(v => v.toJson()),
         unitDataArray       : getNewUnitDataListForResize(mapRawData, newWidth, newHeight).map(v => v.toJson()),
         tileCustomNameArray : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
@@ -459,7 +459,7 @@ export function addOffset({ mapRawData, offsetX, offsetY, gameConfig }: {
         campaignMapData       : mapRawData.getCampaignMapData()?.toJson(),
         modifiedTime          : Timer_TimerModel.getServerTimestamp(),
         tileDataArray         : getNewTileDataListForOffset({
-            mapRawData, offsetX, offsetY, gameConfig
+            mapRawData, offsetX, offsetY, gameConfig,
         }).map(v => v.toJson()),
         unitDataArray          : getNewUnitDataListForOffset(mapRawData, offsetX, offsetY).map(v => v.toJson()),
         templateWarRuleArray   : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),

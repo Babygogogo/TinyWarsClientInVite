@@ -24,7 +24,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         Lang_Constants.TextType.F0098,
         Lang_Utils.getText(Lang_Constants.TextType.Players),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecPlayerPresence>): string | null {
@@ -44,7 +44,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (comparator != null) {
             subTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1404 : Lang_Constants.TextType.B1405)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1404 : Lang_Constants.TextType.B1405),
             )}`);
         }
     }
@@ -53,7 +53,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (comparator != null) {
             subTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConTileFilter() == null ? Lang_Constants.TextType.B1406 : Lang_Constants.TextType.B1407)
+                Lang_Utils.getText(data.getConTileFilter() == null ? Lang_Constants.TextType.B1406 : Lang_Constants.TextType.B1407),
             )}`);
         }
     }
@@ -69,7 +69,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         Lang_Utils.getText(Lang_Constants.TextType.Players),
         subTextArray.join(`\n`),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getErrorTip(data: WecPlayerPresence, playersCountUnneutral: number, mapSize: AuxiliaryTypes_MapSize.MapSize, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {

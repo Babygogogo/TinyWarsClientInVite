@@ -34,9 +34,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelTitle.setText(openData.title);
 
         const groupHeight = Numbers_Utils.getValueInRange({
-            rawValue    : labelContent.getUnscaledHeight() + 80,
-            minValue    : 140,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : labelContent.getUnscaledHeight() + 80,
+            minValue : 140,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         });
         this._group.setUnscaledManualHeight(groupHeight);
 

@@ -33,12 +33,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCmUpdateCampaignDesigners,    callback: this._onNotifyMsgCmUpdateCampaignDesigners },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCmUpdateCampaignDesigners,    callback : this._onNotifyMsgCmUpdateCampaignDesigners },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnAddDesigner,     callback: this._onTouchedBtnAddDesigner },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnAddDesigner,     callback : this._onTouchedBtnAddDesigner },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -73,10 +73,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchMultiUserPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B1138),
-            minChooseCount      : 1,
-            maxChooseCount      : 5,
-            callbackOnConfirm   : userIdArray => {
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1138),
+            minChooseCount    : 1,
+            maxChooseCount    : 5,
+            callbackOnConfirm : userIdArray => {
                 const userIdSet = new Set(userIdArray);
                 for (const userId of campaignInfo.getDesignerUserIdArray()) {
                     userIdSet.delete(userId);
@@ -134,9 +134,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const dataArray: DataForCampaignRenderer[] = designerUserIdArray
                 .sort((v1, v2) => v1 - v2)
                 .map(v => ({
-                    index           : 0,
-                    designerUserId  : v,
-                    campaignId      : campaignId,
+                    index          : 0,
+                    designerUserId : v,
+                    campaignId     : campaignId,
                 }));
             for (let i = 0; i < dataArray.length; ++i) {
                 dataArray[i].index = i;
@@ -158,10 +158,10 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnDelete,                      callback: this._onTouchedBtnDelete },
+            { ui : this._btnDelete,                      callback : this._onTouchedBtnDelete },
         ]);
     }
 
@@ -183,8 +183,8 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => Campaigns_Managements_Gateway.reqCmUpdateCampaignDesigners(openData.campaignId, [], [openData.designerUserId]),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => Campaigns_Managements_Gateway.reqCmUpdateCampaignDesigners(openData.campaignId, [], [openData.designerUserId]),
         });
     }
 

@@ -100,7 +100,7 @@ export function checkIsRedForAutoTourneyMode(): Promise<boolean> {
 
 export function openMultiPlayerModePanel(currentMode: GameModes_Constants.ModeId): void {
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-        availableNumberArray    : [
+        availableNumberArray : [
             GameModes_Constants.ModeId.Versus,
             GameModes_Constants.ModeId.Coop,
             GameModes_Constants.ModeId.Free,
@@ -108,12 +108,12 @@ export function openMultiPlayerModePanel(currentMode: GameModes_Constants.ModeId
             GameModes_Constants.ModeId.RankedMatch,
             GameModes_Constants.ModeId.AutoTourney,
         ],
-        currentNumber           : currentMode,
-        keepOrder               : true,
-        getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1013),
-        getNumberMainText           : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
-        getNumberHelpText       : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
-        checkIsNumberRed        : mode => {
+        currentNumber     : currentMode,
+        keepOrder         : true,
+        getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B1013),
+        getNumberMainText : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
+        getNumberHelpText : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
+        checkIsNumberRed  : mode => {
             switch (mode) {
                 case GameModes_Constants.ModeId.Versus           : return checkIsRedForMultiCustomMode();
                 case GameModes_Constants.ModeId.Coop             : return checkIsRedForMultiCoopMode();
@@ -124,7 +124,7 @@ export function openMultiPlayerModePanel(currentMode: GameModes_Constants.ModeId
                 default                                             : return false;
             }
         },
-        callbackOnConfirm       : mode => {
+        callbackOnConfirm : mode => {
             if (currentMode !== mode) {
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().McrMainMenuPanel);
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().MfrMainMenuPanel);
@@ -142,6 +142,6 @@ export function openMultiPlayerModePanel(currentMode: GameModes_Constants.ModeId
                     case GameModes_Constants.ModeId.AutoTourney   : GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrMainMenuPanel, void 0); return;
                 }
             }
-        }
+        },
     });
 }

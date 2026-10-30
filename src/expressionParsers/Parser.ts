@@ -80,7 +80,7 @@ export class Parser {
             if (this._tokenizer.getToken() !== ExpressionParsers_Enums.Token.Colon) {
                 throw Helpers_Misc.newError(
                     Lang_Utils.getFormattedText(Lang_Constants.TextType.F0039, this._tokenizer.getToken()),
-                    Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_Parser_ParseTernary_01
+                    Utils_ClientErrorCode.ClientErrorCode.ExpressionParser_Parser_ParseTernary_01,
                 );
             }
             this._tokenizer.tickToken();
@@ -427,7 +427,7 @@ export class Parser {
         // Don't Understand
         throw Helpers_Misc.newError(
             Lang_Utils.getFormattedText(Lang_Constants.TextType.F0040, token),
-            Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_06
+            Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseLeaf_06,
         );
     }
 
@@ -439,7 +439,7 @@ export class Parser {
                 if (token !== ExpressionParsers_Enums.Token.Identifier) {
                     throw Helpers_Misc.newError(
                         Lang_Utils.getFormattedText(Lang_Constants.TextType.F0041, token),
-                        Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseMember_00
+                        Utils_ClientErrorCode.ClientErrorCode.EpParser_ParseMember_00,
                     );
                 }
             }
@@ -746,10 +746,10 @@ export class Parser {
         customCounterNameSet    : Set<string>;
     }): { errorCode: Utils_ClientErrorCode.ClientErrorCode, errorText?: string } {
         if (str.length > WarEvents_Constants.Event.MaxExpressionLength) {
-            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_00 };
+            return { errorCode : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_00 };
         }
         if (str !== str.trim()) {
-            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_01 };
+            return { errorCode : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_01 };
         }
 
         let nodeCollection  : ExpressionParsers_Nodes_Collection.Collection | null = null;
@@ -761,12 +761,12 @@ export class Parser {
             const errorCode = error.errorCode;
             if (errorCode == null) {
                 return {
-                    errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_02,
+                    errorCode : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_02,
                 };
             } else {
                 return {
-                    errorCode   : errorCode,
-                    errorText   : error.message
+                    errorCode : errorCode,
+                    errorText : error.message
                         ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
                         : Lang_Utils.getErrorText(errorCode),
                 };
@@ -775,22 +775,22 @@ export class Parser {
 
         if (nodeCollection.getTokensCount() > WarEvents_Constants.Event.MaxExpressionTokensCount) {
             return {
-                errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_03,
+                errorCode : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_03,
             };
         }
 
         try {
             const actualResultType = nodeCollection.getResultType(contextType, customCounterNameSet);
             if (resultTypes.indexOf(actualResultType) >= 0) {
-                return { errorCode: Utils_ClientErrorCode.ClientErrorCode.NoError };
+                return { errorCode : Utils_ClientErrorCode.ClientErrorCode.NoError };
             } else {
                 const errorCode = Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_04;
                 return {
-                    errorCode   : errorCode,
-                    errorText   : `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${Lang_Utils.getFormattedText(
+                    errorCode : errorCode,
+                    errorText : `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${Lang_Utils.getFormattedText(
                         Lang_Constants.TextType.F0016,
                         resultTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(` / `),
-                        Lang_Utils.getExpressionParserResultTypeName(actualResultType)
+                        Lang_Utils.getExpressionParserResultTypeName(actualResultType),
                     )}`,
                 };
             }
@@ -799,12 +799,12 @@ export class Parser {
             const errorCode = error.errorCode;
             if (errorCode == null) {
                 return {
-                    errorCode   : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_05,
+                    errorCode : Utils_ClientErrorCode.ClientErrorCode.EpParser_GetErrorDataForString_05,
                 };
             } else {
                 return {
-                    errorCode   : errorCode,
-                    errorText   : error.message
+                    errorCode : errorCode,
+                    errorText : error.message
                         ? `${Lang_Utils.getText(Lang_Constants.TextType.B0452)} ${errorCode}: ${error.message}`
                         : Lang_Utils.getErrorText(errorCode),
                 };
@@ -817,14 +817,14 @@ export class Parser {
         customCounterNameSet    : Set<string>;
     }): { errorCode: Utils_ClientErrorCode.ClientErrorCode, errorText?: string } {
         if ((!str) && (!expressionInfo.isRequired)) {
-            return { errorCode: Utils_ClientErrorCode.ClientErrorCode.NoError };
+            return { errorCode : Utils_ClientErrorCode.ClientErrorCode.NoError };
         }
 
         return this.getErrorDataForString({
-            str                     : str ?? ``,
-            contextType             : expressionInfo.contextType,
-            resultTypes             : expressionInfo.resultTypes,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : str ?? ``,
+            contextType          : expressionInfo.contextType,
+            resultTypes          : expressionInfo.resultTypes,
+            customCounterNameSet : customCounterNameSet,
         });
     }
     public static checkIsValidString({ str, contextType, resultTypes, customCounterNameSet }: {
@@ -833,7 +833,9 @@ export class Parser {
         resultTypes             : ExpressionParsers_Enums.ResultType[];
         customCounterNameSet    : Set<string>;
     }): boolean {
-        return Parser.getErrorDataForString({ str, contextType, resultTypes, customCounterNameSet }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
+        return Parser.getErrorDataForString({
+            str, contextType, resultTypes, customCounterNameSet, 
+        }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
     public static checkIsValidString2({ str, expressionInfo, customCounterNameSet }: {
         str                     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>;
@@ -841,9 +843,9 @@ export class Parser {
         customCounterNameSet    : Set<string>;
     }): boolean {
         return Parser.getErrorDataForString2({
-            str                     : str,
-            expressionInfo          : expressionInfo,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : str,
+            expressionInfo       : expressionInfo,
+            customCounterNameSet : customCounterNameSet,
         }).errorCode === Utils_ClientErrorCode.ClientErrorCode.NoError;
     }
 }

@@ -89,37 +89,37 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConTileFilter,                       callback: this._onTouchedGroupModifyConTileFilter },
-            { ui: this._btnConTileFilter,                               callback: this._onTouchedBtnConTileFilter },
+            { ui : this._groupModifyConTileFilter,                       callback : this._onTouchedGroupModifyConTileFilter },
+            { ui : this._btnConTileFilter,                               callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._groupModifyActPlayerIndex,                      callback: this._onTouchedGroupModifyActPlayerIndex },
-            { ui: this._btnActPlayerIndex,                              callback: this._onTouchedBtnActPlayerIndex },
+            { ui : this._groupModifyActPlayerIndex,                      callback : this._onTouchedGroupModifyActPlayerIndex },
+            { ui : this._btnActPlayerIndex,                              callback : this._onTouchedBtnActPlayerIndex },
 
-            { ui: this._groupModifyActCurrentHp,                        callback: this._onTouchedGroupModifyActCurrentHp },
-            { ui: this._btnActCurrentHp,                                callback: this._onTouchedBtnActCurrentHp },
+            { ui : this._groupModifyActCurrentHp,                        callback : this._onTouchedGroupModifyActCurrentHp },
+            { ui : this._btnActCurrentHp,                                callback : this._onTouchedBtnActCurrentHp },
 
-            { ui: this._groupModifyActCurrentBuildPoint,                callback: this._onTouchedGroupModifyActCurrentBuildPoint },
-            { ui: this._btnActCurrentBuildPoint,                        callback: this._onTouchedBtnActCurrentBuildPoint },
+            { ui : this._groupModifyActCurrentBuildPoint,                callback : this._onTouchedGroupModifyActCurrentBuildPoint },
+            { ui : this._btnActCurrentBuildPoint,                        callback : this._onTouchedBtnActCurrentBuildPoint },
 
-            { ui: this._groupModifyActCurrentCapturePoint,              callback: this._onTouchedGroupModifyActCurrentCapturePoint },
-            { ui: this._btnActCurrentCapturePoint,                      callback: this._onTouchedBtnActCurrentCapturePoint },
+            { ui : this._groupModifyActCurrentCapturePoint,              callback : this._onTouchedGroupModifyActCurrentCapturePoint },
+            { ui : this._btnActCurrentCapturePoint,                      callback : this._onTouchedBtnActCurrentCapturePoint },
 
-            { ui: this._groupModifyActIsHighlighted,                    callback: this._onTouchedGroupModifyActIsHighlighted },
-            { ui: this._btnActIsHighlighted,                            callback: this._onTouchedBtnActIsHighlighted },
+            { ui : this._groupModifyActIsHighlighted,                    callback : this._onTouchedGroupModifyActIsHighlighted },
+            { ui : this._btnActIsHighlighted,                            callback : this._onTouchedBtnActIsHighlighted },
 
-            { ui: this._groupModifyActGroupedLocationIdArray,           callback: this._onTouchedGroupModifyActGroupedLocationIdArray },
-            { ui: this._btnActGroupedLocationIdArray,                   callback: this._onTouchedBtnActGroupedLocationIdArray },
+            { ui : this._groupModifyActGroupedLocationIdArray,           callback : this._onTouchedGroupModifyActGroupedLocationIdArray },
+            { ui : this._btnActGroupedLocationIdArray,                   callback : this._onTouchedBtnActGroupedLocationIdArray },
 
-            { ui: this._groupModifyActCustomNameId,                     callback: this._onTouchedGroupModifyActCustomNameId },
-            { ui: this._btnActCustomNameId,                             callback: this._onTouchedBtnActCustomNameId },
+            { ui : this._groupModifyActCustomNameId,                     callback : this._onTouchedGroupModifyActCustomNameId },
+            { ui : this._btnActCustomNameId,                             callback : this._onTouchedBtnActCustomNameId },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -143,9 +143,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -171,11 +171,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTileFilter(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ConTileFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -202,11 +202,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActPlayerIndex(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActPlayerIndex,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActPlayerIndex(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActPlayerIndex,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActPlayerIndex() != text) {
                     action.setActPlayerIndex(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -233,11 +233,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCurrentHp(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentHp,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCurrentHp(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentHp,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCurrentHp() != text) {
                     action.setActCurrentHp(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -264,11 +264,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCurrentBuildPoint(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentBuildPoint,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCurrentBuildPoint(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentBuildPoint,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCurrentBuildPoint() != text) {
                     action.setActCurrentBuildPoint(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -295,11 +295,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCurrentCapturePoint(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentCapturePoint,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCurrentCapturePoint(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCurrentCapturePoint,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCurrentCapturePoint() != text) {
                     action.setActCurrentCapturePoint(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -326,11 +326,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActIsHighlighted(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActIsHighlighted,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActIsHighlighted(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActIsHighlighted,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActIsHighlighted() != text) {
                     action.setActIsHighlighted(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -357,11 +357,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActGroupedLocationIdArray(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActGroupedLocationIdArray,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActGroupedLocationIdArray(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActGroupedLocationIdArray,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActGroupedLocationIdArray() != text) {
                     action.setActGroupedLocationIdArray(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -388,11 +388,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCustomNameId(),
-            expressionInfo  : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCustomNameId,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCustomNameId(),
+            expressionInfo : WarEvents_Actions_Constants_SetTileStateExpr.ExpressionInfoDict.ActCustomNameId,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCustomNameId() != text) {
                     action.setActCustomNameId(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

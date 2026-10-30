@@ -21,9 +21,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConPositionFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ConPositionFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConPositionFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ConPositionFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -31,9 +31,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActVisibilityArray(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActVisibilityArray(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -65,9 +65,9 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ConPositionFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConPositionFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConPositionFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -77,9 +77,9 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
     {
         const info      = WarEvents_Actions_Constants_SetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActVisibilityArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActVisibilityArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;

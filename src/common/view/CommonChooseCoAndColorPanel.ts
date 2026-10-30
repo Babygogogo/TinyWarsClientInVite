@@ -44,14 +44,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                           callback: this.closePanel },
+            { ui : this._btnClose,                           callback : this.closePanel },
 
-            { ui: this._btnCo,                              callback: this._onTouchedBtnCo },
-            { ui: this._btnColor,                           callback: this._onTouchedBtnColor },
-            { ui: this._btnConfirm,                         callback: this._onTouchedBtnConfirm },
+            { ui : this._btnCo,                              callback : this._onTouchedBtnCo },
+            { ui : this._btnColor,                           callback : this._onTouchedBtnColor },
+            { ui : this._btnConfirm,                         callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -83,11 +83,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : openData.gcData,
-            availableCoIdArray  : openData.availableCoIdArray,
-            currentCoId         : this._coId,
-            isBan               : false,
-            callbackOnConfirm   : coId => {
+            gameConfig         : openData.gcData,
+            availableCoIdArray : openData.availableCoIdArray,
+            currentCoId        : this._coId,
+            isBan              : false,
+            callbackOnConfirm  : coId => {
                 this._coId = coId;
                 this._updateLayoutCo();
             },
@@ -100,12 +100,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
-            availableSkinIdArray    : openData.availableSkinIdArray,
-            currentSkinId           : this._skinId,
-            callback                : skinId => {
+            availableSkinIdArray : openData.availableSkinIdArray,
+            currentSkinId        : this._skinId,
+            callback             : skinId => {
                 this._skinId = skinId;
                 this._updateLayoutColor();
-            }
+            },
         });
     }
     private _onTouchedBtnConfirm(): void {

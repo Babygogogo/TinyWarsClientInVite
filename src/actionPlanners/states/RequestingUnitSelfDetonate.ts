@@ -57,12 +57,12 @@ export class RequestingUnitSelfDetonate implements ActionPlanners_States_IState.
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitSelfDetonate  : {
-                    path            : {
-                        nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId        : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitSelfDetonate : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    launchUnitId : actionPlanner.getUnitIdForFocusUnitLoaded(),
                 },
             }));
 
@@ -76,7 +76,7 @@ export class RequestingUnitSelfDetonate implements ActionPlanners_States_IState.
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitSelfDetonate(
                 war,
                 actionPlanner.generateProtoMovePath(),
-                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null
+                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
             );
         }
     }

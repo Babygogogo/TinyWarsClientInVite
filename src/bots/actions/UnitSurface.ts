@@ -15,14 +15,16 @@ export async function getScoreAndActionUnitSurface(unit: Units_IUnit.IUnit, path
         const score = await getScoreForActionUnitSurface(unit);
         return {
             score,
-            action  : WoContainer.fromJson({ WoUnitSurface: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-            } }),
+            action : WoContainer.fromJson({
+                WoUnitSurface : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                }, 
+            }),
         };
     }
 }

@@ -50,10 +50,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
     private _framesForStateAnimation    : string[]  = [];
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.UnitAnimationTick,            callback: this._onNotifyUnitAnimationTick },
-        { type: Notifications_TypeId.TypeId.StateIndicatorTick,           callback: this._onNotifyUnitStateIndicatorTick },
-        { type: Notifications_TypeId.TypeId.UnitFlashTick,                callback: this._onNotifyUnitFlashTick },
-        { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,    callback: this._onNotifyBwOverridingSkinIdChanged },
+        { type : Notifications_TypeId.TypeId.UnitAnimationTick,            callback : this._onNotifyUnitAnimationTick },
+        { type : Notifications_TypeId.TypeId.StateIndicatorTick,           callback : this._onNotifyUnitStateIndicatorTick },
+        { type : Notifications_TypeId.TypeId.UnitFlashTick,                callback : this._onNotifyUnitFlashTick },
+        { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,    callback : this._onNotifyBwOverridingSkinIdChanged },
     ];
 
     public constructor() {
@@ -165,9 +165,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
 
         img.setIsVisible(true);
         img.loadSource(Common_Model_CommonModel.getCachedUnitFlashImageSource({
-            version     : Users_Model.getSelfSettingsTextureVersion(),
-            skinId      : ForceSkins_Utils.getFinalSkinId(war, player.getPlayerIndex()),
-            unitType    : unit.getUnitType(),
+            version  : Users_Model.getSelfSettingsTextureVersion(),
+            skinId   : ForceSkins_Utils.getFinalSkinId(war, player.getPlayerIndex()),
+            unitType : unit.getUnitType(),
         }));
     }
     private _onNotifyBwOverridingSkinIdChanged(): void {
@@ -196,13 +196,13 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
     private _tickUnitAnimationFrame(): void {
         const unit = Helpers_Misc.getExisted(this.getUnit());
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData      : unit.getGcData(),
-            version         : Users_Model.getSelfSettingsTextureVersion(),
-            isDark          : this._isDark,
-            animationType   : this._animationType,
-            tickCount       : Common_Model_CommonModel.getUnitAnimationTickCount(),
-            skinId          : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
-            unitType        : unit.getUnitType(),
+            gcData        : unit.getGcData(),
+            version       : Users_Model.getSelfSettingsTextureVersion(),
+            isDark        : this._isDark,
+            animationType : this._animationType,
+            tickCount     : Common_Model_CommonModel.getUnitAnimationTickCount(),
+            skinId        : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+            unitType      : unit.getUnitType(),
         }));
     }
 
@@ -242,7 +242,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const framesCount = this._framesForStateAnimation.length;
         this._imgState.loadSource(framesCount <= 0
             ? ``
-            : this._framesForStateAnimation[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount]
+            : this._framesForStateAnimation[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount],
         );
     }
 
@@ -329,7 +329,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                                 isInvisible         : unit.checkIsInvisible(gridIndex),
                                 unitPlayerIndex     : playerIndex,
                                 observerTeamIndexes : watcherTeamIndexes,
-                            }))
+                            })),
                         );
                     });
                 } else {
@@ -352,7 +352,7 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                                 isInvisible         : unit.checkIsInvisible(gridIndex),
                                 unitPlayerIndex     : playerIndex,
                                 observerTeamIndexes : watcherTeamIndexes,
-                            }))
+                            })),
                         );
                     });
                 }
@@ -360,8 +360,8 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
 
             const point = gridIndex.createPointByGridIndex();
             tween.to(
-                { customX: point.x, customY: point.y },
-                20000 / Math.max(100, Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct())
+                { customX : point.x, customY : point.y },
+                20000 / Math.max(100, Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct()),
             );
         }
 
@@ -399,12 +399,12 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                     cursor.setIsVisible(false);
                     war.getGridVisualEffect().showEffectAiming(aiming, AIMING_TIME_MS);
                 })
-                .wait(AIMING_TIME_MS)
-                .call(() => {
-                    cursor.setIsMovableByTouches(true);
-                    cursor.setIsVisible(true);
-                    this._resetImgUnitFlippedX();
-                    if ((isBlocked)                                         &&
+                    .wait(AIMING_TIME_MS)
+                    .call(() => {
+                        cursor.setIsMovableByTouches(true);
+                        cursor.setIsVisible(true);
+                        this._resetImgUnitFlippedX();
+                        if ((isBlocked)                                         &&
                         (Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
                             war                 : war,
                             unitType            : unitType,
@@ -414,18 +414,18 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                             unitPlayerIndex     : playerIndex,
                             observerTeamIndexes : watcherTeamIndexes,
                         }))
-                    ) {
-                        war.getGridVisualEffect().showEffectBlock(endingGridIndex);
-                        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
-                    }
-                    Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
+                        ) {
+                            war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+                        }
+                        Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
-                    if (updateViewAfterMove) {
-                        unit.updateView();
-                    }
+                        if (updateViewAfterMove) {
+                            unit.updateView();
+                        }
 
-                    resolve();
-                });
+                        resolve();
+                    });
             }
         });
     }
@@ -491,8 +491,8 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
 
             const point = gridIndex.createPointByGridIndex();
             tween.to(
-                { customX: point.x, customY: point.y },
-                20000 / Math.max(100, Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct())
+                { customX : point.x, customY : point.y },
+                20000 / Math.max(100, Users_Model.getSelfSettingsUnitMoveAniSpeedMultiplierPct()),
             );
         }
 
@@ -528,22 +528,22 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
                     cursor.setIsVisible(false);
                     war.getGridVisualEffect().showEffectAiming(aiming, AIMING_TIME_MS);
                 })
-                .wait(AIMING_TIME_MS)
-                .call(() => {
-                    cursor.setIsMovableByTouches(true);
-                    cursor.setIsVisible(true);
+                    .wait(AIMING_TIME_MS)
+                    .call(() => {
+                        cursor.setIsMovableByTouches(true);
+                        cursor.setIsVisible(true);
 
-                    this._resetImgUnitFlippedX();
-                    if ((isBlockedInEnd) && (isVisibleInEnd)) {
-                        war.getGridVisualEffect().showEffectBlock(endingGridIndex);
-                        Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
-                    }
-                    (deleteViewAfterMoving) && (unitMapView.removeUnit(this));
+                        this._resetImgUnitFlippedX();
+                        if ((isBlockedInEnd) && (isVisibleInEnd)) {
+                            war.getGridVisualEffect().showEffectBlock(endingGridIndex);
+                            Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.Block);
+                        }
+                        (deleteViewAfterMoving) && (unitMapView.removeUnit(this));
 
-                    Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
+                        Sounds_SoundPlayer.fadeoutLongSfxForMoveUnit(moveSfxCfg);
 
-                    resolve();
-                });
+                        resolve();
+                    });
             }
         });
     }
@@ -556,17 +556,17 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const skillType = unit.getPlayer().getCoUsingSkillType();
         if (skillType === CoSkills_Constants.SkillTypeId.Power) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.ActivatingCoPower,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoPower,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.ActivatingCoSuperPower,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoSuperPower,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -574,19 +574,19 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.getIsCoOnboard()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.CoOnboard,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.CoOnboard,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         } else {
             const promotion = unit.getCurrentPromotion();
             if (promotion > 0) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitPromotion({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    promotion   : promotion,
-                    skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                    version   : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark    : this._isDark,
+                    promotion : promotion,
+                    skinId    : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
                 }));
             }
         }
@@ -595,10 +595,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.checkIsFuelInShort()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowFuel,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowFuel,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -606,18 +606,18 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.checkIsPrimaryWeaponAmmoInShort()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowPrimaryAmmo,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowPrimaryAmmo,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
         if (unit.checkIsFlareAmmoInShort()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowFlareAmmo,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowFlareAmmo,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -625,10 +625,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.getIsDiving()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.Diving,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.Diving,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -636,10 +636,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.checkIsCapturingTile()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.CapturingTile,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.CapturingTile,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -647,10 +647,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.checkIsBuildingTile()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.BuildingTile,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.BuildingTile,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -660,10 +660,10 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         if ((war) && (unit.getMaxLoadUnitsCount())) {
             if (unit.getLoadedUnitsCount() > 0) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    iconTypeId  : Units_Constants.CornerStateIconTypeId.LoadingUnits,
-                    skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                    version    : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark     : this._isDark,
+                    iconTypeId : Units_Constants.CornerStateIconTypeId.LoadingUnits,
+                    skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
                 }));
             }
         }
@@ -672,18 +672,18 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const unit = Helpers_Misc.getExisted(this.getUnit());
         if (unit.checkIsBuildMaterialInShort()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowBuildMaterial,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowBuildMaterial,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
         if (unit.checkIsProduceMaterialInShort()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowProduceMaterial,
-                skinId      : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowProduceMaterial,
+                skinId     : ForceSkins_Utils.getFinalSkinId(unit.getWar(), unit.getPlayerIndex()),
             }));
         }
     }
@@ -691,9 +691,9 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer implements U
         const arr = this._framesForStateAnimation;
         for (const buff of Helpers_Misc.getExisted(this.getUnit()).getBuffList()) {
             arr.push(Helpers_ImageSource.getUnitBuff({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                buffTypeId  : buff.getBuffTypeId(),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                buffTypeId : buff.getBuffTypeId(),
             }));
         }
     }

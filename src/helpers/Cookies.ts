@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 export function setValue(key: string, value: string): void {
-    Cookies.set(key, value, { expires: 365 });
+    Cookies.set(key, value, { expires : 365 });
 }
 
 export function getInt(key: string): number | null {

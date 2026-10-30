@@ -60,18 +60,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,              callback: this._onNotifyUnitAnimationTick },
-            { type: Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,   callback: this._onMsgCommonLatestConfigVersion },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,              callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,   callback : this._onMsgCommonLatestConfigVersion },
         ]);
         this._setUiListenerArray([
-            { ui: this._group,              callback: this._onTouchedSelf,          mouseStyle: Helpers_PointerInput.MouseStyleType.Default },
-            { ui: this._btnGuest,           callback: this._onTouchedBtnGuest },
-            { ui: this._btnTutorial,        callback: this._onTouchedBtnTutorial },
-            { ui: this._btnLandscape,       callback: this._onTouchedBtnLandscape },
-            { ui: this._btnExportMapCache,  callback: this._onTouchedBtnExportMapCache },
-            { ui: this._btnVersion,         callback: this._onTouchedBtnVersion },
-            { ui: this._btnSound,           callback: this._onTouchedBtnSound },
+            { ui : this._group,              callback : this._onTouchedSelf,          mouseStyle : Helpers_PointerInput.MouseStyleType.Default },
+            { ui : this._btnGuest,           callback : this._onTouchedBtnGuest },
+            { ui : this._btnTutorial,        callback : this._onTouchedBtnTutorial },
+            { ui : this._btnLandscape,       callback : this._onTouchedBtnLandscape },
+            { ui : this._btnExportMapCache,  callback : this._onTouchedBtnExportMapCache },
+            { ui : this._btnVersion,         callback : this._onTouchedBtnVersion },
+            { ui : this._btnSound,           callback : this._onTouchedBtnSound },
         ]);
         this._listLanguage.setItemRendererClass(LanguageRenderer);
 
@@ -91,14 +91,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 LocalData_Storage.setShowExportMapCachePopup(false);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
-                    getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0971),
-                    callback            : () => openPanelForExportMapCache(),
-                    callbackOnCancel    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
-                        getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0972),
-                        callback            : () => openPanelForExportMapCache(),
-                        callbackOnCancel    : () => LocalData_Storage.setShowExportMapCachePopup(false),
+                    getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
+                    getContent       : () => Lang_Utils.getText(Lang_Constants.TextType.A0971),
+                    callback         : () => openPanelForExportMapCache(),
+                    callbackOnCancel : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                        getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1470),
+                        getContent       : () => Lang_Utils.getText(Lang_Constants.TextType.A0972),
+                        callback         : () => openPanelForExportMapCache(),
+                        callbackOnCancel : () => LocalData_Storage.setShowExportMapCachePopup(false),
                     }),
                 });
             }
@@ -148,10 +148,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
-                currentNumber           : currentRotation,
-                availableNumberArray    : [0, 1, 2, 3],
-                getNumberMainText       : num => {
+                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0159),
+                currentNumber        : currentRotation,
+                availableNumberArray : [0, 1, 2, 3],
+                getNumberMainText    : num => {
                     switch (num) {
                         case 0  : return Lang_Utils.getText(Lang_Constants.TextType.B0377);
                         case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0419);
@@ -160,7 +160,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         default : return Lang_Constants.UndefinedError;
                     }
                 },
-                callbackOnConfirm       : num => {
+                callbackOnConfirm : num => {
                     try {
                         LocalData_Storage.setScreenRotation(num);
                         inject.setScreenOrientation(num);
@@ -200,9 +200,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const listLanguage  = this._listLanguage;
         const languageType  = Lang_Utils.getCurrentLanguageType();
         const dataArray     : DataForLanguageRenderer[] = [
-            { languageType: Lang_Constants.LanguageType.Chinese },
-            { languageType: Lang_Constants.LanguageType.English },
-            { languageType: Lang_Constants.LanguageType.Spanish },
+            { languageType : Lang_Constants.LanguageType.Chinese },
+            { languageType : Lang_Constants.LanguageType.English },
+            { languageType : Lang_Constants.LanguageType.Spanish },
         ];
         await listLanguage.bindData(dataArray);
         listLanguage.setSelectedItemIndexes([dataArray.findIndex(v => v.languageType === languageType)]);
@@ -210,84 +210,84 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgBackground,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._imgBackground,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopLeft,
-            waitTime    : 1400,
-            beginProps  : { customX: -40, customAlpha: 0 },
-            endProps    : { customX: 0, customAlpha: 1 },
+            obj        : this._groupTopLeft,
+            waitTime   : 1400,
+            beginProps : { customX : -40, customAlpha : 0 },
+            endProps   : { customX : 0, customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._listLanguage,
-            waitTime    : 1400,
-            beginProps  : { customX: -40, customAlpha: 0 },
-            endProps    : { customX: 0, customAlpha: 1 },
+            obj        : this._listLanguage,
+            waitTime   : 1400,
+            beginProps : { customX : -40, customAlpha : 0 },
+            endProps   : { customX : 0, customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRight,
-            waitTime    : 1500,
-            beginProps  : { customX: 40, customAlpha: 0 },
-            endProps    : { customX: 0, customAlpha: 1 },
+            obj        : this._groupTopRight,
+            waitTime   : 1500,
+            beginProps : { customX : 40, customAlpha : 0 },
+            endProps   : { customX : 0, customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRightButton,
-            waitTime    : 1500,
-            beginProps  : { customX: 40, customAlpha: 0 },
-            endProps    : { customX: 0, customAlpha: 1 },
+            obj        : this._groupRightButton,
+            waitTime   : 1500,
+            beginProps : { customX : 40, customAlpha : 0 },
+            endProps   : { customX : 0, customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._labelVersion,
-            waitTime    : 1600,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._labelVersion,
+            waitTime   : 1600,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupCopyright,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
-            waitTime    : 1700,
+            obj        : this._groupCopyright,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
+            waitTime   : 1700,
         });
 
         await Timer_TimerModel.wait(1700 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._imgBackground,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._imgBackground,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopLeft,
-            beginProps  : { customX: 0, customAlpha: 1 },
-            endProps    : { customX: -40, customAlpha: 0 },
+            obj        : this._groupTopLeft,
+            beginProps : { customX : 0, customAlpha : 1 },
+            endProps   : { customX : -40, customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._listLanguage,
-            beginProps  : { customX: 0, customAlpha: 1 },
-            endProps    : { customX: -40, customAlpha: 0 },
+            obj        : this._listLanguage,
+            beginProps : { customX : 0, customAlpha : 1 },
+            endProps   : { customX : -40, customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._labelVersion,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._labelVersion,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRight,
-            beginProps  : { customX: 0, customAlpha: 1 },
-            endProps    : { customX: 40, customAlpha: 0 },
+            obj        : this._groupTopRight,
+            beginProps : { customX : 0, customAlpha : 1 },
+            endProps   : { customX : 40, customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRightButton,
-            beginProps  : { customX: 0, customAlpha: 1 },
-            endProps    : { customX: 40, customAlpha: 0 },
+            obj        : this._groupRightButton,
+            beginProps : { customX : 0, customAlpha : 1 },
+            endProps   : { customX : 40, customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupCopyright,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._groupCopyright,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -326,7 +326,7 @@ class LanguageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._applySettingsForWholeTouch();
@@ -374,7 +374,7 @@ async function checkHasMapCache(): Promise<boolean> {
 async function openPanelForExportMapCache(): Promise<void> {
     if (!await checkHasMapCache()) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0976),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0976),
         });
         return;
     }
@@ -388,7 +388,7 @@ async function openPanelForExportMapCache(): Promise<void> {
         ]));
     } catch {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
         });
         return;
     }
@@ -398,7 +398,7 @@ async function openPanelForExportMapCache(): Promise<void> {
     const mapEditor     = resultArray[2];
     if (campaignMap.length + normalMap.length + mapEditor.length === 0) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0974),
         });
         return;
     }
@@ -428,13 +428,13 @@ async function openPanelForExportMapCache(): Promise<void> {
                 await navigator.clipboard.writeText(resultString);
             } catch {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0973),
+                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0973),
                 });
                 return;
             }
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0975),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0975),
             });
             LocalData_Storage.setShowExportMapCachePopup(false);
         };
@@ -445,15 +445,15 @@ async function openPanelForExportMapCache(): Promise<void> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await cb();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await cb();
                 },

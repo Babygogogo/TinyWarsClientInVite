@@ -61,9 +61,9 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
         this.setUnscaledManualHeight(getGridHeight() * mapRawData.getMapHeight());
         this._tileMapView.showTileMap(gameConfig, mapRawData.getTileDataArray(), overridingPlayers);
         this._unitMapView.showUnitMap({
-            unitDataArray   : mapRawData.getUnitDataArray(),
-            players         : overridingPlayers,
-            gameConfig      : gameConfig,
+            unitDataArray : mapRawData.getUnitDataArray(),
+            players       : overridingPlayers,
+            gameConfig    : gameConfig,
         });
     }
     public async showMapByWarData({ warData, showInitialWarData, overridingPlayers }: {
@@ -99,9 +99,9 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
                 const mapRawData = Helpers_Misc.getExisted(await Campaigns_Mains_Provider.getCampaignMapRawData(settingsForCaw.getCampaignId(), settingsForCaw.getCampaignMapId()));
                 if ((mapRawData.getCampaignMapData()?.getRevision() ?? 0) === (settingsForCaw.getCampaignMapRevision())) {
                     this.showMapByMapData({
-                        mapRawData  : mapRawData,
-                        gameConfig  : gameConfig,
-                        overridingPlayers     : overridingPlayers,
+                        mapRawData        : mapRawData,
+                        gameConfig        : gameConfig,
+                        overridingPlayers : overridingPlayers,
                     });
                 } else {
                     this.clear();
@@ -115,9 +115,9 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
             const normalMapId = Helpers_ProtoSchema_WarSerialization_SerialWar.getNormalMapId(warData);
             if (normalMapId != null) {
                 this.showMapByMapData({
-                    mapRawData  : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                    gameConfig  : gameConfig,
-                    overridingPlayers     : overridingPlayers,
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    gameConfig        : gameConfig,
+                    overridingPlayers : overridingPlayers,
                 });
                 return;
             }
@@ -136,9 +136,9 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
         overridingPlayers ??= Helpers_Misc.getExisted(warData.getPlayerManager()?.getPlayers());
         this._tileMapView.showTileMap(gameConfig, tileMap.getTiles(), overridingPlayers);
         this._unitMapView.showUnitMap({
-            unitDataArray   : field.getUnitMap()?.getUnits() ?? [],
-            players         : overridingPlayers,
-            gameConfig      : gameConfig,
+            unitDataArray : field.getUnitMap()?.getUnits() ?? [],
+            players       : overridingPlayers,
+            gameConfig    : gameConfig,
         });
     }
 
@@ -150,14 +150,14 @@ export class CommonMapView extends Ui_Components_UiContainerBase.UiContainerBase
 
 class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _borderLayer           = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgCornerUL           = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0000` });
-    private readonly _imgCornerUR           = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0001` });
-    private readonly _imgCornerDR           = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0002` });
-    private readonly _imgCornerDL           = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0003` });
-    private readonly _imgBorderU            = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0000` });
-    private readonly _imgBorderR            = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0001` });
-    private readonly _imgBorderD            = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0002` });
-    private readonly _imgBorderL            = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0003` });
+    private readonly _imgCornerUL           = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0000` });
+    private readonly _imgCornerUR           = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0001` });
+    private readonly _imgCornerDR           = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0002` });
+    private readonly _imgCornerDL           = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0003` });
+    private readonly _imgBorderU            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0000` });
+    private readonly _imgBorderR            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0001` });
+    private readonly _imgBorderD            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0002` });
+    private readonly _imgBorderL            = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0003` });
 
     private readonly _baseLayer             = new TileBaseLayer();
     private readonly _decorationLayer       = new TileDecorationLayer();
@@ -165,8 +165,8 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _objectLayer           = new TileObjectLayer();
 
     private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
-        { type: Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged, callback: this._onNotifyIsShowGridBorderChanged },
+        { type : Notifications_TypeId.TypeId.TileAnimationTick,                   callback : this._onNotifyTileAnimationTick },
+        { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged, callback : this._onNotifyIsShowGridBorderChanged },
     ];
 
     public constructor() {
@@ -224,7 +224,7 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
         const gridBorderLayer                           = this._gridBorderLayer;
         gridBorderLayer.removeUiChildren();
         for (let x = 1; x < mapWidth; ++x) {
-            const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
+            const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
             img.setIsSmoothing(false);
             img.setUnscaledManualWidth(1);
             img.setUnscaledManualHeight(borderHeight);
@@ -232,7 +232,7 @@ class TileMapView extends Ui_Components_UiContainer.UiContainer {
             gridBorderLayer.addUiChild(img);
         }
         for (let y = 1; y < mapHeight; ++y) {
-            const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
+            const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
             img.setIsSmoothing(false);
             img.setUnscaledManualWidth(borderWidth);
             img.setUnscaledManualHeight(1);
@@ -446,12 +446,12 @@ class TileBaseLayer extends TileLayerBase {
         return tileData == null
             ? ``
             : Common_Model_CommonModel.getCachedTileBaseImageSource({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                baseType    : tileData.getBaseType(),
-                shapeId     : tileData.getBaseShapeId(),
-                isDark      : false,
-                skinId      : ForceSkins_Constants.SkinId.Neutral,
+                version   : Users_Model.getSelfSettingsTextureVersion(),
+                themeType : Tiles_Constants_Common.ThemeTypeId.Normal,
+                baseType  : tileData.getBaseType(),
+                shapeId   : tileData.getBaseShapeId(),
+                isDark    : false,
+                skinId    : ForceSkins_Constants.SkinId.Neutral,
                 tickCount,
             });
     }
@@ -466,12 +466,12 @@ class TileDecorationLayer extends TileLayerBase {
         return tileData == null
             ? ``
             : Common_Model_CommonModel.getCachedTileDecorationImageSource({
-                version             : Users_Model.getSelfSettingsTextureVersion(),
-                themeType           : Tiles_Constants_Common.ThemeTypeId.Normal,
-                tileDecorationType  : tileData.getDecorationType(),
-                shapeId             : tileData.getDecorationShapeId(),
-                isDark              : false,
-                skinId              : ForceSkins_Constants.SkinId.Neutral,
+                version            : Users_Model.getSelfSettingsTextureVersion(),
+                themeType          : Tiles_Constants_Common.ThemeTypeId.Normal,
+                tileDecorationType : tileData.getDecorationType(),
+                shapeId            : tileData.getDecorationShapeId(),
+                isDark             : false,
+                skinId             : ForceSkins_Constants.SkinId.Neutral,
                 tickCount,
             });
     }
@@ -486,12 +486,12 @@ class TileObjectLayer extends TileLayerBase {
         return tileData == null
             ? ``
             : Common_Model_CommonModel.getCachedTileObjectImageSource({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                objectType  : tileData.getObjectType(),
-                shapeId     : tileData.getObjectShapeId(),
-                isDark      : false,
-                skinId      : (tileData.skinId || tileData.getPlayerIndex()),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
+                objectType : tileData.getObjectType(),
+                shapeId    : tileData.getObjectShapeId(),
+                isDark     : false,
+                skinId     : (tileData.skinId || tileData.getPlayerIndex()),
                 tickCount,
             });
     }
@@ -507,8 +507,8 @@ class WarMapUnitMapView extends Ui_Components_UiContainer.UiContainer {
     private readonly _groundLayer           = new Ui_Components_UiContainer.UiContainer();
     private readonly _seaLayer              = new Ui_Components_UiContainer.UiContainer();
     private readonly _notifyListenerArray   : Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-        { type: Notifications_TypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+        { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
+        { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
     ];
 
     public constructor() {
@@ -615,10 +615,10 @@ function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
             const loaderUnitId = unitData.getLoaderUnitId();
             if (loaderUnitId == null) {
                 dataArray.push(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                    gameConfig          : gameConfig,
-                    skinId              : ForceSkins_Utils.getDefaultSkinId(unitData.getPlayerIndex()),
-                    overridingSkinId    : undefined,
-                    unitData            : unitData.clone(),
+                    gameConfig       : gameConfig,
+                    skinId           : ForceSkins_Utils.getDefaultSkinId(unitData.getPlayerIndex()),
+                    overridingSkinId : undefined,
+                    unitData         : unitData.clone(),
                 }));
             } else {
                 loaderUnitIdSet.add(loaderUnitId);

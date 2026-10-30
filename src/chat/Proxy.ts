@@ -17,11 +17,11 @@ import type { S as ChatUpdateReadProgressResponse } from "../proto/schema/Common
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatAddMessage,               callback: _onMsgChatAddMessage },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatGetAllMessages,           callback: _onMsgChatGetAllMessages },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatUpdateReadProgress,       callback: _onMsgChatUpdateReadProgress },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatGetAllReadProgressList,   callback: _onMsgChatGetAllReadProgressList },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgChatDeleteMessage,            callback: _onMsgChatDeleteMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChatAddMessage,               callback : _onMsgChatAddMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChatGetAllMessages,           callback : _onMsgChatGetAllMessages },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChatUpdateReadProgress,       callback : _onMsgChatUpdateReadProgress },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChatGetAllReadProgressList,   callback : _onMsgChatGetAllReadProgressList },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgChatDeleteMessage,            callback : _onMsgChatDeleteMessage },
     ], null);
 }
 
@@ -30,11 +30,15 @@ export function reqChatAddMessage(
     toCategory  : Chat_Constants.ToCategoryId,
     toTarget    : number,
 ): void {
-    Networks_Manager.send({ MsgChatAddMessage: { c: {
-        toCategory,
-        toTarget,
-        content,
-    }, } });
+    Networks_Manager.send({
+        MsgChatAddMessage : {
+            c : {
+                toCategory,
+                toTarget,
+                content,
+            }, 
+        }, 
+    });
 }
 function _onMsgChatAddMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChatAddMessageResponse;
@@ -45,7 +49,7 @@ function _onMsgChatAddMessage(e: Egret_Egret.Event): void {
 }
 
 export function reqGetAllMessages(): void {
-    Networks_Manager.send({ MsgChatGetAllMessages: { c: {} } });
+    Networks_Manager.send({ MsgChatGetAllMessages : { c : {} } });
 }
 function _onMsgChatGetAllMessages(e: Egret_Egret.Event): void {
     const data = e.data as ChatGetAllMessagesResponse;
@@ -60,13 +64,17 @@ export function reqUpdateReadProgress(
     toTarget    : number,
     timestamp   = Timer_TimerModel.getServerTimestamp(),
 ): void {
-    Networks_Manager.send({ MsgChatUpdateReadProgress: { c: {
-        progress: {
-            toCategory,
-            toTarget,
-            timestamp,
-        }, }
-    } });
+    Networks_Manager.send({
+        MsgChatUpdateReadProgress : {
+            c : {
+                progress : {
+                    toCategory,
+                    toTarget,
+                    timestamp,
+                }, 
+            },
+        }, 
+    });
 }
 function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event): void {
     const data = e.data as ChatUpdateReadProgressResponse;
@@ -77,7 +85,7 @@ function _onMsgChatUpdateReadProgress(e: Egret_Egret.Event): void {
 }
 
 export function reqGetAllReadProgressList(): void {
-    Networks_Manager.send({ MsgChatGetAllReadProgressList: { c: {} } });
+    Networks_Manager.send({ MsgChatGetAllReadProgressList : { c : {} } });
 }
 function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event): void {
     const data = e.data as ChatGetAllReadProgressListResponse;
@@ -88,7 +96,7 @@ function _onMsgChatGetAllReadProgressList(e: Egret_Egret.Event): void {
 }
 
 export function reqChatDeleteMessage(messageId: number): void {
-    Networks_Manager.send({ MsgChatDeleteMessage: { c: { messageId } } });
+    Networks_Manager.send({ MsgChatDeleteMessage : { c : { messageId } } });
 }
 function _onMsgChatDeleteMessage(e: Egret_Egret.Event): void {
     const data = e.data as ChatDeleteMessageResponse;

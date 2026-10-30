@@ -50,12 +50,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (campaignId != null) {
             this.closePanel();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateMapsPanel, {
-                campaignId  : campaignId,
+                campaignId : campaignId,
             });
         }
     }
@@ -162,12 +162,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0423) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0423) },
                 pageClass   : Campaigns_Views_CampaignInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0436) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0436) },
                 pageClass   : Campaigns_Views_CampaignRankPage.Page,
                 pageData    : null,
             },
@@ -185,8 +185,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray: DataForCampaignRenderer[] = [];
         for (const campaignId of await Campaigns_Mains_Provider.getEnabledCampaignIdArray() ?? []) {
             dataArray.push({
-                campaignId  : campaignId,
-                panel       : this,
+                campaignId : campaignId,
+                panel      : this,
             });
         }
 
@@ -224,7 +224,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return campaignId == null
             ? null
             : {
-                campaignId  : campaignId,
+                campaignId : campaignId,
             };
     }
 
@@ -233,74 +233,74 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return campaignId == null
             ? null
             : {
-                campaignId  : campaignId,
+                campaignId : campaignId,
             };
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupHelp,
-            beginProps  : { customAlpha: 0, customY: 30 },
-            endProps    : { customAlpha: 1, customY: 70 },
+            obj        : this._groupHelp,
+            beginProps : { customAlpha : 0, customY : 30 },
+            endProps   : { customAlpha : 1, customY : 70 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupCampaignList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupCampaignList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupHelp,
-            beginProps  : { customAlpha: 1, customY: 70 },
-            endProps    : { customAlpha: 0, customY: 30 },
+            obj        : this._groupHelp,
+            beginProps : { customAlpha : 1, customY : 70 },
+            endProps   : { customAlpha : 0, customY : 30 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupCampaignList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupCampaignList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
 
         await Timer_TimerModel.wait();
@@ -313,8 +313,7 @@ interface DataForCampaignRenderer extends Ui_Types_UiListItemData.UiListItemData
 }
 class CampaignRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCampaignRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCampaignRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCampaignRenderer> {
     private readonly _imgComplete!  : Ui_Interfaces_IUiImage.IUiImage;
 
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
@@ -368,7 +367,7 @@ class CampaignRenderer
         labelName.setText(``);
         const nameArray = (await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getNameArray();
         if (campaignId === this.getOpenData()?.campaignId) {
-            labelName.setText(Lang_Utils.getLanguageText({ textArray: nameArray }) ?? Lang_Constants.UndefinedError);
+            labelName.setText(Lang_Utils.getLanguageText({ textArray : nameArray }) ?? Lang_Constants.UndefinedError);
         }
 
         this._layoutName.arrangeItems();

@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum CategoryId {
     UnitSimple,
     UnitExpr,
@@ -16,7 +16,7 @@ export const enum CategoryId {
     MiscExpr,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ActionTypeId {
     AddUnitOnMapSimple,
     DeprecatedFillUnitOnMapSimple,
@@ -167,13 +167,13 @@ export const TypeDict = new Map<CategoryId, ActionTypeId[]>([
     ]],
 ]);
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum MaxCounts {
     PerMap      = 200,
     PerEvent    = 20,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum InterchangeableTypeId {
     NotInterchangeable,
     Persistent,
@@ -192,7 +192,7 @@ export const InstantInterchangeableActionTypeArray = [
     ActionTypeId.SetViewpointSimple,
 ];
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum BuffEndTimeModificationMode {
     DoNotChange                     = 0,
     Delete                          = 1,

@@ -64,10 +64,10 @@ export abstract class UiLayoutBase extends Ui_Components_UiContainerBase.UiConta
                 options.orientation         = attrs?.orientation;
                 options.multiItemsPerBlock  = !!attrs?.multiItemsPerBlock;
                 options.padding             = {
-                    left    : attrs?.paddingLeft,
-                    right   : attrs?.paddingRight,
-                    top     : attrs?.paddingTop,
-                    bottom  : attrs?.paddingBottom,
+                    left   : attrs?.paddingLeft,
+                    right  : attrs?.paddingRight,
+                    top    : attrs?.paddingTop,
+                    bottom : attrs?.paddingBottom,
                 };
             }
 

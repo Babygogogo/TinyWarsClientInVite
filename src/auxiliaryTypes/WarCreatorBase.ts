@@ -26,9 +26,9 @@ export class WarCreatorBase {
     public constructor(gcData: GameConfigs_GameConfig.GameConfig, mapRawData: MapRawData, saveSlotIndex: number) {
         this._gcData            = gcData;
         this._settingsForCommon = SettingsForCommon.fromJson({
-            configVersion       : gcData.getVersion(),
-            turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-            warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
+            configVersion      : gcData.getVersion(),
+            turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+            warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
         });
 
         this._mapRawData = mapRawData;

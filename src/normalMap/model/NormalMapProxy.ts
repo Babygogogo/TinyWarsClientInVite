@@ -38,34 +38,36 @@ import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/Tem
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMapGetMapTag,                             callback: _onMsgMapGetMapTag },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgNormalMapGetAllEnabledBriefDataVersions,  callback: _onMsgNormalMapGetAllEnabledBriefDataVersions },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefDataVersion,             callback: _onMsgNormalMapGetBriefDataVersion },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefData,                    callback: _onMsgNormalMapGetBriefData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefDataArray,               callback: _onMsgNormalMapGetBriefDataArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMapGetRawData,                            callback: _onMsgMapGetRawData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmAddIgnoredReviewingMap,                 callback: _onMsgMmAddIgnoredReviewingMap },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleAvailability,                 callback: _onMsgMmSetWarRuleAvailability },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetMapEnabled,                          callback: _onMsgMmSetMapEnabled },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmGetReviewingMaps,                       callback: _onMsgMmGetReviewingMaps },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmReviewMap,                              callback: _onMsgMmReviewMap },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetMapTagIdFlags,                       callback: _onMsgMmSetMapTagIdFlags },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetMapName,                             callback: _onMsgMmSetMapName },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmAddWarRule,                             callback: _onMsgMmAddWarRule },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmAddWarEvent,                            callback: _onMsgMmAddWarEvent },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSubmitMapSimpleDialogue,                callback: _onMsgMmSubmitMapSimpleDialogue },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmDeleteRedundantWarEvent,                callback: _onMsgMmDeleteRedundantWarEvent },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmDeleteWarRule,                          callback: _onMsgMmDeleteWarRule },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleName,                         callback: _onMsgMmSetWarRuleName },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleFixedTileTheme,               callback: _onMsgMmSetWarRuleFixedTileTheme },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmSetMapTagSingleData,                    callback: _onMsgMmSetMapTagSingleData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMapGetMapTag,                             callback : _onMsgMapGetMapTag },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgNormalMapGetAllEnabledBriefDataVersions,  callback : _onMsgNormalMapGetAllEnabledBriefDataVersions },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefDataVersion,             callback : _onMsgNormalMapGetBriefDataVersion },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefData,                    callback : _onMsgNormalMapGetBriefData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgNormalMapGetBriefDataArray,               callback : _onMsgNormalMapGetBriefDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMapGetRawData,                            callback : _onMsgMapGetRawData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmAddIgnoredReviewingMap,                 callback : _onMsgMmAddIgnoredReviewingMap },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleAvailability,                 callback : _onMsgMmSetWarRuleAvailability },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetMapEnabled,                          callback : _onMsgMmSetMapEnabled },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmGetReviewingMaps,                       callback : _onMsgMmGetReviewingMaps },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmReviewMap,                              callback : _onMsgMmReviewMap },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetMapTagIdFlags,                       callback : _onMsgMmSetMapTagIdFlags },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetMapName,                             callback : _onMsgMmSetMapName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmAddWarRule,                             callback : _onMsgMmAddWarRule },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmAddWarEvent,                            callback : _onMsgMmAddWarEvent },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSubmitMapSimpleDialogue,                callback : _onMsgMmSubmitMapSimpleDialogue },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmDeleteRedundantWarEvent,                callback : _onMsgMmDeleteRedundantWarEvent },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmDeleteWarRule,                          callback : _onMsgMmDeleteWarRule },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleName,                         callback : _onMsgMmSetWarRuleName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetWarRuleFixedTileTheme,               callback : _onMsgMmSetWarRuleFixedTileTheme },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmSetMapTagSingleData,                    callback : _onMsgMmSetMapTagSingleData },
     ], null);
 }
 
 export function reqMapGetMapTag(): void {
     Networks_Manager.send({
-        MsgMapGetMapTag: { c: {
-        } }
+        MsgMapGetMapTag : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgMapGetMapTag(e: Egret_Egret.Event): void {
@@ -77,8 +79,12 @@ function _onMsgMapGetMapTag(e: Egret_Egret.Event): void {
 }
 
 export function reqNormalMapGetAllEnabledBriefDataVersions(): void {
-    Networks_Manager.send({ MsgNormalMapGetAllEnabledBriefDataVersions: { c: {
-    } } });
+    Networks_Manager.send({
+        MsgNormalMapGetAllEnabledBriefDataVersions : {
+            c : {
+            }, 
+        }, 
+    });
 }
 async function _onMsgNormalMapGetAllEnabledBriefDataVersions(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as NormalMapGetAllEnabledBriefDataVersionsResponse;
@@ -89,9 +95,13 @@ async function _onMsgNormalMapGetAllEnabledBriefDataVersions(e: Egret_Egret.Even
 }
 
 export function reqNormalMapGetBriefData(normalMapId: number): void {
-    Networks_Manager.send({ MsgNormalMapGetBriefData: { c: {
-        normalMapId : normalMapId,
-    }, }, });
+    Networks_Manager.send({
+        MsgNormalMapGetBriefData : {
+            c : {
+                normalMapId : normalMapId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgNormalMapGetBriefData(e: Egret_Egret.Event): Promise<void> {
     const data  = e.data as NormalMapGetBriefDataResponse;
@@ -104,9 +114,13 @@ async function _onMsgNormalMapGetBriefData(e: Egret_Egret.Event): Promise<void> 
 }
 
 export function reqNormalMapGetBriefDataArray(normalMapIdArray: number[]): void {
-    Networks_Manager.send({ MsgNormalMapGetBriefDataArray: { c: {
-        normalMapIdArray : normalMapIdArray,
-    }, }, });
+    Networks_Manager.send({
+        MsgNormalMapGetBriefDataArray : {
+            c : {
+                normalMapIdArray : normalMapIdArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgNormalMapGetBriefDataArray(e: Egret_Egret.Event): Promise<void> {
     const data  = e.data as NormalMapGetBriefDataArrayResponse;
@@ -117,9 +131,13 @@ async function _onMsgNormalMapGetBriefDataArray(e: Egret_Egret.Event): Promise<v
 }
 
 export function reqNormalMapGetBriefDataVersion(normalMapId: number): void {
-    Networks_Manager.send({ MsgNormalMapGetBriefDataVersion: { c: {
-        normalMapId : normalMapId,
-    }, }, });
+    Networks_Manager.send({
+        MsgNormalMapGetBriefDataVersion : {
+            c : {
+                normalMapId : normalMapId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgNormalMapGetBriefDataVersion(e: Egret_Egret.Event): Promise<void> {
     const data  = e.data as NormalMapGetBriefDataVersionResponse;
@@ -132,9 +150,13 @@ async function _onMsgNormalMapGetBriefDataVersion(e: Egret_Egret.Event): Promise
 }
 
 export function reqGetMapRawData(normalMapId: number): void {
-    Networks_Manager.send({ MsgMapGetRawData: { c: {
-        normalMapId: normalMapId,
-    }, }, });
+    Networks_Manager.send({
+        MsgMapGetRawData : {
+            c : {
+                normalMapId : normalMapId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMapGetRawData(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MapGetRawDataResponse;
@@ -148,11 +170,13 @@ async function _onMsgMapGetRawData(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMmAddIgnoredReviewingMap(designerUserId: number, slotIndex: number, dataTimestamp: number): void {
     Networks_Manager.send({
-        MsgMmAddIgnoredReviewingMap: { c: {
-            designerUserId  : designerUserId,
-            slotIndex       : slotIndex,
-            dataTimestamp   : dataTimestamp,
-        }, }
+        MsgMmAddIgnoredReviewingMap : {
+            c : {
+                designerUserId : designerUserId,
+                slotIndex      : slotIndex,
+                dataTimestamp  : dataTimestamp,
+            }, 
+        },
     });
 }
 function _onMsgMmAddIgnoredReviewingMap(e: Egret_Egret.Event): void {
@@ -168,11 +192,13 @@ export function reqMmSetWarRuleAvailability({ normalMapId, ruleId, availability 
     availability    : RuleAvailability;
 }): void {
     Networks_Manager.send({
-        MsgMmSetWarRuleAvailability: { c: {
-            normalMapId     : normalMapId,
-            ruleId          : ruleId,
-            availability    : availability.toJson(),
-        }, },
+        MsgMmSetWarRuleAvailability : {
+            c : {
+                normalMapId  : normalMapId,
+                ruleId       : ruleId,
+                availability : availability.toJson(),
+            }, 
+        },
     });
 }
 async function _onMsgMmSetWarRuleAvailability(e: Egret_Egret.Event): Promise<void> {
@@ -185,10 +211,12 @@ async function _onMsgMmSetWarRuleAvailability(e: Egret_Egret.Event): Promise<voi
 
 export function reqMmSetMapEnabled(normalMapId: number, isEnabled: boolean): void {
     Networks_Manager.send({
-        MsgMmSetMapEnabled: { c: {
-            normalMapId : normalMapId,
-            isEnabled   : isEnabled,
-        }, }
+        MsgMmSetMapEnabled : {
+            c : {
+                normalMapId : normalMapId,
+                isEnabled   : isEnabled,
+            }, 
+        },
     });
 }
 function _onMsgMmSetMapEnabled(e: Egret_Egret.Event): void {
@@ -200,7 +228,7 @@ function _onMsgMmSetMapEnabled(e: Egret_Egret.Event): void {
 
 export function reqMmGetReviewingMaps(): void {
     Networks_Manager.send({
-        MsgMmGetReviewingMaps: { c: {} },
+        MsgMmGetReviewingMaps : { c : {} },
     });
 }
 function _onMsgMmGetReviewingMaps(e: Egret_Egret.Event): void {
@@ -219,13 +247,15 @@ export function reqMmReviewMap({ designerUserId, slotIndex, modifiedTime, isAcce
     reviewComment   : string | null;
 }): void {
     Networks_Manager.send({
-        MsgMmReviewMap: { c: {
-            designerUserId,
-            slotIndex,
-            modifiedTime,
-            isAccept,
-            reviewComment,
-        }, },
+        MsgMmReviewMap : {
+            c : {
+                designerUserId,
+                slotIndex,
+                modifiedTime,
+                isAccept,
+                reviewComment,
+            }, 
+        },
     });
 }
 function _onMsgMmReviewMap(e: Egret_Egret.Event): void {
@@ -236,10 +266,14 @@ function _onMsgMmReviewMap(e: Egret_Egret.Event): void {
 }
 
 export function reqMmSetMapTagIdFlags(normalMapId: number, mapTagIdFlags: number): void {
-    Networks_Manager.send({ MsgMmSetMapTagIdFlags: { c: {
-        normalMapId     : normalMapId,
-        mapTagIdFlags,
-    } } });
+    Networks_Manager.send({
+        MsgMmSetMapTagIdFlags : {
+            c : {
+                normalMapId : normalMapId,
+                mapTagIdFlags,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMmSetMapTagIdFlags(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmSetMapTagIdFlagsResponse;
@@ -250,10 +284,14 @@ async function _onMsgMmSetMapTagIdFlags(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqMmSetMapName(normalMapId: number, mapNameArray: LanguageText[]): void {
-    Networks_Manager.send({ MsgMmSetMapName: { c: {
-        normalMapId     : normalMapId,
-        mapNameArray    : mapNameArray.map(v => v.toJson()),
-    } } });
+    Networks_Manager.send({
+        MsgMmSetMapName : {
+            c : {
+                normalMapId  : normalMapId,
+                mapNameArray : mapNameArray.map(v => v.toJson()),
+            }, 
+        }, 
+    });
 }
 async function _onMsgMmSetMapName(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmSetMapNameResponse;
@@ -265,10 +303,12 @@ async function _onMsgMmSetMapName(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMmAddWarRule(normalMapId: number, templateWarRule: TemplateWarRule): void {
     Networks_Manager.send({
-        MsgMmAddWarRule: { c: {
-            normalMapId     : normalMapId,
-            templateWarRule : templateWarRule.toJson(),
-        } },
+        MsgMmAddWarRule : {
+            c : {
+                normalMapId     : normalMapId,
+                templateWarRule : templateWarRule.toJson(),
+            }, 
+        },
     });
 }
 async function _onMsgMmAddWarRule(e: Egret_Egret.Event): Promise<void> {
@@ -281,10 +321,12 @@ async function _onMsgMmAddWarRule(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMmAddWarEvent(normalMapId: number, incrementalWarEventFullData: WarEventFullData): void {
     Networks_Manager.send({
-        MsgMmAddWarEvent: { c: {
-            normalMapId                     : normalMapId,
-            incrementalWarEventFullData     : incrementalWarEventFullData.toJson(),
-        } },
+        MsgMmAddWarEvent : {
+            c : {
+                normalMapId                 : normalMapId,
+                incrementalWarEventFullData : incrementalWarEventFullData.toJson(),
+            }, 
+        },
     });
 }
 async function _onMsgMmAddWarEvent(e: Egret_Egret.Event): Promise<void> {
@@ -300,11 +342,13 @@ export function reqMmSubmitMapSimpleDialogue(
     warRuleDialogueInfoArray    : WarRuleDialogueInfo[],
 ): void {
     Networks_Manager.send({
-        MsgMmSubmitMapSimpleDialogue: { c: {
-            normalMapId                 : normalMapId,
-            mapSimpleDialogueArray      : mapSimpleDialogueArray.map(v => v.toJson()),
-            warRuleDialogueInfoArray    : warRuleDialogueInfoArray.map(v => v.toJson()),
-        } },
+        MsgMmSubmitMapSimpleDialogue : {
+            c : {
+                normalMapId              : normalMapId,
+                mapSimpleDialogueArray   : mapSimpleDialogueArray.map(v => v.toJson()),
+                warRuleDialogueInfoArray : warRuleDialogueInfoArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 function _onMsgMmSubmitMapSimpleDialogue(e: Egret_Egret.Event): void {
@@ -316,9 +360,11 @@ function _onMsgMmSubmitMapSimpleDialogue(e: Egret_Egret.Event): void {
 
 export function reqMmDeleteRedundantWarEvent(normalMapId: number): void {
     Networks_Manager.send({
-        MsgMmDeleteRedundantWarEvent: { c: {
-            normalMapId : normalMapId,
-        } },
+        MsgMmDeleteRedundantWarEvent : {
+            c : {
+                normalMapId : normalMapId,
+            }, 
+        },
     });
 }
 async function _onMsgMmDeleteRedundantWarEvent(e: Egret_Egret.Event): Promise<void> {
@@ -330,10 +376,12 @@ async function _onMsgMmDeleteRedundantWarEvent(e: Egret_Egret.Event): Promise<vo
 
 export function reqMmDeleteWarRule(normalMapId: number, ruleId: number): void {
     Networks_Manager.send({
-        MsgMmDeleteWarRule: { c: {
-            normalMapId : normalMapId,
-            ruleId,
-        } },
+        MsgMmDeleteWarRule : {
+            c : {
+                normalMapId : normalMapId,
+                ruleId,
+            }, 
+        },
     });
 }
 async function _onMsgMmDeleteWarRule(e: Egret_Egret.Event): Promise<void> {
@@ -346,11 +394,13 @@ async function _onMsgMmDeleteWarRule(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMmSetWarRuleName(normalMapId: number, ruleId: number, ruleNameArray: LanguageText[]): void {
     Networks_Manager.send({
-        MsgMmSetWarRuleName : { c: {
-            normalMapId     : normalMapId,
-            ruleId          : ruleId,
-            ruleNameArray   : ruleNameArray.map(v => v.toJson()),
-        } },
+        MsgMmSetWarRuleName : {
+            c : {
+                normalMapId   : normalMapId,
+                ruleId        : ruleId,
+                ruleNameArray : ruleNameArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 async function _onMsgMmSetWarRuleName(e: Egret_Egret.Event): Promise<void> {
@@ -363,11 +413,13 @@ async function _onMsgMmSetWarRuleName(e: Egret_Egret.Event): Promise<void> {
 
 export function reqMmSetWarRuleFixedTileTheme(normalMapId: number, ruleId: number, tileTheme: number | null): void {
     Networks_Manager.send({
-        MsgMmSetWarRuleFixedTileTheme : { c: {
-            normalMapId : normalMapId,
-            ruleId      : ruleId,
-            tileTheme   : tileTheme,
-        } },
+        MsgMmSetWarRuleFixedTileTheme : {
+            c : {
+                normalMapId : normalMapId,
+                ruleId      : ruleId,
+                tileTheme   : tileTheme,
+            }, 
+        },
     });
 }
 async function _onMsgMmSetWarRuleFixedTileTheme(e: Egret_Egret.Event): Promise<void> {
@@ -380,9 +432,11 @@ async function _onMsgMmSetWarRuleFixedTileTheme(e: Egret_Egret.Event): Promise<v
 
 export function reqMmSetMapTagSingleData(data: MapTagSingleData): void {
     Networks_Manager.send({
-        MsgMmSetMapTagSingleData: { c: {
-            data: data.toJson(),
-        } },
+        MsgMmSetMapTagSingleData : {
+            c : {
+                data : data.toJson(),
+            }, 
+        },
     });
 }
 function _onMsgMmSetMapTagSingleData(e: Egret_Egret.Event): void {

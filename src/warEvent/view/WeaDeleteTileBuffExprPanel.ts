@@ -58,20 +58,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                              callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                              callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConTileFilter,                   callback: this._onTouchedGroupModifyConTileFilter },
-            { ui: this._btnConTileFilter,                           callback: this._onTouchedBtnConTileFilter },
+            { ui : this._groupModifyConTileFilter,                   callback : this._onTouchedGroupModifyConTileFilter },
+            { ui : this._btnConTileFilter,                           callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._groupModifyConTileBuffFilter,               callback: this._onTouchedGroupModifyConTileBuffFilter },
-            { ui: this._btnConTileBuffFilter,                       callback: this._onTouchedBtnConTileBuffFilter },
-       ]);
+            { ui : this._groupModifyConTileBuffFilter,               callback : this._onTouchedGroupModifyConTileBuffFilter },
+            { ui : this._btnConTileBuffFilter,                       callback : this._onTouchedBtnConTileBuffFilter },
+        ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
@@ -94,9 +94,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -122,11 +122,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTileFilter(),
+            expressionInfo : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -153,11 +153,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConTileBuffFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConTileBuffFilter(),
+            expressionInfo : WarEvents_Actions_Constants_DeleteTileBuffExpr.ExpressionInfoDict.ConTileBuffFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConTileBuffFilter() != text) {
                     action.setConTileBuffFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

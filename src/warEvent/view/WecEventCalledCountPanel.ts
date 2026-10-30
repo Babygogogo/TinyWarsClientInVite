@@ -60,19 +60,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
-            { ui: this._btnEventId,                     callback: this._onTouchedBtnEventId },
-            { ui: this._btnTimesInTurn,                 callback: this._onTouchedBtnTimesInTurn },
-            { ui: this._btnTimesInTurnComparator,       callback: this._onTouchedBtnTimesInTurnComparator },
-            { ui: this._btnTimesTotal,                  callback: this._onTouchedBtnTimesTotal },
-            { ui: this._btnTimesTotalComparator,        callback: this._onTouchedBtnTimesTotalComparator },
-            { ui: this._btnEventsCount,                 callback: this._onTouchedBtnEventsCount },
-            { ui: this._btnEventsCountComparator,       callback: this._onTouchedBtnEventsCountComparator },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
+            { ui : this._btnEventId,                     callback : this._onTouchedBtnEventId },
+            { ui : this._btnTimesInTurn,                 callback : this._onTouchedBtnTimesInTurn },
+            { ui : this._btnTimesInTurnComparator,       callback : this._onTouchedBtnTimesInTurnComparator },
+            { ui : this._btnTimesTotal,                  callback : this._onTouchedBtnTimesTotal },
+            { ui : this._btnTimesTotalComparator,        callback : this._onTouchedBtnTimesTotalComparator },
+            { ui : this._btnEventsCount,                 callback : this._onTouchedBtnEventsCount },
+            { ui : this._btnEventsCountComparator,       callback : this._onTouchedBtnEventsCountComparator },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -96,9 +96,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnEventId(): void {
@@ -109,17 +109,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray          : condition.getEventIdArray(),
-            availableNumberArray        : Helpers_Collection.getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId())),
-            showNumber                  : true,
-            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
-            getNumberMainText           : warEventId => Helpers_Text.getTruncatedText(
+            currentNumberArray   : condition.getEventIdArray(),
+            availableNumberArray : Helpers_Collection.getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId())),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
+            getNumberMainText    : warEventId => Helpers_Text.getTruncatedText(
                 Lang_Utils.getLanguageText({
-                    textArray: fullData.getEventArray()?.find(v => v.getEventId() === warEventId)?.getEventNameArray()
+                    textArray : fullData.getEventArray()?.find(v => v.getEventId() === warEventId)?.getEventNameArray(),
                 }) ?? Lang_Constants.UndefinedError,
-                15
+                15,
             ),
-            callbackOnConfirm           : eventIdArray => {
+            callbackOnConfirm : eventIdArray => {
                 condition.setEventIdArray(eventIdArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -128,11 +128,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTimesInTurn(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0790),
-            minValue        : 0,
-            maxValue        : WarEvents_Constants.Event.MaxCallCountInPlayerTurn,
-            currentValue    : condition.getTimesInTurn(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0790),
+            minValue     : 0,
+            maxValue     : WarEvents_Constants.Event.MaxCallCountInPlayerTurn,
+            currentValue : condition.getTimesInTurn(),
+            callback     : value => {
                 condition.setTimesInTurn(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -146,11 +146,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTimesTotal(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0791),
-            minValue        : 0,
-            maxValue        : WarEvents_Constants.Event.MaxCallCountTotal,
-            currentValue    : condition.getTimesTotal(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0791),
+            minValue     : 0,
+            maxValue     : WarEvents_Constants.Event.MaxCallCountTotal,
+            currentValue : condition.getTimesTotal(),
+            callback     : value => {
                 condition.setTimesTotal(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -164,11 +164,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnEventsCount(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0788),
-            minValue        : 0,
-            maxValue        : WarEvents_Constants.Event.MaxEventsPerMap,
-            currentValue    : condition.getEventsCount(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0788),
+            minValue     : 0,
+            maxValue     : WarEvents_Constants.Event.MaxEventsPerMap,
+            currentValue : condition.getEventsCount(),
+            callback     : value => {
                 condition.setEventsCount(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },

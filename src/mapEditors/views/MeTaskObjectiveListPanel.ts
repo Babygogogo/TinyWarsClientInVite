@@ -39,13 +39,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback: this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,  callback : this._onNotifyMeTaskObjectiveFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnAdd,         callback: this._onTouchedBtnAdd },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnAdd,         callback : this._onTouchedBtnAdd },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -129,10 +129,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (fullData) {
             for (const taskObjective of fullData.getTaskObjectiveArray()) {
                 dataArray.push({
-                    taskObjective           : taskObjective,
-                    fullData                : fullData,
-                    customCounterNameSet    : customCounterNameSet,
-                    war                     : war,
+                    taskObjective        : taskObjective,
+                    fullData             : fullData,
+                    customCounterNameSet : customCounterNameSet,
+                    war                  : war,
                 });
             }
         }
@@ -158,12 +158,12 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnDesc,        callback: this._onTouchedBtnDesc },
-            { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
-            { ui: this._btnEdit,        callback: this._onTouchedBtnEdit },
+            { ui : this._btnDesc,        callback : this._onTouchedBtnDesc },
+            { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
+            { ui : this._btnEdit,        callback : this._onTouchedBtnEdit },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -202,7 +202,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                callback: () => {
+                callback   : () => {
                     const fullData = openData.fullData;
                     Helpers_Collection.deleteElementFromList(fullData.getTaskObjectiveArray(), openData.taskObjective);
                     FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
@@ -223,10 +223,10 @@ class TaskObjectiveRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTaskObjectivePanel, {
-                taskObjective       : openData.taskObjective,
-                fullData            : openData.fullData,
-                warEventFullData    : war.getWarEventManager().getWarEventFullData(),
-                isReviewingMap      : false,
+                taskObjective    : openData.taskObjective,
+                fullData         : openData.fullData,
+                warEventFullData : war.getWarEventManager().getWarEventFullData(),
+                isReviewingMap   : false,
             });
         }
     }

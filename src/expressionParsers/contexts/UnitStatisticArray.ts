@@ -54,13 +54,13 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(UnitStatisticArray.FnMerge, 0, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_00,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.UnitStatistic;
                 },
-            )
+            ),
         );
         functions.set(
             UnitStatisticArray.FnWhere,
@@ -70,35 +70,37 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(UnitStatisticArray.FnWhere, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_01,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_02
+                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_02,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.UnitStatistic],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.UnitStatistic],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(UnitStatisticArray.FnWhere, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_03
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_03,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.UnitStatisticArray;
                 },
-            )
+            ),
         );
         functions.set(
             UnitStatisticArray.FnSelect,
@@ -108,24 +110,26 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(UnitStatisticArray.FnSelect, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_04
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_04,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_05
+                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_05,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.UnitStatistic],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.UnitStatistic],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     switch (lambdaResultType) {
                         case ExpressionParsers_Enums.ResultType.Number        : return ExpressionParsers_Enums.ResultType.NumberArray;
@@ -148,13 +152,13 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                                     ExpressionParsers_Enums.ResultType.Player,
                                     ExpressionParsers_Enums.ResultType.Position,
                                 ],
-                                lambdaResultType
+                                lambdaResultType,
                             ),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_06
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_06,
                         );
                     }
                 },
-            )
+            ),
         );
         functions.set(
             UnitStatisticArray.FnAll,
@@ -164,35 +168,37 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(UnitStatisticArray.FnAll, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_07
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_07,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_08
+                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_08,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.UnitStatistic],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.UnitStatistic],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(UnitStatisticArray.FnAll, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_09
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_09,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             UnitStatisticArray.FnAny,
@@ -202,35 +208,37 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(UnitStatisticArray.FnAny, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_10
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_10,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_11
+                            ExpressionParsers_Utils.getErrorTextForParameterType(UnitStatisticArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_11,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.UnitStatistic],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.UnitStatistic],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(UnitStatisticArray.FnAny, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_12
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_12,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
 
         return functions;
@@ -336,11 +344,11 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         const war           = this.getWar();
         const dataArray     = this._dataArray;
         const resultType    = node.getLambdaResultType2({
-            contextType                     : rootCtx.getContextType(),
-            directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.UnitStatistic],
-            indirectLambdaArgumentInfoDict  : null,
-            localVariableDict               : localVariableDict,
-            customCounterNameSet            : new Set(war.getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
+            contextType                    : rootCtx.getContextType(),
+            directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.UnitStatistic],
+            indirectLambdaArgumentInfoDict : null,
+            localVariableDict              : localVariableDict,
+            customCounterNameSet           : new Set(war.getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
         });
         if (resultType === ExpressionParsers_Enums.ResultType.Unit) {
             const resultArray: ExpressionParsers_Results_NullableUnit.NullableUnit[] = [];

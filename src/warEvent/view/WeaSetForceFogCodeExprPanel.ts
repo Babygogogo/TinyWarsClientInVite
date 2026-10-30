@@ -58,19 +58,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyForceFogCode,                        callback: this._onTouchedGroupModifyForceFogCode },
-            { ui: this._btnForceFogCode,                                callback: this._onTouchedBtnForceFogCode },
+            { ui : this._groupModifyForceFogCode,                        callback : this._onTouchedGroupModifyForceFogCode },
+            { ui : this._btnForceFogCode,                                callback : this._onTouchedBtnForceFogCode },
 
-            { ui: this._groupModifyTurnsCount,                          callback: this._onTouchedGroupModifyTurnsCount },
-            { ui: this._btnTurnsCount,                                  callback: this._onTouchedBtnTurnsCount },
+            { ui : this._groupModifyTurnsCount,                          callback : this._onTouchedGroupModifyTurnsCount },
+            { ui : this._btnTurnsCount,                                  callback : this._onTouchedBtnTurnsCount },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -94,9 +94,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -122,11 +122,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getForceFogCode(),
-            expressionInfo  : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getForceFogCode(),
+            expressionInfo : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.ForceFogCode,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getForceFogCode() != text) {
                     action.setForceFogCode(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -153,11 +153,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getTurnsCount(),
-            expressionInfo  : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getTurnsCount(),
+            expressionInfo : WarEvents_Actions_Constants_SetForceFogCodeExpr.ExpressionInfoDict.TurnsCount,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getTurnsCount() != text) {
                     action.setTurnsCount(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

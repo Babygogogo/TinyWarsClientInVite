@@ -60,19 +60,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnRanking,         callback: this._onTouchedBtnRanking },
-            { ui: this._btnSinglePlayer,    callback: this._onTouchedBtnSinglePlayer },
-            { ui: this._btnMakeRequest,     callback: this._onTouchedBtnMakeRequest },
-            { ui: this._btnHandleRequest,   callback: this._onTouchedBtnHandleRequest },
-            { ui: this._btnDeleteWatcher,   callback: this._onTouchedBtnDeleteWatcher },
-            { ui: this._btnContinueWar,     callback: this._onTouchedBtnContinueWar },
-            { ui: this._btnBack,            callback: this._onTouchedBtnBack },
+            { ui : this._btnRanking,         callback : this._onTouchedBtnRanking },
+            { ui : this._btnSinglePlayer,    callback : this._onTouchedBtnSinglePlayer },
+            { ui : this._btnMakeRequest,     callback : this._onTouchedBtnMakeRequest },
+            { ui : this._btnHandleRequest,   callback : this._onTouchedBtnHandleRequest },
+            { ui : this._btnDeleteWatcher,   callback : this._onTouchedBtnDeleteWatcher },
+            { ui : this._btnContinueWar,     callback : this._onTouchedBtnContinueWar },
+            { ui : this._btnBack,            callback : this._onTouchedBtnBack },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserLogout,                       callback: this._onMsgUserLogout },
-            { type: Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback: this._onMsgMpwCommonGetWarProgressInfo },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onMsgMpwWatchGetRequestedWarIdArray },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserLogout,                       callback : this._onMsgUserLogout },
+            { type : Notifications_TypeId.TypeId.MsgMpwCommonGetWarProgressInfo,      callback : this._onMsgMpwCommonGetWarProgressInfo },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback : this._onMsgMpwWatchGetRequestedWarIdArray },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -100,7 +100,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this.closePanel();
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyTopPanel);
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().LobbyBottomPanel);
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestWarsPanel, { filter: null });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestWarsPanel, { filter : null });
     }
 
     private _onTouchedBtnHandleRequest(): void {
@@ -180,7 +180,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _updateBtnRanking(): Promise<void> {
         this._btnRanking.setRedVisible(
             (await MultiPlayerWar_Model_MpwModel.checkIsRedForMyMrwWars()) ||
-            (await MultiRankRoom_Model_MrrModel.checkIsRed())
+            (await MultiRankRoom_Model_MrrModel.checkIsRed()),
         );
     }
 
@@ -190,96 +190,96 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnMultiPlayer,
-            beginProps  : { customAlpha: 0, customX: 40 },
-            endProps    : { customAlpha: 1, customX: 0 },
+            obj        : this._btnMultiPlayer,
+            beginProps : { customAlpha : 0, customX : 40 },
+            endProps   : { customAlpha : 1, customX : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnRanking,
-            beginProps  : { customAlpha: 0, customX: 40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 100,
+            obj        : this._btnRanking,
+            beginProps : { customAlpha : 0, customX : 40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 100,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnSinglePlayer,
-            beginProps  : { customAlpha: 0, customX: 40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 200,
+            obj        : this._btnSinglePlayer,
+            beginProps : { customAlpha : 0, customX : 40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 200,
         });
 
         Tween_Executor.Executor.reset({
-            obj         : this._groupMakeRequest,
-            beginProps  : { customAlpha: 0, customX: -40 },
-            endProps    : { customAlpha: 1, customX: 0 },
+            obj        : this._groupMakeRequest,
+            beginProps : { customAlpha : 0, customX : -40 },
+            endProps   : { customAlpha : 1, customX : 0 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupHandleRequest,
-            beginProps  : { customAlpha: 0, customX: -40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 200 / 4 * 1,
+            obj        : this._groupHandleRequest,
+            beginProps : { customAlpha : 0, customX : -40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 200 / 4 * 1,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupDeleteWatcher,
-            beginProps  : { customAlpha: 0, customX: -40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 200 / 4 * 2,
+            obj        : this._groupDeleteWatcher,
+            beginProps : { customAlpha : 0, customX : -40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 200 / 4 * 2,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupContinueWar,
-            beginProps  : { customAlpha: 0, customX: -40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 200 / 4 * 3,
+            obj        : this._groupContinueWar,
+            beginProps : { customAlpha : 0, customX : -40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 200 / 4 * 3,
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupBack,
-            beginProps  : { customAlpha: 0, customX: -40 },
-            endProps    : { customAlpha: 1, customX: 0 },
-            waitTime    : 200 / 4 * 4,
+            obj        : this._groupBack,
+            beginProps : { customAlpha : 0, customX : -40 },
+            endProps   : { customAlpha : 1, customX : 0 },
+            waitTime   : 200 / 4 * 4,
         });
 
         await Timer_TimerModel.wait(200 + Graphics_Constants.Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnMultiPlayer,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: 40 },
+            obj        : this._btnMultiPlayer,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnRanking,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: 40 },
+            obj        : this._btnRanking,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnSinglePlayer,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: 40 },
+            obj        : this._btnSinglePlayer,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : 40 },
         });
 
         Tween_Executor.Executor.reset({
-            obj         : this._groupMakeRequest,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: -40 },
+            obj        : this._groupMakeRequest,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : -40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupHandleRequest,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: -40 },
+            obj        : this._groupHandleRequest,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : -40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupDeleteWatcher,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: -40 },
+            obj        : this._groupDeleteWatcher,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : -40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupContinueWar,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: -40 },
+            obj        : this._groupContinueWar,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : -40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupBack,
-            beginProps  : { customAlpha: 1, customX: 0 },
-            endProps    : { customAlpha: 0, customX: -40 },
+            obj        : this._groupBack,
+            beginProps : { customAlpha : 1, customX : 0 },
+            endProps   : { customAlpha : 0, customX : -40 },
         });
 
         await Timer_TimerModel.wait();

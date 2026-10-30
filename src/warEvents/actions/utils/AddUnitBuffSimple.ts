@@ -20,7 +20,7 @@ export function checkIsValid(
     data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitBuffSimple>,
     gameConfig              : GameConfigs_GameConfig.GameConfig,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
-    playersCountUnneutral   : number
+    playersCountUnneutral   : number,
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
@@ -33,7 +33,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0260,
         Lang_Utils.getText(Lang_Constants.TextType.Units),
-        Lang_Utils.getUnitBuffName(data.getActBuffType())
+        Lang_Utils.getUnitBuffName(data.getActBuffType()),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaAddUnitBuffSimple>): string | null {
@@ -110,7 +110,7 @@ export function getErrorTip(
     data                    : WeaAddUnitBuffSimple,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gameConfig              : GameConfigs_GameConfig.GameConfig
+    gameConfig              : GameConfigs_GameConfig.GameConfig,
 ): string | null {
     {
         const filter = data.getConUnitFilter();
@@ -242,7 +242,7 @@ function calculateExpiringTime(
     action              : WeaAddUnitBuffSimple,
     currentTurnIndex    : number,
     currentPlayerIndex  : number,
-    playersCountNeutral : number
+    playersCountNeutral : number,
 ): (number | null)[] {
     const rawEndTurnIndex = action.getActEndTurnIndex();
     if (rawEndTurnIndex == null) {

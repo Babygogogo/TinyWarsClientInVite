@@ -50,12 +50,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
-            { ui: this._groupIsAscending,   callback: this._onTouchedGroupIsAscending },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._groupIsAscending,   callback : this._onTouchedGroupIsAscending },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -113,7 +113,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray: DataForSortTypeRenderer[] = [];
         for (const sortType of MapSortTypeArray) {
             dataArray.push({
-                sortType: sortType,
+                sortType : sortType,
             });
         }
 
@@ -136,7 +136,7 @@ class SortTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

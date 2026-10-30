@@ -31,32 +31,32 @@ import {
 } from "../../internal.ts";
 
 const UiSkinDefaultAttrs: Ui_Types_UiSkinAttrs.UiSkinAttrs = {
-    x                   : 0,
-    y                   : 0,
-    scaleX              : 1,
-    scaleY              : 1,
-    anchorOffsetX       : 0,
-    anchorOffsetY       : 0,
-    alpha               : 1,
-    visible             : 1,
-    rotation            : 0,
-    source              : "",
-    smoothing           : 1,
-    icon                : "",
-    label               : "",
-    text                : "",
-    textColor           : "#FFFFFF",
-    size                : 30,
-    bold                : 0,
-    italic              : 0,
-    lineSpacing         : 0,
-    horizontalAlign     : 0,
-    verticalAlign       : 0,
-    stroke              : 0,
-    strokeColor         : "#000000",
-    restrict            : "",
-    displayAsPassword   : 0,
-    multiline           : 0,
+    x                 : 0,
+    y                 : 0,
+    scaleX            : 1,
+    scaleY            : 1,
+    anchorOffsetX     : 0,
+    anchorOffsetY     : 0,
+    alpha             : 1,
+    visible           : 1,
+    rotation          : 0,
+    source            : "",
+    smoothing         : 1,
+    icon              : "",
+    label             : "",
+    text              : "",
+    textColor         : "#FFFFFF",
+    size              : 30,
+    bold              : 0,
+    italic            : 0,
+    lineSpacing       : 0,
+    horizontalAlign   : 0,
+    verticalAlign     : 0,
+    stroke            : 0,
+    strokeColor       : "#000000",
+    restrict          : "",
+    displayAsPassword : 0,
+    multiline         : 0,
     // autoShrinkWidth     : 0,
 };
 function getDefaultTouchEnabled(uiType: Ui_Types_UiComponentType.UiComponentType): boolean {
@@ -90,11 +90,11 @@ export function loadSkinByPath<T extends Ui_Interfaces_IUiComponent.IUiComponent
 }
 export function loadSkin<T extends Ui_Interfaces_IUiComponent.IUiComponent>(root: T, skin: Ui_Types_UiSkin.UiSkin): T {
     doLoadSkin({
-        root            : root,
-        ui              : root,
-        skin            : skin,
-        isNestedSkin    : false,
-        isRootSkin      : true,
+        root         : root,
+        ui           : root,
+        skin         : skin,
+        isNestedSkin : false,
+        isRootSkin   : true,
     });
 
     return root;
@@ -125,21 +125,21 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
     const nestedSkin        = getNestedSkin(skin);
     if (nestedSkin) {
         doLoadSkin({
-            root            : ui,
-            ui              : ui,
-            skin            : nestedSkin,
-            isNestedSkin    : true,
-            isRootSkin      : false,
+            root         : ui,
+            ui           : ui,
+            skin         : nestedSkin,
+            isNestedSkin : true,
+            isRootSkin   : false,
         });
     } else {
         const directSkinChildren: WeakRef<Ui_Interfaces_IUiComponent.IUiComponent>[] = [];
         for (const childSkin of skin.$$ ?? []) {
             const result = doLoadSkin({
-                root            : root,
-                ui              : createUiByName(Helpers_Misc.getExisted(childSkin.uiType)),
-                skin            : childSkin,
-                isNestedSkin    : false,
-                isRootSkin      : false,
+                root         : root,
+                ui           : createUiByName(Helpers_Misc.getExisted(childSkin.uiType)),
+                skin         : childSkin,
+                isNestedSkin : false,
+                isRootSkin   : false,
             });
 
             const childUi   = result.ui;
@@ -209,8 +209,8 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
     }
 
     return {
-        ui                  : ui,
-        nonNestedChildren   : nonNestedChildren,
+        ui                : ui,
+        nonNestedChildren : nonNestedChildren,
     };
 }
 function createUiByName(name: Ui_Types_UiComponentType.UiComponentType): Ui_Interfaces_IUiComponent.IUiComponent {
@@ -245,12 +245,12 @@ function getNestedSkin(skin: Ui_Types_UiSkin.UiSkin): Ui_Types_UiSkin.UiSkin | u
 export function getRevisedAttrValue<K extends keyof Ui_Types_UiSkinAttrs.UiSkinAttrs>(
     oldSkinAttrs    : Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined,
     newSkinAttrs    : Ui_Types_UiSkinAttrs.UiSkinAttrs,
-    key             : K
+    key             : K,
 ): { needChange: boolean, value: Ui_Types_UiSkinAttrs.UiSkinAttrs[K] } {
     const newValue = newSkinAttrs[key];
     return (oldSkinAttrs != null) && (oldSkinAttrs[key] == newValue)
-        ? { needChange: false,  value: undefined }
-        : { needChange: true,   value: newValue };
+        ? { needChange : false,  value : undefined }
+        : { needChange : true,   value : newValue };
 }
 
 export function loadSkinStateRecursively(ui: Ui_Interfaces_IUiComponent.IUiComponent, state: Ui_Types_UiSkinState.UiSkinState): void {
@@ -281,7 +281,7 @@ function loadSkinAttrs(ui: Ui_Interfaces_IUiComponent.IUiComponent, state: strin
 export function commonLoadSkinAttrs(
     ui              : Ui_Interfaces_IUiComponent.IUiComponent,
     oldSkinAttrs    : Ui_Types_UiSkinAttrs.UiSkinAttrs | undefined,
-    newSkinAttrs    : Ui_Types_UiSkinAttrs.UiSkinAttrs
+    newSkinAttrs    : Ui_Types_UiSkinAttrs.UiSkinAttrs,
 ): void {
     const x             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
     const y             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");

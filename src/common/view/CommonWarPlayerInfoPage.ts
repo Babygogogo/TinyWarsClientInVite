@@ -427,11 +427,11 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const fogRankIndex      = await Leaderboard_Model_LeaderboardModel.getMrwRankIndex(WarTypes_Constants.WarTypeId.MrwFog, userId);
         labelRankStd.setText(stdRankInfo
             ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWars_Constants.Common.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${Helpers_Text.getSuffixForRankIndex(stdRankIndex)}`})`
-            : `${MultiRankedWars_Constants.Common.InitialScore} (--)`
+            : `${MultiRankedWars_Constants.Common.InitialScore} (--)`,
         );
         labelRankFog.setText(fogRankInfo
             ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWars_Constants.Common.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${Helpers_Text.getSuffixForRankIndex(fogRankIndex)}`})`
-            : `${MultiRankedWars_Constants.Common.InitialScore} (--)`
+            : `${MultiRankedWars_Constants.Common.InitialScore} (--)`,
         );
 
         this._layoutStd.arrangeItems();
@@ -462,7 +462,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             label.setText(Lang_Utils.getTimeDurationText2(restTime));
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
-                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)
+                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400),
             );
         }
 

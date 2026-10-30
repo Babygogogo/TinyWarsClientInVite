@@ -32,13 +32,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnClose,                   callback : this.closePanel },
 
-            { ui: this._btnPauseTime,               callback: this._onTouchedBtnPauseTime },
-            { ui: this._btnTurnStart,               callback: this._onTouchedBtnTurnStart },
+            { ui : this._btnPauseTime,               callback : this._onTouchedBtnPauseTime },
+            { ui : this._btnTurnStart,               callback : this._onTouchedBtnTurnStart },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -54,12 +54,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = 0;
         const maxValue  = 5000;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0846),
-            minValue        : minValue,
-            maxValue        : maxValue,
-            currentValue    : LocalData_Storage.getReplayPauseTime(),
-            getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0290),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0846),
+            minValue     : minValue,
+            maxValue     : maxValue,
+            currentValue : LocalData_Storage.getReplayPauseTime(),
+            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0290),
+            callback     : value => {
                 LocalData_Storage.setReplayPauseTime(value);
                 this._updateLabelPauseTime();
             },

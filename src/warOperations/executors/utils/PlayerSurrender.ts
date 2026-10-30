@@ -46,15 +46,15 @@ async function normalExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, ac
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerSurrender_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -62,7 +62,7 @@ async function normalExePlayerSurrender(war: BaseWar_Interface_IBwWar.IBwWar, ac
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSurrender): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {
@@ -70,14 +70,14 @@ async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerSur
     } else if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
         return Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0008,
-            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()
+            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
     } else if (war instanceof ReplayWar_Model_RwWarBase.RwWarBase) {
         return `${await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()} ${Lang_Utils.getText(Lang_Constants.TextType.B0055)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof SinglePlayerWar_Model_SpwWar.SpwWar) {
         return Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0008,
-            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname()
+            await war.getPlayer(action.getPlayerIndex() ?? war.getPlayerIndexInTurn()).getNickname(),
         );
     } else if (war instanceof TestWar_Model_TwWar.TwWar) {
         return null;

@@ -31,7 +31,7 @@ const SANDSTORM_ALPHA   = 0.9;
 
 export class View extends Ui_Components_UiContainer.UiContainer implements Weathers_IView.IView {
     private readonly _notifyListeners   : Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged,    callback: this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
+        { type : Notifications_TypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged,    callback : this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
     ];
 
     private _weatherManager?                : Weathers_IManager.IManager;
@@ -47,10 +47,10 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         super();
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
         this.setIsTouchChildrenEnabled(false);
 
@@ -60,8 +60,8 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             containerForRain.setAlpha(RAIN_ALPHA);
             containerForRain.setIsTouchChildrenEnabled(false);
             containerForRain.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+                verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForRain);
         }
@@ -72,8 +72,8 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             containerForSnow.setAlpha(SNOW_ALPHA);
             containerForSnow.setIsTouchChildrenEnabled(false);
             containerForSnow.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+                verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForSnow);
         }
@@ -84,8 +84,8 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             containerForSandstorm.setAlpha(SANDSTORM_ALPHA);
             containerForSandstorm.setIsTouchChildrenEnabled(false);
             containerForSandstorm.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+                verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForSandstorm);
         }
@@ -163,7 +163,7 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
+                const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
                 img.setUnscaledManualWidth(1);
                 imgArray.push(img);
             }
@@ -195,11 +195,11 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         Tween_Executor.Executor.get(img)
             .set({
                 customX : Math.random() * container.getUnscaledWidth(),
-                customY : startingY
+                customY : startingY,
             })
             .to(
-                { customY: endingY },
-                (endingY - startingY) * 1.2 * (Math.random() * 0.2 + 0.9)
+                { customY : endingY },
+                (endingY - startingY) * 1.2 * (Math.random() * 0.2 + 0.9),
             )
             .call(() => this._resetTweenForImgRain(img));
     }
@@ -213,7 +213,7 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorYellow0001` });
+                const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorYellow0001` });
                 imgArray.push(img);
             }
         }
@@ -246,11 +246,11 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
         Tween_Executor.Executor.get(img)
             .set({
                 customX : Math.random() * container.getUnscaledWidth(),
-                customY : startingY
+                customY : startingY,
             })
             .to(
-                { customY: endingY },
-                (endingY - startingY) * 0.6 * (Math.random() * 0.2 + 0.9)
+                { customY : endingY },
+                (endingY - startingY) * 0.6 * (Math.random() * 0.2 + 0.9),
             )
             .call(() => this._resetTweenForImgSandstorm(img));
     }
@@ -264,7 +264,7 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `commonIcon0022` });
+                const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `commonIcon0022` });
                 imgArray.push(img);
             }
         }
@@ -297,16 +297,16 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
 
         Tween_Executor.Executor.removeTweens(img);
         Tween_Executor.Executor.get(img)
-            .set({ customY: startingY })
+            .set({ customY : startingY })
             .to(
-                { customY: endingY },
-                (endingY - startingY) * 8 * (Math.random() * 0.2 + 0.9)
+                { customY : endingY },
+                (endingY - startingY) * 8 * (Math.random() * 0.2 + 0.9),
             )
             .call(() => this._resetTweenForImgSnow(img));
-        Tween_Executor.Executor.get(img, { loop: true })
-            .set({ customX: startingX - 20})
-            .to({ customX: startingX + 20 }, 2000, Tween_Ease.sineInOut)
-            .to({ customX: startingX - 20 }, 2000, Tween_Ease.sineInOut);
+        Tween_Executor.Executor.get(img, { loop : true })
+            .set({ customX : startingX - 20 })
+            .to({ customX : startingX + 20 }, 2000, Tween_Ease.sineInOut)
+            .to({ customX : startingX - 20 }, 2000, Tween_Ease.sineInOut);
     }
 
     private _resetContainerSize(container: Ui_Interfaces_IUiComponent.IUiComponent): void {

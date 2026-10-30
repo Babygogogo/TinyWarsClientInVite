@@ -10,7 +10,7 @@ export function getDesc(data: GridIndexArrayAndPredicate, valueName: string): st
     return Lang_Utils.getFormattedText(
         data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
         valueName,
-        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `)
+        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `),
     );
 }
 

@@ -39,10 +39,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -88,11 +88,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray         : DataForConditionRenderer[] = [];
         for (const condition of openData.fullData.getConditionArray()) {
             dataArray.push({
-                gameConfig              : gameConfig,
-                parentNodeId            : parentNodeId,
-                oldConditionId          : oldConditionId,
-                candidateConditionId    : Helpers_Misc.getExisted(condition.getWecCommonData()?.getConditionId()),
-                fullData                : fullData,
+                gameConfig           : gameConfig,
+                parentNodeId         : parentNodeId,
+                oldConditionId       : oldConditionId,
+                candidateConditionId : Helpers_Misc.getExisted(condition.getWecCommonData()?.getConditionId()),
+                fullData             : fullData,
             });
         }
 
@@ -116,11 +116,11 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnCopy,    callback: this._onTouchedBtnCopy },
-            { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
+            { ui : this._btnCopy,    callback : this._onTouchedBtnCopy },
+            { ui : this._btnSelect,  callback : this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -140,10 +140,10 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (cloneAndReplaceConditionInParentNode({
-            fullData                : openData.fullData,
-            parentNodeId            : openData.parentNodeId,
-            conditionIdForDelete    : openData.oldConditionId,
-            conditionIdForClone     : openData.candidateConditionId,
+            fullData             : openData.fullData,
+            parentNodeId         : openData.parentNodeId,
+            conditionIdForDelete : openData.oldConditionId,
+            conditionIdForClone  : openData.candidateConditionId,
         }) != null) {
             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
@@ -158,10 +158,10 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         if (replaceConditionInParentNode({
-            fullData        : openData.fullData,
-            parentNodeId    : openData.parentNodeId,
-            oldConditionId  : openData.oldConditionId,
-            newConditionId  : openData.candidateConditionId,
+            fullData       : openData.fullData,
+            parentNodeId   : openData.parentNodeId,
+            oldConditionId : openData.oldConditionId,
+            newConditionId : openData.candidateConditionId,
         })) {
             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeConditionReplacePanel);
@@ -248,7 +248,7 @@ function cloneAndReplaceConditionInParentNode({ fullData, parentNodeId, conditio
             if (oldConditionIdAndFlags != null) {
                 oldConditionIdAndFlags.setConditionId(newConditionId);
             } else {
-                conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
+                conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId : newConditionId }));
             }
 
             // conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());
@@ -278,7 +278,7 @@ function replaceConditionInParentNode({ fullData, parentNodeId, oldConditionId, 
     if (oldConditionIdAndFlags != null) {
         oldConditionIdAndFlags.setConditionId(newConditionId);
     } else {
-        conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
+        conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId : newConditionId }));
     }
 
     // conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());

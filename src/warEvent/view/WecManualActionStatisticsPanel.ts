@@ -58,20 +58,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
 
-            { ui: this._btnPlayerIndex,                 callback: this._onTouchedBtnPlayerIndex },
-            { ui: this._btnIsPlayerInTurn,              callback: this._onTouchedBtnIsPlayerInTurn },
+            { ui : this._btnPlayerIndex,                 callback : this._onTouchedBtnPlayerIndex },
+            { ui : this._btnIsPlayerInTurn,              callback : this._onTouchedBtnIsPlayerInTurn },
 
-            { ui: this._btnRecentTurnsCount,            callback: this._onTouchedBtnRecentTurnsCount },
+            { ui : this._btnRecentTurnsCount,            callback : this._onTouchedBtnRecentTurnsCount },
 
-            { ui: this._btnActionsCount,                callback: this._onTouchedBtnActionsCount },
-            { ui: this._btnActionsCountComparator,      callback: this._onTouchedBtnActionsCountComparator },
+            { ui : this._btnActionsCount,                callback : this._onTouchedBtnActionsCount },
+            { ui : this._btnActionsCountComparator,      callback : this._onTouchedBtnActionsCountComparator },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -95,9 +95,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnPlayerIndex(): void {
@@ -108,11 +108,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray          : condition.getPlayerIndexArray(),
-            availableNumberArray        : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
-            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
-            getNumberMainText           : playerIndex => `P${playerIndex}`,
-            callbackOnConfirm           : playerIndexArray => {
+            currentNumberArray   : condition.getPlayerIndexArray(),
+            availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
+            getNumberMainText    : playerIndex => `P${playerIndex}`,
+            callbackOnConfirm    : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -134,11 +134,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRecentTurnsCount(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0930),
-            minValue        : 1,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : condition.getRecentTurnsCount() ?? 0,
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0930),
+            minValue     : 1,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : condition.getRecentTurnsCount() ?? 0,
+            callback     : value => {
                 condition.setRecentTurnsCount(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -149,17 +149,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const condition = this._getCondition();
         const oldCon    = condition.getTotalActions();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0090),
-            minValue        : 0,
-            maxValue        : WarOperations_Constants.Common.MaxLimit,
-            currentValue    : oldCon?.getValue() ?? 0,
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0090),
+            minValue     : 0,
+            maxValue     : WarOperations_Constants.Common.MaxLimit,
+            currentValue : oldCon?.getValue() ?? 0,
+            callback     : value => {
                 if (oldCon) {
                     oldCon.setValue(value);
                 } else {
                     condition.setTotalActions(ValueAndComparator.fromJson({
-                        value       : value,
-                        comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                        value      : value,
+                        comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
                     }));
                 }
 
@@ -174,8 +174,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ValueAndComparators_Utils.tickComparator(oldCon);
         } else {
             condition.setTotalActions(ValueAndComparator.fromJson({
-                value       : 0,
-                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                value      : 0,
+                comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
             }));
         }
 

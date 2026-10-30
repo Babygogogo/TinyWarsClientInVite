@@ -53,7 +53,7 @@ export function convertAwbwMap(text: string, gcData: GameConfigs_GameConfig.Game
         for (const playerIndex of [...unneutralPlayerIndexSet].sort((v1, v2) => v1 - v2)) {
             playerIndexMapping.set(
                 playerIndex,
-                newIndex <= Players_Constants.PlayerIndex.Max ? newIndex++ : 0
+                newIndex <= Players_Constants.PlayerIndex.Max ? newIndex++ : 0,
             );
         }
     }
@@ -72,10 +72,10 @@ export function convertAwbwMap(text: string, gcData: GameConfigs_GameConfig.Game
             }
 
             const tile = Tiles_Utils_Serialization.createDefault({
-                gridIndex           : { x, y },
-                tileBaseTypeId      : cfg.getToTileBaseTypeId(),
-                tileObjectTypeId    : cfg.getToTileObjectTypeId(),
-                gcData              : gcData,
+                gridIndex        : { x, y },
+                tileBaseTypeId   : cfg.getToTileBaseTypeId(),
+                tileObjectTypeId : cfg.getToTileObjectTypeId(),
+                gcData           : gcData,
             });
             tile.setPlayerIndex(playerIndexMapping.get(info.playerIndex) ?? 0);
             tileArray.push(tile);
@@ -84,23 +84,23 @@ export function convertAwbwMap(text: string, gcData: GameConfigs_GameConfig.Game
 
     const playersCountUnneutral = Math.min(unneutralPlayerIndexSet.size, Players_Constants.PlayerIndex.Max);
     return MapRawData.fromJson({
-        designerName            : "AWBW",
-        designerUserId          : Users_Model.getSelfUserId(),
-        mapNameArray            : [{ languageType: Lang_Constants.LanguageType.English, text: "AWBW Map" }],
-        mapWidth                : mapWidth,
-        mapHeight               : mapHeight,
-        playersCountUnneutral   : playersCountUnneutral,
-        modifiedTime            : Timer_TimerModel.getServerTimestamp(),
-        tileDataArray           : tileArray.map(v => v.toJson()),
-        unitDataArray           : [],
-        templateWarRuleArray    : [WarRules_Utils_Template.createDefault(0, playersCountUnneutral, gcData).toJson()],
-        mapTagIdFlags           : null,
-        warEventFullData        : null,
-        mapSimpleDialogueArray  : [],
-        campaignMapData         : null,
-        taskObjectiveFullData   : null,
-        mapExtraText            : null,
-        tileCustomNameArray     : [],
-        unitCustomNameArray     : [],
+        designerName           : "AWBW",
+        designerUserId         : Users_Model.getSelfUserId(),
+        mapNameArray           : [{ languageType : Lang_Constants.LanguageType.English, text : "AWBW Map" }],
+        mapWidth               : mapWidth,
+        mapHeight              : mapHeight,
+        playersCountUnneutral  : playersCountUnneutral,
+        modifiedTime           : Timer_TimerModel.getServerTimestamp(),
+        tileDataArray          : tileArray.map(v => v.toJson()),
+        unitDataArray          : [],
+        templateWarRuleArray   : [WarRules_Utils_Template.createDefault(0, playersCountUnneutral, gcData).toJson()],
+        mapTagIdFlags          : null,
+        warEventFullData       : null,
+        mapSimpleDialogueArray : [],
+        campaignMapData        : null,
+        taskObjectiveFullData  : null,
+        mapExtraText           : null,
+        tileCustomNameArray    : [],
+        unitCustomNameArray    : [],
     });
 }

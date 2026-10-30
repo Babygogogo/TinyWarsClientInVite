@@ -16,7 +16,7 @@ export function checkIsValidModificationEndTurnIndex(turnIndex: number): boolean
         && (turnIndex <= TileBuffs_Constants.EndTimeModification.MaxEndTurnIndex);
 }
 
-export function create({ buffTypeId, expiringTurnIndex, expiringPlayerIndex, extraParams, }: {
+export function create({ buffTypeId, expiringTurnIndex, expiringPlayerIndex, extraParams }: {
     buffTypeId          : number;
     expiringTurnIndex   : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     expiringPlayerIndex : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;

@@ -60,9 +60,9 @@ export class RequestingPlayerProduceUnit implements ActionPlanners_States_IState
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoPlayerProduceUnit : {
-                    gridIndex   : gridIndex.toProto().toJson(),
-                    unitType    : unitType,
-                    unitHp      : unitHp,
+                    gridIndex : gridIndex.toProto().toJson(),
+                    unitType  : unitType,
+                    unitHp    : unitHp,
                 },
             }));
 
@@ -74,11 +74,11 @@ export class RequestingPlayerProduceUnit implements ActionPlanners_States_IState
             actionPlanner.updateView();
 
             SinglePlayerWar_Model_SpwLocalProxy.reqPlayerProduceUnit({
-                war         : war,
-                gridIndex   : gridIndex,
-                unitType    : unitType,
-                unitHp      : unitHp,
-             });
+                war       : war,
+                gridIndex : gridIndex,
+                unitType  : unitType,
+                unitHp    : unitHp,
+            });
         }
     }
 }

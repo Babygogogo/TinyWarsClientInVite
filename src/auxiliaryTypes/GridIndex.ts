@@ -16,10 +16,10 @@ const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurren
 
 export class GridIndex {
     private static readonly _ADJACENT_OFFSETS = [
-        { offset: new GridIndex(-1,  0), direction: Geometries_Constants.DirectionId.Left,  clockwiseOffset: new GridIndex( 1,  1) },
-        { offset: new GridIndex( 1,  0), direction: Geometries_Constants.DirectionId.Right, clockwiseOffset: new GridIndex(-1, -1) },
-        { offset: new GridIndex( 0, -1), direction: Geometries_Constants.DirectionId.Up,    clockwiseOffset: new GridIndex(-1,  1) },
-        { offset: new GridIndex( 0,  1), direction: Geometries_Constants.DirectionId.Down,  clockwiseOffset: new GridIndex( 1, -1) },
+        { offset : new GridIndex(-1,  0), direction : Geometries_Constants.DirectionId.Left,  clockwiseOffset : new GridIndex( 1,  1) },
+        { offset : new GridIndex( 1,  0), direction : Geometries_Constants.DirectionId.Right, clockwiseOffset : new GridIndex(-1, -1) },
+        { offset : new GridIndex( 0, -1), direction : Geometries_Constants.DirectionId.Up,    clockwiseOffset : new GridIndex(-1,  1) },
+        { offset : new GridIndex( 0,  1), direction : Geometries_Constants.DirectionId.Down,  clockwiseOffset : new GridIndex( 1, -1) },
     ];
 
     private _x: number;
@@ -74,10 +74,10 @@ export class GridIndex {
     }
 
     public toProto(): ProtoGridIndex {
-        return ProtoGridIndex.fromJson({ x: this.getX(), y: this.getY() });
+        return ProtoGridIndex.fromJson({ x : this.getX(), y : this.getY() });
     }
     public getXY(): { x: number, y: number } {
-        return { x: this.getX(), y: this.getY() };
+        return { x : this.getX(), y : this.getY() };
     }
 
     public getX(): number {
@@ -96,8 +96,8 @@ export class GridIndex {
 
     public createPointByGridIndex(): AuxiliaryTypes_AuxiliaryTypes.Point {
         return {
-            x: this.getX() * getGridWidth(),
-            y: this.getY() * getGridHeight(),
+            x : this.getX() * getGridWidth(),
+            y : this.getY() * getGridHeight(),
         };
     }
 
@@ -166,14 +166,14 @@ export class GridIndex {
     public getNearestGridIndexInMap(mapSize: AuxiliaryTypes_MapSize.MapSize): GridIndex {
         return new GridIndex(
             Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : mapSize.getWidth() - 1,
-                rawValue    : this.getX(),
+                minValue : 0,
+                maxValue : mapSize.getWidth() - 1,
+                rawValue : this.getX(),
             }),
             Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : mapSize.getHeight() - 1,
-                rawValue    : this.getY(),
+                minValue : 0,
+                maxValue : mapSize.getHeight() - 1,
+                rawValue : this.getY(),
             }),
         );
     }
@@ -191,7 +191,7 @@ export class GridIndex {
     public getAdjacentGrid(direction: Geometries_Constants.DirectionId): GridIndex {
         return GridIndex.add(
             this,
-            Helpers_Misc.getExisted(GridIndex._ADJACENT_OFFSETS.find(v => v.direction === direction)?.offset)
+            Helpers_Misc.getExisted(GridIndex._ADJACENT_OFFSETS.find(v => v.direction === direction)?.offset),
         );
     }
 

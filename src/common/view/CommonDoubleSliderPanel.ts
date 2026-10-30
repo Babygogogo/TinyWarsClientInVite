@@ -13,7 +13,7 @@ import {
     type Ui_Interfaces_IUiLayout,
 } from "../../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 const enum TouchingType {
     None,
     Lower,
@@ -52,18 +52,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupBar,       callback: this._onTouchedGroupBar },
-            { ui: this._groupBar,       callback: this._onTouchBeginGroupBar,           eventType: Helpers_PointerInput.PointerEventType.Press },
-            { ui: this._groupBar,       callback: this._onTouchMoveGroupBar,            eventType: Helpers_PointerInput.PointerEventType.PressMove },
-            { ui: this._groupBar,       callback: this._onTouchEndGroupBar,             eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupBar,       callback: this._onTouchReleaseOutsideGroupBar,  eventType: Helpers_PointerInput.PointerEventType.ReleaseOut },
+            { ui : this._groupBar,       callback : this._onTouchedGroupBar },
+            { ui : this._groupBar,       callback : this._onTouchBeginGroupBar,           eventType : Helpers_PointerInput.PointerEventType.Press },
+            { ui : this._groupBar,       callback : this._onTouchMoveGroupBar,            eventType : Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupBar,       callback : this._onTouchEndGroupBar,             eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupBar,       callback : this._onTouchReleaseOutsideGroupBar,  eventType : Helpers_PointerInput.PointerEventType.ReleaseOut },
 
-            { ui: this._btnCancel,      callback: this._onTouchedBtnCancel },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
+            { ui : this._btnCancel,      callback : this._onTouchedBtnCancel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

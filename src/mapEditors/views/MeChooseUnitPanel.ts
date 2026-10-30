@@ -47,11 +47,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
-            { ui: this._btnSwitch,  callback: this._onTouchedBtnSwitch },
+            { ui : this._btnClose,   callback : this.closePanel },
+            { ui : this._btnSwitch,  callback : this._onTouchedBtnSwitch },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -152,7 +152,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= Players_Constants.PlayerIndex.Max; ++playerIndex) {
             dataArray.push({
                 playerIndex,
-                panel       : this,
+                panel : this,
             });
         }
 
@@ -209,9 +209,9 @@ class PlayerIndexRenderer extends Ui_Components_UiListItemRenderer.UiListItemRen
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -271,7 +271,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const unitView  = this._unitView;
         const unit      = new Units_Unit.Unit();
         unit.init(Units_Utils_Serialization.createDefault({
-            gridIndex   : { x: 0, y: 0 },
+            gridIndex   : { x : 0, y : 0 },
             unitId      : 0,
             unitTypeId  : unitType,
             playerIndex : dataForDrawUnit.playerIndex,

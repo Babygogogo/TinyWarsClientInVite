@@ -84,7 +84,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
     }
 
     const isCampaignMap = mapRawData.getCampaignMapData() != null;
-    if ((isCampaignMap) && (!Lang_Utils.getLanguageText({ textArray: mapRawData.getMapExtraText()?.getMapDescription() }))) {
+    if ((isCampaignMap) && (!Lang_Utils.getLanguageText({ textArray : mapRawData.getMapExtraText()?.getMapDescription() }))) {
         return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_04;
     }
 
@@ -107,7 +107,9 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_05;
     }
 
-    const warEventError = WarEvents_FullDatas_Utils.getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, mapSize, playersCountUnneutral });
+    const warEventError = WarEvents_FullDatas_Utils.getErrorCodeForWarEventFullData({
+        warEventFullData, gameConfig, mapSize, playersCountUnneutral, 
+    });
     if (warEventError) {
         return warEventError;
     }
@@ -141,7 +143,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         if (taskObjectiveFullData != null) {
             const errorCode = TaskObjectives_Utils.getErrorCodeForFullData(
                 taskObjectiveFullData,
-                new Set(mapRawData.getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``))
+                new Set(mapRawData.getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
             );
             if (errorCode) {
                 return errorCode;
@@ -163,10 +165,10 @@ function getErrorCodeForMapDesigner(mapDesigner: AuxiliaryTypes_AuxiliaryTypes.U
 }
 function getErrorCodeForMapNameArray(mapNameList: AuxiliaryTypes_AuxiliaryTypes.Undefinable<LanguageText[]>): Utils_ClientErrorCode.ClientErrorCode {
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : mapNameList ?? [],
-        maxTextLength   : Maps_Constants.Common.MaxNameLength,
-        minTextLength   : 1,
-        minTextCount    : 1,
+        list          : mapNameList ?? [],
+        maxTextLength : Maps_Constants.Common.MaxNameLength,
+        minTextLength : 1,
+        minTextCount  : 1,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapNameArray_00;
     }
@@ -181,10 +183,10 @@ function getErrorCodeForMapExtraText(mapExtraText: AuxiliaryTypes_AuxiliaryTypes
     const mapDescription = mapExtraText.getMapDescription();
     if ((mapDescription?.length)                &&
         (!Lang_Utils.checkIsValidLanguageTextArray({
-            list            : mapDescription,
-            minTextCount    : 1,
-            minTextLength   : 1,
-            maxTextLength   : Maps_Constants.Common.MaxDescLength,
+            list          : mapDescription,
+            minTextCount  : 1,
+            minTextLength : 1,
+            maxTextLength : Maps_Constants.Common.MaxDescLength,
         }))
     ) {
         return Utils_ClientErrorCode.ClientErrorCode.MeHelpers_GetErrorCodeForMapExtraText_00;

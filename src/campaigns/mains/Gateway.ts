@@ -28,18 +28,18 @@ import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/Sin
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignCreateWar,                    callback: _onMsgCampaignCreateWar },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignSaveWar,                      callback: _onMsgCampaignSaveWar },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignValidateWar,                  callback: _onMsgCampaignValidateWar },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignInfo,              callback: _onMsgCampaignGetCampaignInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetEnabledCampaignIdArray,    callback: _onMsgCampaignGetEnabledCampaignIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetMapRawData,                callback: _onMsgCampaignGetMapRawData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetMapRawDataArray,           callback: _onMsgCampaignGetMapRawDataArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetMapTimestamp,              callback: _onMsgCampaignGetMapTimestamp },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetAllMapTimestampArray,      callback: _onMsgCampaignGetAllMapTimestampArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignLeaderboard,       callback: _onMsgCampaignGetCampaignLeaderboard },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignMapLeaderboard,    callback: _onMsgCampaignGetCampaignMapLeaderboard },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCampaignGetScore,                     callback: _onMsgCampaignGetScore },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignCreateWar,                    callback : _onMsgCampaignCreateWar },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignSaveWar,                      callback : _onMsgCampaignSaveWar },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignValidateWar,                  callback : _onMsgCampaignValidateWar },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignInfo,              callback : _onMsgCampaignGetCampaignInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetEnabledCampaignIdArray,    callback : _onMsgCampaignGetEnabledCampaignIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetMapRawData,                callback : _onMsgCampaignGetMapRawData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetMapRawDataArray,           callback : _onMsgCampaignGetMapRawDataArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetMapTimestamp,              callback : _onMsgCampaignGetMapTimestamp },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetAllMapTimestampArray,      callback : _onMsgCampaignGetAllMapTimestampArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignLeaderboard,       callback : _onMsgCampaignGetCampaignLeaderboard },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetCampaignMapLeaderboard,    callback : _onMsgCampaignGetCampaignMapLeaderboard },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCampaignGetScore,                     callback : _onMsgCampaignGetScore },
     ]);
 }
 
@@ -50,13 +50,17 @@ export function reqCampaignCreateWar({ slotIndex, slotExtraData, campaignId, cam
     campaignMapId       : number;
     playerCoInfoArray   : PlayerCoInfo[];
 }): void {
-    Networks_Manager.send({ MsgCampaignCreateWar: { c: {
-        slotIndex           : slotIndex,
-        slotExtraData       : slotExtraData.toJson(),
-        campaignId          : campaignId,
-        campaignMapId       : campaignMapId,
-        playerCoInfoArray   : playerCoInfoArray.map(v => v.toJson()),
-    } } });
+    Networks_Manager.send({
+        MsgCampaignCreateWar : {
+            c : {
+                slotIndex         : slotIndex,
+                slotExtraData     : slotExtraData.toJson(),
+                campaignId        : campaignId,
+                campaignMapId     : campaignMapId,
+                playerCoInfoArray : playerCoInfoArray.map(v => v.toJson()),
+            }, 
+        }, 
+    });
 }
 async function _onMsgCampaignCreateWar(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CampaignCreateWarResponse;
@@ -69,11 +73,15 @@ async function _onMsgCampaignCreateWar(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqCampaignSaveWar(war: SinglePlayerWar_Interface_ISpwWar.ISpwWar): void {
-    Networks_Manager.send({ MsgCampaignSaveWar: { c: {
-        slotIndex           : war.getSaveSlotIndex(),
-        slotExtraData       : war.getSaveSlotExtraData()?.toJson(),
-        compressedWarData   : Helpers_Gzip.compress(war.serialize().encode()),
-    }, }, });
+    Networks_Manager.send({
+        MsgCampaignSaveWar : {
+            c : {
+                slotIndex         : war.getSaveSlotIndex(),
+                slotExtraData     : war.getSaveSlotExtraData()?.toJson(),
+                compressedWarData : Helpers_Gzip.compress(war.serialize().encode()),
+            }, 
+        }, 
+    });
 }
 async function _onMsgCampaignSaveWar(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CampaignSaveWarResponse;
@@ -84,9 +92,13 @@ async function _onMsgCampaignSaveWar(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqCampaignValidateWar(war: Campaigns_Wars_IWar.IWar): void {
-    Networks_Manager.send({ MsgCampaignValidateWar: { c: {
-        warData     : war.serializeForValidation().toJson(),
-    } }, });
+    Networks_Manager.send({
+        MsgCampaignValidateWar : {
+            c : {
+                warData : war.serializeForValidation().toJson(),
+            }, 
+        }, 
+    });
 }
 function _onMsgCampaignValidateWar(e: Egret_Egret.Event): void {
     const data = e.data as CampaignValidateWarResponse;
@@ -97,9 +109,13 @@ function _onMsgCampaignValidateWar(e: Egret_Egret.Event): void {
 }
 
 export function reqCampaignGetCampaignInfo(campaignId: number): void {
-    Networks_Manager.send({ MsgCampaignGetCampaignInfo: { c: {
-        campaignId  : campaignId,
-    } }, });
+    Networks_Manager.send({
+        MsgCampaignGetCampaignInfo : {
+            c : {
+                campaignId : campaignId,
+            }, 
+        }, 
+    });
 }
 function _onMsgCampaignGetCampaignInfo(e: Egret_Egret.Event): void {
     const data = e.data as CampaignGetCampaignInfoResponse;
@@ -113,7 +129,7 @@ function _onMsgCampaignGetCampaignInfo(e: Egret_Egret.Event): void {
 
 export function reqCampaignGetEnabledCampaignIdArray(): void {
     Networks_Manager.send({
-        MsgCampaignGetEnabledCampaignIdArray: { c: {} },
+        MsgCampaignGetEnabledCampaignIdArray : { c : {} },
     });
 }
 function _onMsgCampaignGetEnabledCampaignIdArray(e: Egret_Egret.Event): void {
@@ -128,10 +144,12 @@ function _onMsgCampaignGetEnabledCampaignIdArray(e: Egret_Egret.Event): void {
 
 export function reqCampaignGetMapRawData(campaignId: number, campaignMapId: number): void {
     Networks_Manager.send({
-        MsgCampaignGetMapRawData: { c: {
-            campaignId      : campaignId,
-            campaignMapId   : campaignMapId,
-        } },
+        MsgCampaignGetMapRawData : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+            }, 
+        },
     });
 }
 async function _onMsgCampaignGetMapRawData(e: Egret_Egret.Event): Promise<void> {
@@ -145,10 +163,14 @@ async function _onMsgCampaignGetMapRawData(e: Egret_Egret.Event): Promise<void> 
 }
 
 export function reqCampaignGetMapRawDataArray(campaignId: number, campaignMapIdArray: number[]): void {
-    Networks_Manager.send({ MsgCampaignGetMapRawDataArray: { c: {
-        campaignId          : campaignId,
-        campaignMapIdArray  : campaignMapIdArray,
-    } }, });
+    Networks_Manager.send({
+        MsgCampaignGetMapRawDataArray : {
+            c : {
+                campaignId         : campaignId,
+                campaignMapIdArray : campaignMapIdArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgCampaignGetMapRawDataArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CampaignGetMapRawDataArrayResponse;
@@ -161,10 +183,14 @@ async function _onMsgCampaignGetMapRawDataArray(e: Egret_Egret.Event): Promise<v
 }
 
 export function reqCampaignGetMapTimestamp(campaignId: number, campaignMapId: number): void {
-    Networks_Manager.send({ MsgCampaignGetMapTimestamp: { c: {
-        campaignId      : campaignId,
-        campaignMapId   : campaignMapId,
-    } }, });
+    Networks_Manager.send({
+        MsgCampaignGetMapTimestamp : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgCampaignGetMapTimestamp(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CampaignGetMapTimestampResponse;
@@ -175,9 +201,13 @@ async function _onMsgCampaignGetMapTimestamp(e: Egret_Egret.Event): Promise<void
 }
 
 export function reqCampaignGetAllMapTimestampArray(campaignId: number): void {
-    Networks_Manager.send({ MsgCampaignGetAllMapTimestampArray: { c: {
-        campaignId      : campaignId,
-    } }, });
+    Networks_Manager.send({
+        MsgCampaignGetAllMapTimestampArray : {
+            c : {
+                campaignId : campaignId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgCampaignGetAllMapTimestampArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as CampaignGetAllMapTimestampArrayResponse;
@@ -190,9 +220,13 @@ async function _onMsgCampaignGetAllMapTimestampArray(e: Egret_Egret.Event): Prom
 }
 
 export function reqCampaignGetCampaignLeaderboard(campaignId: number): void {
-    Networks_Manager.send({ MsgCampaignGetCampaignLeaderboard: { c: {
-        campaignId  : campaignId,
-    } } });
+    Networks_Manager.send({
+        MsgCampaignGetCampaignLeaderboard : {
+            c : {
+                campaignId : campaignId,
+            }, 
+        }, 
+    });
 }
 function _onMsgCampaignGetCampaignLeaderboard(e: Egret_Egret.Event): void {
     const data = e.data as CampaignGetCampaignLeaderboardResponse;
@@ -205,10 +239,14 @@ function _onMsgCampaignGetCampaignLeaderboard(e: Egret_Egret.Event): void {
 }
 
 export function reqCampaignGetCampaignMapLeaderboard(campaignId: number, campaignMapId: number): void {
-    Networks_Manager.send({ MsgCampaignGetCampaignMapLeaderboard: { c: {
-        campaignId      : campaignId,
-        campaignMapId   : campaignMapId,
-    } } });
+    Networks_Manager.send({
+        MsgCampaignGetCampaignMapLeaderboard : {
+            c : {
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+            }, 
+        }, 
+    });
 }
 function _onMsgCampaignGetCampaignMapLeaderboard(e: Egret_Egret.Event): void {
     const data = e.data as CampaignGetCampaignMapLeaderboardResponse;

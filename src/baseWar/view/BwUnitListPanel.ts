@@ -73,16 +73,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateChanged, callback: this._onNotifyBwPlannerStateChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateChanged, callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnAddAlpha,        callback: this._onTouchedBtnAddAlpha },
-            { ui: this._btnSubAlpha,        callback: this._onTouchedBtnSubAlpha },
-            { ui: this._btnNext,            callback: this._onTouchedBtnNext },
-            { ui: this._btnPrevious,        callback: this._onTouchedBtnPrevious },
-            { ui: this._btnUnitStatistics,  callback: this._onTouchedBtnUnitStatistics },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnAddAlpha,        callback : this._onTouchedBtnAddAlpha },
+            { ui : this._btnSubAlpha,        callback : this._onTouchedBtnSubAlpha },
+            { ui : this._btnNext,            callback : this._onTouchedBtnNext },
+            { ui : this._btnPrevious,        callback : this._onTouchedBtnPrevious },
+            { ui : this._btnUnitStatistics,  callback : this._onTouchedBtnUnitStatistics },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -176,8 +176,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (war instanceof ReplayWar_Model_RwWar.RwWar) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitStatisticsPanel, {
-                war         : war,
-                infoArray   : war.getWarStatisticsManager().getUnitStatisticsInfoArrayForFullReplay(),
+                war       : war,
+                infoArray : war.getWarStatisticsManager().getUnitStatisticsInfoArrayForFullReplay(),
             });
             return;
         }
@@ -189,8 +189,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitStatisticsPanel, {
-                    war         : war,
-                    infoArray   : info.getInfoArray(),
+                    war       : war,
+                    infoArray : info.getInfoArray(),
                 });
             }
             return;
@@ -276,26 +276,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if (unit.getPlayerIndex() === playerIndex) {
                 const tile              = tileMap.getTile(unit.getGridIndex());
                 const dataForTileView   : BaseWar_Model_BwTypes.DataForTileView = {
-                    gameConfig          : gameConfig,
-                    hasFog              : tile.getHasFog(),
-                    skinId              : tile.getSkinId(),
-                    overridingSkinId    : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
-                    themeType           : tile.getTileThemeType(),
-                    tileData            : tile.serializeForTeamIndexes(teamIndexes),
-                    isFullReplay        : war instanceof ReplayWar_Model_RwWar.RwWar,
+                    gameConfig       : gameConfig,
+                    hasFog           : tile.getHasFog(),
+                    skinId           : tile.getSkinId(),
+                    overridingSkinId : ForceSkins_Utils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
+                    themeType        : tile.getTileThemeType(),
+                    tileData         : tile.serializeForTeamIndexes(teamIndexes),
+                    isFullReplay     : war instanceof ReplayWar_Model_RwWar.RwWar,
                 };
                 dataList.push({
-                    cursor                  : cursor,
-                    unit                    : unit,
-                    dataForTileView         : dataForTileView,
-                    panel                   : this,
+                    cursor          : cursor,
+                    unit            : unit,
+                    dataForTileView : dataForTileView,
+                    panel           : this,
                 });
                 for (const loadedUnit of unitMap.getUnitsLoadedByLoader(unit, true)) {
                     dataList.push({
-                        cursor                  : cursor,
-                        unit                    : loadedUnit,
-                        dataForTileView         : dataForTileView,
-                        panel                   : this,
+                        cursor          : cursor,
+                        unit            : loadedUnit,
+                        dataForTileView : dataForTileView,
+                        panel           : this,
                     });
                 }
             }
@@ -349,8 +349,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,      callback: this._onNotifyStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,       callback : this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch(undefined, undefined, undefined, Sounds_Constants.ShortSfxCode.None);
 
@@ -371,9 +371,9 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         this._unitView.stopRunningView();

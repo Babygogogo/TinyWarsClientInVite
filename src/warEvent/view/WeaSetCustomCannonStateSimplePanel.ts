@@ -98,31 +98,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConUnitComparator,                   callback: this._onTouchedBtnConUnitComparator },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConUnitComparator,                   callback : this._onTouchedBtnConUnitComparator },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._btnActRangeForUp,                       callback: this._onTouchedBtnActRangeForUp },
-            { ui: this._btnActRangeForDown,                     callback: this._onTouchedBtnActRangeForDown },
-            { ui: this._btnActRangeForLeft,                     callback: this._onTouchedBtnActRangeForLeft },
-            { ui: this._btnActRangeForRight,                    callback: this._onTouchedBtnActRangeForRight },
-            { ui: this._btnActPriority,                         callback: this._onTouchedBtnActPriority },
-            { ui: this._btnActCanAffectSelf,                    callback: this._onTouchedBtnActCanAffectSelf },
-            { ui: this._btnActCanAffectAlly,                    callback: this._onTouchedBtnActCanAffectAlly },
-            { ui: this._btnActCanAffectEnemy,                   callback: this._onTouchedBtnActCanAffectEnemy },
-            { ui: this._btnActMaxTargetCount,                   callback: this._onTouchedBtnActMaxTargetCount },
-            { ui: this._btnActOffsetHp,                         callback: this._onTouchedBtnActOffsetHp },
-            { ui: this._btnActOffsetFuelPercentage,             callback: this._onTouchedBtnActOffsetFuelPercentage },
-            { ui: this._btnActOffsetPrimaryAmmoPercentage,      callback: this._onTouchedBtnActOffsetPrimaryAmmoPercentage },
-            { ui: this._btnActCanBeFatal,                       callback: this._onTouchedBtnActCanBeFatal },
+            { ui : this._btnActRangeForUp,                       callback : this._onTouchedBtnActRangeForUp },
+            { ui : this._btnActRangeForDown,                     callback : this._onTouchedBtnActRangeForDown },
+            { ui : this._btnActRangeForLeft,                     callback : this._onTouchedBtnActRangeForLeft },
+            { ui : this._btnActRangeForRight,                    callback : this._onTouchedBtnActRangeForRight },
+            { ui : this._btnActPriority,                         callback : this._onTouchedBtnActPriority },
+            { ui : this._btnActCanAffectSelf,                    callback : this._onTouchedBtnActCanAffectSelf },
+            { ui : this._btnActCanAffectAlly,                    callback : this._onTouchedBtnActCanAffectAlly },
+            { ui : this._btnActCanAffectEnemy,                   callback : this._onTouchedBtnActCanAffectEnemy },
+            { ui : this._btnActMaxTargetCount,                   callback : this._onTouchedBtnActMaxTargetCount },
+            { ui : this._btnActOffsetHp,                         callback : this._onTouchedBtnActOffsetHp },
+            { ui : this._btnActOffsetFuelPercentage,             callback : this._onTouchedBtnActOffsetFuelPercentage },
+            { ui : this._btnActOffsetPrimaryAmmoPercentage,      callback : this._onTouchedBtnActOffsetPrimaryAmmoPercentage },
+            { ui : this._btnActCanBeFatal,                       callback : this._onTouchedBtnActCanBeFatal },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -153,9 +153,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -171,10 +171,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -193,17 +193,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
 
                 if ((filter != null) && (!action.getConUnitComparator())) {
                     action.setConUnitComparator(ValueAndComparator.fromJson({
-                        comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
-                        value       : 0,
+                        comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                        value      : 0,
                     }));
                 }
 
@@ -225,17 +225,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = action.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon?.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
-                    currentValue    : oldCon?.getValue() ?? 0,
-                    minValue        : 0,
-                    maxValue        : 10,
-                    callback        : unitsCount => {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+                    currentValue : oldCon?.getValue() ?? 0,
+                    minValue     : 0,
+                    maxValue     : 10,
+                    callback     : unitsCount => {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
@@ -246,8 +246,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                                 oldCon.setComparator(sign);
                             } else {
                                 action.setConUnitComparator(ValueAndComparator.fromJson({
-                                    comparator  : sign,
-                                    value       : unitsCount,
+                                    comparator : sign,
+                                    value      : unitsCount,
                                 }));
                             }
 
@@ -255,7 +255,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         }
                     },
                 });
-            }
+            },
         });
     }
 
@@ -271,11 +271,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -290,19 +290,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActRangeForUp();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForUp(null);
@@ -310,7 +310,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActRangeForUp(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -323,19 +323,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActRangeForDown();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForDown(null);
@@ -343,7 +343,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActRangeForDown(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -356,19 +356,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActRangeForLeft();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForLeft(null);
@@ -376,7 +376,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActRangeForLeft(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -389,19 +389,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActRangeForRight();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForRight(null);
@@ -409,7 +409,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActRangeForRight(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -422,19 +422,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActPriority();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActPriority(null);
@@ -442,7 +442,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActPriority(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -506,19 +506,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActMaxTargetCount();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActMaxTargetCount(null);
@@ -526,7 +526,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActMaxTargetCount(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -539,19 +539,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActOffsetHp();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetHp(null);
@@ -559,7 +559,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActOffsetHp(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -572,19 +572,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActOffsetFuelPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetFuelPercentage(null);
@@ -592,7 +592,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActOffsetFuelPercentage(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -605,19 +605,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActOffsetPrimaryAmmoPercentage();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
-            minValue        : -WarEvents_Constants.Event.MaxMultiplier,
-            maxValue        : WarEvents_Constants.Event.MaxMultiplier,
-            currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
-                minValue        : -WarEvents_Constants.Event.MaxOffset,
-                maxValue        : WarEvents_Constants.Event.MaxOffset,
-                currentValue    : act?.getOffset() ?? 0,
-                callback        : newOffset => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Multiplier),
+            minValue     : -WarEvents_Constants.Event.MaxMultiplier,
+            maxValue     : WarEvents_Constants.Event.MaxMultiplier,
+            currentValue : act?.getMultiplierPct() ?? 100,
+            callback     : newMultiplierPct => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Offset),
+                minValue     : -WarEvents_Constants.Event.MaxOffset,
+                maxValue     : WarEvents_Constants.Event.MaxOffset,
+                currentValue : act?.getOffset() ?? 0,
+                callback     : newOffset => {
                     const multiplierAndOffset = MultiplierAndOffset.fromJson({
-                        multiplierPct   : newMultiplierPct,
-                        offset          : newOffset,
+                        multiplierPct : newMultiplierPct,
+                        offset        : newOffset,
                     });
                     if (MultiplierAndOffsets_Utils.checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetPrimaryAmmoPercentage(null);
@@ -625,7 +625,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         action.setActOffsetPrimaryAmmoPercentage(multiplierAndOffset);
                     }
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             }),
         });
     }
@@ -736,7 +736,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForUp();
         this._labelActRangeForUp.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -744,7 +744,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForDown();
         this._labelActRangeForDown.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -752,7 +752,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForLeft();
         this._labelActRangeForLeft.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -760,7 +760,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForRight();
         this._labelActRangeForRight.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -768,7 +768,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActPriority();
         this._labelActPriority.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -776,7 +776,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectSelf();
         this._labelActCanAffectSelf.setText(act == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(act)
+            : Lang_Utils.getTextForYesOrNo(act),
         );
     }
 
@@ -784,7 +784,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectAlly();
         this._labelActCanAffectAlly.setText(act == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(act)
+            : Lang_Utils.getTextForYesOrNo(act),
         );
     }
 
@@ -792,7 +792,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectEnemy();
         this._labelActCanAffectEnemy.setText(act == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(act)
+            : Lang_Utils.getTextForYesOrNo(act),
         );
     }
 
@@ -800,7 +800,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActMaxTargetCount();
         this._labelActMaxTargetCount.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -808,7 +808,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetHp();
         this._labelActOffsetHp.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -816,7 +816,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetFuelPercentage();
         this._labelActOffsetFuelPercentage.setText(act == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(act)
+            : Lang_Utils.getTextForYesOrNo(act),
         );
     }
 
@@ -824,7 +824,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetPrimaryAmmoPercentage();
         this._labelActOffsetPrimaryAmmoPercentage.setText(act == null
             ? ``
-            : MultiplierAndOffsets_Utils.getBriefDesc(act)
+            : MultiplierAndOffsets_Utils.getBriefDesc(act),
         );
     }
 
@@ -832,7 +832,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanBeFatal();
         this._labelActCanBeFatal.setText(act == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(act)
+            : Lang_Utils.getTextForYesOrNo(act),
         );
     }
 

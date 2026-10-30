@@ -68,25 +68,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyTargets,                             callback: this._onTouchedGroupModifyTargets },
-            { ui: this._btnTargets,                                     callback: this._onTouchedBtnTargets },
+            { ui : this._groupModifyTargets,                             callback : this._onTouchedGroupModifyTargets },
+            { ui : this._btnTargets,                                     callback : this._onTouchedBtnTargets },
 
-            { ui: this._groupModifyNeedFocusEffect,                     callback: this._onTouchedGroupModifyNeedFocusEffect },
-            { ui: this._btnNeedFocusEffect,                             callback: this._onTouchedBtnNeedFocusEffect },
+            { ui : this._groupModifyNeedFocusEffect,                     callback : this._onTouchedGroupModifyNeedFocusEffect },
+            { ui : this._btnNeedFocusEffect,                             callback : this._onTouchedBtnNeedFocusEffect },
 
-            { ui: this._groupModifyIsOneByOne,                          callback: this._onTouchedGroupModifyIsOneByOne },
-            { ui: this._btnIsOneByOne,                                  callback: this._onTouchedBtnIsOneByOne },
+            { ui : this._groupModifyIsOneByOne,                          callback : this._onTouchedGroupModifyIsOneByOne },
+            { ui : this._btnIsOneByOne,                                  callback : this._onTouchedBtnIsOneByOne },
 
-            { ui: this._groupModifyInterval,                            callback: this._onTouchedGroupModifyInterval },
-            { ui: this._btnInterval,                                    callback: this._onTouchedBtnInterval },
+            { ui : this._groupModifyInterval,                            callback : this._onTouchedGroupModifyInterval },
+            { ui : this._btnInterval,                                    callback : this._onTouchedBtnInterval },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -110,9 +110,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -138,11 +138,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getTargets(),
-            expressionInfo  : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Targets,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getTargets(),
+            expressionInfo : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Targets,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getTargets() != text) {
                     action.setTargets(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -169,11 +169,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getNeedFocusEffect(),
-            expressionInfo  : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.NeedFocusEffect,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getNeedFocusEffect(),
+            expressionInfo : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.NeedFocusEffect,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getNeedFocusEffect() != text) {
                     action.setNeedFocusEffect(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -200,11 +200,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getIsOneByOne(),
-            expressionInfo  : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.IsOneByOne,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getIsOneByOne(),
+            expressionInfo : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.IsOneByOne,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getIsOneByOne() != text) {
                     action.setIsOneByOne(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -231,11 +231,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getInterval(),
-            expressionInfo  : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Interval,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getInterval(),
+            expressionInfo : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Interval,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getInterval() != text) {
                     action.setInterval(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

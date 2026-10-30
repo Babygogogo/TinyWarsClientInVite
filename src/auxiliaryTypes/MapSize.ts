@@ -45,7 +45,7 @@ export class MapSize {
     }
 
     public getWH(): { width: number, height: number } {
-        return { width: this.getWidth(), height: this.getHeight() };
+        return { width : this.getWidth(), height : this.getHeight() };
     }
 
     public getWidth(): number {

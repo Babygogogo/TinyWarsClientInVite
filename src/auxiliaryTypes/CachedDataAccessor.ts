@@ -99,7 +99,7 @@ export class CachedDataAccessor<KeyType, DataType> {
                 Egret_Egret.setTimeout(() => {
                     requestRetryCountDict.set(key, failCount);
                     this._reqData(key);
-                }, null, 1000)
+                }, null, 1000),
             );
         }
     }

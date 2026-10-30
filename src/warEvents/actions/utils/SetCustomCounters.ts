@@ -20,9 +20,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getIdExpression(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.IdExpression,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getIdExpression(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.IdExpression,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -30,9 +30,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getValueExpression(),
-            expressionInfo          : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.ValueExpression,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getValueExpression(),
+            expressionInfo       : WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.ValueExpression,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -49,7 +49,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0042,
         data.getIdExpression(),
-        data.getValueExpression()
+        data.getValueExpression(),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetCustomCounters>): string | null {
@@ -60,9 +60,9 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.IdExpression;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getIdExpression(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getIdExpression(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -72,9 +72,9 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
     {
         const info      = WarEvents_Actions_Constants_SetCustomCounters.ExpressionInfoDict.ValueExpression;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getValueExpression(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getValueExpression(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -88,7 +88,7 @@ export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Se
 export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise<void> {
     // nothing to do
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     const customCounterIdArray: number[] = [];
     try {

@@ -26,9 +26,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getTargets(),
-            expressionInfo          : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Targets,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getTargets(),
+            expressionInfo       : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Targets,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -36,9 +36,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getNeedFocusEffect(),
-            expressionInfo          : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.NeedFocusEffect,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getNeedFocusEffect(),
+            expressionInfo       : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.NeedFocusEffect,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -46,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getIsOneByOne(),
-            expressionInfo          : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.IsOneByOne,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getIsOneByOne(),
+            expressionInfo       : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.IsOneByOne,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -56,9 +56,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getInterval(),
-            expressionInfo          : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Interval,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getInterval(),
+            expressionInfo       : WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Interval,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -92,9 +92,9 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     {
         const info      = WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Targets;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getTargets(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getTargets(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -104,9 +104,9 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     {
         const info      = WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.NeedFocusEffect;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getNeedFocusEffect(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getNeedFocusEffect(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -116,9 +116,9 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     {
         const info      = WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.IsOneByOne;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getIsOneByOne(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getIsOneByOne(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -128,9 +128,9 @@ export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set
     {
         const info      = WarEvents_Actions_Constants_SetViewpointExpr.ExpressionInfoDict.Interval;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getInterval(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getInterval(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -145,12 +145,12 @@ export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: bo
 }
 export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     return doApply({
-        gridIndexArray      : getTargetGridIndexArray(action.getTargets() ?? ``, war),
-        isNeedFocusEffect   : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
-        isOneByOne          : getIsOneByOne(action.getIsOneByOne(), war),
-        interval            : getInterval(action.getInterval(), war),
-        war                 : war,
-        isFastExecute       : isFast,
+        gridIndexArray    : getTargetGridIndexArray(action.getTargets() ?? ``, war),
+        isNeedFocusEffect : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
+        isOneByOne        : getIsOneByOne(action.getIsOneByOne(), war),
+        interval          : getInterval(action.getInterval(), war),
+        war               : war,
+        isFastExecute     : isFast,
     });
 }
 export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, interval, war, isFastExecute }: {
@@ -252,7 +252,7 @@ function getCenterGridIndex(gridIndexArray: AuxiliaryTypes_GridIndex.GridIndex[]
     const length = gridIndexArray.length;
     return new AuxiliaryTypes_GridIndex.GridIndex(
         Math.floor(x / length),
-        Math.floor(y / length)
+        Math.floor(y / length),
     );
 }
 function getIsOneByOne(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war: BaseWar_Interface_IBwWar.IBwWar): boolean {
@@ -276,9 +276,9 @@ function getInterval(str: AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>, war
         const result = ExpressionParsers_Parser.Parser.getParseResult(str).eval(new ExpressionParsers_Contexts_War.War(war), false);
         if (result instanceof ExpressionParsers_Results_Num.Num) {
             return Numbers_Utils.getValueInRange({
-                minValue    : 100,
-                maxValue    : 3000,
-                rawValue    : Math.floor(result.num),
+                minValue : 100,
+                maxValue : 3000,
+                rawValue : Math.floor(result.num),
             });
         } else {
             return 1000;

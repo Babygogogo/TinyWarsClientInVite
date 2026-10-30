@@ -54,10 +54,10 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
 
     public serialize(): SerialTurnManager {
         return SerialTurnManager.fromJson({
-            turnIndex       : this.getTurnIndex(),
-            playerIndex     : this.getPlayerIndexInTurn(),
-            turnPhaseCode   : this.getPhaseCode(),
-            enterTurnTime   : this.getEnterTurnTime(),
+            turnIndex     : this.getTurnIndex(),
+            playerIndex   : this.getPlayerIndexInTurn(),
+            turnPhaseCode : this.getPhaseCode(),
+            enterTurnTime : this.getEnterTurnTime(),
         });
     }
     public serializeForCreateSfw(): SerialTurnManager {
@@ -200,7 +200,7 @@ export class TurnManager implements Turns_ITurnManager.ITurnManager {
             if (player.getAliveState() !== Players_Constants.AliveStateId.Dead) {
                 return {
                     turnIndex   : nextTurnIndex,
-                    playerIndex : nextPlayerIndex
+                    playerIndex : nextPlayerIndex,
                 };
             } else {
                 ++nextPlayerIndex;

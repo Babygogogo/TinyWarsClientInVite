@@ -95,13 +95,13 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         }
 
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData      : data.gameConfig,
-            version         : Users_Model.getSelfSettingsTextureVersion(),
-            skinId          : ForceSkins_Utils.getFinalSkinId2(data.skinId, data.overridingSkinId),
-            unitType        : data.unitData.getUnitType(),
-            animationType   : Units_Constants.AnimationTypeId.Stand,
-            isDark          : this._isDark,
-            tickCount       : tickCount,
+            gcData        : data.gameConfig,
+            version       : Users_Model.getSelfSettingsTextureVersion(),
+            skinId        : ForceSkins_Utils.getFinalSkinId2(data.skinId, data.overridingSkinId),
+            unitType      : data.unitData.getUnitType(),
+            animationType : Units_Constants.AnimationTypeId.Stand,
+            isDark        : this._isDark,
+            tickCount     : tickCount,
         }));
     }
 
@@ -154,7 +154,7 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         const framesCount   = frames.length;
         this._imgState.loadSource(framesCount <= 0
             ? ``
-            : frames[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount]
+            : frames[Common_Model_CommonModel.getStateIndicatorTickCount() % framesCount],
         );
     }
 
@@ -167,17 +167,17 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         const skillType = viewData.coUsingSkillType;
         if (skillType === CoSkills_Constants.SkillTypeId.Power) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.ActivatingCoPower,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoPower,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         } else if (skillType === CoSkills_Constants.SkillTypeId.SuperPower) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.ActivatingCoSuperPower,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.ActivatingCoSuperPower,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -190,19 +190,19 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         const unitData = viewData.unitData;
         if (unitData.getIsCoOnboard()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.CoOnboard,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.CoOnboard,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         } else {
             const promotion = unitData.getCurrentPromotion();
             if (promotion > 0) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitPromotion({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    promotion   : promotion,
-                    skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    version   : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark    : this._isDark,
+                    promotion : promotion,
+                    skinId    : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -216,10 +216,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         const fuel = viewData.unitData.getCurrentFuel();
         if ((fuel != null) && (fuel <= this._getUnitTemplateCfg().getMaxFuel() * 0.4)) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LowFuel,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LowFuel,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -237,10 +237,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
             const primaryWeaponCurrentAmmo  = unitData.getPrimaryWeaponCurrentAmmo();
             if ((primaryWeaponMaxAmmo != null) && (primaryWeaponCurrentAmmo != null) && (primaryWeaponCurrentAmmo <= primaryWeaponMaxAmmo * 0.4)) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    iconTypeId  : Units_Constants.CornerStateIconTypeId.LowPrimaryAmmo,
-                    skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    version    : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark     : this._isDark,
+                    iconTypeId : Units_Constants.CornerStateIconTypeId.LowPrimaryAmmo,
+                    skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -250,10 +250,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
             const flareCurrentAmmo  = unitData.getFlareCurrentAmmo();
             if ((flareMaxAmmo != null) && (flareCurrentAmmo != null) && (flareCurrentAmmo <= flareMaxAmmo * 0.4)) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    iconTypeId  : Units_Constants.CornerStateIconTypeId.LowFlareAmmo,
-                    skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    version    : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark     : this._isDark,
+                    iconTypeId : Units_Constants.CornerStateIconTypeId.LowFlareAmmo,
+                    skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -266,10 +266,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
 
         if (viewData.unitData.getIsDiving()) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.Diving,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.Diving,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -281,10 +281,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
 
         if (viewData.isCapturingTile) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.CapturingTile,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.CapturingTile,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -296,10 +296,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
 
         if (viewData.isBuildingTile) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.BuildingTile,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.BuildingTile,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -311,10 +311,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
 
         if (viewData.hasLoadedUnit) {
             this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                iconTypeId  : Units_Constants.CornerStateIconTypeId.LoadingUnits,
-                skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                iconTypeId : Units_Constants.CornerStateIconTypeId.LoadingUnits,
+                skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -331,10 +331,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
             const currentBuildMaterial      = unitData.getCurrentBuildMaterial();
             if ((maxBuildMaterial != null) && (currentBuildMaterial != null) && (currentBuildMaterial <= maxBuildMaterial * 0.4)) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    iconTypeId  : Units_Constants.CornerStateIconTypeId.LowBuildMaterial,
-                    skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    version    : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark     : this._isDark,
+                    iconTypeId : Units_Constants.CornerStateIconTypeId.LowBuildMaterial,
+                    skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -344,10 +344,10 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
             const currentProduceMaterial    = unitData.getCurrentProduceMaterial();
             if ((maxProduceMaterial != null) && (currentProduceMaterial != null) && (currentProduceMaterial <= maxProduceMaterial * 0.4)) {
                 this._framesForStateAnimation.push(Helpers_ImageSource.getUnitCornerStateIcon({
-                    version     : Users_Model.getSelfSettingsTextureVersion(),
-                    isDark      : this._isDark,
-                    iconTypeId  : Units_Constants.CornerStateIconTypeId.LowProduceMaterial,
-                    skinId      : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    version    : Users_Model.getSelfSettingsTextureVersion(),
+                    isDark     : this._isDark,
+                    iconTypeId : Units_Constants.CornerStateIconTypeId.LowProduceMaterial,
+                    skinId     : ForceSkins_Utils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -356,9 +356,9 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         const arr = this._framesForStateAnimation;
         for (const buff of this.getViewData()?.unitData?.getBuffArray() ?? []) {
             arr.push(Helpers_ImageSource.getUnitBuff({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                isDark      : this._isDark,
-                buffTypeId  : buff.getBuffTypeId(),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                isDark     : this._isDark,
+                buffTypeId : buff.getBuffTypeId(),
             }));
         }
     }

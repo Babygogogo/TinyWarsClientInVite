@@ -40,15 +40,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo,          callback: this._onNotifyMsgMpwWatchGetOutgoingInfo },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback: this._onNotifyMsgMpwWatchGetIncomingInfo },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetOutgoingInfo,          callback : this._onNotifyMsgMpwWatchGetOutgoingInfo },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback : this._onNotifyMsgMpwWatchGetIncomingInfo },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnMakeRequest,                             callback: this._onTouchedBtnMakeRequest },
-            { ui: this._btnHandleRequest,                           callback: this._onTouchedBtnHandleRequest },
-            { ui: this._btnDeleteWatcher,                           callback: this._onTouchedBtnDeleteWatcher },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnMakeRequest,                             callback : this._onTouchedBtnMakeRequest },
+            { ui : this._btnHandleRequest,                           callback : this._onTouchedBtnHandleRequest },
+            { ui : this._btnDeleteWatcher,                           callback : this._onTouchedBtnDeleteWatcher },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -129,14 +129,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0300);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-                currentNumberArray      : [],
-                availableNumberArray    : requestSrcUserIdArray,
-                showNumber              : true,
-                columnsCount            : 3,
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
-                getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
-                getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
-                getNumberMainTextColor  : userId => {
+                currentNumberArray     : [],
+                availableNumberArray   : requestSrcUserIdArray,
+                showNumber             : true,
+                columnsCount           : 3,
+                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
+                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
+                getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
+                getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
                         return Graphics_Constants.ColorValue.Yellow;
                     }
@@ -146,13 +146,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ? Graphics_Constants.ColorValue.Yellow
                         : Graphics_Constants.ColorValue.White;
                 },
-                callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
-                callbackOnConfirm       : acceptUserIdArray => {
+                callbackOnHelp    : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
+                callbackOnConfirm : acceptUserIdArray => {
                     const acceptUserIdSet       = new Set(acceptUserIdArray);
                     const declineUserIdArray    = requestSrcUserIdArray.filter(v => !acceptUserIdSet.has(v));
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                         getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
-                        callback: () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
+                        callback   : () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
                     });
                 },
             });
@@ -178,15 +178,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0301);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-                currentNumberArray      : [],
-                availableNumberArray    : ongoingUserIdArray,
-                showNumber              : true,
-                minChooseCount          : 1,
-                columnsCount            : 3,
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0219),
-                getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0858),
-                getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
-                getNumberMainTextColor  : userId => {
+                currentNumberArray     : [],
+                availableNumberArray   : ongoingUserIdArray,
+                showNumber             : true,
+                minChooseCount         : 1,
+                columnsCount           : 3,
+                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0219),
+                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0858),
+                getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
+                getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
                         return Graphics_Constants.ColorValue.Yellow;
                     }
@@ -196,8 +196,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ? Graphics_Constants.ColorValue.Yellow
                         : Graphics_Constants.ColorValue.White;
                 },
-                callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
-                callbackOnConfirm       : userIdArray => WatchWar_Model_WwProxy.reqWatchDeleteWatcher(warId, userIdArray),
+                callbackOnHelp    : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
+                callbackOnConfirm : userIdArray => WatchWar_Model_WwProxy.reqWatchDeleteWatcher(warId, userIdArray),
             });
         }
     }

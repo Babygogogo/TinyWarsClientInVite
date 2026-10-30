@@ -12,7 +12,7 @@ import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 
 export interface IPlayer {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     init(data: SerialPlayer, gameConfig: GameConfigs_GameConfig.GameConfig): void;
 
     startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void;

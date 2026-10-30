@@ -63,14 +63,14 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_Common
     }
 
     const score = Numbers_Utils.getValueInRange({
-        minValue    : Numbers_Constants.MinValue,
-        maxValue    : Numbers_Constants.MaxValue,
-        rawValue    : (
+        minValue : Numbers_Constants.MinValue,
+        maxValue : Numbers_Constants.MaxValue,
+        rawValue : (
             ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd())) +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(
                 playerIndexInTurn,
                 produceUnitType,
-                pathNodes[pathNodes.length - 1].getGridIndex()
+                pathNodes[pathNodes.length - 1].getGridIndex(),
             )
         ) || 0,
     });
@@ -79,14 +79,16 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: Bots_Common
     }
 
     return {
-        score   : score + 1,
-        action  : WoContainer.fromJson({ WoUnitProduceUnit: {
-            path    : {
-                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                isBlocked       : false,
-            },
-            launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-        }}),
+        score  : score + 1,
+        action : WoContainer.fromJson({
+            WoUnitProduceUnit : {
+                path : {
+                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                    isBlocked       : false,
+                },
+                launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+            }, 
+        }),
     };
 }

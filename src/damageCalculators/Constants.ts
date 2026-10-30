@@ -1,5 +1,5 @@
 
 export const enum DamageFormulaTypeId {
     Dor = 1,
-    Trilogy = 2
+    Trilogy = 2,
 }

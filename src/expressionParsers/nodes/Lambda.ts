@@ -52,7 +52,7 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
         if (directLambdaArgumentInfoArray?.length !== argumentNameArray.length) {
             throw Helpers_Misc.newError(
                 Lang_Utils.getFormattedText(Lang_Constants.TextType.F0031, argumentNameArray.length, directLambdaArgumentInfoArray?.length),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_00
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_00,
             );
         }
 
@@ -65,17 +65,17 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
             if (dict.has(name)) {
                 throw Helpers_Misc.newError(
                     Lang_Utils.getFormattedText(Lang_Constants.TextType.F0032, name),
-                    Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_01
+                    Utils_ClientErrorCode.ClientErrorCode.EpNodeLambda_GetLambdaResultType_01,
                 );
             }
             dict.set(name, directLambdaArgumentInfoArray[i]);
         }
 
         return this._expression.getResultType({
-            contextType             : contextType,
-            lambdaArgumentInfoDict  : dict,
-            localVariableDict       : localVariableDict,
-            customCounterNameSet    : customCounterNameSet,
+            contextType            : contextType,
+            lambdaArgumentInfoDict : dict,
+            localVariableDict      : localVariableDict,
+            customCounterNameSet   : customCounterNameSet,
         });
     }
     public getLambdaResultType2({ contextType, directLambdaArgumentInfoArray, indirectLambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
@@ -87,11 +87,11 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
     }): ExpressionParsers_Enums.ResultType {
         if (localVariableDict == null) {
             return this.getLambdaResultType({
-                contextType                     : contextType,
-                directLambdaArgumentInfoArray   : directLambdaArgumentInfoArray,
-                indirectLambdaArgumentInfoDict  : indirectLambdaArgumentInfoDict,
-                localVariableDict               : null,
-                customCounterNameSet            : customCounterNameSet,
+                contextType                    : contextType,
+                directLambdaArgumentInfoArray  : directLambdaArgumentInfoArray,
+                indirectLambdaArgumentInfoDict : indirectLambdaArgumentInfoDict,
+                localVariableDict              : null,
+                customCounterNameSet           : customCounterNameSet,
             });
         }
 
@@ -101,11 +101,11 @@ export class Lambda extends ExpressionParsers_Nodes_Base.Base {
         }
 
         return this.getLambdaResultType({
-            contextType                     : contextType,
-            directLambdaArgumentInfoArray   : directLambdaArgumentInfoArray,
-            indirectLambdaArgumentInfoDict  : indirectLambdaArgumentInfoDict,
-            localVariableDict               : dict,
-            customCounterNameSet            : customCounterNameSet,
+            contextType                    : contextType,
+            directLambdaArgumentInfoArray  : directLambdaArgumentInfoArray,
+            indirectLambdaArgumentInfoDict : indirectLambdaArgumentInfoDict,
+            localVariableDict              : dict,
+            customCounterNameSet           : customCounterNameSet,
         });
     }
 

@@ -151,7 +151,7 @@ export function getReadProgressTimestamp(toCategory: Chat_Constants.ToCategoryId
 
 export function checkHasUnreadMessage(): boolean {
     for (const [toCategory, dict] of _allMessageDict) {
-        for (const [toTarget, ] of dict) {
+        for (const [toTarget ] of dict) {
             if (checkHasUnreadMessageForTarget(toCategory, toTarget)) {
                 return true;
             }

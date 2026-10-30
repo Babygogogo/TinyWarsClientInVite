@@ -194,13 +194,13 @@ export class UiImage extends Egret_Egret.Bitmap implements Ui_Interfaces_IUiImag
         //     anchorOffsetY       : this.getAnchorOffsetY(),
         // });
         return (this._aabbCache ??= new Ui_Utils_UiAabbCache.UiAabbCache()).getAabb({
-            unscaledWidth       : this.width,
-            unscaledHeight      : this.height,
-            scaleX              : this.scaleX,
-            scaleY              : this.scaleY,
-            rotationInDegree    : this.rotation,
-            anchorOffsetX       : this.anchorOffsetX,
-            anchorOffsetY       : this.anchorOffsetY,
+            unscaledWidth    : this.width,
+            unscaledHeight   : this.height,
+            scaleX           : this.scaleX,
+            scaleY           : this.scaleY,
+            rotationInDegree : this.rotation,
+            anchorOffsetX    : this.anchorOffsetX,
+            anchorOffsetY    : this.anchorOffsetY,
         });
     }
 
@@ -348,14 +348,14 @@ export class UiImage extends Egret_Egret.Bitmap implements Ui_Interfaces_IUiImag
     public loadSource(
         textureSourceName   : string,
         scale9Grid          = this.getScale9Grid(),
-        callbackOnLoaded?   : (s: Ui_Interfaces_IUiImage.IUiImage) => void
+        callbackOnLoaded?   : (s: Ui_Interfaces_IUiImage.IUiImage) => void,
     ): Promise<void> {
         return this._getTaskQueue().addTask(() => this._doLoadSource(textureSourceName, scale9Grid, callbackOnLoaded));
     }
     private async _doLoadSource(
         textureSourceName   : string,
         scale9Grid          : number[] | undefined,
-        callbackOnLoaded?   : (s: Ui_Interfaces_IUiImage.IUiImage) => void
+        callbackOnLoaded?   : (s: Ui_Interfaces_IUiImage.IUiImage) => void,
     ): Promise<void> {
         const oldScale9Grid = this.getScale9Grid();
         if ((textureSourceName === this.getSource())                                    &&

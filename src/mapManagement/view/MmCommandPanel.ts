@@ -41,19 +41,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmSetMapTagIdFlags,           callback: this._onNotifyMsgMmSetMapTagIdFlags },
-            { type: Notifications_TypeId.TypeId.MsgMmDeleteRedundantWarEvent,    callback: this._onNotifyMsgMmDeleteRedundantWarEvent },
-            { type: Notifications_TypeId.TypeId.MsgMmSetMapName,                 callback: this._onNotifyMsgMmSetMapName },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmSetMapTagIdFlags,           callback : this._onNotifyMsgMmSetMapTagIdFlags },
+            { type : Notifications_TypeId.TypeId.MsgMmDeleteRedundantWarEvent,    callback : this._onNotifyMsgMmDeleteRedundantWarEvent },
+            { type : Notifications_TypeId.TypeId.MsgMmSetMapName,                 callback : this._onNotifyMsgMmSetMapName },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnDeleteRedundantEvent,    callback: this._onTouchedBtnDeleteRedundantEvent },
-            { ui: this._btnDeleteMap,               callback: this._onTouchedBtnDeleteMap },
-            { ui: this._btnEditWarEvent,            callback: this._onTouchedBtnEditWarEvent },
-            { ui: this._btnWarRule,                 callback: this._onTouchedBtnWarRule },
-            { ui: this._btnMapTag,                  callback: this._onTouchedBtnMapTag },
-            { ui: this._btnRename,                  callback: this._onTouchedBtnRename },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnDeleteRedundantEvent,    callback : this._onTouchedBtnDeleteRedundantEvent },
+            { ui : this._btnDeleteMap,               callback : this._onTouchedBtnDeleteMap },
+            { ui : this._btnEditWarEvent,            callback : this._onTouchedBtnEditWarEvent },
+            { ui : this._btnWarRule,                 callback : this._onTouchedBtnWarRule },
+            { ui : this._btnMapTag,                  callback : this._onTouchedBtnMapTag },
+            { ui : this._btnRename,                  callback : this._onTouchedBtnRename },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -122,7 +122,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getFormattedText(
+            getContent : () => Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0158,
                 redundantEventArray.length,
                 redundantEventArray.length ? redundantEventArray.map(v => `E${v.getEventId()}`).join(`, `) : `----`,
@@ -133,7 +133,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 redundantActionArray.length,
                 redundantActionArray.length ? redundantActionArray.map(v => `A${v.getWeaCommonData()?.getActionId()}`).join(`, `) : `----`,
             ),
-            callback    : () => NormalMap_Model_NormalMapProxy.reqMmDeleteRedundantWarEvent(normalMapId),
+            callback : () => NormalMap_Model_NormalMapProxy.reqMmDeleteRedundantWarEvent(normalMapId),
         });
     }
 
@@ -145,7 +145,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0080),
-            callback: () => {
+            callback   : () => {
                 NormalMap_Model_NormalMapProxy.reqMmSetMapEnabled(normalMapId, false);
                 this.closePanel();
             },
@@ -160,19 +160,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData = Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId));
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0391),
-            callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
-                currentSlotIndex        : 0,
-                needConfirmOverwrite    : true,
-                needNonEmptySlot        : false,
-                getHelpText             : null,
-                callback                : slotIndex => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0391),
+            callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
+                currentSlotIndex     : 0,
+                needConfirmOverwrite : true,
+                needNonEmptySlot     : false,
+                getHelpText          : null,
+                callback             : slotIndex => {
                     MapEditor_Model_MeProxy.reqMeSubmitNormalMap({
-                        slotIndex                   : slotIndex,
-                        mapRawData                  : mapRawData,
-                        needReview                  : false,
-                        srcNormalMapIdForAddEvent   : normalMapId,
-                        gridMarkData                : null,
+                        slotIndex                 : slotIndex,
+                        mapRawData                : mapRawData,
+                        needReview                : false,
+                        srcNormalMapIdForAddEvent : normalMapId,
+                        gridMarkData              : null,
                     });
                     Helpers_GameFlow.gotoLobby();
                     FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0393));
@@ -196,10 +196,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         //     mapRawData,
         // });
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0314),
-            availableNumberArray    : [1, 2, 3],
-            currentNumber           : null,
-            getNumberMainText       : num => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0314),
+            availableNumberArray : [1, 2, 3],
+            currentNumber        : null,
+            getNumberMainText    : num => {
                 switch (num) {
                     case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0320);
                     case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0317);
@@ -207,7 +207,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     default : return Lang_Constants.UndefinedError;
                 }
             },
-            callbackOnConfirm       : async num => {
+            callbackOnConfirm : async num => {
                 const ruleArray = mapRawData.getTemplateWarRuleArray();
 
                 if (num === 1) {
@@ -218,7 +218,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             gcData          : await GameConfigs_Provider.getLatestGameConfig(),
                             mapRawData      : mapRawData,
                             templateWarRule : Helpers_Misc.getExisted(ruleArray.find(v => v.getRuleId() === ruleId)?.clone()),
-                        })
+                        }),
                     )();
 
                 } else if (num === 2) {
@@ -226,9 +226,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ruleArray,
                         () => Lang_Utils.getText(Lang_Constants.TextType.B0317),
                         ruleId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmModifyWarRulePanel, {
-                            normalMapId         : normalMapId,
-                            templateWarRuleId   : ruleId,
-                        })
+                            normalMapId       : normalMapId,
+                            templateWarRuleId : ruleId,
+                        }),
                     )();
 
                 } else if (num === 3) {
@@ -241,12 +241,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ruleArray,
                         () => Lang_Utils.getText(Lang_Constants.TextType.B0220),
                         ruleId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent     : () => Lang_Utils.getFormattedText(
+                            getContent : () => Lang_Utils.getFormattedText(
                                 Lang_Constants.TextType.F0265,
-                                `#${ruleId}, ${Lang_Utils.getLanguageText({ textArray: ruleArray.find(v => v.getRuleId() === ruleId)?.getRuleNameArray()})}`
+                                `#${ruleId}, ${Lang_Utils.getLanguageText({ textArray : ruleArray.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() })}`,
                             ),
-                            callback       : () => NormalMap_Model_NormalMapProxy.reqMmDeleteWarRule(normalMapId, ruleId),
-                        })
+                            callback : () => NormalMap_Model_NormalMapProxy.reqMmDeleteWarRule(normalMapId, ruleId),
+                        }),
                     )();
 
                 } else {
@@ -272,12 +272,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentGroupedMapTagId    = mapRawData.getMapTagIdFlags();
         const mapTag                    = await NormalMap_Model_NormalMapModel.getMapTag();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            availableNumberArray    : Helpers_Collection.getNonNullElements(mapTag?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
-            currentNumberArray      : MapTags_Utils.getDecodedMapTagIdList(currentGroupedMapTagId),
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
-            getNumberMainText       : mapTagId => Lang_Utils.getLanguageText({ textArray: mapTag?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : newMapTagIdArray => {
+            availableNumberArray : Helpers_Collection.getNonNullElements(mapTag?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
+            currentNumberArray   : MapTags_Utils.getDecodedMapTagIdList(currentGroupedMapTagId),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
+            getNumberMainText    : mapTagId => Lang_Utils.getLanguageText({ textArray : mapTag?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : newMapTagIdArray => {
                 const newGroupedMapTagId = MapTags_Utils.getEncodedMapTagId(newMapTagIdArray);
                 if (newGroupedMapTagId !== currentGroupedMapTagId) {
                     NormalMap_Model_NormalMapProxy.reqMmSetMapTagIdFlags(normalMapId, newGroupedMapTagId);
@@ -293,10 +293,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0708),
-            maxTextLength       : Maps_Constants.Common.MaxNameLength,
-            currentTextArray    : (await NormalMap_Model_NormalMapModel.getBriefData(normalMapId))?.getMapNameArray() ?? [],
-            callback            : mapNameArray => NormalMap_Model_NormalMapProxy.reqMmSetMapName(normalMapId, mapNameArray),
+            getTitleText     : () => Lang_Utils.getText(Lang_Constants.TextType.B0708),
+            maxTextLength    : Maps_Constants.Common.MaxNameLength,
+            currentTextArray : (await NormalMap_Model_NormalMapModel.getBriefData(normalMapId))?.getMapNameArray() ?? [],
+            callback         : mapNameArray => NormalMap_Model_NormalMapProxy.reqMmSetMapName(normalMapId, mapNameArray),
         });
     }
 
@@ -327,12 +327,12 @@ function generateHandler(
     return async () => {
         await GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : getTitleText,
-            availableNumberArray    : ruleArray.map(v => v.getRuleId()),
-            currentNumber           : null,
-            showNumber              : true,
-            getNumberMainText       : ruleId => Lang_Utils.getLanguageText({ textArray: ruleArray.find(v => v.getRuleId() === ruleId)?.getRuleNameArray()}) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : callback,
+            getTitleText         : getTitleText,
+            availableNumberArray : ruleArray.map(v => v.getRuleId()),
+            currentNumber        : null,
+            showNumber           : true,
+            getNumberMainText    : ruleId => Lang_Utils.getLanguageText({ textArray : ruleArray.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : callback,
         });
     };
 }

@@ -32,16 +32,16 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
         if (war.checkCanEnd()) {
             resultOperation.createIfNotExistsWoSystemEndWar();
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         }
 
         if (turnPhaseCode === Turns_Constants.PhaseCode.WaitBeginTurn) {
             resultOperation.createIfNotExistsWoSystemBeginTurn();
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         }
 
@@ -52,16 +52,16 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
                 resultData.setPlayerIndex(playerIndex);
                 resultData.setIsAgree(true);
                 return {
-                    warOperation    : resultOperation,
-                    userId          : undefined,
+                    warOperation : resultOperation,
+                    userId       : undefined,
                 };
             }
         }
 
         resultOperation.createIfNotExistsWoSystemEndTurn();
         return {
-            warOperation    : resultOperation,
-            userId          : undefined,
+            warOperation : resultOperation,
+            userId       : undefined,
         };
     }
 
@@ -73,8 +73,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
             resultData.setWarEventId(warEventIdAndDataIndex.warEventId);
             resultData.setNodeAndActionsIndex(warEventIdAndDataIndex.dataIndex);
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         }
     }
@@ -83,8 +83,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
     if (war.checkCanEnd()) {
         resultOperation.createIfNotExistsWoSystemEndWar();
         return {
-            warOperation    : resultOperation,
-            userId          : undefined,
+            warOperation : resultOperation,
+            userId       : undefined,
         };
     }
 
@@ -92,8 +92,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
     if (turnPhaseCode === Turns_Constants.PhaseCode.WaitBeginTurn) {
         resultOperation.createIfNotExistsWoSystemBeginTurn();
         return {
-            warOperation    : resultOperation,
-            userId          : undefined,
+            warOperation : resultOperation,
+            userId       : undefined,
         };
     } else if (turnPhaseCode != Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid turn phase code: ${turnPhaseCode}.`);
@@ -107,8 +107,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
             const resultData = resultOperation.createIfNotExistsWoSystemDestroyPlayerForce();
             resultData.setTargetPlayerIndex(playerIndex);
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         }
     }
@@ -118,8 +118,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
         if (!war.getWarStatisticsManager().getManualActionsCount(war.getTurnManager().getTurnIndex(), playerIndexInTurn)) {
             resultOperation.createIfNotExistsWoSystemHandleBootPlayer();
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         } else {
             if (drawVoteManager.checkNeedVoteBeforeEndTurn(playerIndexInTurn)) {
@@ -127,14 +127,14 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
                 resultData.setPlayerIndex(playerIndexInTurn);
                 resultData.setIsAgree(false);
                 return {
-                    warOperation    : resultOperation,
-                    userId          : undefined,
+                    warOperation : resultOperation,
+                    userId       : undefined,
                 };
             } else {
                 resultOperation.createIfNotExistsWoSystemEndTurn();
                 return {
-                    warOperation    : resultOperation,
-                    userId          : undefined,
+                    warOperation : resultOperation,
+                    userId       : undefined,
                 };
             }
         }
@@ -158,8 +158,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
                     resultData.setPlayerIndex(playerIndex);
                     resultData.setIsAgree(true);
                     return {
-                        warOperation    : resultOperation,
-                        userId          : undefined,
+                        warOperation : resultOperation,
+                        userId       : undefined,
                     };
 
                 } else if (Users_Utils.checkIsDummy(userId)) {
@@ -167,8 +167,8 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
                     resultData.setPlayerIndex(playerIndex);
                     resultData.setIsAgree(true);
                     return {
-                        warOperation    : resultOperation,
-                        userId          : userId,
+                        warOperation : resultOperation,
+                        userId       : userId,
                     };
                 }
             }
@@ -185,15 +185,15 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
             resultData.setPlayerIndex(playerIndexInTurn);
             resultData.setIsAgree((playerInTurn.getUserId() == null) || (playerInTurn.getAliveState() === Players_Constants.AliveStateId.Dead));
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
 
         } else {
             resultOperation.createIfNotExistsWoSystemEndTurn();
             return {
-                warOperation    : resultOperation,
-                userId          : undefined,
+                warOperation : resultOperation,
+                userId       : undefined,
             };
         }
     }
@@ -203,13 +203,13 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWar_Interface
         const userId = playerInTurn.getUserId();
         if (userId == null) {
             return {
-                warOperation    : await Bots_Bot.getNextOperation(war),
-                userId          : undefined,
+                warOperation : await Bots_Bot.getNextOperation(war),
+                userId       : undefined,
             };
         } else if (Users_Utils.checkIsDummy(userId)) {
             return {
-                warOperation    : await Bots_Bot.getNextOperation(war),
-                userId          : userId,
+                warOperation : await Bots_Bot.getNextOperation(war),
+                userId       : userId,
             };
         }
     }

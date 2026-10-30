@@ -137,7 +137,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -421,18 +421,18 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomLaserTurretData.fromJson({
-                rangeForUp                      : evalActRangeForUp(action, tile),
-                rangeForDown                    : evalActRangeForDown(action, tile),
-                rangeForLeft                    : evalActRangeForLeft(action, tile),
-                rangeForRight                   : evalActRangeForRight(action, tile),
-                priority                        : evalActPriority(action, tile),
-                canAffectSelf                   : evalActCanAffectSelf(action, tile),
-                canAffectAlly                   : evalActCanAffectAlly(action, tile),
-                canAffectEnemy                  : evalActCanAffectEnemy(action, tile),
-                offsetHp                        : evalActOffsetHp(action, tile),
-                offsetFuelPercentage            : evalActOffsetFuelPercentage(action, tile),
-                offsetPrimaryAmmoPercentage     : evalActOffsetPrimaryAmmoPercentage(action, tile),
-                canBeFatal                      : evalActCanBeFatal(action, tile),
+                rangeForUp                  : evalActRangeForUp(action, tile),
+                rangeForDown                : evalActRangeForDown(action, tile),
+                rangeForLeft                : evalActRangeForLeft(action, tile),
+                rangeForRight               : evalActRangeForRight(action, tile),
+                priority                    : evalActPriority(action, tile),
+                canAffectSelf               : evalActCanAffectSelf(action, tile),
+                canAffectAlly               : evalActCanAffectAlly(action, tile),
+                canAffectEnemy              : evalActCanAffectEnemy(action, tile),
+                offsetHp                    : evalActOffsetHp(action, tile),
+                offsetFuelPercentage        : evalActOffsetFuelPercentage(action, tile),
+                offsetPrimaryAmmoPercentage : evalActOffsetPrimaryAmmoPercentage(action, tile),
+                canBeFatal                  : evalActCanBeFatal(action, tile),
             }));
         }
     }
@@ -441,28 +441,28 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
         for (const [tile, tileCustomLaserTurretData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
             const newData   = Tiles_Utils_Serialization.create({
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                playerIndex             : tile.getPlayerIndex(),
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                playerIndex       : tile.getPlayerIndex(),
+                baseType          : tile.getBaseType(),
+                baseShapeId       : tile.getBaseShapeId(),
+                decorationType    : tile.getDecorationType(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                objectType        : tile.getObjectType(),
+                objectShapeId     : tile.getObjectShapeId(),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                isHighlighted           : tile.getIsHighlighted(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                isHighlighted          : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
+                currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
+                currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
+                currentHp           : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
 
-                customBuildingData      : null,
-                customCrystalData       : null,
-                customCannonData        : null,
-                customLaserTurretData   : tileCustomLaserTurretData.toJson(),
+                customBuildingData    : null,
+                customCrystalData     : null,
+                customCannonData      : null,
+                customLaserTurretData : tileCustomLaserTurretData.toJson(),
             });
 
             tile.init(newData, tile.getGameConfig());
@@ -489,9 +489,9 @@ function evalActRangeForUp(action: WeaSetCustomLaserTurretStateSimple, tile: Til
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForUp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -502,9 +502,9 @@ function evalActRangeForDown(action: WeaSetCustomLaserTurretStateSimple, tile: T
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForDown.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -515,9 +515,9 @@ function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateSimple, tile: T
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForLeft.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -528,9 +528,9 @@ function evalActRangeForRight(action: WeaSetCustomLaserTurretStateSimple, tile: 
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.RangeForRight.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -541,9 +541,9 @@ function evalActPriority(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.Priority.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.Priority.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.Priority.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.Priority.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {
@@ -581,9 +581,9 @@ function evalActOffsetHp(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetHp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -594,9 +594,9 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateSimple,
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): number {
@@ -607,9 +607,9 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateSimple, tile: Tiles_ITile.ITile): boolean {

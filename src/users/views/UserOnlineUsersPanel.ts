@@ -43,11 +43,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetOnlineUserIdArray, callback: this._onNotifySUserGetOnlineUsers },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetOnlineUserIdArray, callback : this._onNotifySUserGetOnlineUsers },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -105,19 +105,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForUserRenderer[] = [];
         for (const userId of this._msg?.getUserIdArray() ?? []) {
             dataArray.push({
-                index       : 0,
-                userId      : userId,
-                gameConfig  : gameConfig,
-                isBottom    : false,
+                index      : 0,
+                userId     : userId,
+                gameConfig : gameConfig,
+                isBottom   : false,
             });
         }
 
         if (dataArray.length % 2 !== 0) {
             dataArray.push({
-                index       : 0,
-                userId      : null,
-                gameConfig  : gameConfig,
-                isBottom    : false,
+                index      : 0,
+                userId     : null,
+                gameConfig : gameConfig,
+                isBottom   : false,
             });
         }
 
@@ -150,8 +150,7 @@ interface DataForUserRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class UserRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForUserRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForUserRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForUserRenderer> {
     private readonly _imgBg!        : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgAvatar!    : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgBottom!    : Ui_Interfaces_IUiImage.IUiImage;

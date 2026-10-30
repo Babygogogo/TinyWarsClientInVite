@@ -32,10 +32,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.MsgCommonGetServerStatus, callback: this._onMsgCommonGetServerStatus },
+            { type : Notifications_TypeId.TypeId.MsgCommonGetServerStatus, callback : this._onMsgCommonGetServerStatus },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -65,7 +65,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const ongoingMpwInfo            = data.getOngoingMpwInfo();
         this._labelOngoingMpwInfo.setText(ongoingMpwInfo == null
             ? Lang_Constants.UndefinedError
-            : `${ongoingMpwInfo[0]} (${Lang_Utils.getText(Lang_Constants.TextType.Players)}: ${ongoingMpwInfo[1]})`
+            : `${ongoingMpwInfo[0]} (${Lang_Utils.getText(Lang_Constants.TextType.Players)}: ${ongoingMpwInfo[1]})`,
         );
     }
 

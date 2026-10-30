@@ -58,13 +58,13 @@ export class RequestingUnitDrop implements ActionPlanners_States_IState.IState {
             }
 
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId             : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitDropUnit          : {
-                    path                : {
-                        nodes           : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId    : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitDropUnit : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId        : actionPlanner.getUnitIdForFocusUnitLoaded(),
-                    dropDestinations    : destinations.map(v => v.toProto().toJson()),
+                    launchUnitId     : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    dropDestinations : destinations.map(v => v.toProto().toJson()),
                 },
             }));
 
@@ -86,10 +86,10 @@ export class RequestingUnitDrop implements ActionPlanners_States_IState.IState {
             }
 
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitDrop({
-                war                 : war,
-                path                : actionPlanner.generateProtoMovePath(),
-                launchUnitId        : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
-                dropDestinations    : destinations,
+                war              : war,
+                path             : actionPlanner.generateProtoMovePath(),
+                launchUnitId     : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
+                dropDestinations : destinations,
             });
         }
     }
@@ -111,13 +111,13 @@ export class RequestingUnitDrop implements ActionPlanners_States_IState.IState {
             }
 
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId             : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitDropUnit          : {
-                    path: {
-                        nodes           : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId    : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitDropUnit : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId        : actionPlanner.getUnitIdForFocusUnitLoaded(),
-                    dropDestinations    : destinations.map(v => v.toProto().toJson()),
+                    launchUnitId     : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    dropDestinations : destinations.map(v => v.toProto().toJson()),
                 },
             }));
 
@@ -135,10 +135,10 @@ export class RequestingUnitDrop implements ActionPlanners_States_IState.IState {
 
             const unit = actionPlanner.getFocusUnitLoaded();
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitDrop({
-                war                 : war,
-                path                : actionPlanner.generateProtoMovePath(),
-                launchUnitId        : unit?.getUnitId() ?? null,
-                dropDestinations    : destinations
+                war              : war,
+                path             : actionPlanner.generateProtoMovePath(),
+                launchUnitId     : unit?.getUnitId() ?? null,
+                dropDestinations : destinations,
             });
         }
     }

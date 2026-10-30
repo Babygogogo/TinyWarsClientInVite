@@ -33,7 +33,7 @@ function fastExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -72,17 +72,17 @@ async function normalExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, acti
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         // TODO 焦点部队移动到目标格子的动画
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war                 : war,
-            commonExtraData     : commonExtraData,
-            isFastExecute       : false,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
         });
 
     } else {
@@ -91,7 +91,7 @@ async function normalExeUnitCrushUnit(war: BaseWar_Interface_IBwWar.IBwWar, acti
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 

@@ -27,7 +27,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         Lang_Constants.TextType.F0098,
         Lang_Utils.getText(Lang_Constants.TextType.Units),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecUnitPresence>): string | null {
@@ -66,7 +66,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         Lang_Utils.getText(Lang_Constants.TextType.Units),
         subTextArray.join(`\n`),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number, mapSize: AuxiliaryTypes_MapSize.MapSize, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {

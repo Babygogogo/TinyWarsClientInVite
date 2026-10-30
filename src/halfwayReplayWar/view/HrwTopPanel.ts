@@ -88,45 +88,45 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: Notifications_TypeId.TypeId.ReplayTick,                      callback: this._onNotifyReplayTick },
-            { type: Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
-            { type: Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: Notifications_TypeId.TypeId.ReplayAutoReplayChanged,         callback: this._onNotifyReplayAutoReplayChanged },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback: this._onNotifyMsgChatGetAllReadProgressList },
-            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback: this._onNotifyMsgChatUpdateReadProgress },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback: this._onNotifyMsgChatGetAllMessages },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,               callback: this._onNotifyMsgChatAddMessage },
-            { type: Notifications_TypeId.TypeId.RwPauseTimeChanged,              callback: this._onNotifyRwPauseTimeChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.ReplayTick,                      callback : this._onNotifyReplayTick },
+            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback : this._onNotifyBwCoEnergyChanged },
+            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : Notifications_TypeId.TypeId.ReplayAutoReplayChanged,         callback : this._onNotifyReplayAutoReplayChanged },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onNotifyMsgChatGetAllReadProgressList },
+            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onNotifyMsgChatUpdateReadProgress },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onNotifyMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onNotifyMsgChatAddMessage },
+            { type : Notifications_TypeId.TypeId.RwPauseTimeChanged,              callback : this._onNotifyRwPauseTimeChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnPlayerList,      callback: this._onTouchedBtnPlayerList },
-            { ui: this._groupCo,            callback: this._onTouchedGroupCo },
-            { ui: this._btnWeather,         callback: this._onTouchedBtnWeather },
-            { ui: this._btnUnitInfo,        callback: this._onTouchedBtnUnitInfo },
-            { ui: this._btnChat,            callback: this._onTouchedBtnChat },
-            { ui: this._groupPauseTime,     callback: this._onTouchedGroupPauseTime },
-            { ui: this._groupVisionTeam,    callback: this._onTouchedGroupVisionTeam },
-            { ui: this._groupProgress,      callback: this._onTouchedGroupProgress },
-            { ui: this._btnRewindAction,    callback: this._onTouchedBtnRewindAction },
-            { ui: this._btnRewindTurn,      callback: this._onTouchedBtnRewindTurn },
-            { ui: this._btnRewindBegin,     callback: this._onTouchedBtnRewindBegin },
-            { ui: this._btnForwardAction,   callback: this._onTouchedBtnForwardAction, },
-            { ui: this._btnForwardTurn,     callback: this._onTouchedBtnForwardTurn, },
-            { ui: this._btnForwardEnd,      callback: this._onTouchedBtnForwardEnd, },
-            { ui: this._btnPlay,            callback: this._onTouchedBtnPlay, },
-            { ui: this._btnPause,           callback: this._onTouchedBtnPause, },
-            { ui: this._btnPlayAction,      callback: this._onTouchedBtnPlayAction },
+            { ui : this._btnPlayerList,      callback : this._onTouchedBtnPlayerList },
+            { ui : this._groupCo,            callback : this._onTouchedGroupCo },
+            { ui : this._btnWeather,         callback : this._onTouchedBtnWeather },
+            { ui : this._btnUnitInfo,        callback : this._onTouchedBtnUnitInfo },
+            { ui : this._btnChat,            callback : this._onTouchedBtnChat },
+            { ui : this._groupPauseTime,     callback : this._onTouchedGroupPauseTime },
+            { ui : this._groupVisionTeam,    callback : this._onTouchedGroupVisionTeam },
+            { ui : this._groupProgress,      callback : this._onTouchedGroupProgress },
+            { ui : this._btnRewindAction,    callback : this._onTouchedBtnRewindAction },
+            { ui : this._btnRewindTurn,      callback : this._onTouchedBtnRewindTurn },
+            { ui : this._btnRewindBegin,     callback : this._onTouchedBtnRewindBegin },
+            { ui : this._btnForwardAction,   callback : this._onTouchedBtnForwardAction },
+            { ui : this._btnForwardTurn,     callback : this._onTouchedBtnForwardTurn },
+            { ui : this._btnForwardEnd,      callback : this._onTouchedBtnForwardEnd },
+            { ui : this._btnPlay,            callback : this._onTouchedBtnPlay },
+            { ui : this._btnPause,           callback : this._onTouchedBtnPause },
+            { ui : this._btnPlayAction,      callback : this._onTouchedBtnPlayAction },
 
-            { ui: this._btnInfo,            callback: this._onTouchedBtnInfo },
-            { ui: this._btnMenu,            callback: this._onTouchedBtnMenu, },
+            { ui : this._btnInfo,            callback : this._onTouchedBtnInfo },
+            { ui : this._btnMenu,            callback : this._onTouchedBtnMenu },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
-            priority    : 1,
+            callback   : this._onKeyboard,
+            thisObject : this,
+            priority   : 1,
         });
         this._listPlayer.setItemRendererClass(PlayerRenderer);
     }
@@ -155,9 +155,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyBwOverridingSkinIdChanged(): void {
@@ -180,9 +180,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyReplayAutoReplayChanged(): void {
@@ -228,8 +228,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getTitle  : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
-            getContent: () => war.getWeatherManager().getDesc(),
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.Weather),
+            getContent : () => war.getWeatherManager().getDesc(),
         });
     }
     private _onTouchedBtnInfo(): void {
@@ -256,8 +256,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
-            war                     : war,
-            callbackForMoveCursor   : unit => {
+            war                   : war,
+            callbackForMoveCursor : unit => {
                 const gridIndex = unit.getGridIndex();
                 const cursor    = war.getCursor();
                 cursor.setGridIndex(gridIndex);
@@ -266,19 +266,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
-            callbackForSelectUnit   : unit => {
+            callbackForSelectUnit : unit => {
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
-                    current : gridIndex,
-                    tappedOn: gridIndex,
+                    current  : gridIndex,
+                    tappedOn : gridIndex,
                 } as Notifications_DataTypes.BwCursorTapped);
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
         });
     }
     private _onTouchedBtnChat(): void {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
     }
     private _onTouchedGroupPauseTime(): void {
         const war = this.getOpenData()?.war;
@@ -636,7 +636,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const teamIndex = this.getOpenData()?.war.getVisionTeamIndex();
         this._labelVisionTeam.setText(teamIndex == null
             ? Lang_Utils.getText(Lang_Constants.TextType.B0890)
-            : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError)
+            : (Lang_Utils.getPlayerTeamName(teamIndex) ?? Lang_Constants.UndefinedError),
         );
         this._layoutVisionTeam.arrangeItems();
     }
@@ -704,8 +704,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.ReplayTick,                  callback: this._onNotifyReplayTick },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.ReplayTick,                  callback : this._onNotifyReplayTick },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -750,13 +750,13 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(war, playerIndex)));
         this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData      : war.getGcData(),
-            version         : Users_Model.getSelfSettingsTextureVersion(),
-            skinId          : player.getUnitAndTileSkinId(),
-            unitType        : Units_Constants.UnitTypeId.First,
-            isDark          : false,
-            animationType   : Units_Constants.AnimationTypeId.Stand,
-            tickCount       : 0,
+            gcData        : war.getGcData(),
+            version       : Users_Model.getSelfSettingsTextureVersion(),
+            skinId        : player.getUnitAndTileSkinId(),
+            unitType      : Units_Constants.UnitTypeId.First,
+            isDark        : false,
+            animationType : Units_Constants.AnimationTypeId.Stand,
+            tickCount     : 0,
         }));
 
         await this._updateLabelTeamAndNickname();
@@ -796,7 +796,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         } else {
             label.setText(player.getCoEnergyType() === Cos_Constants.EnergyTypeId.Trilogy
                 ? `E: ${player.getCoCurrentEnergy()}`
-                : `E: ${player.getCoCurrentEnergy()}  Z: ${player.getCoZoneRadius()}`
+                : `E: ${player.getCoCurrentEnergy()}  Z: ${player.getCoZoneRadius()}`,
             );
         }
 

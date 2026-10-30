@@ -112,10 +112,10 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
     const unitMap           = war.getUnitMap();
     const tileMap           = war.getTileMap();
     return AuxiliaryTypes_MovableArea.MovableArea.create({
-        gridIndex       : unitGridIndex,
-        maxMoveCost     : Math.min(moveRange, currentFuel),
-        mapSize         : mapSize,
-        moveCostGetter  : gridIndex => {
+        gridIndex      : unitGridIndex,
+        maxMoveCost    : Math.min(moveRange, currentFuel),
+        mapSize        : mapSize,
+        moveCostGetter : gridIndex => {
             const tile = tileMap.getTile(gridIndex);
             if ((!gridIndex.checkIsInsideMap(mapSize))                              ||
                 ((blockedGridIndex) && (gridIndex.checkIsEqual(blockedGridIndex)))
@@ -133,7 +133,7 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
                     }
                 }
             }
-        }
+        },
     });
 }
 
@@ -234,25 +234,25 @@ async function getAttackInfo(commonParams: Bots_CommonParams.CommonParams, attac
         const repairInfo    = tile.getRepairHpAndCostForUnit(attacker);
         if (repairInfo) {
             return {
-                baseDamage          : baseDamageWithAmmo,
-                normalizedHp        : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
-                fuel                : attackerMaxFuel,
-                settingsLuckValue   : settingsLuckValue,
+                baseDamage        : baseDamageWithAmmo,
+                normalizedHp      : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
+                fuel              : attackerMaxFuel,
+                settingsLuckValue : settingsLuckValue,
             };
         } else {
             if (attackerGridIndex.getAdjacentGrids(mapSize).some(g => unitMap.getUnitOnMap(g)?.checkCanSupplyAdjacentUnit(attacker))) {
                 return {
-                    baseDamage          : baseDamageWithAmmo,
-                    normalizedHp        : attackerNormalizedCurrentHp,
-                    fuel                : attackerMaxFuel,
-                    settingsLuckValue   : settingsLuckValue,
+                    baseDamage        : baseDamageWithAmmo,
+                    normalizedHp      : attackerNormalizedCurrentHp,
+                    fuel              : attackerMaxFuel,
+                    settingsLuckValue : settingsLuckValue,
                 };
             } else {
                 return {
-                    baseDamage          : baseDamageForCurrentAmmo,
-                    normalizedHp        : attackerNormalizedCurrentHp,
-                    fuel                : attackerCurrentFuel,
-                    settingsLuckValue   : settingsLuckValue,
+                    baseDamage        : baseDamageForCurrentAmmo,
+                    normalizedHp      : attackerNormalizedCurrentHp,
+                    fuel              : attackerCurrentFuel,
+                    settingsLuckValue : settingsLuckValue,
                 };
             }
         }
@@ -268,34 +268,34 @@ async function getAttackInfo(commonParams: Bots_CommonParams.CommonParams, attac
             (!loaderUnit.checkCanLaunchLoadedUnit())
         ) {
             return {
-                baseDamage          : null,
-                normalizedHp        : attackerNormalizedCurrentHp,
-                fuel                : attackerCurrentFuel,
-                settingsLuckValue   : settingsLuckValue,
+                baseDamage        : null,
+                normalizedHp      : attackerNormalizedCurrentHp,
+                fuel              : attackerCurrentFuel,
+                settingsLuckValue : settingsLuckValue,
             };
         } else {
             const repairInfo = loaderUnit.getRepairHpAndCostForLoadedUnit(attacker);
             if (repairInfo) {
                 return {
-                    baseDamage          : baseDamageWithAmmo,
-                    normalizedHp        : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
-                    fuel                : attackerMaxFuel,
-                    settingsLuckValue   : settingsLuckValue,
+                    baseDamage        : baseDamageWithAmmo,
+                    normalizedHp      : Units_Utils_Common.getNormalizedHp(attackerCurrentHp + repairInfo.hp),
+                    fuel              : attackerMaxFuel,
+                    settingsLuckValue : settingsLuckValue,
                 };
             } else {
                 if (loaderUnit.checkCanSupplyLoadedUnit()) {
                     return {
-                        baseDamage          : baseDamageWithAmmo,
-                        normalizedHp        : attackerNormalizedCurrentHp,
-                        fuel                : attackerMaxFuel,
-                        settingsLuckValue   : settingsLuckValue,
+                        baseDamage        : baseDamageWithAmmo,
+                        normalizedHp      : attackerNormalizedCurrentHp,
+                        fuel              : attackerMaxFuel,
+                        settingsLuckValue : settingsLuckValue,
                     };
                 } else {
                     return {
-                        baseDamage          : baseDamageForCurrentAmmo,
-                        normalizedHp        : attackerNormalizedCurrentHp,
-                        fuel                : attackerCurrentFuel,
-                        settingsLuckValue   : settingsLuckValue,
+                        baseDamage        : baseDamageForCurrentAmmo,
+                        normalizedHp      : attackerNormalizedCurrentHp,
+                        fuel              : attackerCurrentFuel,
+                        settingsLuckValue : settingsLuckValue,
                     };
                 }
             }
@@ -347,10 +347,10 @@ async function createDamageMap(commonParams: Bots_CommonParams.CommonParams, tar
 
         await Timer_TimerModel.checkAndCallLater();
         const movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
-            gridIndex       : beginningGridIndex,
-            maxMoveCost     : Math.min(attackerFinalMoveRange, fuel),
-            mapSize         : mapSize,
-            moveCostGetter  : gridIndex => {
+            gridIndex      : beginningGridIndex,
+            maxMoveCost    : Math.min(attackerFinalMoveRange, fuel),
+            mapSize        : mapSize,
+            moveCostGetter : gridIndex => {
                 if (!gridIndex.checkIsInsideMap(mapSize)) {
                     return null;
                 } else {
@@ -366,15 +366,15 @@ async function createDamageMap(commonParams: Bots_CommonParams.CommonParams, tar
 
         await Timer_TimerModel.checkAndCallLater();
         const attackableArea = AuxiliaryTypes_AttackableArea.AttackableArea.create({
-            movableArea         : movableArea,
-            mapSize             : mapSize,
-            minAttackRange      : minAttackRange,
-            maxAttackRange      : maxAttackRange,
-            checkCanAttack      : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
+            movableArea    : movableArea,
+            mapSize        : mapSize,
+            minAttackRange : minAttackRange,
+            maxAttackRange : maxAttackRange,
+            checkCanAttack : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
                 const hasMoved = !moveGridIndex.checkIsEqual(beginningGridIndex);
                 return ((attacker.getLoaderUnitId() == null) || (hasMoved))
                     && ((canAttackAfterMoving) || (!hasMoved));
-            }
+            },
         }).getArea();
 
         await Timer_TimerModel.checkAndCallLater();
@@ -407,15 +407,15 @@ async function createDamageMap(commonParams: Bots_CommonParams.CommonParams, tar
                     * normalizedHp
                     * DamageCalculators_Utils.getDamageMultiplierForDefenseBonus(
                         gcData,
-                        globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus()
+                        globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus(),
                     )
-                    / Units_Constants.Hp.Normalizer
+                    / Units_Constants.Hp.Normalizer,
                 );
                 if (!damageMap[x][y]) {
                     damageMap[x][y] = {
-                        max             : damage,
-                        directTotal     : isDirect ? damage : 0,
-                        indirectTotal   : isDirect ? 0 : damage,
+                        max           : damage,
+                        directTotal   : isDirect ? damage : 0,
+                        indirectTotal : isDirect ? 0 : damage,
                     };
                 } else {
                     const damageGridData    = damageMap[x][y];
@@ -489,10 +489,10 @@ async function getScoreForThreatEnemies(commonParams: Bots_CommonParams.CommonPa
 
     await Timer_TimerModel.checkAndCallLater();
     const movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
-        gridIndex       : gridIndex,
-        maxMoveCost     : attackerUnit.getFinalMoveRange(),
-        mapSize         : mapSize,
-        moveCostGetter  : g => {
+        gridIndex      : gridIndex,
+        maxMoveCost    : attackerUnit.getFinalMoveRange(),
+        mapSize        : mapSize,
+        moveCostGetter : g => {
             if (!g.checkIsInsideMap(mapSize)) {
                 return null;
             } else {
@@ -509,14 +509,14 @@ async function getScoreForThreatEnemies(commonParams: Bots_CommonParams.CommonPa
 
     await Timer_TimerModel.checkAndCallLater();
     const attackableArea = AuxiliaryTypes_AttackableArea.AttackableArea.create({
-        movableArea         : movableArea,
-        mapSize             : mapSize,
-        minAttackRange      : attackerUnit.getMinAttackRange(),
-        maxAttackRange      : attackerUnit.getFinalMaxAttackRange(),
-        checkCanAttack      : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
+        movableArea    : movableArea,
+        mapSize        : mapSize,
+        minAttackRange : attackerUnit.getMinAttackRange(),
+        maxAttackRange : attackerUnit.getFinalMaxAttackRange(),
+        checkCanAttack : (moveGridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const hasMoved = !moveGridIndex.checkIsEqual(gridIndex);
             return ((canAttackAfterMoving) || (!hasMoved));
-        }
+        },
     }).getArea();
 
     await Timer_TimerModel.checkAndCallLater();
@@ -571,9 +571,9 @@ async function getScoreForThreatEnemies(commonParams: Bots_CommonParams.CommonPa
                 * normalizedHp
                 * DamageCalculators_Utils.getDamageMultiplierForDefenseBonus(
                     gcData,
-                    globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus()
+                    globalDefenseBonus + tileMap.getTile(targetGridIndex).getDefenseAmountForUnit(targetUnit, null, false) + targetUnit.getPromotionDefenseBonus(),
                 )
-                / Units_Constants.Hp.Normalizer
+                / Units_Constants.Hp.Normalizer,
             );
             const canDestroy    = damage >= targetUnit.getCurrentHp();
             let score           = (damage + (canDestroy ? 30 : 0)) * targetUnit.getProductionCfgCost() / 1000 * scalerForUnitValueRatio * (targetUnit.getIsCoOnboard() ? 2 : 1);
@@ -785,10 +785,10 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
     await Timer_TimerModel.checkAndCallLater();
 
     const movableArea   = AuxiliaryTypes_MovableArea.MovableArea.create({
-        gridIndex       : gridIndex,
-        maxMoveCost     : Number.MAX_SAFE_INTEGER,
-        mapSize         : commonParams.getMapSize(),
-        moveCostGetter  : g => commonParams.getMoveCost(unit, tileMap.getTile(g)),
+        gridIndex      : gridIndex,
+        maxMoveCost    : Number.MAX_SAFE_INTEGER,
+        mapSize        : commonParams.getMapSize(),
+        moveCostGetter : g => commonParams.getMoveCost(unit, tileMap.getTile(g)),
     });
 
     totalScore += await getScoreForDistanceToCapturableBuildings(commonParams, unit, movableArea);
@@ -846,7 +846,9 @@ async function getBestScoreAndActionForUnitAndPath(commonParams: Bots_CommonPara
         Bots_Actions_UnitCaptureTile.getScoreAndActionUnitCaptureTile(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitCrushUnit.getScoreAndActionUnitCrushUnit(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitDive.getScoreAndActionUnitDive(unit, pathNodes),
-        Bots_Actions_UnitDropUnit.getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex: destination, pathNodes }),
+        Bots_Actions_UnitDropUnit.getScoreAndActionUnitDropUnit({
+            commonParams, unit, gridIndex : destination, pathNodes, 
+        }),
         Bots_Actions_UnitLaunchSilo.getScoreAndActionUnitLaunchSilo(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitLaunchFlare.getScoreAndActionUnitLaunchFlare(commonParams, unit, destination, pathNodes),
         Bots_Actions_UnitProduceUnit.getScoreAndActionUnitProduceUnit(commonParams, unit, pathNodes),
@@ -874,7 +876,9 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Bots_C
         }
     }
 
-    const reachableArea             = await getReachableArea({ commonParams, unit: candidateUnit, passableGridIndex: null, blockedGridIndex: null });
+    const reachableArea             = await getReachableArea({
+        commonParams, unit : candidateUnit, passableGridIndex : null, blockedGridIndex : null, 
+    });
     const damageMapForSurface       = await createDamageMap(commonParams, candidateUnit, false, reachableArea);
     const damageMapForDive          = candidateUnit.checkIsDiver() ? await createDamageMap(commonParams, candidateUnit, true, reachableArea) : null;
     const originGridIndex           = candidateUnit.getGridIndex();
@@ -918,13 +922,13 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Bots_C
                 const scoreForMovePath      = await getScoreForMovePath(commonParams, candidateUnit, pathNodes);
                 const scoreForPosition      = await getScoreForPosition({
                     commonParams,
-                    unit                    : candidateUnit,
-                    gridIndex: destination,
-                    damageMap               : ((action.getWoUnitDive()) || ((candidateUnit.getIsDiving()) && (!action.getWoUnitSurface()))) ? damageMapForDive : damageMapForSurface,
+                    unit      : candidateUnit,
+                    gridIndex : destination,
+                    damageMap : ((action.getWoUnitDive()) || ((candidateUnit.getIsDiving()) && (!action.getWoUnitSurface()))) ? damageMapForDive : damageMapForSurface,
                     scoreDictForThreatEnemy,
                 });
                 return {
-                    score   : scoreAndAction.score + scoreForLaunchUnit + scoreForMovePath + scoreForPosition,
+                    score : scoreAndAction.score + scoreForLaunchUnit + scoreForMovePath + scoreForPosition,
                     action,
                 };
             })());

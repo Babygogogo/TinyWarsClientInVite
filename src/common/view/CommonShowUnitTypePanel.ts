@@ -44,11 +44,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -126,9 +126,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForUnitTypeRenderer[] = [];
         for (const num of openData.availableUnitTypeArray.concat().sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                unitType            : num,
-                gameConfig          : gameConfig,
-                panel               : this,
+                unitType   : num,
+                gameConfig : gameConfig,
+                panel      : this,
             });
         }
 
@@ -136,9 +136,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const rowsCount     = Math.ceil(dataCount / 4);
         const list          = this._listUnitType;
         const listHeight    = Numbers_Utils.getValueInRange({
-            rawValue    : rowsCount * 34 + (rowsCount - 1) * 6,
-            minValue    : 120,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight - 80,
+            rawValue : rowsCount * 34 + (rowsCount - 1) * 6,
+            minValue : 120,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight - 80,
         });
         this._labelNoData.setIsVisible(!dataCount);
         this._group.setUnscaledManualHeight(listHeight + 80);
@@ -166,8 +166,8 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
         ]);
 
         this._conUnitView.addUiChild(this._unitView);
@@ -211,11 +211,11 @@ class UnitTypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         this._imgSelected.setIsVisible(isSelected);
         this._imgSelected0.setIsVisible(isSelected);
         this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig          : gameConfig,
-            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId    : undefined,
-            unitData            : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x: 0, y: 0 },
+            gameConfig       : gameConfig,
+            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId : undefined,
+            unitData         : Units_Utils_Serialization.createDefault({
+                gridIndex   : { x : 0, y : 0 },
                 playerIndex : playerIndex,
                 unitTypeId  : unitType,
                 unitId      : -1,

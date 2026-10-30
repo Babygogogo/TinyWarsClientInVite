@@ -14,7 +14,7 @@ import {
 } from "../../internal.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-type SerialUnitJson as ProtoSerialUnitJson,
+    type SerialUnitJson as ProtoSerialUnitJson,
     SerialUnit,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
@@ -26,21 +26,21 @@ export function createNewUnitDataForChangeType(unit: Units_IUnit.IUnit, newUnitT
     const maxProduceMaterial    = unitTemplateCfg.getMaxProduceMaterial() ?? 0;
 
     return create({
-        unitType                        : newUnitTypeId,
-        unitId                          : unit.getUnitId(),
-        playerIndex                     : unit.getPlayerIndex(),
-        gridIndex                       : unit.getGridIndex().toProto().toJson(),
+        unitType    : newUnitTypeId,
+        unitId      : unit.getUnitId(),
+        playerIndex : unit.getPlayerIndex(),
+        gridIndex   : unit.getGridIndex().toProto().toJson(),
 
-        actionState                     : unit.getActionState(),
-        currentHp                       : Math.min(unit.getCurrentHp(), unitTemplateCfg.getMaxHp()),
-        aiMode                          : unit.getAiMode(),
-        groupedTagId                    : unit.getGroupedTagId(),
-        customNameId                    : unit.getCustomNameId() ?? null,
+        actionState  : unit.getActionState(),
+        currentHp    : Math.min(unit.getCurrentHp(), unitTemplateCfg.getMaxHp()),
+        aiMode       : unit.getAiMode(),
+        groupedTagId : unit.getGroupedTagId(),
+        customNameId : unit.getCustomNameId() ?? null,
 
-        currentPromotion                : unit.getCurrentPromotion(),
-        isDiving                        : (unit.getIsDiving()) && (unitTemplateCfg.getDiveCfg() != null),
-        isCoOnboard                     : unit.getIsCoOnboard(),
-        currentBuildMaterial            : unit.getMaxBuildMaterial() == null
+        currentPromotion     : unit.getCurrentPromotion(),
+        isDiving             : (unit.getIsDiving()) && (unitTemplateCfg.getDiveCfg() != null),
+        isCoOnboard          : unit.getIsCoOnboard(),
+        currentBuildMaterial : unit.getMaxBuildMaterial() == null
             ? maxBuildMaterial
             : Math.min(unit.getCurrentBuildMaterial(), maxBuildMaterial),
 
@@ -48,17 +48,17 @@ export function createNewUnitDataForChangeType(unit: Units_IUnit.IUnit, newUnitT
         forbiddenGroupedLocationIdArray : unit.getForbiddenGroupedLocationIdArray(),
         buffArray                       : unit.getBuffList().map(v => v.toJson()),
 
-        primaryWeaponCurrentAmmo        : unit.getPrimaryWeaponMaxAmmo() == null
+        primaryWeaponCurrentAmmo : unit.getPrimaryWeaponMaxAmmo() == null
             ? maxPrimaryWeaponAmmo
             : Math.min(unit.getPrimaryWeaponCurrentAmmo(), maxPrimaryWeaponAmmo),
-        flareCurrentAmmo                : unit.getFlareMaxAmmo() == null
+        flareCurrentAmmo : unit.getFlareMaxAmmo() == null
             ? maxFlareAmmo
             : Math.min(unit.getFlareCurrentAmmo(), maxFlareAmmo),
-        currentProduceMaterial          : unit.getMaxProduceMaterial() == null
+        currentProduceMaterial : unit.getMaxProduceMaterial() == null
             ? maxProduceMaterial
             : Math.min(unit.getCurrentProduceMaterial(), maxProduceMaterial),
-        currentFuel                     : Math.min(unit.getCurrentFuel(), unitTemplateCfg.getMaxFuel()),
-        loaderUnitId                    : unit.getLoaderUnitId() ?? null,
+        currentFuel  : Math.min(unit.getCurrentFuel(), unitTemplateCfg.getMaxFuel()),
+        loaderUnitId : unit.getLoaderUnitId() ?? null,
     });
 }
 
@@ -197,30 +197,30 @@ export function createDefault({ unitTypeId, unitId, playerIndex, gridIndex, gcDa
 }): SerialUnit {
     const cfg = Helpers_Misc.getExisted(gcData.getUnitTemplateCfg(unitTypeId));
     return create({
-        unitType                        : unitTypeId,
-        unitId                          : unitId,
-        playerIndex                     : playerIndex,
-        gridIndex                       : gridIndex,
+        unitType    : unitTypeId,
+        unitId      : unitId,
+        playerIndex : playerIndex,
+        gridIndex   : gridIndex,
 
-        actionState                     : null,
-        currentHp                       : cfg.getMaxHp(),
-        aiMode                          : null,
-        groupedTagId                    : null,
-        customNameId                    : null,
+        actionState  : null,
+        currentHp    : cfg.getMaxHp(),
+        aiMode       : null,
+        groupedTagId : null,
+        customNameId : null,
 
-        currentPromotion                : null,
-        isDiving                        : cfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-        isCoOnboard                     : null,
-        currentBuildMaterial            : cfg.getMaxBuildMaterial() ?? null,
+        currentPromotion     : null,
+        isDiving             : cfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+        isCoOnboard          : null,
+        currentBuildMaterial : cfg.getMaxBuildMaterial() ?? null,
 
         aiWeightedDestination           : null,
         forbiddenGroupedLocationIdArray : [],
         buffArray                       : [],
 
-        primaryWeaponCurrentAmmo        : cfg.getPrimaryWeaponMaxAmmo() ?? null,
-        flareCurrentAmmo                : cfg.getFlareMaxAmmo() ?? null,
-        currentProduceMaterial          : cfg.getMaxProduceMaterial() ?? null,
-        currentFuel                     : cfg.getMaxFuel(),
-        loaderUnitId                    : null,
+        primaryWeaponCurrentAmmo : cfg.getPrimaryWeaponMaxAmmo() ?? null,
+        flareCurrentAmmo         : cfg.getFlareMaxAmmo() ?? null,
+        currentProduceMaterial   : cfg.getMaxProduceMaterial() ?? null,
+        currentFuel              : cfg.getMaxFuel(),
+        loaderUnitId             : null,
     });
 }

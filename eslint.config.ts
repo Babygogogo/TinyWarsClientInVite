@@ -31,6 +31,7 @@ export default defineConfig([
                 "allowSingleLine" : false,
             }],
             "@stylistic/comma-dangle" : ["error", "always-multiline"],
+            "@stylistic/new-parens"   : ["error", "always"],
             "key-spacing"             : ["error", {
                 "beforeColon" : true,
                 "afterColon"  : true,

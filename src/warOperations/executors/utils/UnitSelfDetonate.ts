@@ -36,7 +36,7 @@ function fastExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -62,16 +62,16 @@ function fastExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, action: W
                         {
                             const unitLostNormalizedHp2 = Units_Utils_Common.getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
                             if (unitLostNormalizedHp2 != 0) {
-                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                    : targetUnit.getUnitType(),
-                                        dstPlayerIndex              : targetUnit.getPlayerIndex(),
-                                        normalizedHpGain            : 0,
-                                        normalizedHpLoss            : unitLostNormalizedHp2,
-                                        unitGain                    : 0,
-                                        unitLoss                    : 0,
-                                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                        unitType                   : targetUnit.getUnitType(),
+                                        dstPlayerIndex             : targetUnit.getPlayerIndex(),
+                                        normalizedHpGain           : 0,
+                                        normalizedHpLoss           : unitLostNormalizedHp2,
+                                        unitGain                   : 0,
+                                        unitLoss                   : 0,
+                                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }
@@ -96,9 +96,9 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData());
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -113,7 +113,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
         const pathNodes     = revisedPath.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -135,7 +135,7 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
             for (const targetGridIndex of destination.getGridsWithinDistance({
                 minDistance : 1,
                 maxDistance : selfDetonateCfg.getRadius(),
-                mapSize     : unitMap.getMapSize()
+                mapSize     : unitMap.getMapSize(),
             })) {
                 const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
                 if ((targetUnit != null) && (targetUnit != focusUnit)) {
@@ -149,16 +149,16 @@ async function normalExeUnitSelfDetonate(war: BaseWar_Interface_IBwWar.IBwWar, a
                         {
                             const unitLostNormalizedHp2 = Units_Utils_Common.getNormalizedHp(currentHp) - targetUnit.getNormalizedCurrentHp();
                             if (unitLostNormalizedHp2 != 0) {
-                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: targetGridIndex });
+                                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : targetGridIndex });
                                 if (observerTeamIndexes) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                    : targetUnit.getUnitType(),
-                                        dstPlayerIndex              : targetUnit.getPlayerIndex(),
-                                        normalizedHpGain            : 0,
-                                        normalizedHpLoss            : unitLostNormalizedHp2,
-                                        unitGain                    : 0,
-                                        unitLoss                    : 0,
-                                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                        unitType                   : targetUnit.getUnitType(),
+                                        dstPlayerIndex             : targetUnit.getPlayerIndex(),
+                                        normalizedHpGain           : 0,
+                                        normalizedHpLoss           : unitLostNormalizedHp2,
+                                        unitGain                   : 0,
+                                        unitLoss                   : 0,
+                                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }

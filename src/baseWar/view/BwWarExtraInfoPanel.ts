@@ -51,10 +51,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 labelMapDesigner.setText(`--`);
             } else {
                 const briefInfo         = await NormalMap_Model_NormalMapModel.getBriefData(normalMapId);
-                labelMapName.setText(`#${normalMapId} ${Lang_Utils.getLanguageText({ textArray: briefInfo?.getMapNameArray() }) ?? Lang_Constants.UndefinedError}`);
+                labelMapName.setText(`#${normalMapId} ${Lang_Utils.getLanguageText({ textArray : briefInfo?.getMapNameArray() }) ?? Lang_Constants.UndefinedError}`);
                 labelMapDesigner.setText(`${briefInfo?.getDesignerName() ?? Lang_Constants.UndefinedError}`);
             }
             this._layoutMapName.arrangeItems();
@@ -130,9 +130,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const scrContent        = this._scrContent;
             const contentHeight     = layoutContent.getScaledHeight();
             const scrollerHeight    = Numbers_Utils.getValueInRange({
-                rawValue    : contentHeight,
-                minValue    : 160,
-                maxValue    : Stages_Constants.Dimension.DesignMinHeight - 80,
+                rawValue : contentHeight,
+                minValue : 160,
+                maxValue : Stages_Constants.Dimension.DesignMinHeight - 80,
             });
             scrContent.setUnscaledManualHeight(scrollerHeight);
             scrContent.updateOnItemsChanged();

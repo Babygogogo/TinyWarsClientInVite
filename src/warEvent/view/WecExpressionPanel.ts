@@ -26,11 +26,11 @@ import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WecExpression } from "../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
 
 const ExpressionInfo: ExpressionParsers_Types.EpExpressionInfo = {
-    contextType     : ExpressionParsers_Enums.ContextType.War,
-    resultTypes     : [ExpressionParsers_Enums.ResultType.Number],
-    isRequired      : true,
-    getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0129),
-    getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0941),
+    contextType  : ExpressionParsers_Enums.ContextType.War,
+    resultTypes  : [ExpressionParsers_Enums.ResultType.Number],
+    isRequired   : true,
+    getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0129),
+    getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0941),
 };
 
 export interface OpenData {
@@ -61,16 +61,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConExpression,       callback: this._onTouchedGroupModifyConExpression },
-            { ui: this._btnConExpression,               callback: this._onTouchedBtnConExpression },
+            { ui : this._groupModifyConExpression,       callback : this._onTouchedGroupModifyConExpression },
+            { ui : this._btnConExpression,               callback : this._onTouchedBtnConExpression },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -94,9 +94,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -118,11 +118,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : condition.getExpression(),
-            expressionInfo  : ExpressionInfo,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : condition.getExpression(),
+            expressionInfo : ExpressionInfo,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (condition.getExpression() != text) {
                     condition.setExpression(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

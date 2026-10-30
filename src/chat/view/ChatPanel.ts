@@ -75,21 +75,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,       callback: this._onNotifyMsgChatAddMessage },
-            { type: Notifications_TypeId.TypeId.MsgChatDeleteMessage,    callback: this._onNotifyMsgChatDeleteMessage },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,   callback: this._onNotifyMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,       callback : this._onNotifyMsgChatAddMessage },
+            { type : Notifications_TypeId.TypeId.MsgChatDeleteMessage,    callback : this._onNotifyMsgChatDeleteMessage },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,   callback : this._onNotifyMsgChatGetAllMessages },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnRefresh,     callback: this._onTouchedBtnRefresh },
-            { ui: this._btnSend,        callback: this._onTouchedBtnSend },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnRefresh,     callback : this._onTouchedBtnRefresh },
+            { ui : this._btnSend,        callback : this._onTouchedBtnSend },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
-            priority    : 2,
+            callback   : this._onKeyboard,
+            thisObject : this,
+            priority   : 2,
         });
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -163,7 +163,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     Chat_Proxy.reqUpdateReadProgress(
                         selectedToCategory,
                         selectedToTarget,
-                        Chat_Model.getLatestMessageTimestamp(selectedToCategory, selectedToTarget)
+                        Chat_Model.getLatestMessageTimestamp(selectedToCategory, selectedToTarget),
                     );
                 }
 
@@ -192,10 +192,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const msgToCategory     = message.getToCategory() as Chat_Constants.ToCategoryId;
         const rawMsgToTarget    = message.getToTarget();
         if (!checkIsMessageInMainCategory({
-            mainCategory    : Helpers_Misc.getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory),
-            toCategory      : msgToCategory,
-            toTarget        : rawMsgToTarget,
-            fromUserId      : msgFromUserId,
+            mainCategory : Helpers_Misc.getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory),
+            toCategory   : msgToCategory,
+            toTarget     : rawMsgToTarget,
+            fromUserId   : msgFromUserId,
         })) {
             return;
         }
@@ -332,28 +332,28 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (!list.getBoundDataArray()?.length) {
             await list.bindData([
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.PublicChannel,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.PublicChannel,
+                    panel        : this,
                 },
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.War,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.War,
+                    panel        : this,
                 },
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.Room,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.Room,
+                    panel        : this,
                 },
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.Following,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.Following,
+                    panel        : this,
                 },
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.Stranger,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.Stranger,
+                    panel        : this,
                 },
                 {
-                    mainCategory    : Chat_Constants.MainCategoryId.MapReview,
-                    panel           : this,
+                    mainCategory : Chat_Constants.MainCategoryId.MapReview,
+                    panel        : this,
                 },
             ]);
         }
@@ -372,31 +372,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (mainCategory === Chat_Constants.MainCategoryId.PublicChannel) {
             for (const [toChannelId, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.PublicChannel)) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.PublicChannel,
-                    toTarget    : toChannelId,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.PublicChannel,
+                    toTarget   : toChannelId,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
             }
 
-            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.PublicChannel, toTarget: Chat_Constants.PublicChannelId.PublicCn})) {
+            if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.PublicChannel, toTarget : Chat_Constants.PublicChannelId.PublicCn })) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.PublicChannel,
-                    toTarget    : Chat_Constants.PublicChannelId.PublicCn,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.PublicChannel,
+                    toTarget   : Chat_Constants.PublicChannelId.PublicCn,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, null));
                 ++indexForSort;
             }
-            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.PublicChannel, toTarget: Chat_Constants.PublicChannelId.PublicEn})) {
+            if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.PublicChannel, toTarget : Chat_Constants.PublicChannelId.PublicEn })) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.PublicChannel,
-                    toTarget    : Chat_Constants.PublicChannelId.PublicEn,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.PublicChannel,
+                    toTarget   : Chat_Constants.PublicChannelId.PublicEn,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, null));
                 ++indexForSort;
@@ -405,20 +405,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (mainCategory === Chat_Constants.MainCategoryId.War) {
             for (const [toWarAndTeam, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.WarAndTeam)) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.WarAndTeam,
-                    toTarget    : toWarAndTeam,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.WarAndTeam,
+                    toTarget   : toWarAndTeam,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
             }
             for (const [toWarAndSelf, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.WarAndSelf)) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.WarAndSelf,
-                    toTarget    : toWarAndSelf,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.WarAndSelf,
+                    toTarget   : toWarAndSelf,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
@@ -430,12 +430,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         const warProgressInfo = await MultiPlayerWar_Model_MpwModel.getWarProgressInfo(warId);
                         if ((warProgressInfo != null) && (!warProgressInfo.getIsEnded())) {
                             const toWarAndTeam1 = warId * Chat_Constants.Common.TeamDivider;
-                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.WarAndTeam, toTarget: toWarAndTeam1 })) {
+                            if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.WarAndTeam, toTarget : toWarAndTeam1 })) {
                                 dataDict.set(indexForSort, {
-                                    index       : indexForSort,
-                                    panel       : this,
-                                    toCategory  : Chat_Constants.ToCategoryId.WarAndTeam,
-                                    toTarget    : toWarAndTeam1,
+                                    index      : indexForSort,
+                                    panel      : this,
+                                    toCategory : Chat_Constants.ToCategoryId.WarAndTeam,
+                                    toTarget   : toWarAndTeam1,
                                 });
                                 timestampList.push(getLatestTimestamp(indexForSort, null));
                                 ++indexForSort;
@@ -443,12 +443,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                             const selfPlayerInfo    = (await MultiPlayerWar_Model_MpwModel.getWarSettings(warId))?.getPlayerInfoArray().find(v => (v.getUserId() ?? 0) == selfUserId);
                             const toWarAndTeam2     = toWarAndTeam1 + (selfPlayerInfo?.getTeamIndex() ?? 0);
-                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.WarAndTeam, toTarget: toWarAndTeam2 })) {
+                            if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.WarAndTeam, toTarget : toWarAndTeam2 })) {
                                 dataDict.set(indexForSort, {
-                                    index       : indexForSort,
-                                    panel       : this,
-                                    toCategory  : Chat_Constants.ToCategoryId.WarAndTeam,
-                                    toTarget    : toWarAndTeam2,
+                                    index      : indexForSort,
+                                    panel      : this,
+                                    toCategory : Chat_Constants.ToCategoryId.WarAndTeam,
+                                    toTarget   : toWarAndTeam2,
                                 });
                                 timestampList.push(getLatestTimestamp(indexForSort, null));
                                 ++indexForSort;
@@ -456,12 +456,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                             {
                                 const toWarAndSelf = warId * Chat_Constants.Common.TeamDivider + (selfPlayerInfo?.getPlayerIndex() ?? 0);
-                                if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.WarAndSelf, toTarget: toWarAndSelf })) {
+                                if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.WarAndSelf, toTarget : toWarAndSelf })) {
                                     dataDict.set(indexForSort, {
-                                        index       : indexForSort,
-                                        panel       : this,
-                                        toCategory  : Chat_Constants.ToCategoryId.WarAndSelf,
-                                        toTarget    : toWarAndSelf,
+                                        index      : indexForSort,
+                                        panel      : this,
+                                        toCategory : Chat_Constants.ToCategoryId.WarAndSelf,
+                                        toTarget   : toWarAndSelf,
                                     });
                                     timestampList.push(getLatestTimestamp(indexForSort, null));
                                     ++indexForSort;
@@ -479,10 +479,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             for (const [toRoomId, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.McrRoom)) {
                 if (await MultiCustomRoom_Model_McrModel.getRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.McrRoom,
-                        toTarget    : toRoomId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.McrRoom,
+                        toTarget   : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
@@ -491,10 +491,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             for (const [toRoomId, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.CcrRoom)) {
                 if (await CoopCustomRoom_Model_CcrModel.getRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.CcrRoom,
-                        toTarget    : toRoomId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.CcrRoom,
+                        toTarget   : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
@@ -503,10 +503,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             for (const [toRoomId, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.MfrRoom)) {
                 if (await MultiFreeRoom_Model_MfrModel.getRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.MfrRoom,
-                        toTarget    : toRoomId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.MfrRoom,
+                        toTarget   : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
@@ -515,12 +515,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             {
                 for (const roomId of await MultiCustomRoom_Model_McrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.McrRoom, toTarget: roomId })) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.McrRoom, toTarget : roomId })) {
                         dataDict.set(indexForSort, {
-                            index       : indexForSort,
-                            panel       : this,
-                            toCategory  : Chat_Constants.ToCategoryId.McrRoom,
-                            toTarget    : roomId,
+                            index      : indexForSort,
+                            panel      : this,
+                            toCategory : Chat_Constants.ToCategoryId.McrRoom,
+                            toTarget   : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
                         ++indexForSort;
@@ -529,12 +529,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
             {
                 for (const roomId of await CoopCustomRoom_Model_CcrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.CcrRoom, toTarget: roomId })) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.CcrRoom, toTarget : roomId })) {
                         dataDict.set(indexForSort, {
-                            index       : indexForSort,
-                            panel       : this,
-                            toCategory  : Chat_Constants.ToCategoryId.CcrRoom,
-                            toTarget    : roomId,
+                            index      : indexForSort,
+                            panel      : this,
+                            toCategory : Chat_Constants.ToCategoryId.CcrRoom,
+                            toTarget   : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
                         ++indexForSort;
@@ -543,12 +543,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
             {
                 for (const roomId of await MultiFreeRoom_Model_MfrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.MfrRoom, toTarget: roomId })) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.MfrRoom, toTarget : roomId })) {
                         dataDict.set(indexForSort, {
-                            index       : indexForSort,
-                            panel       : this,
-                            toCategory  : Chat_Constants.ToCategoryId.MfrRoom,
-                            toTarget    : roomId,
+                            index      : indexForSort,
+                            panel      : this,
+                            toCategory : Chat_Constants.ToCategoryId.MfrRoom,
+                            toTarget   : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
                         ++indexForSort;
@@ -559,10 +559,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else if (mainCategory === Chat_Constants.MainCategoryId.MapReview) {
             for (const [toMapReviewTarget, msgList] of Chat_Model.getMessagesForCategory(Chat_Constants.ToCategoryId.MapReview)) {
                 dataDict.set(indexForSort, {
-                    index       : indexForSort,
-                    panel       : this,
-                    toCategory  : Chat_Constants.ToCategoryId.MapReview,
-                    toTarget    : toMapReviewTarget,
+                    index      : indexForSort,
+                    panel      : this,
+                    toCategory : Chat_Constants.ToCategoryId.MapReview,
+                    toTarget   : toMapReviewTarget,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
@@ -570,12 +570,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             {
                 const toMapReviewTarget = chatToTarget.toMapReviewTarget;
-                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
+                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.MapReview, toTarget : toMapReviewTarget }))) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.MapReview,
-                        toTarget    : toMapReviewTarget,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.MapReview,
+                        toTarget   : toMapReviewTarget,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
                     ++indexForSort;
@@ -584,12 +584,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             {
                 const toMapReviewTarget = Users_Model.getSelfUserId();
-                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
+                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.MapReview, toTarget : toMapReviewTarget }))) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.MapReview,
-                        toTarget    : toMapReviewTarget,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.MapReview,
+                        toTarget   : toMapReviewTarget,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
                     ++indexForSort;
@@ -602,10 +602,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     (!Users_Model.checkIsBlockingUser(toUserId))
                 ) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.Private,
-                        toTarget    : toUserId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.Private,
+                        toTarget   : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
@@ -614,13 +614,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             for (const toUserId of Users_Model.getSelfInfo()?.getUserRelationInfo()?.getFollowingUserIdArray() ?? []) {
                 if ((!Users_Model.checkIsBlockingUser(toUserId))                                                                             &&
-                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.Private, toTarget: toUserId }))
+                    (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.Private, toTarget : toUserId }))
                 ) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.Private,
-                        toTarget    : toUserId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.Private,
+                        toTarget   : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
                     ++indexForSort;
@@ -633,10 +633,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     (!Users_Model.checkIsBlockingUser(toUserId))
                 ) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.Private,
-                        toTarget    : toUserId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.Private,
+                        toTarget   : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
@@ -648,13 +648,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 if ((toUserId != null)                                                                                                          &&
                     (!Users_Model.checkIsFollowingUser(toUserId))                                                                            &&
                     (!Users_Model.checkIsBlockingUser(toUserId))                                                                             &&
-                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: Chat_Constants.ToCategoryId.Private, toTarget: toUserId }))
+                    (!checkHasDataForChatCategoryAndTarget({ dict : dataDict, toCategory : Chat_Constants.ToCategoryId.Private, toTarget : toUserId }))
                 ) {
                     dataDict.set(indexForSort, {
-                        index       : indexForSort,
-                        panel       : this,
-                        toCategory  : Chat_Constants.ToCategoryId.Private,
-                        toTarget    : toUserId,
+                        index      : indexForSort,
+                        panel      : this,
+                        toCategory : Chat_Constants.ToCategoryId.Private,
+                        toTarget   : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
                     ++indexForSort;
@@ -707,17 +707,16 @@ interface DataForMainCategoryRenderer extends Ui_Types_UiListItemData.UiListItem
 }
 class MainCategoryRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMainCategoryRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMainCategoryRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMainCategoryRenderer> {
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _imgRed!       : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
-            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback : this._onMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,                callback : this._onMsgChatAddMessage },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback : this._onMsgChatGetAllReadProgressList },
+            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback : this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -787,10 +786,10 @@ class MainCategoryRenderer
         const data      = e.data as ChatUpdateReadProgressResponse;
         const progress  = Helpers_Misc.getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
-            mainCategory    : mainCategory,
-            toCategory      : progress.getToCategory(),
-            toTarget        : progress.getToTarget(),
-            fromUserId      : Users_Model.getSelfUserId(),
+            mainCategory : mainCategory,
+            toCategory   : progress.getToCategory(),
+            toTarget     : progress.getToTarget(),
+            fromUserId   : Users_Model.getSelfUserId(),
         })) {
             this._updateImgRed();
         }
@@ -845,8 +844,7 @@ interface DataForTargetRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class TargetRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForTargetRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForTargetRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForTargetRenderer> {
     private readonly _layoutContent!    : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _layoutType!       : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelType!        : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -856,10 +854,10 @@ class TargetRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
-            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,            callback : this._onMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,                callback : this._onMsgChatAddMessage },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,    callback : this._onMsgChatGetAllReadProgressList },
+            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,        callback : this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -1045,8 +1043,7 @@ interface DataForMessageRenderer extends Ui_Types_UiListItemData.UiListItemData 
 }
 class MessageRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMessageRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMessageRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMessageRenderer> {
     private readonly _imgAvatar!        : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgOnlineState!   : Ui_Interfaces_IUiImage.IUiImage;
 
@@ -1119,8 +1116,8 @@ class MessageRenderer
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatCommandPanel, {
-            messageId   : message.getMessageId(),
-            userId      : message.getFromUserId(),
+            messageId : message.getMessageId(),
+            userId    : message.getFromUserId(),
         });
     }
 }
@@ -1226,21 +1223,21 @@ function generateChatToTarget(data: DataForTargetRenderer | null): AuxiliaryType
     } else {
         const toCategory = data.toCategory;
         if (toCategory === Chat_Constants.ToCategoryId.CcrRoom) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toCcrRoomId: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toCcrRoomId : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.MapReview) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMapReviewTarget: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMapReviewTarget : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.McrRoom) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMcrRoomId: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMcrRoomId : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.MfrRoom) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMfrRoomId: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toMfrRoomId : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.Private) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toUserId: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toUserId : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.PublicChannel) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toPublicChannel: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toPublicChannel : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.WarAndTeam) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toWarAndTeam: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toWarAndTeam : data.toTarget });
         } else if (toCategory === Chat_Constants.ToCategoryId.WarAndSelf) {
-            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toWarAndSelf: data.toTarget });
+            return new AuxiliaryTypes_ChatToTarget.ChatToTarget({ toWarAndSelf : data.toTarget });
         } else {
             return new AuxiliaryTypes_ChatToTarget.ChatToTarget();
         }

@@ -4366,7 +4366,6 @@ export class WebGLRenderer implements Egret_Sys.SystemRenderer {
             canvasScaleY *= maxTextureSize / (height * canvasScaleY);
         }
 
-
         const x: number = node.x * canvasScaleX;
         const y: number = node.y * canvasScaleY;
         if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {

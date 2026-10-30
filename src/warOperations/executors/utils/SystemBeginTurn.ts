@@ -46,13 +46,13 @@ async function normalExeSystemBeginTurn(war: BaseWar_Interface_IBwWar.IBwWar, ac
         } else {
             await new Promise<void>(resolve => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBeginTurnPanel, {
-                    gameConfig          : war.getGcData(),
-                    playerIndex         : playerIndex,
-                    teamIndex           : playerInTurn.getTeamIndex(),
-                    nickname            : nickname,
-                    coId                : playerInTurn.getCoId(),
-                    unitAndTileSkinId   : playerInTurn.getUnitAndTileSkinId(),
-                    callbackOnFinish    : () => resolve(),
+                    gameConfig        : war.getGcData(),
+                    playerIndex       : playerIndex,
+                    teamIndex         : playerInTurn.getTeamIndex(),
+                    nickname          : nickname,
+                    coId              : playerInTurn.getCoId(),
+                    unitAndTileSkinId : playerInTurn.getUnitAndTileSkinId(),
+                    callbackOnFinish  : () => resolve(),
                 });
             });
         }

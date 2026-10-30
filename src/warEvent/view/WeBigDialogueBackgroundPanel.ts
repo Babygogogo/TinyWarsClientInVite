@@ -26,8 +26,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback: this._onNotifyBwPlannerStateChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -84,9 +84,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const action    = openData.action;
         for (let backgroundId = 0; backgroundId <= maxId; ++backgroundId) {
             dataArray.push({
-                backgroundId    : backgroundId,
-                action          : action,
-                panel           : this,
+                backgroundId : backgroundId,
+                action       : action,
+                panel        : this,
             });
         }
 
@@ -107,11 +107,11 @@ class BackgroundRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._imgBg,                      callback: this._onTouchedImgBg },
-            { ui: this._groupSelect,                callback: this._onTouchedGroupSelect },
+            { ui : this._imgBg,                      callback : this._onTouchedImgBg },
+            { ui : this._groupSelect,                callback : this._onTouchedGroupSelect },
         ]);
     }
 

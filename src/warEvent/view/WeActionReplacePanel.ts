@@ -38,10 +38,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -89,13 +89,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray         : DataForActionRenderer[] = [];
         for (const action of openData.fullData.getActionArray()) {
             dataArray.push({
-                war                 : war,
-                eventId             : eventId,
-                nodeId              : nodeId,
-                oldActionId         : oldActionId,
-                oldActionIndex      : oldActionIndex,
-                candidateActionId   : Helpers_Misc.getExisted(action.getWeaCommonData()?.getActionId()),
-                fullData            : fullData,
+                war               : war,
+                eventId           : eventId,
+                nodeId            : nodeId,
+                oldActionId       : oldActionId,
+                oldActionIndex    : oldActionIndex,
+                candidateActionId : Helpers_Misc.getExisted(action.getWeaCommonData()?.getActionId()),
+                fullData          : fullData,
             });
         }
 
@@ -121,11 +121,11 @@ class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnCopy,    callback: this._onTouchedBtnCopy },
-            { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
+            { ui : this._btnCopy,    callback : this._onTouchedBtnCopy },
+            { ui : this._btnSelect,  callback : this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -145,11 +145,11 @@ class ActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         }
 
         if (cloneAndReplaceActionInEvent({
-            fullData            : openData.fullData,
-            eventId             : openData.eventId,
-            nodeId              : openData.nodeId,
-            oldActionIndex      : openData.oldActionIndex,
-            actionIdForClone    : openData.candidateActionId,
+            fullData         : openData.fullData,
+            eventId          : openData.eventId,
+            nodeId           : openData.nodeId,
+            oldActionIndex   : openData.oldActionIndex,
+            actionIdForClone : openData.candidateActionId,
         }) != null) {
             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeActionReplacePanel);

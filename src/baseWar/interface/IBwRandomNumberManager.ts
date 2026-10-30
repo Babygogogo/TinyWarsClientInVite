@@ -2,7 +2,7 @@ import {
     type AuxiliaryTypes_AuxiliaryTypes,
 } from "../../internal.ts";
 import type {
-SeedRandomState,
+    SeedRandomState,
     SeedRandomStateJson,
 } from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 

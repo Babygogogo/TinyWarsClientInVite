@@ -32,10 +32,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -56,22 +56,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._scrContent.scrollTop();
 
         const labelText1  = this._labelText1;
-        labelText1.setText(Lang_Utils.getLanguageText({ textArray, languageType: Lang_Utils.getCurrentLanguageType(), useAlternate: false}) ?? `----`);
+        labelText1.setText(Lang_Utils.getLanguageText({ textArray, languageType : Lang_Utils.getCurrentLanguageType(), useAlternate : false }) ?? `----`);
         labelText1.setY(this._labelTitle1.getScaledHeight() + 6);
 
         const labelTitle2 = this._labelTitle2;
         labelTitle2.setY(labelText1.getY() + labelText1.getScaledHeight() + 12);
 
         const labelText2  = this._labelText2;
-        labelText2.setText(Lang_Utils.getLanguageText({ textArray, languageType: Lang_Utils.getSecondaryLanguageType(), useAlternate: false}) ?? `----`);
+        labelText2.setText(Lang_Utils.getLanguageText({ textArray, languageType : Lang_Utils.getSecondaryLanguageType(), useAlternate : false }) ?? `----`);
         labelText2.setY(labelTitle2.getY() + labelTitle2.getScaledHeight() + 6);
 
         const contentHeight     = labelText2.getY() + labelText2.getScaledHeight();
         const maxScrHeight      = Stages_Constants.Dimension.DesignMinHeight - 80;
         const scrContentHeight  = Numbers_Utils.getValueInRange({
-            rawValue    : contentHeight,
-            minValue    : 100,
-            maxValue    : maxScrHeight,
+            rawValue : contentHeight,
+            minValue : 100,
+            maxValue : maxScrHeight,
         });
         this._scrContent.setUnscaledManualHeight(scrContentHeight);
         this._group.setUnscaledManualHeight(scrContentHeight + 80);

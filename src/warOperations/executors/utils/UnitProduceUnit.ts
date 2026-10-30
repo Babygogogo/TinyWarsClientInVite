@@ -47,7 +47,7 @@ function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
         const unitMap       = war.getUnitMap();
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -62,31 +62,31 @@ function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
             const unitType          = Helpers_Misc.getExisted(focusUnit.getProduceUnitTypeId(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitProduceUnit_01);
             const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
             producedUnit.init(Units_Utils_Serialization.create({
-                unitType                        : unitType,
-                unitId                          : producedUnitId,
-                playerIndex                     : playerIndex,
-                gridIndex                       : gridIndex.toProto().toJson(),
+                unitType    : unitType,
+                unitId      : producedUnitId,
+                playerIndex : playerIndex,
+                gridIndex   : gridIndex.toProto().toJson(),
 
-                actionState                     : Units_Constants.ActionStateId.Acted,
-                currentHp                       : unitTemplateCfg.getMaxHp(),
-                aiMode                          : null,
-                groupedTagId                    : null,
-                customNameId                    : null,
+                actionState  : Units_Constants.ActionStateId.Acted,
+                currentHp    : unitTemplateCfg.getMaxHp(),
+                aiMode       : null,
+                groupedTagId : null,
+                customNameId : null,
 
-                currentPromotion                : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
-                isDiving                        : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-                isCoOnboard                     : null,
-                currentBuildMaterial            : unitTemplateCfg.getMaxBuildMaterial() ?? null,
+                currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
+                isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+                isCoOnboard          : null,
+                currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
 
                 aiWeightedDestination           : null,
                 forbiddenGroupedLocationIdArray : [],
                 buffArray                       : [],
 
-                primaryWeaponCurrentAmmo        : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
-                flareCurrentAmmo                : unitTemplateCfg.getFlareMaxAmmo() ?? null,
-                currentProduceMaterial          : unitTemplateCfg.getMaxProduceMaterial() ?? null,
-                currentFuel                     : unitTemplateCfg.getMaxFuel(),
-                loaderUnitId                    : focusUnit.getUnitId(),
+                primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
+                flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
+                currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
+                currentFuel              : unitTemplateCfg.getMaxFuel(),
+                loaderUnitId             : focusUnit.getUnitId(),
             }), gameConfig);
             producedUnit.startRunning(war);
 
@@ -100,13 +100,13 @@ function fastExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: Wo
                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                 if (observerTeamIndexes != null) {
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : unitType,
-                        dstPlayerIndex              : playerIndex,
-                        normalizedHpGain            : producedUnit.getNormalizedCurrentHp(),
-                        normalizedHpLoss            : 0,
-                        unitGain                    : 1,
-                        unitLoss                    : 0,
-                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                        unitType                   : unitType,
+                        dstPlayerIndex             : playerIndex,
+                        normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
+                        normalizedHpLoss           : 0,
+                        unitGain                   : 1,
+                        unitLoss                   : 0,
+                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -126,9 +126,9 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
         const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitProduceUnit_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
-            movingUnitAndPath       : movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : movingUnitAndPath,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -155,7 +155,7 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
 
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -178,31 +178,31 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
             const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
 
             producedUnit.init(Units_Utils_Serialization.create({
-                unitType                        : unitType,
-                unitId                          : producedUnitId,
-                playerIndex                     : playerIndex,
-                gridIndex                       : gridIndex.toProto().toJson(),
+                unitType    : unitType,
+                unitId      : producedUnitId,
+                playerIndex : playerIndex,
+                gridIndex   : gridIndex.toProto().toJson(),
 
-                actionState                     : Units_Constants.ActionStateId.Acted,
-                currentHp                       : unitTemplateCfg.getMaxHp(),
-                aiMode                          : null,
-                groupedTagId                    : null,
-                customNameId                    : null,
+                actionState  : Units_Constants.ActionStateId.Acted,
+                currentHp    : unitTemplateCfg.getMaxHp(),
+                aiMode       : null,
+                groupedTagId : null,
+                customNameId : null,
 
-                currentPromotion                : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
-                isDiving                        : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-                isCoOnboard                     : null,
-                currentBuildMaterial            : unitTemplateCfg.getMaxBuildMaterial() ?? null,
+                currentPromotion     : getPromotionForUnitProduceUnit(war, focusUnit, unitType),
+                isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+                isCoOnboard          : null,
+                currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
 
                 aiWeightedDestination           : null,
                 forbiddenGroupedLocationIdArray : [],
                 buffArray                       : [],
 
-                primaryWeaponCurrentAmmo        : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
-                flareCurrentAmmo                : unitTemplateCfg.getFlareMaxAmmo() ?? null,
-                currentProduceMaterial          : unitTemplateCfg.getMaxProduceMaterial() ?? null,
-                currentFuel                     : unitTemplateCfg.getMaxFuel(),
-                loaderUnitId                    : focusUnit.getUnitId(),
+                primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
+                flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
+                currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
+                currentFuel              : unitTemplateCfg.getMaxFuel(),
+                loaderUnitId             : focusUnit.getUnitId(),
             }), gameConfig);
             producedUnit.startRunning(war);
 
@@ -216,13 +216,13 @@ async function normalExeUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, ac
             {
                 if (observerTeamIndexes != null) {
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : unitType,
-                        dstPlayerIndex              : playerIndex,
-                        normalizedHpGain            : producedUnit.getNormalizedCurrentHp(),
-                        normalizedHpLoss            : 0,
-                        unitGain                    : 1,
-                        unitLoss                    : 0,
-                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                        unitType                   : unitType,
+                        dstPlayerIndex             : playerIndex,
+                        normalizedHpGain           : producedUnit.getNormalizedCurrentHp(),
+                        normalizedHpLoss           : 0,
+                        unitGain                   : 1,
+                        unitLoss                   : 0,
+                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -261,7 +261,7 @@ function getPromotionForUnitProduceUnit(war: BaseWar_Interface_IBwWar.IBwWar, pr
         if ((cfg)                                                                           &&
             (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId())) &&
             ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
+                coSkillAreaType : cfg.getCoSkillAreaTypeId(),
                 getCoGridIndexArrayOnMap,
                 coZoneRadius,
             })))

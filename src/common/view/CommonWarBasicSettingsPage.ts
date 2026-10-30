@@ -511,7 +511,7 @@ class SettingsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0129),
-                callback   : callback
+                callback   : callback,
             });
         }
     }

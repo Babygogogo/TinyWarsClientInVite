@@ -157,7 +157,7 @@ export function getDesc(data: PlayerFilter, gameConfig: GameConfigs_GameConfig.G
         Lang_Utils.getText(Lang_Constants.TextType.B0031),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : Lang_Utils.getText(Lang_Constants.TextType.A0944)
+            : Lang_Utils.getText(Lang_Constants.TextType.A0944),
     );
 }
 export function getDescForEmbed(data: PlayerFilter): string | null {
@@ -177,7 +177,7 @@ export function getDescForEmbed(data: PlayerFilter): string | null {
         : Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0231,
             Lang_Utils.getText(Lang_Constants.TextType.B0031),
-            textArrayForSubConditions.join(`, `)
+            textArrayForSubConditions.join(`, `),
         );
 }
 

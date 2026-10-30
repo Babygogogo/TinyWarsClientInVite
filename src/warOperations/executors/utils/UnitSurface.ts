@@ -42,7 +42,7 @@ function fastExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnit
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !revisedPath.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         (isSuccessful) && (focusUnit.setIsDiving(false));
@@ -63,8 +63,8 @@ async function normalExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
@@ -76,7 +76,7 @@ async function normalExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute                       : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -86,7 +86,7 @@ async function normalExeUnitSurface(war: BaseWar_Interface_IBwWar.IBwWar, action
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !revisedPath.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         (isSuccessful) && (focusUnit.setIsDiving(false));

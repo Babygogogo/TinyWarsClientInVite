@@ -36,7 +36,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0247,
         data.getActLoadCount(),
-        unitType == null ? Lang_Constants.UndefinedError : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError)
+        unitType == null ? Lang_Constants.UndefinedError : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaFillUnitLoadedSimple>, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -73,7 +73,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         Lang_Constants.TextType.F0246,
         subTextArray.join(`\n`),
         data.getActLoadCount(),
-        unitType == null ? Lang_Constants.UndefinedError : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError)
+        unitType == null ? Lang_Constants.UndefinedError : (Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError),
     );
 }
 
@@ -119,14 +119,14 @@ export function getErrorTip(data: WeaFillUnitLoadedSimple, mapSize: AuxiliaryTyp
         }
 
         const unitData = actUnitData.clone();
-        unitData.createIfNotExistsGridIndex().loadJson({ x: 0, y: 0 });
+        unitData.createIfNotExistsGridIndex().loadJson({ x : 0, y : 0 });
         unitData.setLoaderUnitId(null);
 
         if (Units_Utils_Serialization.getErrorCodeForUnitDataIgnoringUnitId({
-            unitData                : unitData,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
-            gameConfig              : gameConfig,
+            unitData              : unitData,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
+            gameConfig            : gameConfig,
         })) {
             return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1058));
         }
@@ -205,13 +205,13 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
 
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : unit.getUnitType(),
-                    dstPlayerIndex              : playerIndex,
-                    unitGain                    : 1,
-                    unitLoss                    : 0,
-                    normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                    normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                    unitType                   : unit.getUnitType(),
+                    dstPlayerIndex             : playerIndex,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }

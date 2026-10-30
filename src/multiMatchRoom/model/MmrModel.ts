@@ -89,7 +89,7 @@ export async function getSelfSettings(roomId: number): Promise<AuxiliaryTypes_Au
     } else {
         const newData = new MultiPlayerRooms_SelfSettings.SelfSettings(
             roomInfo,
-            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion()))
+            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion())),
         );
         _selfSettingsDict.set(roomId, newData);
         return newData;

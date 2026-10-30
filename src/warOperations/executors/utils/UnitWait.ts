@@ -39,7 +39,7 @@ function fastExeUnitWait(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitWai
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption, });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         WarOperations_Executors_Utils_Common.handleSelfUnitHpAfterWait(focusUnit, true);
@@ -55,15 +55,15 @@ async function normalExeUnitWait(war: BaseWar_Interface_IBwWar.IBwWar, action: W
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitWait_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -72,7 +72,7 @@ async function normalExeUnitWait(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const pathNodes     = revisedPath.nodes;
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitWait_01);
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 

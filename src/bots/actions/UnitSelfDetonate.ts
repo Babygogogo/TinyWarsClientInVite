@@ -12,7 +12,7 @@ export async function getScoreAndActionUnitSelfDetonate(
     commonParams    : Bots_CommonParams.CommonParams,
     focusUnit       : Units_IUnit.IUnit,
     destination     : AuxiliaryTypes_GridIndex.GridIndex,
-    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[]
+    pathNodes       : AuxiliaryTypes_MovePathNode.MovePathNode[],
 ): Promise<Bots_Types.ScoreAndAction | null> {
     await Timer_TimerModel.checkAndCallLater();
 
@@ -38,16 +38,16 @@ export async function getScoreAndActionUnitSelfDetonate(
     }
 
     return {
-        score   : totalScore,
-        action  : WoContainer.fromJson({
-            WoUnitSelfDetonate: {
-                path        : {
+        score  : totalScore,
+        action : WoContainer.fromJson({
+            WoUnitSelfDetonate : {
+                path : {
                     nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                     fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
                     isBlocked       : false,
                 },
-                launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
-            }
+                launchUnitId : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
+            },
         }),
     };
 }

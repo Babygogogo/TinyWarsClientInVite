@@ -157,7 +157,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (category === Category.UnitType) {
             return getTextForCategoryData(gameConfig.getAllUnitTypeArray().map(v => ({
                 typeId   : v,
-                typeName : Lang_Utils.getUnitName(v, gameConfig) ?? Lang_Constants.UndefinedError
+                typeName : Lang_Utils.getUnitName(v, gameConfig) ?? Lang_Constants.UndefinedError,
             })), sortType);
         } else if (category === Category.UnitMoveType) {
             return getTextForCategoryData(gameConfig.getAllMoveTypeIdArray().map(v => ({ typeId : v, typeName : Lang_Utils.getMoveTypeName(v, gameConfig) ?? Lang_Constants.UndefinedError })), sortType);
@@ -193,9 +193,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return getTextForCategoryData(
                 gameConfig.getAllWeatherTypeArray().map(v => ({
                     typeId   : v,
-                    typeName : Lang_Utils.getWeatherName(v, gameConfig) ?? Lang_Constants.UndefinedError
+                    typeName : Lang_Utils.getWeatherName(v, gameConfig) ?? Lang_Constants.UndefinedError,
                 })),
-                sortType
+                sortType,
             );
         } else if (category === Category.CoCategory) {
             return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId : v, typeName : gameConfig.getCoCategoryCfg(v)?.getName() ?? Lang_Constants.UndefinedError })), sortType);

@@ -90,9 +90,9 @@ class Arc4 {
 
     public exportState(): State {
         return {
-            i: this.i,
-            j: this.j,
-            S: this.S.slice(),
+            i : this.i,
+            j : this.j,
+            S : this.S.slice(),
         };
     }
     public importState(state: State): void {

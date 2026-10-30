@@ -197,9 +197,9 @@ function _arrangeItemsAsRows2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase,
                 newRowItems.push(item);
             } else {
                 rowInfoArray.push({
-                    maxHeight   : rowMaxHeight,
-                    totalWidth  : rowTotalWidth,
-                    items       : newRowItems.concat(),
+                    maxHeight  : rowMaxHeight,
+                    totalWidth : rowTotalWidth,
+                    items      : newRowItems.concat(),
                 });
                 rowMaxHeight        = itemHeight;
                 rowTotalWidth       = itemWidth;
@@ -210,9 +210,9 @@ function _arrangeItemsAsRows2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase,
 
         if (newRowItems.length > 0) {
             rowInfoArray.push({
-                maxHeight   : rowMaxHeight,
-                totalWidth  : rowTotalWidth,
-                items       : newRowItems,
+                maxHeight  : rowMaxHeight,
+                totalWidth : rowTotalWidth,
+                items      : newRowItems,
             });
         }
     }
@@ -264,7 +264,7 @@ function _arrangeItemsAsRows2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBase,
                     const itemHeight = item.getScaledHeight();
                     item.setY(vAlign === Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle
                         ? y + (rowHeight - itemHeight) / 2
-                        : y + (rowHeight - itemHeight)
+                        : y + (rowHeight - itemHeight),
                     );
                 }
             }
@@ -373,7 +373,7 @@ function _arrangeItemsAsColumns2(layout: Ui_Interfaces_IUiLayoutBase.IUiLayoutBa
                     const itemWidth = item.getScaledWidth();
                     item.setX(hAlign === Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center
                         ? x + (columnWidth - itemWidth) / 2
-                        : x + (columnWidth - itemWidth)
+                        : x + (columnWidth - itemWidth),
                     );
                 }
             }

@@ -44,7 +44,7 @@ function fastExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -52,18 +52,18 @@ function fastExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
             const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
 
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
 
             const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
-                war                     : war,
-                movePath1               : pathNodes,
-                launchUnitId1           : launchUnitId,
-                maxAttackRange1         : maxAttackRange1,
-                canAttackAfterMoving1   : canAttackAfterMoving1,
-                gridIndex2              : Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
-                maxAttackRange2         : null,
-                canAttackAfterMoving2   : false,
+                war                   : war,
+                movePath1             : pathNodes,
+                launchUnitId1         : launchUnitId,
+                maxAttackRange1       : maxAttackRange1,
+                canAttackAfterMoving1 : canAttackAfterMoving1,
+                gridIndex2            : Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex())),
+                maxAttackRange2       : null,
+                canAttackAfterMoving2 : false,
             });
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -86,15 +86,15 @@ async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, act
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_00);
         const targetGridIndex = AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(actionExtraData.getTargetGridIndex());
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : targetGridIndex,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : targetGridIndex,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute                       : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -104,7 +104,7 @@ async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, act
         const unitMap           = war.getUnitMap();
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -120,7 +120,7 @@ async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, act
             const maxAttackRange1       = focusUnit.getFinalMaxAttackRange();
             const canAttackAfterMoving1 = focusUnit.getFinalCanAttackAfterMoving();
 
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
 
             const gridIndex2        = Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(action.getTargetGridIndex()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackTile_01);
@@ -134,14 +134,14 @@ async function normalExeUnitAttackTile(war: BaseWar_Interface_IBwWar.IBwWar, act
             });
 
             const battleInfo = DamageCalculators_Utils.runBattleForAttackTile({
-                war                     : war,
-                movePath1               : pathNodes,
-                launchUnitId1           : launchUnitId,
-                maxAttackRange1         : maxAttackRange1,
-                canAttackAfterMoving1   : canAttackAfterMoving1,
-                gridIndex2              : gridIndex2,
-                maxAttackRange2         : null,
-                canAttackAfterMoving2   : false,
+                war                   : war,
+                movePath1             : pathNodes,
+                launchUnitId1         : launchUnitId,
+                maxAttackRange1       : maxAttackRange1,
+                canAttackAfterMoving1 : canAttackAfterMoving1,
+                gridIndex2            : gridIndex2,
+                maxAttackRange2       : null,
+                canAttackAfterMoving2 : false,
             });
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 

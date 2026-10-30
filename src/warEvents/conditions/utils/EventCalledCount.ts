@@ -18,7 +18,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0096,
         Lang_Utils.getComparatorName(data.getEventsCountComparator()),
-        data.getEventsCount()
+        data.getEventsCount(),
     );
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecEventCalledCount>): string | null {
@@ -32,7 +32,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (eventIdArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0095,
-                eventIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
+                eventIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
             )}`);
         }
     }
@@ -42,7 +42,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0094,
                 Lang_Utils.getComparatorName(Helpers_Misc.getExisted(data.getTimesInTurnComparator())),
-                timesInTurn
+                timesInTurn,
             )}`);
         }
     }
@@ -52,7 +52,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0105,
                 Lang_Utils.getComparatorName(Helpers_Misc.getExisted(data.getTimesTotalComparator())),
-                timesTotal
+                timesTotal,
             )}`);
         }
     }
@@ -65,9 +65,9 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0104,
             Lang_Utils.getComparatorName(data.getEventsCountComparator()),
-            data.getEventsCount()
+            data.getEventsCount(),
         ),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecEventCalledCount, fullData: WarEventFullData): string | null {

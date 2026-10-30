@@ -35,10 +35,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -177,10 +177,10 @@ class HighScoreRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         const normalMapId   = openData.normalMapId;
         const mapRawData    = await NormalMap_Model_NormalMapModel.getRawData(normalMapId);
         if (mapRawData?.getNormalMapId() === normalMapId) {  // 由于异步逻辑，所以需要再次比较
-            labelMapName.setText(Lang_Utils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
+            labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData.getMapNameArray() }) ?? Lang_Constants.UndefinedError);
 
             const ruleId = openData.ruleId;
-            labelRuleName.setText(`#${ruleId}(${Lang_Utils.getLanguageText({ textArray: mapRawData.getTemplateWarRuleArray()?.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError})`);
+            labelRuleName.setText(`#${ruleId}(${Lang_Utils.getLanguageText({ textArray : mapRawData.getTemplateWarRuleArray()?.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError})`);
         }
     }
 
@@ -199,7 +199,7 @@ class HighScoreRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         if (openData === this.getOpenData()) {
             label.setText((rankData?.getScore() !== openData.score)
                 ? `--`
-                : `${rankData.getTurnIndex() ?? `--`}`
+                : `${rankData.getTurnIndex() ?? `--`}`,
             );
         }
     }
@@ -217,7 +217,7 @@ class HighScoreRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         if (openData === this.getOpenData()) { // 由于异步逻辑，所以需要再次比较
             labelMyRank.setText((index == null) || (index <= 0)
                 ? `--`
-                : `${index}${Helpers_Text.getSuffixForRankIndex(index)}`
+                : `${index}${Helpers_Text.getSuffixForRankIndex(index)}`,
             );
         }
     }

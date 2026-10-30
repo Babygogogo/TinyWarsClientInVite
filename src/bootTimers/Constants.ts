@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum TimerTypeId {
     NoBoot      = 0,
     Regular     = 1,

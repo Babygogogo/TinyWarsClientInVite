@@ -18,7 +18,7 @@ const _newKeys          = new Set<Keyboard_KbTypes.KeyCode>();
 const _listenerArray    : Listener[] = [];
 
 const _NOTIFY_EVENTS    : Notifications_Types.Listener[] = [
-    { type: Notifications_TypeId.TypeId.GameHidden,   callback: _onNotifyGameHidden },
+    { type : Notifications_TypeId.TypeId.GameHidden,   callback : _onNotifyGameHidden },
 ];
 
 export function init(): void {
@@ -75,10 +75,10 @@ export function addListener(callback: Keyboard_KbTypes.KeyCallback, thisObject: 
     deleteListener(callback, thisObject);
 
     _listenerArray.push({
-        callback    : callback,
-        thisObject  : thisObject,
-        priority    : priority,
-        index       : (_listenerArray[_listenerArray.length - 1]?.index ?? 0) + 1,
+        callback   : callback,
+        thisObject : thisObject,
+        priority   : priority,
+        index      : (_listenerArray[_listenerArray.length - 1]?.index ?? 0) + 1,
     });
 }
 export function deleteListener(callback: Keyboard_KbTypes.KeyCallback, thisObject: unknown): void {
@@ -96,9 +96,9 @@ export function checkHasDirectionKeys(keys: Set<Keyboard_KbTypes.KeyCode>): bool
 
 function _invokeListeners(): void {
     const eventData: Keyboard_KbTypes.EventData = {
-        newKeys     : new Set(_newKeys),
-        allKeys     : new Set(_allKeys),
-        isHandled   : false,
+        newKeys   : new Set(_newKeys),
+        allKeys   : new Set(_allKeys),
+        isHandled : false,
     };
 
     const tempListenerArray = _listenerArray.concat().sort((v1, v2) => {

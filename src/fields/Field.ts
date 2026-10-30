@@ -48,25 +48,25 @@ export class Field implements Fields_IField.IField {
         }
 
         this.getFogMap().init({
-            data                    : data.getFogMap(),
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getFogMap(),
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         const tileMap = this.getTileMap();
         tileMap.init({
-            data                    : data.getTileMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : data.getTileMap(),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         const unitMap = this.getUnitMap();
         unitMap.init({
-            data                    : data.getUnitMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : data.getUnitMap(),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         // const { width, height } = mapSize.getWH();
@@ -92,21 +92,21 @@ export class Field implements Fields_IField.IField {
     }): void {
         const mapSize = AuxiliaryTypes_MapSize.MapSize.createWithSerialTileMap(data.getTileMap());
         this.getFogMap().fastInit({
-            data                    : data.getFogMap(),
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral
+            data                  : data.getFogMap(),
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getTileMap().fastInit({
-            data                    : data.getTileMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getTileMap(),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getUnitMap().fastInit({
-            data                    : data.getUnitMap(),
-            gameConfig              : gameConfig,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getUnitMap(),
+            gameConfig            : gameConfig,
+            mapSize               : mapSize,
+            playersCountUnneutral : playersCountUnneutral,
         });
 
         this.getCursor().fastInit();

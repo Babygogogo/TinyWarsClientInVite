@@ -38,20 +38,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback: this._onNotifyMsgCmSetCampaignName },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignDesc,    callback: this._onNotifyMsgCmSetCampaignDesc },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignEnabled, callback: this._onNotifyMsgCmSetCampaignEnabled },
-            { type: Notifications_TypeId.TypeId.MsgCmSetExtraLink,       callback: this._onNotifyMsgCmSetExtraLink },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback : this._onNotifyMsgCmSetCampaignName },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignDesc,    callback : this._onNotifyMsgCmSetCampaignDesc },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignEnabled, callback : this._onNotifyMsgCmSetCampaignEnabled },
+            { type : Notifications_TypeId.TypeId.MsgCmSetExtraLink,       callback : this._onNotifyMsgCmSetExtraLink },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnSetDesigner,                 callback: this._onTouchedBtnSetDesigner },
-            { ui: this._btnSetName,                     callback: this._onTouchedBtnSetName },
-            { ui: this._btnSetDesc,                     callback: this._onTouchedBtnSetDesc },
-            { ui: this._btnSetExtraLink,                callback: this._onTouchedBtnSetExtraLink },
-            { ui: this._btnSetEnabled,                  callback: this._onTouchedBtnSetEnabled },
-            { ui: this._btnModifyMap,                   callback: this._onTouchedBtnModifyMap },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnSetDesigner,                 callback : this._onTouchedBtnSetDesigner },
+            { ui : this._btnSetName,                     callback : this._onTouchedBtnSetName },
+            { ui : this._btnSetDesc,                     callback : this._onTouchedBtnSetDesc },
+            { ui : this._btnSetExtraLink,                callback : this._onTouchedBtnSetExtraLink },
+            { ui : this._btnSetEnabled,                  callback : this._onTouchedBtnSetEnabled },
+            { ui : this._btnModifyMap,                   callback : this._onTouchedBtnModifyMap },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -83,7 +83,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSetDesigner(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CmCampaignDesignersPanel, {
-            campaignId  : this.getOpenData()?.campaignId,
+            campaignId : this.getOpenData()?.campaignId,
         });
     }
     private async _onTouchedBtnSetName(): Promise<void> {
@@ -105,9 +105,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            currentTextArray    : campaignInfo.getNameArray(),
-            maxTextLength       : Campaigns_Constants.CampaignWar.MaxNameLength,
-            callback            : nameArray => Campaigns_Managements_Gateway.reqCmSetCampaignName(campaignId, nameArray),
+            currentTextArray : campaignInfo.getNameArray(),
+            maxTextLength    : Campaigns_Constants.CampaignWar.MaxNameLength,
+            callback         : nameArray => Campaigns_Managements_Gateway.reqCmSetCampaignName(campaignId, nameArray),
         });
     }
     private async _onTouchedBtnSetDesc(): Promise<void> {
@@ -129,10 +129,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-            getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B1137),
-            currentTextArray    : campaignInfo.getDescArray(),
-            maxLength           : Campaigns_Constants.CampaignWar.MaxDescLength,
-            callback            : descArray => Campaigns_Managements_Gateway.reqCmSetCampaignDesc(campaignId, descArray),
+            getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B1137),
+            currentTextArray : campaignInfo.getDescArray(),
+            maxLength        : Campaigns_Constants.CampaignWar.MaxDescLength,
+            callback         : descArray => Campaigns_Managements_Gateway.reqCmSetCampaignDesc(campaignId, descArray),
         });
     }
     private async _onTouchedBtnSetExtraLink(): Promise<void> {
@@ -155,16 +155,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B1481),
-            currentValue    : campaignInfo.getExtraLink() ?? ``,
-            minLength       : 0,
-            maxChars        : Campaigns_Constants.MaxExtraLinkLength,
-            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0999),
-            charRestrict    : null,
-            isMultiLine     : false,
-            canBeEmpty      : true,
-            isAutoClose     : false,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B1481),
+            currentValue : campaignInfo.getExtraLink() ?? ``,
+            minLength    : 0,
+            maxChars     : Campaigns_Constants.MaxExtraLinkLength,
+            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0999),
+            charRestrict : null,
+            isMultiLine  : false,
+            canBeEmpty   : true,
+            isAutoClose  : false,
+            callback     : panel => {
                 const link = panel.getInputText();
                 if ((link == "") || (Campaigns_Utils.checkIsValidExtraLink(link))) {
                     Campaigns_Managements_Gateway.reqCmSetExtraLink(campaignId, link);
@@ -193,13 +193,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => Campaigns_Managements_Gateway.reqCmSetCampaignEnabled(campaignId, !campaignInfo.getIsEnabled()),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => Campaigns_Managements_Gateway.reqCmSetCampaignEnabled(campaignId, !campaignInfo.getIsEnabled()),
         });
     }
     private _onTouchedBtnModifyMap(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CmCampaignMapsPanel, {
-            campaignId  : this.getOpenData()?.campaignId,
+            campaignId : this.getOpenData()?.campaignId,
         });
     }
 

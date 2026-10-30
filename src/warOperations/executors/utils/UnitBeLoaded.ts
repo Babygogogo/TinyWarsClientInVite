@@ -40,7 +40,7 @@ function fastExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         if (path.isBlocked) {
             unitMap.setUnitOnMap(focusUnit);
@@ -65,14 +65,14 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
         const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
         {
@@ -89,7 +89,7 @@ async function normalExeUnitBeLoaded(war: BaseWar_Interface_IBwWar.IBwWar, actio
         const pathNodes     = revisedPath.nodes;
         const launchUnitId  = action.getLaunchUnitId();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
         if (revisedPath.isBlocked) {

@@ -47,18 +47,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,                                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,                                   callback: this._onTouchedBtnClose },
-            { ui: this._btnClearFilter,                             callback: this._onTouchedBtnClearFilter },
+            { ui : this._btnHelp,                                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,                                   callback : this._onTouchedBtnClose },
+            { ui : this._btnClearFilter,                             callback : this._onTouchedBtnClearFilter },
 
-            { ui: this._layoutOngoing,                               callback: this._onTouchedGroupOngoing },
+            { ui : this._layoutOngoing,                               callback : this._onTouchedGroupOngoing },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback : this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputFilter,                                callback: this._onFocusOutInputFilter,  eventType: Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
+            { ui : this._inputFilter,                                callback : this._onFocusOutInputFilter,  eventType : Ui_Types_UiInputEventType.UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
@@ -181,10 +181,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const bgmCode of Sounds_Utils.getAllBgmCodeArray()) {
             if ((!filterText) || (Lang_Utils.getBgmSfxName(bgmCode, gameConfig)?.toLocaleLowerCase().includes(filterText))) {
                 dataArray.push({
-                    callback    : callback,
-                    bgmCode     : bgmCode,
-                    gameConfig  : gameConfig,
-                    panel       : this,
+                    callback   : callback,
+                    bgmCode    : bgmCode,
+                    gameConfig : gameConfig,
+                    panel      : this,
                 });
             }
         }
@@ -209,11 +209,11 @@ class BgmRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._imgSelected,    callback: this._onTouchedImgSelected },
-            { ui: this,                 callback: this._onTouchedSelf },
+            { ui : this._imgSelected,    callback : this._onTouchedImgSelected },
+            { ui : this,                 callback : this._onTouchedSelf },
         ]);
         this._setShortSfxCode(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         this.setIsTouchEnabled(true);
@@ -226,9 +226,9 @@ class BgmRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         await super._onClosed();

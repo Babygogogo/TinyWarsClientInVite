@@ -77,27 +77,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
 
-            { type: Notifications_TypeId.TypeId.MsgMcrJoinRoom,                  callback: this._onNotifyMsgMcrJoinRoom },
-            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,         callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomStaticInfo,         callback: this._onNotifyMsgMcrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgMcrGetJoinableRoomIdArray,    callback: this._onNotifyMsgMcrGetJoinableRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMcrJoinRoom,                  callback : this._onNotifyMsgMcrJoinRoom },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,         callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomStaticInfo,         callback : this._onNotifyMsgMcrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetJoinableRoomIdArray,    callback : this._onNotifyMsgMcrGetJoinableRoomIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgCcrJoinRoom,                  callback: this._onNotifyMsgCcrJoinRoom },
-            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,         callback: this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,         callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgCcrGetJoinableRoomIdArray,    callback: this._onNotifyMsgCcrGetJoinableRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgCcrJoinRoom,                  callback : this._onNotifyMsgCcrJoinRoom },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,         callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,         callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetJoinableRoomIdArray,    callback : this._onNotifyMsgCcrGetJoinableRoomIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgMfrJoinRoom,                  callback: this._onNotifyMsgMfrJoinRoom },
-            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo,         callback: this._onNotifyMsgMfrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,         callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgMfrGetJoinableRoomIdArray,    callback: this._onNotifyMsgMfrGetJoinableRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMfrJoinRoom,                  callback : this._onNotifyMsgMfrJoinRoom },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo,         callback : this._onNotifyMsgMfrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,         callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetJoinableRoomIdArray,    callback : this._onNotifyMsgMfrGetJoinableRoomIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
-            { ui: this._btnSearch,      callback: this._onTouchedBtnSearch },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
+            { ui : this._btnSearch,      callback : this._onTouchedBtnSearch },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -242,13 +242,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     MultiCustomRoom_Model_McrProxy.reqMcrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title           : Lang_Utils.getText(Lang_Constants.TextType.B0449),
-                        currentValue    : ``,
-                        tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
-                        charRestrict    : `0-9`,
-                        maxChars        : Wars_Constants.Misc.MaxPasswordLength,
-                        isAutoClose     : false,
-                        callback        : panel => {
+                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        currentValue : ``,
+                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        charRestrict : `0-9`,
+                        maxChars     : Wars_Constants.Misc.MaxPasswordLength,
+                        isAutoClose  : false,
+                        callback     : panel => {
                             if (panel.getInputText() !== password) {
                                 FloatText.showLang(Lang_Constants.TextType.A0017);
                             } else {
@@ -272,13 +272,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     CoopCustomRoom_Model_CcrProxy.reqCcrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title           : Lang_Utils.getText(Lang_Constants.TextType.B0449),
-                        currentValue    : ``,
-                        tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
-                        charRestrict    : `0-9`,
-                        maxChars        : Wars_Constants.Misc.MaxPasswordLength,
-                        isAutoClose     : false,
-                        callback        : panel => {
+                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        currentValue : ``,
+                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        charRestrict : `0-9`,
+                        maxChars     : Wars_Constants.Misc.MaxPasswordLength,
+                        isAutoClose  : false,
+                        callback     : panel => {
                             if (panel.getInputText() !== password) {
                                 FloatText.showLang(Lang_Constants.TextType.A0017);
                             } else {
@@ -302,13 +302,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     MultiFreeRoom_Model_MfrProxy.reqMfrJoinRoom(roomId);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                        title           : Lang_Utils.getText(Lang_Constants.TextType.B0449),
-                        currentValue    : ``,
-                        tips            : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
-                        charRestrict    : `0-9`,
-                        maxChars        : Wars_Constants.Misc.MaxPasswordLength,
-                        isAutoClose     : false,
-                        callback        : panel => {
+                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0449),
+                        currentValue : ``,
+                        tips         : Lang_Utils.getFormattedText(Lang_Constants.TextType.F0068, Wars_Constants.Misc.MaxPasswordLength),
+                        charRestrict : `0-9`,
+                        maxChars     : Wars_Constants.Misc.MaxPasswordLength,
+                        isAutoClose  : false,
+                        callback     : panel => {
                             if (panel.getInputText() !== password) {
                                 FloatText.showLang(Lang_Constants.TextType.A0017);
                             } else {
@@ -332,12 +332,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonRoomFilterPanel, {
-            roomFilter          : openData.filter,
-            isMapNameEnabled    : true,
-            callbackOnConfirm   : roomFilter => {
+            roomFilter        : openData.filter,
+            isMapNameEnabled  : true,
+            callbackOnConfirm : roomFilter => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwJoinRoomListPanel, {
-                    preferredRoomType   : openData.preferredRoomType,
-                    filter              : roomFilter,
+                    preferredRoomType : openData.preferredRoomType,
+                    filter            : roomFilter,
                 });
             },
         });
@@ -350,22 +350,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = true;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -477,10 +477,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(roomStaticInfo.getSettingsForMcw()?.getNormalMapId() ?? 0)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(roomStaticInfo.getSettingsForMcw()?.getNormalMapId() ?? 0)),
+                        overridingPlayers : null,
                     },
                 };
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr) {
@@ -489,10 +489,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(roomStaticInfo.getSettingsForCcw()?.getNormalMapId() ?? 0)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(roomStaticInfo.getSettingsForCcw()?.getNormalMapId() ?? 0)),
+                        overridingPlayers : null,
                     },
                 };
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr) {
@@ -500,10 +500,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return warData == null
                 ? null
                 : {
-                    warInfo     : {
-                        warData             : warData,
-                        showInitialWarData  : false,
-                        overridingPlayers   : null,
+                    warInfo : {
+                        warData            : warData,
+                        showInitialWarData : false,
+                        overridingPlayers  : null,
                     },
                 };
 
@@ -579,23 +579,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForRoomRenderer[] = [];
         for (const roomId of [...mcrRoomIdSet].sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
-                roomId      : roomId,
-                panel       : this,
+                roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
+                roomId   : roomId,
+                panel    : this,
             });
         }
         for (const roomId of [...ccrRoomIdSet].sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr,
-                roomId      : roomId,
-                panel       : this,
+                roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr,
+                roomId   : roomId,
+                panel    : this,
             });
         }
         for (const roomId of [...mfrRoomIdSet].sort((v1, v2) => v1 - v2)) {
             dataArray.push({
-                roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr,
-                roomId      : roomId,
-                panel       : this,
+                roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr,
+                roomId   : roomId,
+                panel    : this,
             });
         }
 
@@ -604,68 +604,68 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 0, customY: 30 },
-            endProps    : { customAlpha: 1, customY: 70 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 0, customY : 30 },
+            endProps   : { customAlpha : 1, customY : 70 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRoomList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupRoomList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 1, customY: 70 },
-            endProps    : { customAlpha: 0, customY: 30 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 1, customY : 70 },
+            endProps   : { customAlpha : 0, customY : 30 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRoomList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupRoomList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -699,11 +699,11 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
-            { ui: this._groupName,  callback: this._onTouchedGroupName },
+            { ui : this._btnHelp,    callback : this._onTouchedBtnHelp },
+            { ui : this._groupName,  callback : this._onTouchedGroupName },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -732,7 +732,7 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             if ((settingsForMcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
                 const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(settingsForMcw.getNormalMapId());
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent : () => Lang_Utils.getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
+                    getContent : () => Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
                 });
             }
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr) {
@@ -740,7 +740,7 @@ class RoomRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             if ((settingsForCcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
                 const mapRawData = await NormalMap_Model_NormalMapModel.getRawData(settingsForCcw.getNormalMapId());
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                    getContent : () => Lang_Utils.getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
+                    getContent : () => Lang_Utils.getLanguageText({ textArray : mapRawData?.getMapExtraText()?.getMapDescription() }) ?? Lang_Constants.UndefinedError,
                 });
             }
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr) {

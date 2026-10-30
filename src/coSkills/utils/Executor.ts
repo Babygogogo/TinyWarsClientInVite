@@ -50,32 +50,70 @@ export function executeInstantSkill({ player, skillId, skillData, targetGridInde
         exeEnemyPrimaryAmmoGainWithExtraData({ isFastExecute });
         exeSelfUnitBuffGainWithExtraData({ isFastExecute });
         exeEnemyUnitBuffGainWithExtraData({ isFastExecute });
-        exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute });
+        exeFixedAreaDamageWithExtraData({
+            skillCfg, player, skillData, targetGridIndexes, isFastExecute, 
+        });
         exeSelfPromotionGainWithExtraData({ isFastExecute });
         exeSelfUnitActionStateWithExtraData({ isFastExecute });
         exeSelfFlareAmmoGainWithExtraData({ isFastExecute });
-        exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExecute });
+        exeChangeWeatherWithExtraData({
+            skillCfg, player, skillData, isFastExecute, 
+        });
         exeSelfCoOnboardWithExtraData({ isFastExecute });
     } else {
         exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute });
         exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute });
-        exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute });
-        exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
-        exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastExecute });
-        exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute });
+        exeSelfAddUnitWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfHpGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeEnemyHpGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfFuelGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeEnemyFuelGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfMaterialGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeEnemyMaterialGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfPrimaryAmmoGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeEnemyPrimaryAmmoGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfUnitBuffGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeEnemyUnitBuffGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeFixedAreaDamageWithoutExtraData({
+            skillCfg, player, skillData, targetGridIndexes, isFastExecute, 
+        });
+        exeSelfPromotionGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfUnitActionStateWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeSelfFlareAmmoGainWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
+        exeChangeWeatherWithoutExtraData({
+            skillCfg, player, skillData, isFastExecute, 
+        });
+        exeSelfCoOnboardWithoutExtraData({
+            skillCfg, player, coGridIndexList, isFastExecute, 
+        });
     }
 }
 
@@ -101,7 +139,7 @@ function exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute }: {
         : player.getWar().getTileMap().getTotalIncomeForPlayer(player.getPlayerIndex()) * (cfg.getIncomeConversionPct()) / 100;
 
     player.setFund(Players_Utils_Common.getValidFund(
-        player.getFund() * (cfg.getMultiplierPct()) / 100 + (cfg.getOffset()) + offsetByIncome)
+        player.getFund() * (cfg.getMultiplierPct()) / 100 + (cfg.getOffset()) + offsetByIncome),
     );
 }
 
@@ -176,8 +214,8 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         const tileType = tile.getTileTypeId();
         if ((!gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   ||
             (!gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                getCoGridIndexArrayOnMap: () => coGridIndexList,
+                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                getCoGridIndexArrayOnMap : () => coGridIndexList,
                 coZoneRadius,
             }))
         ) {
@@ -190,31 +228,31 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         const unitTemplateCfg   = Helpers_Misc.getExisted(gameConfig.getUnitTemplateCfg(unitTypeId));
         const unit              = new Units_Unit.Unit();
         unit.init(Units_Utils_Serialization.create({
-            unitType                        : unitTypeId,
-            unitId                          : unitId,
-            playerIndex                     : selfPlayerIndex,
-            gridIndex                       : gridIndex.toProto().toJson(),
+            unitType    : unitTypeId,
+            unitId      : unitId,
+            playerIndex : selfPlayerIndex,
+            gridIndex   : gridIndex.toProto().toJson(),
 
-            actionState                     : cfg.getUnitActionStateId(),
-            currentHp                       : cfg.getHp(),
-            aiMode                          : null,
-            groupedTagId                    : null,
-            customNameId                    : null,
+            actionState  : cfg.getUnitActionStateId(),
+            currentHp    : cfg.getHp(),
+            aiMode       : null,
+            groupedTagId : null,
+            customNameId : null,
 
-            currentPromotion                : null,
-            isDiving                        : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
-            isCoOnboard                     : null,
-            currentBuildMaterial            : unitTemplateCfg.getMaxBuildMaterial() ?? null,
+            currentPromotion     : null,
+            isDiving             : unitTemplateCfg.getDiveCfg()?.getIsDivedByDefault() ?? null,
+            isCoOnboard          : null,
+            currentBuildMaterial : unitTemplateCfg.getMaxBuildMaterial() ?? null,
 
             aiWeightedDestination           : null,
             forbiddenGroupedLocationIdArray : [],
             buffArray                       : [],
 
-            primaryWeaponCurrentAmmo        : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
-            flareCurrentAmmo                : unitTemplateCfg.getFlareMaxAmmo() ?? null,
-            currentProduceMaterial          : unitTemplateCfg.getMaxProduceMaterial() ?? null,
-            currentFuel                     : unitTemplateCfg.getMaxFuel(),
-            loaderUnitId                    : null,
+            primaryWeaponCurrentAmmo : unitTemplateCfg.getPrimaryWeaponMaxAmmo() ?? null,
+            flareCurrentAmmo         : unitTemplateCfg.getFlareMaxAmmo() ?? null,
+            currentProduceMaterial   : unitTemplateCfg.getMaxProduceMaterial() ?? null,
+            currentFuel              : unitTemplateCfg.getMaxFuel(),
+            loaderUnitId             : null,
         }), gameConfig);
 
         unit.startRunning(war);
@@ -226,13 +264,13 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : unitTypeId,
-                    dstPlayerIndex              : selfPlayerIndex,
-                    unitGain                    : 1,
-                    unitLoss                    : 0,
-                    normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                    normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                    unitType                   : unitTypeId,
+                    dstPlayerIndex             : selfPlayerIndex,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }
@@ -274,23 +312,23 @@ function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFa
                 (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                &&
                 ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategoryId)))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : coSkillAreaTypeId,
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : coSkillAreaTypeId,
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 const oldNormalizedHp = unit.getNormalizedCurrentHp();
                 if (regularHpOffset >= 0) {
                     unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                        minValue    : 1,
-                        maxValue    : maxHp,
-                        rawValue    : (unit.getNormalizedCurrentHp() + regularHpOffset) * Units_Constants.Hp.Normalizer
+                        minValue : 1,
+                        maxValue : maxHp,
+                        rawValue : (unit.getNormalizedCurrentHp() + regularHpOffset) * Units_Constants.Hp.Normalizer,
                     }));
                 } else {
                     unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                        rawValue    : currentHp + hpOffset,
-                        minValue    : 1,
-                        maxValue    : maxHp,
+                        rawValue : currentHp + hpOffset,
+                        minValue : 1,
+                        maxValue : maxHp,
                     }));
                 }
 
@@ -304,13 +342,13 @@ function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFa
                         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                         if (observerTeamIndexes != null) {
                             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                    : unitType,
-                                dstPlayerIndex              : playerIndex,
-                                unitGain                    : 0,
-                                unitLoss                    : 0,
-                                normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                unitType                   : unitType,
+                                dstPlayerIndex             : playerIndex,
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                             }));
                         }
                     }
@@ -362,21 +400,21 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
                 (gameConfig.checkIsTileTypeInCategory(tileType, tileCategory))  &&
                 (unit.checkIsMeetLoadedState(loadedState))                      &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 const oldNormalizedHp = unit.getNormalizedCurrentHp();
                 if (deltaHp > 0) {
                     unit.setCurrentHp(Math.min(
                         maxHp,
-                        (unit.getNormalizedCurrentHp() + deltaHp) * Units_Constants.Hp.Normalizer)
+                        (unit.getNormalizedCurrentHp() + deltaHp) * Units_Constants.Hp.Normalizer),
                     );
                 } else {
                     unit.setCurrentHp(Math.max(
                         1,
-                        currentHp + modifier
+                        currentHp + modifier,
                     ));
                 }
 
@@ -386,13 +424,13 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
                         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                         if (observerTeamIndexes != null) {
                             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                    : unitType,
-                                dstPlayerIndex              : unit.getPlayerIndex(),
-                                unitGain                    : 0,
-                                unitLoss                    : 0,
-                                normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                unitType                   : unitType,
+                                dstPlayerIndex             : unit.getPlayerIndex(),
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                             }));
                         }
                     }
@@ -430,9 +468,9 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 const maxFuel       = unit.getMaxFuel();
@@ -440,12 +478,12 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
                 if (modifier > 0) {
                     unit.setCurrentFuel(Math.min(
                         maxFuel,
-                        currentFuel + Math.floor(maxFuel * modifier / 100)
+                        currentFuel + Math.floor(maxFuel * modifier / 100),
                     ));
                 } else {
                     unit.setCurrentFuel(Math.max(
                         0,
-                        Math.floor(currentFuel * (100 + modifier) / 100)
+                        Math.floor(currentFuel * (100 + modifier) / 100),
                     ));
                 }
                 (!isFastExecute) && (unit.updateView());
@@ -485,9 +523,9 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
             (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
             (unit.checkIsMeetLoadedState(loadedState))                  &&
             (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                getCoGridIndexArrayOnMap: () => coGridIndexList,
-                coZoneRadius            : zoneRadius
+                coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                getCoGridIndexArrayOnMap : () => coGridIndexList,
+                coZoneRadius             : zoneRadius,
             }))
         ) {
             const maxFuel       = unit.getMaxFuel();
@@ -495,12 +533,12 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
             if (modifier > 0) {
                 unit.setCurrentFuel(Math.min(
                     maxFuel,
-                    currentFuel + Math.floor(maxFuel * modifier / 100)
+                    currentFuel + Math.floor(maxFuel * modifier / 100),
                 ));
             } else {
                 unit.setCurrentFuel(Math.max(
                     0,
-                    Math.floor(currentFuel * (100 + modifier) / 100)
+                    Math.floor(currentFuel * (100 + modifier) / 100),
                 ));
             }
             (!isFastExecute) && (unit.updateView());
@@ -540,9 +578,9 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 if (maxBuildMaterial != null) {
@@ -550,12 +588,12 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                     if (modifier > 0) {
                         unit.setCurrentBuildMaterial(Math.min(
                             maxBuildMaterial,
-                            currentBuildMaterial + Math.floor(maxBuildMaterial * modifier / 100)
+                            currentBuildMaterial + Math.floor(maxBuildMaterial * modifier / 100),
                         ));
                     } else {
                         unit.setCurrentBuildMaterial(Math.max(
                             0,
-                            Math.floor(currentBuildMaterial * (100 + modifier) / 100)
+                            Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
                     (!isFastExecute) && (unit.updateView());
@@ -607,9 +645,9 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
             if ((unit.getPlayerIndex() !== playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 if (maxBuildMaterial != null) {
@@ -617,12 +655,12 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                     if (modifier > 0) {
                         unit.setCurrentBuildMaterial(Math.min(
                             maxBuildMaterial,
-                            currentBuildMaterial + Math.floor(maxBuildMaterial * modifier / 100)
+                            currentBuildMaterial + Math.floor(maxBuildMaterial * modifier / 100),
                         ));
                     } else {
                         unit.setCurrentBuildMaterial(Math.max(
                             0,
-                            Math.floor(currentBuildMaterial * (100 + modifier) / 100)
+                            Math.floor(currentBuildMaterial * (100 + modifier) / 100),
                         ));
                     }
                     (!isFastExecute) && (unit.updateView());
@@ -674,9 +712,9 @@ function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexL
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 if (modifier > 0) {
@@ -722,9 +760,9 @@ function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndex
             if ((unit.getPlayerIndex() !== playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 if (modifier > 0) {
@@ -770,9 +808,9 @@ function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList
             (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                            &&
             ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unit.getUnitType(), unitCategoryId)))    &&
             (unit.getGridIndex().checkIsInsideCoSkillArea({
-                coSkillAreaType         : coSkillAreaTypeId,
-                getCoGridIndexArrayOnMap: () => coGridIndexList,
-                coZoneRadius            : zoneRadius,
+                coSkillAreaType          : coSkillAreaTypeId,
+                getCoGridIndexArrayOnMap : () => coGridIndexList,
+                coZoneRadius             : zoneRadius,
             }))
         ) {
             if (turns > 0) {
@@ -829,9 +867,9 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
             (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                            &&
             ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unit.getUnitType(), unitCategoryId)))    &&
             (unit.getGridIndex().checkIsInsideCoSkillArea({
-                coSkillAreaType         : coSkillAreaTypeId,
-                getCoGridIndexArrayOnMap: () => coGridIndexList,
-                coZoneRadius            : zoneRadius,
+                coSkillAreaType          : coSkillAreaTypeId,
+                getCoGridIndexArrayOnMap : () => coGridIndexList,
+                coZoneRadius             : zoneRadius,
             }))
         ) {
             if (turns > 0) {
@@ -923,7 +961,7 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
     const warStatisticsManager  = war.getWarStatisticsManager();
     const gridVisualEffect      = war.getGridVisualEffect();
     for (const center of centerArray) {
-        for (const gridIndex of center.getGridsWithinDistance({ minDistance: 0, maxDistance: cfg.getRadius(), mapSize })) {
+        for (const gridIndex of center.getGridsWithinDistance({ minDistance : 0, maxDistance : cfg.getRadius(), mapSize })) {
             const unit = unitMap.getUnitOnMap(gridIndex);
             if ((unit)                                                      &&
                 ((isIndiscriminate) || (unit.getTeamIndex() !== teamIndex))
@@ -934,9 +972,9 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
                 } else {
                     const oldNormalizedHp = unit.getNormalizedCurrentHp();
                     unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                        maxValue    : unit.getMaxHp(),
-                        minValue    : 1,
-                        rawValue    : rawNewHp,
+                        maxValue : unit.getMaxHp(),
+                        minValue : 1,
+                        rawValue : rawNewHp,
                     }));
                     if (actionState >= 0) {
                         unit.setActionState(actionState);
@@ -948,13 +986,13 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
                             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                    : unit.getUnitType(),
-                                    dstPlayerIndex              : unit.getPlayerIndex(),
-                                    unitGain                    : 0,
-                                    unitLoss                    : 0,
-                                    normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                    normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                    unitType                   : unit.getUnitType(),
+                                    dstPlayerIndex             : unit.getPlayerIndex(),
+                                    unitGain                   : 0,
+                                    unitLoss                   : 0,
+                                    normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                    normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                 }));
                             }
                         }
@@ -1000,9 +1038,9 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                 ((conIsCoOnboard == null) || (conIsCoOnboard === unit.getIsCoOnboard()))                    &&
                 ((unitCategory == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategory)))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 const currentPromotion = unit.getCurrentPromotion();
@@ -1010,7 +1048,7 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                     0,
                     Math.min(
                         maxPromotion,
-                        currentPromotion + modifier
+                        currentPromotion + modifier,
                     ),
                 ));
                 (!isFastExecute) && (unit.updateView());
@@ -1051,9 +1089,9 @@ function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexL
                 ((conIsCoOnboard == null) || (unit.getIsCoOnboard() === conIsCoOnboard))    &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))                  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 unit.setActionState(actionState);
@@ -1095,20 +1133,20 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
-                    getCoGridIndexArrayOnMap: () => coGridIndexList,
-                    coZoneRadius            : zoneRadius,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+                    getCoGridIndexArrayOnMap : () => coGridIndexList,
+                    coZoneRadius             : zoneRadius,
                 }))
             ) {
                 if (modifier > 0) {
                     unit.setFlareCurrentAmmo(Math.min(
                         maxAmmo,
-                        currentAmmo + Math.floor(maxAmmo * modifier / 100)
+                        currentAmmo + Math.floor(maxAmmo * modifier / 100),
                     ));
                 } else {
                     unit.setFlareCurrentAmmo(Math.max(
                         0,
-                        Math.floor(currentAmmo * (100 + modifier) / 100)
+                        Math.floor(currentAmmo * (100 + modifier) / 100),
                     ));
                 }
                 (!isFastExecute) && (unit.updateView());
@@ -1117,7 +1155,7 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_IPlayer.IPlayer;
@@ -1147,7 +1185,7 @@ function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExec
         }
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
     player          : Players_IPlayer.IPlayer;
@@ -1207,9 +1245,9 @@ function exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, i
             ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unit.getUnitType(), unitCategoryId)))    &&
             (unit.getIsCoOnboard() !== isCoOnboard)                                                                     &&
             (unit.getGridIndex().checkIsInsideCoSkillArea({
-                coSkillAreaType         : coSkillAreaTypeId,
-                getCoGridIndexArrayOnMap: () => coGridIndexList,
-                coZoneRadius            : zoneRadius,
+                coSkillAreaType          : coSkillAreaTypeId,
+                getCoGridIndexArrayOnMap : () => coGridIndexList,
+                coZoneRadius             : zoneRadius,
             }))
         ) {
             unit.setIsCoOnboard(isCoOnboard);

@@ -13,26 +13,26 @@ import { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/Template
 
 export function createDefault(ruleId: number, playersCount: number, gcData: GameConfigs_GameConfig.GameConfig): TemplateWarRule {
     return TemplateWarRule.fromJson({
-        ruleId  : ruleId,
+        ruleId           : ruleId,
         // ruleNameArray   : [
         //     { languageType: LanguageType.Chinese, text: Lang.getText(LangTextType.B0277, LanguageType.Chinese) },
         //     { languageType: LanguageType.English, text: Lang.getText(LangTextType.B0277, LanguageType.English) },
         // ],
-        ruleAvailability: {
-            canMcw  : false,
-            canMrw  : false,
-            canSrw  : false,
-            canCcw  : false,
+        ruleAvailability : {
+            canMcw : false,
+            canMrw : false,
+            canSrw : false,
+            canCcw : false,
         },
-        warRuleCommonData   : {
-            hasFogByDefault     : false,
-            defaultWeatherType  : gcData.getDefaultWeatherType(),
-            playerRuleList      : PlayerRules_Utils.createDefaultPlayerRuleList(playersCount, gcData).map(v => v.toJson()),
+        warRuleCommonData : {
+            hasFogByDefault    : false,
+            defaultWeatherType : gcData.getDefaultWeatherType(),
+            playerRuleList     : PlayerRules_Utils.createDefaultPlayerRuleList(playersCount, gcData).map(v => v.toJson()),
         },
-        warEventIdArray             : [],
-        ruleNameArray               : [],
-        mapSimpleDialogueIdArray    : [],
-        taskObjectiveIdArray        : [],
+        warEventIdArray          : [],
+        ruleNameArray            : [],
+        mapSimpleDialogueIdArray : [],
+        taskObjectiveIdArray     : [],
     });
 }
 
@@ -49,10 +49,10 @@ export function getErrorCode({ templateWarRule, allWarEventIdArray, gameConfig, 
     allTaskObjectiveIdSet       : Set<number>;
 }): Utils_ClientErrorCode.ClientErrorCode {
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : templateWarRule.getRuleNameArray(),
-        minTextLength   : 1,
-        maxTextLength   : WarRules_Constants.Constants.MaxNameLength,
-        minTextCount    : 1,
+        list          : templateWarRule.getRuleNameArray(),
+        minTextLength : 1,
+        maxTextLength : WarRules_Constants.Constants.MaxNameLength,
+        minTextCount  : 1,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForTemplateWarRule_00;
     }
@@ -70,11 +70,11 @@ export function getErrorCode({ templateWarRule, allWarEventIdArray, gameConfig, 
     }
 
     const errorCodeForRuleForPlayers = PlayerRules_Utils.getErrorCodeForPlayerRuleList({
-        playerRuleList          : ruleForPlayers,
-        gameConfig              : gameConfig,
-        playersCountUnneutral   : playersCountUnneutral,
-        ruleAvailability        : ruleAvailability ?? null,
-        isCampaignMap           : isCampaignMap,
+        playerRuleList        : ruleForPlayers,
+        gameConfig            : gameConfig,
+        playersCountUnneutral : playersCountUnneutral,
+        ruleAvailability      : ruleAvailability ?? null,
+        isCampaignMap         : isCampaignMap,
     });
     if (errorCodeForRuleForPlayers) {
         return errorCodeForRuleForPlayers;

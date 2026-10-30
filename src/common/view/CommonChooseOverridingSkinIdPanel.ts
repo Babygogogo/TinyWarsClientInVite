@@ -49,14 +49,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnClose,           callback : this.closePanel },
 
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
-            { ui: this._btnReset,           callback: this._onTouchedBtnReset },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._btnReset,           callback : this._onTouchedBtnReset },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -147,10 +147,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray         : DataForSkinRenderer[] = [];
         for (let i = 0; i < length; ++i) {
             dataArray.push({
-                playerIndex     : i + 1,
-                originSkinId    : originSkinIdArray[i],
-                showSeparator   : i < length - 1,
-                panel           : this,
+                playerIndex   : i + 1,
+                originSkinId  : originSkinIdArray[i],
+                showSeparator : i < length - 1,
+                panel         : this,
             });
         }
 
@@ -204,7 +204,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 extraData.setOverridingSkinIdArray(arr ?? []);
             } else {
                 war.setSaveSlotExtraData(SpmWarSaveSlotExtraData.fromJson({
-                    overridingSkinIdArray   : arr ?? [],
+                    overridingSkinIdArray : arr ?? [],
                 }));
             }
             return;
@@ -220,8 +220,7 @@ interface DataForSkinRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class SkinRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSkinRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer> {
     private readonly _labelPlayerIndex! : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _imgSrcSkin!       : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgDstSkin!       : Ui_Interfaces_IUiImage.IUiImage;
@@ -244,12 +243,12 @@ class SkinRenderer
         const playerIndex   = openData.playerIndex;
         const panel         = openData.panel;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSkinIdPanel, {
-            availableSkinIdArray    : ForceSkins_Utils.getAllSkinIdArray(false),
-            currentSkinId           : panel.getTargetSkinId(playerIndex) ?? openData.originSkinId,
-            callback                : skinId => {
+            availableSkinIdArray : ForceSkins_Utils.getAllSkinIdArray(false),
+            currentSkinId        : panel.getTargetSkinId(playerIndex) ?? openData.originSkinId,
+            callback             : skinId => {
                 panel.setTargetSkinId(playerIndex, skinId);
                 this._updateView();
-            }
+            },
         });
     }
 

@@ -50,15 +50,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._groupTileBase,          callback: this._onTouchedGroupTileBase, },
-            { ui: this._groupTileDecoration,    callback: this._onTouchedGroupTileDecoration },
-            { ui: this._groupTileObject,        callback: this._onTouchedGroupTileObject, },
-            { ui: this._groupUnit,              callback: this._onTouchedGroupUnit },
-            { ui: this._groupShowAllLocation,   callback: this._onTouchedGroupShowAllLocation },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._groupTileBase,          callback : this._onTouchedGroupTileBase },
+            { ui : this._groupTileDecoration,    callback : this._onTouchedGroupTileDecoration },
+            { ui : this._groupTileObject,        callback : this._onTouchedGroupTileObject },
+            { ui : this._groupUnit,              callback : this._onTouchedGroupUnit },
+            { ui : this._groupShowAllLocation,   callback : this._onTouchedGroupShowAllLocation },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -203,9 +203,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war       = this._getWar();
         for (let locationId = Locations_Constants.MinId; locationId <= Locations_Constants.MaxId; ++locationId) {
             dataArray.push({
-                war         : war,
-                locationId  : locationId,
-                panel       : this,
+                war        : war,
+                locationId : locationId,
+                panel      : this,
             });
         }
         await this._listLocation.bindData(dataArray);

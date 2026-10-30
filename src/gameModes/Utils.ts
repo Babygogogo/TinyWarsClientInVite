@@ -81,19 +81,35 @@ export function getEnum(warType: WarTypes_Constants.WarTypeId): GameModes_Consta
 export function getEnumArray(ruleAvailability: AuxiliaryTypes_AuxiliaryTypes.Undefinable<RuleAvailability>): GameModes_Constants.ModeId[] {
     const arr: GameModes_Constants.ModeId[] = [];
     if (ruleAvailability) {
-        if (ruleAvailability.getCanCcw()) { arr.push(GameModes_Constants.ModeId.Coop); }
-        if (ruleAvailability.getCanMcw()) { arr.push(GameModes_Constants.ModeId.Versus); }
-        if (ruleAvailability.getCanMrw()) { arr.push(GameModes_Constants.ModeId.RankedMatch); }
-        if (ruleAvailability.getCanSrw()) { arr.push(GameModes_Constants.ModeId.WarRoom); }
+        if (ruleAvailability.getCanCcw()) {
+            arr.push(GameModes_Constants.ModeId.Coop); 
+        }
+        if (ruleAvailability.getCanMcw()) {
+            arr.push(GameModes_Constants.ModeId.Versus); 
+        }
+        if (ruleAvailability.getCanMrw()) {
+            arr.push(GameModes_Constants.ModeId.RankedMatch); 
+        }
+        if (ruleAvailability.getCanSrw()) {
+            arr.push(GameModes_Constants.ModeId.WarRoom); 
+        }
     }
     return arr;
 }
 export function getRuleAvailability(enumArray: number[]): RuleAvailability {
     const enumSet       = new Set(enumArray);
     const availability  = new RuleAvailability();
-    if (enumSet.has(GameModes_Constants.ModeId.Coop))         { availability.setCanCcw(true); }
-    if (enumSet.has(GameModes_Constants.ModeId.Versus))       { availability.setCanMcw(true); }
-    if (enumSet.has(GameModes_Constants.ModeId.RankedMatch))  { availability.setCanMrw(true); }
-    if (enumSet.has(GameModes_Constants.ModeId.WarRoom))      { availability.setCanSrw(true); }
+    if (enumSet.has(GameModes_Constants.ModeId.Coop))         {
+        availability.setCanCcw(true); 
+    }
+    if (enumSet.has(GameModes_Constants.ModeId.Versus))       {
+        availability.setCanMcw(true); 
+    }
+    if (enumSet.has(GameModes_Constants.ModeId.RankedMatch))  {
+        availability.setCanMrw(true); 
+    }
+    if (enumSet.has(GameModes_Constants.ModeId.WarRoom))      {
+        availability.setCanSrw(true); 
+    }
     return availability;
 }

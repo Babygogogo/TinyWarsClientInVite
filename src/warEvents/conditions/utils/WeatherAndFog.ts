@@ -25,7 +25,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (weatherTypeArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0224,
-                weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
+                weatherTypeArray.map(v => Lang_Utils.getWeatherName(v, gameConfig)).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
             )}`);
         }
     }
@@ -42,7 +42,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 
     return [
         Lang_Utils.getText(Lang_Constants.TextType.A0948),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecWeatherAndFog, war: BaseWar_Interface_IBwWar.IBwWar): string | null {

@@ -41,11 +41,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -114,9 +114,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     ++Helpers_Misc.getExisted(dictForTileBases.get(tileBaseType)).count;
                 } else {
                     dictForTileBases.set(tileBaseType, {
-                        baseType    : tileBaseType,
-                        objectType  : null,
-                        count       : 1,
+                        baseType   : tileBaseType,
+                        objectType : null,
+                        count      : 1,
                         tileType,
                         playerIndex,
                         gameConfig,
@@ -127,9 +127,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     ++Helpers_Misc.getExisted(dictForTileObjects.get(tileObjectType)).count;
                 } else {
                     dictForTileObjects.set(tileObjectType, {
-                        baseType    : null,
-                        objectType  : tileObjectType,
-                        count       : 1,
+                        baseType   : null,
+                        objectType : tileObjectType,
+                        count      : 1,
                         tileType,
                         playerIndex,
                         gameConfig,
@@ -214,7 +214,7 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
         ]);
 
         const tileView      = this._tileView;
@@ -236,15 +236,15 @@ class TileRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
         this._labelNum.setText(`${openData.count}`);
         this._tileView.init({
-            tileBaseType            : openData.baseType,
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : openData.objectType,
-            tileObjectShapeId       : 0,
-            skinId                  : openData.playerIndex,
-            overridingSkinId        : undefined,
-            gameConfig              : openData.gameConfig,
+            tileBaseType          : openData.baseType,
+            tileBaseShapeId       : 0,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectType        : openData.objectType,
+            tileObjectShapeId     : 0,
+            skinId                : openData.playerIndex,
+            overridingSkinId      : undefined,
+            gameConfig            : openData.gameConfig,
         });
         this._tileView.updateView();
     }
@@ -284,7 +284,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const gcData    = war.getGcData();
         const unit      = new Units_Unit.Unit();
         unit.init(Units_Utils_Serialization.createDefault({
-            gridIndex   : { x: 0, y: 0 },
+            gridIndex   : { x : 0, y : 0 },
             unitId      : 0,
             unitTypeId  : dataForDrawUnit.unitType,
             playerIndex : dataForDrawUnit.playerIndex,

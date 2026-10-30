@@ -42,14 +42,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnDelete1,         callback: this._onTouchedBtnDelete1 },
-            { ui: this._btnDelete2,         callback: this._onTouchedBtnDelete2 },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnDelete1,         callback : this._onTouchedBtnDelete1 },
+            { ui : this._btnDelete2,         callback : this._onTouchedBtnDelete2 },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel();
@@ -102,10 +102,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const textArray : LanguageText[] = [];
         if (text1) {
-            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getCurrentLanguageType(), text: text1 }));
+            textArray.push(LanguageText.fromJson({ languageType : Lang_Utils.getCurrentLanguageType(), text : text1 }));
         }
         if (text2) {
-            textArray.push(LanguageText.fromJson({ languageType: Lang_Utils.getSecondaryLanguageType(), text: text2 }));
+            textArray.push(LanguageText.fromJson({ languageType : Lang_Utils.getSecondaryLanguageType(), text : text2 }));
         }
 
         const maxLength = openData.maxTextLength;
@@ -129,8 +129,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const textArray = openData.currentTextArray;
         this._btnHelp.setIsVisible(!!openData.getHelpText);
-        this._input1.setInputText(Lang_Utils.getLanguageText({ textArray: textArray, languageType: Lang_Utils.getCurrentLanguageType(), useAlternate: false }) ?? ``);
-        this._input2.setInputText(Lang_Utils.getLanguageText({ textArray: textArray, languageType: Lang_Utils.getSecondaryLanguageType(), useAlternate: false }) ?? ``);
+        this._input1.setInputText(Lang_Utils.getLanguageText({ textArray : textArray, languageType : Lang_Utils.getCurrentLanguageType(), useAlternate : false }) ?? ``);
+        this._input2.setInputText(Lang_Utils.getLanguageText({ textArray : textArray, languageType : Lang_Utils.getSecondaryLanguageType(), useAlternate : false }) ?? ``);
     }
 
     private _updateComponentsForLanguage(): void {

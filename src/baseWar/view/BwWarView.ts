@@ -36,22 +36,28 @@ type Padding = {
     bottom  : number;
     top     : number;
 };
-// eslint-disable-next-line no-shadow
+ 
 const enum PaddingType {
     Default,
     Replay,
     MapEditor,
 }
 const PADDINGS = new Map<PaddingType, Padding>([
-    [PaddingType.Default,   { left: 150,    right: 150,     top: 120,   bottom: 20 }],
-    [PaddingType.MapEditor, { left: 90,     right: 90,      top: 120,   bottom: 120 }],
-    [PaddingType.Replay,    { left: 150,    right: 150,     top: 60,    bottom: 20 }],
+    [PaddingType.Default,   {
+        left : 150,    right : 150,     top : 120,   bottom : 20, 
+    }],
+    [PaddingType.MapEditor, {
+        left : 90,     right : 90,      top : 120,   bottom : 120, 
+    }],
+    [PaddingType.Replay,    {
+        left : 150,    right : 150,     top : 60,    bottom : 20, 
+    }],
 ]);
 
 export class BwWarView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwWarView.IBwWarView {
     private _fieldContainer         = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
-    private _weatherContainer       = new Ui_Components_UiContainer.UiContainer;
-    private _labelPersistentText    = new Ui_Components_UiLabel.UiLabel;
+    private _weatherContainer       = new Ui_Components_UiContainer.UiContainer();
+    private _labelPersistentText    = new Ui_Components_UiLabel.UiLabel();
 
     private _isShowingVibration = false;
     private _vibrationMaxOffset = 4;
@@ -60,22 +66,22 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     private _war? : BaseWar_Interface_IBwWar.IBwWar;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-        { type: Notifications_TypeId.TypeId.BwFieldZoomedByTouch,    callback: this._onNotifyBwFieldZoomedByTouch },
-        { type: Notifications_TypeId.TypeId.BwFieldDragged,          callback: this._onNotifyBwFieldDragged },
+        { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+        { type : Notifications_TypeId.TypeId.BwFieldZoomedByTouch,    callback : this._onNotifyBwFieldZoomedByTouch },
+        { type : Notifications_TypeId.TypeId.BwFieldDragged,          callback : this._onNotifyBwFieldDragged },
     ];
     private _uiListeners: AuxiliaryTypes_AuxiliaryTypes.UiListener[] = [
-        { ui: this,     callback: this._onEnterFrame,   eventType: Egret_Egret.Event.ENTER_FRAME },
+        { ui : this,     callback : this._onEnterFrame,   eventType : Egret_Egret.Event.ENTER_FRAME },
     ];
 
     public constructor() {
         super();
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         {
@@ -98,7 +104,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
             labelPersistentText.setY(60);
             labelPersistentText.setHorizontalAlign(Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center);
             labelPersistentText.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign: { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
             });
             this.addUiChild(labelPersistentText);
         }
@@ -113,7 +119,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         fieldContainer.removeAllContents();
         fieldContainer.setContentSize(
             mapSize.getWidth() * getGridWidth(),
-            mapSize.getHeight() * getGridHeight()
+            mapSize.getHeight() * getGridHeight(),
         );
         fieldContainer.addContent(war.getField().getView());
         fieldContainer.setContentScale(0, true);
@@ -155,21 +161,21 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
         const stageHeight       = stage.stageHeight;
         const gridX             = gridIndex.getX();
         const gridY             = gridIndex.getY();
-        const currPoint         = container.getContentsContainerLocalToGlobal({ x: (gridX + 0.5) * getGridWidth(),   y: (gridY + 0.5) * getGridHeight() });
-        const topLeftPoint      = container.getContentsContainerLocalToGlobal({ x: gridX * getGridWidth(),           y: gridY * getGridHeight() });
-        const bottomRightPoint  = container.getContentsContainerLocalToGlobal({ x: (gridX + 1) * getGridWidth(),     y: (gridY + 1) * getGridHeight() });
+        const currPoint         = container.getContentsContainerLocalToGlobal({ x : (gridX + 0.5) * getGridWidth(),   y : (gridY + 0.5) * getGridHeight() });
+        const topLeftPoint      = container.getContentsContainerLocalToGlobal({ x : gridX * getGridWidth(),           y : gridY * getGridHeight() });
+        const bottomRightPoint  = container.getContentsContainerLocalToGlobal({ x : (gridX + 1) * getGridWidth(),     y : (gridY + 1) * getGridHeight() });
         const currX             = currPoint.x;
         const currY             = currPoint.y;
         // const padding           = this._padding;
         const newX              = Numbers_Utils.getValueInRange({
-            minValue    : CENTRAL_PADDING + currX - topLeftPoint.x,
-            maxValue    : stageWidth - CENTRAL_PADDING + currX - bottomRightPoint.x,
-            rawValue    : currX,
+            minValue : CENTRAL_PADDING + currX - topLeftPoint.x,
+            maxValue : stageWidth - CENTRAL_PADDING + currX - bottomRightPoint.x,
+            rawValue : currX,
         });
         const newY              = Numbers_Utils.getValueInRange({
-            minValue    : CENTRAL_PADDING + currY - topLeftPoint.y,
-            maxValue    : stageHeight - CENTRAL_PADDING + currY - bottomRightPoint.y,
-            rawValue    : currY,
+            minValue : CENTRAL_PADDING + currY - topLeftPoint.y,
+            maxValue : stageHeight - CENTRAL_PADDING + currY - bottomRightPoint.y,
+            rawValue : currY,
         });
         const newPoint  = this._getRevisedContentPointForMoveGrid(gridIndex, newX, newY);
         container.tweenContentToPoint(newPoint.x, newPoint.y, false);
@@ -187,13 +193,13 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
     private _getRevisedContentPointForMoveGrid(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, x: number, y: number): AuxiliaryTypes_AuxiliaryTypes.Point {
         const container = this._fieldContainer;
         const point1    = container.getContentsContainerLocalToGlobal({
-            x: (gridIndex.getX() + 0.5) * getGridWidth(),
-            y: (gridIndex.getY() + 0.5) * getGridHeight(),
+            x : (gridIndex.getX() + 0.5) * getGridWidth(),
+            y : (gridIndex.getY() + 0.5) * getGridHeight(),
         });
-        const point2    = container.getContentsContainerLocalToGlobal({ x: 0, y: 0 });
+        const point2    = container.getContentsContainerLocalToGlobal({ x : 0, y : 0 });
         return {
-            x   : container.getRevisedContentX(- point1.x + point2.x + x),
-            y   : container.getRevisedContentY(- point1.y + point2.y + y),
+            x : container.getRevisedContentX(- point1.x + point2.x + x),
+            y : container.getRevisedContentY(- point1.y + point2.y + y),
         };
     }
 
@@ -225,8 +231,8 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
             const offsetX   = Math.random() * maxOffset * (Math.random() > 0.5 ? 1 : -1);
             const offsetY   = Math.random() * maxOffset * (Math.random() > 0.5 ? 1 : -1);
             this._fieldContainer.checkAndInitSizerInfo().addSizerOptions({
-                verticalAlign   : { offset  : offsetX },
-                horizontalAlign : { offset  : offsetY },
+                verticalAlign   : { offset : offsetX },
+                horizontalAlign : { offset : offsetY },
             });
         }
     }
@@ -245,7 +251,7 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
             const action = warEventManager.getWarEventAction(actionId).getWeaPersistentShowText();
             if (action) {
                 textArray.push(war.getWarEventManager().handleEscapeText(
-                    Lang_Utils.getLanguageText({ textArray: action.getTextArray() }) ?? Lang_Constants.UndefinedError,
+                    Lang_Utils.getLanguageText({ textArray : action.getTextArray() }) ?? Lang_Constants.UndefinedError,
                 ));
             }
         }
@@ -279,10 +285,10 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
 
 function resetContainer(container: Ui_Interfaces_IUiComponent.IUiComponent): void {
     container.checkAndInitSizerInfo().setSizerOptions({
-        verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-        horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-        width           : { percentage  : 100 },
-        height          : { percentage  : 100 },
+        verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+        horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+        width           : { percentage : 100 },
+        height          : { percentage : 100 },
     });
 }
 

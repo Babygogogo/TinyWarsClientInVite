@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum UiCommonEventType {
     AddedToParent              = "added",               // egret.Event.ADDED
     AddedToStage               = "addedToStage",        // egret.Event.ADDED_TO_STAGE

@@ -47,7 +47,7 @@ export class RequestingUnitUseCoActiveSkill implements ActionPlanners_States_ISt
         this.doApplyOnChooseAction(
             actionPlanner,
             Helpers_Misc.getExisted(actionPlanner.getCoActiveSkillTypeId()),
-            actionPlanner.getCoActiveSkillTargetGridIndexArray()
+            actionPlanner.getCoActiveSkillTargetGridIndexArray(),
         );
     }
 
@@ -63,14 +63,14 @@ export class RequestingUnitUseCoActiveSkill implements ActionPlanners_States_ISt
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId                 : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitUseCoSkill            : {
-                    path                    : {
-                        nodes               : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId      : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitUseCoSkill : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId            : actionPlanner.getUnitIdForFocusUnitLoaded(),
-                    skillType               : coSkillTypeId,
-                    targetGridIndexArray    : targetGridIndexArray?.map(v => v.toProto().toJson()) ?? [],
+                    launchUnitId         : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    skillType            : coSkillTypeId,
+                    targetGridIndexArray : targetGridIndexArray?.map(v => v.toProto().toJson()) ?? [],
                 },
             }));
 
@@ -82,11 +82,11 @@ export class RequestingUnitUseCoActiveSkill implements ActionPlanners_States_ISt
             actionPlanner.updateView();
 
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitUseCoActiveSkill({
-                war                     : war,
-                skillType               : coSkillTypeId,
-                path                    : actionPlanner.generateProtoMovePath(),
-                launchUnitId            : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
-                targetGridIndexArray    : targetGridIndexArray,
+                war                  : war,
+                skillType            : coSkillTypeId,
+                path                 : actionPlanner.generateProtoMovePath(),
+                launchUnitId         : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
+                targetGridIndexArray : targetGridIndexArray,
             });
         }
     }

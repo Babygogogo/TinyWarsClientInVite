@@ -22,27 +22,27 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap    : () => AuxiliaryTypes_GridIndex.GridIndex[];
 }): { lower: number; upper: number } {
     if (cfg == null) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
     {
         const unitCategoryId = cfg.getUnitCategoryId();
         if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return { lower: 0, upper: 0 };
+            return { lower : 0, upper : 0 };
         }
     }
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
-            coZoneRadius                : coZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : coZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))
     ) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
-    return { lower: cfg.getLowerOffset(), upper: cfg.getUpperOffset() };
+    return { lower : cfg.getLowerOffset(), upper : cfg.getUpperOffset() };
 }
 export function getTotalOffsetForDamageCalculatorPanel({
     cfg,
@@ -54,15 +54,15 @@ export function getTotalOffsetForDamageCalculatorPanel({
     unitTypeId                  : number;
 }): { lower: number; upper: number } {
     if (cfg == null) {
-        return { lower: 0, upper: 0 };
+        return { lower : 0, upper : 0 };
     }
 
     {
         const unitCategoryId = cfg.getUnitCategoryId();
         if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
-            return { lower: 0, upper: 0 };
+            return { lower : 0, upper : 0 };
         }
     }
 
-    return { lower: cfg.getLowerOffset(), upper: cfg.getUpperOffset() };
+    return { lower : cfg.getLowerOffset(), upper : cfg.getUpperOffset() };
 }

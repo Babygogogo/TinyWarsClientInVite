@@ -1,6 +1,4 @@
-import {
-    Egret_Egret,
-} from "../internal.ts";
+import { Egret_Egret } from "../internal.ts";
 
 export function addLifecycleListener(plugin: (context: LifecycleContext) => void): void {
     const context: LifecycleContext = new LifecycleContext();

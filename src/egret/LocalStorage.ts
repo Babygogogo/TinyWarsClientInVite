@@ -1,6 +1,4 @@
-import {
-    Egret_Egret,
-} from "../internal.ts";
+import { Egret_Egret } from "../internal.ts";
 
 export function getItem(key: string): string | null {
     return window.localStorage.getItem(key);

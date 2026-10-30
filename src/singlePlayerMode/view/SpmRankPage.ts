@@ -32,8 +32,7 @@ export type OpenData = {
 } | null;
 export class Page
     extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData>
-{
+    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
     private readonly _listRule! : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRuleRenderer>;
 
     public constructor() {
@@ -44,10 +43,10 @@ export class Page
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
         this._listRule.setItemRendererClass(RuleRenderer);
     }
@@ -105,7 +104,7 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listStd.setItemRendererClass(UserRenderer);
@@ -163,14 +162,14 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         for (const rankData of (await SinglePlayerMode_Model_SpmModel.getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray() ?? []) {
             const score = Helpers_Misc.getExisted(rankData.getScore());
             dataArray.push({
-                index       : 0,
-                rankId      : Helpers_Misc.getExisted(rankData.getRankId()),
-                rank        : 0,
-                userId      : Helpers_Misc.getExisted(rankData.getUserId()),
+                index     : 0,
+                rankId    : Helpers_Misc.getExisted(rankData.getRankId()),
+                rank      : 0,
+                userId    : Helpers_Misc.getExisted(rankData.getUserId()),
                 score,
-                turnIndex   : Helpers_Misc.getExisted(rankData.getTurnIndex()),
-                canReplay   : (hasPrivilege) || (selfScore >= score),
-                isLast      : false,
+                turnIndex : Helpers_Misc.getExisted(rankData.getTurnIndex()),
+                canReplay : (hasPrivilege) || (selfScore >= score),
+                isLast    : false,
             });
         }
 
@@ -232,8 +231,8 @@ class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgBg,              callback: this._onTouchedImgBg },
-            { ui: this._groupTurnIndex,     callback: this._onTouchedGroupTurnIndex },
+            { ui : this._imgBg,              callback : this._onTouchedImgBg },
+            { ui : this._groupTurnIndex,     callback : this._onTouchedGroupTurnIndex },
         ]);
         this._imgBg.setIsTouchEnabled(true);
     }
@@ -250,7 +249,7 @@ class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: openData.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : openData.userId });
     }
     private async _onTouchedGroupTurnIndex(): Promise<void> {
         const openData = this.getOpenData();
@@ -261,7 +260,7 @@ class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         if (!openData.canReplay) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: openData.userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : openData.userId });
         } else {
             const replayData = await SinglePlayerMode_Model_SpmModel.getReplayData(openData.rankId);
             (replayData) && (Helpers_GameFlow.gotoReplayWar(replayData, -1));

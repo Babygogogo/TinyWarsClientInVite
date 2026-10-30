@@ -96,10 +96,10 @@ function getAttackBonusMultiplier({ war, attacker, attackerGridIndex, isCounter,
     const amountFromOpa             = war.getWarEventManager().getOpaAttackPowerModifier(attacker, attackerGridIndex);
     const amountFromWeather         = attacker.getAttackModifierByWeather(attackerGridIndex, observerTeamIndexSet, useDamagePreviewSettings);
     const amountFromCo              = attacker.getAttackModifierByCo({
-        selfGridIndex               : attackerGridIndex,
-        isCounter                   : isCounter,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        selfGridIndex            : attackerGridIndex,
+        isCounter                : isCounter,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
 
     const totalAmount = amountFromCommonSettings
@@ -129,10 +129,10 @@ function getDefenseBonusMultiplierForUnit({ war, attacker, attackerGridIndex, ta
     const amountFromOpa         = war.getWarEventManager().getOpaDefenseModifier(target, targetGridIndex);
     const amountFromGlobalTiles = tileMap.getTotalGlobalDefenseBonus(targetPlayerIndex, observerTeamIndexSet, useDamagePreviewSettings);
     const amountFromCo          = target.getDefenseModifierByCo({
-        selfGridIndex               : targetGridIndex,
-        attackerUnitTypeId          : attacker.getUnitType(),
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        selfGridIndex            : targetGridIndex,
+        attackerUnitTypeId       : attacker.getUnitType(),
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
 
     const attackerOffensePierce = attacker.getEffectiveOffensePierce(attackerGridIndex);
@@ -143,7 +143,7 @@ function getDefenseBonusMultiplierForUnit({ war, attacker, attackerGridIndex, ta
         amountFromCo            * (100 - attackerOffensePierce[2]) / 100 +
         amountFromGlobalTiles   * (100 - attackerOffensePierce[3]) / 100 +
         amountFromRule          * (100 - attackerOffensePierce[4]) / 100 +
-        amountFromOpa           * (100 - attackerOffensePierce[5]) / 100
+        amountFromOpa           * (100 - attackerOffensePierce[5]) / 100,
     );
 }
 function getDefenseBonusMultiplierForTile(): number {
@@ -174,7 +174,7 @@ function checkCanAttackTile({ unit1, movePath1, maxAttackRange1, canAttackAfterM
         gridIndex1      : unit1.getGridIndex(),
         gridIndex2      : tile2.getGridIndex(),
         minAttackRange1 : unit1.getMinAttackRange(),
-        maxAttackRange1 : maxAttackRange1
+        maxAttackRange1 : maxAttackRange1,
     })) {
         return false;
     }
@@ -241,35 +241,35 @@ function getAttackDamageForAttackUnit({ war, unit1, unit2, isCounter, isEstimate
     const gridIndex1        = unit1.getGridIndex();
     const gridIndex2        = unit2.getGridIndex();
     const attackBonusMultiplier     = getAttackBonusMultiplier({
-        war                         : war,
-        attacker                    : unit1,
-        attackerGridIndex           : gridIndex1,
-        targetUnit                  : unit2,
-        targetGridIndex             : gridIndex2,
-        isCounter                   : isCounter,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        war                      : war,
+        attacker                 : unit1,
+        attackerGridIndex        : gridIndex1,
+        targetUnit               : unit2,
+        targetGridIndex          : gridIndex2,
+        isCounter                : isCounter,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
     const defenseBonusMultiplier    = getDefenseBonusMultiplierForUnit({
-        war                         : war,
-        attacker                    : unit1,
-        attackerGridIndex           : gridIndex1,
-        target                      : unit2,
-        targetGridIndex             : gridIndex2,
-        isCounter                   : isCounter,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        war                      : war,
+        attacker                 : unit1,
+        attackerGridIndex        : gridIndex1,
+        target                   : unit2,
+        targetGridIndex          : gridIndex2,
+        isCounter                : isCounter,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
     const luckValue                 = unit2.checkIsArmorAffectByLuck()
         ? getLuckValue(war, unit1, gridIndex1, isEstimated)
         : 0;
     return Numbers_Utils.getValueInRange({
-        minValue    : 0,
-        maxValue    : Numbers_Constants.MaxInt32,
-        rawValue    : Math.floor(0.000001 +
+        minValue : 0,
+        maxValue : Numbers_Constants.MaxInt32,
+        rawValue : Math.floor(0.000001 +
             (baseAttackDamage * attackBonusMultiplier + luckValue)      *
             (Units_Utils_Common.getNormalizedHp(unitHp1) / 10) *
-            defenseBonusMultiplier
+            defenseBonusMultiplier,
         ),
     });
 }
@@ -291,26 +291,26 @@ function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimate
     const gridIndex1            = unit1.getGridIndex();
     const gridIndex2            = tile2.getGridIndex();
     const attackBonusMultiplier = getAttackBonusMultiplier({
-        war                         : war,
-        attacker                    : unit1,
-        attackerGridIndex           : gridIndex1,
-        targetUnit                  : null,
-        targetGridIndex             : gridIndex2,
-        isCounter                   : isCounter,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        war                      : war,
+        attacker                 : unit1,
+        attackerGridIndex        : gridIndex1,
+        targetUnit               : null,
+        targetGridIndex          : gridIndex2,
+        isCounter                : isCounter,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
     const defenseBonusMultiplier    = getDefenseBonusMultiplierForTile();
     const luckValue                 = tile2.checkIsArmorAffectByLuck()
         ? getLuckValue(war, unit1, gridIndex1, isEstimated)
         : 0;
     return Numbers_Utils.getValueInRange({
-        minValue    : 0,
-        maxValue    : Numbers_Constants.MaxInt32,
-        rawValue    : Math.floor(0.000001 +
+        minValue : 0,
+        maxValue : Numbers_Constants.MaxInt32,
+        rawValue : Math.floor(0.000001 +
             (baseAttackDamage * attackBonusMultiplier + luckValue)      *
             (Units_Utils_Common.getNormalizedHp(unitHp1) / 10) *
-            defenseBonusMultiplier
+            defenseBonusMultiplier,
         ),
     });
 }
@@ -345,30 +345,30 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
     const unit2       = Helpers_Misc.getExisted(unitMap.getUnitOnMap(gridIndex2));
     const unitId2     = unit2.getUnitId();
     if (!checkCanAttackUnit({
-        unit1                   : unit1,
-        movePath1               : movePath1,
-        maxAttackRange1         : maxAttackRange1,
-        canAttackAfterMoving1   : canAttackAfterMoving1,
-        unit2                   : unit2,
-        isCounter               : false,
+        unit1                 : unit1,
+        movePath1             : movePath1,
+        maxAttackRange1       : maxAttackRange1,
+        canAttackAfterMoving1 : canAttackAfterMoving1,
+        unit2                 : unit2,
+        isCounter             : false,
     })) {
         return;
     }
 
     const attackDamage = getAttackDamageForAttackUnit({
-        war                         : war,
-        unit1                       : unit1,
-        unit2                       : unit2,
-        isEstimated                 : isEstimated,
-        isCounter                   : false,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        war                      : war,
+        unit1                    : unit1,
+        unit2                    : unit2,
+        isEstimated              : isEstimated,
+        isCounter                : false,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
     battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
         attackerUnitId      : unitId1,
         targetUnitId        : unitId2,
         damage              : attackDamage,
-        targetTileGridIndex : null
+        targetTileGridIndex : null,
     }));
     handleAttackUnit({
         battleInfo  : battleInfo,
@@ -376,34 +376,34 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
         unit1       : unit1,
         unit2       : unit2,
         damage      : attackDamage,
-        isEstimated : isEstimated
+        isEstimated : isEstimated,
     });
 
     if ((gridIndex1.getDistance(gridIndex2) <= 1)   &&
         (unit2.getCurrentHp() > 0)                  &&
         (checkCanAttackUnit({
-            unit1                   : unit2,
-            movePath1               : null,
-            maxAttackRange1         : maxAttackRange2,
-            canAttackAfterMoving1   : canAttackAfterMoving2,
-            unit2                   : unit1,
-            isCounter               : true,
+            unit1                 : unit2,
+            movePath1             : null,
+            maxAttackRange1       : maxAttackRange2,
+            canAttackAfterMoving1 : canAttackAfterMoving2,
+            unit2                 : unit1,
+            isCounter             : true,
         }))
     ) {
         const counterDamage = getAttackDamageForAttackUnit({
-            war                         : war,
-            unit1                       : unit2,
-            unit2                       : unit1,
-            isEstimated                 : isEstimated,
-            isCounter                   : true,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : useDamagePreviewSettings,
+            war                      : war,
+            unit1                    : unit2,
+            unit2                    : unit1,
+            isEstimated              : isEstimated,
+            isCounter                : true,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : useDamagePreviewSettings,
         });
         battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
             attackerUnitId      : unitId2,
             targetUnitId        : unitId1,
             damage              : counterDamage,
-            targetTileGridIndex : null
+            targetTileGridIndex : null,
         }));
         handleAttackUnit({
             battleInfo  : battleInfo,
@@ -411,7 +411,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
             unit1       : unit2,
             unit2       : unit1,
             damage      : counterDamage,
-            isEstimated : isEstimated
+            isEstimated : isEstimated,
         });
     }
 
@@ -455,68 +455,68 @@ function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }
     const isInCoZone1             = (unit1.getIsCoOnboard()) || (player1.checkIsInCoZone(unitGridIndex1, coGridIndexArray1));
     if ((!isEstimated) && (unitLostNormalizedHp2 != 0)) {
         const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({
-            war         : war,
-            gridIndex   : unitGridIndex2,
+            war       : war,
+            gridIndex : unitGridIndex2,
         });
         if (observerTeamIndexes != null) {
             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                unitType                    : unit2.getUnitType(),
-                dstPlayerIndex              : unit2.getPlayerIndex(),
-                normalizedHpGain            : 0,
-                normalizedHpLoss            : unitLostNormalizedHp2,
-                unitGain                    : 0,
-                unitLoss                    : 0,
-                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                unitType                   : unit2.getUnitType(),
+                dstPlayerIndex             : unit2.getPlayerIndex(),
+                normalizedHpGain           : 0,
+                normalizedHpLoss           : unitLostNormalizedHp2,
+                unitGain                   : 0,
+                unitLoss                   : 0,
+                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }
     handlePrimaryWeaponAmmoForAttackUnit({
-        battleInfo      : battleInfo,
-        isEstimated     : isEstimated,
-        unit1           : unit1,
-        targetUnit      : unit2
+        battleInfo  : battleInfo,
+        isEstimated : isEstimated,
+        unit1       : unit1,
+        targetUnit  : unit2,
     });
     handleHpForAttackUnit({
-        battleInfo      : battleInfo,
-        isEstimated     : isEstimated,
-        unit            : unit2,
-        unitNewHp       : unitNewHp2
+        battleInfo  : battleInfo,
+        isEstimated : isEstimated,
+        unit        : unit2,
+        unitNewHp   : unitNewHp2,
     });
     handlePromotionForAttackUnit({
-        battleInfo                  : battleInfo,
-        isEstimated                 : isEstimated,
-        player1                     : player1,
-        unit1                       : unit1,
-        targetLostNormalizedHp      : unitLostNormalizedHp2,
-        attackerCoGridIndexListOnMap: coGridIndexArray1,
-        isTargetDestroyed           : isUnitDestroyed2
+        battleInfo                   : battleInfo,
+        isEstimated                  : isEstimated,
+        player1                      : player1,
+        unit1                        : unit1,
+        targetLostNormalizedHp       : unitLostNormalizedHp2,
+        attackerCoGridIndexListOnMap : coGridIndexArray1,
+        isTargetDestroyed            : isUnitDestroyed2,
     });
     handleFundForAttackUnit({
-        battleInfo                  : battleInfo,
-        isEstimated                 : isEstimated,
-        attackerPlayer              : player1,
-        attackerUnit                : unit1,
-        targetUnit                  : unit2,
-        targetLostNormalizedHp      : unitLostNormalizedHp2,
-        isAttackerInAttackerCoZone  : isInCoZone1
+        battleInfo                 : battleInfo,
+        isEstimated                : isEstimated,
+        attackerPlayer             : player1,
+        attackerUnit               : unit1,
+        targetUnit                 : unit2,
+        targetLostNormalizedHp     : unitLostNormalizedHp2,
+        isAttackerInAttackerCoZone : isInCoZone1,
     });
     handleEnergyForAttackUnit({
-        battleInfo                  : battleInfo,
-        isEstimated                 : isEstimated,
-        war                         : war,
-        attackerPlayer              : player1,
-        targetPlayer                : player2,
-        targetLostNormalizedHp      : unitLostNormalizedHp2,
-        targetCfgEnergyValue        : unit2.getTemplateCfg().getEnergyPerNormalizedHp(),
-        isAttackerInAttackerCoZone  : isInCoZone1,
-        isTargetInTargetCoZone      : (unit2.getIsCoOnboard()) || (player2.checkIsInCoZone(unitGridIndex2, coGridIndexArray2))
+        battleInfo                 : battleInfo,
+        isEstimated                : isEstimated,
+        war                        : war,
+        attackerPlayer             : player1,
+        targetPlayer               : player2,
+        targetLostNormalizedHp     : unitLostNormalizedHp2,
+        targetCfgEnergyValue       : unit2.getTemplateCfg().getEnergyPerNormalizedHp(),
+        isAttackerInAttackerCoZone : isInCoZone1,
+        isTargetInTargetCoZone     : (unit2.getIsCoOnboard()) || (player2.checkIsInCoZone(unitGridIndex2, coGridIndexArray2)),
     });
     handleDestructionForAttackUnit({
         battleInfo      : battleInfo,
         war             : war,
         unit            : unit2,
         isUnitDestroyed : isUnitDestroyed2,
-        isEstimated     : isEstimated
+        isEstimated     : isEstimated,
     });
 
     if (isUnitDestroyed2) {
@@ -601,15 +601,15 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
         let offset                      = 0;
         for (const skillId of player1.getCoCurrentSkills()) {
             offset += CoSkills_Utils_InstantMisc_SelfUnitPromotionAfterBattle.getTotalOffset({
-                cfg                         : gcData.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitPromotionAfterBattle(),
-                gameConfig                  : gcData,
-                unitTypeId                  : attackerUnitTypeId,
-                coZoneRadius                : attackerCoZoneRadius,
-                gridIndex                   : attackerGridIndex,
-                isCoOnboard                 : isAttackerCoOnBoard,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-                targetLostNormalizedHp      : targetLostNormalizedHp,
-                isTargetKilled              : isTargetDestroyed,
+                cfg                      : gcData.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitPromotionAfterBattle(),
+                gameConfig               : gcData,
+                unitTypeId               : attackerUnitTypeId,
+                coZoneRadius             : attackerCoZoneRadius,
+                gridIndex                : attackerGridIndex,
+                isCoOnboard              : isAttackerCoOnBoard,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                targetLostNormalizedHp   : targetLostNormalizedHp,
+                isTargetKilled           : isTargetDestroyed,
             });
         }
 
@@ -647,14 +647,14 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
     let addFund                 = 0;
     for (const skillId of attackerPlayer.getCoCurrentSkills()) {
         addFund += CoSkills_Utils_InstantMisc_SelfFundAfterBattle.getTotalOffset({
-            cfg                         : gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfFundAfterBattle(),
-            gameConfig                  : gameConfig,
-            selfUnitTypeId              : attackerUnitTypeId,
-            isSelfInCoZone              : isAttackerInAttackerCoZone,
-            enemyUnitTypeId             : targetUnitTypeId,
-            enemyFinalProductionCost    : targetUnitCost,
-            enemyNormalizedLostHp       : targetLostNormalizedHp,
-            enemyNormalizedMaxHp        : targetNormalizedMaxHp,
+            cfg                      : gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfFundAfterBattle(),
+            gameConfig               : gameConfig,
+            selfUnitTypeId           : attackerUnitTypeId,
+            isSelfInCoZone           : isAttackerInAttackerCoZone,
+            enemyUnitTypeId          : targetUnitTypeId,
+            enemyFinalProductionCost : targetUnitCost,
+            enemyNormalizedLostHp    : targetLostNormalizedHp,
+            enemyNormalizedMaxHp     : targetNormalizedMaxHp,
         });
     }
 
@@ -669,13 +669,13 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
         }
 
         attackerPlayer.setFund(Numbers_Utils.getValueInRange({
-            maxValue    : Players_Constants.Fund.MaxFund,
-            minValue    : Players_Constants.Fund.MinFund,
-            rawValue    : attackerPlayer.getFund() + addFund
+            maxValue : Players_Constants.Fund.MaxFund,
+            minValue : Players_Constants.Fund.MinFund,
+            rawValue : attackerPlayer.getFund() + addFund,
         }));
     }
 }
-function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlayer, targetPlayer, targetLostNormalizedHp, targetCfgEnergyValue, isAttackerInAttackerCoZone, isTargetInTargetCoZone}: {
+function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlayer, targetPlayer, targetLostNormalizedHp, targetCfgEnergyValue, isAttackerInAttackerCoZone, isTargetInTargetCoZone }: {
     battleInfo                  : AuxiliaryTypes_BattleInfo.BattleInfo;
     isEstimated                 : boolean;
     war                         : BaseWar_Interface_IBwWar.IBwWar;
@@ -776,10 +776,10 @@ function handleDestructionForAttackUnit({ battleInfo, war, unit, isUnitDestroyed
 }): void {
     if (isUnitDestroyed) {
         Destructions_Utils.destroyUnitOnMapForWarDamageCalculator({
-            battleInfo          : battleInfo,
-            war                 : war,
-            gridIndex           : unit.getGridIndex(),
-            isEstimated         : isEstimated,
+            battleInfo  : battleInfo,
+            war         : war,
+            gridIndex   : unit.getGridIndex(),
+            isEstimated : isEstimated,
         });
     }
 }
@@ -810,37 +810,37 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
     const unit1       = Helpers_Misc.getExisted(unitMap.getUnit(gridIndex1, launchUnitId1));
     const tile2       = war.getTileMap().getTile(gridIndex2);
     if (!checkCanAttackTile({
-        unit1                   : unit1,
-        movePath1               : movePath1,
-        maxAttackRange1         : maxAttackRange1,
-        canAttackAfterMoving1   : canAttackAfterMoving1,
-        tile2                   : tile2,
+        unit1                 : unit1,
+        movePath1             : movePath1,
+        maxAttackRange1       : maxAttackRange1,
+        canAttackAfterMoving1 : canAttackAfterMoving1,
+        tile2                 : tile2,
     })) {
         return;
     }
 
     const attackDamage = getAttackDamageForAttackTile({
-        war                         : war,
-        unit1                       : unit1,
-        tile2                       : tile2,
-        isEstimated                 : isEstimated,
-        isCounter                   : false,
-        observerTeamIndexSet        : observerTeamIndexSet,
-        useDamagePreviewSettings    : useDamagePreviewSettings,
+        war                      : war,
+        unit1                    : unit1,
+        tile2                    : tile2,
+        isEstimated              : isEstimated,
+        isCounter                : false,
+        observerTeamIndexSet     : observerTeamIndexSet,
+        useDamagePreviewSettings : useDamagePreviewSettings,
     });
     battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
         attackerUnitId      : unit1.getUnitId(),
         targetUnitId        : null,
         targetTileGridIndex : gridIndex2.toProto().toJson(),
-        damage              : attackDamage
+        damage              : attackDamage,
     }));
     handleAttackTile({
-        battleInfo      : battleInfo,
-        war             : war,
-        unit1           : unit1,
-        tile2           : tile2,
-        damage          : attackDamage,
-        isEstimated     : isEstimated
+        battleInfo  : battleInfo,
+        war         : war,
+        unit1       : unit1,
+        tile2       : tile2,
+        damage      : attackDamage,
+        isEstimated : isEstimated,
     });
 
     for (const player of battleInfo.playersForDestroyedUnits) {
@@ -874,19 +874,19 @@ function handleAttackTile({ battleInfo, war, unit1, tile2, damage, isEstimated }
         battleInfo  : battleInfo,
         isEstimated : isEstimated,
         unit1       : unit1,
-        tile2       : tile2
+        tile2       : tile2,
     });
     handleHpForAttackTile({
         battleInfo  : battleInfo,
         isEstimated : isEstimated,
         tile2       : tile2,
-        tileNewHp2  : Math.max(0, tileOldHp2 - damage)
+        tileNewHp2  : Math.max(0, tileOldHp2 - damage),
     });
     handleDestructionForAttackTile({
         battleInfo  : battleInfo,
         isEstimated : isEstimated,
         war         : war,
-        tile2       : tile2
+        tile2       : tile2,
     });
 }
 function handlePrimaryWeaponAmmoForAttackTile({ battleInfo, isEstimated, unit1, tile2 }: {
@@ -1050,31 +1050,31 @@ export function getEstimatedBattleInfo({
     // 战斗
     if (isAttackUnit) {
         doRunBattleForAttackUnit({
-            battleInfo                  : battleInfo,
-            war                         : war,
-            movePath1                   : movePath1,
-            launchUnitId1               : launchUnitId1,
-            maxAttackRange1             : maxAttackRange1,
-            canAttackAfterMoving1       : canAttackAfterMoving1,
-            gridIndex2                  : gridIndex2,
-            maxAttackRange2             : maxAttackRange2,
-            canAttackAfterMoving2       : canAttackAfterMoving2,
-            isEstimated                 : true,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : useDamagePreviewSettings,
+            battleInfo               : battleInfo,
+            war                      : war,
+            movePath1                : movePath1,
+            launchUnitId1            : launchUnitId1,
+            maxAttackRange1          : maxAttackRange1,
+            canAttackAfterMoving1    : canAttackAfterMoving1,
+            gridIndex2               : gridIndex2,
+            maxAttackRange2          : maxAttackRange2,
+            canAttackAfterMoving2    : canAttackAfterMoving2,
+            isEstimated              : true,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : useDamagePreviewSettings,
         });
     } else {
         doRunBattleForAttackTile({
-            battleInfo                  : battleInfo,
-            war                         : war,
-            movePath1                   : movePath1,
-            launchUnitId1               : launchUnitId1,
-            maxAttackRange1             : maxAttackRange1,
-            canAttackAfterMoving1       : canAttackAfterMoving1,
-            gridIndex2                  : gridIndex2,
-            isEstimated                 : true,
-            observerTeamIndexSet        : observerTeamIndexSet,
-            useDamagePreviewSettings    : useDamagePreviewSettings,
+            battleInfo               : battleInfo,
+            war                      : war,
+            movePath1                : movePath1,
+            launchUnitId1            : launchUnitId1,
+            maxAttackRange1          : maxAttackRange1,
+            canAttackAfterMoving1    : canAttackAfterMoving1,
+            gridIndex2               : gridIndex2,
+            isEstimated              : true,
+            observerTeamIndexSet     : observerTeamIndexSet,
+            useDamagePreviewSettings : useDamagePreviewSettings,
         });
     }
 
@@ -1132,7 +1132,7 @@ export function runBattleForAttackUnit({
     canAttackAfterMoving1,
     gridIndex2,
     maxAttackRange2,
-    canAttackAfterMoving2
+    canAttackAfterMoving2,
 }: {
     war                     : BaseWar_Interface_IBwWar.IBwWar;
     movePath1               : AuxiliaryTypes_GridIndex.GridIndex[];
@@ -1145,18 +1145,18 @@ export function runBattleForAttackUnit({
 }): AuxiliaryTypes_BattleInfo.BattleInfo {
     const battleInfo = new AuxiliaryTypes_BattleInfo.BattleInfo();
     doRunBattleForAttackUnit({
-        battleInfo                  : battleInfo,
-        war                         : war,
-        movePath1                   : movePath1,
-        launchUnitId1               : launchUnitId1,
-        maxAttackRange1             : maxAttackRange1,
-        canAttackAfterMoving1       : canAttackAfterMoving1,
-        gridIndex2                  : gridIndex2,
-        maxAttackRange2             : maxAttackRange2,
-        canAttackAfterMoving2       : canAttackAfterMoving2,
-        isEstimated                 : false,
-        observerTeamIndexSet        : null,
-        useDamagePreviewSettings    : false,
+        battleInfo               : battleInfo,
+        war                      : war,
+        movePath1                : movePath1,
+        launchUnitId1            : launchUnitId1,
+        maxAttackRange1          : maxAttackRange1,
+        canAttackAfterMoving1    : canAttackAfterMoving1,
+        gridIndex2               : gridIndex2,
+        maxAttackRange2          : maxAttackRange2,
+        canAttackAfterMoving2    : canAttackAfterMoving2,
+        isEstimated              : false,
+        observerTeamIndexSet     : null,
+        useDamagePreviewSettings : false,
     });
 
     return battleInfo;
@@ -1172,7 +1172,7 @@ export function runBattleForAttackTile({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     maxAttackRange2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    canAttackAfterMoving2
+    canAttackAfterMoving2,
 }: {
     war                     : BaseWar_Interface_IBwWar.IBwWar;
     movePath1               : AuxiliaryTypes_GridIndex.GridIndex[];
@@ -1185,16 +1185,16 @@ export function runBattleForAttackTile({
 }): AuxiliaryTypes_BattleInfo.BattleInfo {
     const battleInfo = new AuxiliaryTypes_BattleInfo.BattleInfo();
     doRunBattleForAttackTile({
-        battleInfo                  : battleInfo,
-        war                         : war,
-        movePath1                   : movePath1,
-        launchUnitId1               : launchUnitId1,
-        maxAttackRange1             : maxAttackRange1,
-        canAttackAfterMoving1       : canAttackAfterMoving1,
-        gridIndex2                  : gridIndex2,
-        isEstimated                 : false,
-        observerTeamIndexSet        : null,
-        useDamagePreviewSettings    : false,
+        battleInfo               : battleInfo,
+        war                      : war,
+        movePath1                : movePath1,
+        launchUnitId1            : launchUnitId1,
+        maxAttackRange1          : maxAttackRange1,
+        canAttackAfterMoving1    : canAttackAfterMoving1,
+        gridIndex2               : gridIndex2,
+        isEstimated              : false,
+        observerTeamIndexSet     : null,
+        useDamagePreviewSettings : false,
     });
 
     return battleInfo;

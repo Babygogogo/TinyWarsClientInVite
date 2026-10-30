@@ -64,20 +64,20 @@ let _selfAccount                : string;
 let _selfPassword               : string | null = null;
 let _selfGuestUserId            : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
 const _userPublicInfoAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, UserPublicInfo>({
-    reqData                     : (userId: number) => Users_Proxy.reqUserGetPublicInfo(userId),
+    reqData : (userId: number) => Users_Proxy.reqUserGetPublicInfo(userId),
 });
 const _userBriefInfoAccessor    = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, UserBriefInfo>({
-    reqData                     : (userId: number) => Users_Proxy.reqUserGetBriefInfo(userId),
+    reqData : (userId: number) => Users_Proxy.reqUserGetBriefInfo(userId),
 });
 const _userOnlineStateAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypes_AuxiliaryTypes.UserOnlineState>({
-    reqData         : userId => Users_Proxy.reqUserGetOnlineState(userId),
-    dataExpireTime  : 5,
+    reqData        : userId => Users_Proxy.reqUserGetOnlineState(userId),
+    dataExpireTime : 5,
 });
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type: Notifications_TypeId.TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
-        { type: Notifications_TypeId.TypeId.MsgUserLogout,          callback: _onNotifyMsgUserLogout, },
+        { type : Notifications_TypeId.TypeId.NetworkDisconnected,    callback : _onNotifyNetworkDisconnected },
+        { type : Notifications_TypeId.TypeId.MsgUserLogout,          callback : _onNotifyMsgUserLogout },
     ], null);
 }
 
@@ -232,7 +232,7 @@ export function getMapRating(normalMapId: number): AuxiliaryTypes_AuxiliaryTypes
 export function checkCanRegisterAutoTourney(): boolean {
     return getSelfUserComplexInfo()?.getUserRankInfo()?.getMrwArray()?.find(v =>
         ((v.getWarType() === WarTypes_Constants.WarTypeId.MrwFog) || (v.getWarType() === WarTypes_Constants.WarTypeId.MrwStd))  &&
-        (v.getPlayersCountUnneutral() === AutoTourneys_Constants.Common.PlayersCountUnneutral)
+        (v.getPlayersCountUnneutral() === AutoTourneys_Constants.Common.PlayersCountUnneutral),
     )?.getLastWarEndTime() != null;
 }
 
@@ -293,13 +293,13 @@ export function setSelfSettingsOpacitySettings(opacitySettings: UserOpacitySetti
 export function reqTickSelfSettingsUnitOpacity(): void {
     const unitOpacity = getSelfSettingsOpacitySettings()?.getUnitOpacity();
     if ((unitOpacity === 100) || (unitOpacity == null)) {
-        Users_Proxy.reqUserSetSettings({ opacitySettings: { unitOpacity: 75 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 75 }, coBgmSettings : [] });
     } else if (unitOpacity === 75) {
-        Users_Proxy.reqUserSetSettings({ opacitySettings: { unitOpacity: 50 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 50 }, coBgmSettings : [] });
     } else if (unitOpacity === 50) {
-        Users_Proxy.reqUserSetSettings({ opacitySettings: { unitOpacity: 0 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 0 }, coBgmSettings : [] });
     } else {
-        Users_Proxy.reqUserSetSettings({ opacitySettings: { unitOpacity: 100 }, coBgmSettings: [] });
+        Users_Proxy.reqUserSetSettings({ opacitySettings : { unitOpacity : 100 }, coBgmSettings : [] });
     }
 }
 function mergeSelfSettingsOpacitySettings(newOpacitySettings: UserOpacitySettings): void {
@@ -416,9 +416,9 @@ export function updateOnMsgUserGetOnlineState(data: UserGetOnlineStateResponse):
     setUserOnlineState(
         data.getUserId() ?? 0,
         {
-            isOnline                : !!data.getIsOnline(),
-            lastActivityTimestamp   : data.getLastActivityTime() ?? 0,
-        }
+            isOnline              : !!data.getIsOnline(),
+            lastActivityTimestamp : data.getLastActivityTime() ?? 0,
+        },
     );
 }
 export function updateOnFailedMsgUserGetOnlineState(data: UserGetOnlineStateResponse): void {
@@ -562,8 +562,8 @@ export function updateOnMsgUserSetCoBgmSettings(data: UserSetCoBgmSettingsRespon
     } else {
         if (bgmCodeArray) {
             coBgmSettings.push(CoBgmSettings.fromJson({
-                coCategoryId    : coCategoryId,
-                bgmCodeArray    : bgmCodeArray,
+                coCategoryId : coCategoryId,
+                bgmCodeArray : bgmCodeArray,
             }));
         }
     }

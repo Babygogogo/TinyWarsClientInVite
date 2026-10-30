@@ -63,19 +63,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
-            { ui: this._btnTurnIndexComparator,         callback: this._onTouchedBtnTurnIndexComparator },
-            { ui: this._btnTurnRemainderComparator,     callback: this._onTouchedBtnTurnRemainderComparator },
-            { ui: this._btnTurnPhase,                   callback: this._onTouchedBtnTurnPhase },
-            { ui: this._btnPlayerIndex,                 callback: this._onTouchedBtnPlayerIndex },
-            { ui: this._btnTurnIndex,                   callback: this._onTouchedBtnTurnIndex },
-            { ui: this._btnTurnDivider,                 callback: this._onTouchedBtnTurnDivider },
-            { ui: this._btnTurnRemainder,               callback: this._onTouchedBtnTurnRemainder },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
+            { ui : this._btnTurnIndexComparator,         callback : this._onTouchedBtnTurnIndexComparator },
+            { ui : this._btnTurnRemainderComparator,     callback : this._onTouchedBtnTurnRemainderComparator },
+            { ui : this._btnTurnPhase,                   callback : this._onTouchedBtnTurnPhase },
+            { ui : this._btnPlayerIndex,                 callback : this._onTouchedBtnPlayerIndex },
+            { ui : this._btnTurnIndex,                   callback : this._onTouchedBtnTurnIndex },
+            { ui : this._btnTurnDivider,                 callback : this._onTouchedBtnTurnDivider },
+            { ui : this._btnTurnRemainder,               callback : this._onTouchedBtnTurnRemainder },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -99,9 +99,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnTurnIndexComparator(): void {
@@ -134,11 +134,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray          : condition.getPlayerIndexArray(),
-            availableNumberArray        : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
-            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
-            getNumberMainText           : playerIndex => `P${playerIndex}`,
-            callbackOnConfirm           : playerIndexArray => {
+            currentNumberArray   : condition.getPlayerIndexArray(),
+            availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
+            getNumberMainText    : playerIndex => `P${playerIndex}`,
+            callbackOnConfirm    : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -147,11 +147,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnIndex(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
-            minValue        : 0,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : condition.getTurnIndex(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Turns),
+            minValue     : 0,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : condition.getTurnIndex(),
+            callback     : value => {
                 condition.setTurnIndex(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -160,11 +160,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnDivider(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0518),
-            minValue        : 2,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : condition.getTurnIndexDivider(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0518),
+            minValue     : 2,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : condition.getTurnIndexDivider(),
+            callback     : value => {
                 condition.setTurnIndexDivider(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -173,11 +173,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnTurnRemainder(): void {
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0519),
-            minValue        : 0,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : condition.getTurnIndexRemainder(),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0519),
+            minValue     : 0,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : condition.getTurnIndexRemainder(),
+            callback     : value => {
                 condition.setTurnIndexRemainder(value);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },

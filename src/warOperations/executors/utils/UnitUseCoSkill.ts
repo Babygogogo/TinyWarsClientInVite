@@ -41,12 +41,12 @@ function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
                 CoSkills_Utils_Executor.executeInstantSkill({
-                    player              : playerInTurn,
-                    skillId             : skillIdArray[skillIndex],
-                    skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01),
-                    targetGridIndexes   : action.getTargetGridIndexArray(),
-                    hasExtraData        : true,
-                    isFastExecute       : true,
+                    player            : playerInTurn,
+                    skillId           : skillIdArray[skillIndex],
+                    skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_01),
+                    targetGridIndexes : action.getTargetGridIndexArray(),
+                    hasExtraData      : true,
+                    isFastExecute     : true,
                 });
             }
         }
@@ -66,7 +66,7 @@ function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
         const pathNodes         = revisedPath.nodes;
         const launchUnitId      = action.getLaunchUnitId();
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitUseCoSkill_03);
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -77,18 +77,18 @@ function fastExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, action: WoU
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
                 const dataForUseCoSkill = CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
-                    war         : war,
-                    player      : playerInTurn,
-                    skillType   : skillType,
-                    skillIndex  : skillIndex,
+                    war        : war,
+                    player     : playerInTurn,
+                    skillType  : skillType,
+                    skillIndex : skillIndex,
                 });
                 CoSkills_Utils_Executor.executeInstantSkill({
-                    player              : playerInTurn,
-                    skillId             : skillIdArray[skillIndex],
-                    skillData           : dataForUseCoSkill,
-                    targetGridIndexes   : action.getTargetGridIndexArray(),
-                    hasExtraData        : false,
-                    isFastExecute       : true,
+                    player            : playerInTurn,
+                    skillId           : skillIdArray[skillIndex],
+                    skillData         : dataForUseCoSkill,
+                    targetGridIndexes : action.getTargetGridIndexArray(),
+                    hasExtraData      : false,
+                    isFastExecute     : true,
                 });
             }
 
@@ -127,9 +127,9 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         const skillType: AuxiliaryTypes_AuxiliaryTypes.Undefinable<CoSkills_Constants.SkillTypeId> = actionExtraData.getSkillType();
@@ -138,12 +138,12 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
             const skillDataArray    = actionExtraData.getSkillDataArray();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
                 CoSkills_Utils_Executor.executeInstantSkill({
-                    player              : playerInTurn,
-                    skillId             : skillIdArray[skillIndex],
-                    skillData           : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
-                    targetGridIndexes   : action.getTargetGridIndexArray(),
-                    hasExtraData        : true,
-                    isFastExecute       : false,
+                    player            : playerInTurn,
+                    skillId           : skillIdArray[skillIndex],
+                    skillData         : Helpers_Misc.getExisted(skillDataArray.find(v => v.getSkillIndex() === skillIndex), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_02),
+                    targetGridIndexes : action.getTargetGridIndexArray(),
+                    hasExtraData      : true,
+                    isFastExecute     : false,
                 });
             }
         }
@@ -151,7 +151,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
         if (skillType != null) {
@@ -173,7 +173,7 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
         const pathNodes         = revisedPath.nodes;
         const launchUnitId      = action.getLaunchUnitId();
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitUseCoSkill_03);
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: revisedPath.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : revisedPath.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -195,17 +195,17 @@ async function normalExeUnitUseCoSkill(war: BaseWar_Interface_IBwWar.IBwWar, act
             const skillIdArray = playerInTurn.getCoCurrentSkills();
             for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
                 CoSkills_Utils_Executor.executeInstantSkill({
-                    player              : playerInTurn,
-                    skillId             : skillIdArray[skillIndex],
-                    skillData           : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
-                        war         : war,
-                        player      : playerInTurn,
-                        skillType   : skillType,
-                        skillIndex  : skillIndex,
+                    player    : playerInTurn,
+                    skillId   : skillIdArray[skillIndex],
+                    skillData : CoSkills_Utils_DataGeneratorForUseCoSkill.generate({
+                        war        : war,
+                        player     : playerInTurn,
+                        skillType  : skillType,
+                        skillIndex : skillIndex,
                     }),
-                    targetGridIndexes   : action.getTargetGridIndexArray(),
-                    hasExtraData        : false,
-                    isFastExecute       : false,
+                    targetGridIndexes : action.getTargetGridIndexArray(),
+                    hasExtraData      : false,
+                    isFastExecute     : false,
                 });
             }
 

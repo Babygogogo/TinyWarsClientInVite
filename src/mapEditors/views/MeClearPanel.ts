@@ -43,14 +43,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnCancel,          callback: this.closePanel, },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm, },
-            { ui: this._btnWidth,           callback: this._onTouchedBtnWidth },
-            { ui: this._btnHeight,          callback: this._onTouchedBtnHeight },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnCancel,          callback : this.closePanel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
+            { ui : this._btnWidth,           callback : this._onTouchedBtnWidth },
+            { ui : this._btnHeight,          callback : this._onTouchedBtnHeight },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -99,16 +99,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = war.getGcData();
         war.stopRunning();
         await war.initWithMapRawData({
-            mapRawData: MapEditor_Model_MeHelpers.clearMap({
-                mapRawData  : await war.serializeForMap(),
-                newWidth    : width,
-                newHeight   : height,
-                gameConfig  : gameConfig,
+            mapRawData : MapEditor_Model_MeHelpers.clearMap({
+                mapRawData : await war.serializeForMap(),
+                newWidth   : width,
+                newHeight  : height,
+                gameConfig : gameConfig,
             }),
-            slotIndex                   : war.getMapSlotIndex(),
-            gameConfig                  : gameConfig,
-            srcNormalMapIdForAddEvent   : war.getSrcNormalMapIdForAddEvent(),
-            gridMarkData                : null,
+            slotIndex                 : war.getMapSlotIndex(),
+            gameConfig                : gameConfig,
+            srcNormalMapIdForAddEvent : war.getSrcNormalMapIdForAddEvent(),
+            gridMarkData              : null,
         });
         war.setIsMapModified(true);
         war.startRunning()
@@ -120,29 +120,29 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnWidth(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0034),
-            minValue        : 1,
-            maxValue        : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newHeight || 1)),
-            currentValue    : this._newWidth,
-            callback        : newWidth => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0034),
+            minValue     : 1,
+            maxValue     : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newHeight || 1)),
+            currentValue : this._newWidth,
+            callback     : newWidth => {
                 this._newWidth = newWidth;
                 this._updateBtnWidth();
                 this._updateLabelNewGrids();
-            }
+            },
         });
     }
 
     private _onTouchedBtnHeight(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0035),
-            minValue        : 1,
-            maxValue        : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newWidth || 1)),
-            currentValue    : this._newHeight,
-            callback        : newHeight => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0035),
+            minValue     : 1,
+            maxValue     : Math.floor(Maps_Constants.Common.MaxGridsCount / (this._newWidth || 1)),
+            currentValue : this._newHeight,
+            callback     : newHeight => {
                 this._newHeight = newHeight;
                 this._updateBtnHeight();
                 this._updateLabelNewGrids();
-            }
+            },
         });
     }
 

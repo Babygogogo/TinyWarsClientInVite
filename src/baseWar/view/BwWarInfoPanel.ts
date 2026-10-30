@@ -44,7 +44,7 @@ import {
     WarTypes_Constants,
 } from "../../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 const enum InfoType {
     Player,
     TeamIndex,
@@ -165,20 +165,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.BwCoIdChanged,               callback: this._onNotifyBwCoIdChanged },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.BwCoIdChanged,               callback : this._onNotifyBwCoIdChanged },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnInfo,                callback: this._onTouchedBtnInfo },
-            { ui: this._btnSwitch,              callback: this._onTouchedBtnSwitch },
-            { ui: this._btnUnits,               callback: this._onTouchedBtnUnits },
-            { ui: this._btnTiles,               callback: this._onTouchedBtnTiles },
-            { ui: this._groupPlayer1,           callback: this._onTouchedGroupPlayer1 },
-            { ui: this._groupPlayer2,           callback: this._onTouchedGroupPlayer2 },
-            { ui: this._groupPlayer3,           callback: this._onTouchedGroupPlayer3 },
-            { ui: this._groupPlayer4,           callback: this._onTouchedGroupPlayer4 },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnInfo,                callback : this._onTouchedBtnInfo },
+            { ui : this._btnSwitch,              callback : this._onTouchedBtnSwitch },
+            { ui : this._btnUnits,               callback : this._onTouchedBtnUnits },
+            { ui : this._btnTiles,               callback : this._onTouchedBtnTiles },
+            { ui : this._groupPlayer1,           callback : this._onTouchedGroupPlayer1 },
+            { ui : this._groupPlayer2,           callback : this._onTouchedGroupPlayer2 },
+            { ui : this._groupPlayer3,           callback : this._onTouchedGroupPlayer3 },
+            { ui : this._groupPlayer4,           callback : this._onTouchedGroupPlayer4 },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -255,8 +255,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitListPanel, {
-            war                     : war,
-            callbackForMoveCursor   : unit => {
+            war                   : war,
+            callbackForMoveCursor : unit => {
                 if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
                     return;
                 }
@@ -269,7 +269,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
                 Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             },
-            callbackForSelectUnit   : unit => {
+            callbackForSelectUnit : unit => {
                 if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
                     return;
                 }
@@ -277,8 +277,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwCursorTapped, {
-                    current : gridIndex,
-                    tappedOn: gridIndex,
+                    current  : gridIndex,
+                    tappedOn : gridIndex,
                 } as Notifications_DataTypes.BwCursorTapped);
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitListPanel);
             },
@@ -396,7 +396,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const warId = war.getWarId();
             label.setText(warId == null
                 ? Lang_Utils.getText(Lang_Constants.TextType.B0223)
-                : `${Lang_Utils.getText(Lang_Constants.TextType.B0719)} #${warId}`
+                : `${Lang_Utils.getText(Lang_Constants.TextType.B0719)} #${warId}`,
             );
         }
     }
@@ -405,7 +405,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const war = this.getOpenData()?.war;
         this._labelTips.setText((war instanceof SingleCustomWar_Model_ScwWar.ScwWar) || (war instanceof SingleFreeWar_Model_SfwWar.SfwWar)
             ? Lang_Utils.getText(Lang_Constants.TextType.A0998)
-            : ``
+            : ``,
         );
     }
 
@@ -419,9 +419,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         let index       = 0;
         for (const playerRuleType of getInfoTypesForTitleList(war)) {
             dataArray.push({
-                index       : index++,
-                infoType    : playerRuleType,
-                war         : war,
+                index    : index++,
+                infoType : playerRuleType,
+                war      : war,
             });
         }
         await this._listRuleTitle.bindData(dataArray);
@@ -472,9 +472,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const dataArray: DataForInfoRenderer[] = [];
             for (const infoType of infoTypeArray) {
                 dataArray.push({
-                    war             : war,
-                    infoType        : infoType,
-                    playerIndex     : playerIndex,
+                    war         : war,
+                    infoType    : infoType,
+                    playerIndex : playerIndex,
                 });
             }
             await list.bindData(dataArray);
@@ -499,14 +499,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const dataArray         : Ui_Components_UiPlayerRuleRenderer.DataForUiPlayerRuleRenderer[] = [];
             for (const playerRuleType of CommonPlayerRuleTypes) {
                 dataArray.push({
-                    canModify               : canModify,
-                    gcData                  : gcData,
-                    gameModeId              : gameModeId,
-                    instanceWarRule         : null,
-                    warRuleCommonData       : warRuleCommonData,
-                    playerRule              : playerRule,
-                    playerRuleType          : playerRuleType,
-                    getIsBatch              : getIsBatch,
+                    canModify         : canModify,
+                    gcData            : gcData,
+                    gameModeId        : gameModeId,
+                    instanceWarRule   : null,
+                    warRuleCommonData : warRuleCommonData,
+                    playerRule        : playerRule,
+                    playerRuleType    : playerRuleType,
+                    getIsBatch        : getIsBatch,
                 });
             }
             await list.bindData(dataArray);
@@ -530,10 +530,10 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupHelp,                  callback: this._onTouchedGroupHelp },
+            { ui : this._groupHelp,                  callback : this._onTouchedGroupHelp },
         ]);
     }
 
@@ -581,10 +581,10 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowSelectedCoCategoryIdPanel, {
-            selectedCoCategoryIdDict    : dict,
-            availableCoCategoryIdArray  : gameConfig.getEnabledCoCategoryIdArray(war.getWarType()),
-            isBan                       : true,
-            gameConfig                  : gameConfig,
+            selectedCoCategoryIdDict   : dict,
+            availableCoCategoryIdArray : gameConfig.getEnabledCoCategoryIdArray(war.getWarType()),
+            isBan                      : true,
+            gameConfig                 : gameConfig,
         });
     }
 }
@@ -604,10 +604,10 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnModify,          callback: this._onTouchedBtnModify },
+            { ui : this._btnModify,          callback : this._onTouchedBtnModify },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TimeTick,    callback: this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.TimeTick,    callback : this._onNotifyTimeTick },
         ]);
     }
 
@@ -647,7 +647,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const isHuman               = player.getUserId() != null;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => isHuman ? Lang_Utils.getText(Lang_Constants.TextType.A0110) : Lang_Utils.getText(Lang_Constants.TextType.A0111),
-            callback: () => {
+            callback   : () => {
                 player.setUserId(isHuman ? null : Users_Model.getSelfUserId());
                 this._updateView();
             },
@@ -662,7 +662,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const { playerIndex, war }  = openData;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0072, playerIndex),
-            callback: () => {
+            callback   : () => {
                 const warRuleCommonData = Helpers_Misc.getExisted(war.getInstanceWarRule().getWarRuleCommonData());
                 const playerRule        = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex);
                 playerRule.setTeamIndex((playerRule.getTeamIndex() % war.getPlayerManager().getTotalPlayersCount(false)) + 1);
@@ -681,11 +681,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const gameConfig            = war.getGcData();
         const currentCoId           = player.getCoId();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-            gameConfig          : gameConfig,
-            currentCoId         : currentCoId,
-            availableCoIdArray  : gameConfig.getEnabledCoArray(war.getWarType()).map(v => v.getCoId()),
-            isBan               : false,
-            callbackOnConfirm   : newCoId => {
+            gameConfig         : gameConfig,
+            currentCoId        : currentCoId,
+            availableCoIdArray : gameConfig.getEnabledCoArray(war.getWarType()).map(v => v.getCoId()),
+            isBan              : false,
+            callbackOnConfirm  : newCoId => {
                 if (newCoId !== currentCoId) {
                     player.setCoId(newCoId);
 
@@ -704,11 +704,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const { playerIndex, war }  = openData;
         const gameConfig            = war.getGcData();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowCoCategoryIdPanel, {
-            gameConfig                      : gameConfig,
-            availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
-            currentCoCategoryIdArray        : getBannedCoCategoryIdArray(war, playerIndex),
-            isBan                           : true,
-            getTitleText                    : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0403)} (P${playerIndex})`,
+            gameConfig                 : gameConfig,
+            availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
+            currentCoCategoryIdArray   : getBannedCoCategoryIdArray(war, playerIndex),
+            isBan                      : true,
+            getTitleText               : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0403)} (P${playerIndex})`,
         });
     }
     private _modifyAsEnergy(): void {
@@ -721,11 +721,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const player                = war.getPlayer(playerIndex);
         const currValue             = player.getCoCurrentEnergy();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => `P${playerIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B0033)}`,
-            currentValue    : currValue,
-            minValue        : Cos_Constants.EnergyHardLimit.Min,
-            maxValue        : Cos_Constants.EnergyHardLimit.Max,
-            callback        : value => {
+            getTitle     : () => `P${playerIndex} ${Lang_Utils.getText(Lang_Constants.TextType.B0033)}`,
+            currentValue : currValue,
+            minValue     : Cos_Constants.EnergyHardLimit.Min,
+            maxValue     : Cos_Constants.EnergyHardLimit.Max,
+            callback     : value => {
                 player.setAndValidateCoCurrentEnergy(value);
                 this._updateView();
             },
@@ -743,11 +743,11 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const maxValue              = PlayerRules_Constants.InitialFund.MaxLimit;
         const minValue              = PlayerRules_Constants.InitialFund.MinLimit;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => `P${player.getPlayerIndex()} ${Lang_Utils.getText(Lang_Constants.TextType.Fund)}`,
-            currentValue    : currValue,
+            getTitle     : () => `P${player.getPlayerIndex()} ${Lang_Utils.getText(Lang_Constants.TextType.Fund)}`,
+            currentValue : currValue,
             minValue,
             maxValue,
-            callback        : value => {
+            callback     : value => {
                 player.setFund(value);
                 this._updateView();
             },
@@ -784,7 +784,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const labelValue            = this._labelValue;
         labelValue.setText(userId == null
             ? Lang_Utils.getText(Lang_Constants.TextType.B0607)
-            : Helpers_Misc.getExisted(await Users_Model.getUserNickname(userId), Utils_ClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateViewAsPlayer_00)
+            : Helpers_Misc.getExisted(await Users_Model.getUserNickname(userId), Utils_ClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateViewAsPlayer_00),
         );
         labelValue.setTextColor(0xFFFFFF);
 
@@ -953,7 +953,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             label.setText(`${Lang_Utils.getTimeDurationText2(restTime)}${textForAddTime}`);
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
-                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)
+                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400),
             );
         }
 

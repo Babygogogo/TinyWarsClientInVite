@@ -18,9 +18,9 @@ export function getTotalOffset({
 }): number {
     const realHpOffset  = cfg.getRealHpOffset();
     let newHp           = Numbers_Utils.getValueInRange({
-        maxValue    : maxHp,
-        minValue    : 1,
-        rawValue    : currentHp + realHpOffset,
+        maxValue : maxHp,
+        minValue : 1,
+        rawValue : currentHp + realHpOffset,
     });
     if (realHpOffset > 0) {
         const remainder = newHp % Units_Constants.Hp.Normalizer;

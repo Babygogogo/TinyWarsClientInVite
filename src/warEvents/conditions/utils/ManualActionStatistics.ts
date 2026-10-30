@@ -19,7 +19,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0143,
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue())
+        totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue()),
     );
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecManualActionStatistics>): string | null {
@@ -33,7 +33,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (playerIndexArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0217,
-                playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
+                playerIndexArray.map(v => `P${v}`).join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
             )}`);
         }
     }
@@ -48,7 +48,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (recentTurnsCount != null) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0144,
-                recentTurnsCount
+                recentTurnsCount,
             )}`);
         }
     }
@@ -63,9 +63,9 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0227,
             comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-            totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue())
+            totalActions == null ? Lang_Constants.UndefinedError : (totalActions.getValue()),
         ),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecManualActionStatistics, war: BaseWar_Interface_IBwWar.IBwWar): string | null {

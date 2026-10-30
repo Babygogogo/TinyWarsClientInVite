@@ -106,44 +106,44 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
-            { ui: this._btnClear,                               callback: this._onTouchedBtnClear },
+            { ui : this._btnClose,                               callback : this._onTouchedBtnClose },
+            { ui : this._btnClear,                               callback : this._onTouchedBtnClear },
 
-            { ui: this._btnConPlayerIndexArray,                 callback: this._onTouchedBtnConPlayerIndexArray },
-            { ui: this._btnConPlayerIndexPredicate,             callback: this._onTouchedBtnConPlayerIndexPredicate },
+            { ui : this._btnConPlayerIndexArray,                 callback : this._onTouchedBtnConPlayerIndexArray },
+            { ui : this._btnConPlayerIndexPredicate,             callback : this._onTouchedBtnConPlayerIndexPredicate },
 
-            { ui: this._btnConTeamIndexArray,                   callback: this._onTouchedBtnConTeamIndexArray },
-            { ui: this._btnConTeamIndexPredicate,               callback: this._onTouchedBtnConTeamIndexPredicate },
+            { ui : this._btnConTeamIndexArray,                   callback : this._onTouchedBtnConTeamIndexArray },
+            { ui : this._btnConTeamIndexPredicate,               callback : this._onTouchedBtnConTeamIndexPredicate },
 
-            { ui: this._btnConTileTypeArray,                    callback: this._onTouchedBtnConTileTypeArray },
-            { ui: this._btnConTileTypePredicate,                callback: this._onTouchedBtnConTileTypePredicate },
+            { ui : this._btnConTileTypeArray,                    callback : this._onTouchedBtnConTileTypeArray },
+            { ui : this._btnConTileTypePredicate,                callback : this._onTouchedBtnConTileTypePredicate },
 
-            { ui: this._btnConHp,                               callback: this._onTouchedBtnConHp },
+            { ui : this._btnConHp,                               callback : this._onTouchedBtnConHp },
 
-            { ui: this._btnConIsOwnerPlayerInTurn,              callback: this._onTouchedBtnConIsOwnerPlayerInTurn },
+            { ui : this._btnConIsOwnerPlayerInTurn,              callback : this._onTouchedBtnConIsOwnerPlayerInTurn },
 
-            { ui: this._btnConIsHighlighted,                    callback: this._onTouchedBtnConIsHighlighted },
+            { ui : this._btnConIsHighlighted,                    callback : this._onTouchedBtnConIsHighlighted },
 
-            { ui: this._btnConUnitsCount,                       callback: this._onTouchedBtnConUnitsCount },
+            { ui : this._btnConUnitsCount,                       callback : this._onTouchedBtnConUnitsCount },
 
-            { ui: this._btnConCustomNameId,                     callback: this._onTouchedBtnConCustomNameId },
+            { ui : this._btnConCustomNameId,                     callback : this._onTouchedBtnConCustomNameId },
 
-            { ui: this._btnConBuildPoint,                       callback: this._onTouchedBtnConBuildPoint },
+            { ui : this._btnConBuildPoint,                       callback : this._onTouchedBtnConBuildPoint },
 
-            { ui: this._btnConCapturePoint,                     callback: this._onTouchedBtnConCapturePoint },
+            { ui : this._btnConCapturePoint,                     callback : this._onTouchedBtnConCapturePoint },
 
-            { ui: this._btnConGridIndexArray,                   callback: this._onTouchedBtnConGridIndexArray },
-            { ui: this._btnConGridIndexPredicate,               callback: this._onTouchedBtnConGridIndexPredicate },
+            { ui : this._btnConGridIndexArray,                   callback : this._onTouchedBtnConGridIndexArray },
+            { ui : this._btnConGridIndexPredicate,               callback : this._onTouchedBtnConGridIndexPredicate },
 
-            { ui: this._btnConLocationIdArray,                  callback: this._onTouchedBtnConLocationIdArray },
-            { ui: this._btnConLocationIdPredicate,              callback: this._onTouchedBtnConLocationIdPredicate },
+            { ui : this._btnConLocationIdArray,                  callback : this._onTouchedBtnConLocationIdArray },
+            { ui : this._btnConLocationIdPredicate,              callback : this._onTouchedBtnConLocationIdPredicate },
 
-            { ui: this._btnConBuffTypeIdArray,                  callback: this._onTouchedBtnConBuffTypeIdArray },
-            { ui: this._btnConBuffTypeIdPredicate,              callback: this._onTouchedBtnConBuffTypeIdPredicate },
+            { ui : this._btnConBuffTypeIdArray,                  callback : this._onTouchedBtnConBuffTypeIdArray },
+            { ui : this._btnConBuffTypeIdPredicate,              callback : this._onTouchedBtnConBuffTypeIdPredicate },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
@@ -170,26 +170,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this.closePanel();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
-                getTextForConfirm      : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel       : () => Lang_Utils.getText(Lang_Constants.TextType.No),
-                callback            : () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                callback          : () => {
                     const tileFilter = this._getTileFilter();
                     callback(Tiles_Utils_Filter.checkIsEmpty(tileFilter) ? null : tileFilter);
                     this.closePanel();
                 },
-                callbackOnCancel    : () => this.closePanel(),
-                showButtonClose     : true,
+                callbackOnCancel : () => this.closePanel(),
+                showButtonClose  : true,
             });
         }
     }
     private _onTouchedBtnClear(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
                 this._tileFilter = new TileFilter();
                 this._updateView();
-            }
+            },
         });
     }
 
@@ -202,11 +202,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConPlayerIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray          : oldCon?.getValueArray() ?? [],
-            availableNumberArray        : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, playersCountUnneutral + 1, 1),
-            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
-            getNumberMainText           : num => `P${num}`,
-            callbackOnConfirm           : valueArray => {
+            currentNumberArray   : oldCon?.getValueArray() ?? [],
+            availableNumberArray : Helpers_Collection.createRange(Players_Constants.PlayerIndex.Neutral, playersCountUnneutral + 1, 1),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0031)),
+            getNumberMainText    : num => `P${num}`,
+            callbackOnConfirm    : valueArray => {
                 if (!valueArray.length) {
                     filter.setConPlayerIndex(null);
                 } else {
@@ -233,11 +233,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConTeamIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : oldCon?.getValueArray() ?? [],
-            availableNumberArray    : Helpers_Collection.createRange(Teams_Constants.TeamIndex.Neutral, playersCountUnneutral + 1, 1),
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0019)),
-            getNumberMainText       : num => Lang_Utils.getPlayerTeamName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : valueArray => {
+            currentNumberArray   : oldCon?.getValueArray() ?? [],
+            availableNumberArray : Helpers_Collection.createRange(Teams_Constants.TeamIndex.Neutral, playersCountUnneutral + 1, 1),
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0019)),
+            getNumberMainText    : num => Lang_Utils.getPlayerTeamName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : valueArray => {
                 if (!valueArray.length) {
                     filter.setConTeamIndex(null);
                 } else {
@@ -264,10 +264,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileFilter();
         const oldCon = filter.getConTileType();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiTileTypePanel, {
-            gameConfig              : gameConfig,
-            currentTileTypeArray    : oldCon?.getValueArray() ?? [],
-            availableTileTypeArray  : gameConfig.getAllTileTypeArray(),
-            callbackOnConfirm       : unitTypeArray => {
+            gameConfig             : gameConfig,
+            currentTileTypeArray   : oldCon?.getValueArray() ?? [],
+            availableTileTypeArray : gameConfig.getAllTileTypeArray(),
+            callbackOnConfirm      : unitTypeArray => {
                 if (!unitTypeArray.length) {
                     filter.setConTileType(null);
                 } else {
@@ -290,16 +290,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConHp();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
-                minValue        : 0,
-                maxValue        : 100,
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon == null ? null : oldCon.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0807),
+                minValue     : 0,
+                maxValue     : 100,
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                callback     : value => {
                     if (value == null) {
                         filter.setConHp(null);
                     } else {
@@ -308,8 +308,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(sign);
                         } else {
                             filter.setConHp(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : sign,
+                                value      : value,
+                                comparator : sign,
                             }));
                         }
                     }
@@ -351,16 +351,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConUnitsCount();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
-                minValue        : 0,
-                maxValue        : 100,
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon == null ? null : oldCon.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0773),
+                minValue     : 0,
+                maxValue     : 100,
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                callback     : value => {
                     if (value == null) {
                         filter.setConUnitsCount(null);
                     } else {
@@ -369,8 +369,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(sign);
                         } else {
                             filter.setConUnitsCount(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : sign,
+                                value      : value,
+                                comparator : sign,
                             }));
                         }
                     }
@@ -386,16 +386,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConCustomNameId();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
-                minValue        : Tiles_Constants_Common.CustomName.MinId,
-                maxValue        : Tiles_Constants_Common.CustomName.MaxId,
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon == null ? null : oldCon.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.CustomNameId),
+                minValue     : Tiles_Constants_Common.CustomName.MinId,
+                maxValue     : Tiles_Constants_Common.CustomName.MaxId,
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                callback     : value => {
                     if (value == null) {
                         filter.setConCustomNameId(null);
                     } else {
@@ -404,8 +404,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(sign);
                         } else {
                             filter.setConCustomNameId(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : sign,
+                                value      : value,
+                                comparator : sign,
                             }));
                         }
                     }
@@ -421,16 +421,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConBuildPoint();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
-                minValue        : 0,
-                maxValue        : 100,
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon == null ? null : oldCon.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.BuildPoint),
+                minValue     : 0,
+                maxValue     : 100,
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                callback     : value => {
                     if (value == null) {
                         filter.setConBuildPoint(null);
                     } else {
@@ -439,8 +439,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(sign);
                         } else {
                             filter.setConBuildPoint(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : sign,
+                                value      : value,
+                                comparator : sign,
                             }));
                         }
                     }
@@ -456,16 +456,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const oldCon = filter.getConCapturePoint();
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            currentNumber           : oldCon == null ? null : oldCon.getComparator(),
-            getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
-                minValue        : 0,
-                maxValue        : 100,
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            currentNumber        : oldCon == null ? null : oldCon.getComparator(),
+            getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : sign => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.CapturePoint),
+                minValue     : 0,
+                maxValue     : 100,
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                callback     : value => {
                     if (value == null) {
                         filter.setConCapturePoint(null);
                     } else {
@@ -474,8 +474,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(sign);
                         } else {
                             filter.setConCapturePoint(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : sign,
+                                value      : value,
+                                comparator : sign,
                             }));
                         }
                     }
@@ -494,9 +494,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const filter = this._getTileFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseGridIndexPanel, {
-            currentGridIndexArray   : Helpers_Collection.getNonNullElements(filter.getConGridIndex()?.getGridIndexArray().map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v)) ?? []),
-            mapSize                 : mapSize,
-            callbackOnConfirm       : valueArray => {
+            currentGridIndexArray : Helpers_Collection.getNonNullElements(filter.getConGridIndex()?.getGridIndexArray().map(v => AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v)) ?? []),
+            mapSize               : mapSize,
+            callbackOnConfirm     : valueArray => {
                 if (!valueArray.length) {
                     filter.setConGridIndex(null);
                 } else {
@@ -517,10 +517,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConLocationIdArray(): void {
         const filter = this._getTileFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiIntegerPanel, {
-            currentIntegerArray     : filter.getConLocationId()?.getValueArray() ?? [],
-            availableIntegerArray   : Locations_Constants.AllLocationIdArray,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
-            callbackOnConfirm       : valueArray => {
+            currentIntegerArray   : filter.getConLocationId()?.getValueArray() ?? [],
+            availableIntegerArray : Locations_Constants.AllLocationIdArray,
+            getTitleText          : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
+            callbackOnConfirm     : valueArray => {
                 if (!valueArray.length) {
                     filter.setConLocationId(null);
                 } else {
@@ -535,11 +535,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConLocationIdPredicate(): void {
         const filter = this._getTileFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
-            availableNumberArray    : ValueSetAndRelations_Constants.AllSetRelationIdArray,
-            currentNumber           : filter.getConLocationId()?.getSetRelation(),
-            getNumberMainText       : num => Lang_Utils.getSetRelationName(num),
-            callbackOnConfirm       : setRelation => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Location),
+            availableNumberArray : ValueSetAndRelations_Constants.AllSetRelationIdArray,
+            currentNumber        : filter.getConLocationId()?.getSetRelation(),
+            getNumberMainText    : num => Lang_Utils.getSetRelationName(num),
+            callbackOnConfirm    : setRelation => {
                 filter.createIfNotExistsConLocationId().setSetRelation(setRelation);
                 this._updateView();
             },
@@ -549,12 +549,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConBuffTypeIdArray(): void {
         const filter = this._getTileFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : filter.getConBuffTypeId()?.getValueArray() ?? [],
-            availableNumberArray    : TileBuffs_Constants.AllBuffTypeIdArray,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
-            getNumberMainText       : v => Lang_Utils.getTileBuffName(v) ?? Lang_Constants.UndefinedError,
-            showNumber              : true,
-            callbackOnConfirm       : valueArray => {
+            currentNumberArray   : filter.getConBuffTypeId()?.getValueArray() ?? [],
+            availableNumberArray : TileBuffs_Constants.AllBuffTypeIdArray,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            getNumberMainText    : v => Lang_Utils.getTileBuffName(v) ?? Lang_Constants.UndefinedError,
+            showNumber           : true,
+            callbackOnConfirm    : valueArray => {
                 if (!valueArray.length) {
                     filter.setConBuffTypeId(null);
                 } else {
@@ -569,11 +569,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConBuffTypeIdPredicate(): void {
         const filter = this._getTileFilter();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
-            availableNumberArray    : ValueSetAndRelations_Constants.AllSetRelationIdArray,
-            currentNumber           : filter.getConBuffTypeId()?.getSetRelation(),
-            getNumberMainText       : num => Lang_Utils.getSetRelationName(num),
-            callbackOnConfirm       : setRelation => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            availableNumberArray : ValueSetAndRelations_Constants.AllSetRelationIdArray,
+            currentNumber        : filter.getConBuffTypeId()?.getSetRelation(),
+            getNumberMainText    : num => Lang_Utils.getSetRelationName(num),
+            callbackOnConfirm    : setRelation => {
                 filter.createIfNotExistsConBuffTypeId().setSetRelation(setRelation);
                 this._updateView();
             },

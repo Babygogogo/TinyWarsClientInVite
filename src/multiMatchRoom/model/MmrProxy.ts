@@ -21,22 +21,22 @@ import type { S as MmrSetSelfSettingsResponse } from "../../proto/schema/CommonP
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetMaxConcurrentCount,         callback: _onMsgMmrGetMaxConcurrentCount },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetRoomPublicInfo,             callback: _onMsgMmrGetRoomPublicInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetJoinedRoomIdArray,          callback: _onMsgMmrGetJoinedRoomIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBannedCoIdArray,            callback: _onMsgMmrSetBannedCoIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetMaxConcurrentCount,         callback: _onMsgMmrSetMaxConcurrentCount },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetBannedNormalMapIdArray,     callback: _onMsgMmrGetBannedNormalMapIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBannedNormalMapIdArray,     callback: _onMsgMmrSetBannedNormalMapIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrGetBootTimerDaysRange,         callback: _onMsgMmrGetBootTimerDaysRange },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetBootTimerDaysRange,         callback: _onMsgMmrSetBootTimerDaysRange },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrSetSelfSettings,               callback: _onMsgMmrSetSelfSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMmrDeleteRoomByServer,            callback: _onMsgMmrDeleteRoomByServer },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrGetMaxConcurrentCount,         callback : _onMsgMmrGetMaxConcurrentCount },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrGetRoomPublicInfo,             callback : _onMsgMmrGetRoomPublicInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrGetJoinedRoomIdArray,          callback : _onMsgMmrGetJoinedRoomIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrSetBannedCoIdArray,            callback : _onMsgMmrSetBannedCoIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrSetMaxConcurrentCount,         callback : _onMsgMmrSetMaxConcurrentCount },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrGetBannedNormalMapIdArray,     callback : _onMsgMmrGetBannedNormalMapIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrSetBannedNormalMapIdArray,     callback : _onMsgMmrSetBannedNormalMapIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrGetBootTimerDaysRange,         callback : _onMsgMmrGetBootTimerDaysRange },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrSetBootTimerDaysRange,         callback : _onMsgMmrSetBootTimerDaysRange },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrSetSelfSettings,               callback : _onMsgMmrSetSelfSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMmrDeleteRoomByServer,            callback : _onMsgMmrDeleteRoomByServer },
     ]);
 }
 
 export function reqMmrGetMaxConcurrentCount(): void {
-    Networks_Manager.send({ MsgMmrGetMaxConcurrentCount: { c: {} } });
+    Networks_Manager.send({ MsgMmrGetMaxConcurrentCount : { c : {} } });
 }
 function _onMsgMmrGetMaxConcurrentCount(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetMaxConcurrentCountResponse;
@@ -48,7 +48,7 @@ function _onMsgMmrGetMaxConcurrentCount(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrGetBootTimerDaysRange(): void {
-    Networks_Manager.send({ MsgMmrGetBootTimerDaysRange: { c: {} } });
+    Networks_Manager.send({ MsgMmrGetBootTimerDaysRange : { c : {} } });
 }
 function _onMsgMmrGetBootTimerDaysRange(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetBootTimerDaysRangeResponse;
@@ -59,10 +59,14 @@ function _onMsgMmrGetBootTimerDaysRange(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrSetBootTimerDaysRange(rangeForStd: number[], rangeForFog: number[]): void {
-    Networks_Manager.send({ MsgMmrSetBootTimerDaysRange: { c: {
-        rangeForStd : rangeForStd,
-        rangeForFog : rangeForFog,
-    } } });
+    Networks_Manager.send({
+        MsgMmrSetBootTimerDaysRange : {
+            c : {
+                rangeForStd : rangeForStd,
+                rangeForFog : rangeForFog,
+            }, 
+        }, 
+    });
 }
 function _onMsgMmrSetBootTimerDaysRange(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetBootTimerDaysRangeResponse;
@@ -73,9 +77,13 @@ function _onMsgMmrSetBootTimerDaysRange(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrGetRoomPublicInfo(roomId: number): void {
-    Networks_Manager.send({ MsgMmrGetRoomPublicInfo: { c: {
-        roomId,
-    } }, });
+    Networks_Manager.send({
+        MsgMmrGetRoomPublicInfo : {
+            c : {
+                roomId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMmrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrGetRoomPublicInfoResponse;
@@ -88,8 +96,12 @@ async function _onMsgMmrGetRoomPublicInfo(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqMmrGetJoinedRoomIdArray(): void {
-    Networks_Manager.send({ MsgMmrGetJoinedRoomIdArray: { c: {
-    }, }, });
+    Networks_Manager.send({
+        MsgMmrGetJoinedRoomIdArray : {
+            c : {
+            }, 
+        }, 
+    });
 }
 function _onMsgMmrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetJoinedRoomIdArrayResponse;
@@ -98,10 +110,14 @@ function _onMsgMmrGetJoinedRoomIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number[]): void {
-    Networks_Manager.send({ MsgMmrSetBannedCoIdArray: { c: {
-        roomId          : roomId,
-        bannedCoIdArray : bannedCoIdArray,
-    } }, });
+    Networks_Manager.send({
+        MsgMmrSetBannedCoIdArray : {
+            c : {
+                roomId          : roomId,
+                bannedCoIdArray : bannedCoIdArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMmrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrSetBannedCoIdArrayResponse;
@@ -112,10 +128,14 @@ async function _onMsgMmrSetBannedCoIdArray(e: Egret_Egret.Event): Promise<void> 
 }
 
 export function reqMmrSetMaxConcurrentCount(maxCountForStd: number, maxCountForFog: number): void {
-    Networks_Manager.send({ MsgMmrSetMaxConcurrentCount: { c: {
-        maxCountForStd,
-        maxCountForFog,
-    } }, });
+    Networks_Manager.send({
+        MsgMmrSetMaxConcurrentCount : {
+            c : {
+                maxCountForStd,
+                maxCountForFog,
+            }, 
+        }, 
+    });
 }
 function _onMsgMmrSetMaxConcurrentCount(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetMaxConcurrentCountResponse;
@@ -127,8 +147,12 @@ function _onMsgMmrSetMaxConcurrentCount(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrGetBannedNormalMapIdArray(): void {
-    Networks_Manager.send({ MsgMmrGetBannedNormalMapIdArray: { c: {
-    } } });
+    Networks_Manager.send({
+        MsgMmrGetBannedNormalMapIdArray : {
+            c : {
+            }, 
+        }, 
+    });
 }
 function _onMsgMmrGetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrGetBannedNormalMapIdArrayResponse;
@@ -139,10 +163,14 @@ function _onMsgMmrGetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrSetBannedNormalMapIdArray(normalMapIdArrayForStd: number[], normalMapIdArrayForFog: number[]): void {
-    Networks_Manager.send({ MsgMmrSetBannedNormalMapIdArray: { c: {
-        bannedNormalMapIdArrayForStd  : normalMapIdArrayForStd,
-        bannedNormalMapIdArrayForFog  : normalMapIdArrayForFog,
-    } } });
+    Networks_Manager.send({
+        MsgMmrSetBannedNormalMapIdArray : {
+            c : {
+                bannedNormalMapIdArrayForStd : normalMapIdArrayForStd,
+                bannedNormalMapIdArrayForFog : normalMapIdArrayForFog,
+            }, 
+        }, 
+    });
 }
 function _onMsgMmrSetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
     const data = e.data as MmrSetBannedNormalMapIdArrayResponse;
@@ -153,11 +181,15 @@ function _onMsgMmrSetBannedNormalMapIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqMmrSetSelfSettings(roomId: number, coId: number, unitAndTileSkinId: number): void {
-    Networks_Manager.send({ MsgMmrSetSelfSettings: { c: {
-        roomId,
-        coId,
-        unitAndTileSkinId,
-    }, }, });
+    Networks_Manager.send({
+        MsgMmrSetSelfSettings : {
+            c : {
+                roomId,
+                coId,
+                unitAndTileSkinId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgMmrSetSelfSettings(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as MmrSetSelfSettingsResponse;

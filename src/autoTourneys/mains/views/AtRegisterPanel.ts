@@ -39,17 +39,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TimeTick,                    callback: this._onNotifyTimeTick },
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgAtRegister,               callback: this._onNotifyMsgAtRegister },
-            { type: Notifications_TypeId.TypeId.MsgAtGetRegistrationInfo,    callback: this._onNotifyMsgAtGetRegistrationInfo },
+            { type : Notifications_TypeId.TypeId.TimeTick,                    callback : this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgAtRegister,               callback : this._onNotifyMsgAtRegister },
+            { type : Notifications_TypeId.TypeId.MsgAtGetRegistrationInfo,    callback : this._onNotifyMsgAtGetRegistrationInfo },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnPreviousTourney, callback: this._onTouchedBtnPreviousTourney },
-            { ui: this._btnNextTourney,     callback: this._onTouchedBtnNextTourney },
-            { ui: this._btnRegister,        callback: this._onTouchedBtnRegister },
-            { ui: this._btnUnregister,      callback: this._onTouchedBtnUnregister },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnPreviousTourney, callback : this._onTouchedBtnPreviousTourney },
+            { ui : this._btnNextTourney,     callback : this._onTouchedBtnNextTourney },
+            { ui : this._btnRegister,        callback : this._onTouchedBtnRegister },
+            { ui : this._btnUnregister,      callback : this._onTouchedBtnUnregister },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -171,7 +171,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (tourneyId == null) {
             label.setText(`----`);
         } else {
-            const tourneyName = Lang_Utils.getLanguageText({ textArray: (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() });
+            const tourneyName = Lang_Utils.getLanguageText({ textArray : (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() });
             this._labelTourneyId.setText(`#${tourneyId} ${tourneyName ?? ``}`);
         }
     }

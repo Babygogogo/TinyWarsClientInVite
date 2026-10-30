@@ -2,7 +2,7 @@ import {
     Helpers_Collection,
 } from "../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum SkinId {
     Neutral   = 0,
     First     = 1,

@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum TurnIndex {
     FirstIndex      = 1,
 
@@ -9,7 +9,7 @@ export const enum TurnIndex {
     MinLimit        = 20,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum PhaseCode {
     WaitBeginTurn       = 0,
     Main                = 1,

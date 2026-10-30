@@ -50,7 +50,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = NumArray.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(NumArray.VnLength,    { desc: Lang_Constants.TextType.A0480, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false } );
+        variables.set(NumArray.VnLength,    { desc : Lang_Constants.TextType.A0480, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false } );
 
         return variables;
     }
@@ -60,26 +60,28 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
             NumArray.FnGet,
             new ExpressionParsers_FunctionInfo.FunctionInfo(
                 Lang_Constants.TextType.A0490,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                 
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnGet, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_00,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnGet, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_01,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnWhere,
@@ -89,35 +91,37 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnWhere, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_02
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_02,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_03
+                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnWhere, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_03,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.Number],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.Number],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(NumArray.FnWhere, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_04
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_04,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.NumberArray;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnSelect,
@@ -127,24 +131,26 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnSelect, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_05
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_05,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_06
+                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnSelect, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_06,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.Number],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.Number],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     switch (lambdaResultType) {
                         case ExpressionParsers_Enums.ResultType.Number        : return ExpressionParsers_Enums.ResultType.NumberArray;
@@ -167,13 +173,13 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                                     ExpressionParsers_Enums.ResultType.Player,
                                     ExpressionParsers_Enums.ResultType.Position,
                                 ],
-                                lambdaResultType
+                                lambdaResultType,
                             ),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_07
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_07,
                         );
                     }
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnMax,
@@ -183,24 +189,26 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnMax, `<=1`, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_08
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_08,
                         );
                     }
                     if (argArray.length === 0) {
                         return ExpressionParsers_Enums.ResultType.Number;
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnMax, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_09
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_09,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnMin,
@@ -210,24 +218,26 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnMin, `<=1`, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_10
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_10,
                         );
                     }
                     if (argArray.length === 0) {
                         return ExpressionParsers_Enums.ResultType.Number;
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnMin, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_11
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_11,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnMean,
@@ -237,24 +247,26 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnMean, `<=1`, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_12
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_12,
                         );
                     }
                     if (argArray.length === 0) {
                         return ExpressionParsers_Enums.ResultType.Number;
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnMean, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_13
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_13,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnSum,
@@ -264,24 +276,26 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length > 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnSum, `<=1`, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_14
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_14,
                         );
                     }
                     if (argArray.length === 0) {
                         return ExpressionParsers_Enums.ResultType.Number;
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnSum, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_15
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_15,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnAll,
@@ -291,35 +305,37 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnAll, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_16
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_16,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_17
+                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAll, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_17,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.Number],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.Number],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(NumArray.FnAll, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_18
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_18,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.NumberArray;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnAny,
@@ -329,35 +345,37 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnAny, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_19
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_19,
                         );
                     }
 
                     const lambda = argArray[0];
                     if (!(lambda instanceof ExpressionParsers_Nodes_Lambda.Lambda)) {
                         throw Helpers_Misc.newError(
-                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_20
+                            ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAny, 1, ExpressionParsers_Enums.ResultType.Lambda, lambda.getResultType({
+                                contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                            })),
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_20,
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
-                        contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.Number],
-                        indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
-                        localVariableDict               : localVariableDict,
-                        customCounterNameSet            : customCounterNameSet,
+                        contextType                    : contextType,
+                        directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.Number],
+                        indirectLambdaArgumentInfoDict : lambdaArgumentInfoDict,
+                        localVariableDict              : localVariableDict,
+                        customCounterNameSet           : customCounterNameSet,
                     });
                     if (lambdaResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForLambdaResultType(NumArray.FnAny, 1, [ExpressionParsers_Enums.ResultType.Number], lambdaResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_21
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_21,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnAdd,
@@ -367,23 +385,25 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length <= 0) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnAdd, "> 0", argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_22
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_22,
                         );
                     }
 
                     for (let i = 0; i < argArray.length; ++i) {
-                        const argType = argArray[i].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                        const argType = argArray[i].getResultType({
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
                                 ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnAdd, i + 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                                Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_23
+                                Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_23,
                             );
                         }
                     }
 
                     return ExpressionParsers_Enums.ResultType.NumberArray;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnHas,
@@ -393,21 +413,23 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnHas, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_24
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_24,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnHas, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_25
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_25,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
         functions.set(
             NumArray.FnSet,
@@ -417,23 +439,25 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 2) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(NumArray.FnSet, 2, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_26
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_26,
                         );
                     }
 
                     for (let i = 0; i < argArray.length; ++i) {
-                        const argType = argArray[i].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                        const argType = argArray[i].getResultType({
+                            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                        });
                         if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                             throw Helpers_Misc.newError(
                                 ExpressionParsers_Utils.getErrorTextForParameterType(NumArray.FnSet, i + 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                                Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_27
+                                Utils_ClientErrorCode.ClientErrorCode.EpContextNumberArray_GenerateFunctions_27,
                             );
                         }
                     }
 
                     return ExpressionParsers_Enums.ResultType.NumberArray;
                 },
-            )
+            ),
         );
 
         return functions;
@@ -537,11 +561,11 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         const war           = this.getWar();
         const numbers       = this._numberArray;
         const resultType    = node.getLambdaResultType2({
-            contextType                     : rootCtx.getContextType(),
-            directLambdaArgumentInfoArray   : [ExpressionParsers_Enums.ResultType.Number],
-            indirectLambdaArgumentInfoDict  : null,
-            localVariableDict               : localVariableDict,
-            customCounterNameSet            : new Set(war.getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
+            contextType                    : rootCtx.getContextType(),
+            directLambdaArgumentInfoArray  : [ExpressionParsers_Enums.ResultType.Number],
+            indirectLambdaArgumentInfoDict : null,
+            localVariableDict              : localVariableDict,
+            customCounterNameSet           : new Set(war.getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
         });
         if (resultType === ExpressionParsers_Enums.ResultType.Unit) {
             const resultArray: ExpressionParsers_Results_NullableUnit.NullableUnit[] = [];

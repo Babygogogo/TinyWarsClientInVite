@@ -37,8 +37,8 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayer
     }
 
     return WoContainer.fromJson({
-        WoPlayerDeleteUnit   : {
-            gridIndex   : gridIndex.toProto().toJson(),
+        WoPlayerDeleteUnit : {
+            gridIndex : gridIndex.toProto().toJson(),
         },
     });
 }

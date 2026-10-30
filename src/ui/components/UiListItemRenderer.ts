@@ -9,8 +9,7 @@ import {
 
 export abstract class UiListItemRenderer<OpenData extends Ui_Types_UiListItemData.UiListItemData>
     extends     Ui_Components_UiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<OpenData>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<OpenData> {
     private _shortSfxCode = Sounds_Constants.ShortSfxCode.None;
 
     // public constructor() {
@@ -36,7 +35,7 @@ export abstract class UiListItemRenderer<OpenData extends Ui_Types_UiListItemDat
         touchEnabled            = true,
         touchChildrenEnabled    = false,
         mouseStyle              = Helpers_PointerInput.MouseStyleType.Pointer,
-        shortSfxCode            = Sounds_Constants.ShortSfxCode.ButtonNeutral01
+        shortSfxCode            = Sounds_Constants.ShortSfxCode.ButtonNeutral01,
     ): void {
         this.setIsTouchEnabled(touchEnabled);
         this.setIsTouchChildrenEnabled(touchChildrenEnabled);

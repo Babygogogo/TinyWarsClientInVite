@@ -54,12 +54,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -187,8 +187,7 @@ interface DataForMedalRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class MedalRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForMedalRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMedalRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForMedalRenderer> {
     private readonly _imgMedal! : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
@@ -210,7 +209,7 @@ class MedalRenderer
 }
 
 function getTextForTimestamp(timestamp: number): string {
-    const text1 = Lang_Utils.getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
-    const text2 = Lang_Utils.getTimestampShortText(timestamp, { year: false, month: false, date: false });
+    const text1 = Lang_Utils.getTimestampShortText(timestamp, { hour : false, minute : false, second : false });
+    const text2 = Lang_Utils.getTimestampShortText(timestamp, { year : false, month : false, date : false });
     return `${text1} ${text2}`;
 }

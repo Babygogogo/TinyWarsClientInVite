@@ -28,9 +28,9 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         super(
             gcData,
             SettingsForCommon.fromJson({
-                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
-            })
+                turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+            }),
         );
 
         this._mapRawData = mapRawData;
@@ -38,7 +38,7 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         this.getSettingsForCcw().setNormalMapId(mapRawData.getNormalMapId());
         this.getSettingsForCommon().setConfigVersion(gcData.getVersion());
         this.resetDataByTemplateWarRuleId(Helpers_Misc.getExisted(
-            mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanCcw())?.getRuleId())
+            mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanCcw())?.getRuleId()),
         );
     }
 
@@ -50,13 +50,13 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         settingsForCcw.setBootTimerParams(this.getBootTimerParams());
 
         return CcrCreateRoomRequest.fromJson({
-            settingsForCommon       : this.getSettingsForCommon().toJson(),
-            settingsForCcw          : settingsForCcw.toJson(),
+            settingsForCommon : this.getSettingsForCommon().toJson(),
+            settingsForCcw    : settingsForCcw.toJson(),
 
-            selfCoId                : this.getSelfCoId(),
-            selfPlayerIndex         : this.getSelfPlayerIndex(),
-            selfUnitAndTileSkinId   : this.getSelfUnitAndTileSkinId(),
-            aiSkinInfoArray         : this.getAiSkinInfoArray().map(v => v.toJson()),
+            selfCoId              : this.getSelfCoId(),
+            selfPlayerIndex       : this.getSelfPlayerIndex(),
+            selfUnitAndTileSkinId : this.getSelfUnitAndTileSkinId(),
+            aiSkinInfoArray       : this.getAiSkinInfoArray().map(v => v.toJson()),
         });
     }
 
@@ -91,10 +91,10 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         });
 
         this.getSettingsForCommon().setInstanceWarRule(WarRules_Utils_Instance.create({
-            templateWarRule             : templateWarRule,
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : templateWarRule,
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         }));
         this.setSelfPlayerIndex(selfPlayerIndex);
         this.setSelfUnitAndTileSkinId(selfPlayerIndex);
@@ -135,8 +135,8 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         infoArray.length    = 0;
         for (const playerIndex of aiPlayerIndexArray) {
             infoArray.push(AiSkinInfo.fromJson({
-                playerIndex         : playerIndex,
-                unitAndTileSkinId   : playerIndex,
+                playerIndex       : playerIndex,
+                unitAndTileSkinId : playerIndex,
             }));
         }
     }
@@ -154,7 +154,7 @@ export class CcrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         } else {
             infoArray.push(AiSkinInfo.fromJson({
                 playerIndex,
-                unitAndTileSkinId   : skinId,
+                unitAndTileSkinId : skinId,
             }));
         }
     }

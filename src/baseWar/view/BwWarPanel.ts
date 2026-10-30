@@ -30,19 +30,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupAll,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
-            tweenTime   : 1000,
+            obj        : this._groupAll,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
+            tweenTime  : 1000,
         });
 
         await Timer_TimerModel.wait(1000);
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupAll,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._groupAll,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

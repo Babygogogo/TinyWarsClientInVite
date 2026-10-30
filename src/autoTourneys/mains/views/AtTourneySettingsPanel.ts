@@ -48,24 +48,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgAtSetRegistrationDuration,    callback: this._onNotifyMsgAtSetRegistrationDuration },
-            { type: Notifications_TypeId.TypeId.MsgAtSetAdjustmentDuration,      callback: this._onNotifyMsgAtSetAdjustmentDuration },
-            { type: Notifications_TypeId.TypeId.MsgAtGetTourneyInfo,             callback: this._onNotifyMsgAtGetTourneyInfo },
-            { type: Notifications_TypeId.TypeId.MsgAtDeleteUser,                 callback: this._onNotifyMsgAtDeleteUser },
-            { type: Notifications_TypeId.TypeId.MsgAtSetName,                    callback: this._onNotifyMsgAtSetName },
-            { type: Notifications_TypeId.TypeId.MsgAtSetBootTimer,               callback: this._onNotifyMsgAtSetBootTimer },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgAtSetRegistrationDuration,    callback : this._onNotifyMsgAtSetRegistrationDuration },
+            { type : Notifications_TypeId.TypeId.MsgAtSetAdjustmentDuration,      callback : this._onNotifyMsgAtSetAdjustmentDuration },
+            { type : Notifications_TypeId.TypeId.MsgAtGetTourneyInfo,             callback : this._onNotifyMsgAtGetTourneyInfo },
+            { type : Notifications_TypeId.TypeId.MsgAtDeleteUser,                 callback : this._onNotifyMsgAtDeleteUser },
+            { type : Notifications_TypeId.TypeId.MsgAtSetName,                    callback : this._onNotifyMsgAtSetName },
+            { type : Notifications_TypeId.TypeId.MsgAtSetBootTimer,               callback : this._onNotifyMsgAtSetBootTimer },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnRegistrationDuration,    callback: this._onTouchedBtnRegistrationDuration },
-            { ui: this._btnAdjustmentDuration,      callback: this._onTouchedBtnAdjustmentDuration },
-            { ui: this._btnRename,                  callback: this._onTouchedBtnRename },
-            { ui: this._btnBootTimer,               callback: this._onTouchedBtnBootTimer },
-            { ui: this._btnDeletePlayer,            callback: this._onTouchedBtnDeletePlayer },
-            { ui: this._btnModifyMap,               callback: this._onTouchedBtnModifyMap },
-            { ui: this._btnModifyBracket,           callback: this._onTouchedBtnModifyBracket },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnRegistrationDuration,    callback : this._onTouchedBtnRegistrationDuration },
+            { ui : this._btnAdjustmentDuration,      callback : this._onTouchedBtnAdjustmentDuration },
+            { ui : this._btnRename,                  callback : this._onTouchedBtnRename },
+            { ui : this._btnBootTimer,               callback : this._onTouchedBtnBootTimer },
+            { ui : this._btnDeletePlayer,            callback : this._onTouchedBtnDeletePlayer },
+            { ui : this._btnModifyMap,               callback : this._onTouchedBtnModifyMap },
+            { ui : this._btnModifyBracket,           callback : this._onTouchedBtnModifyBracket },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -100,18 +100,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = AutoTourneys_Constants.RegistrationConstants.MaxDuration;
         const currentValue  = tourneyInfo.getRegistrationDuration();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B1043),
-            minValue        : minValue,
-            maxValue        : maxValue,
-            currentValue    : currentValue,
-            tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
-            callback        : interval => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B1043),
+            minValue     : minValue,
+            maxValue     : maxValue,
+            currentValue : currentValue,
+            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
+            callback     : interval => {
                 if (interval !== currentValue) {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent     : () => AutoTourneys_Mains_Provider.getTourneyInfoPhase(tourneyInfo) === AutoTourneys_Constants.PhaseId.Registration
+                        getContent : () => AutoTourneys_Mains_Provider.getTourneyInfoPhase(tourneyInfo) === AutoTourneys_Constants.PhaseId.Registration
                             ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0164, Lang_Utils.getTimeDurationText2((tourneyInfo.getRegistrationTimestamp()) + interval - Timer_TimerModel.getServerTimestamp()))
                             : Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                        callback    : () => AutoTourneys_Mains_Gateway.reqAtSetRegistrationDuration(tourneyId, interval),
+                        callback : () => AutoTourneys_Mains_Gateway.reqAtSetRegistrationDuration(tourneyId, interval),
                     });
                 }
             },
@@ -133,18 +133,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxValue      = AutoTourneys_Constants.AdjustmentConstants.MaxDuration;
         const currentValue  = tourneyInfo.getAdjustmentDuration();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B1044),
-            minValue        : minValue,
-            maxValue        : maxValue,
-            currentValue    : currentValue,
-            tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
-            callback        : interval => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B1044),
+            minValue     : minValue,
+            maxValue     : maxValue,
+            currentValue : currentValue,
+            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
+            callback     : interval => {
                 if (interval !== currentValue) {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent     : () => AutoTourneys_Mains_Provider.getTourneyInfoPhase(tourneyInfo) === AutoTourneys_Constants.PhaseId.Adjustment
+                        getContent : () => AutoTourneys_Mains_Provider.getTourneyInfoPhase(tourneyInfo) === AutoTourneys_Constants.PhaseId.Adjustment
                             ? Lang_Utils.getFormattedText(Lang_Constants.TextType.F0165, Lang_Utils.getTimeDurationText2((tourneyInfo.getAdjustmentTimestamp() ?? 0) + interval - Timer_TimerModel.getServerTimestamp()))
                             : Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                        callback    : () => AutoTourneys_Mains_Gateway.reqAtSetAdjustmentDuration(tourneyId, interval),
+                        callback : () => AutoTourneys_Mains_Gateway.reqAtSetAdjustmentDuration(tourneyId, interval),
                     });
                 }
             },
@@ -172,9 +172,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            currentTextArray    : tourneyInfo.getNameArray(),
-            maxTextLength       : AutoTourneys_Constants.Common.MaxNameLength,
-            callback            : nameArray => AutoTourneys_Mains_Gateway.reqAtSetName(tourneyId, nameArray),
+            currentTextArray : tourneyInfo.getNameArray(),
+            maxTextLength    : AutoTourneys_Constants.Common.MaxNameLength,
+            callback         : nameArray => AutoTourneys_Mains_Gateway.reqAtSetName(tourneyId, nameArray),
         });
     }
 
@@ -199,22 +199,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currBootTimerParams = tourneyInfo.getBootTimerParams();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0188),
-            availableNumberArray    : [BootTimers_Constants.TimerTypeId.Regular, BootTimers_Constants.TimerTypeId.Incremental],
-            currentNumber           : currBootTimerParams[0],
-            getNumberMainText       : timerType => Lang_Utils.getBootTimerTypeName(timerType) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : newTimerType => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0188),
+            availableNumberArray : [BootTimers_Constants.TimerTypeId.Regular, BootTimers_Constants.TimerTypeId.Incremental],
+            currentNumber        : currBootTimerParams[0],
+            getNumberMainText    : timerType => Lang_Utils.getBootTimerTypeName(timerType) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : newTimerType => {
                 if (newTimerType === BootTimers_Constants.TimerTypeId.Regular) {
                     const minValue      = 1;
                     const maxValue      = 3600 * 24 * 7;
                     const currentValue  = currBootTimerParams[1];
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                        title           : Lang_Utils.getText(Lang_Constants.TextType.B0124),
-                        minValue        : minValue,
-                        maxValue        : maxValue,
-                        currentValue    : currentValue,
-                        tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
-                        callback        : newValue => {
+                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0124),
+                        minValue     : minValue,
+                        maxValue     : maxValue,
+                        currentValue : currentValue,
+                        tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
+                        callback     : newValue => {
                             const newBootTimerParams = [newTimerType, newValue];
                             if (Helpers_Collection.checkIsSameList(currBootTimerParams, newBootTimerParams)) {
                                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
@@ -229,32 +229,32 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     const maxInitialTime    = 3600 * 24 * 7;
                     const currInitialTime   = currBootTimerParams[1];
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                        title           : Lang_Utils.getText(Lang_Constants.TextType.B0389),
-                        minValue        : minInitialTime,
-                        maxValue        : maxInitialTime,
-                        currentValue    : currInitialTime,
-                        tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minInitialTime)}, ${Lang_Utils.getTimeDurationText2(maxInitialTime)}]`,
-                        callback        : newInitialTime => {
+                        title        : Lang_Utils.getText(Lang_Constants.TextType.B0389),
+                        minValue     : minInitialTime,
+                        maxValue     : maxInitialTime,
+                        currentValue : currInitialTime,
+                        tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minInitialTime)}, ${Lang_Utils.getTimeDurationText2(maxInitialTime)}]`,
+                        callback     : newInitialTime => {
                             const minIncrementalTimePerUnit    = 0;
                             const maxIncrementalTimePerUnit    = 3600 * 24 * 7;
                             const currIncrementalTimePerUnit   = currBootTimerParams[2] ?? 0;
                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                                title           : Lang_Utils.getText(Lang_Constants.TextType.B0390),
-                                minValue        : minIncrementalTimePerUnit,
-                                maxValue        : maxIncrementalTimePerUnit,
-                                currentValue    : currIncrementalTimePerUnit,
-                                tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minIncrementalTimePerUnit)}, ${Lang_Utils.getTimeDurationText2(maxIncrementalTimePerUnit)}]`,
-                                callback        : newIncrementalTimePerUnit => {
+                                title        : Lang_Utils.getText(Lang_Constants.TextType.B0390),
+                                minValue     : minIncrementalTimePerUnit,
+                                maxValue     : maxIncrementalTimePerUnit,
+                                currentValue : currIncrementalTimePerUnit,
+                                tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minIncrementalTimePerUnit)}, ${Lang_Utils.getTimeDurationText2(maxIncrementalTimePerUnit)}]`,
+                                callback     : newIncrementalTimePerUnit => {
                                     const minIncrementalTimePerTurn    = 0;
                                     const maxIncrementalTimePerTurn    = 3600 * 24 * 7;
                                     const currIncrementalTimePerTurn   = currBootTimerParams[3] ?? 0;
                                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-                                        title           : Lang_Utils.getText(Lang_Constants.TextType.B1475),
-                                        minValue        : minIncrementalTimePerTurn,
-                                        maxValue        : maxIncrementalTimePerTurn,
-                                        currentValue    : currIncrementalTimePerTurn,
-                                        tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minIncrementalTimePerTurn)}, ${Lang_Utils.getTimeDurationText2(maxIncrementalTimePerTurn)}]`,
-                                        callback        : newIncrementalTimePerTurn => {
+                                        title        : Lang_Utils.getText(Lang_Constants.TextType.B1475),
+                                        minValue     : minIncrementalTimePerTurn,
+                                        maxValue     : maxIncrementalTimePerTurn,
+                                        currentValue : currIncrementalTimePerTurn,
+                                        tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minIncrementalTimePerTurn)}, ${Lang_Utils.getTimeDurationText2(maxIncrementalTimePerTurn)}]`,
+                                        callback     : newIncrementalTimePerTurn => {
                                             const newBootTimerParams = [newTimerType, newInitialTime, newIncrementalTimePerUnit, newIncrementalTimePerTurn];
                                             if (Helpers_Collection.checkIsSameList(currBootTimerParams, newBootTimerParams)) {
                                                 FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
@@ -295,16 +295,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            maxChooseCount          : 1000,
-            minChooseCount          : 1,
-            availableNumberArray    : currentUserIdArray,
-            currentNumberArray      : [],
-            showNumber              : true,
-            columnsCount            : 3,
-            getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1048),
-            callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
-            callbackOnConfirm       : userIdArray => AutoTourneys_Mains_Gateway.reqAtDeleteUser(tourneyId, userIdArray),
+            maxChooseCount       : 1000,
+            minChooseCount       : 1,
+            availableNumberArray : currentUserIdArray,
+            currentNumberArray   : [],
+            showNumber           : true,
+            columnsCount         : 3,
+            getNumberMainText    : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1048),
+            callbackOnHelp       : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
+            callbackOnConfirm    : userIdArray => AutoTourneys_Mains_Gateway.reqAtDeleteUser(tourneyId, userIdArray),
         });
     }
 
@@ -322,7 +322,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0411);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtSetMapPoolPanel, {
-                tourneyId   : tourneyId,
+                tourneyId : tourneyId,
             });
         }
     }
@@ -338,7 +338,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0407);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtSetInitialBracketsPanel, {
-                tourneyId   : tourneyId,
+                tourneyId : tourneyId,
             });
         }
     }
@@ -432,7 +432,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelRename.setText(Lang_Utils.getLanguageText({ textArray: (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() }) ?? `--`);
+        this._labelRename.setText(Lang_Utils.getLanguageText({ textArray : (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() }) ?? `--`);
     }
 
     private async _updateLabelBootTimer(): Promise<void> {

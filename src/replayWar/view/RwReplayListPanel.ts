@@ -77,14 +77,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnSearch,      callback: this._onTouchedBtnSearch },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
-            { ui: this._btnPrevPage,    callback: this._onTouchedBtnPrevPage },
-            { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnSearch,      callback : this._onTouchedBtnSearch },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
+            { ui : this._btnPrevPage,    callback : this._onTouchedBtnPrevPage },
+            { ui : this._btnNextPage,    callback : this._onTouchedBtnNextPage },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -147,7 +147,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnSearch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwSearchReplayPanel, {
-            replayFilter    : this._replayFilter,
+            replayFilter : this._replayFilter,
         });
     }
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -168,9 +168,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnPrevPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex - 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex - 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -179,9 +179,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
         const newPageIndex = Numbers_Utils.getValueInRange({
-            minValue    : 0,
-            maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
-            rawValue    : _pageIndex + 1,
+            minValue : 0,
+            maxValue : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
+            rawValue : _pageIndex + 1,
         });
         if (newPageIndex !== _pageIndex) {
             _pageIndex = newPageIndex;
@@ -222,17 +222,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0223) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0223) },
                 pageClass   : ReplayWar_View_RwReplayWarInfoPage.Page,
                 pageData    : null,
             },
@@ -302,8 +302,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const replayInfo    = await ReplayWar_Model_RwModel.getReplayInfo(replayId);
             if ((replayInfo != null) && (await _checkIsReplayInfoMeetFilter(replayInfo, filter))) {
                 this._cachedListDataArray = [{
-                    replayId    : replayId,
-                    panel       : this,
+                    replayId : replayId,
+                    panel    : this,
                 }];
             } else {
                 this._cachedListDataArray = [];
@@ -322,8 +322,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 if ((filter == null) || (await _checkIsReplayInfoMeetFilter(replayInfo, filter))) {
                     dataArray.push({
-                        replayId    : replayId,
-                        panel       : this,
+                        replayId : replayId,
+                        panel    : this,
                     });
                 }
             })());
@@ -346,10 +346,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (normalMapId != null) {
             return {
                 mapInfo : {
-                    hasFog              : !!replayInfo.getHasFog(),
-                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                    gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(replayInfo.getConfigVersion())),
-                    overridingPlayers   : null,
+                    hasFog            : !!replayInfo.getHasFog(),
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(replayInfo.getConfigVersion())),
+                    overridingPlayers : null,
                 },
             };
         } else {
@@ -358,9 +358,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     warInfo : {
-                        warData             : warData,
-                        showInitialWarData  : false,
-                        overridingPlayers   : null,
+                        warData            : warData,
+                        showInitialWarData : false,
+                        overridingPlayers  : null,
                     },
                 };
         }
@@ -381,107 +381,107 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const playerInfo of replayBriefInfo.getPlayerInfoList()) {
             const userId = playerInfo.getUserId() ?? null;
             playerInfoArray.push({
-                playerIndex         : playerInfo.getPlayerIndex(),
-                teamIndex           : playerInfo.getTeamIndex(),
-                isAi                : userId == null,
-                userId              : userId,
-                coId                : playerInfo.getCoId(),
-                unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId(),
-                isReady             : null,
-                isInTurn            : null,
-                isDefeat            : !playerInfo.getIsAlive(),
-                restTimeToBoot      : playerInfo.getRestTimeToBoot(),
+                playerIndex       : playerInfo.getPlayerIndex(),
+                teamIndex         : playerInfo.getTeamIndex(),
+                isAi              : userId == null,
+                userId            : userId,
+                coId              : playerInfo.getCoId(),
+                unitAndTileSkinId : playerInfo.getUnitAndTileSkinId(),
+                isReady           : null,
+                isInTurn          : null,
+                isDefeat          : !playerInfo.getIsAlive(),
+                restTimeToBoot    : playerInfo.getRestTimeToBoot(),
             });
         }
 
         return {
-            gameConfig              : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(replayBriefInfo.getConfigVersion())),
-            playersCountUnneutral   : playerInfoArray.length,
-            roomOwnerPlayerIndex    : null,
-            callbackOnExitRoom      : null,
-            callbackOnDeletePlayer  : null,
-            callbackOnAddDummy      : null,
-            callbackOnChangeDummy   : null,
-            playerInfoArray         : playerInfoArray,
-            enterTurnTime           : null,
-            isReplay                : true,
+            gameConfig             : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(replayBriefInfo.getConfigVersion())),
+            playersCountUnneutral  : playerInfoArray.length,
+            roomOwnerPlayerIndex   : null,
+            callbackOnExitRoom     : null,
+            callbackOnDeletePlayer : null,
+            callbackOnAddDummy     : null,
+            callbackOnChangeDummy  : null,
+            playerInfoArray        : playerInfoArray,
+            enterTurnTime          : null,
+            isReplay               : true,
         };
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 0, customY: 16 - 40 },
-            endProps    : { customAlpha: 1, customY: 16 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 0, customY : 16 - 40 },
+            endProps   : { customAlpha : 1, customY : 16 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 0, customY: 30 },
-            endProps    : { customAlpha: 1, customY: 70 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 0, customY : 30 },
+            endProps   : { customAlpha : 1, customY : 70 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupReplayList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupReplayList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 1, customY: 16 },
-            endProps    : { customAlpha: 0, customY: 16 - 40 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 1, customY : 16 },
+            endProps   : { customAlpha : 0, customY : 16 - 40 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupSearch,
-            beginProps  : { customAlpha: 1, customY: 70 },
-            endProps    : { customAlpha: 0, customY: 30 },
+            obj        : this._groupSearch,
+            beginProps : { customAlpha : 1, customY : 70 },
+            endProps   : { customAlpha : 0, customY : 30 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupReplayList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupReplayList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -505,8 +505,7 @@ interface DataForReplayRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class ReplayRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForReplayRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForReplayRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForReplayRenderer> {
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -545,7 +544,7 @@ class ReplayRenderer
             labelType.setText(Lang_Utils.getWarTypeName(replayBriefInfo.getWarType()) ?? Lang_Constants.UndefinedError);
             labelName.setText(normalMapId == null
                 ? `----`
-                : await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? Lang_Constants.UndefinedError
+                : await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? Lang_Constants.UndefinedError,
             );
         }
         this._layoutName.arrangeItems();

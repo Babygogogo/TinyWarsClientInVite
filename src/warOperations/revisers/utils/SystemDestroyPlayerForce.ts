@@ -29,7 +29,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystem
     }
 
     return WoContainer.fromJson({
-        WoSystemDestroyPlayerForce: {
+        WoSystemDestroyPlayerForce : {
             targetPlayerIndex,
         },
     });

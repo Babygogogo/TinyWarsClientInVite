@@ -64,32 +64,32 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
 
-            { ui: this._btnReset,               callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,              callback: this._onTouchedBtnSearch },
+            { ui : this._btnReset,               callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,              callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnMapName,             callback: this._onTouchedBtnMapName },
-            { ui: this._btnDeleteMapName,       callback: this._onTouchedBtnDeleteMapName },
+            { ui : this._btnMapName,             callback : this._onTouchedBtnMapName },
+            { ui : this._btnDeleteMapName,       callback : this._onTouchedBtnDeleteMapName },
 
-            { ui: this._btnPlayerName,          callback: this._onTouchedBtnPlayerName },
-            { ui: this._btnDeletePlayerName,    callback: this._onTouchedBtnDeletePlayerName },
+            { ui : this._btnPlayerName,          callback : this._onTouchedBtnPlayerName },
+            { ui : this._btnDeletePlayerName,    callback : this._onTouchedBtnDeletePlayerName },
 
-            { ui: this._btnCoName,              callback: this._onTouchedBtnCoName },
-            { ui: this._btnDeleteCoName,        callback: this._onTouchedBtnDeleteCoName },
+            { ui : this._btnCoName,              callback : this._onTouchedBtnCoName },
+            { ui : this._btnDeleteCoName,        callback : this._onTouchedBtnDeleteCoName },
 
-            { ui: this._btnPlayersCount,        callback: this._onTouchedBtnPlayersCount },
-            { ui: this._btnDeletePlayersCount,  callback: this._onTouchedBtnDeletePlayersCount },
+            { ui : this._btnPlayersCount,        callback : this._onTouchedBtnPlayersCount },
+            { ui : this._btnDeletePlayersCount,  callback : this._onTouchedBtnDeletePlayersCount },
 
-            { ui: this._btnWarId,               callback: this._onTouchedBtnWarId },
-            { ui: this._btnDeleteWarId,         callback: this._onTouchedBtnDeleteWarId },
+            { ui : this._btnWarId,               callback : this._onTouchedBtnWarId },
+            { ui : this._btnDeleteWarId,         callback : this._onTouchedBtnDeleteWarId },
 
-            { ui: this._btnWarName,             callback: this._onTouchedBtnWarName },
-            { ui: this._btnDeleteWarName,       callback: this._onTouchedBtnDeleteWarName },
+            { ui : this._btnWarName,             callback : this._onTouchedBtnWarName },
+            { ui : this._btnDeleteWarName,       callback : this._onTouchedBtnDeleteWarName },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -116,7 +116,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSearch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestWarsPanel, {
-            filter  : this._filter,
+            filter : this._filter,
         });
         this.closePanel();
     }
@@ -124,9 +124,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnMapName(): Promise<void> {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            callback                  : normalMapId => {
                 filter.normalMapId = normalMapId;
                 this._updateLabelMapName();
             },
@@ -139,8 +139,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnPlayerName(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : null,
-            callbackOnConfirm   : userId => {
+            getTitleText      : null,
+            callbackOnConfirm : userId => {
                 this._filter.userId = userId;
                 this._updateLabelPlayerName();
             },
@@ -155,11 +155,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
         const filter        = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoCategoryIdPanel, {
-            gameConfig                      : gameConfig,
-            availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
-            currentCoCategoryId             : filter.coCategoryId ?? null,
-            isBan                           : false,
-            callbackOnConfirm               : coCategoryId => {
+            gameConfig                 : gameConfig,
+            availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
+            currentCoCategoryId        : filter.coCategoryId ?? null,
+            isBan                      : false,
+            callbackOnConfirm          : coCategoryId => {
                 filter.coCategoryId = coCategoryId;
                 this._updateLabelCoName();
             },
@@ -173,14 +173,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnPlayersCount(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0229),
-            minValue        : 2,
-            maxValue        : Players_Constants.PlayerIndex.Max,
-            currentValue    : filter.playersCountUnneutral ?? 2,
-            callback        : playersCount => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0229),
+            minValue     : 2,
+            maxValue     : Players_Constants.PlayerIndex.Max,
+            currentValue : filter.playersCountUnneutral ?? 2,
+            callback     : playersCount => {
                 filter.playersCountUnneutral = playersCount;
                 this._updateLabelPlayersCount();
-            }
+            },
         });
     }
     private _onTouchedBtnDeletePlayersCount(): void {
@@ -191,11 +191,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnWarId(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0226),
-            minValue        : 0,
-            maxValue        : 999999999,
-            currentValue    : filter.warId ?? 0,
-            callback        : warId => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0226),
+            minValue     : 0,
+            maxValue     : 999999999,
+            currentValue : filter.warId ?? 0,
+            callback     : warId => {
                 filter.warId = warId;
                 this._updateLabelWarId();
             },
@@ -209,16 +209,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnWarName(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0185),
-            charRestrict    : null,
-            canBeEmpty      : true,
-            maxChars        : Wars_Constants.Misc.MaxNameLength,
-            tips            : null,
-            currentValue    : filter.warName ?? ``,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0185),
+            charRestrict : null,
+            canBeEmpty   : true,
+            maxChars     : Wars_Constants.Misc.MaxNameLength,
+            tips         : null,
+            currentValue : filter.warName ?? ``,
+            callback     : panel => {
                 filter.warName = panel.getInputText();
                 this._updateLabelWarName();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteWarName(): void {

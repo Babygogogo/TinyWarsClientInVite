@@ -33,7 +33,7 @@ import {
 } from "../../internal.ts";
 import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 const enum UnitInfoType {
     Hp,
     ProductionCost,
@@ -94,15 +94,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,           callback: this._onNotifyUnitAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,          callback: this._onNotifyUnitStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,           callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,          callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnSwitch,          callback: this._onTouchedBtnSwitch },
-            { ui: this._groupDamageTitle,   callback: this._onTouchedGroupDamageTitle },
-            { ui: this._groupMoveCostTitle, callback: this._onTouchedGroupMoveCostTitle },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnSwitch,          callback : this._onTouchedBtnSwitch },
+            { ui : this._groupDamageTitle,   callback : this._onTouchedGroupDamageTitle },
+            { ui : this._groupMoveCostTitle, callback : this._onTouchedGroupMoveCostTitle },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -158,7 +158,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSwitch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonTileChartPanel, {
-            gameConfig: this.getOpenData()?.gameConfig,
+            gameConfig : this.getOpenData()?.gameConfig,
         });
         this.closePanel();
     }
@@ -217,11 +217,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelName.setText(Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError);
         this._labelName1.setText(Lang_Utils.getUnitName(unitType, gameConfig, Lang_Utils.getSecondaryLanguageType()) ?? Lang_Constants.UndefinedError);
         this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig          : gameConfig,
-            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId    : undefined,
-            unitData            : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x: 0, y: 0 },
+            gameConfig       : gameConfig,
+            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId : undefined,
+            unitData         : Units_Utils_Serialization.createDefault({
+                gridIndex   : { x : 0, y : 0 },
                 playerIndex : playerIndex,
                 unitTypeId  : unitType,
                 unitId      : -1,
@@ -295,16 +295,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _createInfoHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer {
         return {
-            index           : 0,
-            infoType        : UnitInfoType.Hp,
+            index    : 0,
+            infoType : UnitInfoType.Hp,
             unitTemplateCfg,
             gameConfig,
         };
     }
     private _createInfoProductionCost(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer {
         return {
-            index       : 0,
-            infoType    : UnitInfoType.ProductionCost,
+            index    : 0,
+            infoType : UnitInfoType.ProductionCost,
             unitTemplateCfg,
             gameConfig,
         };
@@ -326,16 +326,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _createInfoMovement(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer {
         return {
-            index       : 0,
-            infoType    : UnitInfoType.Movement,
+            index    : 0,
+            infoType : UnitInfoType.Movement,
             unitTemplateCfg,
             gameConfig,
         };
     }
     private _createInfoFuel(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer {
         return {
-            index       : 0,
-            infoType    : UnitInfoType.Fuel,
+            index    : 0,
+            infoType : UnitInfoType.Fuel,
             unitTemplateCfg,
             gameConfig,
         };
@@ -344,16 +344,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getMinAttackRange() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.AttackRange,
+                index    : 0,
+                infoType : UnitInfoType.AttackRange,
                 unitTemplateCfg,
                 gameConfig,
             };
     }
     private _createInfoVision(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigs_GameConfig.GameConfig): DataForInfoRenderer {
         return {
-            index       : 0,
-            infoType    : UnitInfoType.Vision,
+            index    : 0,
+            infoType : UnitInfoType.Vision,
             unitTemplateCfg,
             gameConfig,
         };
@@ -362,8 +362,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getPrimaryWeaponMaxAmmo() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.PrimaryWeaponAmmo,
+                index    : 0,
+                infoType : UnitInfoType.PrimaryWeaponAmmo,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -372,8 +372,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getMaxBuildMaterial() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.BuildMaterial,
+                index    : 0,
+                infoType : UnitInfoType.BuildMaterial,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -382,8 +382,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getMaxProduceMaterial() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.ProduceMaterial,
+                index    : 0,
+                infoType : UnitInfoType.ProduceMaterial,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -392,8 +392,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getFlareMaxAmmo() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.FlareAmmo,
+                index    : 0,
+                infoType : UnitInfoType.FlareAmmo,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -402,8 +402,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getDiveCfg() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.IsDiver,
+                index    : 0,
+                infoType : UnitInfoType.IsDiver,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -412,8 +412,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         return unitTemplateCfg.getLoadUnitCategoryId() == null
             ? null
             : {
-                index       : 0,
-                infoType    : UnitInfoType.LoadUnit,
+                index    : 0,
+                infoType : UnitInfoType.LoadUnit,
                 unitTemplateCfg,
                 gameConfig,
             };
@@ -439,11 +439,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             }
             for (const targetTileType of gameConfig.getTileTypeArrayForDamageChart()) {
                 dataArray.push({
-                    index           : index,
-                    gameConfig      : gameConfig,
-                    attackUnitType  : attackUnitType,
-                    targetTileType  : targetTileType,
-                    playerIndex     : playerIndex,
+                    index          : index,
+                    gameConfig     : gameConfig,
+                    attackUnitType : attackUnitType,
+                    targetTileType : targetTileType,
+                    playerIndex    : playerIndex,
                 });
                 ++index;
             }
@@ -464,10 +464,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             let index           = 0;
             for (const tileType of gameConfig.getTileTypeArrayForTileChart()) {
                 dataArray.push({
-                    tileType    : tileType,
-                    gameConfig  : gameConfig,
-                    unitType    : unitType,
-                    index       : index++,
+                    tileType   : tileType,
+                    gameConfig : gameConfig,
+                    unitType   : unitType,
+                    index      : index++,
                 });
             }
         }
@@ -487,8 +487,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             data.push({
                 gameConfig,
                 index,
-                unitType: unitTypes[index],
-                panel   : this,
+                unitType : unitTypes[index],
+                panel    : this,
             });
         }
 
@@ -512,8 +512,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -541,11 +541,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._labelName.setText(Lang_Utils.getUnitName(unitType, gameConfig) ?? Lang_Constants.UndefinedError);
         this._layoutName.arrangeItems();
         this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig          : gameConfig,
-            skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-            overridingSkinId    : undefined,
-            unitData            : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x: 0, y: 0 },
+            gameConfig       : gameConfig,
+            skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+            overridingSkinId : undefined,
+            unitData         : Units_Utils_Serialization.createDefault({
+                gridIndex   : { x : 0, y : 0 },
                 unitTypeId  : unitType,
                 playerIndex : playerIndex,
                 unitId      : -1,
@@ -574,7 +574,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -751,7 +751,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             groupExtra.setIsVisible(true);
             this._labelExtraInfo.setText(Lang_Utils.getUnitName(
                 Helpers_Misc.getExisted(unit.getProduceUnitTypeId()),
-                data.gameConfig
+                data.gameConfig,
             ) ?? Lang_Constants.UndefinedError);
         }
     }
@@ -799,7 +799,7 @@ class InfoRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             groupExtra.setIsVisible(true);
             this._labelExtraInfo.setText(Lang_Utils.getUnitCategoryName(
                 Helpers_Misc.getExisted(unit.getLoadUnitCategoryId()),
-                data.gameConfig
+                data.gameConfig,
             ) ?? Lang_Constants.UndefinedError);
         }
     }
@@ -827,8 +827,8 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,  callback : this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -866,11 +866,11 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             this._unitView.setIsVisible(true);
             this._tileView.setIsVisible(false);
             this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                gameConfig          : gameConfig,
-                skinId              : ForceSkins_Utils.getDefaultSkinId(playerIndex),
-                overridingSkinId    : undefined,
-                unitData            : Units_Utils_Serialization.createDefault({
-                    gridIndex   : { x: 0, y: 0 },
+                gameConfig       : gameConfig,
+                skinId           : ForceSkins_Utils.getDefaultSkinId(playerIndex),
+                overridingSkinId : undefined,
+                unitData         : Units_Utils_Serialization.createDefault({
+                    gridIndex   : { x : 0, y : 0 },
                     unitTypeId  : targetUnitType,
                     playerIndex : playerIndex,
                     unitId      : -1,
@@ -903,13 +903,13 @@ class DamageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
             const primaryAttackDamage       = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Primary].getDamage();
             const secondaryAttackDamage     = attackCfg[targetArmorType][Units_Constants.WeaponTypeId.Secondary].getDamage();
             this._tileView.loadSource(Common_Model_CommonModel.getCachedTileObjectImageSource({
-                version     : Users_Model.getSelfSettingsTextureVersion(),
-                themeType   : Tiles_Constants_Common.ThemeTypeId.Normal,
-                skinId      : ForceSkins_Constants.SkinId.Neutral,
-                objectType  : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(targetTileType)),
-                isDark      : false,
-                shapeId     : 0,
-                tickCount   : Common_Model_CommonModel.getTileAnimationTickCount(),
+                version    : Users_Model.getSelfSettingsTextureVersion(),
+                themeType  : Tiles_Constants_Common.ThemeTypeId.Normal,
+                skinId     : ForceSkins_Constants.SkinId.Neutral,
+                objectType : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(targetTileType)),
+                isDark     : false,
+                shapeId    : 0,
+                tickCount  : Common_Model_CommonModel.getTileAnimationTickCount(),
             }));
             this._labelPrimaryAttack.setText(primaryAttackDamage == null ? `--` : `${primaryAttackDamage}`);
             this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
@@ -935,7 +935,7 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -974,15 +974,15 @@ class MoveCostRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         const tileView          = this._tileView;
         const tileTemplateCfg   = gameConfig.getTileTemplateCfg(tileType);
         tileView.init({
-            tileBaseType            : tileTemplateCfg?.getToTileBaseTypeId() ?? null,
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : tileTemplateCfg?.getToTileObjectTypeId() ?? null,
-            tileObjectShapeId       : 0,
-            skinId                  : Players_Constants.PlayerIndex.Neutral,
-            overridingSkinId        : undefined,
-            gameConfig              : gameConfig,
+            tileBaseType          : tileTemplateCfg?.getToTileBaseTypeId() ?? null,
+            tileBaseShapeId       : 0,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectType        : tileTemplateCfg?.getToTileObjectTypeId() ?? null,
+            tileObjectShapeId     : 0,
+            skinId                : Players_Constants.PlayerIndex.Neutral,
+            overridingSkinId      : undefined,
+            gameConfig            : gameConfig,
         });
         tileView.updateView();
     }

@@ -10,7 +10,7 @@ export const Common = {
 
     MaxRating : 10,
     MinRating : 0,
-}
+};
 
 export const enum ReviewStatus {
     None        = 0,

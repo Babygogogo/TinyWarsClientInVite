@@ -24,11 +24,11 @@ export class UiRadioButton extends Ui_Components_UiOpenableComponent.UiOpenableC
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupLeft,      callback: this._onTouchedGroupLeft },
-            { ui: this._groupRight,     callback: this._onTouchedGroupRight },
+            { ui : this._groupLeft,      callback : this._onTouchedGroupLeft },
+            { ui : this._groupRight,     callback : this._onTouchedGroupRight },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this.setMouseStyle(Helpers_PointerInput.MouseStyleType.Pointer);
 

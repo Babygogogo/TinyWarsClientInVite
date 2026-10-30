@@ -47,16 +47,18 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: Bots_CommonP
         }
 
         candidates.push({
-            score   : totalScore,
-            action  : WoContainer.fromJson({ WoUnitRepairUnit: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                targetGridIndex : targetGridIndex.toProto().toJson(),
-                launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
-            } })
+            score  : totalScore,
+            action : WoContainer.fromJson({
+                WoUnitRepairUnit : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    targetGridIndex : targetGridIndex.toProto().toJson(),
+                    launchUnitId    : focusUnit.getLoaderUnitId() == null ? null : focusUnit.getUnitId(),
+                }, 
+            }),
         });
     }
 

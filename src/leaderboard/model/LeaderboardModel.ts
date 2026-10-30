@@ -16,16 +16,16 @@ type SpmOverallRankInfo = {
 };
 
 const _spmOverallTopDataArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<string, LbSpmOverall>({
-    reqData: (configVersion: string) => Leaderboard_Model_LeaderboardProxy.reqLbSpmOverallGetTopDataArray(configVersion),
+    reqData : (configVersion: string) => Leaderboard_Model_LeaderboardProxy.reqLbSpmOverallGetTopDataArray(configVersion),
 });
 const _spmOverallRankInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, SpmOverallRankInfo>({
-    reqData: (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbSpmOverallGetRankInfo(userId),
+    reqData : (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbSpmOverallGetRankInfo(userId),
 });
 const _mrwStdRankIndexAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData: (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbMrwGetRankIndex(WarTypes_Constants.WarTypeId.MrwStd, 2, userId),
+    reqData : (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbMrwGetRankIndex(WarTypes_Constants.WarTypeId.MrwStd, 2, userId),
 });
 const _mrwFogRankIndexAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData: (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbMrwGetRankIndex(WarTypes_Constants.WarTypeId.MrwFog, 2, userId),
+    reqData : (userId: number) => Leaderboard_Model_LeaderboardProxy.reqLbMrwGetRankIndex(WarTypes_Constants.WarTypeId.MrwFog, 2, userId),
 });
 
 export function getSpmOverallTopDataArray(configVersion: string): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<LbSpmOverall>> {
@@ -86,8 +86,8 @@ export function updateOnMsgLbSpmOverallGetRankInfo(data: LbSpmOverallGetRankInfo
     setSpmOverallRankInfo(
         data.getUserId() ?? 0,
         {
-            rankIndex   : data.getRankIndex() ?? null,
-            score       : data.getScore() ?? null,
+            rankIndex : data.getRankIndex() ?? null,
+            score     : data.getScore() ?? null,
         },
     );
 }

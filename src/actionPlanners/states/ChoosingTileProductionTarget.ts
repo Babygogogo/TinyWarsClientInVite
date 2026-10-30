@@ -95,8 +95,8 @@ export class ChoosingTileProductionTarget implements ActionPlanners_States_IStat
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.CursorConfirm01);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwProduceUnitPanel, {
-            gridIndex   : gridIndex,
-            war         : actionPlanner.getWar(),
+            gridIndex : gridIndex,
+            war       : actionPlanner.getWar(),
         });
     }
 

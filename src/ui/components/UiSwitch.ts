@@ -56,8 +56,8 @@ export class UiSwitch extends Ui_Components_UiContainer.UiContainer implements U
             // imgDisabled.alpha   = endDisabledAlpha;
         } else {
             this._isRunningTween = true;
-            Tween_Executor.Executor.get(groupSlider).to({ customX: endX }, TweenTime).call(() => this._isRunningTween = false);
-            Tween_Executor.Executor.get(imgEnabled).to({ customAlpha: endEnabledAlpha }, TweenTime);
+            Tween_Executor.Executor.get(groupSlider).to({ customX : endX }, TweenTime).call(() => this._isRunningTween = false);
+            Tween_Executor.Executor.get(imgEnabled).to({ customAlpha : endEnabledAlpha }, TweenTime);
             // Tween.get(imgDisabled).to({ alpha: endDisabledAlpha }, TweenTime);
         }
     }

@@ -68,21 +68,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgGmSetUserPrivilege,   callback: this._onNotifyMsgUserSetPrivilege },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgGmSetUserPrivilege,   callback : this._onNotifyMsgUserSetPrivilege },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSearchUser,                  callback: this._onTouchedBtnSearchUser },
-            { ui: this._btnConfirm,                     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnCancel,                      callback: this.closePanel },
-            { ui: this._groupCanChat,                   callback: this._onTouchedGroupCanChat },
-            { ui: this._groupChatManager,               callback: this._onTouchedGroupChatManager },
-            { ui: this._groupAutoTourneyCommittee,      callback: this._onTouchedGroupAutoTourneyCommittee },
-            { ui: this._groupCanLogin,                  callback: this._onTouchedGroupCanLogin },
-            { ui: this._groupIsAdmin,                   callback: this._onTouchedGroupIsAdmin },
-            { ui: this._groupIsChangeLogEditor,         callback: this._onTouchedGroupIsChangeLogEditor },
-            { ui: this._groupIsMapCommittee,            callback: this._onTouchedGroupIsMapCommittee },
-            { ui: this._groupIsCampaignManager,         callback: this._onTouchedGroupIsCampaignManager },
+            { ui : this._btnSearchUser,                  callback : this._onTouchedBtnSearchUser },
+            { ui : this._btnConfirm,                     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,                      callback : this.closePanel },
+            { ui : this._groupCanChat,                   callback : this._onTouchedGroupCanChat },
+            { ui : this._groupChatManager,               callback : this._onTouchedGroupChatManager },
+            { ui : this._groupAutoTourneyCommittee,      callback : this._onTouchedGroupAutoTourneyCommittee },
+            { ui : this._groupCanLogin,                  callback : this._onTouchedGroupCanLogin },
+            { ui : this._groupIsAdmin,                   callback : this._onTouchedGroupIsAdmin },
+            { ui : this._groupIsChangeLogEditor,         callback : this._onTouchedGroupIsChangeLogEditor },
+            { ui : this._groupIsMapCommittee,            callback : this._onTouchedGroupIsMapCommittee },
+            { ui : this._groupIsCampaignManager,         callback : this._onTouchedGroupIsCampaignManager },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -113,9 +113,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnSearchUser(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : null,
-            callbackOnConfirm   : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, {
-                userId  : userId,
+            getTitleText      : null,
+            callbackOnConfirm : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, {
+                userId : userId,
             }),
         });
     }
@@ -124,14 +124,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const userId = this._getUserId();
         if (userId) {
             Gm_Model_GmProxy.reqGmSetUserPrivilege(userId, UserPrivilege.fromJson({
-                canChat                 : !!this._imgCanChat.getIsVisible(),
-                canLogin                : !!this._imgCanLogin.getIsVisible(),
-                isAdmin                 : !!this._imgIsAdmin.getIsVisible(),
-                isChangeLogEditor       : !!this._imgIsChangeLogEditor.getIsVisible(),
-                isMapCommittee          : !!this._imgIsMapCommittee.getIsVisible(),
-                isChatManager           : !!this._imgChatManager.getIsVisible(),
-                isAutoTourneyCommittee  : !!this._imgAutoTourneyCommittee.getIsVisible(),
-                isCampaignManager       : !!this._imgIsCampaignManager.getIsVisible(),
+                canChat                : !!this._imgCanChat.getIsVisible(),
+                canLogin               : !!this._imgCanLogin.getIsVisible(),
+                isAdmin                : !!this._imgIsAdmin.getIsVisible(),
+                isChangeLogEditor      : !!this._imgIsChangeLogEditor.getIsVisible(),
+                isMapCommittee         : !!this._imgIsMapCommittee.getIsVisible(),
+                isChatManager          : !!this._imgChatManager.getIsVisible(),
+                isAutoTourneyCommittee : !!this._imgAutoTourneyCommittee.getIsVisible(),
+                isCampaignManager      : !!this._imgIsCampaignManager.getIsVisible(),
             }));
         }
     }

@@ -136,7 +136,7 @@ export class BwGridVisualEffectView extends Ui_Components_UiContainer.UiContaine
 }
 
 function createEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitBlock() });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : Helpers_ImageSource.getUnitBlock() });
     img.setAnchorOffsetX(58);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -147,7 +147,7 @@ function createEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_In
     img.setY(getBlockOffsetY() + pos.y);
 
     Tween_Executor.Executor.get(img)
-        .to({ customScaleX: 1, customScaleY: 1 }, 100)
+        .to({ customScaleX : 1, customScaleY : 1 }, 100)
         .wait(600)
         .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
@@ -156,7 +156,7 @@ function createEffectBlock(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_In
 
 function createEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitDive();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDiveOffsetX() + pos.x);
@@ -173,7 +173,7 @@ function createEffectDive(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Int
 
 function createEffectExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitExplosion();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getExplosionOffsetX() + pos.x);
@@ -194,7 +194,7 @@ function createEffectFlare(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_In
 
 function createEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitDamage();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
@@ -210,7 +210,7 @@ function createEffectDamage(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
 }
 
 function createEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitSupply() });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : Helpers_ImageSource.getUnitSupply() });
     img.setAnchorOffsetX(60);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -221,7 +221,7 @@ function createEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
     img.setY(getSupplyOffsetY() + pos.y);
 
     Tween_Executor.Executor.get(img)
-        .to({ customScaleX: 1, customScaleY: 1 }, 100)
+        .to({ customScaleX : 1, customScaleY : 1 }, 100)
         .wait(600)
         .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
@@ -229,7 +229,7 @@ function createEffectSupply(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
 }
 
 function createEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: Helpers_ImageSource.getUnitRepair() });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : Helpers_ImageSource.getUnitRepair() });
     img.setAnchorOffsetX(60);
     img.setAnchorOffsetY(18);
     img.setScaleX(2);
@@ -240,7 +240,7 @@ function createEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
     img.setY(getRepairOffsetY() + pos.y);
 
     Tween_Executor.Executor.get(img)
-        .to({ customScaleX: 1, customScaleY: 1 }, 100)
+        .to({ customScaleX : 1, customScaleY : 1 }, 100)
         .wait(600)
         .call(() => img.getParent()?.removeChild(img as unknown as Egret_Egret.DisplayObject));
 
@@ -249,7 +249,7 @@ function createEffectRepair(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
 
 function createEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arrForDamage  = Helpers_ImageSource.getArrayUnitDamage();
-    const img           = new Ui_Components_UiImage.UiImage({ textureSourceName: arrForDamage[0] });
+    const img           = new Ui_Components_UiImage.UiImage({ textureSourceName : arrForDamage[0] });
     const pos           = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
@@ -261,8 +261,8 @@ function createEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex
     }
 
     tween.set({
-        customX: getExplosionOffsetX() + pos.x,
-        customY: getExplosionOffsetY() + pos.y
+        customX : getExplosionOffsetX() + pos.x,
+        customY : getExplosionOffsetY() + pos.y,
     });
 
     const arrForExplosion = Helpers_ImageSource.getArrayUnitExplosion();
@@ -278,7 +278,7 @@ function createEffectSiloExplosion(gridIndex: AuxiliaryTypes_GridIndex.GridIndex
 
 function createEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitScop();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoSuperPowerActivationOffsetX() + pos.x);
@@ -295,7 +295,7 @@ function createEffectCoSuperPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.
 
 function createEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitCop();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoPowerActivationOffsetX() + pos.x);
@@ -312,7 +312,7 @@ function createEffectCoPowerActivation(gridIndex: AuxiliaryTypes_GridIndex.GridI
 
 function createEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayTileCharge();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getCoSuperPowerActivationOffsetX() + pos.x);
@@ -329,7 +329,7 @@ function createEffectCharge(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_I
 
 function createEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayUnitSurface();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     const pos = gridIndex.createPointByGridIndex();
     img.setIsSmoothing(false);
     img.setX(getDamageOffsetX() + pos.x);
@@ -346,14 +346,14 @@ function createEffectSurface(gridIndex: AuxiliaryTypes_GridIndex.GridIndex): Ui_
 
 function createEffectAiming(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, timeMs: number): Ui_Interfaces_IUiComponent.IUiComponent {
     const arr = Helpers_ImageSource.getArrayCursorAiming();
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: arr[0] });
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : arr[0] });
     img.setIsSmoothing(false);
     img.setX(getGridWidth() * (gridIndex.getX() - 1));
     img.setY(getGridHeight() * (gridIndex.getY() - 1));
 
     const totalFramesCount  = arr.length;
     let frameIndex          = 0;
-    Tween_Executor.Executor.get(img, { loop: true })
+    Tween_Executor.Executor.get(img, { loop : true })
         .wait(getAimingFrameDuration())
         .call(() => {
             frameIndex = (frameIndex + 1) % totalFramesCount;

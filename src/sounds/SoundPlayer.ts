@@ -36,29 +36,29 @@ type OngoingLongSfxData = {
 
 const _SOUND_PATH       = "resource/assets/sound/";
 const _SHORT_SFX_PARAM  = new Map<Sounds_Constants.ShortSfxCode, ShortSfxParams>([   // 必须和config保持一致
-    [ Sounds_Constants.ShortSfxCode.FootMove01,          { name: "footMove.mp3"          } ],
-    [ Sounds_Constants.ShortSfxCode.TireMove01,          { name: "tireMove.mp3"          } ],
-    [ Sounds_Constants.ShortSfxCode.TankMove01,          { name: "tankMove.mp3"          } ],
-    [ Sounds_Constants.ShortSfxCode.CopterMove01,        { name: "copterMove.mp3"        } ],
-    [ Sounds_Constants.ShortSfxCode.JetMove01,           { name: "jetMove.mp3"           } ],
-    [ Sounds_Constants.ShortSfxCode.NavalMove01,         { name: "navalMove.mp3"         } ],
-    [ Sounds_Constants.ShortSfxCode.ButtonNeutral01,     { name: "buttonNeutral01.mp3"   } ],
-    [ Sounds_Constants.ShortSfxCode.ButtonConfirm01,     { name: "buttonConfirm01.mp3"   } ],
-    [ Sounds_Constants.ShortSfxCode.ButtonCancel01,      { name: "buttonCancel01.mp3"    } ],
-    [ Sounds_Constants.ShortSfxCode.ButtonForbidden01,   { name: `buttonForbidden01.mp3` } ],
-    [ Sounds_Constants.ShortSfxCode.CursorConfirm01,     { name: "cursorConfirm01.mp3"   } ],
-    [ Sounds_Constants.ShortSfxCode.CursorMove01,        { name: "cursorMove01.mp3"      } ],
-    [ Sounds_Constants.ShortSfxCode.Explode,             { name: "explode.mp3"           } ],
-    [ Sounds_Constants.ShortSfxCode.Attack,              { name: "attack.m4a"            } ],
-    [ Sounds_Constants.ShortSfxCode.Block,               { name: "block.m4a"             } ],
-    [ Sounds_Constants.ShortSfxCode.Capture,             { name: "capture.m4a"           } ],
-    [ Sounds_Constants.ShortSfxCode.SpendMoney,          { name: "spendMoney.m4a"        } ],
-    [ Sounds_Constants.ShortSfxCode.UnitProduction,      { name: "unitProduction.m4a"    } ],
+    [ Sounds_Constants.ShortSfxCode.FootMove01,          { name : "footMove.mp3"          } ],
+    [ Sounds_Constants.ShortSfxCode.TireMove01,          { name : "tireMove.mp3"          } ],
+    [ Sounds_Constants.ShortSfxCode.TankMove01,          { name : "tankMove.mp3"          } ],
+    [ Sounds_Constants.ShortSfxCode.CopterMove01,        { name : "copterMove.mp3"        } ],
+    [ Sounds_Constants.ShortSfxCode.JetMove01,           { name : "jetMove.mp3"           } ],
+    [ Sounds_Constants.ShortSfxCode.NavalMove01,         { name : "navalMove.mp3"         } ],
+    [ Sounds_Constants.ShortSfxCode.ButtonNeutral01,     { name : "buttonNeutral01.mp3"   } ],
+    [ Sounds_Constants.ShortSfxCode.ButtonConfirm01,     { name : "buttonConfirm01.mp3"   } ],
+    [ Sounds_Constants.ShortSfxCode.ButtonCancel01,      { name : "buttonCancel01.mp3"    } ],
+    [ Sounds_Constants.ShortSfxCode.ButtonForbidden01,   { name : `buttonForbidden01.mp3` } ],
+    [ Sounds_Constants.ShortSfxCode.CursorConfirm01,     { name : "cursorConfirm01.mp3"   } ],
+    [ Sounds_Constants.ShortSfxCode.CursorMove01,        { name : "cursorMove01.mp3"      } ],
+    [ Sounds_Constants.ShortSfxCode.Explode,             { name : "explode.mp3"           } ],
+    [ Sounds_Constants.ShortSfxCode.Attack,              { name : "attack.m4a"            } ],
+    [ Sounds_Constants.ShortSfxCode.Block,               { name : "block.m4a"             } ],
+    [ Sounds_Constants.ShortSfxCode.Capture,             { name : "capture.m4a"           } ],
+    [ Sounds_Constants.ShortSfxCode.SpendMoney,          { name : "spendMoney.m4a"        } ],
+    [ Sounds_Constants.ShortSfxCode.UnitProduction,      { name : "unitProduction.m4a"    } ],
 ]);
 const _UNIT_MOVE_FADEOUT_TIME   = 0.6;
 const _NOTIFY_EVENTS    : Notifications_Types.Listener[] = [
-    { type: Notifications_TypeId.TypeId.GameShown,    callback: _onNotifyGameShown },
-    { type: Notifications_TypeId.TypeId.GameHidden,   callback: _onNotifyGameHidden },
+    { type : Notifications_TypeId.TypeId.GameShown,    callback : _onNotifyGameShown },
+    { type : Notifications_TypeId.TypeId.GameHidden,   callback : _onNotifyGameHidden },
 ];
 
 let _isInitialized              = false;
@@ -618,7 +618,7 @@ async function doFadeoutLongSfxForMoveUnit(cfg: Sounds_Types.BgmSfxCfg): Promise
                 data.sourceNode = null;
             },
             null,
-            _UNIT_MOVE_FADEOUT_TIME * 1000
+            _UNIT_MOVE_FADEOUT_TIME * 1000,
         );
     }
 }
@@ -704,7 +704,7 @@ async function loadAudioBuffer(fullName: string): Promise<AudioBuffer | null> {
             // nothing to do.
         },
         null,
-        Egret_Res.ResourceItemHelper.TYPE_BIN
+        Egret_Res.ResourceItemHelper.TYPE_BIN,
     );
     if (!arrayBuffer) {
         return null;

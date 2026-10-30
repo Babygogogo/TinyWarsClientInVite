@@ -57,13 +57,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgSpmCreateScw,                 callback: this._onNotifyMsgSpmCreateScw },
-            { type: Notifications_TypeId.TypeId.WarCreator_SaveSlotIndexChanged,     callback: this._onNotifyScrCreateWarSaveSlotChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgSpmCreateScw,                 callback : this._onNotifyMsgSpmCreateScw },
+            { type : Notifications_TypeId.TypeId.WarCreator_SaveSlotIndexChanged,     callback : this._onNotifyScrCreateWarSaveSlotChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -100,10 +100,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnBack(): void {
         this.closePanel();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ScrCreateMapListPanel, {
-            mapFilter               : null,
-            mapSorter               : null,
-            usePreviousFilter       : true,
-            usePreviousPageIndex    : true,
+            mapFilter            : null,
+            mapSorter            : null,
+            usePreviousFilter    : true,
+            usePreviousPageIndex : true,
         });
     }
     private async _onTouchedBtnConfirm(): Promise<void> {
@@ -139,9 +139,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onNotifyMsgSpmCreateScw(e: Egret_Egret.Event): void {
         const data = e.data as SpmCreateScwResponse;
         Helpers_GameFlow.gotoSinglePlayerWar({
-            warData         : Helpers_Misc.getExisted(data.getWarData()),
-            slotExtraData   : Helpers_Misc.getExisted(data.getExtraData()),
-            slotIndex       : Helpers_Misc.getExisted(data.getSlotIndex()),
+            warData       : Helpers_Misc.getExisted(data.getWarData()),
+            slotExtraData : Helpers_Misc.getExisted(data.getExtraData()),
+            slotIndex     : Helpers_Misc.getExisted(data.getSlotIndex()),
         });
     }
     private _onNotifyScrCreateWarSaveSlotChanged(): void {
@@ -180,22 +180,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : SingleCustomRoom_View_ScrCreatePlayerInfoPage.Page,
                 pageData    : null,
             },
@@ -244,22 +244,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const warEventFullData  = mapRawData.getWarEventFullData();
         const warRuleCommonData = Helpers_Misc.getExisted(instanceWarRule.getWarRuleCommonData());
         const openDataForPage   : Common_View_CommonWarBasicSettingsPage.OpenData = {
-            dataArrayForListSettings: [
+            dataArrayForListSettings : [
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.NormalMapId,
-                    currentValue    : mapRawData.getNormalMapId(),
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.NormalMapId,
+                    currentValue     : mapRawData.getNormalMapId(),
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
-                    currentValue    : null,
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: async () => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : async () => {
                         warCreator.tickTemplateWarRuleId();
                         this._updateCommonWarBasicSettingsPage();
                         this._updateCommonWarAdvancedSettingsPage();
@@ -267,36 +267,36 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.HasFog,
-                    currentValue    : null,
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: () => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.HasFog,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : () => {
                         warRuleCommonData.setHasFogByDefault(!warRuleCommonData.getHasFogByDefault());
                         instanceWarRule.setTemplateWarRuleId(null);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.Weather,
-                    currentValue    : null,
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: () => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.Weather,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : () => {
                         WarRules_Utils_CommonData.tickDefaultWeatherType(warRuleCommonData, gcData);
                         instanceWarRule.setTemplateWarRuleId(null);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType        : Wars_Constants.BasicSettingsTypeId.TileTheme,
-                    currentValue        : null,
-                    instanceWarRule     : instanceWarRule,
-                    gameConfig          : gcData,
-                    warEventFullData    : warEventFullData,
-                    callbackOnModify    : newValue => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.TileTheme,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : newValue => {
                         if (typeof newValue === "string") {
                             throw Helpers_Misc.newError(`Invalid newValue: ${newValue}`);
                         }
@@ -309,37 +309,37 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.WarEvent,
-                    currentValue    : null,
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: null,
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.WarEvent,
+                    currentValue     : null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : null,
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.SpmSaveSlotIndex,
-                    currentValue    : warCreator.getSaveSlotIndex(),
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: () => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.SpmSaveSlotIndex,
+                    currentValue     : warCreator.getSaveSlotIndex(),
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : () => {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-                            currentSlotIndex        : warCreator.getSaveSlotIndex(),
-                            needComment             : false,
-                            needConfirmOverwrite    : true,
-                            callback                : slotIndex => {
+                            currentSlotIndex     : warCreator.getSaveSlotIndex(),
+                            needComment          : false,
+                            needConfirmOverwrite : true,
+                            callback             : slotIndex => {
                                 warCreator.setSaveSlotIndex(slotIndex);
                             },
                         });
                     },
                 },
                 {
-                    settingsType    : Wars_Constants.BasicSettingsTypeId.SpmSaveSlotComment,
-                    currentValue    : warCreator.getSlotComment() ?? null,
-                    instanceWarRule : instanceWarRule,
-                    gameConfig      : gcData,
-                    warEventFullData: warEventFullData,
-                    callbackOnModify: (newValue: string | number | null) => {
+                    settingsType     : Wars_Constants.BasicSettingsTypeId.SpmSaveSlotComment,
+                    currentValue     : warCreator.getSlotComment() ?? null,
+                    instanceWarRule  : instanceWarRule,
+                    gameConfig       : gcData,
+                    warEventFullData : warEventFullData,
+                    callbackOnModify : (newValue: string | number | null) => {
                         if (typeof newValue === "number") {
                             throw Helpers_Misc.newError(`Invalid newValue: ${newValue}`, Utils_ClientErrorCode.ClientErrorCode.ScrCreateSettingsPanel_CreateDataForCommonWarBasicSettingsPage_00);
                         }
@@ -374,10 +374,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const warCreator = openData.warCreator;
         return {
             mapInfo : {
-                hasFog              : !!warCreator.getInstanceWarRule().getWarRuleCommonData()?.getHasFogByDefault(),
-                gameConfig          : warCreator.getGcData(),
-                mapRawData          : warCreator.getMapRawData(),
-                overridingPlayers   : null,
+                hasFog            : !!warCreator.getInstanceWarRule().getWarRuleCommonData()?.getHasFogByDefault(),
+                gameConfig        : warCreator.getGcData(),
+                mapRawData        : warCreator.getMapRawData(),
+                overridingPlayers : null,
             },
         };
     }
@@ -388,7 +388,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         return {
-            warCreator    : openData.warCreator,
+            warCreator : openData.warCreator,
         };
     }
 
@@ -397,48 +397,48 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnConfirm,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnConfirm,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnConfirm,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnConfirm,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

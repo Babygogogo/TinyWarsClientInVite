@@ -33,11 +33,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -90,7 +90,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const avatarId of Avatars_Utils.getAvailableUserAvatarIdArray()) {
             dataArray.push({
                 avatarId,
-                panel   : this,
+                panel : this,
             });
         }
 
@@ -110,8 +110,7 @@ interface DataForAvatarRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class AvatarRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForAvatarRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForAvatarRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForAvatarRenderer> {
     private readonly _imgAvatar!    : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {

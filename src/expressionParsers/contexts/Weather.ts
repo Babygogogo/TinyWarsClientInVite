@@ -25,9 +25,9 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Functions    = Weather.generateFunctions();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Weather.VnExpiringPlayerIndex, { desc: Lang_Constants.TextType.A0459, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Weather.VnExpiringTurnIndex,   { desc: Lang_Constants.TextType.A0460, resultType: ExpressionParsers_Enums.ResultType.Number, isExtension: false });
-        variables.set(Weather.VnWar,                 { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War,    isExtension: false });
+        variables.set(Weather.VnExpiringPlayerIndex, { desc : Lang_Constants.TextType.A0459, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Weather.VnExpiringTurnIndex,   { desc : Lang_Constants.TextType.A0460, resultType : ExpressionParsers_Enums.ResultType.Number, isExtension : false });
+        variables.set(Weather.VnWar,                 { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War,    isExtension : false });
 
         return variables;
     }
@@ -41,21 +41,23 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Weather.FnType, 1, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextWeather_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextWeather_GenerateFunctions_00,
                         );
                     }
 
-                    const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Weather.FnType, 1, ExpressionParsers_Enums.ResultType.Number, argType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextWeather_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextWeather_GenerateFunctions_01,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
 
         return functions;

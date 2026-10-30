@@ -30,10 +30,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,   callback: this.closePanel },
+            { ui : this._btnClose,   callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -104,7 +104,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 }
 
 function createLabelForTaskObjectiveCategory(text: string): Ui_Interfaces_IUiLabel.IUiLabel {
-    const label = new Ui_Components_UiLabel.UiLabel;
+    const label = new Ui_Components_UiLabel.UiLabel();
     label.setText(text);
     label.setIsBold(true);
     label.setFontSize(12);
@@ -117,17 +117,17 @@ function createTaskObjectiveRenderer(data: DataForTaskObjectiveRenderer): TaskOb
     return renderer;
 }
 function createGroupEmpty(): Ui_Interfaces_IUiContainer.IUiContainer {
-    const label     = new Ui_Components_UiLabel.UiLabel;
+    const label     = new Ui_Components_UiLabel.UiLabel();
     label.setText(`----`);
     label.setFontSize(16);
     label.setX(30);
 
-    const group = new Ui_Components_UiContainer.UiContainer;
+    const group = new Ui_Components_UiContainer.UiContainer();
     group.addUiChild(label);
     return group;
 }
 function createSeparator(): Ui_Interfaces_IUiImage.IUiImage {
-    const img = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000`});
+    const img = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
     img.setUnscaledManualWidth(560);
     img.setUnscaledManualHeight(1);
     img.setIsSmoothing(false);
@@ -140,8 +140,8 @@ function getDataArrayForTaskObjectiveRenderer(war: BaseWar_Interface_IBwWar.IBwW
         const objectiveId = taskObjective.getObjectiveId();
         if (!stateArray.find(v => (v.getObjectiveId()) === objectiveId)?.getIsHidden()) {
             dataArray.push({
-                war             : war,
-                taskObjective   : taskObjective,
+                war           : war,
+                taskObjective : taskObjective,
             });
         }
     }
@@ -191,7 +191,7 @@ class TaskObjectiveRenderer extends Ui_Components_UiContainer.UiContainer {
         const maxProgress       = taskObjective.getMaxProgress();
         const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) == objectiveId)?.getCurrentProgress() ?? 0;
         const labelDesc         = this._labelDesc;
-        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${Lang_Utils.getLanguageText({ textArray: taskObjective.getDesc() })}`);
+        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${Lang_Utils.getLanguageText({ textArray : taskObjective.getDesc() })}`);
         this.setUnscaledManualHeight(labelDesc.getScaledHeight());
 
         const groupCompleted = this._groupCompleted;

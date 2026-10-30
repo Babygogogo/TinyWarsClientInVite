@@ -39,13 +39,13 @@ export class CommonParams {
         const playerIndexInTurn     = war.getPlayerIndexInTurn();
         const unitsInfoDict         = await CommonParams.generateUnitsInfoDict(war);
         return new CommonParams({
-            war                     : war,
-            unitsInfoDict           : unitsInfoDict,
-            unitValueRatio          : await CommonParams.generateUnitValueRatio(war, unitsInfoDict, playerIndexInTurn),
-            visibleUnits            : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, new Set([war.getPlayer(playerIndexInTurn).getTeamIndex()])),
-            globalOffenseBonuses    : await CommonParams.generateGlobalOffenseBonuses(war),
-            globalDefenseBonuses    : await CommonParams.generateGlobalDefenseBonuses(war),
-            settingsLuckValueDict   : await CommonParams.generateSettingsLuckValueDict(war),
+            war                   : war,
+            unitsInfoDict         : unitsInfoDict,
+            unitValueRatio        : await CommonParams.generateUnitValueRatio(war, unitsInfoDict, playerIndexInTurn),
+            visibleUnits          : Visibilities_Utils.getAllUnitsOnMapVisibleToTeams(war, new Set([war.getPlayer(playerIndexInTurn).getTeamIndex()])),
+            globalOffenseBonuses  : await CommonParams.generateGlobalOffenseBonuses(war),
+            globalDefenseBonuses  : await CommonParams.generateGlobalDefenseBonuses(war),
+            settingsLuckValueDict : await CommonParams.generateSettingsLuckValueDict(war),
         });
     }
     private static async generateUnitsInfoDict(war: BaseWar_Interface_IBwWar.IBwWar): Promise<Map<number, UnitsInfo>> {
@@ -61,8 +61,8 @@ export class CommonParams {
             if (!unitsInfoDict.has(playerIndex)) {
                 unitsInfoDict.set(playerIndex, {
                     value,
-                    allCountOnMap   : isOnMap ? 1 : 0,
-                    idleCountOnMap  : isOnMap && isIdle ? 1 : 0,
+                    allCountOnMap  : isOnMap ? 1 : 0,
+                    idleCountOnMap : isOnMap && isIdle ? 1 : 0,
                 });
             } else {
                 const info          = Helpers_Misc.getExisted(unitsInfoDict.get(playerIndex), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetUnitsInfoDict_00);
@@ -74,9 +74,9 @@ export class CommonParams {
         for (const [playerIndex] of war.getPlayerManager().getAllPlayersDict()) {
             if (!unitsInfoDict.has(playerIndex)) {
                 unitsInfoDict.set(playerIndex, {
-                    value           : 0,
-                    allCountOnMap   : 0,
-                    idleCountOnMap  : 0,
+                    value          : 0,
+                    allCountOnMap  : 0,
+                    idleCountOnMap : 0,
                 });
             }
         }
@@ -115,7 +115,7 @@ export class CommonParams {
 
             globalOffenseBonuses.set(
                 playerIndex,
-                commonSettingManager.getPlayerRule(playerIndex).getAttackPowerModifier()
+                commonSettingManager.getPlayerRule(playerIndex).getAttackPowerModifier(),
             );
         }
 
@@ -139,7 +139,7 @@ export class CommonParams {
         for (let playerIndex = war.getPlayerManager().getTotalPlayersCount(false); playerIndex > Players_Constants.PlayerIndex.Neutral; --playerIndex) {
             globalDefenseBonuses.set(
                 playerIndex,
-                commonSettingManager.getPlayerRule(playerIndex).getDefenseModifier()
+                commonSettingManager.getPlayerRule(playerIndex).getDefenseModifier(),
             );
         }
 

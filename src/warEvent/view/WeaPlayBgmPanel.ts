@@ -42,15 +42,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnActBgm,                              callback: this._onTouchedBtnActBgm },
-            { ui: this._btnActUseCoBgm,                         callback: this._onTouchedBtnActUseCoBgm },
+            { ui : this._btnActBgm,                              callback : this._onTouchedBtnActBgm },
+            { ui : this._btnActUseCoBgm,                         callback : this._onTouchedBtnActUseCoBgm },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -79,9 +79,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -97,9 +97,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : action.getBgmCode(),
-            callbackOnConfirm   : code => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : action.getBgmCode(),
+            callbackOnConfirm : code => {
                 action.setBgmCode(code);
                 action.setUseCoBgm(null);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -170,7 +170,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const code = action.getBgmCode();
             label.setText(code == null
                 ? `--`
-                : (Lang_Utils.getBgmSfxName(code, gameConfig) ?? Lang_Constants.UndefinedError)
+                : (Lang_Utils.getBgmSfxName(code, gameConfig) ?? Lang_Constants.UndefinedError),
             );
         }
     }

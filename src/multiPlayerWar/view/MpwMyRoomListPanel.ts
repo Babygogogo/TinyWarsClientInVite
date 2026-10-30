@@ -88,41 +88,41 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
 
-            { type: Notifications_TypeId.TypeId.MsgAtrGetJoinedRoomIdArray,          callback: this._onNotifyMsgAtrGetJoinedRoomIdArray },
-            { type: Notifications_TypeId.TypeId.MsgAtrDeleteRoomByServer,            callback: this._onNotifyMsgAtrDeleteRoomByServer },
-            { type: Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo,             callback: this._onNotifyMsgAtrGetRoomPublicInfo },
-            { type: Notifications_TypeId.TypeId.MsgAtrSetSelfSettings,               callback: this._onNotifyMsgAtrSetSelfSettings },
-            { type: Notifications_TypeId.TypeId.MsgAtrSetBannedCoIdArray,            callback: this._onNotifyMsgAtrSetBannedCoIdArray },
+            { type : Notifications_TypeId.TypeId.MsgAtrGetJoinedRoomIdArray,          callback : this._onNotifyMsgAtrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgAtrDeleteRoomByServer,            callback : this._onNotifyMsgAtrDeleteRoomByServer },
+            { type : Notifications_TypeId.TypeId.MsgAtrGetRoomPublicInfo,             callback : this._onNotifyMsgAtrGetRoomPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgAtrSetSelfSettings,               callback : this._onNotifyMsgAtrSetSelfSettings },
+            { type : Notifications_TypeId.TypeId.MsgAtrSetBannedCoIdArray,            callback : this._onNotifyMsgAtrSetBannedCoIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,             callback: this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgCcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgCcrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomStaticInfo,             callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgCcrGetJoinedRoomIdArray,          callback : this._onNotifyMsgCcrGetJoinedRoomIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomStaticInfo,             callback: this._onNotifyMsgMcrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgMcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMcrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomStaticInfo,             callback : this._onNotifyMsgMcrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback : this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgMcrGetJoinedRoomIdArray,          callback : this._onNotifyMsgMcrGetJoinedRoomIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo,             callback: this._onNotifyMsgMfrGetRoomStaticInfo },
-            { type: Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type: Notifications_TypeId.TypeId.MsgMfrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMfrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomStaticInfo,             callback : this._onNotifyMsgMfrGetRoomStaticInfo },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback : this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type : Notifications_TypeId.TypeId.MsgMfrGetJoinedRoomIdArray,          callback : this._onNotifyMsgMfrGetJoinedRoomIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgMmrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMmrGetJoinedRoomIdArray },
-            { type: Notifications_TypeId.TypeId.MsgMmrDeleteRoomByServer,            callback: this._onNotifyMsgMmrDeleteRoomByServer },
-            { type: Notifications_TypeId.TypeId.MsgMmrGetRoomPublicInfo,             callback: this._onNotifyMsgMmrGetRoomPublicInfo },
-            { type: Notifications_TypeId.TypeId.MsgMmrSetSelfSettings,               callback: this._onNotifyMsgMmrSetSelfSettings },
-            { type: Notifications_TypeId.TypeId.MsgMmrSetBannedCoIdArray,            callback: this._onNotifyMsgMmrSetBannedCoIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMmrGetJoinedRoomIdArray,          callback : this._onNotifyMsgMmrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMmrDeleteRoomByServer,            callback : this._onNotifyMsgMmrDeleteRoomByServer },
+            { type : Notifications_TypeId.TypeId.MsgMmrGetRoomPublicInfo,             callback : this._onNotifyMsgMmrGetRoomPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgMmrSetSelfSettings,               callback : this._onNotifyMsgMmrSetSelfSettings },
+            { type : Notifications_TypeId.TypeId.MsgMmrSetBannedCoIdArray,            callback : this._onNotifyMsgMmrSetBannedCoIdArray },
 
-            { type: Notifications_TypeId.TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMrrGetJoinedRoomIdArray },
-            { type: Notifications_TypeId.TypeId.MsgMrrDeleteRoomByServer,            callback: this._onNotifyMsgMrrDeleteRoomByServer },
-            { type: Notifications_TypeId.TypeId.MsgMrrGetRoomPublicInfo,             callback: this._onNotifyMsgMrrGetRoomPublicInfo },
-            { type: Notifications_TypeId.TypeId.MsgMrrSetSelfSettings,               callback: this._onNotifyMsgMrrSetSelfSettings },
-            { type: Notifications_TypeId.TypeId.MsgMrrSetBannedCoIdArray,            callback: this._onNotifyMsgMrrSetBannedCoIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMrrGetJoinedRoomIdArray,          callback : this._onNotifyMsgMrrGetJoinedRoomIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMrrDeleteRoomByServer,            callback : this._onNotifyMsgMrrDeleteRoomByServer },
+            { type : Notifications_TypeId.TypeId.MsgMrrGetRoomPublicInfo,             callback : this._onNotifyMsgMrrGetRoomPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgMrrSetSelfSettings,               callback : this._onNotifyMsgMrrSetSelfSettings },
+            { type : Notifications_TypeId.TypeId.MsgMrrSetBannedCoIdArray,            callback : this._onNotifyMsgMrrSetBannedCoIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -411,23 +411,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             } else {
                 (await AutoTourneys_Rooms_Provider.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtrRoomInfoPanel, {
-                    roomId  : roomId,
+                    roomId : roomId,
                 });
             }
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CcrRoomInfoPanel, {
-                roomId  : roomId,
+                roomId : roomId,
             });
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().McrRoomInfoPanel, {
-                roomId  : roomId,
+                roomId : roomId,
             });
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrRoomInfoPanel, {
-                roomId  : roomId,
+                roomId : roomId,
             });
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mmr) {
@@ -437,7 +437,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             } else {
                 (await MultiMatchRoom_Model_MmrModel.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmrRoomInfoPanel, {
-                    roomId  : roomId,
+                    roomId : roomId,
                 });
             }
 
@@ -448,7 +448,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             } else {
                 (await MultiRankRoom_Model_MrrModel.getSelfSettings(roomId))?.resetData(roomInfo);
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MrrRoomInfoPanel, {
-                    roomId  : roomId,
+                    roomId : roomId,
                 });
             }
         }
@@ -461,22 +461,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -554,34 +554,34 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _createDataForListRoom(): Promise<DataForRoomRenderer[]> {
         const dataArray: DataForRoomRenderer[] = [];
         dataArray.push(...((await AutoTourneys_Rooms_Provider.getJoinedRoomIdArray())?.map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Atr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Atr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
         dataArray.push(...((await MultiRankRoom_Model_MrrModel.getJoinedRoomIdArray())?.map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mrr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mrr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
         dataArray.push(...((await MultiMatchRoom_Model_MmrModel.getJoinedRoomIdArray())?.map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mmr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mmr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
         dataArray.push(...[...await MultiCustomRoom_Model_McrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
         dataArray.push(...[...await CoopCustomRoom_Model_CcrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
         dataArray.push(...[...await MultiFreeRoom_Model_MfrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
-            roomId      : roomId,
-            panel       : this,
-            roomType    : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr,
+            roomId   : roomId,
+            panel    : this,
+            roomType : MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
 
         return dataArray;
@@ -626,10 +626,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                        overridingPlayers : null,
                     },
                 };
 
@@ -640,10 +640,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomStaticInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomStaticInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomStaticInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                        overridingPlayers : null,
                     },
                 };
 
@@ -654,10 +654,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                        overridingPlayers : null,
                     },
                 };
 
@@ -670,9 +670,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     warInfo : {
-                        warData             : warData,
-                        showInitialWarData  : false,
-                        overridingPlayers   : null,
+                        warData            : warData,
+                        showInitialWarData : false,
+                        overridingPlayers  : null,
                     },
                 };
 
@@ -683,10 +683,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                        overridingPlayers : null,
                     },
                 };
 
@@ -697,10 +697,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 ? null
                 : {
                     mapInfo : {
-                        hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                        overridingPlayers   : null,
+                        hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                        gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                        overridingPlayers : null,
                     },
                 };
 
@@ -786,58 +786,58 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRoomList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupRoomList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupRoomList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupRoomList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -862,8 +862,7 @@ interface DataForRoomRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class RoomRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForRoomRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRoomRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRoomRenderer> {
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelRoomId!  : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelWarType! : Ui_Interfaces_IUiLabel.IUiLabel;
@@ -897,11 +896,11 @@ class RoomRenderer
             imgRed.setIsVisible(await AutoTourneys_Rooms_Provider.checkIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
                 ? Lang_Utils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.AtwFog : WarTypes_Constants.WarTypeId.AtwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(roomInfo
                 ? (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForAtw()?.getNormalMapId() ?? 0) ?? Lang_Constants.UndefinedError)
-                : ``
+                : ``,
             );
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Ccr) {
@@ -910,11 +909,11 @@ class RoomRenderer
             imgRed.setIsVisible(await CoopCustomRoom_Model_CcrModel.checkIsRedForRoom(roomId));
             labelWarType.setText(roomStaticInfo
                 ? Lang_Utils.getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.CcwFog : WarTypes_Constants.WarTypeId.CcwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(settingsForCcw
                 ? settingsForCcw.getWarName() || (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId()) ?? Lang_Constants.UndefinedError)
-                : ``
+                : ``,
             );
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mcr) {
@@ -923,11 +922,11 @@ class RoomRenderer
             imgRed.setIsVisible(await MultiCustomRoom_Model_McrModel.checkIsRedForRoom(roomId));
             labelWarType.setText(roomStaticInfo
                 ? Lang_Utils.getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.McwFog : WarTypes_Constants.WarTypeId.McwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(settingsForMcw
                 ? settingsForMcw.getWarName() || (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId()) ?? Lang_Constants.UndefinedError)
-                : ``
+                : ``,
             );
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mfr) {
@@ -935,11 +934,11 @@ class RoomRenderer
             imgRed.setIsVisible(await MultiFreeRoom_Model_MfrModel.checkIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
                 ? Lang_Utils.getWarTypeName(roomInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.MfwFog : WarTypes_Constants.WarTypeId.MfwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(roomInfo
                 ? roomInfo.getSettingsForMfw()?.getWarName() || `(${Lang_Utils.getText(Lang_Constants.TextType.B0557)})`
-                : ``
+                : ``,
             );
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mmr) {
@@ -947,11 +946,11 @@ class RoomRenderer
             imgRed.setIsVisible(await MultiMatchRoom_Model_MmrModel.checkIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
                 ? Lang_Utils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.MmwFog : WarTypes_Constants.WarTypeId.MmwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(roomInfo
                 ? (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForMmw()?.getNormalMapId() ?? 0) ?? Lang_Constants.UndefinedError)
-                : ``
+                : ``,
             );
 
         } else if (roomType === MultiPlayerRooms_Constants.MultiPlayerRoomType.Mrr) {
@@ -959,11 +958,11 @@ class RoomRenderer
             imgRed.setIsVisible(await MultiRankRoom_Model_MrrModel.checkIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
                 ? Lang_Utils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypes_Constants.WarTypeId.MrwFog : WarTypes_Constants.WarTypeId.MrwStd) ?? Lang_Constants.UndefinedError
-                : ``
+                : ``,
             );
             labelName.setText(roomInfo
                 ? (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForMrw()?.getNormalMapId() ?? 0) ?? Lang_Constants.UndefinedError)
-                : ``
+                : ``,
             );
         }
 

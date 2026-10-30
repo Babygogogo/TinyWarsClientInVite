@@ -48,15 +48,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.BwUnitBuffChanged,   callback: this._onNotifyBwUnitBuffChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.BwUnitBuffChanged,   callback : this._onNotifyBwUnitBuffChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnAdd,                     callback: this._onTouchedBtnAdd },
-            { ui: this._groupExpire,                callback: this._onTouchedGroupExpire },
-            { ui: this._groupExtraParams,           callback: this._onTouchedGroupExtraParams },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnAdd,                     callback : this._onTouchedBtnAdd },
+            { ui : this._groupExpire,                callback : this._onTouchedGroupExpire },
+            { ui : this._groupExtraParams,           callback : this._onTouchedGroupExtraParams },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -83,7 +83,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent: () => Lang_Utils.getText(Lang_Constants.TextType.A0742),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0742),
         });
     }
 
@@ -100,20 +100,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            currentNumber           : null,
-            availableNumberArray    : UnitBuffs_Constants.AllBuffTypeIdArray,
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
-            getNumberMainText       : buffTypeId => Lang_Utils.getUnitBuffName(buffTypeId) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : buffTypeId => {
+            currentNumber        : null,
+            availableNumberArray : UnitBuffs_Constants.AllBuffTypeIdArray,
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStates),
+            getNumberMainText    : buffTypeId => Lang_Utils.getUnitBuffName(buffTypeId) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : buffTypeId => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                    title           : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
-                    charRestrict    : `0-9 `,
-                    currentValue    : ``,
-                    maxChars        : 10,
-                    tips            : Lang_Utils.getText(Lang_Constants.TextType.A0743),
-                    canBeEmpty      : true,
-                    callback        : panel => {
+                    title        : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
+                    charRestrict : `0-9 `,
+                    currentValue : ``,
+                    maxChars     : 10,
+                    tips         : Lang_Utils.getText(Lang_Constants.TextType.A0743),
+                    canBeEmpty   : true,
+                    callback     : panel => {
                         const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
                         const isEmpty       = !numberArray.length;
                         const turnIndex     = isEmpty ? null : numberArray[0];
@@ -175,11 +175,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (const buff of unit.getBuffList()) {
             const length = dataArray.length;
             dataArray.push({
-                index       : length + 1,
-                buff        : buff,
-                isLast      : false,
-                canModify   : canModify,
-                unit        : unit,
+                index     : length + 1,
+                buff      : buff,
+                isLast    : false,
+                canModify : canModify,
+                unit      : unit,
             });
         }
         if (dataArray.length) {
@@ -215,9 +215,9 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupType,          callback: this._onTouchedGroupType },
-            { ui: this._groupExpire,        callback: this._onTouchedGroupExpire },
-            { ui: this._groupExtraParams,   callback: this._onTouchedGroupExtraParams },
+            { ui : this._groupType,          callback : this._onTouchedGroupType },
+            { ui : this._groupExpire,        callback : this._onTouchedGroupExpire },
+            { ui : this._groupExtraParams,   callback : this._onTouchedGroupExtraParams },
         ]);
     }
 
@@ -241,8 +241,8 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => `${Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0741)}`,
-                callback    : () => {
+                getContent : () => `${Lang_Utils.getUnitBuffDesc(buffTypeId) ?? Lang_Constants.UndefinedError}\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0741)}`,
+                callback   : () => {
                     openData.unit.deleteBuff(buff, true);
                 },
             });
@@ -260,19 +260,19 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
-            charRestrict    : `0-9 `,
-            currentValue    : ``,
-            maxChars        : 10,
-            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0743),
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.EndTime),
+            charRestrict : `0-9 `,
+            currentValue : ``,
+            maxChars     : 10,
+            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0743),
+            callback     : panel => {
                 const numberArray   = panel.getInputText().split(` `).map(v => parseInt(v)).filter(v => isFinite(v));
                 const isEmpty       = !numberArray.length;
                 const buff          = openData.buff;
                 buff.setExpiringTurnIndex(isEmpty ? null : numberArray[0]);
                 buff.setExpiringPlayerIndex(isEmpty ? null : numberArray[1] ?? 0);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.BwUnitBuffChanged, {
-                    unit    : openData.unit,
+                    unit : openData.unit,
                 } as Notifications_DataTypes.BwUnitBuffChanged);
             },
         });
@@ -313,7 +313,7 @@ class BuffRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const expiringPlayerIndex   = buff.getExpiringPlayerIndex();
         this._labelExpire.setText(((expiringTurnIndex == null) || (expiringPlayerIndex == null))
             ? `--`
-            : `${Lang_Utils.getText(Lang_Constants.TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`
+            : `${Lang_Utils.getText(Lang_Constants.TextType.B0191)}${expiringTurnIndex}, P${expiringPlayerIndex}`,
         );
 
         const extraParamArray = buff.getExtraParamArray();

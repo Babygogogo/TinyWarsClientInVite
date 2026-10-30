@@ -36,14 +36,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetSceneBgmSettings,  callback: this._onNotifyMsgUserSetSceneBgmSettings },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetSceneBgmSettings,  callback : this._onNotifyMsgUserSetSceneBgmSettings },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                           callback: this.closePanel },
+            { ui : this._btnClose,                           callback : this.closePanel },
 
-            { ui: this._btnLobby,                           callback: this._onTouchedBtnLobby },
-            { ui: this._btnMapEditor,                       callback: this._onTouchedBtnMapEditor },
+            { ui : this._btnLobby,                           callback : this._onTouchedBtnLobby },
+            { ui : this._btnMapEditor,                       callback : this._onTouchedBtnMapEditor },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -74,14 +74,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentBgmCode = Users_Model.getSelfSettingsBgmCodeForLobby();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : currentBgmCode,
-            callbackOnConfirm   : newBgmCode => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : currentBgmCode,
+            callbackOnConfirm : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
                     FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 } else {
                     Users_Proxy.reqUserSetSceneBgmSettings({
-                        lobbyBgmCode    : newBgmCode,
+                        lobbyBgmCode : newBgmCode,
                     });
                 }
             },
@@ -96,14 +96,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const currentBgmCode = Users_Model.getSelfSettingsBgmCodeForMapEditor();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SoundsChooseSingleBgmPanel, {
-            gameConfig          : gameConfig,
-            currentBgmCode      : currentBgmCode,
-            callbackOnConfirm   : newBgmCode => {
+            gameConfig        : gameConfig,
+            currentBgmCode    : currentBgmCode,
+            callbackOnConfirm : newBgmCode => {
                 if (newBgmCode === currentBgmCode) {
                     FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
                 } else {
                     Users_Proxy.reqUserSetSceneBgmSettings({
-                        mapEditorBgmCode    : newBgmCode,
+                        mapEditorBgmCode : newBgmCode,
                     });
                 }
             },

@@ -108,7 +108,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -423,7 +423,7 @@ function evalActLocationIdArray(action: WeaSetTileStateSimple, tile: Tiles_ITile
         return tile.getGroupedLocationIdArray();
     } else {
         return Locations_Utils.encode(
-            ArrayModifiers_Utils.getResultValue(act, tile.getLocationIdList(true))
+            ArrayModifiers_Utils.getResultValue(act, tile.getLocationIdList(true)),
         );
     }
 }

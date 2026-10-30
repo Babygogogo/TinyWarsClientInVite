@@ -41,11 +41,11 @@ export class MfrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         settingsForMfw.setBootTimerParams(this.getBootTimerParams());
 
         return MfrCreateRoomRequest.fromJson({
-            settingsForMfw         : settingsForMfw.toJson(),
+            settingsForMfw : settingsForMfw.toJson(),
 
-            selfPlayerIndex        : this.getSelfPlayerIndex(),
-            selfCoId               : this.getSelfCoId(),
-            selfUnitAndTileSkinId  : this.getSelfUnitAndTileSkinId(),
+            selfPlayerIndex       : this.getSelfPlayerIndex(),
+            selfCoId              : this.getSelfCoId(),
+            selfUnitAndTileSkinId : this.getSelfUnitAndTileSkinId(),
         });
     }
 

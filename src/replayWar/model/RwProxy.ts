@@ -17,21 +17,23 @@ import type { S as ReplaySetSelfRatingResponse } from "../../proto/schema/Common
 export function init(): void {
     Networks_Manager.addListeners([
         // { msgCode: NetMessageCodes.MsgReplayGetReplayIdArray,   callback: _onMsgReplayGetReplayIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetData,            callback: _onMsgReplayGetData },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetReplayInfo,      callback: _onMsgReplayGetReplayInfo },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetReplayInfoArray, callback: _onMsgReplayGetReplayInfoArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetSelfRating,      callback: _onMsgReplayGetSelfRating },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplaySetSelfRating,      callback: _onMsgReplaySetSelfRating },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetAllInfoVersions, callback: _onMsgReplayGetAllInfoVersions },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgReplayGetInfoVersion,     callback: _onMsgReplayGetInfoVersion },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetData,            callback : _onMsgReplayGetData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetReplayInfo,      callback : _onMsgReplayGetReplayInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetReplayInfoArray, callback : _onMsgReplayGetReplayInfoArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetSelfRating,      callback : _onMsgReplayGetSelfRating },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplaySetSelfRating,      callback : _onMsgReplaySetSelfRating },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetAllInfoVersions, callback : _onMsgReplayGetAllInfoVersions },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgReplayGetInfoVersion,     callback : _onMsgReplayGetInfoVersion },
     ], null);
 }
 
 export function reqReplayGetData(replayId: number): void {
     Networks_Manager.send({
-        MsgReplayGetData: { c: {
-            replayId,
-        }, },
+        MsgReplayGetData : {
+            c : {
+                replayId,
+            }, 
+        },
     });
 }
 async function _onMsgReplayGetData(e: Egret_Egret.Event): Promise<void> {
@@ -46,9 +48,11 @@ async function _onMsgReplayGetData(e: Egret_Egret.Event): Promise<void> {
 
 export function reqReplayGetReplayInfo(replayId: number): void {
     Networks_Manager.send({
-        MsgReplayGetReplayInfo: { c: {
-            replayId,
-        }, },
+        MsgReplayGetReplayInfo : {
+            c : {
+                replayId,
+            }, 
+        },
     });
 }
 async function _onMsgReplayGetReplayInfo(e: Egret_Egret.Event): Promise<void> {
@@ -62,9 +66,13 @@ async function _onMsgReplayGetReplayInfo(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqReplayGetReplayInfoArray(replayIdArray: number[]): void {
-    Networks_Manager.send({ MsgReplayGetReplayInfoArray: { c: {
-        replayIdArray: replayIdArray,
-    }, }, });
+    Networks_Manager.send({
+        MsgReplayGetReplayInfoArray : {
+            c : {
+                replayIdArray : replayIdArray,
+            }, 
+        }, 
+    });
 }
 async function _onMsgReplayGetReplayInfoArray(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as ReplayGetReplayInfoArrayResponse;
@@ -76,9 +84,11 @@ async function _onMsgReplayGetReplayInfoArray(e: Egret_Egret.Event): Promise<voi
 
 export function reqReplayGetSelfRating(replayId: number): void {
     Networks_Manager.send({
-        MsgReplayGetSelfRating: { c: {
-            replayId,
-        }, },
+        MsgReplayGetSelfRating : {
+            c : {
+                replayId,
+            }, 
+        },
     });
 }
 function _onMsgReplayGetSelfRating(e: Egret_Egret.Event): void {
@@ -93,10 +103,12 @@ function _onMsgReplayGetSelfRating(e: Egret_Egret.Event): void {
 
 export function reqReplaySetSelfRating(replayId: number, rating: number): void {
     Networks_Manager.send({
-        MsgReplaySetSelfRating: { c: {
-            replayId,
-            rating,
-        }, },
+        MsgReplaySetSelfRating : {
+            c : {
+                replayId,
+                rating,
+            }, 
+        },
     });
 }
 function _onMsgReplaySetSelfRating(e: Egret_Egret.Event): void {
@@ -108,8 +120,12 @@ function _onMsgReplaySetSelfRating(e: Egret_Egret.Event): void {
 }
 
 export function reqReplayGetAllInfoVersions(): void {
-    Networks_Manager.send({ MsgReplayGetAllInfoVersions: { c: {
-    }, }, });
+    Networks_Manager.send({
+        MsgReplayGetAllInfoVersions : {
+            c : {
+            }, 
+        }, 
+    });
 }
 async function _onMsgReplayGetAllInfoVersions(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as ReplayGetAllInfoVersionsResponse;
@@ -120,9 +136,13 @@ async function _onMsgReplayGetAllInfoVersions(e: Egret_Egret.Event): Promise<voi
 }
 
 export function reqMsgReplayGetInfoVersion(replayId: number): void {
-    Networks_Manager.send({ MsgReplayGetInfoVersion: { c: {
-        replayId    : replayId,
-    } } });
+    Networks_Manager.send({
+        MsgReplayGetInfoVersion : {
+            c : {
+                replayId : replayId,
+            }, 
+        }, 
+    });
 }
 async function _onMsgReplayGetInfoVersion(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as ReplayGetInfoVersionResponse;

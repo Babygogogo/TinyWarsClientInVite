@@ -39,15 +39,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,          callback: this._onNotifyMeTaskObjectiveFullDataChanged },
-            { type: Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged,    callback: this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,          callback : this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged,    callback : this._onNotifyMeWarRuleTaskObjectiveIdArrayChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnAdd,         callback: this._onTouchedBtnAdd },
-            { ui: this._btnDeleteAll,   callback: this._onTouchedBtnDeleteAll },
-            { ui: this._btnModify,      callback: this._onTouchedBtnModify },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnAdd,         callback : this._onTouchedBtnAdd },
+            { ui : this._btnDeleteAll,   callback : this._onTouchedBtnDeleteAll },
+            { ui : this._btnModify,      callback : this._onTouchedBtnModify },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -92,17 +92,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 allTaskObjectiveIdSet.delete(taskObjectiveId);
             }
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-                availableNumberArray            : [...allTaskObjectiveIdSet],
-                currentNumberArray              : [],
-                showNumber                      : true,
-                getTitleText                    : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B1214)),
-                getNumberMainText               : taskObjectiveId => Helpers_Text.getTruncatedText(
+                availableNumberArray : [...allTaskObjectiveIdSet],
+                currentNumberArray   : [],
+                showNumber           : true,
+                getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B1214)),
+                getNumberMainText    : taskObjectiveId => Helpers_Text.getTruncatedText(
                     Lang_Utils.getLanguageText({
-                        textArray: taskObjectiveFullData.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc()
+                        textArray : taskObjectiveFullData.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc(),
                     }) ?? Lang_Constants.UndefinedError,
-                    15
+                    15,
                 ),
-                callbackOnConfirm               : additionalTaskObjectiveIdArray => {
+                callbackOnConfirm : additionalTaskObjectiveIdArray => {
                     if (!currentTaskObjectiveIdArray) {
                         templateWarRule.setTaskObjectiveIdArray(additionalTaskObjectiveIdArray);
                     } else {
@@ -128,7 +128,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0802),
-                callback: () => {
+                callback   : () => {
                     openData.templateWarRule.setTaskObjectiveIdArray([]);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleTaskObjectiveIdArrayChanged);
                 },
@@ -168,9 +168,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray             : DataForItemRenderer[] = [];
         for (const taskObjectiveId of templateWarRule.getTaskObjectiveIdArray()) {
             dataArray.push({
-                war                 : war,
-                templateWarRule     : templateWarRule,
-                taskObjectiveId     : taskObjectiveId,
+                war             : war,
+                templateWarRule : templateWarRule,
+                taskObjectiveId : taskObjectiveId,
             });
         }
 
@@ -195,12 +195,12 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnUp,          callback: this._onTouchedBtnUp },
-            { ui: this._btnDown,        callback: this._onTouchedBtnDown },
-            { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
+            { ui : this._btnUp,          callback : this._onTouchedBtnUp },
+            { ui : this._btnDown,        callback : this._onTouchedBtnDown },
+            { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -272,9 +272,9 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         this._labelId.setText(`#${taskObjectiveId}`);
         this._labelName.setText(Helpers_Text.getTruncatedText(
             Lang_Utils.getLanguageText({
-                textArray: openData.war.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc()
+                textArray : openData.war.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc(),
             }) ?? Lang_Constants.UndefinedError,
-            30
+            30,
         ));
         this._layoutName.arrangeItems();
     }

@@ -40,10 +40,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -141,9 +141,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForCategoryRenderer[] = [];
         for (const [category] of WarEvents_Actions_Constants_Common.TypeDict) {
             dataArray.push({
-                category    : category,
-                isInUse     : category === categoryInUse,
-                panel       : this,
+                category : category,
+                isInUse  : category === categoryInUse,
+                panel    : this,
             });
         }
 
@@ -165,9 +165,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray: DataForTypeRenderer[] = [];
         for (const newActionType of WarEvents_Actions_Constants_Common.TypeDict.get(category) ?? []) {
             dataArray.push({
-                newActionType   : newActionType,
-                action          : action,
-                panel           : this,
+                newActionType : newActionType,
+                action        : action,
+                panel         : this,
             });
         }
 
@@ -182,8 +182,7 @@ interface DataForCategoryRenderer extends Ui_Types_UiListItemData.UiListItemData
 }
 class CategoryRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForCategoryRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCategoryRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForCategoryRenderer> {
     private readonly _labelCategory!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
     public updateOnLoadedSkin(): void {
@@ -220,7 +219,7 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -230,9 +229,9 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);

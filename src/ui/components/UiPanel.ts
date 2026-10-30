@@ -90,7 +90,7 @@ export abstract class UiPanel<OpenData> extends Ui_Components_UiOpenableComponen
     }
 
     protected _enableDefaultOpenAndCloseAnimation(imgMask: Ui_Interfaces_IUiImage.IUiImage, group: Ui_Interfaces_IUiContainer.IUiContainer, animationType = 1): void {
-        this._componentsForDefaultOpenAndCloseAnimation = { imgMask: imgMask, group: group };
+        this._componentsForDefaultOpenAndCloseAnimation = { imgMask : imgMask, group : group };
         this._defaultOpenAndCloseAnimationType          = animationType;
     }
     protected _disableDefaultOpenAndCloseAnimation(): void {
@@ -311,9 +311,9 @@ async function showDefaultOpenAnimation(components: ComponentsForDefaultOpenAndC
 
     } else if (animationType === 2) {
         Tween_Executor.Executor.reset({
-            obj         : imgMask,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : imgMask,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         group.customScaleX  = 0.9;
@@ -321,10 +321,10 @@ async function showDefaultOpenAnimation(components: ComponentsForDefaultOpenAndC
         group.customAlpha   = 0;
 
         Tween_Executor.Executor.removeTweens(group);
-        Tween_Executor.Executor.get(group).to({ customAlpha: 1 }, DefaultTweenTime);
+        Tween_Executor.Executor.get(group).to({ customAlpha : 1 }, DefaultTweenTime);
         Tween_Executor.Executor.get(group)
-            .to({ customScaleX: 1.05,   customScaleY: 1.05 },   DefaultTweenTime / 8 * 6)
-            .to({ customScaleX: 1,      customScaleY: 1 },      DefaultTweenTime / 8 * 2);
+            .to({ customScaleX : 1.05,   customScaleY : 1.05 },   DefaultTweenTime / 8 * 6)
+            .to({ customScaleX : 1,      customScaleY : 1 },      DefaultTweenTime / 8 * 2);
 
         await Timer_TimerModel.wait(DefaultTweenTime);
     }
@@ -350,9 +350,9 @@ async function showDefaultCloseAnimation(components: ComponentsForDefaultOpenAnd
 
     } else if (animationType === 2) {
         Tween_Executor.Executor.reset({
-            obj         : imgMask,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : imgMask,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         group.customScaleX  = 1;
@@ -360,10 +360,10 @@ async function showDefaultCloseAnimation(components: ComponentsForDefaultOpenAnd
         group.customAlpha   = 1;
 
         Tween_Executor.Executor.removeTweens(group);
-        Tween_Executor.Executor.get(group).to({ customAlpha: 0 }, DefaultTweenTime);
+        Tween_Executor.Executor.get(group).to({ customAlpha : 0 }, DefaultTweenTime);
         Tween_Executor.Executor.get(group)
-            .to({ customScaleX: 1.05,   customScaleY: 1.05 },   DefaultTweenTime / 8 * 2)
-            .to({ customScaleX: 0.9,    customScaleY: 0.9 },    DefaultTweenTime / 8 * 6);
+            .to({ customScaleX : 1.05,   customScaleY : 1.05 },   DefaultTweenTime / 8 * 2)
+            .to({ customScaleX : 0.9,    customScaleY : 0.9 },    DefaultTweenTime / 8 * 6);
 
         await Timer_TimerModel.wait(DefaultTweenTime);
     }

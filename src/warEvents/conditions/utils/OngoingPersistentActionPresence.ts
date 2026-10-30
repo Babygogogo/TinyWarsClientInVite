@@ -30,7 +30,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (actionIdArray?.length) {
             subTextArray.push(`- ${Lang_Utils.getFormattedText(
                 Lang_Constants.TextType.F0226,
-                actionIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `)
+                actionIdArray.join(` ${Lang_Utils.getText(Lang_Constants.TextType.Or)} `),
             )}`);
         }
     }
@@ -45,7 +45,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
             Lang_Utils.getComparatorName(data.getOngoingActionsCountComparator()),
             data.getOngoingActionsCount(),
         ),
-        ...subTextArray
+        ...subTextArray,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecOngoingPersistentActionPresence): string | null {

@@ -13,7 +13,7 @@ export async function getActionForPhase11(commonParams: Bots_CommonParams.Common
         return null;
     } else {
         return WoContainer.fromJson({
-            WoPlayerVoteForDraw: {
+            WoPlayerVoteForDraw : {
                 playerIndex : playerIndex,
                 isAgree     : true,
             },

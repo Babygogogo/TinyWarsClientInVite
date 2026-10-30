@@ -93,19 +93,19 @@ function checkIsValidDataForCoDialogue(data: DataForCoDialogue, playersCountUnne
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getTextArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxTextLength,
-        minTextCount    : 1,
+        list          : data.getTextArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxTextLength,
+        minTextCount  : 1,
     })) {
         return false;
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getNameArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxNameLength,
-        minTextCount    : 0,
+        list          : data.getNameArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxNameLength,
+        minTextCount  : 0,
     })) {
         return false;
     }
@@ -114,10 +114,10 @@ function checkIsValidDataForCoDialogue(data: DataForCoDialogue, playersCountUnne
 }
 function checkIsValidDataForAside(data: DataForAside): boolean {
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getTextArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxTextLength,
-        minTextCount    : 1,
+        list          : data.getTextArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxTextLength,
+        minTextCount  : 1,
     })) {
         return false;
     }

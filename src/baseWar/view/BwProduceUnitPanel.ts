@@ -61,17 +61,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback: this._onNotifyBwPlannerStateChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,     callback : this._onNotifyBwPlannerStateChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this._onTouchedBtnClose },
-            { ui: this._btnUnitList,    callback: this._onTouchedBtnUnitList },
-            { ui: this._btnDetail,      callback: this._onTouchedBtnDetail },
+            { ui : this._btnClose,       callback : this._onTouchedBtnClose },
+            { ui : this._btnUnitList,    callback : this._onTouchedBtnUnitList },
+            { ui : this._btnDetail,      callback : this._onTouchedBtnDetail },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
+            callback   : this._onKeyboard,
+            thisObject : this,
         });
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
@@ -147,15 +147,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageChartPanel, {
-            gameConfig  : gameConfig,
+            gameConfig : gameConfig,
         });
     }
     private _onTouchedBtnDetail(): void {
         const data = this._listUnit.getFirstSelectedData();
         if (data) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwUnitDetailPanel, {
-                unit        : data.unit,
-                canDelete   : false,
+                unit      : data.unit,
+                canDelete : false,
             });
         }
     }
@@ -206,19 +206,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 // const newX      = (currentX + columns + offsetX) % columns;
                 // const newY      = (currentY + rows + offsetY) % rows;
                 const newX      = Numbers_Utils.getValueInRange({
-                    minValue    : 0,
-                    maxValue    : COLUMNS - 1,
-                    rawValue    : currentX + offsetX,
+                    minValue : 0,
+                    maxValue : COLUMNS - 1,
+                    rawValue : currentX + offsetX,
                 });
                 const newY      = Numbers_Utils.getValueInRange({
-                    minValue    : 0,
-                    maxValue    : rows - 1,
-                    rawValue    : currentY + offsetY,
+                    minValue : 0,
+                    maxValue : rows - 1,
+                    rawValue : currentY + offsetY,
                 });
                 const newIndex  = Numbers_Utils.getValueInRange({
-                    minValue    : 0,
-                    maxValue    : length - 1,
-                    rawValue    : newX + newY * COLUMNS,
+                    minValue : 0,
+                    maxValue : length - 1,
+                    rawValue : newX + newY * COLUMNS,
                 });
                 if (newIndex !== index) {
                     this.setAndReviseSelectedUnitType(dataArray[newIndex]?.unitType, true);
@@ -291,11 +291,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 unit,
                 cfgCost,
                 costModifier,
-                unitProductionSkillCfg  : skillCfg,
-                minCost                 : skillCfg
+                unitProductionSkillCfg : skillCfg,
+                minCost                : skillCfg
                     ? Math.floor(cfgCost * costModifier * minNormalizedHp * (skillCfg.getCostMultiplierPct()) / Units_Constants.Hp.Normalizer / 100)
                     : Math.floor(cfgCost * costModifier),
-                panel   : this,
+                panel : this,
             });
         }
 
@@ -337,11 +337,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._imgBg,                          callback: this._onTouchedImgBg,         eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupProduce,                   callback: this._onTouchedGroupProduce,  eventType: Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._imgBg,                          callback : this._onTouchedImgBg,         eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
+            { ui : this._groupProduce,                   callback : this._onTouchedGroupProduce,  eventType : Helpers_PointerInput.PointerEventType.ReleaseIn },
         ]);
 
         this._conUnitView.addUiChild(this._unitView);
@@ -462,14 +462,14 @@ function handleProduce(data: DataForUnitRenderer): void {
             const minHp         = rawMinHp;
             const maxHp         = Math.min(
                 rawMaxHp,
-                Math.floor(data.currentFund * Units_Constants.Hp.MaxHp / (data.cfgCost * data.costModifier * (skillCfg.getCostMultiplierPct()) / 100) / normalizer) * normalizer
+                Math.floor(data.currentFund * Units_Constants.Hp.MaxHp / (data.cfgCost * data.costModifier * (skillCfg.getCostMultiplierPct()) / 100) / normalizer) * normalizer,
             );
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
-                currentValue    : maxHp,
-                maxValue        : maxHp,
-                minValue        : minHp,
-                callback        : value => {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.Hp),
+                currentValue : maxHp,
+                maxValue     : maxHp,
+                minValue     : minHp,
+                callback     : value => {
                     ActionPlanners_States_RequestingPlayerProduceUnit.RequestingPlayerProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner, gridIndex, unitType, value);
                 },
             });

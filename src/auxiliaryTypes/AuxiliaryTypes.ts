@@ -107,7 +107,7 @@ export interface UserOnlineState {
     lastActivityTimestamp   : number;
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum UserWarHistoryType {
     RankStd,
     RankFow,

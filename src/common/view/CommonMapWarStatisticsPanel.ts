@@ -59,12 +59,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnRule,                    callback: this._onTouchedBtnRule },
-            { ui: this._btnWarType,                 callback: this._onTouchedBtnWarType },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnRule,                    callback : this._onTouchedBtnRule },
+            { ui : this._btnWarType,                 callback : this._onTouchedBtnWarType },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -173,7 +173,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const templateWarRuleId = this._templateWarRuleId;
         const templateWarRule   = (await NormalMap_Model_NormalMapModel.getRawData(normalMapId))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === templateWarRuleId);
-        const ruleName          = templateWarRule ? Lang_Utils.getLanguageText({ textArray: templateWarRule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError : Lang_Constants.UndefinedError;
+        const ruleName          = templateWarRule ? Lang_Utils.getLanguageText({ textArray : templateWarRule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError : Lang_Constants.UndefinedError;
         this._labelRule.setText(`#${templateWarRuleId} ${ruleName}`);
     }
 
@@ -204,10 +204,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const turnGames         = info.getTotalGames();
             const statisticsArray   = info.getGameResultArray();
             dataArray.push({
-                index           : 0,
-                isLast          : false,
-                turnIndex       : info.getTurnIndex(),
-                totalGames      : 0,
+                index      : 0,
+                isLast     : false,
+                turnIndex  : info.getTurnIndex(),
+                totalGames : 0,
                 turnGames,
                 statisticsArray,
             });
@@ -298,14 +298,14 @@ class StatisticsRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
     public updateOnLoadedSkin(): void {
         this._groupsForPlayers.push(this._groupP1, this._groupP2, this._groupP3, this._groupP4, this._groupP5, this._groupP6, this._groupP7, this._groupP8);
         this._labelsForStatics.push(
-            [ this._labelWin1,  this._labelLose1,   this._labelDraw1, ],
-            [ this._labelWin2,  this._labelLose2,   this._labelDraw2, ],
-            [ this._labelWin3,  this._labelLose3,   this._labelDraw3, ],
-            [ this._labelWin4,  this._labelLose4,   this._labelDraw4, ],
-            [ this._labelWin5,  this._labelLose5,   this._labelDraw5, ],
-            [ this._labelWin6,  this._labelLose6,   this._labelDraw6, ],
-            [ this._labelWin7,  this._labelLose7,   this._labelDraw7, ],
-            [ this._labelWin8,  this._labelLose8,   this._labelDraw8, ],
+            [ this._labelWin1,  this._labelLose1,   this._labelDraw1 ],
+            [ this._labelWin2,  this._labelLose2,   this._labelDraw2 ],
+            [ this._labelWin3,  this._labelLose3,   this._labelDraw3 ],
+            [ this._labelWin4,  this._labelLose4,   this._labelDraw4 ],
+            [ this._labelWin5,  this._labelLose5,   this._labelDraw5 ],
+            [ this._labelWin6,  this._labelLose6,   this._labelDraw6 ],
+            [ this._labelWin7,  this._labelLose7,   this._labelDraw7 ],
+            [ this._labelWin8,  this._labelLose8,   this._labelDraw8 ],
         );
     }
 

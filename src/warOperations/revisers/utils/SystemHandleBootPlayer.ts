@@ -7,7 +7,7 @@ import {
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystemHandleBootPlayer, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
         throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemHandleBootPlayer_00);
@@ -18,7 +18,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystem
     }
 
     return WoContainer.fromJson({
-        WoSystemHandleBootPlayer: {
+        WoSystemHandleBootPlayer : {
         },
     });
 }

@@ -143,7 +143,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
         if (comparator != null) {
             conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -442,19 +442,19 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
     {
         for (const tile of targetTileArray) {
             dataDict.set(tile, TileCustomCannonData.fromJson({
-                rangeForUp                      : evalActRangeForUp(action, tile),
-                rangeForDown                    : evalActRangeForDown(action, tile),
-                rangeForLeft                    : evalActRangeForLeft(action, tile),
-                rangeForRight                   : evalActRangeForRight(action, tile),
-                priority                        : evalActPriority(action, tile),
-                canAffectSelf                   : evalActCanAffectSelf(action, tile),
-                canAffectAlly                   : evalActCanAffectAlly(action, tile),
-                canAffectEnemy                  : evalActCanAffectEnemy(action, tile),
-                maxTargetCount                  : evalActMaxTargetCount(action, tile),
-                offsetHp                        : evalActOffsetHp(action, tile),
-                offsetFuelPercentage            : evalActOffsetFuelPercentage(action, tile),
-                offsetPrimaryAmmoPercentage     : evalActOffsetPrimaryAmmoPercentage(action, tile),
-                canBeFatal                      : evalActCanBeFatal(action, tile),
+                rangeForUp                  : evalActRangeForUp(action, tile),
+                rangeForDown                : evalActRangeForDown(action, tile),
+                rangeForLeft                : evalActRangeForLeft(action, tile),
+                rangeForRight               : evalActRangeForRight(action, tile),
+                priority                    : evalActPriority(action, tile),
+                canAffectSelf               : evalActCanAffectSelf(action, tile),
+                canAffectAlly               : evalActCanAffectAlly(action, tile),
+                canAffectEnemy              : evalActCanAffectEnemy(action, tile),
+                maxTargetCount              : evalActMaxTargetCount(action, tile),
+                offsetHp                    : evalActOffsetHp(action, tile),
+                offsetFuelPercentage        : evalActOffsetFuelPercentage(action, tile),
+                offsetPrimaryAmmoPercentage : evalActOffsetPrimaryAmmoPercentage(action, tile),
+                canBeFatal                  : evalActCanBeFatal(action, tile),
             }));
         }
     }
@@ -463,28 +463,28 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
         for (const [tile, tileCustomCannonData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
             const newData   = Tiles_Utils_Serialization.create({
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                playerIndex             : tile.getPlayerIndex(),
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                playerIndex       : tile.getPlayerIndex(),
+                baseType          : tile.getBaseType(),
+                baseShapeId       : tile.getBaseShapeId(),
+                decorationType    : tile.getDecorationType(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                objectType        : tile.getObjectType(),
+                objectShapeId     : tile.getObjectShapeId(),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                isHighlighted           : tile.getIsHighlighted(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                isHighlighted          : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
+                currentBuildPoint   : Math.min(tile.getCurrentBuildPoint(),     cfg.getMaxBuildPoint() ?? 0),
+                currentCapturePoint : Math.min(tile.getCurrentCapturePoint(),   cfg.getMaxCapturePoint() ?? 0),
+                currentHp           : Math.min(tile.getCurrentHp(),             cfg.getMaxHp() ?? 0),
 
-                customBuildingData      : null,
-                customCrystalData       : null,
-                customCannonData        : tileCustomCannonData.toJson(),
-                customLaserTurretData   : null,
+                customBuildingData    : null,
+                customCrystalData     : null,
+                customCannonData      : tileCustomCannonData.toJson(),
+                customLaserTurretData : null,
             });
 
             tile.init(newData, tile.getGameConfig());
@@ -511,9 +511,9 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateSimple, tile: Tiles_IT
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.RangeForUp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForDown(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -524,9 +524,9 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateSimple, tile: Tiles_
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.RangeForDown.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForLeft(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -537,9 +537,9 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateSimple, tile: Tiles_
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.RangeForLeft.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActRangeForRight(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -550,9 +550,9 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateSimple, tile: Tiles
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.RangeForRight.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActPriority(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -563,9 +563,9 @@ function evalActPriority(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITil
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.Priority.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.Priority.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.Priority.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.Priority.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanAffectSelf(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {
@@ -603,9 +603,9 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateSimple, tile: Tile
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.MaxTargetCount.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetHp(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -616,9 +616,9 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITil
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.OffsetHp.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -629,9 +629,9 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateSimple, tile
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.OffsetFuelPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): number {
@@ -642,9 +642,9 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateSimpl
     }
 
     return Numbers_Utils.getValueInRange({
-        minValue    : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MinValue,
-        maxValue    : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
-        rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
+        minValue : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MinValue,
+        maxValue : Tiles_Constants_CustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
+        rawValue : MultiplierAndOffsets_Utils.getResultValue(act, defaultValue),
     });
 }
 function evalActCanBeFatal(action: WeaSetCustomCannonStateSimple, tile: Tiles_ITile.ITile): boolean {

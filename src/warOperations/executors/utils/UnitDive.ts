@@ -42,7 +42,7 @@ function fastExeUnitDive(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUnitDiv
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !path.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         (isSuccessful) && (focusUnit.setIsDiving(true));
@@ -63,8 +63,8 @@ async function normalExeUnitDive(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
@@ -76,7 +76,7 @@ async function normalExeUnitDive(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute       : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -86,7 +86,7 @@ async function normalExeUnitDive(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
         const isSuccessful  = !path.isBlocked;
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
         (isSuccessful) && (focusUnit.setIsDiving(true));

@@ -88,7 +88,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     protected async _showOpenAnimation(): Promise<void> {
         this.setAlpha(0);
         Tween_Executor.Executor.get(this as Ui_Interfaces_IUiPanel.IUiPanel<OpenData>)
-            .to({ customAlpha: 1 }, 150);
+            .to({ customAlpha : 1 }, 150);
 
         await Timer_TimerModel.wait(250);
 
@@ -96,7 +96,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.get(this as Ui_Interfaces_IUiPanel.IUiPanel<OpenData>)
-            .to({ customAlpha: 0 }, 150);
+            .to({ customAlpha : 0 }, 150);
 
         await Timer_TimerModel.wait(250);
     }

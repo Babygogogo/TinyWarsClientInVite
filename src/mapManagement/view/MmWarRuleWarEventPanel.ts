@@ -37,14 +37,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
-            { type: Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged, callback: this._onNotifyMeWarRuleWarEventIdArrayChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged, callback : this._onNotifyMeWarRuleWarEventIdArrayChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnAdd,         callback: this._onTouchedBtnAdd },
-            { ui: this._btnDeleteAll,   callback: this._onTouchedBtnDeleteAll },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnAdd,         callback : this._onTouchedBtnAdd },
+            { ui : this._btnDeleteAll,   callback : this._onTouchedBtnDeleteAll },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -85,17 +85,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             allWarEventIdSet.delete(warEventId);
         }
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            availableNumberArray        : [...allWarEventIdSet],
-            currentNumberArray          : [],
-            showNumber                  : true,
-            getTitleText                : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
-            getNumberMainText           : warEventId => Helpers_Text.getTruncatedText(
+            availableNumberArray : [...allWarEventIdSet],
+            currentNumberArray   : [],
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0461)),
+            getNumberMainText    : warEventId => Helpers_Text.getTruncatedText(
                 Lang_Utils.getLanguageText({
-                    textArray: warEventArray.find(v => v.getEventId() === warEventId)?.getEventNameArray()
+                    textArray : warEventArray.find(v => v.getEventId() === warEventId)?.getEventNameArray(),
                 }) ?? Lang_Constants.UndefinedError,
-                15
+                15,
             ),
-            callbackOnConfirm           : additionalWarEventIdArray => {
+            callbackOnConfirm : additionalWarEventIdArray => {
                 if (!currentWarEventIdArray) {
                     templateWarRule.setWarEventIdArray(additionalWarEventIdArray);
                 } else {
@@ -117,7 +117,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0801),
-            callback: () => {
+            callback   : () => {
                 openData.templateWarRule.setWarEventIdArray([]);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeWarRuleWarEventIdArrayChanged);
             },
@@ -172,12 +172,12 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnUp,          callback: this._onTouchedBtnUp },
-            { ui: this._btnDown,        callback: this._onTouchedBtnDown },
-            { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
+            { ui : this._btnUp,          callback : this._onTouchedBtnUp },
+            { ui : this._btnDown,        callback : this._onTouchedBtnDown },
+            { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -237,9 +237,9 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         this._labelEventId.setText(`E${eventId}`);
         this._labelEventName.setText(Helpers_Text.getTruncatedText(
             Lang_Utils.getLanguageText({
-                textArray: openData.warEventArray.find(v => v.getEventId() === eventId)?.getEventNameArray()
+                textArray : openData.warEventArray.find(v => v.getEventId() === eventId)?.getEventNameArray(),
             }) ?? Lang_Constants.UndefinedError,
-            30
+            30,
         ));
         this._layoutName.arrangeItems();
     }

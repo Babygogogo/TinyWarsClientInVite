@@ -8,7 +8,7 @@ import {
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystemBeginTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
         throw Helpers_Misc.newError(`Invalid requesterUserId.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemBeginTurn_00);
@@ -19,7 +19,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoSystem
     }
 
     return WoContainer.fromJson({
-        WoSystemBeginTurn: {
+        WoSystemBeginTurn : {
         },
     });
 }

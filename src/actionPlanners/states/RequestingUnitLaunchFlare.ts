@@ -46,10 +46,10 @@ export class RequestingUnitLaunchFlare implements ActionPlanners_States_IState.I
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitLaunchFlare   : {
-                    path            : {
-                        nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitLaunchFlare : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
                     launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
                     targetGridIndex : gridIndex.toProto().toJson(),
@@ -67,7 +67,7 @@ export class RequestingUnitLaunchFlare implements ActionPlanners_States_IState.I
                 war             : war,
                 path            : actionPlanner.generateProtoMovePath(),
                 launchUnitId    : actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
-                targetGridIndex : gridIndex
+                targetGridIndex : gridIndex,
             });
         }
     }

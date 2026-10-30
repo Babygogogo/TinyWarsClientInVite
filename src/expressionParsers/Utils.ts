@@ -151,7 +151,7 @@ export function getErrorTextForParameterType(functionName: string, index: number
         typeof expectedType == "number"
             ? Lang_Utils.getExpressionParserResultTypeName(expectedType)
             : expectedType.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
-        Lang_Utils.getExpressionParserResultTypeName(actualType)
+        Lang_Utils.getExpressionParserResultTypeName(actualType),
     );
 }
 export function getErrorTextForLambdaResultType(functionName: string, index: number, expectedTypes: ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
@@ -160,7 +160,7 @@ export function getErrorTextForLambdaResultType(functionName: string, index: num
         functionName,
         index,
         expectedTypes.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
-        Lang_Utils.getExpressionParserResultTypeName(actualType)
+        Lang_Utils.getExpressionParserResultTypeName(actualType),
     );
 }
 export function getErrorTextForOperandType(operatorName: string, index: number, expectedType: ExpressionParsers_Enums.ResultType | ExpressionParsers_Enums.ResultType[], actualType: ExpressionParsers_Enums.ResultType): string {
@@ -171,7 +171,7 @@ export function getErrorTextForOperandType(operatorName: string, index: number, 
         typeof expectedType == "number"
             ? Lang_Utils.getExpressionParserResultTypeName(expectedType)
             : expectedType.map(v => Lang_Utils.getExpressionParserResultTypeName(v)).join(" / "),
-        Lang_Utils.getExpressionParserResultTypeName(actualType)
+        Lang_Utils.getExpressionParserResultTypeName(actualType),
     );
 }
 

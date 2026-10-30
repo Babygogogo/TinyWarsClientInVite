@@ -140,7 +140,7 @@ namespace IndexedDb {
             if (databaseForInit.objectStoreNames.contains(storeName)) {
                 databaseForInit.deleteObjectStore(storeName);
             }
-            databaseForInit.createObjectStore(storeName, { keyPath: "key" });
+            databaseForInit.createObjectStore(storeName, { keyPath : "key" });
         }
         public setDatabase(databaseForTransaction: IDBDatabase): void {
             this._database = databaseForTransaction;
@@ -253,8 +253,8 @@ namespace IndexedDb {
                     };
                 } else {
                     const request       = store.put({
-                        key     : key,
-                        value   : this._encode(value),
+                        key   : key,
+                        value : this._encode(value),
                     });
                     request.onerror     = () => resolve();
                     request.onsuccess   = () => {
@@ -293,7 +293,7 @@ namespace IndexedDb {
             if (databaseForInit.objectStoreNames.contains(storeName)) {
                 databaseForInit.deleteObjectStore(storeName);
             }
-            databaseForInit.createObjectStore(storeName, { keyPath: ["key1", "key2"] });
+            databaseForInit.createObjectStore(storeName, { keyPath : ["key1", "key2"] });
         }
         public setDatabase(databaseForTransaction: IDBDatabase): void {
             this._database = databaseForTransaction;
@@ -453,9 +453,9 @@ namespace IndexedDb {
                     };
                 } else {
                     const request       = store.put({
-                        key1    : key1,
-                        key2    : key2,
-                        value   : this._encode(value),
+                        key1  : key1,
+                        key2  : key2,
+                        value : this._encode(value),
                     });
                     request.onerror     = () => resolve();
                     request.onsuccess   = () => {
@@ -653,63 +653,63 @@ export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: Auxili
 // }
 
 export const StoreNormalMapBriefData = new IndexedDb.Store1<number, NormalMapBriefData, Uint8Array>({
-    storeName           : "NormalMapBriefData",
-    encode              : mapBriefData  => Helpers_Gzip.compress(mapBriefData.encode()),
-    decode              : encodedData   => NormalMapBriefData.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "NormalMapBriefData",
+    encode    : mapBriefData  => Helpers_Gzip.compress(mapBriefData.encode()),
+    decode    : encodedData   => NormalMapBriefData.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreNormalMapRawData = new IndexedDb.Store1<number, MapRawData, Uint8Array>({
-    storeName           : "NormalMapRawData",
-    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "NormalMapRawData",
+    encode    : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode    : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpmFullReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
-    storeName           : "MpmFullReplayData",
-    encode              : replayData    => Helpers_Gzip.compress(replayData.encode()),
-    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "MpmFullReplayData",
+    encode    : replayData    => Helpers_Gzip.compress(replayData.encode()),
+    decode    : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpmFullReplayInfo = new IndexedDb.Store1<number, ReplayInfo, Uint8Array>({
-    storeName           : "MpmFullReplayInfo",
-    encode              : replayInfo    => Helpers_Gzip.compress(replayInfo.encode()),
-    decode              : encodedData   => ReplayInfo.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "MpmFullReplayInfo",
+    encode    : replayInfo    => Helpers_Gzip.compress(replayInfo.encode()),
+    decode    : encodedData   => ReplayInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreSpmReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
-    storeName           : "SpmReplayData",
-    encode              : replayData    => Helpers_Gzip.compress(replayData.encode()),
-    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "SpmReplayData",
+    encode    : replayData    => Helpers_Gzip.compress(replayData.encode()),
+    decode    : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMcrRoomStaticInfo = new IndexedDb.Store1<number, McrRoomStaticInfo, Uint8Array>({
-    storeName           : "McrRoomStaticInfo",
-    encode              : info          => Helpers_Gzip.compress(info.encode()),
-    decode              : encodedData   => McrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "McrRoomStaticInfo",
+    encode    : info          => Helpers_Gzip.compress(info.encode()),
+    decode    : encodedData   => McrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreCcrRoomStaticInfo = new IndexedDb.Store1<number, CcrRoomStaticInfo, Uint8Array>({
-    storeName           : "CcrRoomStaticInfo",
-    encode              : info          => Helpers_Gzip.compress(info.encode()),
-    decode              : encodedData   => CcrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "CcrRoomStaticInfo",
+    encode    : info          => Helpers_Gzip.compress(info.encode()),
+    decode    : encodedData   => CcrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMfrRoomStaticInfo = new IndexedDb.Store1<number, MfrRoomStaticInfo, Uint8Array>({
-    storeName           : "MfrRoomStaticInfo",
-    encode              : info          => Helpers_Gzip.compress(info.encode()),
-    decode              : encodedData   => MfrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MfrRoomStaticInfo",
+    encode    : info          => Helpers_Gzip.compress(info.encode()),
+    decode    : encodedData   => MfrRoomStaticInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWarSettings = new IndexedDb.Store1<number, MpwWarSettings, Uint8Array>({
-    storeName           : "MpwWarSettings",
-    encode              : info          => Helpers_Gzip.compress(info.encode()),
-    decode              : encodedData   => MpwWarSettings.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwWarSettings",
+    encode    : info          => Helpers_Gzip.compress(info.encode()),
+    decode    : encodedData   => MpwWarSettings.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWarProgressInfo = new IndexedDb.Store1<number, MpwWarProgressInfo, Uint8Array>({
-    storeName           : "MpwWarProgressInfo",
-    encode              : info          => Helpers_Gzip.compress(info.encode()),
-    decode              : encodedData   => MpwWarProgressInfo.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwWarProgressInfo",
+    encode    : info          => Helpers_Gzip.compress(info.encode()),
+    decode    : encodedData   => MpwWarProgressInfo.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreSpmWarSaveSlotFullData = new IndexedDb.Store2<AuxiliaryTypes_AuxiliaryTypes.DecodedSpmWarSaveSlotData, Uint8Array>({   // userId, slotIndex
-    storeName           : "SpmWarSaveSlotFullData",
-    encode              : data => Helpers_Gzip.compress(SpmWarSaveSlotFullData.fromJson({
-        slotIndex           : data.slotIndex,
-        compressedWarData   : Helpers_Gzip.compress(data.warData.encode()),
-        encodedExtraData    : data.extraData.encode(),
+    storeName : "SpmWarSaveSlotFullData",
+    encode    : data => Helpers_Gzip.compress(SpmWarSaveSlotFullData.fromJson({
+        slotIndex         : data.slotIndex,
+        compressedWarData : Helpers_Gzip.compress(data.warData.encode()),
+        encodedExtraData  : data.extraData.encode(),
     }).encode()),
-    decode              : encodedData => {
+    decode : encodedData => {
         const data              = SpmWarSaveSlotFullData.decode(Helpers_Gzip.decompress(encodedData));
         const compressedWarData = Helpers_Misc.getExisted(data.getCompressedWarData());
         let encodedWarData      = compressedWarData;
@@ -720,61 +720,61 @@ export const StoreSpmWarSaveSlotFullData = new IndexedDb.Store2<AuxiliaryTypes_A
             encodedWarData = compressedWarData;
         }
         return {
-            slotIndex   : data.getSlotIndex() ?? 0,
-            warData     : SerialWar.decode(encodedWarData),
-            extraData   : SpmWarSaveSlotExtraData.decode(Helpers_Misc.getExisted(data.getEncodedExtraData())),
+            slotIndex : data.getSlotIndex() ?? 0,
+            warData   : SerialWar.decode(encodedWarData),
+            extraData : SpmWarSaveSlotExtraData.decode(Helpers_Misc.getExisted(data.getEncodedExtraData())),
         };
-    }
+    },
 });
 export const StoreMeFullData = new IndexedDb.Store2<AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
-    storeName           : "MeFullData",
-    encode              : data => Helpers_Gzip.compress(MapEditorData.fromJson({
-        slotIndex                   : data.slotIndex,
-        reviewComment               : data.reviewComment,
-        reviewStatus                : data.reviewStatus,
-        encodedMapRawData           : data.mapRawData?.encode(),
-        dataTimestamp               : data.dataTimestamp,
-        srcNormalMapIdForAddEvent   : data.srcNormalMapIdForAddEvent,
-        gridMarkData                : data.gridMarkData?.toJson(),
+    storeName : "MeFullData",
+    encode    : data => Helpers_Gzip.compress(MapEditorData.fromJson({
+        slotIndex                 : data.slotIndex,
+        reviewComment             : data.reviewComment,
+        reviewStatus              : data.reviewStatus,
+        encodedMapRawData         : data.mapRawData?.encode(),
+        dataTimestamp             : data.dataTimestamp,
+        srcNormalMapIdForAddEvent : data.srcNormalMapIdForAddEvent,
+        gridMarkData              : data.gridMarkData?.toJson(),
     }).encode()),
-    decode              : encodedData => {
+    decode : encodedData => {
         const data              = MapEditorData.decode(Helpers_Gzip.decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
-            slotIndex                   : data.getSlotIndex(),
-            reviewComment               : data.getReviewComment() ?? null,
-            reviewStatus                : data.getReviewStatus(),
-            mapRawData                  : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
-            dataTimestamp               : data.getDataTimestamp(),
-            srcNormalMapIdForAddEvent   : data.getSrcNormalMapIdForAddEvent() ?? null,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : data.getSlotIndex(),
+            reviewComment             : data.getReviewComment() ?? null,
+            reviewStatus              : data.getReviewStatus(),
+            mapRawData                : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
+            dataTimestamp             : data.getDataTimestamp(),
+            srcNormalMapIdForAddEvent : data.getSrcNormalMapIdForAddEvent() ?? null,
+            gridMarkData              : data.getGridMarkData(),
         };
-    }
+    },
 });
 export const StoreCampaignMapRawData = new IndexedDb.Store2<MapRawData, Uint8Array>({
-    storeName           : "CampaignMapRawData",
-    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "CampaignMapRawData",
+    encode    : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode    : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwHalfwayReplayData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
-    storeName           : "MpwHalfwayReplayData",
-    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwHalfwayReplayData",
+    encode    : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode    : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwWatchWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
-    storeName           : "MpwWatchWarData",
-    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwWatchWarData",
+    encode    : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode    : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwOngoingWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
-    storeName           : "MpwOngoingWarData",
-    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
-    decode              : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwOngoingWarData",
+    encode    : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode    : encodedData   => SerialWar.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMpwUnitStatistics = new IndexedDb.Store2<MpwCommonGetUnitStatisticsResponse, Uint8Array>({   // userId, warId
-    storeName           : "MpwUnitStatistics",
-    encode              : warData       => Helpers_Gzip.compress(warData.encode()),
-    decode              : encodedData   => MpwCommonGetUnitStatisticsResponse.decode(Helpers_Gzip.decompress(encodedData)),
+    storeName : "MpwUnitStatistics",
+    encode    : warData       => Helpers_Gzip.compress(warData.encode()),
+    decode    : encodedData   => MpwCommonGetUnitStatisticsResponse.decode(Helpers_Gzip.decompress(encodedData)),
 });
 
 function setValue(key: string, value: string): void {

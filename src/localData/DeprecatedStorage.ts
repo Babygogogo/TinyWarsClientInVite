@@ -60,7 +60,7 @@ namespace IndexedDb {
 
         public initStore(databaseForInit: IDBDatabase): void {
             if (!databaseForInit.objectStoreNames.contains(this._storeName)) {
-                databaseForInit.createObjectStore(this._storeName, { keyPath: "key" });
+                databaseForInit.createObjectStore(this._storeName, { keyPath : "key" });
             }
         }
         public setDatabase(databaseForTransaction: IDBDatabase): void {
@@ -174,8 +174,8 @@ namespace IndexedDb {
                     };
                 } else {
                     const request       = store.put({
-                        key     : key,
-                        value   : this._encode(value),
+                        key   : key,
+                        value : this._encode(value),
                     });
                     request.onerror     = () => resolve();
                     request.onsuccess   = () => {
@@ -207,7 +207,7 @@ namespace IndexedDb {
 
         public initStore(databaseForInit: IDBDatabase): void {
             if (!databaseForInit.objectStoreNames.contains(this._storeName)) {
-                databaseForInit.createObjectStore(this._storeName, { keyPath: ["key1", "key2"] });
+                databaseForInit.createObjectStore(this._storeName, { keyPath : ["key1", "key2"] });
             }
         }
         public setDatabase(databaseForTransaction: IDBDatabase): void {
@@ -368,9 +368,9 @@ namespace IndexedDb {
                     };
                 } else {
                     const request       = store.put({
-                        key1    : key1,
-                        key2    : key2,
-                        value   : this._encode(value),
+                        key1  : key1,
+                        key2  : key2,
+                        value : this._encode(value),
                     });
                     request.onerror     = () => resolve();
                     request.onsuccess   = () => {
@@ -397,37 +397,37 @@ export function init(): Promise<void> {
 }
 
 export const StoreNormalMapRawData = new IndexedDb.Store1<number, MapRawData, Uint8Array>({
-    storeName           : "NormalMapRawData",
-    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "NormalMapRawData",
+    encode    : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode    : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData)),
 });
 export const StoreMeFullData = new IndexedDb.Store2<AuxiliaryTypes_AuxiliaryTypes.DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
-    storeName           : "MeFullData",
-    encode              : data => Helpers_Gzip.compress(MapEditorData.fromJson({
-        slotIndex                   : data.slotIndex,
-        reviewComment               : data.reviewComment,
-        reviewStatus                : data.reviewStatus,
-        encodedMapRawData           : data.mapRawData?.encode(),
-        dataTimestamp               : data.dataTimestamp,
-        srcNormalMapIdForAddEvent   : data.srcNormalMapIdForAddEvent,
-        gridMarkData                : data.gridMarkData?.toJson(),
+    storeName : "MeFullData",
+    encode    : data => Helpers_Gzip.compress(MapEditorData.fromJson({
+        slotIndex                 : data.slotIndex,
+        reviewComment             : data.reviewComment,
+        reviewStatus              : data.reviewStatus,
+        encodedMapRawData         : data.mapRawData?.encode(),
+        dataTimestamp             : data.dataTimestamp,
+        srcNormalMapIdForAddEvent : data.srcNormalMapIdForAddEvent,
+        gridMarkData              : data.gridMarkData?.toJson(),
     }).encode()),
-    decode              : encodedData => {
+    decode : encodedData => {
         const data              = MapEditorData.decode(Helpers_Gzip.decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
-            slotIndex                   : data.getSlotIndex(),
-            reviewComment               : data.getReviewComment() ?? null,
-            reviewStatus                : data.getReviewStatus(),
-            mapRawData                  : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
-            dataTimestamp               : data.getDataTimestamp(),
-            srcNormalMapIdForAddEvent   : data.getSrcNormalMapIdForAddEvent() ?? null,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : data.getSlotIndex(),
+            reviewComment             : data.getReviewComment() ?? null,
+            reviewStatus              : data.getReviewStatus(),
+            mapRawData                : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
+            dataTimestamp             : data.getDataTimestamp(),
+            srcNormalMapIdForAddEvent : data.getSrcNormalMapIdForAddEvent() ?? null,
+            gridMarkData              : data.getGridMarkData(),
         };
-    }
+    },
 });
 export const StoreCampaignMapRawData = new IndexedDb.Store2<MapRawData, Uint8Array>({
-    storeName           : "CampaignMapRawData",
-    encode              : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
-    decode              : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData))
+    storeName : "CampaignMapRawData",
+    encode    : mapRawData    => Helpers_Gzip.compress(mapRawData.encode()),
+    decode    : encodedData   => MapRawData.decode(Helpers_Gzip.decompress(encodedData)),
 });

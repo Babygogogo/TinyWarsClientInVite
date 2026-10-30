@@ -174,7 +174,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 .getEnabledCoCategoryIdArray(warType)
                 .filter(coCategoryId =>
                     (coCategoryId !== Cos_Constants.CategoryId.Random)                                            &&
-                    ((!bannedCoCategoryIdSets.length) || (bannedCoCategoryIdSets.some(v => !v.has(coCategoryId))))
+                    ((!bannedCoCategoryIdSets.length) || (bannedCoCategoryIdSets.some(v => !v.has(coCategoryId)))),
                 ),
             currentCoCategoryIdArray       : [],
             forceUnchosenCoCategoryIdArray : null,
@@ -187,11 +187,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ? Lang_Utils.getText(Lang_Constants.TextType.A0139)
                         : Lang_Utils.getFormattedText(
                             Lang_Constants.TextType.F0185,
-                            bannedCoCategoryIdArray.map(v => gcData.getCoIdByCategoryId(v)).map(v => gcData.getCoNameAndTierText(v) ?? Lang_Constants.UndefinedError).join(`, `)
+                            bannedCoCategoryIdArray.map(v => gcData.getCoIdByCategoryId(v)).map(v => gcData.getCoNameAndTierText(v) ?? Lang_Constants.UndefinedError).join(`, `),
                         ),
                     callback : () => AutoTourneys_Rooms_Gateway.reqAtrSetBannedCoIdArray(
                         roomId,
-                        bannedCoCategoryIdArray.map(v => (gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
+                        bannedCoCategoryIdArray.map(v => (gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v))),
                     ),
                 });
             },
@@ -501,7 +501,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 btnBannedCo.setIsVisible(true);
                 labelBanCo.setText(bannedCoIdArray.length
                     ? bannedCoIdArray.map(v => gameConfig.getCoBasicCfg(v)?.getName()).join(`\n`)
-                    : Lang_Utils.getText(Lang_Constants.TextType.None)
+                    : Lang_Utils.getText(Lang_Constants.TextType.None),
                 );
             }
         }
@@ -538,7 +538,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const coId              = (await AutoTourneys_Rooms_Provider.getSelfSettings(roomId))?.getCoId();
         this._imgCo.loadSource(((gameConfig == null) || (coId == null))
             ? ``
-            : Helpers_ImageSource.getCoEye(gameConfig, coId, true) ?? ``
+            : Helpers_ImageSource.getCoEye(gameConfig, coId, true) ?? ``,
         );
     }
 
@@ -686,8 +686,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 0, },
-            endProps   : { customAlpha : 1, },
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
@@ -720,8 +720,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 1, },
-            endProps   : { customAlpha : 0, },
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

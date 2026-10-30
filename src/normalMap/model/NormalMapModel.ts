@@ -31,8 +31,8 @@ const _mapTagAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccess
     reqData : () => NormalMap_Model_NormalMapProxy.reqMapGetMapTag(),
 });
 const _reviewingMapsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, MapEditorData[]>({
-    reqData         : () => NormalMap_Model_NormalMapProxy.reqMmGetReviewingMaps(),
-    dataExpireTime  : 60,
+    reqData        : () => NormalMap_Model_NormalMapProxy.reqMmGetReviewingMaps(),
+    dataExpireTime : 60,
 });
 const _enabledNormalMapIdSetAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, Set<number>>({
     reqData : () => NormalMap_Model_NormalMapProxy.reqNormalMapGetAllEnabledBriefDataVersions(),
@@ -257,7 +257,7 @@ export async function getMapNameInCurrentLanguage(normalMapId: number): Promise<
     if (!mapBriefData) {
         return null;
     } else {
-        return Lang_Utils.getLanguageText({ textArray: mapBriefData.getMapNameArray() });
+        return Lang_Utils.getLanguageText({ textArray : mapBriefData.getMapNameArray() });
     }
 }
 export async function getDesignerName(normalMapId: number): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<string>> {
@@ -305,12 +305,12 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 name        : await getMapNameInCurrentLanguage(data.normalMapId) ?? ``,
             });
         }
-        const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
+        const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId : v.normalMapId, extraData : v.extraData }));
         return isAscending ? result : result.reverse();
 
     } else if (sortType === Maps_Constants.SortType.NormalMapId) {
@@ -322,19 +322,19 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 name        : (await getBriefData(data.normalMapId))?.getDesignerName()?.toLocaleLowerCase() ?? ``,
             });
         }
-        const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
+        const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId : v.normalMapId, extraData : v.extraData }));
         return isAscending ? result : result.reverse();
 
     } else if (sortType === Maps_Constants.SortType.Popularity) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 num         : (await getTotalPlayedTimes(data.normalMapId)),
             });
@@ -346,7 +346,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 num         : await getAverageRating(data.normalMapId) ?? 0,
             });
@@ -358,7 +358,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 num         : Users_Model.getMapRating(data.normalMapId) ?? 0,
             });
@@ -370,7 +370,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
-                normalMapId       : data.normalMapId,
+                normalMapId : data.normalMapId,
                 extraData   : data.extraData,
                 num         : (await getBriefData(data.normalMapId))?.getPlayersCountUnneutral() ?? 0,
             });

@@ -317,7 +317,7 @@ async function handleDeprecatedData(encodedMapRawData: AuxiliaryTypes_AuxiliaryT
         mapRawData.setModifiedTime(mapRawData.getModifiedTime());
         mapRawData.setMapNameArray(mapRawData.getMapNameArray());
         mapRawData.setTileDataArray(
-            mapRawData.getTileDataArray()
+            mapRawData.getTileDataArray(),
         );
         mapRawData.setWarEventFullData(mapRawData.getWarEventFullData() ?? new WarEventFullData());
     }

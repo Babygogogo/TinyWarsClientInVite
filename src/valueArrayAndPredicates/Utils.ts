@@ -9,7 +9,7 @@ export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValu
     return Lang_Utils.getFormattedText(
         data.getIsOneOf() ? Lang_Constants.TextType.F0228 : Lang_Constants.TextType.F0229,
         valueName,
-        data.getValueArray()?.map(v => getValueText(v)).join(`, `)
+        data.getValueArray()?.map(v => getValueText(v)).join(`, `),
     );
 }
 

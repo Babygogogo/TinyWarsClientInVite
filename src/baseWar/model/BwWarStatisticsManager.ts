@@ -56,9 +56,9 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
-                hasHandledPreDeployedUnits  : this._hasHandledPreDeployedUnits,
-                playerStatisticsArray       : this._getPlayerStatisticsArray().map(v => v.toJson()),
-                unitStatisticsArray         : this.getUnitStatisticsArray().map(v => v.toJson()),
+                hasHandledPreDeployedUnits : this._hasHandledPreDeployedUnits,
+                playerStatisticsArray      : this._getPlayerStatisticsArray().map(v => v.toJson()),
+                unitStatisticsArray        : this.getUnitStatisticsArray().map(v => v.toJson()),
             });
         }
     }
@@ -67,9 +67,9 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
-                hasHandledPreDeployedUnits  : this._hasHandledPreDeployedUnits,
-                playerStatisticsArray       : this._getPlayerStatisticsArray().map(v => v.toJson()),
-                unitStatisticsArray         : this.getUnitStatisticsArray().map(v => v.toJson()),
+                hasHandledPreDeployedUnits : this._hasHandledPreDeployedUnits,
+                playerStatisticsArray      : this._getPlayerStatisticsArray().map(v => v.toJson()),
+                unitStatisticsArray        : this.getUnitStatisticsArray().map(v => v.toJson()),
             });
         }
     }
@@ -78,9 +78,9 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             return new SerialWarStatisticsManager();
         } else {
             return SerialWarStatisticsManager.fromJson({
-                hasHandledPreDeployedUnits  : this._hasHandledPreDeployedUnits,
-                playerStatisticsArray       : this._getPlayerStatisticsArray().map(v => v.toJson()),
-                unitStatisticsArray         : this.getUnitStatisticsArray().map(v => v.toJson()),
+                hasHandledPreDeployedUnits : this._hasHandledPreDeployedUnits,
+                playerStatisticsArray      : this._getPlayerStatisticsArray().map(v => v.toJson()),
+                unitStatisticsArray        : this.getUnitStatisticsArray().map(v => v.toJson()),
             });
         }
     }
@@ -95,28 +95,28 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
         const war       = this._getWar();
         const unitMap   = war.getUnitMap();
         for (const unit of unitMap.getAllUnitsOnMap()) {
-            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
             if (observerTeamIndexes != null) {
                 const playerIndex                   = unit.getPlayerIndex();
                 const groupedObserverTeamIndexes    = Helpers_Team.encodeTeamIndex(observerTeamIndexes);
                 this.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : unit.getUnitType(),
-                    dstPlayerIndex              : playerIndex,
-                    unitGain                    : 1,
-                    unitLoss                    : 0,
-                    normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                    normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : groupedObserverTeamIndexes,
+                    unitType                   : unit.getUnitType(),
+                    dstPlayerIndex             : playerIndex,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                 }));
                 for (const unitLoaded of unitMap.getUnitsLoadedByLoader(unit, true)) {
                     this.addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : unitLoaded.getUnitType(),
-                        dstPlayerIndex              : playerIndex,
-                        unitGain                    : 1,
-                        unitLoss                    : 0,
-                        normalizedHpGain            : unitLoaded.getNormalizedCurrentHp(),
-                        normalizedHpLoss            : 0,
-                        groupedObserverTeamIndexes  : groupedObserverTeamIndexes,
+                        unitType                   : unitLoaded.getUnitType(),
+                        dstPlayerIndex             : playerIndex,
+                        unitGain                   : 1,
+                        unitLoss                   : 0,
+                        normalizedHpGain           : unitLoaded.getNormalizedCurrentHp(),
+                        normalizedHpLoss           : 0,
+                        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
                     }));
                 }
             }
@@ -183,12 +183,12 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             }
             if (!hasMerged) {
                 resultArray.push(Info.fromJson({
-                    unitType            : info.getUnitType(),
-                    playerIndex         : info.getDstPlayerIndex(),
-                    unitGain            : info.getUnitGain(),
-                    unitLoss            : info.getUnitLoss(),
-                    normalizedHpGain    : info.getNormalizedHpGain(),
-                    normalizedHpLoss    : info.getNormalizedHpLoss(),
+                    unitType         : info.getUnitType(),
+                    playerIndex      : info.getDstPlayerIndex(),
+                    unitGain         : info.getUnitGain(),
+                    unitLoss         : info.getUnitLoss(),
+                    normalizedHpGain : info.getNormalizedHpGain(),
+                    normalizedHpLoss : info.getNormalizedHpLoss(),
                 }));
             }
         }
@@ -263,10 +263,10 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
         const existingDataForPlayer = playerStatisticsArray.find(v => v.getPlayerIndex() === playerIndex);
         if (existingDataForPlayer == null) {
             playerStatisticsArray.push(WsPlayerStatistics.fromJson({
-                playerIndex                 : playerIndex,
-                playerTurnStatisticsArray   : [{
-                    turnIndex           : turnIndex,
-                    manualActionsCount  : 1,
+                playerIndex               : playerIndex,
+                playerTurnStatisticsArray : [{
+                    turnIndex          : turnIndex,
+                    manualActionsCount : 1,
                 }],
             }));
         } else {
@@ -274,8 +274,8 @@ export class BwWarStatisticsManager implements BaseWar_Interface_IBwWarStatistic
             const existingData              = playerTurnStatisticsArray.find(v => v.getTurnIndex() === turnIndex);
             if (existingData == null) {
                 playerTurnStatisticsArray.push(WsPlayerTurnStatistics.fromJson({
-                    turnIndex           : turnIndex,
-                    manualActionsCount  : 1,
+                    turnIndex          : turnIndex,
+                    manualActionsCount : 1,
                 }));
             } else {
                 existingData.setManualActionsCount((existingData.getManualActionsCount() ?? 0) + 1);

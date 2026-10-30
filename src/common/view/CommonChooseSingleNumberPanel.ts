@@ -48,11 +48,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnSettings,            callback: this._onTouchedBtnSettings },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSettings,            callback : this._onTouchedBtnSettings },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -135,27 +135,27 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForItemRenderer[] = [];
         for (const num of numArray) {
             dataArray.push({
-                num                 : num,
-                showNumber          : showNumber,
-                getNumberMainText   : getNumberMainText,
-                getNumberHelpText   : getNumberHelpText,
-                checkIsNumberRed    : checkIsNumberRed,
-                panel               : this,
+                num               : num,
+                showNumber        : showNumber,
+                getNumberMainText : getNumberMainText,
+                getNumberHelpText : getNumberHelpText,
+                checkIsNumberRed  : checkIsNumberRed,
+                panel             : this,
             });
         }
 
         const dataCount     = dataArray.length;
         const columnsCount  = Numbers_Utils.getValueInRange({
-            rawValue    : openData.columnsCount ?? 2,
-            minValue    : 2,
-            maxValue    : 4,
+            rawValue : openData.columnsCount ?? 2,
+            minValue : 2,
+            maxValue : 4,
         });
         const rowsCount     = Math.ceil(dataCount / columnsCount);
         const listWidth     = columnsCount * 200 + (columnsCount - 1) * 10;
         const groupHeight   = Numbers_Utils.getValueInRange({
-            rawValue    : rowsCount * 36 + (rowsCount - 1) * 10 + 80,
-            minValue    : 180,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : rowsCount * 36 + (rowsCount - 1) * 10 + 80,
+            minValue : 180,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         });
         const group     = this._group;
         const list      = this._list;
@@ -189,11 +189,11 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupSelect,    callback: this._onTouchedGroupSelect },
-            { ui: this._groupHelp,      callback: this._onTouchedGroupHelp },
+            { ui : this._groupSelect,    callback : this._onTouchedGroupSelect },
+            { ui : this._groupHelp,      callback : this._onTouchedGroupHelp },
         ]);
     }
     protected async _onOpened(): Promise<void> {
@@ -202,9 +202,9 @@ class ItemRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);

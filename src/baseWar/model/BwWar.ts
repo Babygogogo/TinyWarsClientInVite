@@ -93,8 +93,8 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     private _overridingBgmCode      : number | null = null;
 
     private _damagePreviewSettings  : DamagePreviewSettings = {
-        isEnabled   : false,
-        settings    : [],
+        isEnabled : false,
+        settings  : [],
     };
 
     public abstract init(data: SerialWar, gameConfig: GameConfigs_GameConfig.GameConfig): void;
@@ -131,23 +131,23 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
 
         this._setWarType(warType);
         this.getCommonSettingManager().init({
-            settings                : settingsForCommon,
-            warType                 : warType,
-            mapSize                 : mapSize,
-            playersCountUnneutral   : Players_Utils_Common.getPlayersCountUnneutral(data.getPlayerManager()),
-            gameConfig              : gameConfig,
+            settings              : settingsForCommon,
+            warType               : warType,
+            mapSize               : mapSize,
+            playersCountUnneutral : Players_Utils_Common.getPlayersCountUnneutral(data.getPlayerManager()),
+            gameConfig            : gameConfig,
         });
 
         const instanceWarRule = settingsForCommon.getInstanceWarRule();
         this.getWarEventManager().init(data.getWarEventManager(), instanceWarRule?.getWarEventFullData());
         this.getRandomNumberManager().init({
-            isNeedSeedRandom: this.getIsNeedSeedRandom(),
-            initialState    : data.getSeedRandomInitialState(),
-            currentState    : data.getSeedRandomCurrentState(),
+            isNeedSeedRandom : this.getIsNeedSeedRandom(),
+            initialState     : data.getSeedRandomInitialState(),
+            currentState     : data.getSeedRandomCurrentState(),
         });
         this.getExecutedOperationManager().init({
-            isNeedExecutedOperations    : this.getIsNeedExecutedOperations(),
-            data                        : data.getExecutedOperationManager(),
+            isNeedExecutedOperations : this.getIsNeedExecutedOperations(),
+            data                     : data.getExecutedOperationManager(),
         });
 
         const playerManager = this.getPlayerManager();
@@ -157,15 +157,15 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const turnManagerData       = Helpers_Misc.getExisted(data.getTurnManager(), Utils_ClientErrorCode.ClientErrorCode.BwWar_BaseInit_05);
         this.getTurnManager().init(turnManagerData, playersCountUnneutral);
         this.getField().init({
-            data                    : data.getField(),
-            gameConfig              : gameConfig,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : data.getField(),
+            gameConfig            : gameConfig,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getWarStatisticsManager().init({
-            data                    : data.getWarStatisticsManager(),
-            playersCountUnneutral   : playersCountUnneutral,
-            currentTurnIndex        : turnManagerData.getTurnIndex(),
-            gameConfiguration       : gameConfig,
+            data                  : data.getWarStatisticsManager(),
+            playersCountUnneutral : playersCountUnneutral,
+            currentTurnIndex      : turnManagerData.getTurnIndex(),
+            gameConfiguration     : gameConfig,
         });
         this.getTaskObjectiveManager().init(data.getTaskObjectiveManager(), instanceWarRule?.getTaskObjectiveFullData());
 
@@ -184,18 +184,18 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         this.getTurnManager().fastInit(Helpers_Misc.getExisted(warData.getTurnManager()), playersCountUnneutral);
         this.getWarEventManager().fastInit(Helpers_Misc.getExisted(warData.getWarEventManager()));
         this.getField().fastInit({
-            data                    : Helpers_Misc.getExisted(warData.getField()),
-            gameConfig              : gameConfig,
-            playersCountUnneutral   : playersCountUnneutral,
+            data                  : Helpers_Misc.getExisted(warData.getField()),
+            gameConfig            : gameConfig,
+            playersCountUnneutral : playersCountUnneutral,
         });
         this.getDrawVoteManager().fastInit(
             warData.getRemainingVotesForDraw(),
             warData.getDrawVoteManager(),
         );
         this.getRandomNumberManager().init({
-            isNeedSeedRandom    : this.getIsNeedSeedRandom(),
-            initialState        : warData.getSeedRandomInitialState(),
-            currentState        : warData.getSeedRandomCurrentState(),
+            isNeedSeedRandom : this.getIsNeedSeedRandom(),
+            initialState     : warData.getSeedRandomInitialState(),
+            currentState     : warData.getSeedRandomCurrentState(),
         });
         this.getWarStatisticsManager().fastInit(warData.getWarStatisticsManager());
         this.getTaskObjectiveManager().fastInit(warData.getTaskObjectiveManager());
@@ -209,9 +209,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         warView.updatePersistentText();
 
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : this,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            war                            : this,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
     }
 
@@ -227,58 +227,58 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
 
     public serializeForCreateSfw(): SerialWar {
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().serializeForCreateSfw().toJson(),
-            settingsForMcw              : null,
-            settingsForMrw              : null,
-            settingsForMmw              : null,
-            settingsForAtw              : null,
-            settingsForMfw              : null,
-            settingsForCcw              : null,
-            settingsForScw              : null,
-            settingsForSfw              : null,
+            settingsForCommon : this.getCommonSettingManager().serializeForCreateSfw().toJson(),
+            settingsForMcw    : null,
+            settingsForMrw    : null,
+            settingsForMmw    : null,
+            settingsForAtw    : null,
+            settingsForMfw    : null,
+            settingsForCcw    : null,
+            settingsForScw    : null,
+            settingsForSfw    : null,
 
-            warId                       : this.getWarId(),
-            isEnded                     : false,
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            executedOperationManager    : null,
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serializeForCreateSfw().toJson(),
-            warEventManager             : this.getWarEventManager().serializeForCreateSfw().toJson(),
-            playerManager               : this.getPlayerManager().serializeForCreateSfw().toJson(),
-            turnManager                 : this.getTurnManager().serializeForCreateSfw().toJson(),
-            field                       : this.getField().serializeForCreateSfw().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serializeForCreateSfw().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateSfw().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : false,
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            executedOperationManager : null,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serializeForCreateSfw().toJson(),
+            warEventManager          : this.getWarEventManager().serializeForCreateSfw().toJson(),
+            playerManager            : this.getPlayerManager().serializeForCreateSfw().toJson(),
+            turnManager              : this.getTurnManager().serializeForCreateSfw().toJson(),
+            field                    : this.getField().serializeForCreateSfw().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForCreateSfw().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForCreateSfw().toJson(),
         });
     }
     public serializeForCreateMfr(): SerialWar {
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().serializeForCreateMfr().toJson(),
-            settingsForMcw              : null,
-            settingsForMrw              : null,
-            settingsForMmw              : null,
-            settingsForAtw              : null,
-            settingsForMfw              : null,
-            settingsForCcw              : null,
-            settingsForScw              : null,
-            settingsForSfw              : null,
+            settingsForCommon : this.getCommonSettingManager().serializeForCreateMfr().toJson(),
+            settingsForMcw    : null,
+            settingsForMrw    : null,
+            settingsForMmw    : null,
+            settingsForAtw    : null,
+            settingsForMfw    : null,
+            settingsForCcw    : null,
+            settingsForScw    : null,
+            settingsForSfw    : null,
 
-            warId                       : this.getWarId(),
-            isEnded                     : false,
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            executedOperationManager    : null,
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serializeForCreateMfr().toJson(),
-            warEventManager             : this.getWarEventManager().serializeForCreateMfr().toJson(),
-            playerManager               : this.getPlayerManager().serializeForCreateMfr().toJson(),
-            turnManager                 : this.getTurnManager().serializeForCreateMfr().toJson(),
-            field                       : this.getField().serializeForCreateMfr().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serializeForCreateMfr().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateMfr().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : false,
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            executedOperationManager : null,
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serializeForCreateMfr().toJson(),
+            warEventManager          : this.getWarEventManager().serializeForCreateMfr().toJson(),
+            playerManager            : this.getPlayerManager().serializeForCreateMfr().toJson(),
+            turnManager              : this.getTurnManager().serializeForCreateMfr().toJson(),
+            field                    : this.getField().serializeForCreateMfr().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForCreateMfr().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForCreateMfr().toJson(),
         });
     }
     public async serializeForMap(): Promise<MapRawData> {
@@ -294,34 +294,34 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const timestamp                 = Timer_TimerModel.getServerTimestamp();
 
         return MapRawData.fromJson({
-            normalMapId             : null,
-            designerName            : mapRawData?.getDesignerName(),
-            designerUserId          : mapRawData?.getDesignerUserId(),
-            mapNameArray            : mapRawData?.getMapNameArray().map(v => v.toJson()) ?? [],
-            mapWidth                : mapSize.getWidth(),
-            mapHeight               : mapSize.getHeight(),
-            playersCountUnneutral   : this.getPlayerManager().getTotalPlayersCount(false),
-            modifiedTime            : timestamp,
-            campaignMapData         : null,
-            tileDataArray           : serialTileMap.getTiles().map(v => v.toJson()),
-            unitDataArray           : serialUnitMap.getUnits().map(v => v.toJson()),
-            templateWarRuleArray    : [{
-                warEventIdArray             : warEventFullData?.getEventArray()?.map(v => v.getEventId()) ?? [],
-                ruleAvailability            : null,
-                ruleId                      : 0,
-                warRuleCommonData           : instanceWarRule.getWarRuleCommonData()?.toJson(),
-                ruleNameArray               : instanceWarRule.getRuleNameArray().map(v => v.toJson()),
-                lastModifiedTimestamp       : timestamp,
-                mapSimpleDialogueIdArray    : mapSimpleDialogueArray?.map(v => v.getDialogueId()),
-                taskObjectiveIdArray        : [],
+            normalMapId           : null,
+            designerName          : mapRawData?.getDesignerName(),
+            designerUserId        : mapRawData?.getDesignerUserId(),
+            mapNameArray          : mapRawData?.getMapNameArray().map(v => v.toJson()) ?? [],
+            mapWidth              : mapSize.getWidth(),
+            mapHeight             : mapSize.getHeight(),
+            playersCountUnneutral : this.getPlayerManager().getTotalPlayersCount(false),
+            modifiedTime          : timestamp,
+            campaignMapData       : null,
+            tileDataArray         : serialTileMap.getTiles().map(v => v.toJson()),
+            unitDataArray         : serialUnitMap.getUnits().map(v => v.toJson()),
+            templateWarRuleArray  : [{
+                warEventIdArray          : warEventFullData?.getEventArray()?.map(v => v.getEventId()) ?? [],
+                ruleAvailability         : null,
+                ruleId                   : 0,
+                warRuleCommonData        : instanceWarRule.getWarRuleCommonData()?.toJson(),
+                ruleNameArray            : instanceWarRule.getRuleNameArray().map(v => v.toJson()),
+                lastModifiedTimestamp    : timestamp,
+                mapSimpleDialogueIdArray : mapSimpleDialogueArray?.map(v => v.getDialogueId()),
+                taskObjectiveIdArray     : [],
             }],
-            warEventFullData        : warEventFullData?.toJson(),
-            taskObjectiveFullData   : instanceWarRule.getTaskObjectiveFullData()?.toJson(),
-            mapExtraText            : mapRawData?.getMapExtraText()?.toJson(),
-            mapTagIdFlags           : mapRawData?.getMapTagIdFlags(),
-            mapSimpleDialogueArray  : mapSimpleDialogueArray.map(v => v.toJson()),
-            tileCustomNameArray     : serialTileMap.getTileCustomNameArray().map(v => v.toJson()),
-            unitCustomNameArray     : serialUnitMap.getUnitCustomNameArray().map(v => v.toJson()),
+            warEventFullData       : warEventFullData?.toJson(),
+            taskObjectiveFullData  : instanceWarRule.getTaskObjectiveFullData()?.toJson(),
+            mapExtraText           : mapRawData?.getMapExtraText()?.toJson(),
+            mapTagIdFlags          : mapRawData?.getMapTagIdFlags(),
+            mapSimpleDialogueArray : mapSimpleDialogueArray.map(v => v.toJson()),
+            tileCustomNameArray    : serialTileMap.getTileCustomNameArray().map(v => v.toJson()),
+            unitCustomNameArray    : serialUnitMap.getUnitCustomNameArray().map(v => v.toJson()),
         });
     }
 
@@ -553,9 +553,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
 
         if (this.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
             this.getFogMap().updateMapFromPathsByUnitAndPath({
-                unit            : focusUnit,
-                unitVisionInfo  : focusUnit.getVisionInfo(),
-                path            : pathNodes
+                unit           : focusUnit,
+                unitVisionInfo : focusUnit.getVisionInfo(),
+                path           : pathNodes,
             });
         }
 
@@ -611,9 +611,9 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const virtualUnitView = virtualUnit.getView();
         unitMapView.addUnit(virtualUnitView, true);
         await virtualUnitView.moveAlongExtraPath({
-            path                    : movingPath,
-            aiming                  : aiming,
-            deleteViewAfterMoving   : deleteViewAfterMoving,
+            path                  : movingPath,
+            aiming                : aiming,
+            deleteViewAfterMoving : deleteViewAfterMoving,
         });
         if (deleteViewAfterMoving) {
             virtualUnit.stopRunning();
@@ -643,7 +643,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const currGridIndex             = field.getCursor().getGridIndex();
         const currX                     = currGridIndex.getX();
         const currY                     = currGridIndex.getY();
-        const { width, height}          = tileMap.getMapSize().getWH();
+        const { width, height }          = tileMap.getMapSize().getWH();
         const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
             if ((unit)                                                                                      &&
@@ -683,7 +683,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
         const field                     = this.getField();
         const unitMap                   = field.getUnitMap();
         const { x: currX, y: currY }    = field.getCursor().getGridIndex().getXY();
-        const { width, height}          = unitMap.getMapSize().getWH();
+        const { width, height }          = unitMap.getMapSize().getWH();
         const checkIsIdle               = (gridIndex: AuxiliaryTypes_GridIndex.GridIndex): boolean => {
             const unit = unitMap.getUnitOnMap(gridIndex);
             return (unit?.getPlayerIndex() === playerIndex) && (unit.getActionState() === Units_Constants.ActionStateId.Idle);

@@ -20,10 +20,10 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
     const eventNameArray = warEvent.getEventNameArray();
     if ((eventNameArray == null)                                     ||
         (!Lang_Utils.checkIsValidLanguageTextArray({
-            list            : eventNameArray,
-            maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
-            minTextLength   : 1,
-            minTextCount    : 1,
+            list          : eventNameArray,
+            maxTextLength : WarEvents_Constants.Event.MaxNameLength,
+            minTextLength : 1,
+            minTextCount  : 1,
         }))
     ) {
         return false;
@@ -152,16 +152,16 @@ export function addEvent(fullData: WarEventFullData): number | null {
     for (let eventId = 1; ; ++eventId) {
         if (!eventArray.some(v => v.getEventId() === eventId)) {
             eventArray.push(ProtoWarEvent.fromJson({
-                eventId                             : eventId,
-                maxCallCountInPlayerTurn            : 1,
-                maxCallCountTotal                   : 1,
-                canBeTriggeredRightAfterAnyEvent    : false,
-                rootNodeAndActionsArray             : [],
-                eventNameArray                      : [
-                    { languageType: Lang_Utils.getCurrentLanguageType(), text: `${Lang_Utils.getText(Lang_Constants.TextType.B0469)} #${eventId}` },
-                    { languageType: Lang_Utils.getSecondaryLanguageType(), text: `${Lang_Utils.getText(Lang_Constants.TextType.B0469, Lang_Utils.getSecondaryLanguageType())} #${eventId}` },
+                eventId                          : eventId,
+                maxCallCountInPlayerTurn         : 1,
+                maxCallCountTotal                : 1,
+                canBeTriggeredRightAfterAnyEvent : false,
+                rootNodeAndActionsArray          : [],
+                eventNameArray                   : [
+                    { languageType : Lang_Utils.getCurrentLanguageType(), text : `${Lang_Utils.getText(Lang_Constants.TextType.B0469)} #${eventId}` },
+                    { languageType : Lang_Utils.getSecondaryLanguageType(), text : `${Lang_Utils.getText(Lang_Constants.TextType.B0469, Lang_Utils.getSecondaryLanguageType())} #${eventId}` },
                 ],
-                deprecatedActionIdArray             : [],
+                deprecatedActionIdArray : [],
             }));
             eventArray.sort((v1, v2) => v1.getEventId() - v2.getEventId());
             return eventId;
@@ -179,21 +179,21 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
         const srcRootNodeAndActionsArray = srcEvent.getRootNodeAndActionsArray();
         if (isShallowClone) {
             eventArray.push(ProtoWarEvent.fromJson({
-                eventId                             : eventId,
-                eventNameArray                      : srcEvent.getEventNameArray().map(v => v.toJson()),
-                maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),
-                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
-                maxCallCountTotal                   : srcEvent.getMaxCallCountTotal(),
-                rootNodeAndActionsArray             : srcRootNodeAndActionsArray.map(v => v.toJson()),
-                deprecatedActionIdArray             : [],
+                eventId                          : eventId,
+                eventNameArray                   : srcEvent.getEventNameArray().map(v => v.toJson()),
+                maxCallCountInPlayerTurn         : srcEvent.getMaxCallCountInPlayerTurn(),
+                canBeTriggeredRightAfterAnyEvent : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
+                maxCallCountTotal                : srcEvent.getMaxCallCountTotal(),
+                rootNodeAndActionsArray          : srcRootNodeAndActionsArray.map(v => v.toJson()),
+                deprecatedActionIdArray          : [],
             }));
         } else {
             eventArray.push(ProtoWarEvent.fromJson({
-                eventId                             : eventId,
-                eventNameArray                      : srcEvent.getEventNameArray().map(v => v.clone().toJson()),
-                maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),
-                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
-                maxCallCountTotal                   : srcEvent.getMaxCallCountTotal(),
+                eventId                          : eventId,
+                eventNameArray                   : srcEvent.getEventNameArray().map(v => v.clone().toJson()),
+                maxCallCountInPlayerTurn         : srcEvent.getMaxCallCountInPlayerTurn(),
+                canBeTriggeredRightAfterAnyEvent : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
+                maxCallCountTotal                : srcEvent.getMaxCallCountTotal(),
                 // actionIdArray                       : srcEvent.getActionIdArray().map(v => GhWarEventAction.cloneAction(fullData, v)),
                 // rootConditionNodeIdAndFlags         : srcRootNodeAndActionsArray == null
                 //     ? null
@@ -201,19 +201,19 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
                 //         nodeId      : GhWarEventConditionNode.cloneNode(fullData, srcRootNodeAndActionsArray.getNodeId(), isShallowClone),
                 //         isNegated   : srcRootNodeAndActionsArray.getIsNegated(),
                 //     }
-                rootNodeAndActionsArray             : srcRootNodeAndActionsArray.map(root => {
+                rootNodeAndActionsArray          : srcRootNodeAndActionsArray.map(root => {
                     const nodeIdAndFlags = root.getNodeIdAndFlags();
                     return {
-                        nodeIdAndFlags  : nodeIdAndFlags == null
+                        nodeIdAndFlags : nodeIdAndFlags == null
                             ? null
                             : {
-                                nodeId      : WarEvents_ConditionNodes_Utils.cloneNode(fullData, nodeIdAndFlags.getNodeId(), isShallowClone),
-                                isNegated   : nodeIdAndFlags.getIsNegated(),
+                                nodeId    : WarEvents_ConditionNodes_Utils.cloneNode(fullData, nodeIdAndFlags.getNodeId(), isShallowClone),
+                                isNegated : nodeIdAndFlags.getIsNegated(),
                             },
-                        actionIdArray   : root.getActionIdArray().map(v => WarEvents_Actions_Utils_Common.cloneAction(fullData, v)),
+                        actionIdArray : root.getActionIdArray().map(v => WarEvents_Actions_Utils_Common.cloneAction(fullData, v)),
                     };
                 }),
-                deprecatedActionIdArray             : [],
+                deprecatedActionIdArray : [],
             }));
         }
 

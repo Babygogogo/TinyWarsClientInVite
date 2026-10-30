@@ -47,19 +47,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsAutoScrollMapChanged,                  callback: this._onNotifyUserSettingsIsAutoScrollMapChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,            callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsIsSetPathModeChanged,                    callback: this._onNotifyUserSettingsIsSetPathModeChanged },
-            { type: Notifications_TypeId.TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged,    callback: this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsAutoScrollMapChanged,                  callback : this._onNotifyUserSettingsIsAutoScrollMapChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,            callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsIsSetPathModeChanged,                    callback : this._onNotifyUserSettingsIsSetPathModeChanged },
+            { type : Notifications_TypeId.TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged,    callback : this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnLanguage,                                callback: this._onTouchedBtnLanguage },
-            { ui: this._groupHelpAutoScrollMap,                     callback: this._onTouchedGroupHelpAutoScrollMap },
-            { ui: this._groupHelpIsReplayResultVisible,             callback: this._onTouchedGroupHelpIsReplayResultVisible },
-            { ui: this._groupHelpSetPath,                           callback: this._onTouchedGroupHelpSetPath },
-            { ui: this._groupHelpCanAcceptNotFollowingMessages,     callback: this._onTouchedGroupHelpCanAcceptNotFollowingMessages },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnLanguage,                                callback : this._onTouchedBtnLanguage },
+            { ui : this._groupHelpAutoScrollMap,                     callback : this._onTouchedGroupHelpAutoScrollMap },
+            { ui : this._groupHelpIsReplayResultVisible,             callback : this._onTouchedGroupHelpIsReplayResultVisible },
+            { ui : this._groupHelpSetPath,                           callback : this._onTouchedGroupHelpSetPath },
+            { ui : this._groupHelpCanAcceptNotFollowingMessages,     callback : this._onTouchedGroupHelpCanAcceptNotFollowingMessages },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -74,20 +74,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         this._uiSwitchIsReplayResultVisible.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                isReplayResultVisible   : !Users_Model.getSelfSettingsIsReplayResultVisible(),
-                coBgmSettings           : [],
+                isReplayResultVisible : !Users_Model.getSelfSettingsIsReplayResultVisible(),
+                coBgmSettings         : [],
             });
         });
         this._uiSwitchSetPath.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                isSetPathMode   : !Users_Model.getSelfSettingsIsSetPathMode(),
-                coBgmSettings   : [],
+                isSetPathMode : !Users_Model.getSelfSettingsIsSetPathMode(),
+                coBgmSettings : [],
             });
         });
         this._uiSwitchCanAcceptNotFollowingMessages.setCallbackOnTouch(() => {
             Users_Proxy.reqUserSetSettings({
-                canAcceptNotFollowingMessages   : !Users_Model.getSelfSettingsCanAcceptNotFollowingMessages(),
-                coBgmSettings                   : [],
+                canAcceptNotFollowingMessages : !Users_Model.getSelfSettingsCanAcceptNotFollowingMessages(),
+                coBgmSettings                 : [],
             });
         });
 
@@ -112,15 +112,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnLanguage(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0627),
-            availableNumberArray    : [
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0627),
+            availableNumberArray : [
                 Lang_Constants.LanguageType.Chinese,
                 Lang_Constants.LanguageType.English,
                 Lang_Constants.LanguageType.Spanish,
             ],
-            currentNumber           : Lang_Utils.getCurrentLanguageType(),
-            getNumberMainText       : num => Lang_Utils.getLanguageTypeName(num) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : num => {
+            currentNumber     : Lang_Utils.getCurrentLanguageType(),
+            getNumberMainText : num => Lang_Utils.getLanguageTypeName(num) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm : num => {
                 Lang_Utils.setCurrentLanguageType(num);
                 LocalData_Storage.setLanguageType(num);
 

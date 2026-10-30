@@ -43,7 +43,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         if (dom) {
             this._selectionRange = [
                 dom.selectionStart ?? null,
-                dom.selectionEnd ?? null
+                dom.selectionEnd ?? null,
             ];
         }
 
@@ -861,7 +861,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
         const stage         = Stages_StageManager.getStage();
         matrix.scale(
             canvasBounds.width / stage.stageWidth,
-            canvasBounds.height / stage.stageHeight
+            canvasBounds.height / stage.stageHeight,
         );
 
         // 以下原代码会导致缩放出错，故屏蔽
@@ -978,10 +978,10 @@ function _matrixToCSS(m: Egret_Egret.Matrix): string {
 function _calculateCanvasBounds(): CanvasBounds {
     const rect = Stages_StageManager.getCanvasBoundingClientRect();
     return {
-        left    : rect.left + window.scrollX,
-        top     : rect.top + window.scrollY,
-        width   : rect.width,
-        height  : rect.height,
+        left   : rect.left + window.scrollX,
+        top    : rect.top + window.scrollY,
+        width  : rect.width,
+        height : rect.height,
     };
 }
 function _compareMatrices(m1: Egret_Egret.Matrix | undefined, m2: Egret_Egret.Matrix | undefined): boolean {

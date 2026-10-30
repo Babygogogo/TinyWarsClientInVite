@@ -23,7 +23,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitRe
     const rawPath       = rawAction.getPath();
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId, 
+    });
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
         throw Helpers_Misc.newError(`Destination occupied.`);
     }
@@ -50,7 +52,7 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitRe
     }
 
     return WoContainer.fromJson({
-        WoUnitRepairUnit: {
+        WoUnitRepairUnit : {
             path            : revisedPath.toProto().toJson(),
             launchUnitId    : launchUnitId,
             targetGridIndex : targetGridIndex.toProto().toJson(),

@@ -34,7 +34,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
 
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0250,
-        `P${data.getActPlayerIndex()}`
+        `P${data.getActPlayerIndex()}`,
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaSetUnitOwnershipSimple>): string | null {
@@ -69,7 +69,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0251,
         conTextArray.join(`\n`),
-        `P${data.getActPlayerIndex()}`
+        `P${data.getActPlayerIndex()}`,
     );
 }
 
@@ -209,21 +209,21 @@ function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwW
     const unitType      = unit.getUnitType();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-        unitType                    : unitType,
-        dstPlayerIndex              : unit.getPlayerIndex(),
-        normalizedHpGain            : 0,
-        normalizedHpLoss            : normalizedHp,
-        unitGain                    : 0,
-        unitLoss                    : 1,
-        groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+        unitType                   : unitType,
+        dstPlayerIndex             : unit.getPlayerIndex(),
+        normalizedHpGain           : 0,
+        normalizedHpLoss           : normalizedHp,
+        unitGain                   : 0,
+        unitLoss                   : 1,
+        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
     }));
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-        unitType                    : unitType,
-        dstPlayerIndex              : newPlayerIndex,
-        normalizedHpGain            : normalizedHp,
-        normalizedHpLoss            : 0,
-        unitGain                    : 1,
-        unitLoss                    : 0,
-        groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+        unitType                   : unitType,
+        dstPlayerIndex             : newPlayerIndex,
+        normalizedHpGain           : normalizedHp,
+        normalizedHpLoss           : 0,
+        unitGain                   : 1,
+        unitLoss                   : 0,
+        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
     }));
 }

@@ -24,9 +24,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConUnitFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ConUnitFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConUnitFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ConUnitFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -35,9 +35,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
     {
         const str = action.getActPlayerAliveState();
         if ((str) && (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : str,
-            expressionInfo          : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : str,
+            expressionInfo       : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState,
+            customCounterNameSet : customCounterNameSet,
         }))) {
             return false;
         }
@@ -68,9 +68,9 @@ export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<
     {
         const info      = WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ConUnitFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConUnitFilter() ?? ``,
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConUnitFilter() ?? ``,
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -80,9 +80,9 @@ export function getErrorTip(data: WeaDestroyUnitExpr, customCounterNameSet: Set<
     {
         const info      = WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActPlayerAliveState(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPlayerAliveState(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;

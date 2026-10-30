@@ -51,24 +51,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnDamageCalculator,                        callback: this._onTouchedBtnDamageCalculator },
-            { ui: this._btnSettings,                                callback: this._onTouchedBtnSettings },
-            { ui: this._btnClose,                                   callback: this.closePanel },
+            { ui : this._btnDamageCalculator,                        callback : this._onTouchedBtnDamageCalculator },
+            { ui : this._btnSettings,                                callback : this._onTouchedBtnSettings },
+            { ui : this._btnClose,                                   callback : this.closePanel },
 
-            { ui: this._btnTaskObjective,                           callback: this._onTouchedBtnTaskObjective },
-            { ui: this._btnMapSimpleDialogue,                       callback: this._onTouchedBtnMapSimpleDialogue },
-            { ui: this._btnSaveGame,                                callback: this._onTouchedBtnSaveGame },
-            { ui: this._btnLoadGame,                                callback: this._onTouchedBtnLoadGame },
-            { ui: this._btnAdvanced,                                callback: this._onTouchedBtnAdvanced },
+            { ui : this._btnTaskObjective,                           callback : this._onTouchedBtnTaskObjective },
+            { ui : this._btnMapSimpleDialogue,                       callback : this._onTouchedBtnMapSimpleDialogue },
+            { ui : this._btnSaveGame,                                callback : this._onTouchedBtnSaveGame },
+            { ui : this._btnLoadGame,                                callback : this._onTouchedBtnLoadGame },
+            { ui : this._btnAdvanced,                                callback : this._onTouchedBtnAdvanced },
 
-            { ui: this._btnSimulation,                              callback: this._onTouchedBtnSimulation },
+            { ui : this._btnSimulation,                              callback : this._onTouchedBtnSimulation },
 
-            { ui: this._btnGotoMpw,                                 callback: this._onTouchedBtnGotoMpWar },
-            { ui: this._btnGotoWarList,                             callback: this._onTouchedBtnGotoWarList },
-            { ui: this._btnGotoLobby,                               callback: this._onTouchedBtnGotoLobby },
+            { ui : this._btnGotoMpw,                                 callback : this._onTouchedBtnGotoMpWar },
+            { ui : this._btnGotoWarList,                             callback : this._onTouchedBtnGotoWarList },
+            { ui : this._btnGotoLobby,                               callback : this._onTouchedBtnGotoLobby },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -108,9 +108,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            war                     : war,
-            needReviseWeaponType    : true,
-            data                    : null,
+            war                  : war,
+            needReviseWeaponType : true,
+            data                 : null,
         });
         this.closePanel();
     }
@@ -127,7 +127,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (war.getWarEventManager().getCalledDialogueActionIdArray().length) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMapSimpleDialogueListPanel, {
-                war     : war,
+                war : war,
             });
             this.closePanel();
 
@@ -148,7 +148,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMapSimpleDialogueListPanel, {
-                    war     : war,
+                    war : war,
                 });
                 this.closePanel();
             }
@@ -168,29 +168,29 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (war.getSaveSlotIndex() == null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-                currentSlotIndex        : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
-                needComment             : true,
-                needConfirmOverwrite    : true,
-                callback                : (slotIndex, comment) => {
+                currentSlotIndex     : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
+                needComment          : true,
+                needConfirmOverwrite : true,
+                callback             : (slotIndex, comment) => {
                     const saveSlotExtraData = war.getSaveSlotExtraData();
                     SinglePlayerMode_Model_SpmProxy.reqSpmCreateSfw({
-                        slotIndex       : slotIndex,
-                        slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                            slotComment             : comment,
-                            mpwWarId                : saveSlotExtraData.getMpwWarId(),
-                            overridingSkinIdArray   : [],
-                            gridMarkData            : saveSlotExtraData.getGridMarkData()?.toJson(),
+                        slotIndex     : slotIndex,
+                        slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                            slotComment           : comment,
+                            mpwWarId              : saveSlotExtraData.getMpwWarId(),
+                            overridingSkinIdArray : [],
+                            gridMarkData          : saveSlotExtraData.getGridMarkData()?.toJson(),
                         }),
-                        warData         : war.serializeForCreateSfw(),
+                        warData : war.serializeForCreateSfw(),
                     });
-                }
+                },
             });
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0071),
-            callback: () => {
+            callback   : () => {
                 const warType = war.getWarType();
                 if ((warType === WarTypes_Constants.WarTypeId.ScwFog) || (warType === WarTypes_Constants.WarTypeId.ScwStd)) {
                     SinglePlayerMode_Model_SpmProxy.reqSpmSaveScw(war);
@@ -214,22 +214,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
-            callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-                currentSlotIndex        : this.getOpenData()?.war.getSaveSlotIndex() ?? 0,
-                needComment             : false,
-                needConfirmOverwrite    : false,
-                needNonEmptyData        : true,
-                callback                : async slotIndex => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+            callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
+                currentSlotIndex     : this.getOpenData()?.war.getSaveSlotIndex() ?? 0,
+                needComment          : false,
+                needConfirmOverwrite : false,
+                needNonEmptyData     : true,
+                callback             : async slotIndex => {
                     const slotInfo  = await SinglePlayerMode_Model_SpmModel.getSlotFullData(slotIndex);
                     if (slotInfo != null) {
                         Helpers_GameFlow.gotoSinglePlayerWar({
-                            slotIndex       : slotIndex,
-                            warData         : slotInfo.warData,
-                            slotExtraData   : slotInfo.extraData,
+                            slotIndex     : slotIndex,
+                            warData       : slotInfo.warData,
+                            slotExtraData : slotInfo.extraData,
                         });
                     }
-                }
+                },
             }),
         });
     }
@@ -258,22 +258,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+            callback   : () => {
                 const warData = war.serializeForCreateSfw();
                 warData.createIfNotExistsSettingsForSfw();
 
                 const saveSlotExtraData = war.getSaveSlotExtraData();
                 Helpers_GameFlow.gotoSinglePlayerWar({
-                    warData         : warData,
-                    slotIndex       : null,
-                    slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                        mpwWarId                : saveSlotExtraData.getMpwWarId(),
-                        overridingSkinIdArray   : [],
-                        gridMarkData            : saveSlotExtraData.getGridMarkData()?.toJson(),
+                    warData       : warData,
+                    slotIndex     : null,
+                    slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                        mpwWarId              : saveSlotExtraData.getMpwWarId(),
+                        overridingSkinIdArray : [],
+                        gridMarkData          : saveSlotExtraData.getGridMarkData()?.toJson(),
                     }),
                 });
-            }
+            },
         });
     }
 
@@ -292,7 +292,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0711),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: async () => {
+            callback   : async () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
                     title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
                     content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
@@ -324,7 +324,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0652),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: () => Helpers_GameFlow.gotoMyWarListPanel(war.getWarType()),
+            callback   : () => Helpers_GameFlow.gotoMyWarListPanel(war.getWarType()),
         });
     }
 
@@ -337,7 +337,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0025),
-            callback: () => Helpers_GameFlow.gotoLobby(),
+            callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
 

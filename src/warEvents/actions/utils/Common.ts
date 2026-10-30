@@ -167,16 +167,18 @@ export function checkIsValidWarEventAction({ action, mapSize, gameConfig, player
         return false;
     }
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : weaCommonData?.getActionNameArray() ?? [],
-        maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
-        minTextLength   : 1,
-        minTextCount    : 0,
+        list          : weaCommonData?.getActionNameArray() ?? [],
+        maxTextLength : WarEvents_Constants.Event.MaxNameLength,
+        minTextLength : 1,
+        minTextCount  : 0,
     })) {
         return false;
     }
 
     // todo: add more checkers when the action types grow.
-    return (WarEvents_Actions_Utils_AddUnitOnMapSimple.checkIsValid({ action: action.getWeaAddUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral }))
+    return (WarEvents_Actions_Utils_AddUnitOnMapSimple.checkIsValid({
+        action : action.getWeaAddUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral, 
+    }))
         || (WarEvents_Actions_Utils_FillUnitOnMapExpr.checkIsValid(action.getWeaFillUnitOnMapExpr(), customCounterNameSet))
         || (WarEvents_Actions_Utils_FillUnitOnMapSimple.checkIsValid(action.getWeaFillUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral))
         || (WarEvents_Actions_Utils_FillUnitLoadedSimple.checkIsValid(action.getWeaFillUnitLoadedSimple(), gameConfig, mapSize, playersCountUnneutral))
@@ -306,68 +308,121 @@ export function openActionModifyPanel(war: MapEditor_Interface_IMeWar.IMeWar, fu
     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeaPersistentModifyPlayerAttributePanel);
     GamePanels_Manager.closePanel(GamePanels_Dict.getDict().WeaPersistentModifyUnitAttributePanel);
 
-    if      (action.getWeaAddUnitOnMapSimple())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddUnitOnMapSimplePanel,                             { war, fullData, action }); }
-    else if (action.getWeaSetViewpointExpr())                           { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetViewpointExprPanel,                               { war, fullData, action }); }
-    else if (action.getWeaSetViewpointSimple())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetViewpointSimplePanel,                             { war, fullData, action }); }
-    else if (action.getWeaBigDialogueSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaBigDialogueSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaSmallDialogueSimple())                        { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSmallDialogueSimplePanel,                            { war, fullData, action }); }
-    else if (action.getWeaPlayBgm())                                    { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPlayBgmPanel,                                        { war, fullData, action }); }
-    else if (action.getWeaPlaySfx())                                    { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPlaySfxPanel,                                        { war, fullData, action }); }
-    else if (action.getWeaSetWeatherExpr())                             { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetWeatherExprPanel,                                 { war, fullData, action }); }
-    else if (action.getWeaSetWeatherSimple())                           { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetWeatherSimplePanel,                               { war, fullData, action }); }
-    else if (action.getWeaFillUnitOnMapExpr())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitOnMapExprPanel,                              { war, fullData, action }); }
-    else if (action.getWeaFillUnitOnMapSimple())                        { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitOnMapSimplePanel,                            { war, fullData, action }); }
-    else if (action.getWeaFillUnitLoadedSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitLoadedSimplePanel,                           { war, fullData, action }); }
-    else if (action.getWeaFillUnitLoadedExpr())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitLoadedExprPanel,                             { war, fullData, action }); }
-    else if (action.getWeaDestroyUnitSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDestroyUnitSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaDestroyUnitExpr())                            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDestroyUnitExprPanel,                                { war, fullData, action }); }
-    else if (action.getWeaSetUnitTypeSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitTypeSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaSetUnitTypeExpr())                            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitTypeExprPanel,                                { war, fullData, action }); }
-    else if (action.getWeaSetUnitOwnershipSimple())                     { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitOwnershipSimplePanel,                         { war, fullData, action }); }
-    else if (action.getWeaSetUnitOwnershipExpr())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitOwnershipExprPanel,                           { war, fullData, action }); }
-    else if (action.getWeaSetUnitPositionSimple())                      { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitPositionSimplePanel,                          { war, fullData, action }); }
-    else if (action.getWeaSetUnitPositionExpr())                        { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitPositionExprPanel,                            { war, fullData, action }); }
-    else if (action.getWeaSetUnitStateSimple())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitStateSimplePanel,                             { war, fullData, action }); }
-    else if (action.getWeaSetUnitStateExpr())                           { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitStateExprPanel,                               { war, fullData, action }); }
-    else if (action.getWeaAddUnitBuffSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddUnitBuffSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaModifyUnitBuffSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyUnitBuffSimplePanel,                           { war, fullData, action }); }
-    else if (action.getWeaDeleteUnitBuffSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteUnitBuffSimplePanel,                           { war, fullData, action }); }
-
-    else if (action.getWeaSetForceFogCodeExpr())                        { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetForceFogCodeExprPanel,                            { war, fullData, action }); }
-    else if (action.getWeaSetForceFogCodeSimple())                      { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetForceFogCodeSimplePanel,                          { war, fullData, action }); }
-    else if (action.getWeaStopPersistentAction())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaStopPersistentActionPanel,                           { war, fullData, action }); }
-    else if (action.getWeaSetCustomCounters())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCountersPanel,                              { war, fullData, action }); }
-
-    else if (action.getWeaSetPlayerStateExpr())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetPlayerStateExprPanel,                             { war, fullData, action }); }
-    else if (action.getWeaSetPlayerStateSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetPlayerStateSimplePanel,                           { war, fullData, action }); }
-    else if (action.getWeaSetTaskObjectiveState())                      { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTaskObjectiveStatePanel,                          { war, fullData, action }); }
-    else if (action.getWeaSetUnitMovePathVisibility())                  { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitMovePathVisibilityPanel,                      { war, fullData, action }); }
-
-    else if (action.getWeaSetTileTypeExpr())                            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileTypeExprPanel,                                { war, fullData, action }); }
-    else if (action.getWeaSetTileTypeSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileTypeSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaSetTileStateExpr())                           { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileStateExprPanel,                               { war, fullData, action }); }
-    else if (action.getWeaSetTileStateSimple())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileStateSimplePanel,                             { war, fullData, action }); }
-    else if (action.getWeaSetCustomBuildingStateExpr())                 { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomBuildingStateExprPanel,                     { war, fullData, action }); }
-    else if (action.getWeaSetCustomBuildingStateSimple())               { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomBuildingStateSimplePanel,                   { war, fullData, action }); }
-    else if (action.getWeaSetCustomCrystalStateExpr())                  { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCrystalStateExprPanel,                      { war, fullData, action }); }
-    else if (action.getWeaSetCustomCrystalStateSimple())                { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCrystalStateSimplePanel,                    { war, fullData, action }); }
-    else if (action.getWeaSetCustomCannonStateExpr())                   { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCannonStateExprPanel,                       { war, fullData, action }); }
-    else if (action.getWeaSetCustomCannonStateSimple())                 { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCannonStateSimplePanel,                     { war, fullData, action }); }
-    else if (action.getWeaSetCustomLaserTurretStateExpr())              { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomLaserTurretStateExprPanel,                  { war, fullData, action }); }
-    else if (action.getWeaSetCustomLaserTurretStateSimple())            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomLaserTurretStateSimplePanel,                { war, fullData, action }); }
-    else if (action.getWeaDeleteTileBuffExpr())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteTileBuffExprPanel,                             { war, fullData, action }); }
-    else if (action.getWeaDeleteTileBuffSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteTileBuffSimplePanel,                           { war, fullData, action }); }
-    else if (action.getWeaAddTileBuffExpr())                            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddTileBuffExprPanel,                                { war, fullData, action }); }
-    else if (action.getWeaAddTileBuffSimple())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddTileBuffSimplePanel,                              { war, fullData, action }); }
-    else if (action.getWeaModifyTileBuffExpr())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyTileBuffExprPanel,                             { war, fullData, action }); }
-    else if (action.getWeaModifyTileBuffSimple())                       { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyTileBuffSimplePanel,                           { war, fullData, action }); }
-
-    else if (action.getWeaPersistentShowText())                         { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentShowTextPanel,                             { war, fullData, action }); }
-    else if (action.getWeaPersistentPlayBgm())                          { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentPlayBgmPanel,                              { war, fullData, action }); }
-    else if (action.getWeaPersistentModifyPlayerAttribute())            { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentModifyPlayerAttributePanel,                { war, fullData, action }); }
-    else if (action.getWeaPersistentModifyUnitAttribute())              { GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentModifyUnitAttributePanel,                  { war, fullData, action }); }
-
-    else                                                                { throw Helpers_Misc.newError(`Invalid action.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_OpenActionModifyPanel_00); }
+    if      (action.getWeaAddUnitOnMapSimple())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddUnitOnMapSimplePanel,                             { war, fullData, action }); 
+    } else if (action.getWeaSetViewpointExpr())                           {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetViewpointExprPanel,                               { war, fullData, action }); 
+    } else if (action.getWeaSetViewpointSimple())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetViewpointSimplePanel,                             { war, fullData, action }); 
+    } else if (action.getWeaBigDialogueSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaBigDialogueSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaSmallDialogueSimple())                        {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSmallDialogueSimplePanel,                            { war, fullData, action }); 
+    } else if (action.getWeaPlayBgm())                                    {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPlayBgmPanel,                                        { war, fullData, action }); 
+    } else if (action.getWeaPlaySfx())                                    {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPlaySfxPanel,                                        { war, fullData, action }); 
+    } else if (action.getWeaSetWeatherExpr())                             {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetWeatherExprPanel,                                 { war, fullData, action }); 
+    } else if (action.getWeaSetWeatherSimple())                           {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetWeatherSimplePanel,                               { war, fullData, action }); 
+    } else if (action.getWeaFillUnitOnMapExpr())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitOnMapExprPanel,                              { war, fullData, action }); 
+    } else if (action.getWeaFillUnitOnMapSimple())                        {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitOnMapSimplePanel,                            { war, fullData, action }); 
+    } else if (action.getWeaFillUnitLoadedSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitLoadedSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaFillUnitLoadedExpr())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaFillUnitLoadedExprPanel,                             { war, fullData, action }); 
+    } else if (action.getWeaDestroyUnitSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDestroyUnitSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaDestroyUnitExpr())                            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDestroyUnitExprPanel,                                { war, fullData, action }); 
+    } else if (action.getWeaSetUnitTypeSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitTypeSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaSetUnitTypeExpr())                            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitTypeExprPanel,                                { war, fullData, action }); 
+    } else if (action.getWeaSetUnitOwnershipSimple())                     {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitOwnershipSimplePanel,                         { war, fullData, action }); 
+    } else if (action.getWeaSetUnitOwnershipExpr())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitOwnershipExprPanel,                           { war, fullData, action }); 
+    } else if (action.getWeaSetUnitPositionSimple())                      {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitPositionSimplePanel,                          { war, fullData, action }); 
+    } else if (action.getWeaSetUnitPositionExpr())                        {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitPositionExprPanel,                            { war, fullData, action }); 
+    } else if (action.getWeaSetUnitStateSimple())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitStateSimplePanel,                             { war, fullData, action }); 
+    } else if (action.getWeaSetUnitStateExpr())                           {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitStateExprPanel,                               { war, fullData, action }); 
+    } else if (action.getWeaAddUnitBuffSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddUnitBuffSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaModifyUnitBuffSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyUnitBuffSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaDeleteUnitBuffSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteUnitBuffSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaSetForceFogCodeExpr())                        {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetForceFogCodeExprPanel,                            { war, fullData, action }); 
+    } else if (action.getWeaSetForceFogCodeSimple())                      {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetForceFogCodeSimplePanel,                          { war, fullData, action }); 
+    } else if (action.getWeaStopPersistentAction())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaStopPersistentActionPanel,                           { war, fullData, action }); 
+    } else if (action.getWeaSetCustomCounters())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCountersPanel,                              { war, fullData, action }); 
+    } else if (action.getWeaSetPlayerStateExpr())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetPlayerStateExprPanel,                             { war, fullData, action }); 
+    } else if (action.getWeaSetPlayerStateSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetPlayerStateSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaSetTaskObjectiveState())                      {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTaskObjectiveStatePanel,                          { war, fullData, action }); 
+    } else if (action.getWeaSetUnitMovePathVisibility())                  {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetUnitMovePathVisibilityPanel,                      { war, fullData, action }); 
+    } else if (action.getWeaSetTileTypeExpr())                            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileTypeExprPanel,                                { war, fullData, action }); 
+    } else if (action.getWeaSetTileTypeSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileTypeSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaSetTileStateExpr())                           {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileStateExprPanel,                               { war, fullData, action }); 
+    } else if (action.getWeaSetTileStateSimple())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetTileStateSimplePanel,                             { war, fullData, action }); 
+    } else if (action.getWeaSetCustomBuildingStateExpr())                 {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomBuildingStateExprPanel,                     { war, fullData, action }); 
+    } else if (action.getWeaSetCustomBuildingStateSimple())               {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomBuildingStateSimplePanel,                   { war, fullData, action }); 
+    } else if (action.getWeaSetCustomCrystalStateExpr())                  {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCrystalStateExprPanel,                      { war, fullData, action }); 
+    } else if (action.getWeaSetCustomCrystalStateSimple())                {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCrystalStateSimplePanel,                    { war, fullData, action }); 
+    } else if (action.getWeaSetCustomCannonStateExpr())                   {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCannonStateExprPanel,                       { war, fullData, action }); 
+    } else if (action.getWeaSetCustomCannonStateSimple())                 {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomCannonStateSimplePanel,                     { war, fullData, action }); 
+    } else if (action.getWeaSetCustomLaserTurretStateExpr())              {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomLaserTurretStateExprPanel,                  { war, fullData, action }); 
+    } else if (action.getWeaSetCustomLaserTurretStateSimple())            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaSetCustomLaserTurretStateSimplePanel,                { war, fullData, action }); 
+    } else if (action.getWeaDeleteTileBuffExpr())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteTileBuffExprPanel,                             { war, fullData, action }); 
+    } else if (action.getWeaDeleteTileBuffSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaDeleteTileBuffSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaAddTileBuffExpr())                            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddTileBuffExprPanel,                                { war, fullData, action }); 
+    } else if (action.getWeaAddTileBuffSimple())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaAddTileBuffSimplePanel,                              { war, fullData, action }); 
+    } else if (action.getWeaModifyTileBuffExpr())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyTileBuffExprPanel,                             { war, fullData, action }); 
+    } else if (action.getWeaModifyTileBuffSimple())                       {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaModifyTileBuffSimplePanel,                           { war, fullData, action }); 
+    } else if (action.getWeaPersistentShowText())                         {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentShowTextPanel,                             { war, fullData, action }); 
+    } else if (action.getWeaPersistentPlayBgm())                          {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentPlayBgmPanel,                              { war, fullData, action }); 
+    } else if (action.getWeaPersistentModifyPlayerAttribute())            {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentModifyPlayerAttributePanel,                { war, fullData, action }); 
+    } else if (action.getWeaPersistentModifyUnitAttribute())              {
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeaPersistentModifyUnitAttributePanel,                  { war, fullData, action }); 
+    } else                                                                {
+        throw Helpers_Misc.newError(`Invalid action.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_OpenActionModifyPanel_00); 
+    }
 }
 
 export function getBriefDescForAction(action: WarEventAction, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {
@@ -809,12 +864,12 @@ export function addDefaultAction({ fullData, eventId, nodeId, actionIndex }: {
     for (let actionId = 1; ; ++actionId) {
         if (!actionArray.some(v => v.getWeaCommonData()?.getActionId() === actionId)) {
             actionArray.push(WarEventAction.fromJson({
-                WeaCommonData: {
+                WeaCommonData : {
                     actionId        : actionId,
                     actionNameArray : [],
                 },
-                WeaAddUnitOnMapSimple: {
-                    unitArray   : [],
+                WeaAddUnitOnMapSimple : {
+                    unitArray : [],
                 },
             }));
             actionArray.sort((v1, v2) => Helpers_Misc.getExisted(v1.getWeaCommonData()?.getActionId()) - Helpers_Misc.getExisted(v2.getWeaCommonData()?.getActionId()));
@@ -832,13 +887,13 @@ export function addDefaultAction({ fullData, eventId, nodeId, actionIndex }: {
 
 export function getDefaultSimpleCoDialogueData(): DataForDialogue {
     return DataForDialogue.fromJson({
-        dataForCoDialogue: {
+        dataForCoDialogue : {
             coId        : null,
             playerIndex : Players_Constants.PlayerIndex.First,
             side        : Dialogues_Constants.SmallDialogueSideId.Bottom,
             nameArray   : [],
             textArray   : [
-                { languageType: Lang_Utils.getCurrentLanguageType(), text: `...` },
+                { languageType : Lang_Utils.getCurrentLanguageType(), text : `...` },
             ],
         },
     });
@@ -866,19 +921,19 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
     // todo handle future actions.
     if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitOnMapSimple) {
         action.setWeaAddUnitOnMapSimple(WeaAddUnitOnMapSimple.fromJson({
-            unitArray   : [],
+            unitArray : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapExpr) {
         action.setWeaFillUnitOnMapExpr(WeaFillUnitOnMapExpr.fromJson({
-            conTileFilter                       : ``,
-            actPlayerIndex                      : ``,
-            actUnitType                         : ``,
+            conTileFilter  : ``,
+            actPlayerIndex : ``,
+            actUnitType    : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapSimple) {
         const unitData = Units_Utils_Serialization.createDefault({
             unitTypeId  : Units_Constants.UnitTypeId.First,
             playerIndex : Players_Constants.PlayerIndex.First,
-            gridIndex   : { x: 0, y: 0 },
+            gridIndex   : { x : 0, y : 0 },
             unitId      : -1,
             gcData      : gameConfig,
         });
@@ -890,44 +945,44 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
         const unitData = Units_Utils_Serialization.createDefault({
             unitTypeId  : Units_Constants.UnitTypeId.First,
             playerIndex : Players_Constants.PlayerIndex.First,
-            gridIndex   : { x: 0, y: 0 },
+            gridIndex   : { x : 0, y : 0 },
             unitId      : -1,
             gcData      : gameConfig,
         });
         unitData.setGridIndex(null);
         action.setWeaFillUnitLoadedSimple(WeaFillUnitLoadedSimple.fromJson({
-            actLoadCount    : 1,
-            actUnitData : unitData.toJson(),
+            actLoadCount : 1,
+            actUnitData  : unitData.toJson(),
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitLoadedExpr) {
         action.setWeaFillUnitLoadedExpr(WeaFillUnitLoadedExpr.fromJson({
-            conUnitFilter                       : ``,
-            actUnitType                         : ``,
+            conUnitFilter : ``,
+            actUnitType   : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitSimple) {
         action.setWeaDestroyUnitSimple(WeaDestroyUnitSimple.fromJson({
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitExpr) {
         action.setWeaDestroyUnitExpr(WeaDestroyUnitExpr.fromJson({
-            conUnitFilter                       : ``,
+            conUnitFilter : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeSimple) {
         action.setWeaSetUnitTypeSimple(WeaSetUnitTypeSimple.fromJson({
-            actUnitType                         : Units_Constants.UnitTypeId.First,
+            actUnitType : Units_Constants.UnitTypeId.First,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeExpr) {
         action.setWeaSetUnitTypeExpr(WeaSetUnitTypeExpr.fromJson({
-            conUnitFilter                       : ``,
-            actUnitType                         : ``,
+            conUnitFilter : ``,
+            actUnitType   : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipSimple) {
         action.setWeaSetUnitOwnershipSimple(WeaSetUnitOwnershipSimple.fromJson({
-            actPlayerIndex                      : Players_Constants.PlayerIndex.First,
+            actPlayerIndex : Players_Constants.PlayerIndex.First,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipExpr) {
         action.setWeaSetUnitOwnershipExpr(WeaSetUnitOwnershipExpr.fromJson({
-            conUnitFilter                       : ``,
-            actPlayerIndex                      : ``,
+            conUnitFilter  : ``,
+            actPlayerIndex : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitPositionSimple) {
         action.setWeaSetUnitPositionSimple(WeaSetUnitPositionSimple.fromJson({
@@ -940,12 +995,12 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitStateExpr) {
         action.setWeaSetUnitStateExpr(WeaSetUnitStateExpr.fromJson({
-            conUnitFilter                       : ``,
+            conUnitFilter : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitBuffSimple) {
         action.setWeaAddUnitBuffSimple(WeaAddUnitBuffSimple.fromJson({
-            actBuffType     : UnitBuffs_Constants.BuffTypeId.Fire,
-            actExtraParams  : [],
+            actBuffType    : UnitBuffs_Constants.BuffTypeId.Fire,
+            actExtraParams : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.ModifyUnitBuffSimple) {
         action.setWeaModifyUnitBuffSimple(WeaModifyUnitBuffSimple.fromJson({
@@ -955,58 +1010,58 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointExpr) {
         action.setWeaSetViewpointExpr(WeaSetViewpointExpr.fromJson({
-            targets         : ``,
+            targets : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointSimple) {
         action.setWeaSetViewpointSimple(WeaSetViewpointSimple.fromJson({
-            actNeedFocusEffect  : true,
-            actIsOneByOne       : true,
+            actNeedFocusEffect : true,
+            actIsOneByOne      : true,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherSimple) {
         action.setWeaSetWeatherSimple(WeaSetWeatherSimple.fromJson({
-            weatherType         : gameConfig.getDefaultWeatherType(),
-            weatherTurnsCount   : 0,
+            weatherType       : gameConfig.getDefaultWeatherType(),
+            weatherTurnsCount : 0,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherExpr) {
         action.setWeaSetWeatherExpr(WeaSetWeatherExpr.fromJson({
-            weatherType         : "",
-            weatherTurnsCount   : "",
+            weatherType       : "",
+            weatherTurnsCount : "",
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.BigDialogueSimple) {
         action.setWeaBigDialogueSimple(WeaBigDialogueSimple.fromJson({
-            backgroundId    : 0,
-            dataArray       : [],
+            backgroundId : 0,
+            dataArray    : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SmallDialogueSimple) {
         action.setWeaSmallDialogueSimple(WeaSmallDialogueSimple.fromJson({
-            dataArray       : [],
+            dataArray : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PlayBgm) {
         action.setWeaPlayBgm(WeaPlayBgm.fromJson({
-            useCoBgm        : false,
-            bgmCode         : Sounds_Constants.BgmSfxCode.None,
+            useCoBgm : false,
+            bgmCode  : Sounds_Constants.BgmSfxCode.None,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PlaySfx) {
         action.setWeaPlaySfx(WeaPlaySfx.fromJson({
-            sfxCode         : Sounds_Constants.BgmSfxCode.None,
+            sfxCode : Sounds_Constants.BgmSfxCode.None,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeExpr) {
         action.setWeaSetForceFogCodeExpr(WeaSetForceFogCodeExpr.fromJson({
-            forceFogCode    : ``,
+            forceFogCode : ``,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeSimple) {
         action.setWeaSetForceFogCodeSimple(WeaSetForceFogCodeSimple.fromJson({
-            forceFogCode    : FogMaps_Constants.ForcedFogCode.Fog,
-            turnsCount      : 0,
+            forceFogCode : FogMaps_Constants.ForcedFogCode.Fog,
+            turnsCount   : 0,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCounters) {
         action.setWeaSetCustomCounters(WeaSetCustomCounters.fromJson({
-            idExpression            : "",
-            valueExpression         : "",
+            idExpression    : "",
+            valueExpression : "",
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.StopPersistentAction) {
         action.setWeaStopPersistentAction(WeaStopPersistentAction.fromJson({
-            actionIdArray   : [],
+            actionIdArray : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.SetPlayerStateExpr) {
         action.setWeaSetPlayerStateExpr(WeaSetPlayerStateExpr.fromJson({
@@ -1067,8 +1122,8 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.AddTileBuffSimple) {
         action.setWeaAddTileBuffSimple(WeaAddTileBuffSimple.fromJson({
-            actBuffType     : TileBuffs_Constants.BuffTypeId.NoIncome,
-            actExtraParams  : [],
+            actBuffType    : TileBuffs_Constants.BuffTypeId.NoIncome,
+            actExtraParams : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.ModifyTileBuffExpr) {
         action.setWeaModifyTileBuffExpr(WeaModifyTileBuffExpr.fromJson({
@@ -1078,18 +1133,18 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PersistentShowText) {
         action.setWeaPersistentShowText(WeaPersistentShowText.fromJson({
-            textArray: [],
+            textArray : [],
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PersistentPlayBgm) {
         action.setWeaPersistentPlayBgm(WeaPersistentPlayBgm.fromJson({
-            bgmCode     : Sounds_Constants.BgmSfxCode.CoEmpty,
+            bgmCode : Sounds_Constants.BgmSfxCode.CoEmpty,
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyPlayerAttribute) {
         action.setWeaPersistentModifyPlayerAttribute(WeaPersistentModifyPlayerAttribute.fromJson({
         }));
     } else if (actionType === WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyUnitAttribute) {
         action.setWeaPersistentModifyUnitAttribute(WeaPersistentModifyUnitAttribute.fromJson({
-            conUnitFilter               : ``,
+            conUnitFilter : ``,
         }));
     } else {
         throw Helpers_Misc.newError(`Invalid actionType: ${actionType}.`, Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_ResetAction_00);
@@ -1099,63 +1154,121 @@ export function resetAction(action: WarEventAction, actionType: WarEvents_Action
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getActionTypeId(action: WarEventAction): WarEvents_Actions_Constants_Common.ActionTypeId | null {
     // todo: handle future actions.
-    if      (action.getWeaAddUnitOnMapSimple())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitOnMapSimple; }
-    else if (action.getWeaFillUnitOnMapExpr())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapExpr; }
-    else if (action.getWeaFillUnitOnMapSimple())                        { return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapSimple; }
-    else if (action.getWeaFillUnitLoadedSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitLoadedSimple; }
-    else if (action.getWeaFillUnitLoadedExpr())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitLoadedExpr; }
-    else if (action.getWeaDestroyUnitSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitSimple; }
-    else if (action.getWeaDestroyUnitExpr())                            { return WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitExpr; }
-    else if (action.getWeaSetUnitTypeSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeSimple; }
-    else if (action.getWeaSetUnitTypeExpr())                            { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeExpr; }
-    else if (action.getWeaSetUnitOwnershipSimple())                     { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipSimple; }
-    else if (action.getWeaSetUnitOwnershipExpr())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipExpr; }
-    else if (action.getWeaSetUnitPositionSimple())                      { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitPositionSimple; }
-    else if (action.getWeaSetUnitPositionExpr())                        { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitPositionExpr; }
-    else if (action.getWeaSetUnitStateSimple())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitStateSimple; }
-    else if (action.getWeaSetUnitStateExpr())                           { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitStateExpr; }
-    else if (action.getWeaAddUnitBuffSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitBuffSimple; }
-    else if (action.getWeaModifyUnitBuffSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyUnitBuffSimple; }
-    else if (action.getWeaDeleteUnitBuffSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteUnitBuffSimple; }
-    else if (action.getWeaSetViewpointExpr())                           { return WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointExpr; }
-    else if (action.getWeaSetViewpointSimple())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointSimple; }
-    else if (action.getWeaSetWeatherSimple())                           { return WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherSimple; }
-    else if (action.getWeaSetWeatherExpr())                             { return WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherExpr; }
-    else if (action.getWeaBigDialogueSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.BigDialogueSimple; }
-    else if (action.getWeaSmallDialogueSimple())                        { return WarEvents_Actions_Constants_Common.ActionTypeId.SmallDialogueSimple; }
-    else if (action.getWeaPlayBgm())                                    { return WarEvents_Actions_Constants_Common.ActionTypeId.PlayBgm; }
-    else if (action.getWeaPlaySfx())                                    { return WarEvents_Actions_Constants_Common.ActionTypeId.PlaySfx; }
-    else if (action.getWeaSetForceFogCodeExpr())                        { return WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeExpr; }
-    else if (action.getWeaSetForceFogCodeSimple())                      { return WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeSimple; }
-    else if (action.getWeaSetCustomCounters())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCounters; }
-    else if (action.getWeaStopPersistentAction())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.StopPersistentAction; }
-    else if (action.getWeaSetPlayerStateExpr())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.SetPlayerStateExpr; }
-    else if (action.getWeaSetPlayerStateSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.SetPlayerStateSimple; }
-    else if (action.getWeaSetTaskObjectiveState())                      { return WarEvents_Actions_Constants_Common.ActionTypeId.SetTaskObjectiveState; }
-    else if (action.getWeaSetUnitMovePathVisibility())                  { return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitMovePathVisibility; }
-    else if (action.getWeaSetTileTypeExpr())                            { return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileTypeExpr; }
-    else if (action.getWeaSetTileTypeSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileTypeSimple; }
-    else if (action.getWeaSetTileStateExpr())                           { return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileStateExpr; }
-    else if (action.getWeaSetTileStateSimple())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileStateSimple; }
-    else if (action.getWeaSetCustomBuildingStateExpr())                 { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomBuildingStateExpr; }
-    else if (action.getWeaSetCustomBuildingStateSimple())               { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomBuildingStateSimple; }
-    else if (action.getWeaSetCustomCrystalStateExpr())                  { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCrystalStateExpr; }
-    else if (action.getWeaSetCustomCrystalStateSimple())                { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCrystalStateSimple; }
-    else if (action.getWeaSetCustomCannonStateExpr())                   { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCannonStateExpr; }
-    else if (action.getWeaSetCustomCannonStateSimple())                 { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCannonStateSimple; }
-    else if (action.getWeaSetCustomLaserTurretStateExpr())              { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomLaserTurretStateExpr; }
-    else if (action.getWeaSetCustomLaserTurretStateSimple())            { return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomLaserTurretStateSimple; }
-    else if (action.getWeaDeleteTileBuffExpr())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteTileBuffExpr; }
-    else if (action.getWeaDeleteTileBuffSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteTileBuffSimple; }
-    else if (action.getWeaAddTileBuffExpr())                            { return WarEvents_Actions_Constants_Common.ActionTypeId.AddTileBuffExpr; }
-    else if (action.getWeaAddTileBuffSimple())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.AddTileBuffSimple; }
-    else if (action.getWeaModifyTileBuffExpr())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyTileBuffExpr; }
-    else if (action.getWeaModifyTileBuffSimple())                       { return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyTileBuffSimple; }
-    else if (action.getWeaPersistentShowText())                         { return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentShowText; }
-    else if (action.getWeaPersistentPlayBgm())                          { return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentPlayBgm; }
-    else if (action.getWeaPersistentModifyPlayerAttribute())            { return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyPlayerAttribute; }
-    else if (action.getWeaPersistentModifyUnitAttribute())              { return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyUnitAttribute; }
-    else                                                                { return null; }
+    if      (action.getWeaAddUnitOnMapSimple())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitOnMapSimple; 
+    } else if (action.getWeaFillUnitOnMapExpr())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapExpr; 
+    } else if (action.getWeaFillUnitOnMapSimple())                        {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitOnMapSimple; 
+    } else if (action.getWeaFillUnitLoadedSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitLoadedSimple; 
+    } else if (action.getWeaFillUnitLoadedExpr())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.FillUnitLoadedExpr; 
+    } else if (action.getWeaDestroyUnitSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitSimple; 
+    } else if (action.getWeaDestroyUnitExpr())                            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.DestroyUnitExpr; 
+    } else if (action.getWeaSetUnitTypeSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeSimple; 
+    } else if (action.getWeaSetUnitTypeExpr())                            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitTypeExpr; 
+    } else if (action.getWeaSetUnitOwnershipSimple())                     {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipSimple; 
+    } else if (action.getWeaSetUnitOwnershipExpr())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitOwnershipExpr; 
+    } else if (action.getWeaSetUnitPositionSimple())                      {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitPositionSimple; 
+    } else if (action.getWeaSetUnitPositionExpr())                        {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitPositionExpr; 
+    } else if (action.getWeaSetUnitStateSimple())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitStateSimple; 
+    } else if (action.getWeaSetUnitStateExpr())                           {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitStateExpr; 
+    } else if (action.getWeaAddUnitBuffSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.AddUnitBuffSimple; 
+    } else if (action.getWeaModifyUnitBuffSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyUnitBuffSimple; 
+    } else if (action.getWeaDeleteUnitBuffSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteUnitBuffSimple; 
+    } else if (action.getWeaSetViewpointExpr())                           {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointExpr; 
+    } else if (action.getWeaSetViewpointSimple())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetViewpointSimple; 
+    } else if (action.getWeaSetWeatherSimple())                           {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherSimple; 
+    } else if (action.getWeaSetWeatherExpr())                             {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetWeatherExpr; 
+    } else if (action.getWeaBigDialogueSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.BigDialogueSimple; 
+    } else if (action.getWeaSmallDialogueSimple())                        {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SmallDialogueSimple; 
+    } else if (action.getWeaPlayBgm())                                    {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PlayBgm; 
+    } else if (action.getWeaPlaySfx())                                    {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PlaySfx; 
+    } else if (action.getWeaSetForceFogCodeExpr())                        {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeExpr; 
+    } else if (action.getWeaSetForceFogCodeSimple())                      {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetForceFogCodeSimple; 
+    } else if (action.getWeaSetCustomCounters())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCounters; 
+    } else if (action.getWeaStopPersistentAction())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.StopPersistentAction; 
+    } else if (action.getWeaSetPlayerStateExpr())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetPlayerStateExpr; 
+    } else if (action.getWeaSetPlayerStateSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetPlayerStateSimple; 
+    } else if (action.getWeaSetTaskObjectiveState())                      {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetTaskObjectiveState; 
+    } else if (action.getWeaSetUnitMovePathVisibility())                  {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetUnitMovePathVisibility; 
+    } else if (action.getWeaSetTileTypeExpr())                            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileTypeExpr; 
+    } else if (action.getWeaSetTileTypeSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileTypeSimple; 
+    } else if (action.getWeaSetTileStateExpr())                           {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileStateExpr; 
+    } else if (action.getWeaSetTileStateSimple())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetTileStateSimple; 
+    } else if (action.getWeaSetCustomBuildingStateExpr())                 {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomBuildingStateExpr; 
+    } else if (action.getWeaSetCustomBuildingStateSimple())               {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomBuildingStateSimple; 
+    } else if (action.getWeaSetCustomCrystalStateExpr())                  {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCrystalStateExpr; 
+    } else if (action.getWeaSetCustomCrystalStateSimple())                {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCrystalStateSimple; 
+    } else if (action.getWeaSetCustomCannonStateExpr())                   {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCannonStateExpr; 
+    } else if (action.getWeaSetCustomCannonStateSimple())                 {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomCannonStateSimple; 
+    } else if (action.getWeaSetCustomLaserTurretStateExpr())              {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomLaserTurretStateExpr; 
+    } else if (action.getWeaSetCustomLaserTurretStateSimple())            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.SetCustomLaserTurretStateSimple; 
+    } else if (action.getWeaDeleteTileBuffExpr())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteTileBuffExpr; 
+    } else if (action.getWeaDeleteTileBuffSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.DeleteTileBuffSimple; 
+    } else if (action.getWeaAddTileBuffExpr())                            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.AddTileBuffExpr; 
+    } else if (action.getWeaAddTileBuffSimple())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.AddTileBuffSimple; 
+    } else if (action.getWeaModifyTileBuffExpr())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyTileBuffExpr; 
+    } else if (action.getWeaModifyTileBuffSimple())                       {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.ModifyTileBuffSimple; 
+    } else if (action.getWeaPersistentShowText())                         {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentShowText; 
+    } else if (action.getWeaPersistentPlayBgm())                          {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentPlayBgm; 
+    } else if (action.getWeaPersistentModifyPlayerAttribute())            {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyPlayerAttribute; 
+    } else if (action.getWeaPersistentModifyUnitAttribute())              {
+        return WarEvents_Actions_Constants_Common.ActionTypeId.PersistentModifyUnitAttribute; 
+    } else                                                                {
+        return null; 
+    }
 }
 export function getInterchangeableTypeId(action: WarEventAction): WarEvents_Actions_Constants_Common.InterchangeableTypeId {
     const actionType = getActionTypeId(action);

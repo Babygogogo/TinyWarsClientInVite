@@ -14,8 +14,8 @@ export class DropDestination {
 
     public toProto(): ProtoDropDestination {
         return ProtoDropDestination.fromJson({
-            gridIndex   : this._gridIndex.toProto().toJson(),
-            unitId      : this._unitId,
+            gridIndex : this._gridIndex.toProto().toJson(),
+            unitId    : this._unitId,
         });
     }
 }

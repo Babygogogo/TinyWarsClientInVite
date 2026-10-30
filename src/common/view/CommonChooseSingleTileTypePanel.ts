@@ -40,10 +40,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -116,19 +116,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForTypeRenderer[] = [];
         for (const newTileType of openData.tileTypeArray) {
             dataArray.push({
-                gameConfig  : gameConfig,
-                tileType    : newTileType,
-                panel       : this,
-                callback    : openData.callback,
+                gameConfig : gameConfig,
+                tileType   : newTileType,
+                panel      : this,
+                callback   : openData.callback,
             });
         }
         await this._listType.bindData(dataArray);
 
         const rowCount = Math.ceil(dataArray.length / 4);
         this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            rawValue    : rowCount * 36 + (rowCount - 1) * 10 + 80,
-            minValue    : 200,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : rowCount * 36 + (rowCount - 1) * 10 + 80,
+            minValue : 200,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         }));
     }
 }
@@ -151,8 +151,8 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.TileAnimationTick,   callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -168,9 +168,9 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -225,15 +225,15 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const tileType      = openData.tileType;
         const gameConfig    = openData.gameConfig;
         this._tileView.init({
-            tileBaseType            : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
-            tileBaseShapeId         : 0,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectType          : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
-            tileObjectShapeId       : 0,
-            skinId                  : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
-            overridingSkinId        : undefined,
-            gameConfig              : gameConfig,
+            tileBaseType          : Helpers_Misc.getExisted(gameConfig.getTileBaseTypeByTileType(tileType)),
+            tileBaseShapeId       : 0,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectType        : Helpers_Misc.getExisted(gameConfig.getTileObjectTypeByTileType(tileType)),
+            tileObjectShapeId     : 0,
+            skinId                : ForceSkins_Utils.getDefaultSkinId(Players_Constants.PlayerIndex.Neutral),
+            overridingSkinId      : undefined,
+            gameConfig            : gameConfig,
         });
     }
     private _updateImgSelected(): void {

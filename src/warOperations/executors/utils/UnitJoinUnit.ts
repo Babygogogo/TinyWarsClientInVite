@@ -47,7 +47,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
 
         if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -55,22 +55,22 @@ function fastExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
             const targetUnit    = Helpers_Misc.getExisted(unitMap.getUnitOnMap(endingGridIndex));
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
             unitMap.removeUnitOnMap(endingGridIndex, true)?.stopRunning();
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             {
-                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
+                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : endingGridIndex });
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : focusUnit.getUnitType(),
-                        dstPlayerIndex              : focusUnit.getPlayerIndex(),
-                        unitGain                    : 0,
-                        unitLoss                    : 1,
-                        normalizedHpGain            : 0,
-                        normalizedHpLoss            : Math.max(0, normalizedHpLoss),
-                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                        unitType                   : focusUnit.getUnitType(),
+                        dstPlayerIndex             : focusUnit.getPlayerIndex(),
+                        unitGain                   : 0,
+                        unitLoss                   : 1,
+                        normalizedHpGain           : 0,
+                        normalizedHpLoss           : Math.max(0, normalizedHpLoss),
+                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -93,7 +93,7 @@ function fastExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUni
 
             focusUnit.setCurrentFuel(Math.min(
                 focusUnit.getMaxFuel(),
-                focusUnit.getCurrentFuel() + targetUnit.getCurrentFuel()
+                focusUnit.getCurrentFuel() + targetUnit.getCurrentFuel(),
             ));
 
             const maxBuildMaterial = focusUnit.getMaxBuildMaterial();
@@ -141,8 +141,8 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         await war.moveExtraUnit({
             movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         const movingPath    = movingUnitAndPath?.getPath();
@@ -155,10 +155,10 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         }
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
-            war                 : war,
-            commonExtraData     : commonExtraData,
-            isFastExecute       : false,
-            isUnitJoinUnit      : true,
+            war             : war,
+            commonExtraData : commonExtraData,
+            isFastExecute   : false,
+            isUnitJoinUnit  : true,
         });
 
     } else {
@@ -169,7 +169,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         const focusUnit         = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
 
         if (path.isBlocked) {
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -184,22 +184,22 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
         } else {
             const player        = war.getPlayer(focusUnit.getPlayerIndex());
             const targetUnit    = Helpers_Misc.getExisted(unitMap.removeUnitOnMap(endingGridIndex, false));
-            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+            war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
             unitMap.setUnitOnMap(focusUnit);
             focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
             {
-                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: endingGridIndex });
+                const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : endingGridIndex });
                 if (observerTeamIndexes != null) {
                     const normalizedHpLoss = targetUnit.getNormalizedCurrentHp() + focusUnit.getNormalizedCurrentHp() - focusUnit.getNormalizedMaxHp();
                     war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
-                        unitType                    : focusUnit.getUnitType(),
-                        dstPlayerIndex              : focusUnit.getPlayerIndex(),
-                        unitGain                    : 0,
-                        unitLoss                    : 1,
-                        normalizedHpGain            : 0,
-                        normalizedHpLoss            : Math.max(0, normalizedHpLoss),
-                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                        unitType                   : focusUnit.getUnitType(),
+                        dstPlayerIndex             : focusUnit.getPlayerIndex(),
+                        unitGain                   : 0,
+                        unitLoss                   : 1,
+                        normalizedHpGain           : 0,
+                        normalizedHpLoss           : Math.max(0, normalizedHpLoss),
+                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                     }));
                 }
             }
@@ -222,7 +222,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
 
             focusUnit.setCurrentFuel(Math.min(
                 focusUnit.getMaxFuel(),
-                focusUnit.getCurrentFuel() + targetUnit.getCurrentFuel()
+                focusUnit.getCurrentFuel() + targetUnit.getCurrentFuel(),
             ));
 
             {
@@ -230,7 +230,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 if (maxBuildMaterial != null) {
                     focusUnit.setCurrentBuildMaterial(Math.min(
                         maxBuildMaterial,
-                        focusUnit.getCurrentBuildMaterial() + targetUnit.getCurrentBuildMaterial()
+                        focusUnit.getCurrentBuildMaterial() + targetUnit.getCurrentBuildMaterial(),
                     ));
                 }
             }
@@ -251,7 +251,7 @@ async function normalExeUnitJoinUnit(war: BaseWar_Interface_IBwWar.IBwWar, actio
                 if (maxAmmo != null) {
                     focusUnit.setFlareCurrentAmmo(Math.min(
                         maxAmmo,
-                        focusUnit.getFlareCurrentAmmo() + targetUnit.getFlareCurrentAmmo()
+                        focusUnit.getFlareCurrentAmmo() + targetUnit.getFlareCurrentAmmo(),
                     ));
                 }
             }

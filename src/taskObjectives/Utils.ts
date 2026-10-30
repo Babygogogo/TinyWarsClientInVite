@@ -19,10 +19,10 @@ export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<stri
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getDesc(),
-        minTextLength   : 1,
-        maxTextLength   : TaskObjectives_Constants.Common.MaxDescLength,
-        minTextCount    : 1
+        list          : data.getDesc(),
+        minTextLength : 1,
+        maxTextLength : TaskObjectives_Constants.Common.MaxDescLength,
+        minTextCount  : 1,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_01;
     }
@@ -34,9 +34,9 @@ export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<stri
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : data.getUpdaterForCurrentProgress(),
-            expressionInfo          : TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getUpdaterForCurrentProgress(),
+            expressionInfo       : TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return Utils_ClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_03;
         }
@@ -50,10 +50,10 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getDesc(),
-        minTextLength   : 1,
-        maxTextLength   : TaskObjectives_Constants.Common.MaxDescLength,
-        minTextCount    : 1
+        list          : data.getDesc(),
+        minTextLength : 1,
+        maxTextLength : TaskObjectives_Constants.Common.MaxDescLength,
+        minTextCount  : 1,
     })) {
         return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B1215));
     }
@@ -66,9 +66,9 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
     {
         const info      = TaskObjectives_Constants.ExpressionInfoDict.UpdaterForCurrentProgress;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getUpdaterForCurrentProgress(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getUpdaterForCurrentProgress(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -130,7 +130,7 @@ export function trimAndClone(srcData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
     }
 
     return TaskObjectiveFullData.fromJson({
-        taskObjectiveArray  : dstTaskObjectiveArray.map(v => v.toJson()),
+        taskObjectiveArray : dstTaskObjectiveArray.map(v => v.toJson()),
     });
 }
 

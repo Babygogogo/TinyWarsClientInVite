@@ -42,11 +42,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,        callback: this._onNotifyMsgUserGetPublicInfo },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,        callback : this._onNotifyMsgUserGetPublicInfo },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -119,16 +119,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         let index       = 0;
         const dataList  : DataForHistoryRenderer[] = [{
-            index       : index++,
+            index        : index++,
             userId,
-            warType     : WarTypes_Constants.WarTypeId.MrwStd,
-            playersCount: 2,
+            warType      : WarTypes_Constants.WarTypeId.MrwStd,
+            playersCount : 2,
         }];
         for (let playersCount = 2; playersCount <= Players_Constants.PlayerIndex.Max; ++playersCount) {
             dataList.push({
-                index       : index++,
+                index   : index++,
                 userId,
-                warType     : WarTypes_Constants.WarTypeId.McwStd,
+                warType : WarTypes_Constants.WarTypeId.McwStd,
                 playersCount,
             });
         }
@@ -143,16 +143,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         let index       = 0;
         const dataList  : DataForHistoryRenderer[] = [{
-            index       : index++,
+            index        : index++,
             userId,
-            warType     : WarTypes_Constants.WarTypeId.MrwFog,
-            playersCount: 2,
+            warType      : WarTypes_Constants.WarTypeId.MrwFog,
+            playersCount : 2,
         }];
         for (let playersCount = 2; playersCount <= Players_Constants.PlayerIndex.Max; ++playersCount) {
             dataList.push({
-                index       : index++,
+                index   : index++,
                 userId,
-                warType     : WarTypes_Constants.WarTypeId.McwFog,
+                warType : WarTypes_Constants.WarTypeId.McwFog,
                 playersCount,
             });
         }

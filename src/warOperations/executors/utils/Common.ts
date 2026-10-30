@@ -467,18 +467,18 @@ export function handleSelfUnitHpAfterWait(focusUnit: Units_IUnit.IUnit, isFastEx
         }
 
         if ((!isCoOnboard) && (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId(),
-            coZoneRadius                : focusCoZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap
+            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : focusCoZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))) {
             continue;
         }
 
         newHp += CoSkills_Utils_InstantMisc_SelfUnitHpAfterWait.getTotalOffset({
-            cfg         : skillCfg,
-            gameConfig  : gameConfig,
-            maxHp       : maxHp,
-            currentHp   : newHp,
+            cfg        : skillCfg,
+            gameConfig : gameConfig,
+            maxHp      : maxHp,
+            currentHp  : newHp,
         });
     }
 
@@ -542,9 +542,9 @@ export function handlePostOperationPlunder(focusUnit: Units_IUnit.IUnit, isFastE
         }
 
         if ((!isCoOnboard) && (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId(),
-            coZoneRadius                : focusCoZoneRadius,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId(),
+            coZoneRadius             : focusCoZoneRadius,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }))) {
             continue;
         }

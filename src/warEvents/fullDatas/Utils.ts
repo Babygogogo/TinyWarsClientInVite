@@ -224,12 +224,16 @@ export function getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, 
 
     const customCounterNameSet = new Set(customCounterNameDict.values());
     for (const [, action] of actionDict) {
-        if (!WarEvents_Actions_Utils_Common.checkIsValidWarEventAction({ action, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
+        if (!WarEvents_Actions_Utils_Common.checkIsValidWarEventAction({
+            action, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet, 
+        })) {
             return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_15;
         }
     }
     for (const [, condition] of conditionDict) {
-        if (!WarEvents_Conditions_Utils_Common.checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet })) {
+        if (!WarEvents_Conditions_Utils_Common.checkIsValidWarEventCondition({
+            condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet, 
+        })) {
             return Utils_ClientErrorCode.ClientErrorCode.WarEventHelper_GetErrorCodeForWarEventFullData_16;
         }
     }

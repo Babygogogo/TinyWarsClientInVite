@@ -78,7 +78,7 @@ export class AttackableArea {
                         const movableGrid = column[moveY];
                         if (movableGrid) {
                             const moveGridIndex = new AuxiliaryTypes_GridIndex.GridIndex(moveX, moveY);
-                            for (const attackGridIndex of moveGridIndex.getGridsWithinDistance({ minDistance: minAttackRange, maxDistance: maxAttackRange, mapSize })) {
+                            for (const attackGridIndex of moveGridIndex.getGridsWithinDistance({ minDistance : minAttackRange, maxDistance : maxAttackRange, mapSize })) {
                                 const attackX = attackGridIndex.getX();
                                 const attackY = attackGridIndex.getY();
                                 if (checkCanAttack(moveGridIndex, attackGridIndex)) {
@@ -88,7 +88,7 @@ export class AttackableArea {
                                         (movableGrid.totalMoveCost < Helpers_Misc.getExisted(movableArea.getDataByGridIndex(attackableGrid.movePathDestination)).totalMoveCost)
                                     ) {
                                         area[attackX][attackY] = {
-                                            movePathDestination: new AuxiliaryTypes_GridIndex.GridIndex(moveX, moveY),
+                                            movePathDestination : new AuxiliaryTypes_GridIndex.GridIndex(moveX, moveY),
                                         };
                                     }
                                 }
@@ -116,13 +116,13 @@ export class AttackableArea {
                     area[x] = [];
                 }
                 area[x][y] = {
-                    movePathDestination: new AuxiliaryTypes_GridIndex.GridIndex(tileGridX, tileGridY),
+                    movePathDestination : new AuxiliaryTypes_GridIndex.GridIndex(tileGridX, tileGridY),
                 };
             }
         };
 
         if ((mapWeaponType === Tiles_Constants_MapWeapon.TypeId.Crystal) || (mapWeaponType === Tiles_Constants_MapWeapon.TypeId.CustomCrystal)) {
-            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: Helpers_Misc.getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
+            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : Helpers_Misc.getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
                 addGrid(gridIndex.getX(), gridIndex.getY());
             }
 

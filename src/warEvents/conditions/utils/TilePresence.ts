@@ -28,7 +28,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wec
         Lang_Constants.TextType.F0098,
         Lang_Utils.getText(Lang_Constants.TextType.Tiles),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WecTilePresence>): string | null {
@@ -42,7 +42,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         if (comparator != null) {
             subTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                 comparator,
-                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
             )}`);
         }
     }
@@ -70,7 +70,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
         Lang_Utils.getText(Lang_Constants.TextType.Tiles),
         subTextArray.join(`\n`),
         comparator == null ? Lang_Constants.UndefinedError : (Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError),
-        con == null ? Lang_Constants.UndefinedError : (con.getValue())
+        con == null ? Lang_Constants.UndefinedError : (con.getValue()),
     );
 }
 export function getErrorTip(data: WecTilePresence, playersCountUnneutral: number, mapSize: AuxiliaryTypes_MapSize.MapSize, gameConfig: GameConfigs_GameConfig.GameConfig): string | null {

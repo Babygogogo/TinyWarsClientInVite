@@ -37,14 +37,14 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
     }
     protected override _doApplyOpenData(): void | Promise<void> {
@@ -72,7 +72,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
         const descArray                     = (await Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId))?.getMapExtraText()?.getMapDescription();
         const newOpenData                   = this.getOpenData();
         if ((newOpenData != null) && (campaignId === newOpenData.campaignId) && (campaignMapId === newOpenData.campaignMapId)) {
-            this._labelDesc.setText(Lang_Utils.getLanguageText({ textArray: descArray }) ?? Lang_Constants.UndefinedError);
+            this._labelDesc.setText(Lang_Utils.getLanguageText({ textArray : descArray }) ?? Lang_Constants.UndefinedError);
         }
     }
 
@@ -102,12 +102,12 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
         for (const coId of coIdArray) {
             const source    = Helpers_Misc.getExisted(Helpers_ImageSource.getCoBust(gameConfig, coId));
-            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: source });
+            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : source });
             img.setScaleX(-0.7);
             img.setScaleY(0.7);
             img.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
-                verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset : group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
+                verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
             });
             group.addUiChild(img);
         }
@@ -138,12 +138,12 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
         for (const coId of coIdArray) {
             const source    = Helpers_Misc.getExisted(Helpers_ImageSource.getCoBust(gameConfig, coId));
-            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: source });
+            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : source });
             img.setScaleX(0.7);
             img.setScaleY(0.7);
             img.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align: Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset: group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
-                verticalAlign   : { align: Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
+                horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Right, offset : group.getUiChildren().length * CO_GROUP_WIDTH / coIdArray.length },
+                verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Bottom },
             });
             group.addUiChild(img);
         }

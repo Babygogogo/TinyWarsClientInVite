@@ -53,10 +53,10 @@ export class Collection {
         const length    = nodeArray.length;
         if (length === 1) {
             return nodeArray[0].getResultType({
-                contextType             : contextType,
-                lambdaArgumentInfoDict  : null,
-                localVariableDict       : null,
-                customCounterNameSet    : customCounterNameSet,
+                contextType            : contextType,
+                lambdaArgumentInfoDict : null,
+                localVariableDict      : null,
+                customCounterNameSet   : customCounterNameSet,
             });
         }
 
@@ -68,10 +68,10 @@ export class Collection {
             }
 
             const result = node.getResultType({
-                contextType             : contextType,
-                lambdaArgumentInfoDict  : null,
-                localVariableDict       : localVariableDict,
-                customCounterNameSet    : customCounterNameSet,
+                contextType            : contextType,
+                lambdaArgumentInfoDict : null,
+                localVariableDict      : localVariableDict,
+                customCounterNameSet   : customCounterNameSet,
             });
             for (const name of node.getAssignTargetNames()) {
                 localVariableDict.set(name, result);
@@ -79,10 +79,10 @@ export class Collection {
         }
 
         return nodeArray[length - 1].getResultType({
-            contextType             : contextType,
-            lambdaArgumentInfoDict  : null,
-            localVariableDict       : localVariableDict,
-            customCounterNameSet    : customCounterNameSet,
+            contextType            : contextType,
+            lambdaArgumentInfoDict : null,
+            localVariableDict      : localVariableDict,
+            customCounterNameSet   : customCounterNameSet,
         });
     }
 

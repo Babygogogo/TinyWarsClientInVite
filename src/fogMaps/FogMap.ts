@@ -95,7 +95,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         this.init({
             data,
             mapSize,
-            playersCountUnneutral
+            playersCountUnneutral,
         });
     }
 
@@ -166,10 +166,10 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         }
 
         return SerialFogMap.fromJson({
-            forceFogCode            : this.getForceFogCode(),
-            forceExpirePlayerIndex  : this.getForceExpirePlayerIndex(),
-            forceExpireTurnIndex    : this.getForceExpireTurnIndex(),
-            mapsFromPath            : serialMapsFromPath.map(v => v.toJson()),
+            forceFogCode           : this.getForceFogCode(),
+            forceExpirePlayerIndex : this.getForceExpirePlayerIndex(),
+            forceExpireTurnIndex   : this.getForceExpireTurnIndex(),
+            mapsFromPath           : serialMapsFromPath.map(v => v.toJson()),
         });
     }
     public serializeForCreateSfw(): SerialFogMap {
@@ -193,10 +193,10 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
             }
 
             return SerialFogMap.fromJson({
-                forceFogCode            : this.getForceFogCode(),
-                forceExpirePlayerIndex  : this.getForceExpirePlayerIndex(),
-                forceExpireTurnIndex    : this.getForceExpireTurnIndex(),
-                mapsFromPath            : serialMapsFromPath.map(v => v.toJson()),
+                forceFogCode           : this.getForceFogCode(),
+                forceExpirePlayerIndex : this.getForceExpirePlayerIndex(),
+                forceExpireTurnIndex   : this.getForceExpireTurnIndex(),
+                mapsFromPath           : serialMapsFromPath.map(v => v.toJson()),
             });
         }
 
@@ -221,10 +221,10 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
                 }
             }
             return SerialFogMap.fromJson({
-                forceFogCode            : this.getForceFogCode(),
-                forceExpirePlayerIndex  : this.getForceExpirePlayerIndex(),
-                forceExpireTurnIndex    : this.getForceExpireTurnIndex(),
-                mapsFromPath            : mapsFromPath.map(v => v.toJson()),
+                forceFogCode           : this.getForceFogCode(),
+                forceExpirePlayerIndex : this.getForceExpirePlayerIndex(),
+                forceExpireTurnIndex   : this.getForceExpireTurnIndex(),
+                mapsFromPath           : mapsFromPath.map(v => v.toJson()),
             });
         }
     }
@@ -349,12 +349,12 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
         const mapSize       = this.getMapSize();
         const mapFromPath   = this._getMapFromPath(playerIndex);
         for (const pathNode of path) {
-            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance: 0, maxDistance: 1, mapSize })) {
+            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize })) {
                 mapFromPath[gridIndex.getX()][gridIndex.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
             }
 
             const visionRange = unit.getFinalVisionRange(unitVisionInfo, pathNode);
-            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance: 2, maxDistance: visionRange, mapSize })) {
+            for (const gridIndex of pathNode.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize })) {
                 if (unitVisionInfo.isPenetrating) {
                     mapFromPath[gridIndex.getX()][gridIndex.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                 } else {
@@ -387,7 +387,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
     }
     public updateMapFromPathsByFlare(playerIndex: number, flareGridIndex: AuxiliaryTypes_GridIndex.GridIndex, flareRadius: number): void {
         const map = this._getMapFromPath(playerIndex);
-        for (const gridIndex of flareGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: flareRadius, mapSize: this.getMapSize() })) {
+        for (const gridIndex of flareGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize : this.getMapSize() })) {
             map[gridIndex.getX()][gridIndex.getY()] = 2;
         }
     }
@@ -414,7 +414,7 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
                 for (let y = 0; y < height; ++y) {
                     resultMap[x][y] = Math.max(
                         resultMap[x][y],
-                        map[x][y]
+                        map[x][y],
                     );
                 }
             }
@@ -592,12 +592,12 @@ export class FogMap implements FogMaps_IFogMap.IFogMap {
                         continue;
                     }
 
-                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: 1, mapSize })) {
+                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : 1, mapSize })) {
                         resultMap[g.getX()][g.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                     }
 
                     const isPenetrating = visionInfo.isPenetrating;
-                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance: 2, maxDistance: visionRange, mapSize })) {
+                    for (const g of unitGridIndex.getGridsWithinDistance({ minDistance : 2, maxDistance : visionRange, mapSize })) {
                         if (isPenetrating) {
                             resultMap[g.getX()][g.getY()] = Visibilities_Constants.VisibilityTypeId.Penetrating;
                         } else {

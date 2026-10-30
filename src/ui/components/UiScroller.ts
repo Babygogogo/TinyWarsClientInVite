@@ -12,8 +12,7 @@ import {
 
 export class UiScroller<T extends Ui_Interfaces_IUiContainer.IUiContainer | Ui_Interfaces_IUiLayout.IUiLayout>
     extends     Ui_Components_UiScrollerBase.UiScrollerBase
-    implements  Ui_Interfaces_IUiScroller.IUiScroller<T>
-{
+    implements  Ui_Interfaces_IUiScroller.IUiScroller<T> {
     private _viewport: T | undefined;
 
     public initViewport(viewport: T): void {

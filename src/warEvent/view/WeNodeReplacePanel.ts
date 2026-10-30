@@ -40,10 +40,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -119,11 +119,11 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnCopy,    callback: this._onTouchedBtnCopy },
-            { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
+            { ui : this._btnCopy,    callback : this._onTouchedBtnCopy },
+            { ui : this._btnSelect,  callback : this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -155,19 +155,19 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
                 if (WarEvents_ConditionNodes_Utils.createAndReplaceRootNodeInEvent({
-                    fullData                    : fullData,
-                    eventId                     : openData.eventId,
-                    oldRootNodeId               : srcNodeId,
-                    isNeedAnd                   : isNeedAnd,
-                    isNeedFalse                 : isNeedFalse,
-                    conditionIdAndFlagsArray    : candidateNode.getConditionIdAndFlagsArray(),
-                    subNodeIdAndFlagsArray      : candidateNode.getSubNodeIdAndFlagsArray(),
+                    fullData                 : fullData,
+                    eventId                  : openData.eventId,
+                    oldRootNodeId            : srcNodeId,
+                    isNeedAnd                : isNeedAnd,
+                    isNeedFalse              : isNeedFalse,
+                    conditionIdAndFlagsArray : candidateNode.getConditionIdAndFlagsArray(),
+                    subNodeIdAndFlagsArray   : candidateNode.getSubNodeIdAndFlagsArray(),
                 }) != null) {
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 }
             }
         } else {
-            if (getAllSubNodesAndConditionsForNode({ fullData, nodeId: candidateNodeId }).nodeIdSet.has(parentNodeId)) {
+            if (getAllSubNodesAndConditionsForNode({ fullData, nodeId : candidateNodeId }).nodeIdSet.has(parentNodeId)) {
                 FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0179));
                 return;
             }
@@ -195,9 +195,9 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         if (parentNodeId == null) {
             if (srcNodeId == null) {
                 if (!addRootNodeInEvent({
-                    fullData    : fullData,
-                    eventId     : openData.eventId,
-                    newNodeId   : newNodeId,
+                    fullData  : fullData,
+                    eventId   : openData.eventId,
+                    newNodeId : newNodeId,
                 })) {
                     FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 } else {
@@ -208,10 +208,10 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 }
             } else {
                 if (!replaceRootNodeInEvent({
-                    fullData    : fullData,
-                    eventId     : openData.eventId,
-                    oldNodeId   : srcNodeId,
-                    newNodeId   : newNodeId,
+                    fullData  : fullData,
+                    eventId   : openData.eventId,
+                    oldNodeId : srcNodeId,
+                    newNodeId : newNodeId,
                 })) {
                     FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
                 } else {
@@ -222,16 +222,16 @@ class NodeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 }
             }
         } else {
-            if (getAllSubNodesAndConditionsForNode({ fullData, nodeId: newNodeId }).nodeIdSet.has(parentNodeId)) {
+            if (getAllSubNodesAndConditionsForNode({ fullData, nodeId : newNodeId }).nodeIdSet.has(parentNodeId)) {
                 FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0179));
                 return;
             }
 
             if (!replaceSubNodeInParentNode({
-                fullData        : fullData,
-                parentNodeId    : parentNodeId,
-                oldNodeId       : srcNodeId,
-                newNodeId       : newNodeId,
+                fullData     : fullData,
+                parentNodeId : parentNodeId,
+                oldNodeId    : srcNodeId,
+                newNodeId    : newNodeId,
             })) {
                 FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
             } else {
@@ -382,7 +382,7 @@ function cloneAndReplaceNodeInParentNode({ fullData, parentNodeId, nodeIdForDele
 
             const arr = parentNode.getSubNodeIdAndFlagsArray();
             Helpers_Collection.deleteElementFromList2(arr, v => v.getNodeId() === nodeIdForDelete);
-            arr.push(NodeIdAndFlags.fromJson({ nodeId: nodeId}));
+            arr.push(NodeIdAndFlags.fromJson({ nodeId : nodeId }));
             // arr.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             return nodeId;
@@ -407,10 +407,10 @@ function addRootNodeInEvent({ fullData, eventId, newNodeId }: {
     }
 
     rootNodeAndActionsArray.push(ConditionNodeAndActions.fromJson({
-        nodeIdAndFlags  : {
-            nodeId  : newNodeId,
+        nodeIdAndFlags : {
+            nodeId : newNodeId,
         },
-        actionIdArray   : [],
+        actionIdArray : [],
     }));
 
     return true;
@@ -469,7 +469,7 @@ function replaceSubNodeInParentNode({ fullData, parentNodeId, oldNodeId, newNode
 
     const nodeIdAndFlagsArray = parentNode.getSubNodeIdAndFlagsArray();
     Helpers_Collection.deleteElementFromList2(nodeIdAndFlagsArray, v => v.getNodeId() === oldNodeId);
-    nodeIdAndFlagsArray.push(NodeIdAndFlags.fromJson({ nodeId: newNodeId }));
+    nodeIdAndFlagsArray.push(NodeIdAndFlags.fromJson({ nodeId : newNodeId }));
     // nodeIdAndFlagsArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
     // checkAndDeleteUnusedNode(fullData, oldNodeId);
 

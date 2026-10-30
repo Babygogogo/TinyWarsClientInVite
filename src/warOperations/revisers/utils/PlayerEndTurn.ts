@@ -9,7 +9,7 @@ import {
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayerEndTurn, requesterUserId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== Turns_Constants.PhaseCode.Main) {
         throw Helpers_Misc.newError(`Invalid turnPhaseCode.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerEndTurn_00);
@@ -28,6 +28,6 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayer
     }
 
     return WoContainer.fromJson({
-        WoPlayerEndTurn  : {},
+        WoPlayerEndTurn : {},
     });
 }

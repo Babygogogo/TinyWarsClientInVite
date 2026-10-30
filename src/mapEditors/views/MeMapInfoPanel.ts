@@ -96,43 +96,43 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: Notifications_TypeId.TypeId.MeMapNameChanged,                    callback: this._onNotifyMeMapNameChanged },
-            { type: Notifications_TypeId.TypeId.MeMapCleared,                        callback: this._onNotifyMeMapCleared },
-            { type: Notifications_TypeId.TypeId.MeMapSizeChanged,                    callback: this._onNotifyMeMapSizeChanged },
-            { type: Notifications_TypeId.TypeId.MeMapDescChanged,                    callback: this._onNotifyMeMapDescChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
-            { type: Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,      callback: this._onNotifyMeTaskObjectiveFullDataChanged },
-            { type: Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,          callback: this._onNotifyMeMapSimpleDialogueChanged },
-            { type: Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,        callback: this._onNotifyBwTileCustomNameArrayChanged },
-            { type: Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,        callback: this._onNotifyBwUnitCustomNameArrayChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback: this._onNotifyMsgUserSetMapEditorAutoSaveTime },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignMapName,             callback: this._onNotifyMsgCmSetCampaignMapName },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignMapExtraText,        callback: this._onNotifyMsgCmSetCampaignMapExtraText },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAndTileTextureVersionChanged,    callback : this._onNotifyUnitAndTileTextureVersionChanged },
+            { type : Notifications_TypeId.TypeId.MeMapNameChanged,                    callback : this._onNotifyMeMapNameChanged },
+            { type : Notifications_TypeId.TypeId.MeMapCleared,                        callback : this._onNotifyMeMapCleared },
+            { type : Notifications_TypeId.TypeId.MeMapSizeChanged,                    callback : this._onNotifyMeMapSizeChanged },
+            { type : Notifications_TypeId.TypeId.MeMapDescChanged,                    callback : this._onNotifyMeMapDescChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.MeTaskObjectiveFullDataChanged,      callback : this._onNotifyMeTaskObjectiveFullDataChanged },
+            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,          callback : this._onNotifyMeMapSimpleDialogueChanged },
+            { type : Notifications_TypeId.TypeId.BwTileCustomNameArrayChanged,        callback : this._onNotifyBwTileCustomNameArrayChanged },
+            { type : Notifications_TypeId.TypeId.BwUnitCustomNameArrayChanged,        callback : this._onNotifyBwUnitCustomNameArrayChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapName,             callback : this._onNotifyMsgCmSetCampaignMapName },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignMapExtraText,        callback : this._onNotifyMsgCmSetCampaignMapExtraText },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this.closePanel },
-            { ui: this._btnHelp,                                callback: this._onTouchedBtnHelp },
-            { ui: this._groupModifyMapDesigner,                 callback: this._onTouchedGroupModifyMapDesigner },
-            { ui: this._groupModifyMapName,                     callback: this._onTouchedGroupModifyMapName },
-            { ui: this._groupModifyMapDescription,              callback: this._onTouchedGroupModifyMapDescription },
-            { ui: this._groupModifyMapSize,                     callback: this._onTouchedGroupModifyMapSize },
-            { ui: this._groupModifyMapTag,                      callback: this._onTouchedGroupModifyMapTag },
-            { ui: this._groupModifyWarRule,                     callback: this._onTouchedGroupModifyWarRule },
-            { ui: this._groupModifyWarEvent,                    callback: this._onTouchedGroupModifyWarEvent },
-            { ui: this._groupModifyCustomCounter,               callback: this._onTouchedGroupModifyCustomCounter },
-            { ui: this._groupModifyTaskObjective,               callback: this._onTouchedGroupModifyTaskObjective },
-            { ui: this._groupModifyRepeatableSimpleDialogue,    callback: this._onTouchedGroupModifyRepeatableSimpleDialogue },
-            { ui: this._groupModifyTileCustomName,              callback: this._onTouchedGroupModifyTileCustomName },
-            { ui: this._groupModifyUnitCustomName,              callback: this._onTouchedGroupModifyUnitCustomName },
+            { ui : this._btnClose,                               callback : this.closePanel },
+            { ui : this._btnHelp,                                callback : this._onTouchedBtnHelp },
+            { ui : this._groupModifyMapDesigner,                 callback : this._onTouchedGroupModifyMapDesigner },
+            { ui : this._groupModifyMapName,                     callback : this._onTouchedGroupModifyMapName },
+            { ui : this._groupModifyMapDescription,              callback : this._onTouchedGroupModifyMapDescription },
+            { ui : this._groupModifyMapSize,                     callback : this._onTouchedGroupModifyMapSize },
+            { ui : this._groupModifyMapTag,                      callback : this._onTouchedGroupModifyMapTag },
+            { ui : this._groupModifyWarRule,                     callback : this._onTouchedGroupModifyWarRule },
+            { ui : this._groupModifyWarEvent,                    callback : this._onTouchedGroupModifyWarEvent },
+            { ui : this._groupModifyCustomCounter,               callback : this._onTouchedGroupModifyCustomCounter },
+            { ui : this._groupModifyTaskObjective,               callback : this._onTouchedGroupModifyTaskObjective },
+            { ui : this._groupModifyRepeatableSimpleDialogue,    callback : this._onTouchedGroupModifyRepeatableSimpleDialogue },
+            { ui : this._groupModifyTileCustomName,              callback : this._onTouchedGroupModifyTileCustomName },
+            { ui : this._groupModifyUnitCustomName,              callback : this._onTouchedGroupModifyUnitCustomName },
 
-            { ui: this._btnTilesAndUnits,                       callback: this._onTouchedBtnTilesAndUnits },
-            { ui: this._btnSimulation,                          callback: this._onTouchedBtnSimulation },
-            { ui: this._btnFreeMode,                            callback: this._onTouchedBtnFreeMode },
-            { ui: this._btnImport,                              callback: this._onTouchedBtnImport },
-            { ui: this._btnClearMap,                            callback: this._onTouchedBtnClearMap },
-            { ui: this._btnDeleteSlotData,                      callback: this._onTouchedBtnDeleteSlotData },
+            { ui : this._btnTilesAndUnits,                       callback : this._onTouchedBtnTilesAndUnits },
+            { ui : this._btnSimulation,                          callback : this._onTouchedBtnSimulation },
+            { ui : this._btnFreeMode,                            callback : this._onTouchedBtnFreeMode },
+            { ui : this._btnImport,                              callback : this._onTouchedBtnImport },
+            { ui : this._btnClearMap,                            callback : this._onTouchedBtnClearMap },
+            { ui : this._btnDeleteSlotData,                      callback : this._onTouchedBtnDeleteSlotData },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -211,15 +211,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapNameArray  = war.getMapNameArray();
         if (war.getIsReviewingMap()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowLangTextPanel, {
-                getTitleText: () => Lang_Utils.getText(Lang_Constants.TextType.B0225),
-                textArray   : mapNameArray,
+                getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0225),
+                textArray    : mapNameArray,
             });
 
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-                currentTextArray    : mapNameArray,
-                maxTextLength       : Maps_Constants.Common.MaxNameLength,
-                callback            : async newMapNameArray => {
+                currentTextArray : mapNameArray,
+                maxTextLength    : Maps_Constants.Common.MaxNameLength,
+                callback         : async newMapNameArray => {
                     war.setMapNameArray(newMapNameArray);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapNameChanged);
 
@@ -229,11 +229,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         const campaignMapId = campaignMapData.getCampaignMapId();
                         if ((await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getEnabledCampaignMapIdArray().some(v => v === campaignMapId)) {
                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                getContent         : () => Lang_Utils.getText(Lang_Constants.TextType.A0112),
-                                callback        : () => Campaigns_Managements_Gateway.reqCmSetCampaignMapName(
+                                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0112),
+                                callback   : () => Campaigns_Managements_Gateway.reqCmSetCampaignMapName(
                                     campaignId,
                                     campaignMapId,
-                                    newMapNameArray
+                                    newMapNameArray,
                                 ),
                             });
                         }
@@ -254,16 +254,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapDescArray  = war.getMapDescArray();
         if (war.getIsReviewingMap()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowLangTextPanel, {
-                getTitleText    : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
-                textArray       : mapDescArray,
+                getTitleText : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
+                textArray    : mapDescArray,
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputLanguageTextPanel, {
-                maxLength           : Maps_Constants.Common.MaxDescLength,
-                currentTextArray    : mapDescArray,
-                isMultiline         : true,
-                getTitle            : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
-                callback            : async newMapDescArray => {
+                maxLength        : Maps_Constants.Common.MaxDescLength,
+                currentTextArray : mapDescArray,
+                isMultiline      : true,
+                getTitle         : () => Lang_Utils.getText(Lang_Constants.TextType.B0893),
+                callback         : async newMapDescArray => {
                     war.setMapDescArray(newMapDescArray);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.MeMapDescChanged);
 
@@ -273,12 +273,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         const campaignMapId = campaignMapData.getCampaignMapId();
                         if ((await Campaigns_Mains_Provider.getCampaignInfo(campaignId))?.getEnabledCampaignMapIdArray().some(v => v === campaignMapId)) {
                             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                getContent      : () => Lang_Utils.getText(Lang_Constants.TextType.A0109),
-                                callback        : () => Campaigns_Managements_Gateway.reqCmSetCampaignMapExtraText(
+                                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0109),
+                                callback   : () => Campaigns_Managements_Gateway.reqCmSetCampaignMapExtraText(
                                     campaignId,
                                     campaignMapId,
                                     {
-                                        mapDescription: newMapDescArray.map(v => v.toJson()),
+                                        mapDescription : newMapDescArray.map(v => v.toJson()),
                                     },
                                 ),
                             });
@@ -308,17 +308,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const currentGroupedMapTagId    = war.getGroupedMapTagId() ?? 0;
         if (war.getIsReviewingMap()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapTagIdPanel, {
-                currentGroupedMapTagId  : currentGroupedMapTagId,
+                currentGroupedMapTagId : currentGroupedMapTagId,
             });
         } else {
             const mapTag = await NormalMap_Model_NormalMapModel.getMapTag();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-                availableNumberArray    : Helpers_Collection.getNonNullElements(mapTag?.getMapTagDataArray().map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
-                currentNumberArray      : MapTags_Utils.getDecodedMapTagIdList(currentGroupedMapTagId),
-                showNumber              : true,
-                getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
-                getNumberMainText       : mapTagId => Lang_Utils.getLanguageText({ textArray: mapTag?.getMapTagDataArray().find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
-                callbackOnConfirm       : newMapTagIdArray => {
+                availableNumberArray : Helpers_Collection.getNonNullElements(mapTag?.getMapTagDataArray().map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
+                currentNumberArray   : MapTags_Utils.getDecodedMapTagIdList(currentGroupedMapTagId),
+                showNumber           : true,
+                getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
+                getNumberMainText    : mapTagId => Lang_Utils.getLanguageText({ textArray : mapTag?.getMapTagDataArray().find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
+                callbackOnConfirm    : newMapTagIdArray => {
                     war.setGroupedMapTagId(MapTags_Utils.getEncodedMapTagId(newMapTagIdArray));
                     this._updateLabelMapTag();
                 },
@@ -334,7 +334,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeWarRulePanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeWarRulePanel, { war : war });
         this.closePanel();
     }
 
@@ -359,8 +359,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeCustomCounterNameListPanel, {
-            isReviewingMap  : war.getIsReviewingMap(),
-            fullData        : Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()),
+            isReviewingMap : war.getIsReviewingMap(),
+            fullData       : Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()),
         });
     }
 
@@ -372,7 +372,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTaskObjectiveListPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTaskObjectiveListPanel, { war : war });
     }
 
     private _onTouchedGroupModifyRepeatableSimpleDialogue(): void {
@@ -383,7 +383,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeMapSimpleDialogueMainPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeMapSimpleDialogueMainPanel, { war : war });
     }
 
     private _onTouchedGroupModifyTileCustomName(): void {
@@ -394,7 +394,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTileCustomNameListPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTileCustomNameListPanel, { war : war });
     }
 
     private _onTouchedGroupModifyUnitCustomName(): void {
@@ -405,7 +405,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeUnitCustomNameListPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeUnitCustomNameListPanel, { war : war });
     }
 
     private _onTouchedBtnTilesAndUnits(): void {
@@ -414,7 +414,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTileUnitInfoPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeTileUnitInfoPanel, { war : war });
         this.closePanel();
     }
 
@@ -426,9 +426,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData    = await war.serializeForMap();
         const errorCode     = await Maps_Utils_MapRawData.getErrorCode({
-            mapRawData                          : mapRawData,
-            allowRedundantWarEvents             : false,
-            allowRedundantMapSimpleDialogues    : false,
+            mapRawData                       : mapRawData,
+            allowRedundantWarEvents          : false,
+            allowRedundantMapSimpleDialogues : false,
         });
         if (errorCode) {
             FloatText.show(Lang_Utils.getErrorText(errorCode));
@@ -446,9 +446,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapRawData    = await war.serializeForMap();
         const errorCode     = await Maps_Utils_MapRawData.getErrorCode({
-            mapRawData                          : mapRawData,
-            allowRedundantWarEvents             : false,
-            allowRedundantMapSimpleDialogues    : false,
+            mapRawData                       : mapRawData,
+            allowRedundantWarEvents          : false,
+            allowRedundantMapSimpleDialogues : false,
         });
         if (errorCode) {
             FloatText.show(Lang_Utils.getErrorText(errorCode));
@@ -459,8 +459,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             Helpers_GameFlow.checkAndCreateMultiFreeWar(mapRawData);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0317),
-                callback    : () => Helpers_GameFlow.checkAndCreateMultiFreeWar(mapRawData),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0317),
+                callback   : () => Helpers_GameFlow.checkAndCreateMultiFreeWar(mapRawData),
             });
         }
     }
@@ -475,7 +475,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportExportPanel, {
-                war     : war,
+                war : war,
             });
             this.closePanel();
         }
@@ -510,7 +510,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0314),
-                callback: () => MapEditor_Model_MeProxy.reqMeDeleteSlot(slotIndex),
+                callback   : () => MapEditor_Model_MeProxy.reqMeDeleteSlot(slotIndex),
             });
         }
     }
@@ -525,12 +525,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-                title           : Lang_Utils.getText(Lang_Constants.TextType.B0163),
-                tips            : null,
-                currentValue    : war.getMapDesignerName(),
-                maxChars        : Maps_Constants.Common.MaxDesignerLength,
-                charRestrict    : null,
-                callback        : (panel) => {
+                title        : Lang_Utils.getText(Lang_Constants.TextType.B0163),
+                tips         : null,
+                currentValue : war.getMapDesignerName(),
+                maxChars     : Maps_Constants.Common.MaxDesignerLength,
+                charRestrict : null,
+                callback     : (panel) => {
                     war.setMapDesignerName(panel.getInputText());
                     this._updateLabelMapDesigner();
                 },

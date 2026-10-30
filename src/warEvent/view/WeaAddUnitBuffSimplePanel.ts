@@ -67,23 +67,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnType,                                callback: this._onTouchedBtnType },
-            { ui: this._btnClose,                               callback: this.closePanel },
+            { ui : this._btnType,                                callback : this._onTouchedBtnType },
+            { ui : this._btnClose,                               callback : this.closePanel },
 
-            { ui: this._btnConPlayerFilter,                     callback: this._onTouchedBtnConPlayerFilter },
-            { ui: this._btnConUnitFilter,                       callback: this._onTouchedBtnConUnitFilter },
-            { ui: this._btnConTileFilter,                       callback: this._onTouchedBtnConTileFilter },
+            { ui : this._btnConPlayerFilter,                     callback : this._onTouchedBtnConPlayerFilter },
+            { ui : this._btnConUnitFilter,                       callback : this._onTouchedBtnConUnitFilter },
+            { ui : this._btnConTileFilter,                       callback : this._onTouchedBtnConTileFilter },
 
-            { ui: this._btnActBuffType,                         callback: this._onTouchedBtnActBuffType },
-            { ui: this._btnActExtraParams,                      callback: this._onTouchedBtnActExtraParams },
-            { ui: this._btnActEndTurnIndex,                     callback: this._onTouchedBtnActEndTurnIndex },
-            { ui: this._btnActEndPlayerIndex,                   callback: this._onTouchedBtnActEndPlayerIndex },
-            { ui: this._btnActIsRelativeEndTurnIndex,           callback: this._onTouchedBtnActIsRelativeEndTurnIndex },
-            { ui: this._btnActIsRelativeEndPlayerIndex,         callback: this._onTouchedBtnActIsRelativeEndPlayerIndex },
+            { ui : this._btnActBuffType,                         callback : this._onTouchedBtnActBuffType },
+            { ui : this._btnActExtraParams,                      callback : this._onTouchedBtnActExtraParams },
+            { ui : this._btnActEndTurnIndex,                     callback : this._onTouchedBtnActEndTurnIndex },
+            { ui : this._btnActEndPlayerIndex,                   callback : this._onTouchedBtnActEndPlayerIndex },
+            { ui : this._btnActIsRelativeEndTurnIndex,           callback : this._onTouchedBtnActIsRelativeEndTurnIndex },
+            { ui : this._btnActIsRelativeEndPlayerIndex,         callback : this._onTouchedBtnActIsRelativeEndPlayerIndex },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -112,9 +112,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            war         : openData.war,
-            fullData    : openData.fullData,
-            action      : openData.action,
+            war      : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
         });
     }
 
@@ -130,10 +130,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : action.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : action.getConPlayerFilter(),
+            callback              : filter => {
                 action.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -152,11 +152,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConUnitFilter(),
+            callback              : filter => {
                 action.setConUnitFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -175,11 +175,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : action.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : action.getConTileFilter(),
+            callback              : filter => {
                 action.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -194,12 +194,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const act = action.getActBuffType();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
-            availableNumberArray    : UnitBuffs_Constants.AllBuffTypeIdArray,
-            currentNumber           : act,
-            getNumberMainText       : typeId => Lang_Utils.getUnitBuffName(typeId) || Lang_Constants.UndefinedError,
-            getNumberHelpText       : typeId => Lang_Utils.getUnitBuffDesc(typeId) || Lang_Constants.UndefinedError,
-            callbackOnConfirm       : newValue => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            availableNumberArray : UnitBuffs_Constants.AllBuffTypeIdArray,
+            currentNumber        : act,
+            getNumberMainText    : typeId => Lang_Utils.getUnitBuffName(typeId) || Lang_Constants.UndefinedError,
+            getNumberHelpText    : typeId => Lang_Utils.getUnitBuffDesc(typeId) || Lang_Constants.UndefinedError,
+            callbackOnConfirm    : newValue => {
                 action.setActBuffType(newValue);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -224,11 +224,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldValue = action.getActEndTurnIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
-            minValue        : UnitBuffs_Constants.EndTimeModification.MinEndTurnIndex,
-            maxValue        : UnitBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
-            currentValue    : oldValue,
-            callback        : newValue => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+            minValue     : UnitBuffs_Constants.EndTimeModification.MinEndTurnIndex,
+            maxValue     : UnitBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
+            currentValue : oldValue,
+            callback     : newValue => {
                 action.setActEndTurnIndex(newValue);
 
                 const isEmpty = newValue == null;
@@ -253,11 +253,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldValue = action.getActEndPlayerIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
-            minValue        : UnitBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
-            maxValue        : UnitBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
-            currentValue    : oldValue,
-            callback        : newValue => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+            minValue     : UnitBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
+            maxValue     : UnitBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
+            currentValue : oldValue,
+            callback     : newValue => {
                 action.setActEndPlayerIndex(newValue);
 
                 const isEmpty = newValue == null;
@@ -426,7 +426,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelActIsRelativeEndTurnIndex.setText(
             action.getActEndTurnIndex() == null
                 ? ``
-                : Lang_Utils.getTextForYesOrNo(action.getActIsRelativeEndTurnIndex())
+                : Lang_Utils.getTextForYesOrNo(action.getActIsRelativeEndTurnIndex()),
         );
     }
 
@@ -439,7 +439,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelActIsRelativeEndPlayerIndex.setText(
             action.getActEndPlayerIndex() == null
                 ? ``
-                : Lang_Utils.getTextForYesOrNo(action.getActIsRelativeEndPlayerIndex())
+                : Lang_Utils.getTextForYesOrNo(action.getActIsRelativeEndPlayerIndex()),
         );
     }
 

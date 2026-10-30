@@ -61,7 +61,7 @@ export class WebsocketConnection extends Egret_Egret.WebSocket {
             ", length: ",
             data.length + 4,
             "\n",
-            msgData?.toJson()
+            msgData?.toJson(),
         );
 
         this._callbackOnConnectionData(this, msgContainer);

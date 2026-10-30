@@ -27,15 +27,15 @@ export class UiTrackPad {
 
     public constructor(options: TrackPadOptions) {
         this._xAxis = new Ui_Utils_UiSlidingNumber.UiSlidingNumber({
-            ease: options.xEase,
-            maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+            ease      : options.xEase,
+            maxSpeed  : options.maxSpeed,
+            constrain : options.constrain,
         });
 
         this._yAxis = new Ui_Utils_UiSlidingNumber.UiSlidingNumber({
-            ease: options.yEase,
-            maxSpeed: options.maxSpeed,
-            constrain: options.constrain
+            ease      : options.yEase,
+            maxSpeed  : options.maxSpeed,
+            constrain : options.constrain,
         });
 
         this.setIsEasingDisabled(options.disableEasing ?? false);
@@ -102,9 +102,9 @@ export class UiTrackPad {
             axis.setPositionAndClearSpeed(x);
         } else {
             axis.setPositionAndClearSpeed(Numbers_Utils.getValueInRange({
-                minValue    : axis.getMax(),
-                maxValue    : axis.getMin(),
-                rawValue    : x,
+                minValue : axis.getMax(),
+                maxValue : axis.getMin(),
+                rawValue : x,
             }));
         }
     }
@@ -118,9 +118,9 @@ export class UiTrackPad {
             axis.setPositionAndClearSpeed(y);
         } else {
             axis.setPositionAndClearSpeed(Numbers_Utils.getValueInRange({
-                minValue    : axis.getMax(),
-                maxValue    : axis.getMin(),
-                rawValue    : y,
+                minValue : axis.getMax(),
+                maxValue : axis.getMin(),
+                rawValue : y,
             }));
         }
     }

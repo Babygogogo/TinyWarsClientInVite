@@ -394,7 +394,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     gameConfig,
                     callbackOnModify : null,
                 },
-            ]
+            ],
         };
     }
 
@@ -438,8 +438,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 0, },
-            endProps   : { customAlpha : 1, },
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
@@ -467,8 +467,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         });
         Tween_Executor.Executor.reset({
             obj        : this._groupTab,
-            beginProps : { customAlpha : 1, },
-            endProps   : { customAlpha : 0, },
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

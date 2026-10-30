@@ -87,35 +87,35 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
-            { ui: this._btnConIsEffectiveInMpw,                         callback: this._onTouchedBtnConIsEffectiveInMpw },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
+            { ui : this._btnConIsEffectiveInMpw,                         callback : this._onTouchedBtnConIsEffectiveInMpw },
 
-            { ui: this._groupModifyConPlayerFilter,                     callback: this._onTouchedGroupModifyConPlayerFilter },
-            { ui: this._btnConPlayerFilter,                             callback: this._onTouchedBtnConPlayerFilter },
+            { ui : this._groupModifyConPlayerFilter,                     callback : this._onTouchedGroupModifyConPlayerFilter },
+            { ui : this._btnConPlayerFilter,                             callback : this._onTouchedBtnConPlayerFilter },
 
-            { ui: this._groupModifyActBannedUnitTypeArray,              callback: this._onTouchedGroupModifyActBannedUnitTypeArray },
-            { ui: this._btnActBannedUnitTypeArray,                      callback: this._onTouchedBtnActBannedUnitTypeArray },
+            { ui : this._groupModifyActBannedUnitTypeArray,              callback : this._onTouchedGroupModifyActBannedUnitTypeArray },
+            { ui : this._btnActBannedUnitTypeArray,                      callback : this._onTouchedBtnActBannedUnitTypeArray },
 
-            { ui: this._groupModifyActUnbannedUnitTypeArray,            callback: this._onTouchedGroupModifyActUnbannedUnitTypeArray },
-            { ui: this._btnActUnbannedUnitTypeArray,                    callback: this._onTouchedBtnActUnbannedUnitTypeArray },
+            { ui : this._groupModifyActUnbannedUnitTypeArray,            callback : this._onTouchedGroupModifyActUnbannedUnitTypeArray },
+            { ui : this._btnActUnbannedUnitTypeArray,                    callback : this._onTouchedBtnActUnbannedUnitTypeArray },
 
-            { ui: this._groupModifyActCanActivateCoSkill,               callback: this._onTouchedGroupModifyActCanActivateCoSkill },
-            { ui: this._btnActCanActivateCoSkill,                       callback: this._onTouchedBtnActCanActivateCoSkill },
+            { ui : this._groupModifyActCanActivateCoSkill,               callback : this._onTouchedGroupModifyActCanActivateCoSkill },
+            { ui : this._btnActCanActivateCoSkill,                       callback : this._onTouchedBtnActCanActivateCoSkill },
 
-            { ui: this._groupModifyActEnergyGrowthMultiplierModifier,   callback: this._onTouchedGroupModifyActEnergyGrowthMultiplierModifier },
-            { ui: this._btnActEnergyGrowthMultiplierModifier,           callback: this._onTouchedBtnActEnergyGrowthMultiplierModifier },
+            { ui : this._groupModifyActEnergyGrowthMultiplierModifier,   callback : this._onTouchedGroupModifyActEnergyGrowthMultiplierModifier },
+            { ui : this._btnActEnergyGrowthMultiplierModifier,           callback : this._onTouchedBtnActEnergyGrowthMultiplierModifier },
 
-            { ui: this._groupModifyActCoZoneRadiusModifier,             callback: this._onTouchedGroupModifyActCoZoneRadiusModifier },
-            { ui: this._btnActCoZoneRadiusModifier,                     callback: this._onTouchedBtnActCoZoneRadiusModifier },
+            { ui : this._groupModifyActCoZoneRadiusModifier,             callback : this._onTouchedGroupModifyActCoZoneRadiusModifier },
+            { ui : this._btnActCoZoneRadiusModifier,                     callback : this._onTouchedBtnActCoZoneRadiusModifier },
 
-            { ui: this._groupModifyActAiUnitProductionBonusScore,       callback: this._onTouchedGroupModifyActAiUnitProductionBonusScore },
-            { ui: this._btnActAiUnitProductionBonusScore,               callback: this._onTouchedBtnActAiUnitProductionBonusScore },
+            { ui : this._groupModifyActAiUnitProductionBonusScore,       callback : this._onTouchedGroupModifyActAiUnitProductionBonusScore },
+            { ui : this._btnActAiUnitProductionBonusScore,               callback : this._onTouchedBtnActAiUnitProductionBonusScore },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -139,9 +139,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -160,11 +160,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0538),
-                callback    : () => {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0538),
+                callback   : () => {
                     action.setIsEffectiveInMpw(true);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                }
+                },
             });
         }
     }
@@ -186,11 +186,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConPlayerFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ConPlayerFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConPlayerFilter(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ConPlayerFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConPlayerFilter() != text) {
                     action.setConPlayerFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -217,11 +217,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActBannedUnitTypeArray(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActBannedUnitTypeArray(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActBannedUnitTypeArray,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActBannedUnitTypeArray() != text) {
                     action.setActBannedUnitTypeArray(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -248,11 +248,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActUnbannedUnitTypeArray(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActUnbannedUnitTypeArray(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActUnbannedUnitTypeArray,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActUnbannedUnitTypeArray() != text) {
                     action.setActUnbannedUnitTypeArray(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -279,11 +279,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCanActivateCoSkill(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCanActivateCoSkill(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCanActivateCoSkill,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCanActivateCoSkill() != text) {
                     action.setActCanActivateCoSkill(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -310,11 +310,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActEnergyGrowthMultiplierModifier(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActEnergyGrowthMultiplierModifier,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActEnergyGrowthMultiplierModifier(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActEnergyGrowthMultiplierModifier,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActEnergyGrowthMultiplierModifier() != text) {
                     action.setActEnergyGrowthMultiplierModifier(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -341,11 +341,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActCoZoneRadiusModifier(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCoZoneRadiusModifier,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActCoZoneRadiusModifier(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActCoZoneRadiusModifier,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActCoZoneRadiusModifier() != text) {
                     action.setActCoZoneRadiusModifier(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -372,11 +372,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActAiUnitProductionBonusScore(),
-            expressionInfo  : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActAiUnitProductionBonusScore(),
+            expressionInfo : WarEvents_Actions_Constants_PersistentModifyPlayerAttribute.ExpressionInfoDict.ActAiUnitProductionBonusScore,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActAiUnitProductionBonusScore() != text) {
                     action.setActAiUnitProductionBonusScore(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

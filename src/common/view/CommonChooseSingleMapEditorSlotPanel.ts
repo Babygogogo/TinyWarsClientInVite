@@ -55,12 +55,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._zoomMap,                callback: this._onTouchedGroupZoomMap },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._zoomMap,                callback : this._onTouchedGroupZoomMap },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -97,9 +97,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             labelNoData.setIsVisible(false);
             zoomMap.setIsVisible(true);
             zoomMap.showMapByMapData({
-                mapRawData          : mapData,
-                gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                overridingPlayers   : null,
+                mapRawData        : mapData,
+                gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                overridingPlayers : null,
             });
         }
     }
@@ -124,8 +124,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
-                callback    : callback,
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0070),
+                callback   : callback,
             });
         }
     }
@@ -151,9 +151,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (mapRawData) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    mapRawData          : mapRawData,
-                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                    overridingPlayers   : null,
+                    mapRawData        : mapRawData,
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    overridingPlayers : null,
                 },
             });
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
@@ -194,9 +194,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForSlotRenderer[] = [];
         for (let slotIndex = 0; slotIndex < maxSlotsCount; ++slotIndex) {
             dataArray.push({
-                slotIndex   : slotIndex,
-                allowPlay   : allowPlay,
-                panel       : this,
+                slotIndex : slotIndex,
+                allowPlay : allowPlay,
+                panel     : this,
             });
         }
 
@@ -220,8 +220,8 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgSelected,    callback: this._onTouchedImgSelected },
-            { ui: this._btnPlay,        callback: this._onTouchedBtnPlay },
+            { ui : this._imgSelected,    callback : this._onTouchedImgSelected },
+            { ui : this._btnPlay,        callback : this._onTouchedBtnPlay },
         ]);
         this._setShortSfxCode(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         this.setIsTouchEnabled(true);
@@ -233,9 +233,9 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -265,17 +265,17 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            availableNumberArray    : [1, 2],
-            currentNumber           : 1,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0401),
-            getNumberMainText       : num => {
+            availableNumberArray : [1, 2],
+            currentNumber        : 1,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B0401),
+            getNumberMainText    : num => {
                 switch (num) {
                     case 1  : return Lang_Utils.getText(Lang_Constants.TextType.B0325);
                     case 2  : return Lang_Utils.getText(Lang_Constants.TextType.B0557);
                     default : throw Helpers_Misc.newError(`Invalid num: ${num}`);
                 }
             },
-            callbackOnConfirm       : num => {
+            callbackOnConfirm : num => {
                 switch (num) {
                     case 1  : return Helpers_GameFlow.checkAndCreateSimulation(mapRawData, mapEditorData?.gridMarkData);
                     case 2  : return Helpers_GameFlow.checkAndCreateMultiFreeWar(mapRawData);
@@ -311,9 +311,9 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const mapRawData = mapEditorData?.mapRawData;
         if ((mapRawData) && (openData.allowPlay)) {
             const errorCode = await Maps_Utils_MapRawData.getErrorCode({
-                mapRawData                          : mapRawData,
-                allowRedundantWarEvents             : false,
-                allowRedundantMapSimpleDialogues    : false,
+                mapRawData                       : mapRawData,
+                allowRedundantWarEvents          : false,
+                allowRedundantMapSimpleDialogues : false,
             });
             if (slotIndex !== this.getOpenData()?.slotIndex) {
                 return;
@@ -325,7 +325,7 @@ class SlotRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         const status            = mapEditorData?.reviewStatus ?? 0;
         const labelSlotIndex    = this._labelSlotIndex;
         labelSlotIndex.setTextColor(getReviewStatusTextColor(status));
-        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray: mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
+        this._labelMapName.setText(Lang_Utils.getLanguageText({ textArray : mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${Lang_Utils.getText(Lang_Constants.TextType.B0277)})`);
 
         const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent;
         if (srcNormalMapIdForAddEvent != null) {

@@ -113,7 +113,7 @@ export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): str
             Lang_Constants.TextType.F0170,
             conLocationIdArray.join(`/`),
             Lang_Utils.getComparatorName(conLocationMinDistance.getComparator()),
-            conLocationMinDistance.getValue()
+            conLocationMinDistance.getValue(),
         )
         : null;
 
@@ -124,7 +124,7 @@ export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): str
             Lang_Constants.TextType.F0169,
             conGridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`/`),
             Lang_Utils.getComparatorName(conGridIndexMinDistance.getComparator()),
-            conGridIndexMinDistance.getValue()
+            conGridIndexMinDistance.getValue(),
         )
         : null;
 
@@ -138,7 +138,7 @@ export function getDesc(data: AuxiliaryTypes_PositionFilter.PositionFilter): str
         ? Lang_Utils.getText(Lang_Constants.TextType.A0423)
         : Lang_Utils.getFormattedText(
             Lang_Constants.TextType.F0184,
-            textArrayForSubConditions.join(Lang_Utils.getText(Lang_Constants.TextType.B0783))
+            textArrayForSubConditions.join(Lang_Utils.getText(Lang_Constants.TextType.B0783)),
         );
 }
 export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilter): string | null {
@@ -159,7 +159,7 @@ export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilt
             Lang_Constants.TextType.F0170,
             conLocationIdArray.join(`/`),
             Lang_Utils.getComparatorName(conLocationMinDistance.getComparator()),
-            conLocationMinDistance.getValue()
+            conLocationMinDistance.getValue(),
         )
         : null;
 
@@ -170,7 +170,7 @@ export function getDescForEmbed(data: AuxiliaryTypes_PositionFilter.PositionFilt
             Lang_Constants.TextType.F0169,
             conGridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`/`),
             Lang_Utils.getComparatorName(conGridIndexMinDistance.getComparator()),
-            conGridIndexMinDistance.getValue()
+            conGridIndexMinDistance.getValue(),
         )
         : null;
 

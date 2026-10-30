@@ -208,7 +208,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback           : (lowerNumber, upperNumber)  => {
                 filter.globalRatingRange = [lowerNumber, upperNumber];
                 this._updateLabelMinGlobalRating();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinGlobalRating(): void {
@@ -226,7 +226,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback     : minMyRating => {
                 filter.minMyRating = minMyRating;
                 this._updateLabelMinMyRating();
-            }
+            },
         });
     }
 
@@ -240,7 +240,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callback     : replayId => {
                 filter.replayId = replayId;
                 this._updateLabelReplayId();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteReplayId(): void {
@@ -286,7 +286,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             callbackOnConfirm : gameMode => {
                 filter.gameMode = gameMode;
                 this._updateLabelIsRanked();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteIsRanked(): void {
@@ -446,7 +446,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 filter.minPlayersCountUnneutral = lowerNumber;
                 filter.maxPlayersCountUnneutral = upperNumber;
                 this._updateLabelPlayersCount();
-            }
+            },
         });
     }
     private _onTouchedBtnDeletePlayersCount(): void {
@@ -643,7 +643,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const userId = this._replayFilter.userId;
         this._labelPlayerName.setText(userId == null
             ? ``
-            : (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError
+            : (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
         );
     }
 
@@ -651,7 +651,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const normalMapId = this._replayFilter.normalMapId;
         this._labelMapName.setText(normalMapId == null
             ? ``
-            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? Lang_Constants.UndefinedError,
         );
     }
 
@@ -659,7 +659,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const coCategoryId = this._replayFilter.coCategoryId;
         this._labelCoName.setText(coCategoryId == null
             ? ``
-            : (await GameConfigs_Provider.getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? Lang_Constants.UndefinedError
+            : (await GameConfigs_Provider.getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? Lang_Constants.UndefinedError,
         );
     }
 
@@ -671,7 +671,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const range = this._replayFilter.globalRatingRange ?? [];
         this._labelMinGlobalRating.setText(!range.length
             ? ``
-            : `${range[0]} ~ ${range[1]}`
+            : `${range[0]} ~ ${range[1]}`,
         );
     }
 
@@ -679,7 +679,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const hasFog = this._replayFilter.hasFog;
         this._labelHasFog.setText(hasFog == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(hasFog)
+            : Lang_Utils.getTextForYesOrNo(hasFog),
         );
     }
 
@@ -687,7 +687,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const isFavorite = this._replayFilter.isFavorite;
         this._labelIsFavorite.setText(isFavorite == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(isFavorite)
+            : Lang_Utils.getTextForYesOrNo(isFavorite),
         );
     }
 
@@ -695,7 +695,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameMode = this._replayFilter.gameMode;
         this._labelIsRanked.setText(gameMode == null
             ? ``
-            : (Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError)
+            : (Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError),
         );
     }
 

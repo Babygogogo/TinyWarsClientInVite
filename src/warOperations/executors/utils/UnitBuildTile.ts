@@ -44,7 +44,7 @@ function fastExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
         const pathNodes     = path.nodes;
         const unitMap       = war.getUnitMap();
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -62,9 +62,9 @@ function fastExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, action: WoUn
 
                 const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
-                    baseType        : targetTileCfg.getDstTileBaseTypeId(),
-                    objectType      : targetTileCfg.getDstTileObjectTypeId(),
-                    playerIndex     : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
+                    baseType    : targetTileCfg.getDstTileBaseTypeId(),
+                    objectType  : targetTileCfg.getDstTileObjectTypeId(),
+                    playerIndex : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentBuildPoint(0);
             }
@@ -87,9 +87,9 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
         const commonExtraData   = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_00);
         const movingUnitAndPath = commonExtraData.getMovingUnitAndPath();
         const extraUnit         = await war.moveExtraUnit({
-            movingUnitAndPath       : movingUnitAndPath,
-            aiming                  : null,
-            deleteViewAfterMoving   : false,
+            movingUnitAndPath     : movingUnitAndPath,
+            aiming                : null,
+            deleteViewAfterMoving : false,
         });
 
         {
@@ -104,20 +104,20 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
                     commonExtraData
                         .getTileArrayAfterAction()
                         .find(v =>
-                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex())))
+                            gridIndex.checkIsEqual(Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v.getGridIndex()))),
                         ),
-                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01
+                    Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01,
                 );
                 const rawNewBuildPoint = tileDataAfterAction.getCurrentBuildPoint();
 
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue            : maxBuildPoint,
-                        currentValue        : currentBuildPoint,
-                        newValue            : rawNewBuildPoint > currentBuildPoint
+                        maxValue     : maxBuildPoint,
+                        currentValue : currentBuildPoint,
+                        newValue     : rawNewBuildPoint > currentBuildPoint
                             ? rawNewBuildPoint
                             : Math.max(rawNewBuildPoint, maxBuildPoint),
-                        callbackOnFinish    : () => resolve(),
+                        callbackOnFinish : () => resolve(),
                     });
                 });
             }
@@ -131,7 +131,7 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -139,7 +139,7 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
         const launchUnitId  = action.getLaunchUnitId();
         const pathNodes     = path.nodes;
         const focusUnit     = Helpers_Misc.getExisted(unitMap.getUnit(pathNodes[0], launchUnitId));
-        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption: path.fuelConsumption });
+        war.moveUnit({ pathNodes, launchUnitId, fuelConsumption : path.fuelConsumption });
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(Units_Constants.ActionStateId.Acted);
 
@@ -167,9 +167,9 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
 
                 const targetTileCfg = Helpers_Misc.getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
-                    baseType        : targetTileCfg.getDstTileBaseTypeId(),
-                    objectType      : targetTileCfg.getDstTileObjectTypeId(),
-                    playerIndex     : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
+                    baseType    : targetTileCfg.getDstTileBaseTypeId(),
+                    objectType  : targetTileCfg.getDstTileObjectTypeId(),
+                    playerIndex : targetTileCfg.getIsDstNeutral() ? Players_Constants.PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentBuildPoint(0);
             }
@@ -184,10 +184,10 @@ async function normalExeUnitBuildTile(war: BaseWar_Interface_IBwWar.IBwWar, acti
             if (isSelfInTurn) {
                 await new Promise<void>(resolve => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwCaptureProgressPanel, {
-                        maxValue            : maxBuildPoint,
-                        newValue            : newBuildPoint,
-                        currentValue        : currentBuildPoint,
-                        callbackOnFinish    : () => resolve(),
+                        maxValue         : maxBuildPoint,
+                        newValue         : newBuildPoint,
+                        currentValue     : currentBuildPoint,
+                        callbackOnFinish : () => resolve(),
                     });
                 });
             }

@@ -40,17 +40,19 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: Bots_CommonP
         }
 
         return {
-            score   : await getScoreForActionUnitUseCoSkill(),
-            action  : WoContainer.fromJson({ WoUnitUseCoSkill: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId            : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                skillType               : CoSkills_Constants.SkillTypeId.SuperPower,
-                targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
-            } }),
+            score  : await getScoreForActionUnitUseCoSkill(),
+            action : WoContainer.fromJson({
+                WoUnitUseCoSkill : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                    skillType            : CoSkills_Constants.SkillTypeId.SuperPower,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.SuperPower)?.map(v => v.toProto().toJson()) ?? [],
+                }, 
+            }),
         };
     }
 
@@ -75,17 +77,19 @@ export async function getScoreAndActionUnitUseCoSkill(commonParams: Bots_CommonP
         }
 
         return {
-            score   : await getScoreForActionUnitUseCoSkill(),
-            action  : WoContainer.fromJson({ WoUnitUseCoSkill: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId            : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                skillType               : CoSkills_Constants.SkillTypeId.Power,
-                targetGridIndexArray    : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
-            } }),
+            score  : await getScoreForActionUnitUseCoSkill(),
+            action : WoContainer.fromJson({
+                WoUnitUseCoSkill : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId         : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                    skillType            : CoSkills_Constants.SkillTypeId.Power,
+                    targetGridIndexArray : Bots_Utils.getCoPowerSkillTargetGridIndexArray(commonParams, player, CoSkills_Constants.SkillTypeId.Power)?.map(v => v.toProto().toJson()) ?? [],
+                }, 
+            }),
         };
     }
 

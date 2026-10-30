@@ -61,14 +61,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnSwitch,          callback: this._onTouchedBtnSwitch },
-            { ui: this._btnPreviousPlayer,  callback: this._onTouchedBtnPreviousPlayer },
-            { ui: this._btnNextPlayer,      callback: this._onTouchedBtnNextPlayer },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnSwitch,          callback : this._onTouchedBtnSwitch },
+            { ui : this._btnPreviousPlayer,  callback : this._onTouchedBtnPreviousPlayer },
+            { ui : this._btnNextPlayer,      callback : this._onTouchedBtnNextPlayer },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -193,11 +193,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const unitType0     = subArray0[i];
             const unitType1     = subArray1[i];
             const singleData0   : SingleData = {
-                unitType            : unitType0,
-                unitGain            : 0,
-                unitLoss            : 0,
-                normalizedHpGain    : 0,
-                normalizedHpLoss    : 0,
+                unitType         : unitType0,
+                unitGain         : 0,
+                unitLoss         : 0,
+                normalizedHpGain : 0,
+                normalizedHpLoss : 0,
             };
             for (const info of infoArray.filter(v => ((v.getPlayerIndex() ?? 0)=== playerIndex) && ((v.getUnitType() ?? 0) == unitType0))) {
                 singleData0.normalizedHpGain    += info.getNormalizedHpGain() ?? 0;
@@ -214,11 +214,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             let singleData1: SingleData | null = null;
             if (unitType1 != null) {
                 singleData1 = {
-                    unitType            : unitType1,
-                    unitGain            : 0,
-                    unitLoss            : 0,
-                    normalizedHpGain    : 0,
-                    normalizedHpLoss    : 0,
+                    unitType         : unitType1,
+                    unitGain         : 0,
+                    unitLoss         : 0,
+                    normalizedHpGain : 0,
+                    normalizedHpLoss : 0,
                 };
                 for (const info of infoArray.filter(v => ((v.getPlayerIndex() ?? 0)=== playerIndex) && ((v.getUnitType() ?? 0) == unitType1))) {
                     singleData1.normalizedHpGain    += info.getNormalizedHpGain() ?? 0;
@@ -228,20 +228,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 }
 
                 if (!IsShowHp) {
-                const cost                      = gameConfig.getUnitTemplateCfg(singleData1.unitType)?.getProductionCost() ?? 0;
-                singleData1.normalizedHpGain    = (singleData1.normalizedHpGain) * cost / Units_Constants.Hp.MaxNormalizedHp;
-                singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss) * cost / Units_Constants.Hp.MaxNormalizedHp;
+                    const cost                      = gameConfig.getUnitTemplateCfg(singleData1.unitType)?.getProductionCost() ?? 0;
+                    singleData1.normalizedHpGain    = (singleData1.normalizedHpGain) * cost / Units_Constants.Hp.MaxNormalizedHp;
+                    singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss) * cost / Units_Constants.Hp.MaxNormalizedHp;
                 }
             }
 
             dataList.push({
-                index               : index++,
-                playerIndex         : playerIndex,
-                skinId              : skinId,
-                overridingSkinId    : overridingSkinId,
-                gameConfig          : gameConfig,
-                singleData0         : singleData0,
-                singleData1         : singleData1,
+                index            : index++,
+                playerIndex      : playerIndex,
+                skinId           : skinId,
+                overridingSkinId : overridingSkinId,
+                gameConfig       : gameConfig,
+                singleData0      : singleData0,
+                singleData1      : singleData1,
             });
         }
 
@@ -289,8 +289,8 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: Notifications_TypeId.TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,       callback : this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.StateIndicatorTick,      callback : this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conUnitView0.addUiChild(this._unitView0);
@@ -334,11 +334,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             this._labelUnitLoss0.setText(`${data.unitLoss}`);
             this._labelUnitRemain0.setText(`${data.unitGain - data.unitLoss}`);
             this._unitView0.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                gameConfig          : gameConfig,
-                skinId              : skinId,
-                overridingSkinId    : overridingSkinId,
-                unitData            : Units_Utils_Serialization.createDefault({
-                    gridIndex   : { x: 0, y: 0 },
+                gameConfig       : gameConfig,
+                skinId           : skinId,
+                overridingSkinId : overridingSkinId,
+                unitData         : Units_Utils_Serialization.createDefault({
+                    gridIndex   : { x : 0, y : 0 },
                     unitTypeId  : data.unitType,
                     unitId      : -1,
                     playerIndex : openData.playerIndex,
@@ -380,11 +380,11 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
                 labelUnitLoss1.setText(`${data.unitLoss}`);
                 labelUnitRemain1.setText(`${data.unitGain - data.unitLoss}`);
                 unitView1.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-                    gameConfig          : gameConfig,
-                    skinId              : skinId,
-                    overridingSkinId    : overridingSkinId,
-                    unitData            : Units_Utils_Serialization.createDefault({
-                        gridIndex   : { x: 0, y: 0 },
+                    gameConfig       : gameConfig,
+                    skinId           : skinId,
+                    overridingSkinId : overridingSkinId,
+                    unitData         : Units_Utils_Serialization.createDefault({
+                        gridIndex   : { x : 0, y : 0 },
                         unitTypeId  : data.unitType,
                         playerIndex : openData.playerIndex,
                         unitId      : -1,

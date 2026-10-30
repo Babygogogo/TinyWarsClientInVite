@@ -72,10 +72,10 @@ async function resetDataByTemplateWarRuleId(templateWarRuleId: AuxiliaryTypes_Au
         settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.createDefault(playersCountUnneutral, gameConfig));
     } else {
         settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
-            templateWarRule             : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         }));
     }
 
@@ -89,7 +89,7 @@ async function resetDataByTemplateWarRuleId(templateWarRuleId: AuxiliaryTypes_Au
                 gameConfig      : gameConfig,
                 hasFogByDefault : hasFogByDefault,
                 includeRandom   : true,
-            })])
+            })]),
         );
     }
 }

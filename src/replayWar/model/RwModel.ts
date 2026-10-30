@@ -27,7 +27,7 @@ import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/Seria
 let _war                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<ReplayWar_Interface_IRwWar.IRwWar>;
 
 const _replaySelfRatingAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData: (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetSelfRating(replayId),
+    reqData : (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetSelfRating(replayId),
 });
 const _replayIdSetAccessor  = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, Set<number>>({
     reqData : () => ReplayWar_Model_RwProxy.reqReplayGetAllInfoVersions(),
@@ -40,7 +40,7 @@ const _replayInfoArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDat
     reqData : () => { /** nothing to do */ },
 });
 const _replayInfoAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, ReplayInfo>({
-    reqData: (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetReplayInfo(replayId),
+    reqData : (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetReplayInfo(replayId),
 });
 const _replayDataAccessor   = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, SerialWar>({
     reqData : (replayId: number) => ReplayWar_Model_RwProxy.reqReplayGetData(replayId),

@@ -31,7 +31,7 @@ export function getRotatedPointInRadian(x: number, y: number, clockwiseRadian: n
 /** 计算点(x,y)围绕原点(0,0)顺时针旋转clockwiseRadian后的坐标 */
 export function getRotatedPoint(x: number, y: number, sinValue: number, cosValue: number, originX = 0, originY = 0): AuxiliaryTypes_AuxiliaryTypes.Point {
     return {
-        x   : (x - originX) * cosValue - (y - originY) * sinValue + originX,
-        y   : (x - originX) * sinValue + (y - originY) * cosValue + originY,
+        x : (x - originX) * cosValue - (y - originY) * sinValue + originX,
+        y : (x - originX) * sinValue + (y - originY) * cosValue + originY,
     };
 }

@@ -242,7 +242,7 @@ export class Unit implements Units_IUnit.IUnit {
         updateViewAfterMove : boolean;
     }): Promise<void> {
         return this.getView().moveAlongPath({
-            path : pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove
+            path : pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove,
         });
     }
 
@@ -434,7 +434,7 @@ export class Unit implements Units_IUnit.IUnit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
-                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
+                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet),
         );
         const getOwnTilesCount          = Helpers_Misc.createLazyFunc2((tileCategoryId: number): number => {
             let count = 0;
@@ -504,7 +504,7 @@ export class Unit implements Units_IUnit.IUnit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
-                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
+                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet),
         );
 
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
@@ -598,7 +598,7 @@ export class Unit implements Units_IUnit.IUnit {
         const getCoGridIndexArrayOnMap  = Helpers_Misc.createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
-                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
+                : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet),
         );
         const getOwnTilesCount          = Helpers_Misc.createLazyFunc2((tileCategoryId: number): number => {
             let count = 0;
@@ -771,7 +771,7 @@ export class Unit implements Units_IUnit.IUnit {
 
         return Numbers_Utils.getValueInInt32(cfgRange
             + this._getMaxAttackRangeModifierByCo()
-            + this.getWar().getWarEventManager().getOpaMaxAttackRangeModifier(this)
+            + this.getWar().getWarEventManager().getOpaMaxAttackRangeModifier(this),
         );
     }
     private _getMaxAttackRangeModifierByCo(): number {
@@ -1050,7 +1050,7 @@ export class Unit implements Units_IUnit.IUnit {
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
                         coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
-                        coZoneRadius             : coZoneRadius
+                        coZoneRadius             : coZoneRadius,
                     })))
                 ) {
                     return true;
@@ -1142,7 +1142,7 @@ export class Unit implements Units_IUnit.IUnit {
             : Numbers_Utils.getValueInRange({
                 minValue : 0,
                 maxValue : Numbers_Constants.MaxInt32,
-                rawValue : Math.floor(cfgRadius + this.getWar().getWarEventManager().getOpaFlareRadiusModifier(this, gridIndex))
+                rawValue : Math.floor(cfgRadius + this.getWar().getWarEventManager().getOpaFlareRadiusModifier(this, gridIndex)),
             });
     }
 
@@ -1153,7 +1153,7 @@ export class Unit implements Units_IUnit.IUnit {
             : Numbers_Utils.getValueInRange({
                 minValue : 0,
                 maxValue : Numbers_Constants.MaxInt32,
-                rawValue : Math.floor(cfgMaxRange + this.getWar().getWarEventManager().getOpaFlareRangeModifier(this, gridIndex))
+                rawValue : Math.floor(cfgMaxRange + this.getWar().getWarEventManager().getOpaFlareRangeModifier(this, gridIndex)),
             });
     }
 
@@ -1319,7 +1319,7 @@ export class Unit implements Units_IUnit.IUnit {
                     + war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getMoveRangeModifier()
                     + war.getWarEventManager().getOpaMoveRangeModifier(this)
                     + this._getMoveRangeModifierByCo()
-                    + this._getMoveRangeModifierByWeather()
+                    + this._getMoveRangeModifierByWeather(),
                 ),
             });
         }
@@ -1414,7 +1414,7 @@ export class Unit implements Units_IUnit.IUnit {
         return Math.floor(
             this.getProductionCfgCost()                                 *
             this.getPlayer().getUnitCostModifier(this.getUnitType())    *
-            extraMultiplier
+            extraMultiplier,
         );
     }
 
@@ -1803,7 +1803,7 @@ export class Unit implements Units_IUnit.IUnit {
             maxValue : mapSize.getWidth() + mapSize.getHeight(),
             rawValue : Math.floor(visionInfo.isFixed
                 ? baseRange
-                : baseRange + this.getVisionRangeBonusOnTile(tileMap.getTile(gridIndex).getTileTypeId())
+                : baseRange + this.getVisionRangeBonusOnTile(tileMap.getTile(gridIndex).getTileTypeId()),
             ),
         });
     }
@@ -2163,7 +2163,7 @@ export class Unit implements Units_IUnit.IUnit {
                     } else {
                         return false;
                     }
-                }
+                },
             }).getArea();
 
             if (!attackableArea.length) {

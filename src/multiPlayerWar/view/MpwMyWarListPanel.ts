@@ -58,12 +58,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.TimeTick,            callback: this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.TimeTick,            callback : this._onNotifyTimeTick },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,                    callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,                callback: this._onTouchedBtnNextStep },
+            { ui : this._btnBack,                    callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,                callback : this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -162,22 +162,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -237,8 +237,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _createDataForListWar(): Promise<DataForWarRenderer[]> {
         const dataArray: DataForWarRenderer[] = (await MultiPlayerWar_Model_MpwModel.getJoinedMpwIdArray(true) ?? [])
             .map(v => ({
-                warId   : v,
-                panel   : this,
+                warId : v,
+                panel : this,
             }));
 
         return dataArray.sort((v1, v2) => v1.warId - v2.warId);
@@ -256,10 +256,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const settingsForCommon = warSettings.getSettingsForCommon();
             return {
                 mapInfo : {
-                    hasFog              : !!settingsForCommon?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                    gameConfig          : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon?.getConfigVersion())),
-                    mapRawData          : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
-                    overridingPlayers   : null,
+                    hasFog            : !!settingsForCommon?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                    gameConfig        : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon?.getConfigVersion())),
+                    mapRawData        : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    overridingPlayers : null,
                 },
             };
         } else {
@@ -267,10 +267,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return warData == null
                 ? null
                 : {
-                    warInfo     : {
-                        warData             : warData,
-                        showInitialWarData  : false,
-                        overridingPlayers   : null,
+                    warInfo : {
+                        warData            : warData,
+                        showInitialWarData : false,
+                        overridingPlayers  : null,
                     },
                 };
         }
@@ -290,58 +290,58 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -373,7 +373,7 @@ class WarRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TimeTick,                    callback: this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.TimeTick,                    callback : this._onNotifyTimeTick },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -475,7 +475,7 @@ class WarRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
             label.setText(Lang_Utils.getTimeDurationText2(restTime));
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
-                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)
+                : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400),
             );
         }
         layout.arrangeItems();

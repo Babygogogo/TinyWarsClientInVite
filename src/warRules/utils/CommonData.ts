@@ -46,7 +46,7 @@ export function getErrorCode(data: WarRuleCommonData, gcData: GameConfigs_GameCo
         if ((value != null)                                 &&
             (!Tiles_Utils_Common.checkIsValidThemeId(value))
         ) {
-             return Utils_ClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForRuleForGlobalParams_01;
+            return Utils_ClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForRuleForGlobalParams_01;
         }
     }
 

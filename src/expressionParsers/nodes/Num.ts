@@ -15,7 +15,7 @@ export class Num extends ExpressionParsers_Nodes_Base.Base {
         this._number = num;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     public override eval(ctx: ExpressionParsers_Contexts_Base.Base): ExpressionParsers_Results_Base.Base {
         return new ExpressionParsers_Results_Num.Num(ctx.getWar(), this._number);
     }

@@ -24,9 +24,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConUnitFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ConUnitFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConUnitFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ConUnitFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -34,9 +34,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActPlayerIndex(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ActPlayerIndex,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActPlayerIndex(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ActPlayerIndex,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -67,9 +67,9 @@ export function getErrorTip(data: WeaSetUnitOwnershipExpr, customCounterNameSet:
     {
         const info      = WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ConUnitFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConUnitFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConUnitFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -79,9 +79,9 @@ export function getErrorTip(data: WeaSetUnitOwnershipExpr, customCounterNameSet:
     {
         const info      = WarEvents_Actions_Constants_SetUnitOwnershipExpr.ExpressionInfoDict.ActPlayerIndex;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActPlayerIndex(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPlayerIndex(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -183,21 +183,21 @@ function updateWarStatisticsManager(warStatisticsManager: BaseWar_Interface_IBwW
     const unitType      = unit.getUnitType();
     const normalizedHp  = unit.getNormalizedCurrentHp();
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-        unitType                    : unitType,
-        dstPlayerIndex              : unit.getPlayerIndex(),
-        normalizedHpGain            : 0,
-        normalizedHpLoss            : normalizedHp,
-        unitGain                    : 0,
-        unitLoss                    : 1,
-        groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+        unitType                   : unitType,
+        dstPlayerIndex             : unit.getPlayerIndex(),
+        normalizedHpGain           : 0,
+        normalizedHpLoss           : normalizedHp,
+        unitGain                   : 0,
+        unitLoss                   : 1,
+        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
     }));
     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-        unitType                    : unitType,
-        dstPlayerIndex              : newPlayerIndex,
-        normalizedHpGain            : normalizedHp,
-        normalizedHpLoss            : 0,
-        unitGain                    : 1,
-        unitLoss                    : 0,
-        groupedObserverTeamIndexes  : groupedObserverTeamIndexes
+        unitType                   : unitType,
+        dstPlayerIndex             : newPlayerIndex,
+        normalizedHpGain           : normalizedHp,
+        normalizedHpLoss           : 0,
+        unitGain                   : 1,
+        unitLoss                   : 0,
+        groupedObserverTeamIndexes : groupedObserverTeamIndexes,
     }));
 }

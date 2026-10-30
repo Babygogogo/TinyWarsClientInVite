@@ -59,19 +59,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                              callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                              callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyConUnitFilter,                   callback: this._onTouchedGroupModifyConUnitFilter },
-            { ui: this._btnConUnitFilter,                           callback: this._onTouchedBtnConUnitFilter },
+            { ui : this._groupModifyConUnitFilter,                   callback : this._onTouchedGroupModifyConUnitFilter },
+            { ui : this._btnConUnitFilter,                           callback : this._onTouchedBtnConUnitFilter },
 
-            { ui: this._groupModifyActPlayerAliveState,             callback: this._onTouchedGroupModifyActPlayerAliveState },
-            { ui: this._btnActPlayerAliveState,                     callback: this._onTouchedBtnActPlayerAliveState },
+            { ui : this._groupModifyActPlayerAliveState,             callback : this._onTouchedGroupModifyActPlayerAliveState },
+            { ui : this._btnActPlayerAliveState,                     callback : this._onTouchedBtnActPlayerAliveState },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -95,9 +95,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -123,11 +123,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getConUnitFilter(),
-            expressionInfo  : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ConUnitFilter,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getConUnitFilter(),
+            expressionInfo : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ConUnitFilter,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getConUnitFilter() != text) {
                     action.setConUnitFilter(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -154,11 +154,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getActPlayerAliveState(),
-            expressionInfo  : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getActPlayerAliveState(),
+            expressionInfo : WarEvents_Actions_Constants_DestroyUnitExpr.ExpressionInfoDict.ActPlayerAliveState,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getActPlayerAliveState() != text) {
                     action.setActPlayerAliveState(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

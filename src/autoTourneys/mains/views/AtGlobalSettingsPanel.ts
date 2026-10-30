@@ -37,19 +37,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgAtGetGlobalSettings,      callback: this._onNotifyMsgAtGetGlobalSettings },
-            { type: Notifications_TypeId.TypeId.MsgAtSetGlobalSettings,      callback: this._onNotifyMsgAtSetGlobalSettings },
-            { type: Notifications_TypeId.TypeId.MsgAtCreateTourney,          callback: this._onNotifyMsgAtCreateTourney },
-            { type: Notifications_TypeId.TypeId.MsgAtDeleteLastTourney,      callback: this._onNotifyMsgAtDeleteLastTourney },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgAtGetGlobalSettings,      callback : this._onNotifyMsgAtGetGlobalSettings },
+            { type : Notifications_TypeId.TypeId.MsgAtSetGlobalSettings,      callback : this._onNotifyMsgAtSetGlobalSettings },
+            { type : Notifications_TypeId.TypeId.MsgAtCreateTourney,          callback : this._onNotifyMsgAtCreateTourney },
+            { type : Notifications_TypeId.TypeId.MsgAtDeleteLastTourney,      callback : this._onNotifyMsgAtDeleteLastTourney },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnIsEnabled,           callback: this._onTouchedBtnIsEnabled },
-            { ui: this._btnInterval,            callback: this._onTouchedBtnInterval },
-            { ui: this._btnCreateTourney,       callback: this._onTouchedBtnCreateTourney },
-            { ui: this._btnDeleteLastTourney,   callback: this._onTouchedBtnDeleteLastTourney },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
-            { ui: this._btnCancel,              callback: this.closePanel },
+            { ui : this._btnIsEnabled,           callback : this._onTouchedBtnIsEnabled },
+            { ui : this._btnInterval,            callback : this._onTouchedBtnInterval },
+            { ui : this._btnCreateTourney,       callback : this._onTouchedBtnCreateTourney },
+            { ui : this._btnDeleteLastTourney,   callback : this._onTouchedBtnDeleteLastTourney },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,              callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -76,16 +76,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue = AutoTourneys_Constants.Common.MinCreateInterval;
         const maxValue = AutoTourneys_Constants.Common.MaxCreateInterval;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputDurationPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B1035),
-            minValue        : minValue,
-            maxValue        : maxValue,
-            currentValue    : this._interval,
-            tips            : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
-            getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0847),
-            callback        : interval => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B1035),
+            minValue     : minValue,
+            maxValue     : maxValue,
+            currentValue : this._interval,
+            tips         : `${Lang_Utils.getText(Lang_Constants.TextType.B0319)}: [${Lang_Utils.getTimeDurationText2(minValue)}, ${Lang_Utils.getTimeDurationText2(maxValue)}]`,
+            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0847),
+            callback     : interval => {
                 this._interval = interval;
                 this._updateLabelInterval();
-            }
+            },
         });
     }
 
@@ -101,16 +101,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0201, Lang_Utils.getTimeDurationText2(duration)));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0846),
-                callback    : () => AutoTourneys_Mains_Gateway.reqAtCreateTourney(),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0846),
+                callback   : () => AutoTourneys_Mains_Gateway.reqAtCreateTourney(),
             });
         }
     }
 
     private _onTouchedBtnDeleteLastTourney(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0405),
-            callback    : () => AutoTourneys_Mains_Gateway.reqAtDeleteLastTourney(),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0405),
+            callback   : () => AutoTourneys_Mains_Gateway.reqAtDeleteLastTourney(),
         });
     }
 

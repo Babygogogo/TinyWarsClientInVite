@@ -39,15 +39,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                           callback: this.closePanel },
-            { ui: this._btnImportMapFromPool,               callback: this._onTouchedBtnImportMapFromPool },
-            { ui: this._btnImportMapFromClipboard,          callback: this._onTouchedBtnImportFromMapClipboard },
-            { ui: this._btnImportMapFromClipboardAwbw,      callback: this._onTouchedBtnImportFromMapClipboardAwbw },
-            { ui: this._btnImportMapFromMapEditorSlot,      callback: this._onTouchedBtnImportMapFromMapEditorSlot },
-            { ui: this._btnExportMapToClipboard,            callback: this._onTouchedBtnExportMapToClipboard },
+            { ui : this._btnClose,                           callback : this.closePanel },
+            { ui : this._btnImportMapFromPool,               callback : this._onTouchedBtnImportMapFromPool },
+            { ui : this._btnImportMapFromClipboard,          callback : this._onTouchedBtnImportFromMapClipboard },
+            { ui : this._btnImportMapFromClipboardAwbw,      callback : this._onTouchedBtnImportFromMapClipboardAwbw },
+            { ui : this._btnImportMapFromMapEditorSlot,      callback : this._onTouchedBtnImportMapFromMapEditorSlot },
+            { ui : this._btnExportMapToClipboard,            callback : this._onTouchedBtnExportMapToClipboard },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -64,12 +64,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnImportMapFromPool(): Promise<void> {
         const war = this.getOpenData()?.war;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0681),
-            callback                    : async normalMapId => {
+            availableNormalMapIdArray : [...await NormalMap_Model_NormalMapModel.getEnabledNormalMapIdSet()],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0681),
+            callback                  : async normalMapId => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
-                    war             : war,
-                    srcMapRawData   : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
+                    war           : war,
+                    srcMapRawData : Helpers_Misc.getExisted(await NormalMap_Model_NormalMapModel.getRawData(normalMapId)),
                 });
             },
         });
@@ -102,8 +102,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             handleUnsupportedCoId(mapRawData, war.getGcData());
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
-                war             : war,
-                srcMapRawData   : mapRawData,
+                war           : war,
+                srcMapRawData : mapRawData,
             });
             this.closePanel();
         };
@@ -114,15 +114,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
@@ -161,8 +161,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             handleUnsupportedCoId(mapRawData, war.getGcData());
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
-                war             : war,
-                srcMapRawData   : mapRawData,
+                war           : war,
+                srcMapRawData : mapRawData,
             });
             this.closePanel();
         };
@@ -173,15 +173,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
@@ -191,14 +191,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnImportMapFromMapEditorSlot(): void {
         const war = this.getOpenData()?.war;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
-            currentSlotIndex        : 0,
-            needConfirmOverwrite    : false,
-            needNonEmptySlot        : true,
-            getHelpText             : null,
-            callback                : async slotIndex => {
+            currentSlotIndex     : 0,
+            needConfirmOverwrite : false,
+            needNonEmptySlot     : true,
+            getHelpText          : null,
+            callback             : async slotIndex => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MeImportContentPanel, {
-                    war             : war,
-                    srcMapRawData   : Helpers_Misc.getExisted((await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData),
+                    war           : war,
+                    srcMapRawData : Helpers_Misc.getExisted((await MapEditor_Model_MeModel.getMapEditorData(slotIndex))?.mapRawData),
                 });
             },
         });
@@ -229,15 +229,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },

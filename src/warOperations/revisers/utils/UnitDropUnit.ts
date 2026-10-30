@@ -26,7 +26,9 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitDr
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const revisedPath   = WarOperations_Revisers_Utils_Common.getRevisedPath({
+        war, rawPath, launchUnitId, requesterUserId, 
+    });
     const rawPathNodes  = rawPath?.getNodes().map(v => Helpers_Misc.getExisted(AuxiliaryTypes_GridIndex.GridIndex.convertGridIndex(v))) ?? [];
     if (WarOperations_Revisers_Utils_Common.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
         throw Helpers_Misc.newError(`Destination occupied.`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_02);
@@ -40,11 +42,11 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoUnitDr
     const revisedDropDestinations   = getRevisedDropDestinations(war, rawAction, revisedPath);
     const isDropBlocked             =  (!revisedPath.isBlocked) && (revisedDropDestinations.length < dropDestinations.length);
     return WoContainer.fromJson({
-        WoUnitDropUnit   : {
-            path                : revisedPath.toProto().toJson(),
-            launchUnitId        : launchUnitId,
-            dropDestinations    : revisedDropDestinations.map(v => v.toProto().toJson()),
-            isDropBlocked       : isDropBlocked,
+        WoUnitDropUnit : {
+            path             : revisedPath.toProto().toJson(),
+            launchUnitId     : launchUnitId,
+            dropDestinations : revisedDropDestinations.map(v => v.toProto().toJson()),
+            isDropBlocked    : isDropBlocked,
         },
     });
 }
@@ -130,13 +132,13 @@ function checkIsDropDestinationsValid(war: BaseWar_Interface_IBwWar.IBwWar, acti
         const existingUnit = unitMap.getUnitOnMap(droppingGridIndex);
         if ((existingUnit) && (existingUnit !== loaderUnit)) {
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
-                war                 : war,
-                gridIndex           : droppingGridIndex,
-                unitType            : existingUnit.getUnitType(),
-                isDiving            : existingUnit.getIsDiving(),
-                isInvisible         : existingUnit.checkIsInvisible(droppingGridIndex),
-                unitPlayerIndex     : existingUnit.getPlayerIndex(),
-                observerTeamIndex   : teamIndex,
+                war               : war,
+                gridIndex         : droppingGridIndex,
+                unitType          : existingUnit.getUnitType(),
+                isDiving          : existingUnit.getIsDiving(),
+                isInvisible       : existingUnit.checkIsInvisible(droppingGridIndex),
+                unitPlayerIndex   : existingUnit.getPlayerIndex(),
+                observerTeamIndex : teamIndex,
             })) {
                 return false;
             }

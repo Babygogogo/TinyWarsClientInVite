@@ -36,14 +36,14 @@ const getGridHeight = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurren
 
 export class TileMapView extends Ui_Components_UiContainer.UiContainer implements Tiles_ITileMapView.ITileMapView {
     private readonly _borderLayer               = new Ui_Components_UiContainer.UiContainer();
-    private readonly _imgCornerUL               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0000` });
-    private readonly _imgCornerUR               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0001` });
-    private readonly _imgCornerDR               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0002` });
-    private readonly _imgCornerDL               = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedCorner0003` });
-    private readonly _imgBorderU                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0000` });
-    private readonly _imgBorderR                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0001` });
-    private readonly _imgBorderD                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0002` });
-    private readonly _imgBorderL                = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedBorder0003` });
+    private readonly _imgCornerUL               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0000` });
+    private readonly _imgCornerUR               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0001` });
+    private readonly _imgCornerDR               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0002` });
+    private readonly _imgCornerDL               = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedCorner0003` });
+    private readonly _imgBorderU                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0000` });
+    private readonly _imgBorderR                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0001` });
+    private readonly _imgBorderD                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0002` });
+    private readonly _imgBorderL                = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedBorder0003` });
 
     private readonly _tileViewArray             : Tiles_ITileView.ITileView[] = [];
     private readonly _baseLayer                 = new Ui_Components_UiContainer.UiContainer();
@@ -59,17 +59,17 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
     private readonly _markLayer                 = new Ui_Components_UiContainer.UiContainer();
 
     private readonly _notifyListeners: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.TileAnimationTick,                                   callback: this._onNotifyTileAnimationTick },
-        { type: Notifications_TypeId.TypeId.StateIndicatorTick,                                  callback: this._onNotifyStateIndicatorTick },
-        { type: Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback: this._onNotifyIsShowGridBorderChanged },
-        { type: Notifications_TypeId.TypeId.BwTileHasLocationIdSet,                              callback: this._onNotifyBwTileHasLocationIdSet },
-        { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,                           callback: this._onNotifyBwOverridingSkinIdChanged },
-        { type: Notifications_TypeId.TypeId.GridMarkAdded,                                       callback: this._onNotifyGridMarkAdded },
-        { type: Notifications_TypeId.TypeId.GridMarkDeleted,                                     callback: this._onNotifyGridMarkDeleted },
-        { type: Notifications_TypeId.TypeId.GridMarkListChanged,                                 callback: this._onNotifyGridMarkListChanged },
-        { type: Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged,                     callback: this._onNotifyHiddenGridMarkTypeIdListChanged },
-        { type: Notifications_TypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,    callback: this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
-        { type: Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,                  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
+        { type : Notifications_TypeId.TypeId.TileAnimationTick,                                   callback : this._onNotifyTileAnimationTick },
+        { type : Notifications_TypeId.TypeId.StateIndicatorTick,                                  callback : this._onNotifyStateIndicatorTick },
+        { type : Notifications_TypeId.TypeId.UserSettingsIsShowGridBorderChanged,                 callback : this._onNotifyIsShowGridBorderChanged },
+        { type : Notifications_TypeId.TypeId.BwTileHasLocationIdSet,                              callback : this._onNotifyBwTileHasLocationIdSet },
+        { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,                           callback : this._onNotifyBwOverridingSkinIdChanged },
+        { type : Notifications_TypeId.TypeId.GridMarkAdded,                                       callback : this._onNotifyGridMarkAdded },
+        { type : Notifications_TypeId.TypeId.GridMarkDeleted,                                     callback : this._onNotifyGridMarkDeleted },
+        { type : Notifications_TypeId.TypeId.GridMarkListChanged,                                 callback : this._onNotifyGridMarkListChanged },
+        { type : Notifications_TypeId.TypeId.HiddenGridMarkTypeIdListChanged,                     callback : this._onNotifyHiddenGridMarkTypeIdListChanged },
+        { type : Notifications_TypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,    callback : this._onNotifyBwPlayerPlayerIndexArrayForShowMarkedGridUpdated },
+        { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,                  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
     private _tileMap?: Tiles_ITileMap.ITileMap;
@@ -162,7 +162,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
             const gridBorderLayer   = this._gridBorderLayer;
             gridBorderLayer.removeUiChildren();
             for (let x = 1; x < mapWidth; ++x) {
-                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
+                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
                 img.setIsSmoothing(false);
                 img.setUnscaledManualWidth(1);
                 img.setUnscaledManualHeight(borderHeight);
@@ -170,7 +170,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
                 gridBorderLayer.addUiChild(img);
             }
             for (let y = 1; y < mapHeight; ++y) {
-                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorBlack0000` });
+                const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorBlack0000` });
                 img.setIsSmoothing(false);
                 img.setUnscaledManualWidth(borderWidth);
                 img.setUnscaledManualHeight(1);
@@ -186,7 +186,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
             for (let y = 0; y < mapHeight; ++y) {
                 for (let x = 0; x < mapWidth; ++x) {
-                    const imgLocation       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
+                    const imgLocation       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
                     imgLocation.setIsSmoothing(false);
                     imgLocation.setX(x * getGridWidth());
                     imgLocation.setY(y * getGridHeight());
@@ -340,7 +340,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
                     const column = matrix[x];
                     for (let y = 0; y < mapHeight; ++y) {
                         if (column[y] == null) {
-                            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: imgSource });
+                            const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : imgSource });
                             img.setIsSmoothing(false);
                             img.setX(getGridWidth() * x);
                             img.setY(getGridHeight() * y);
@@ -389,7 +389,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
             for (let y = 0; y <= mapHeight; ++y) {
                 for (let x = 0; x < mapWidth; ++x) {
                     if (imgArray[i] == null) {
-                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
+                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
                         imgArray[i]     = img;
                         img.setIsSmoothing(false);
                         container.addUiChild(img);
@@ -407,7 +407,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
             for (let y = 0; y < mapHeight; ++y) {
                 for (let x = 0; x <= mapWidth; ++x) {
                     if (imgArray[i] == null) {
-                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName: `uncompressedColorWhite0000` });
+                        const img       = new Ui_Components_UiImage.UiImage({ textureSourceName : `uncompressedColorWhite0000` });
                         imgArray[i]     = img;
                         img.setIsSmoothing(false);
                         container.addUiChild(img);
@@ -479,7 +479,7 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
             for (const coGridIndex of gridIndexList) {
                 const { x: coX, y: coY } = coGridIndex.getXY();
-                for (const gridIndex of coGridIndex.getGridsWithinDistance({ minDistance: radius, maxDistance: radius, mapSize })) {
+                for (const gridIndex of coGridIndex.getGridsWithinDistance({ minDistance : radius, maxDistance : radius, mapSize })) {
                     const { x, y }  = gridIndex.getXY();
                     const deltaX    = x - coX;
                     if (deltaX >= 0) {
@@ -505,9 +505,9 @@ export class TileMapView extends Ui_Components_UiContainer.UiContainer implement
 
         const coZoneContainer = this._coZoneContainer;
         coZoneContainer.setAlpha(0);
-        Tween_Executor.Executor.get(coZoneContainer, { loop: true })
-            .to({ customAlpha: 0.75 }, 1000)
-            .to({ customAlpha: 0 }, 1000);
+        Tween_Executor.Executor.get(coZoneContainer, { loop : true })
+            .to({ customAlpha : 0.75 }, 1000)
+            .to({ customAlpha : 0 }, 1000);
     }
     private _stopCoZoneAnimation(): void {
         Tween_Executor.Executor.removeTweens(this._coZoneContainer);

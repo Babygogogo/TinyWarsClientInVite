@@ -23,9 +23,9 @@ export class McrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         super(
             gcData,
             SettingsForCommon.fromJson({
-                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
-            })
+                turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+            }),
         );
 
         this._mapRawData = mapRawData;
@@ -33,7 +33,7 @@ export class McrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         this.getSettingsForMcw().setNormalMapId(mapRawData.getNormalMapId());
         this.getSettingsForCommon().setConfigVersion(gcData.getVersion());
         this.resetDataByTemplateWarRuleId(Helpers_Misc.getExisted(
-            mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanMcw())?.getRuleId()
+            mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanMcw())?.getRuleId(),
         ));
     }
 
@@ -45,12 +45,12 @@ export class McrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         settingsForMcw.setBootTimerParams(this.getBootTimerParams());
 
         return McrCreateRoomRequest.fromJson({
-            settingsForCommon       : this.getSettingsForCommon().toJson(),
-            settingsForMcw          : settingsForMcw.toJson(),
+            settingsForCommon : this.getSettingsForCommon().toJson(),
+            settingsForMcw    : settingsForMcw.toJson(),
 
-            selfPlayerIndex         : this.getSelfPlayerIndex(),
-            selfCoId                : this.getSelfCoId(),
-            selfUnitAndTileSkinId   : this.getSelfUnitAndTileSkinId(),
+            selfPlayerIndex       : this.getSelfPlayerIndex(),
+            selfCoId              : this.getSelfCoId(),
+            selfUnitAndTileSkinId : this.getSelfUnitAndTileSkinId(),
         });
     }
 
@@ -67,23 +67,23 @@ export class McrRoomCreator extends MultiPlayerRooms_RoomCreatorBase.RoomCreator
         if (templateWarRuleId == null) {
             settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.createDefault(
                 mapRawData.getPlayersCountUnneutral(),
-                this.getGcData()
+                this.getGcData(),
             ));
         } else {
             settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
-                templateWarRule             : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(r => r.getRuleId() === templateWarRuleId)),
-                warEventFullData            : mapRawData.getWarEventFullData(),
-                allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-                taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+                templateWarRule           : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(r => r.getRuleId() === templateWarRuleId)),
+                warEventFullData          : mapRawData.getWarEventFullData(),
+                allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+                taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
             }));
         }
 
         const warRuleCommonData     = Helpers_Misc.getExisted(this.getInstanceWarRule().getWarRuleCommonData());
         const availableCoIdArray    = [...PlayerRules_Utils.getFinalMcwHumanCoIdSet({
-            playerRule          : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, this.getSelfPlayerIndex()),
-            gameConfiguration   : this.getGcData(),
-            hasFogByDefault     : warRuleCommonData.getHasFogByDefault(),
-            includeRandom       : true,
+            playerRule        : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, this.getSelfPlayerIndex()),
+            gameConfiguration : this.getGcData(),
+            hasFogByDefault   : warRuleCommonData.getHasFogByDefault(),
+            includeRandom     : true,
         })];
         if (availableCoIdArray.indexOf(this.getSelfCoId()) < 0) {
             this.setSelfCoId(Cos_Utils.pickRandomCo(availableCoIdArray));

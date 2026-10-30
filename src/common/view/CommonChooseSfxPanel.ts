@@ -31,10 +31,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                    callback: this.closePanel },
+            { ui : this._btnClose,                    callback : this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -86,10 +86,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig    = openData.gameConfig;
         for (const sfxCode of Sounds_Utils.getAllSfxCodeArray()) {
             dataArray.push({
-                callback    : callback,
-                sfxCode     : sfxCode,
-                gameConfig  : gameConfig,
-                panel       : this,
+                callback   : callback,
+                sfxCode    : sfxCode,
+                gameConfig : gameConfig,
+                panel      : this,
             });
         }
         return dataArray;
@@ -112,10 +112,10 @@ class SfxRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupSelect,                    callback: this._onTouchedGroupSelect },
+            { ui : this._groupSelect,                    callback : this._onTouchedGroupSelect },
         ]);
         this._applySettingsForWholeTouch(true, true, undefined, Sounds_Constants.ShortSfxCode.None);
     }

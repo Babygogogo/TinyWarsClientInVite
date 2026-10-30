@@ -72,31 +72,31 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnReset,                   callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,                  callback: this._onTouchedBtnSearch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnReset,                   callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,                  callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnModifyUserInRoom,        callback: this._onTouchedBtnModifyUserInRoom },
-            { ui: this._btnDeleteUserInRoom,        callback: this._onTouchedBtnDeleteUserInRoom },
+            { ui : this._btnModifyUserInRoom,        callback : this._onTouchedBtnModifyUserInRoom },
+            { ui : this._btnDeleteUserInRoom,        callback : this._onTouchedBtnDeleteUserInRoom },
 
-            { ui: this._btnModifyUserNotInRoom,     callback: this._onTouchedBtnModifyUserNotInRoom },
-            { ui: this._btnDeleteUserNotInRoom,     callback: this._onTouchedBtnDeleteUserNotInRoom },
+            { ui : this._btnModifyUserNotInRoom,     callback : this._onTouchedBtnModifyUserNotInRoom },
+            { ui : this._btnDeleteUserNotInRoom,     callback : this._onTouchedBtnDeleteUserNotInRoom },
 
-            { ui: this._btnModifyRoomId,            callback: this._onTouchedBtnModifyRoomId },
-            { ui: this._btnDeleteRoomId,            callback: this._onTouchedBtnDeleteRoomId },
+            { ui : this._btnModifyRoomId,            callback : this._onTouchedBtnModifyRoomId },
+            { ui : this._btnDeleteRoomId,            callback : this._onTouchedBtnDeleteRoomId },
 
-            { ui: this._btnModifyMapName,           callback: this._onTouchedBtnModifyMapName },
-            { ui: this._btnDeleteMapName,           callback: this._onTouchedBtnDeleteMapName },
+            { ui : this._btnModifyMapName,           callback : this._onTouchedBtnModifyMapName },
+            { ui : this._btnDeleteMapName,           callback : this._onTouchedBtnDeleteMapName },
 
-            { ui: this._btnModifyHasFog,            callback: this._onTouchedBtnModifyHasFog },
-            { ui: this._btnDeleteHasFog,            callback: this._onTouchedBtnDeleteHasFog },
+            { ui : this._btnModifyHasFog,            callback : this._onTouchedBtnModifyHasFog },
+            { ui : this._btnDeleteHasFog,            callback : this._onTouchedBtnDeleteHasFog },
 
-            { ui: this._btnModifyCoCategory,        callback: this._onTouchedBtnModifyCoCategory },
-            { ui: this._btnDeleteCoCategory,        callback: this._onTouchedBtnDeleteCoCategory },
+            { ui : this._btnModifyCoCategory,        callback : this._onTouchedBtnModifyCoCategory },
+            { ui : this._btnDeleteCoCategory,        callback : this._onTouchedBtnDeleteCoCategory },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -129,8 +129,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnModifyUserInRoom(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0023),
-            callbackOnConfirm   : userId => {
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0023),
+            callbackOnConfirm : userId => {
                 this._filter.userIdInRoom = userId;
                 this._updateLabelUserInRoom();
             },
@@ -143,8 +143,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnModifyUserNotInRoom(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0027),
-            callbackOnConfirm   : userId => {
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0027),
+            callbackOnConfirm : userId => {
                 this._filter.userIdNotInRoom = userId;
                 this._updateLabelUserNotInRoom();
             },
@@ -158,11 +158,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyRoomId(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0814),
-            minValue        : 0,
-            maxValue        : 99999999,
-            currentValue    : filter.roomId ?? 0,
-            callback        : roomId => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0814),
+            minValue     : 0,
+            maxValue     : 99999999,
+            currentValue : filter.roomId ?? 0,
+            callback     : roomId => {
                 filter.roomId = roomId;
                 this._updateLabelRoomId();
             },
@@ -176,16 +176,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMapName(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0225),
-            currentValue    : filter.mapName ?? ``,
-            maxChars        : 20,
-            canBeEmpty      : true,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0225),
+            currentValue : filter.mapName ?? ``,
+            maxChars     : 20,
+            canBeEmpty   : true,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 filter.mapName = panel.getInputText();
                 this._updateLabelMapName();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMapName(): void {
@@ -207,11 +207,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter        = this._filter;
         const gameConfig    = await GameConfigs_Provider.getLatestGameConfig();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoCategoryIdPanel, {
-            currentCoCategoryId             : filter.coCategoryId ?? null,
-            gameConfig                      : gameConfig,
-            availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
-            isBan                           : false,
-            callbackOnConfirm               : coCategoryId => {
+            currentCoCategoryId        : filter.coCategoryId ?? null,
+            gameConfig                 : gameConfig,
+            availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
+            isBan                      : false,
+            callbackOnConfirm          : coCategoryId => {
                 filter.coCategoryId = coCategoryId;
                 this._updateLabelCoCategory();
             },

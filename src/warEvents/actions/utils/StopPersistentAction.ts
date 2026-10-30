@@ -47,11 +47,11 @@ export function getErrorTip(data: WeaStopPersistentAction, fullData: WarEventFul
     return null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function applyWithExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function applyWithoutExtraData(action: WeaStopPersistentAction, isFastExecute: boolean, war: BaseWar_Interface_IBwWar.IBwWar): Promise<void> {
     war.getWarEventManager().updateOpaIdArrayOnDeleteAction(action.getActionIdArray());
 }

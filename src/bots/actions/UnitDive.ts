@@ -15,14 +15,16 @@ export async function getScoreAndActionUnitDive(unit: Units_IUnit.IUnit, pathNod
         const score = await getScoreForActionUnitDive(unit);
         return {
             score,
-            action  : WoContainer.fromJson({ WoUnitDive: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-            } }),
+            action : WoContainer.fromJson({
+                WoUnitDive : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                }, 
+            }),
         };
     }
 }

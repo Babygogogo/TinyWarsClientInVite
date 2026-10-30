@@ -49,7 +49,7 @@ import {
 import type { S as SpmCreateSfwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 enum PanelSkinState {
     Normal,
     Expanded,
@@ -99,38 +99,38 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.BwPlayerFundChanged,             callback: this._onNotifyBwPlayerFundChanged },
-            { type: Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback: this._onNotifyBwPlayerIndexInTurnChanged },
-            { type: Notifications_TypeId.TypeId.BwTurnIndexChanged,              callback: this._onNotifyBwTurnIndexChanged },
-            { type: Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback: this._onNotifyBwCoEnergyChanged },
-            { type: Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: Notifications_TypeId.TypeId.BwCoIdChanged,                   callback: this._onNotifyBwCoIdChanged },
-            { type: Notifications_TypeId.TypeId.BwForceWeatherTypeChanged,       callback: this._onNotifyBwForceWeatherTypeChanged },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: Notifications_TypeId.TypeId.WarOperationNormalExecuted,      callback: this._onNotifyWarOperationNormalExecuted },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback: this._onNotifyMsgChatGetAllReadProgressList },
-            { type: Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback: this._onNotifyMsgChatUpdateReadProgress },
-            { type: Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback: this._onNotifyMsgChatGetAllMessages },
-            { type: Notifications_TypeId.TypeId.MsgChatAddMessage,               callback: this._onNotifyMsgChatAddMessage },
-            { type: Notifications_TypeId.TypeId.MsgSpmCreateSfw,                 callback: this._onNotifyMsgSpmCreateSfw },
-            { type: Notifications_TypeId.TypeId.MsgSpmSaveScw,                   callback: this._onNotifyMsgSpmSaveScw },
-            { type: Notifications_TypeId.TypeId.MsgSpmSaveSfw,                   callback: this._onNotifyMsgSpmSaveSfw },
-            { type: Notifications_TypeId.TypeId.MsgSpmSaveSrw,                   callback: this._onNotifyMsgSpmSaveSrw },
-            { type: Notifications_TypeId.TypeId.MsgCampaignSaveWar,              callback: this._onNotifyMsgCampaignSaveWar },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.BwPlayerFundChanged,             callback : this._onNotifyBwPlayerFundChanged },
+            { type : Notifications_TypeId.TypeId.BwPlayerIndexInTurnChanged,      callback : this._onNotifyBwPlayerIndexInTurnChanged },
+            { type : Notifications_TypeId.TypeId.BwTurnIndexChanged,              callback : this._onNotifyBwTurnIndexChanged },
+            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,               callback : this._onNotifyBwCoEnergyChanged },
+            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,       callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : Notifications_TypeId.TypeId.BwCoIdChanged,                   callback : this._onNotifyBwCoIdChanged },
+            { type : Notifications_TypeId.TypeId.BwForceWeatherTypeChanged,       callback : this._onNotifyBwForceWeatherTypeChanged },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,       callback : this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.WarOperationNormalExecuted,      callback : this._onNotifyWarOperationNormalExecuted },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllReadProgressList,   callback : this._onNotifyMsgChatGetAllReadProgressList },
+            { type : Notifications_TypeId.TypeId.MsgChatUpdateReadProgress,       callback : this._onNotifyMsgChatUpdateReadProgress },
+            { type : Notifications_TypeId.TypeId.MsgChatGetAllMessages,           callback : this._onNotifyMsgChatGetAllMessages },
+            { type : Notifications_TypeId.TypeId.MsgChatAddMessage,               callback : this._onNotifyMsgChatAddMessage },
+            { type : Notifications_TypeId.TypeId.MsgSpmCreateSfw,                 callback : this._onNotifyMsgSpmCreateSfw },
+            { type : Notifications_TypeId.TypeId.MsgSpmSaveScw,                   callback : this._onNotifyMsgSpmSaveScw },
+            { type : Notifications_TypeId.TypeId.MsgSpmSaveSfw,                   callback : this._onNotifyMsgSpmSaveSfw },
+            { type : Notifications_TypeId.TypeId.MsgSpmSaveSrw,                   callback : this._onNotifyMsgSpmSaveSrw },
+            { type : Notifications_TypeId.TypeId.MsgCampaignSaveWar,              callback : this._onNotifyMsgCampaignSaveWar },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnWeather,         callback: this._onTouchedBtnWeather },
-            { ui: this._groupPlayer,        callback: this._onTouchedGroupPlayer },
-            { ui: this._groupScore,         callback: this._onTouchedGroupScore },
-            { ui: this._groupCo,            callback: this._onTouchedGroupCo },
-            { ui: this._groupInfo,          callback: this._onTouchedGroupInfo },
-            { ui: this._btnSave,            callback: this._onTouchedBtnSave },
-            { ui: this._btnLoad,            callback: this._onTouchedBtnLoad },
-            { ui: this._btnChat,            callback: this._onTouchedBtnChat },
-            { ui: this._btnExpand,          callback: this._onTouchedBtnExpand },
-            { ui: this._btnNarrow,          callback: this._onTouchedBtnNarrow },
-            { ui: this._groupPauseAi,       callback: this._onTouchedGroupPauseAi },
+            { ui : this._btnWeather,         callback : this._onTouchedBtnWeather },
+            { ui : this._groupPlayer,        callback : this._onTouchedGroupPlayer },
+            { ui : this._groupScore,         callback : this._onTouchedGroupScore },
+            { ui : this._groupCo,            callback : this._onTouchedGroupCo },
+            { ui : this._groupInfo,          callback : this._onTouchedGroupInfo },
+            { ui : this._btnSave,            callback : this._onTouchedBtnSave },
+            { ui : this._btnLoad,            callback : this._onTouchedBtnLoad },
+            { ui : this._btnChat,            callback : this._onTouchedBtnChat },
+            { ui : this._btnExpand,          callback : this._onTouchedBtnExpand },
+            { ui : this._btnNarrow,          callback : this._onTouchedBtnNarrow },
+            { ui : this._groupPauseAi,       callback : this._onTouchedGroupPauseAi },
         ]);
         this._listPlayer.setItemRendererClass(PlayerRenderer);
     }
@@ -161,9 +161,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         this._updateView();
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyBwTurnIndexChanged(): void {
@@ -181,9 +181,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : war,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            war                            : war,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     }
     private _onNotifyBwCoIdChanged(e: Egret_Egret.Event): void {
@@ -287,7 +287,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedGroupScore(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0997),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0997),
         });
     }
 
@@ -332,22 +332,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (war.getSaveSlotIndex() == null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-                currentSlotIndex        : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
-                needComment             : true,
-                needConfirmOverwrite    : true,
-                callback                : (slotIndex, comment) => {
+                currentSlotIndex     : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
+                needComment          : true,
+                needConfirmOverwrite : true,
+                callback             : (slotIndex, comment) => {
                     const saveSlotExtraData = war.getSaveSlotExtraData();
                     SinglePlayerMode_Model_SpmProxy.reqSpmCreateSfw({
-                        slotIndex       : slotIndex,
-                        slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                            slotComment             : comment,
-                            mpwWarId                : saveSlotExtraData.getMpwWarId(),
-                            overridingSkinIdArray   : [],
-                            gridMarkData            : saveSlotExtraData.getGridMarkData()?.toJson(),
+                        slotIndex     : slotIndex,
+                        slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                            slotComment           : comment,
+                            mpwWarId              : saveSlotExtraData.getMpwWarId(),
+                            overridingSkinIdArray : [],
+                            gridMarkData          : saveSlotExtraData.getGridMarkData()?.toJson(),
                         }),
-                        warData         : war.serializeForCreateSfw(),
+                        warData : war.serializeForCreateSfw(),
                     });
-                }
+                },
             });
             return;
         }
@@ -355,7 +355,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0260),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0071),
-            callback: () => {
+            callback   : () => {
                 const warType = war.getWarType();
                 if ((warType === WarTypes_Constants.WarTypeId.ScwFog) || (warType === WarTypes_Constants.WarTypeId.ScwStd)) {
                     SinglePlayerMode_Model_SpmProxy.reqSpmSaveScw(war);
@@ -397,14 +397,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle    : () => Lang_Utils.getText(Lang_Constants.TextType.B0261),
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
-            callback    : () => {
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0261),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+            callback   : () => {
                 Helpers_GameFlow.gotoSinglePlayerWar({
-                    slotIndex           : slotInfo.slotIndex,
-                    warData             : slotInfo.warData,
-                    slotExtraData       : slotInfo.extraData,
-                    overridingBgmCode   : war.getOverridingBgmCode(),
+                    slotIndex         : slotInfo.slotIndex,
+                    warData           : slotInfo.warData,
+                    slotExtraData     : slotInfo.extraData,
+                    overridingBgmCode : war.getOverridingBgmCode(),
                 });
             },
         });
@@ -412,7 +412,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnChat(): void {
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().SpwWarMenuPanel);
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({}) });
     }
 
     private _onTouchedBtnExpand(): void {
@@ -661,12 +661,12 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.BwPlayerFundChanged,         callback: this._onNotifyBwPlayerFundChanged },
-            { type: Notifications_TypeId.TypeId.WarOperationNormalExecuted,  callback: this._onNotifyWarOperationNormalExecuted },
-            { type: Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,   callback: this._onNotifyBwCoUsingSkillChanged },
-            { type: Notifications_TypeId.TypeId.BwCoEnergyChanged,           callback: this._onNotifyBwCoEnergyChanged },
-            { type: Notifications_TypeId.TypeId.BwCoIdChanged,               callback: this._onNotifyBwCoIdChanged },
-            { type: Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type : Notifications_TypeId.TypeId.BwPlayerFundChanged,         callback : this._onNotifyBwPlayerFundChanged },
+            { type : Notifications_TypeId.TypeId.WarOperationNormalExecuted,  callback : this._onNotifyWarOperationNormalExecuted },
+            { type : Notifications_TypeId.TypeId.BwCoUsingSkillTypeChanged,   callback : this._onNotifyBwCoUsingSkillChanged },
+            { type : Notifications_TypeId.TypeId.BwCoEnergyChanged,           callback : this._onNotifyBwCoEnergyChanged },
+            { type : Notifications_TypeId.TypeId.BwCoIdChanged,               callback : this._onNotifyBwCoIdChanged },
+            { type : Notifications_TypeId.TypeId.BwOverridingSkinIdChanged,   callback : this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._applySettingsForWholeTouch();
     }

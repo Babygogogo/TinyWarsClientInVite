@@ -28,9 +28,9 @@ export function checkIsValidFund(fund: number): boolean {
 }
 export function getValidFund(fund: number): number {
     return Numbers_Utils.getValueInRange({
-        minValue    : Players_Constants.Fund.MinFund,
-        maxValue    : Players_Constants.Fund.MaxFund,
-        rawValue    : Math.floor(fund),
+        minValue : Players_Constants.Fund.MinFund,
+        maxValue : Players_Constants.Fund.MaxFund,
+        rawValue : Math.floor(fund),
     });
 }
 

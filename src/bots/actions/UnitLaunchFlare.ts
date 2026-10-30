@@ -25,19 +25,21 @@ export async function getScoreAndActionUnitLaunchFlare(commonParams: Bots_Common
 
     const flareMaxRange     = Helpers_Misc.getExisted(unit.getFlareMaxRange(destination), Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchFlare_00);
     const promiseArray      : Promise<Bots_Types.ScoreAndAction | null>[] = [];
-    for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: 0, maxDistance: flareMaxRange, mapSize: commonParams.getMapSize() })) {
+    for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance : 0, maxDistance : flareMaxRange, mapSize : commonParams.getMapSize() })) {
         promiseArray.push((async () => {
             return {
-                score   : await getScoreForActionUnitLaunchFlare(commonParams, unit, destination, targetGridIndex),
-                action  : WoContainer.fromJson({ WoUnitLaunchFlare: {
-                    path        : {
-                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                        isBlocked       : false,
-                    },
-                    launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                    targetGridIndex : targetGridIndex.toProto().toJson(),
-                } }),
+                score  : await getScoreForActionUnitLaunchFlare(commonParams, unit, destination, targetGridIndex),
+                action : WoContainer.fromJson({
+                    WoUnitLaunchFlare : {
+                        path : {
+                            nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                            fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                            isBlocked       : false,
+                        },
+                        launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                        targetGridIndex : targetGridIndex.toProto().toJson(),
+                    }, 
+                }),
             };
         })());
     }
@@ -53,7 +55,7 @@ async function getScoreForActionUnitLaunchFlare(commonParams: Bots_CommonParams.
     const war           = commonParams.getWar();
     const unitMap       = war.getUnitMap();
     let score           = 0;
-    for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: flareRadius, mapSize: commonParams.getMapSize() })) {
+    for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : flareRadius, mapSize : commonParams.getMapSize() })) {
         const u = unitMap.getUnitOnMap(gridIndex);
         if ((u)                                 &&
             (!u.getIsDiving())                  &&

@@ -75,37 +75,37 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnReset,                   callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,                  callback: this._onTouchedBtnSearch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnReset,                   callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,                  callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnModifyMapName,           callback: this._onTouchedBtnModifyMapName },
-            { ui: this._btnDeleteMapName,           callback: this._onTouchedBtnDeleteMapName },
+            { ui : this._btnModifyMapName,           callback : this._onTouchedBtnModifyMapName },
+            { ui : this._btnDeleteMapName,           callback : this._onTouchedBtnDeleteMapName },
 
-            { ui: this._btnModifyMapDesigner,       callback: this._onTouchedBtnModifyMapDesigner },
-            { ui: this._btnDeleteMapDesigner,       callback: this._onTouchedBtnDeleteMapDesigner },
+            { ui : this._btnModifyMapDesigner,       callback : this._onTouchedBtnModifyMapDesigner },
+            { ui : this._btnDeleteMapDesigner,       callback : this._onTouchedBtnDeleteMapDesigner },
 
-            { ui: this._btnModifyPlayersCount,      callback: this._onTouchedBtnModifyPlayersCount },
-            { ui: this._btnDeletePlayersCount,      callback: this._onTouchedBtnDeletePlayersCount },
+            { ui : this._btnModifyPlayersCount,      callback : this._onTouchedBtnModifyPlayersCount },
+            { ui : this._btnDeletePlayersCount,      callback : this._onTouchedBtnDeletePlayersCount },
 
-            { ui: this._btnModifyPlayedTimes,       callback: this._onTouchedBtnModifyPlayedTimes },
-            { ui: this._btnDeletePlayedTimes,       callback: this._onTouchedBtnDeletePlayedTimes },
+            { ui : this._btnModifyPlayedTimes,       callback : this._onTouchedBtnModifyPlayedTimes },
+            { ui : this._btnDeletePlayedTimes,       callback : this._onTouchedBtnDeletePlayedTimes },
 
-            { ui: this._btnModifyMinRating,         callback: this._onTouchedBtnModifyMinRating },
-            { ui: this._btnDeleteMinRating,         callback: this._onTouchedBtnDeleteMinRating },
+            { ui : this._btnModifyMinRating,         callback : this._onTouchedBtnModifyMinRating },
+            { ui : this._btnDeleteMinRating,         callback : this._onTouchedBtnDeleteMinRating },
 
-            { ui: this._btnModifyMapTag,            callback: this._onTouchedBtnModifyMapTag },
-            { ui: this._btnDeleteMapTag,            callback: this._onTouchedBtnDeleteMapTag },
+            { ui : this._btnModifyMapTag,            callback : this._onTouchedBtnModifyMapTag },
+            { ui : this._btnDeleteMapTag,            callback : this._onTouchedBtnDeleteMapTag },
 
-            { ui: this._btnModifyMapWidth,          callback: this._onTouchedBtnMapWidth },
-            { ui: this._btnDeleteMapWidth,          callback: this._onTouchedBtnDeleteMapWidth },
+            { ui : this._btnModifyMapWidth,          callback : this._onTouchedBtnMapWidth },
+            { ui : this._btnDeleteMapWidth,          callback : this._onTouchedBtnDeleteMapWidth },
 
-            { ui: this._btnModifyMapHeight,         callback: this._onTouchedBtnMapHeight },
-            { ui: this._btnDeleteMapHeight,         callback: this._onTouchedBtnDeleteMapHeight },
+            { ui : this._btnModifyMapHeight,         callback : this._onTouchedBtnMapHeight },
+            { ui : this._btnDeleteMapHeight,         callback : this._onTouchedBtnDeleteMapHeight },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -137,16 +137,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMapName(): void {
         const filter = this._mapFilter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0225),
-            currentValue    : filter.mapName ?? ``,
-            maxChars        : 20,
-            canBeEmpty      : true,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0225),
+            currentValue : filter.mapName ?? ``,
+            maxChars     : 20,
+            canBeEmpty   : true,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 filter.mapName = panel.getInputText();
                 this._updateLabelMapName();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMapName(): void {
@@ -157,16 +157,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMapDesigner(): void {
         const filter = this._mapFilter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0251),
-            currentValue    : filter.mapDesigner ?? ``,
-            maxChars        : 20,
-            canBeEmpty      : true,
-            charRestrict    : null,
-            tips            : null,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0251),
+            currentValue : filter.mapDesigner ?? ``,
+            maxChars     : 20,
+            canBeEmpty   : true,
+            charRestrict : null,
+            tips         : null,
+            callback     : panel => {
                 filter.mapDesigner = panel.getInputText();
                 this._updateLabelMapDesigner();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMapDesigner(): void {
@@ -178,15 +178,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter    = this._mapFilter;
         const range     = filter.playersCountRange ?? [];
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0922),
-            minNumber           : 2,
-            maxNumber           : Players_Constants.PlayerIndex.Max,
-            currentLowerNumber  : range[0] ?? 2,
-            currentUpperNumber  : range[1] ?? Players_Constants.PlayerIndex.Max,
-            callback            : (minNumber, maxNumber) => {
+            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0922),
+            minNumber          : 2,
+            maxNumber          : Players_Constants.PlayerIndex.Max,
+            currentLowerNumber : range[0] ?? 2,
+            currentUpperNumber : range[1] ?? Players_Constants.PlayerIndex.Max,
+            callback           : (minNumber, maxNumber) => {
                 filter.playersCountRange = [minNumber, maxNumber];
                 this._updateLabelPlayersCount();
-            }
+            },
         });
     }
     private _onTouchedBtnDeletePlayersCount(): void {
@@ -197,14 +197,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyPlayedTimes(): void {
         const filter = this._mapFilter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0568),
-            currentValue    : filter.playedTimes ?? 0,
-            maxValue        : 9999,
-            minValue        : 0,
-            callback        : playedTimes => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0568),
+            currentValue : filter.playedTimes ?? 0,
+            maxValue     : 9999,
+            minValue     : 0,
+            callback     : playedTimes => {
                 filter.playedTimes = playedTimes;
                 this._updateLabelPlayedTimes();
-            }
+            },
         });
     }
     private _onTouchedBtnDeletePlayedTimes(): void {
@@ -216,15 +216,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter    = this._mapFilter;
         const range     = filter.globalRatingRange ?? [];
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => Lang_Utils.getText(Lang_Constants.TextType.B0569),
-            minNumber           : 0,
-            maxNumber           : 10,
-            currentLowerNumber  : range[0] ?? 0,
-            currentUpperNumber  : range[1] ?? 10,
-            callback            : (minNumber, maxNumber) => {
+            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0569),
+            minNumber          : 0,
+            maxNumber          : 10,
+            currentLowerNumber : range[0] ?? 0,
+            currentUpperNumber : range[1] ?? 10,
+            callback           : (minNumber, maxNumber) => {
                 filter.globalRatingRange = [minNumber, maxNumber];
                 this._updateLabelMinRating();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinRating(): void {
@@ -236,12 +236,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const mapTagData = await NormalMap_Model_NormalMapModel.getMapTag();
         const filter        = this._mapFilter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            availableNumberArray    : Helpers_Collection.getNonNullElements(mapTagData?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
-            currentNumberArray      : MapTags_Utils.getDecodedMapTagIdList(filter.mapTagIdFlags ?? 0),
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
-            getNumberMainText       : mapTagId => Lang_Utils.getLanguageText({ textArray: mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : newMapTagIdArray => {
+            availableNumberArray : Helpers_Collection.getNonNullElements(mapTagData?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
+            currentNumberArray   : MapTags_Utils.getDecodedMapTagIdList(filter.mapTagIdFlags ?? 0),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0445)),
+            getNumberMainText    : mapTagId => Lang_Utils.getLanguageText({ textArray : mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : newMapTagIdArray => {
                 filter.mapTagIdFlags = MapTags_Utils.getEncodedMapTagId(newMapTagIdArray);
                 this._updateLabelMapTag();
             },
@@ -258,11 +258,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue          = 1;
         const maxValue          = Maps_Constants.Common.MaxGridsCount;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1389),
-            currentValue    : filter.minMapWidth,
-            minValue        : minValue,
-            maxValue        : oldMaxMapWidth ?? maxValue,
-            callback        : newMinMapWidth => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1389),
+            currentValue : filter.minMapWidth,
+            minValue     : minValue,
+            maxValue     : oldMaxMapWidth ?? maxValue,
+            callback     : newMinMapWidth => {
                 if (newMinMapWidth == null) {
                     delete filter.minMapWidth;
                 } else {
@@ -271,11 +271,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._updateLabelMapWidth();
 
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1390),
-                    currentValue    : oldMaxMapWidth,
-                    minValue        : newMinMapWidth ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxMapWidth => {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1390),
+                    currentValue : oldMaxMapWidth,
+                    minValue     : newMinMapWidth ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxMapWidth => {
                         if (newMaxMapWidth == null) {
                             delete filter.maxMapWidth;
                         } else {
@@ -300,11 +300,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue          = 1;
         const maxValue          = Maps_Constants.Common.MaxGridsCount;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1391),
-            currentValue    : filter.minMapHeight,
-            minValue        : minValue,
-            maxValue        : oldMaxMapHeight ?? maxValue,
-            callback        : newMinMapHeight => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1391),
+            currentValue : filter.minMapHeight,
+            minValue     : minValue,
+            maxValue     : oldMaxMapHeight ?? maxValue,
+            callback     : newMinMapHeight => {
                 if (newMinMapHeight == null) {
                     delete filter.minMapHeight;
                 } else {
@@ -313,11 +313,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._updateLabelMapHeight();
 
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1392),
-                    currentValue    : oldMaxMapHeight,
-                    minValue        : newMinMapHeight ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxMapHeight => {
+                    getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1392),
+                    currentValue : oldMaxMapHeight,
+                    minValue     : newMinMapHeight ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxMapHeight => {
                         if (newMaxMapHeight == null) {
                             delete filter.maxMapHeight;
                         } else {
@@ -380,7 +380,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const range = this._mapFilter.playersCountRange;
         this._labelPlayersCount.setText(range == null
             ? ``
-            : `${range[0]} ~ ${range[1]}`
+            : `${range[0]} ~ ${range[1]}`,
         );
     }
     private _updateLabelPlayedTimes(): void {
@@ -390,7 +390,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const range = this._mapFilter.globalRatingRange;
         this._labelMinRating.setText(range == null
             ? ``
-            : `${range[0]} ~ ${range[1]}`
+            : `${range[0]} ~ ${range[1]}`,
         );
     }
     private async _updateLabelMapTag(): Promise<void> {
@@ -400,7 +400,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         if (length == 0) {
             label.setText(``);
         } else if (length === 1) {
-            label.setText(Lang_Utils.getLanguageText({ textArray: (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagIdArray[0])?.getNameArray() }) ?? Lang_Constants.UndefinedError);
+            label.setText(Lang_Utils.getLanguageText({ textArray : (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagIdArray[0])?.getNameArray() }) ?? Lang_Constants.UndefinedError);
         } else {
             label.setText(`${length}`);
         }

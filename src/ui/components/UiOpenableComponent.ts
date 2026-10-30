@@ -22,8 +22,7 @@ interface KeyboardListener {
 
 export abstract class UiOpenableComponent<OpenData>
     extends     Ui_Components_UiContainer.UiContainer
-    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData>
-{
+    implements  Ui_Interfaces_IUiOpenableComponent.IUiOpenableComponent<OpenData> {
     private readonly _taskQueueForOpenClose = new AuxiliaryTypes_TaskQueue.TaskQueue<void>();
     private readonly _taskQueueForOpenData  = new AuxiliaryTypes_TaskQueue.TaskQueue<void>();
 

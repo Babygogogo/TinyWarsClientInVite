@@ -137,7 +137,9 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
         mapSize                 : AuxiliaryTypes_MapSize.MapSize;
         playersCountUnneutral   : number;
     }): void {
-        this.init({ data, gameConfig, mapSize, playersCountUnneutral });
+        this.init({
+            data, gameConfig, mapSize, playersCountUnneutral, 
+        });
     }
 
     public startRunning(war: BaseWar_Interface_IBwWar.IBwWar): void {
@@ -308,13 +310,13 @@ export class UnitMap implements Units_IUnitMap.IUnitMap {
 
         const war = this.getWar();
         return (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
-            war                 : war,
-            unitType            : unit.getUnitType(),
-            isDiving            : unit.getIsDiving(),
-            isInvisible         : unit.checkIsInvisible(gridIndex),
-            observerTeamIndex   : war.getPlayerInTurn().getTeamIndex(),
-            gridIndex           : gridIndex,
-            unitPlayerIndex     : unit.getPlayerIndex(),
+            war               : war,
+            unitType          : unit.getUnitType(),
+            isDiving          : unit.getIsDiving(),
+            isInvisible       : unit.checkIsInvisible(gridIndex),
+            observerTeamIndex : war.getPlayerInTurn().getTeamIndex(),
+            gridIndex         : gridIndex,
+            unitPlayerIndex   : unit.getPlayerIndex(),
         }))
             ? unit
             : null;

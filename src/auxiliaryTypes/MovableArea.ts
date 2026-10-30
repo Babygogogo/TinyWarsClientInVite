@@ -51,11 +51,11 @@ export class MovableArea {
         const area              : Data[][] = [];
         const availableGrids    : AvailableMovableGrid[] = [];
         _updateAvailableGrids({
-            grids           : availableGrids,
-            index           : 0,
-            gridIndex       : gridIndex,
-            prev            : null,
-            totalMoveCost   : 0,
+            grids         : availableGrids,
+            index         : 0,
+            gridIndex     : gridIndex,
+            prev          : null,
+            totalMoveCost : 0,
         });
 
         const moveCostDict  = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>>();
@@ -63,7 +63,9 @@ export class MovableArea {
         while (index < availableGrids.length) {
             const availableGrid                     = _sortAvailableMovableGrids(availableGrids, index);
             const { currGridIndex, totalMoveCost }  = availableGrid;
-            if (_checkAndUpdateMovableArea({ area, gridIndex: currGridIndex, prev: availableGrid.prevGridIndex, totalMoveCost })) {
+            if (_checkAndUpdateMovableArea({
+                area, gridIndex : currGridIndex, prev : availableGrid.prevGridIndex, totalMoveCost, 
+            })) {
                 for (const nextGridIndex of currGridIndex.getAdjacentGrids(mapSize)) {
                     const gridId = nextGridIndex.getGridId(mapSize);
                     if (!moveCostDict.has(gridId)) {
@@ -71,7 +73,9 @@ export class MovableArea {
                     }
                     const nextMoveCost = moveCostDict.get(gridId) ?? null;
                     if ((nextMoveCost != null) && (nextMoveCost + totalMoveCost <= maxMoveCost)) {
-                        _updateAvailableGrids({ grids: availableGrids, index: index + 1, gridIndex: nextGridIndex, prev: currGridIndex, totalMoveCost: nextMoveCost + totalMoveCost });
+                        _updateAvailableGrids({
+                            grids : availableGrids, index : index + 1, gridIndex : nextGridIndex, prev : currGridIndex, totalMoveCost : nextMoveCost + totalMoveCost, 
+                        });
                     }
                 }
             }
@@ -110,8 +114,8 @@ function _updateAvailableGrids({ grids, index, gridIndex, prev, totalMoveCost }:
     totalMoveCost   : number;
 }): void {
     const newNode: AvailableMovableGrid = {
-        currGridIndex: gridIndex,
-        prevGridIndex: prev?.clone() ?? null,
+        currGridIndex : gridIndex,
+        prevGridIndex : prev?.clone() ?? null,
         totalMoveCost,
     };
 
@@ -140,7 +144,7 @@ function _checkAndUpdateMovableArea({ area, gridIndex, prev, totalMoveCost }: {
         return false;
     } else {
         area[x][y] = {
-            prevGridIndex: prev?.clone() ?? null,
+            prevGridIndex : prev?.clone() ?? null,
             totalMoveCost,
         };
         return true;

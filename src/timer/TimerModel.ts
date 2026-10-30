@@ -22,8 +22,8 @@ let _serverTimestamp        = 0;
 
 export function init(): void {
     Notifications_Dispatcher.addEventListeners([
-        { type: Notifications_TypeId.TypeId.NetworkConnected,       callback: _onNotifyNetworkConnected, },
-        { type: Notifications_TypeId.TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
+        { type : Notifications_TypeId.TypeId.NetworkConnected,       callback : _onNotifyNetworkConnected },
+        { type : Notifications_TypeId.TypeId.NetworkDisconnected,    callback : _onNotifyNetworkDisconnected },
     ], Timer_TimerModel);
 
     Egret_Egret.setInterval(() => {

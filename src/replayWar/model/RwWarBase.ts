@@ -321,10 +321,10 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         let turnIndex       = turnManager.getTurnIndex();
         let playerIndex     = turnManager.getPlayerIndex();
         const infoArray     : AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointInfo[] = [{
-            checkpointId        : checkpointId,
-            nextOperationId     : this._getFirstOperationId(),
-            turnIndex           : turnIndex,
-            playerIndex         : playerIndex,
+            checkpointId    : checkpointId,
+            nextOperationId : this._getFirstOperationId(),
+            turnIndex       : turnIndex,
+            playerIndex     : playerIndex,
         }];
 
         const allActionArray    = this._srcExecutedOperationArray ?? [];
@@ -456,9 +456,9 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : this,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            war                            : this,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);
@@ -482,9 +482,9 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
         Sounds_SoundPlayer.playCoBgmWithWar({
-            war                             : this,
-            force                           : false,
-            coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            war                            : this,
+            force                          : false,
+            coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);

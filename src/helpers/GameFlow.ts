@@ -78,14 +78,14 @@ import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMar
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 const _NET_EVENTS = [
-    { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },
+    { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonServerDisconnect, callback : _onMsgCommonServerDisconnect },
 ];
 const _NOTIFY_EVENTS = [
-    { type: Notifications_TypeId.TypeId.NetworkConnected,                callback: _onNotifyNetworkConnected, },
-    { type: Notifications_TypeId.TypeId.MsgUserLogin,                    callback: _onMsgUserLogin },
-    { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest,             callback: _onMsgUserLoginAsGuest },
-    { type: Notifications_TypeId.TypeId.MsgUserLogout,                   callback: _onMsgUserLogout },
-    { type: Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,    callback: _onMsgCommonLatestConfigVersion },
+    { type : Notifications_TypeId.TypeId.NetworkConnected,                callback : _onNotifyNetworkConnected },
+    { type : Notifications_TypeId.TypeId.MsgUserLogin,                    callback : _onMsgUserLogin },
+    { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest,             callback : _onMsgUserLoginAsGuest },
+    { type : Notifications_TypeId.TypeId.MsgUserLogout,                   callback : _onMsgUserLogout },
+    { type : Notifications_TypeId.TypeId.MsgCommonLatestConfigVersion,    callback : _onMsgCommonLatestConfigVersion },
 ];
 
 let _hasOnceWentToLobby = false;
@@ -277,9 +277,9 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
-        war                             : war,
-        force                           : true,
-        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        war                            : war,
+        force                          : true,
+        coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoReplayWar(warData: SerialWar, replayId: number): Promise<void> {
@@ -302,9 +302,9 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
-        war                             : war,
-        force                           : true,
-        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        war                            : war,
+        force                          : true,
+        coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
@@ -327,9 +327,9 @@ export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
-        war                             : war,
-        force                           : true,
-        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        war                            : war,
+        force                          : true,
+        coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 }
 export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, overridingBgmCode }: {
@@ -360,9 +360,9 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BroadcastPanel, void 0);
 
     Sounds_SoundPlayer.playCoBgmWithWar({
-        war                             : war,
-        force                           : true,
-        coBgmCodeArrayFromUserSettings  : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+        war                            : war,
+        force                          : true,
+        coBgmCodeArrayFromUserSettings : Users_Model.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
     });
 
     await SinglePlayerWar_Model_SpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
@@ -375,11 +375,11 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
     gridMarkData                : AuxiliaryTypes_AuxiliaryTypes.Undefinable<GridMarkData>;
  }): Promise<void> {
     const war = await MapEditor_Model_MeModel.loadWar({
-        mapRawData                  : mapRawData,
-        slotIndex                   : slotIndex,
-        isReview                    : isReview,
-        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-        gridMarkData                : gridMarkData,
+        mapRawData                : mapRawData,
+        slotIndex                 : slotIndex,
+        isReview                  : isReview,
+        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+        gridMarkData              : gridMarkData,
     });
     MultiPlayerWar_Model_MpwModel.unloadWar();
     SinglePlayerWar_Model_SpwModel.unloadWar();
@@ -419,12 +419,12 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
         _gotoSpmWarListPanel();
     } else if (warType === WarTypes_Constants.WarTypeId.Me) {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleMapEditorSlotPanel, {
-            currentSlotIndex        : 0,
-            needConfirmOverwrite    : false,
-            needNonEmptySlot        : false,
-            allowPlay               : true,
-            getHelpText             : null,
-            callback                : async slotIndex => {
+            currentSlotIndex     : 0,
+            needConfirmOverwrite : false,
+            needNonEmptySlot     : false,
+            allowPlay            : true,
+            getHelpText          : null,
+            callback             : async slotIndex => {
                 const mapEditorData             = await MapEditor_Model_MeModel.getMapEditorData(slotIndex);
                 const reviewStatus              = mapEditorData?.reviewStatus;
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
@@ -432,13 +432,13 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
                         getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0305),
                         getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
-                        callback: () => {
+                        callback   : () => {
                             gotoMapEditorWar({
-                                mapRawData                  : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
-                                slotIndex                   : slotIndex,
-                                isReview                    : false,
-                                srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                                gridMarkData                : mapEditorData?.gridMarkData,
+                                mapRawData                : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
+                                slotIndex                 : slotIndex,
+                                isReview                  : false,
+                                srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                                gridMarkData              : mapEditorData?.gridMarkData,
                             });
                         },
                     });
@@ -446,35 +446,35 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonAlertPanel, {
                         getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0326),
                         getContent : () => mapEditorData?.reviewComment || Lang_Utils.getText(Lang_Constants.TextType.None),
-                        callback: () => {
+                        callback   : () => {
                             gotoMapEditorWar({
-                                mapRawData                  : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
-                                slotIndex                   : slotIndex,
-                                isReview                    : false,
-                                srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                                gridMarkData                : mapEditorData?.gridMarkData,
+                                mapRawData                : Helpers_Misc.getExisted(mapEditorData?.mapRawData),
+                                slotIndex                 : slotIndex,
+                                isReview                  : false,
+                                srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                                gridMarkData              : mapEditorData?.gridMarkData,
                             });
                         },
                     });
                 } else {
                     if (srcNormalMapIdForAddEvent == null) {
                         gotoMapEditorWar({
-                            mapRawData                  : mapEditorData?.mapRawData,
-                            slotIndex                   : slotIndex,
-                            isReview                    : false,
-                            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                            gridMarkData                : mapEditorData?.gridMarkData,
+                            mapRawData                : mapEditorData?.mapRawData,
+                            slotIndex                 : slotIndex,
+                            isReview                  : false,
+                            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                            gridMarkData              : mapEditorData?.gridMarkData,
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
-                            callback    : () => {
+                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.R0015),
+                            callback   : () => {
                                 gotoMapEditorWar({
-                                    mapRawData                  : mapEditorData?.mapRawData,
-                                    slotIndex                   : slotIndex,
-                                    isReview                    : false,
-                                    srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                                    gridMarkData                : mapEditorData?.gridMarkData,
+                                    mapRawData                : mapEditorData?.mapRawData,
+                                    slotIndex                 : slotIndex,
+                                    isReview                  : false,
+                                    srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                                    gridMarkData              : mapEditorData?.gridMarkData,
                                 });
                             },
                         });
@@ -489,9 +489,9 @@ export function gotoMyWarListPanel(warType: WarTypes_Constants.WarTypeId): void 
 export function gotoRwReplayListPanel(openData?: ReplayWar_View_RwReplayListPanel.OpenData): void {
     unloadAllWarsAndOpenCommonPanels();
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().RwReplayListPanel, openData ?? {
-        filter                  : null,
-        usePreviousFilter       : true,
-        usePreviousPageIndex    : true,
+        filter               : null,
+        usePreviousFilter    : true,
+        usePreviousPageIndex : true,
     });
 }
 export function gotoWatchWarListPanel(): void {
@@ -529,9 +529,9 @@ export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<vo
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().LobbyBackgroundPanel, void 0);
 
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MfrCreateSettingsPanel, {
-        roomCreator: new MultiFreeRoom_Model_MfrRoomCreator.MfrRoomCreator(
+        roomCreator : new MultiFreeRoom_Model_MfrRoomCreator.MfrRoomCreator(
             await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())),
-            warData
+            warData,
         ),
     });
 
@@ -541,17 +541,17 @@ export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<vo
 export function gotoSrrCreateMapListPanel(): void {
     unloadAllWarsAndOpenCommonPanels();
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().SrrCreateMapListPanel, {
-        mapFilter               : null,
-        mapSorter               : null,
-        usePreviousFilter       : true,
-        usePreviousPageIndex    : true,
+        mapFilter            : null,
+        mapSorter            : null,
+        usePreviousFilter    : true,
+        usePreviousPageIndex : true,
     });
 }
 
 export function gotoCampaignCreateMapsPanel(campaignId: number): void {
     unloadAllWarsAndOpenCommonPanels();
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CampaignCreateMapsPanel, {
-        campaignId  : campaignId,
+        campaignId : campaignId,
     });
 }
 
@@ -689,7 +689,7 @@ function initListenerForWindowOnError(): void {
 function showErrorText(text: string): void {
     console.warn(text);
     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonErrorPanel, {
-        content: text,
+        content : text,
     });
     Chat_Proxy.reqChatAddMessage(
         text.substring(0, Chat_Constants.Common.MaxErrorLength),
@@ -706,30 +706,30 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
             FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
-                callback    : () => {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+                callback   : () => {
                     warData.createIfNotExistsSettingsForSfw();
                     gotoSinglePlayerWar({
-                        warData         : warData,
-                        slotIndex       : null,
-                        slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                            mpwWarId                : war.getWarId(),
-                            overridingSkinIdArray   : [],
-                            gridMarkData            : gridMarkData?.toJson(),
+                        warData       : warData,
+                        slotIndex     : null,
+                        slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                            mpwWarId              : war.getWarId(),
+                            overridingSkinIdArray : [],
+                            gridMarkData          : gridMarkData?.toJson(),
                         }),
                     });
-                }
+                },
             });
         }
     };
 
     const war = new MapEditor_Model_MeWar.MeWar();
     await war.initWithMapRawData({
-        mapRawData                  : mapRawData,
-        slotIndex                   : 0,
-        gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
-        srcNormalMapIdForAddEvent   : null,
-        gridMarkData                : null,
+        mapRawData                : mapRawData,
+        slotIndex                 : 0,
+        gameConfig                : await GameConfigs_Provider.getLatestGameConfig(),
+        srcNormalMapIdForAddEvent : null,
+        gridMarkData              : null,
     });
     war.startRunning();
 
@@ -740,12 +740,12 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
         callbackForChosenWarRule();
     } else {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            currentNumber           : null,
-            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
-            getNumberMainText       : ruleId => Lang_Utils.getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : ruleId => {
+            currentNumber        : null,
+            availableNumberArray : templateWarRuleArray.map(v => v.getRuleId()),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getNumberMainText    : ruleId => Lang_Utils.getLanguageText({ textArray : templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     MapEditor_Model_MeSimModel.resetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
@@ -765,19 +765,19 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
             FloatText.show(Lang_Utils.getErrorText(errorCode));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
-                callback    : () => gotoMfrCreateSettingsPanel(warData),
+                getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
+                callback   : () => gotoMfrCreateSettingsPanel(warData),
             });
         }
     };
 
     const war = new MapEditor_Model_MeWar.MeWar();
     await war.initWithMapRawData({
-        mapRawData                  : mapRawData,
-        slotIndex                   : 0,
-        gameConfig                  : await GameConfigs_Provider.getLatestGameConfig(),
-        srcNormalMapIdForAddEvent   : null,
-        gridMarkData                : null,
+        mapRawData                : mapRawData,
+        slotIndex                 : 0,
+        gameConfig                : await GameConfigs_Provider.getLatestGameConfig(),
+        srcNormalMapIdForAddEvent : null,
+        gridMarkData              : null,
     });
     war.startRunning();
 
@@ -788,12 +788,12 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
         callbackForChosenWarRule();
     } else {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            currentNumber           : null,
-            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
-            getNumberMainText       : ruleId => Lang_Utils.getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : ruleId => {
+            currentNumber        : null,
+            availableNumberArray : templateWarRuleArray.map(v => v.getRuleId()),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1242),
+            getNumberMainText    : ruleId => Lang_Utils.getLanguageText({ textArray : templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     MapEditor_Model_MeMfwModel.resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));

@@ -49,14 +49,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,             callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnType,                                    callback: this._onTouchedBtnType },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnType,                                    callback : this._onTouchedBtnType },
 
-            { ui: this._btnActActionIdArray,                        callback: this._onTouchedBtnActActionIdArray },
+            { ui : this._btnActActionIdArray,                        callback : this._onTouchedBtnActActionIdArray },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -80,9 +80,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
 
@@ -100,12 +100,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const warEventFullData  = openData.fullData;
         const gameConfig        = openData.war.getGcData();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : action.getActionIdArray(),
-            availableNumberArray    : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
-            showNumber              : true,
-            getNumberMainText       : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
-            callbackOnConfirm       : actionIdArray => {
+            currentNumberArray   : action.getActionIdArray(),
+            availableNumberArray : warEventFullData.getActionArray().filter(v => WarEvents_Actions_Utils_Common.checkIsPersistentAction(v)).map(v => Helpers_Misc.getExisted(v.getWeaCommonData()?.getActionId())),
+            showNumber           : true,
+            getNumberMainText    : actionId => WarEvents_Actions_Utils_Common.getBriefDescForAction(Helpers_Misc.getExisted(WarEvents_FullDatas_Utils.getAction(warEventFullData, actionId)), gameConfig) ?? Lang_Constants.UndefinedError,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.B0889)),
+            callbackOnConfirm    : actionIdArray => {
                 action.setActionIdArray(actionIdArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },

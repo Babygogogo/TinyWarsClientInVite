@@ -14,8 +14,8 @@ export class GridIndexAndWeight {
 
     public toProto(): WeightedGridIndex {
         return WeightedGridIndex.fromJson({
-            gridIndex   : this.gridIndex.toProto().toJson(),
-            weight      : this.weight,
+            gridIndex : this.gridIndex.toProto().toJson(),
+            weight    : this.weight,
         });
     }
 }

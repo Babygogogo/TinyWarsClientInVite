@@ -31,26 +31,26 @@ type RegistrationInfo = {
 };
 
 const _globalSettingsAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, GlobalSettings>({
-    reqData     : () => AutoTourneys_Mains_Gateway.reqAtGetGlobalSettings(),
+    reqData : () => AutoTourneys_Mains_Gateway.reqAtGetGlobalSettings(),
 });
 const _phaseInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<null, PhaseInfo>({
-    reqData     : () => AutoTourneys_Mains_Gateway.reqAtGetPhaseInfo(),
+    reqData : () => AutoTourneys_Mains_Gateway.reqAtGetPhaseInfo(),
 });
 const _registrationInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, RegistrationInfo>({
-    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetRegistrationInfo(tourneyId),
+    reqData : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetRegistrationInfo(tourneyId),
 });
 const _tourneyInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, TourneyInfo>({
-    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetTourneyInfo(tourneyId),
+    reqData : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetTourneyInfo(tourneyId),
 });
 const _fullMapInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, FullMapInfo>({
-    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullMapInfo(tourneyId),
+    reqData : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullMapInfo(tourneyId),
 });
 const _fullBracketInfoAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, FullBracketInfo>({
-    reqData     : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullBracketInfo(tourneyId),
+    reqData : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetFullBracketInfo(tourneyId),
 });
 const _userArrayAccessor = new AuxiliaryTypes_CachedDataAccessor.CachedDataAccessor<number, number[]>({
-    reqData         : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetUserArray(tourneyId),
-    dataExpireTime  : 30,
+    reqData        : tourneyId => AutoTourneys_Mains_Gateway.reqAtGetUserArray(tourneyId),
+    dataExpireTime : 30,
 });
 
 export function getGlobalSettings(): Promise<AuxiliaryTypes_AuxiliaryTypes.Undefinable<GlobalSettings>> {
@@ -116,9 +116,9 @@ export function setIsNotifiedForRegistration(tourneyId: number, isNotified: bool
 export function updateOnMsgAtGetGlobalSettings(msg: AtGetGlobalSettingsResponse): void {
     const globalSettings = msg.getGlobalSettings();
     _globalSettingsAccessor.setData(null, {
-        isEnabled               : !!globalSettings?.getIsEnabled(),
-        interval                : globalSettings?.getInterval() ?? 0,
-        lastCreateTimestamp     : msg.getLastCreateTimestamp() ?? 0,
+        isEnabled           : !!globalSettings?.getIsEnabled(),
+        interval            : globalSettings?.getInterval() ?? 0,
+        lastCreateTimestamp : msg.getLastCreateTimestamp() ?? 0,
     });
 }
 export async function updateOnMsgAtSetName(msg: AtSetNameResponse): Promise<void> {
@@ -135,16 +135,16 @@ export async function updateOnMsgAtSetBootTimer(msg: AtSetBootTimerResponse): Pr
 }
 export function updateOnMsgAtGetPhaseInfo(msg: AtGetPhaseInfoResponse): void {
     _phaseInfoAccessor.setData(null, {
-        infoArray   : msg.getSinglePhaseInfoArray(),
+        infoArray : msg.getSinglePhaseInfoArray(),
     });
 }
 export function updateOnMsgAtGetRegistrationInfo(msg: AtGetRegistrationInfoResponse): void {
     const tourneyId = msg.getTourneyId() ?? 0;
     _registrationInfoAccessor.setData(tourneyId, {
-        isRegistered    : !!msg.getIsRegistered(),
-        tourneyId       : tourneyId,
-        playersCount    : msg.getPlayersCount() ?? 0,
-        endTimestamp    : msg.getEndTimestamp() ?? 0,
+        isRegistered : !!msg.getIsRegistered(),
+        tourneyId    : tourneyId,
+        playersCount : msg.getPlayersCount() ?? 0,
+        endTimestamp : msg.getEndTimestamp() ?? 0,
     });
 }
 

@@ -13,8 +13,7 @@ import {
 
 export class UiScrollList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData>
     extends     Ui_Components_UiScrollerBase.UiScrollerBase
-    implements  Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRenderer>
-{
+    implements  Ui_Interfaces_IUiScrollList.IUiScrollList<DataForRenderer> {
     private readonly _taskQueue = new AuxiliaryTypes_TaskQueue.TaskQueue();
     private _viewport?          : Ui_Interfaces_IUiList.IUiList<DataForRenderer>;
 
@@ -68,7 +67,7 @@ export class UiScrollList<DataForRenderer extends Ui_Types_UiListItemData.UiList
         if (keepSelectedIndexes) {
             this.setSelectedItemIndexes(
                 selectedIndexes                             ??
-                (viewport.getRequireSelection() ? [0] : [])
+                (viewport.getRequireSelection() ? [0] : []),
             );
         }
 

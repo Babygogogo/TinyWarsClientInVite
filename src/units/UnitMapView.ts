@@ -26,8 +26,8 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
     private readonly _layerForGround    = new Ui_Components_UiContainer.UiContainer();
     private readonly _layerForAir       = new Ui_Components_UiContainer.UiContainer();
     private readonly _notifyListeners   = [
-        { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,               callback: this._onNotifyActionPlannerStateChanged },
-        { type: Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
+        { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,               callback : this._onNotifyActionPlannerStateChanged },
+        { type : Notifications_TypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback : this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
     private _unitMap    : Units_IUnitMap.IUnitMap | null = null;
@@ -235,7 +235,7 @@ export class UnitMapView extends Ui_Components_UiContainer.UiContainer implement
             war,
             ((war instanceof ReplayWar_Model_RwWar.RwWar) && (!war.getIsShowAllUnits()))
                 ? new Set([war.getVisionTeamIndex() ?? war.getPlayerInTurn().getTeamIndex()])
-                : war.getPlayerManager().getWatcherTeamIndexesForSelf()
+                : war.getPlayerManager().getWatcherTeamIndexesForSelf(),
         );
         for (const unit of unitMap.getAllUnitsOnMap()) {
             unit.setViewVisible(visibleUnits.has(unit));

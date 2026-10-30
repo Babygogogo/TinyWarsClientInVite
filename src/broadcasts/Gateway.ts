@@ -15,21 +15,23 @@ import type { LanguageText } from "../proto/schema/CommonProto/Structure/Languag
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgBroadcastAddMessage,              callback: _onMsgBroadcastAddMessage },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgBroadcastDeleteMessage,           callback: _onMsgBroadcastDeleteMessage, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgBroadcastDoBroadcast,             callback: _onMsgBroadcastDoBroadcast },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback: _onMsgBroadcastGetAllMessageIdArray, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgBroadcastGetMessageData,          callback: _onMsgBroadcastGetMessageData },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastAddMessage,              callback : _onMsgBroadcastAddMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastDeleteMessage,           callback : _onMsgBroadcastDeleteMessage },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastDoBroadcast,             callback : _onMsgBroadcastDoBroadcast },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback : _onMsgBroadcastGetAllMessageIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgBroadcastGetMessageData,          callback : _onMsgBroadcastGetMessageData },
     ], null);
 }
 
 export function reqBroadcastAddMessage(textList: LanguageText[], startTime: number, endTime: number): void {
     Networks_Manager.send({
-        MsgBroadcastAddMessage: { c: {
-            textList    : textList.map(v => v.toJson()),
-            startTime   : startTime,
-            endTime     : endTime,
-        } },
+        MsgBroadcastAddMessage : {
+            c : {
+                textList  : textList.map(v => v.toJson()),
+                startTime : startTime,
+                endTime   : endTime,
+            }, 
+        },
     });
 }
 function _onMsgBroadcastAddMessage(e: Egret_Egret.Event): void {
@@ -41,9 +43,11 @@ function _onMsgBroadcastAddMessage(e: Egret_Egret.Event): void {
 
 export function reqBroadcastDeleteMessage(messageId: number): void {
     Networks_Manager.send({
-        MsgBroadcastDeleteMessage: { c: {
-            messageId,
-        } },
+        MsgBroadcastDeleteMessage : {
+            c : {
+                messageId,
+            }, 
+        },
     });
 }
 function _onMsgBroadcastDeleteMessage(e: Egret_Egret.Event): void {
@@ -55,8 +59,10 @@ function _onMsgBroadcastDeleteMessage(e: Egret_Egret.Event): void {
 
 export function reqBroadcastDoBroadcast(): void {
     Networks_Manager.send({
-        MsgBroadcastDoBroadcast: { c: {
-        } },
+        MsgBroadcastDoBroadcast : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgBroadcastDoBroadcast(e: Egret_Egret.Event): void {
@@ -67,8 +73,12 @@ function _onMsgBroadcastDoBroadcast(e: Egret_Egret.Event): void {
 }
 
 export function reqBroadcastGetAllMessageIdArray(): void {
-    Networks_Manager.send({ MsgBroadcastGetAllMessageIdArray: { c: {
-    } }, });
+    Networks_Manager.send({
+        MsgBroadcastGetAllMessageIdArray : {
+            c : {
+            }, 
+        }, 
+    });
 }
 function _onMsgBroadcastGetAllMessageIdArray(e: Egret_Egret.Event): void {
     const data = e.data as BroadcastGetAllMessageIdArrayResponse;
@@ -79,9 +89,13 @@ function _onMsgBroadcastGetAllMessageIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqBroadcastGetMessageData(messageId: number): void {
-    Networks_Manager.send({ MsgBroadcastGetMessageData: { c: {
-        messageId,
-    } } });
+    Networks_Manager.send({
+        MsgBroadcastGetMessageData : {
+            c : {
+                messageId,
+            }, 
+        }, 
+    });
 }
 function _onMsgBroadcastGetMessageData(e: Egret_Egret.Event): void {
     const data = e.data as BroadcastGetMessageDataResponse;

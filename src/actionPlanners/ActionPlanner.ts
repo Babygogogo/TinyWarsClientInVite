@@ -121,9 +121,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _isIgnoreEnemyForPreviewMove        = true;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.BwCursorTapped,      callback: this._onNotifyBwCursorTapped },
-        { type: Notifications_TypeId.TypeId.BwCursorDragged,     callback: this._onNotifyBwCursorDragged },
-        { type: Notifications_TypeId.TypeId.BwCursorDragEnded,   callback: this._onNotifyBwCursorDragEnded },
+        { type : Notifications_TypeId.TypeId.BwCursorTapped,      callback : this._onNotifyBwCursorTapped },
+        { type : Notifications_TypeId.TypeId.BwCursorDragged,     callback : this._onNotifyBwCursorDragged },
+        { type : Notifications_TypeId.TypeId.BwCursorDragEnded,   callback : this._onNotifyBwCursorDragEnded },
     ];
 
     public init(mapSize: AuxiliaryTypes_MapSize.MapSize): void {
@@ -336,7 +336,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
             if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war : this.getWar() });
             } else {
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
@@ -357,7 +357,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
             if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war : this.getWar() });
             } else {
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
@@ -375,7 +375,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
             if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war : this.getWar() });
             } else {
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
@@ -393,7 +393,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwUnitActionsPanel);
             }
             if ((currState === ActionPlanners_Constants.StateId.ChoosingUnitMovePath) || (currState === ActionPlanners_Constants.StateId.ChoosingUnitAttackTarget)) {
-                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war: this.getWar() });
+                GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwDamagePreviewPanel, { war : this.getWar() });
             } else {
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().BwDamagePreviewPanel);
             }
@@ -489,10 +489,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     public resetMovableArea(): void {
         const unit = Helpers_Misc.getExisted(this.getFocusUnit());
         this._movableArea = AuxiliaryTypes_MovableArea.MovableArea.create({
-            gridIndex       : unit.getGridIndex(),
-            maxMoveCost     : unit.getFinalMoveRange(),
-            mapSize         : this.getMapSize(),
-            moveCostGetter  : gridIndex => this._getMoveCost(gridIndex, unit)
+            gridIndex      : unit.getGridIndex(),
+            maxMoveCost    : unit.getFinalMoveRange(),
+            mapSize        : this.getMapSize(),
+            moveCostGetter : gridIndex => this._getMoveCost(gridIndex, unit),
         });
     }
     private _clearMovableArea(): void {
@@ -510,11 +510,11 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         const hasAmmo               = (!!focusUnit.getPrimaryWeaponCurrentAmmo()) || (focusUnit.checkHasSecondaryWeapon());
         const unitMap               = this.getWar().getUnitMap();
         this._setAttackableArea(AuxiliaryTypes_AttackableArea.AttackableArea.create({
-            movableArea         : Helpers_Misc.getExisted(this.getMovableArea()),
-            mapSize             : this.getMapSize(),
-            minAttackRange      : focusUnit.getMinAttackRange(),
-            maxAttackRange      : focusUnit.getFinalMaxAttackRange(),
-            checkCanAttack      : (moveGridIndex): boolean => {
+            movableArea    : Helpers_Misc.getExisted(this.getMovableArea()),
+            mapSize        : this.getMapSize(),
+            minAttackRange : focusUnit.getMinAttackRange(),
+            maxAttackRange : focusUnit.getFinalMaxAttackRange(),
+            checkCanAttack : (moveGridIndex): boolean => {
                 if (!hasAmmo) {
                     return false;
                 } else {
@@ -527,7 +527,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                             && ((canAttackAfterMoving) || (!hasMoved));
                     }
                 }
-            }
+            },
         }));
     }
     private _setAttackableArea(area: AuxiliaryTypes_AttackableArea.AttackableArea): void {
@@ -798,11 +798,11 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         const isIgnoreAlly          = this.getIsIgnoreAllyForPreviewingAttackableArea();
         const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
         const newArea               = AuxiliaryTypes_AttackableArea.AttackableArea.create({
-            movableArea: AuxiliaryTypes_MovableArea.MovableArea.create({
-                gridIndex       : beginningGridIndex,
-                maxMoveCost     : unit.getFinalMoveRange(),
-                mapSize         : mapSize,
-                moveCostGetter  : targetGridIndex => {
+            movableArea : AuxiliaryTypes_MovableArea.MovableArea.create({
+                gridIndex      : beginningGridIndex,
+                maxMoveCost    : unit.getFinalMoveRange(),
+                mapSize        : mapSize,
+                moveCostGetter : targetGridIndex => {
                     const existingUnit  = unitMap.getUnitOnMap(targetGridIndex);
                     if ((existingUnit == null)                      ||
                         (teamIndex === existingUnit.getTeamIndex()) ||
@@ -815,10 +815,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                     }
                 },
             }),
-            mapSize             : mapSize,
-            minAttackRange      : unit.getMinAttackRange(),
-            maxAttackRange      : unit.getFinalMaxAttackRange(),
-            checkCanAttack      : moveGridIndex => {
+            mapSize        : mapSize,
+            minAttackRange : unit.getMinAttackRange(),
+            maxAttackRange : unit.getFinalMaxAttackRange(),
+            checkCanAttack : moveGridIndex => {
                 if (!hasAmmo) {
                     return false;
                 }
@@ -855,11 +855,11 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             const hasAmmo               = (!!unit.getPrimaryWeaponCurrentAmmo()) || (unit.checkHasSecondaryWeapon());
             const teamIndex             = unit.getTeamIndex();
             const newArea               = AuxiliaryTypes_AttackableArea.AttackableArea.create({
-                movableArea: AuxiliaryTypes_MovableArea.MovableArea.create({
-                    gridIndex       : beginningGridIndex,
-                    maxMoveCost     : unit.getFinalMoveRange(),
-                    mapSize         : mapSize,
-                    moveCostGetter  : targetGridIndex => {
+                movableArea : AuxiliaryTypes_MovableArea.MovableArea.create({
+                    gridIndex      : beginningGridIndex,
+                    maxMoveCost    : unit.getFinalMoveRange(),
+                    mapSize        : mapSize,
+                    moveCostGetter : targetGridIndex => {
                         const existingUnit  = unitMap.getUnitOnMap(targetGridIndex);
                         if ((existingUnit == null)                      ||
                             (teamIndex === existingUnit.getTeamIndex()) ||
@@ -872,10 +872,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
                         }
                     },
                 }),
-                mapSize             : mapSize,
-                minAttackRange      : unit.getMinAttackRange(),
-                maxAttackRange      : unit.getFinalMaxAttackRange(),
-                checkCanAttack      : moveGridIndex => {
+                mapSize        : mapSize,
+                minAttackRange : unit.getMinAttackRange(),
+                maxAttackRange : unit.getFinalMaxAttackRange(),
+                checkCanAttack : moveGridIndex => {
                     if (!hasAmmo) {
                         return false;
                     }
@@ -950,10 +950,10 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             const unitMap               = war.getUnitMap();
             const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
             this._setAreaForPreviewingMovableArea(AuxiliaryTypes_MovableArea.MovableArea.create({
-                gridIndex       : movingUnit.getGridIndex(),
-                maxMoveCost     : movingUnit.getFinalMoveRange(),
-                mapSize         : this.getMapSize(),
-                moveCostGetter  : targetGridIndex => {
+                gridIndex      : movingUnit.getGridIndex(),
+                maxMoveCost    : movingUnit.getFinalMoveRange(),
+                mapSize        : this.getMapSize(),
+                moveCostGetter : targetGridIndex => {
                     const existingUnit  = unitMap.getUnitOnMap(targetGridIndex);
                     if ((existingUnit == null)                      ||
                         (teamIndex === existingUnit.getTeamIndex()) ||
@@ -1018,13 +1018,13 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
         if ((existingUnit)                                      &&
             (existingUnit.getTeamIndex() !== teamIndex)         &&
             (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
-                war                 : war,
-                gridIndex           : targetGridIndex,
-                unitType            : existingUnit.getUnitType(),
-                isDiving            : existingUnit.getIsDiving(),
-                isInvisible         : existingUnit.checkIsInvisible(targetGridIndex),
-                unitPlayerIndex     : existingUnit.getPlayerIndex(),
-                observerTeamIndex   : teamIndex,
+                war               : war,
+                gridIndex         : targetGridIndex,
+                unitType          : existingUnit.getUnitType(),
+                isDiving          : existingUnit.getIsDiving(),
+                isInvisible       : existingUnit.checkIsInvisible(targetGridIndex),
+                unitPlayerIndex   : existingUnit.getPlayerIndex(),
+                observerTeamIndex : teamIndex,
             }))
         ) {
             return null;
@@ -1044,7 +1044,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
             } else {
                 return focusUnit.checkCanAttackTargetAfterMovePath(
                     Helpers_Misc.getExisted(this.getMovableArea()).createShortestMovePath(Helpers_Misc.getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination)).map(v => v.getGridIndex()),
-                    gridIndex
+                    gridIndex,
                 );
             }
         }
@@ -1081,16 +1081,16 @@ function createFuncCheckIsUnitVisible(observerTeamIndexes: Set<number>): (unit: 
 
         const gridIndex = unit.getGridIndex();
         const isVisible = Visibilities_Utils.checkIsUnitOnMapVisibleToTeams({
-           war                 : unit.getWar(),
-           gridIndex           : gridIndex,
-           unitType            : unit.getUnitType(),
-           isDiving            : unit.getIsDiving(),
-           isInvisible         : unit.checkIsInvisible(gridIndex),
-           unitPlayerIndex     : unit.getPlayerIndex(),
-           observerTeamIndexes : observerTeamIndexes,
-       });
-       unitVisibleDict.set(unit, isVisible);
-       return isVisible;
+            war                 : unit.getWar(),
+            gridIndex           : gridIndex,
+            unitType            : unit.getUnitType(),
+            isDiving            : unit.getIsDiving(),
+            isInvisible         : unit.checkIsInvisible(gridIndex),
+            unitPlayerIndex     : unit.getPlayerIndex(),
+            observerTeamIndexes : observerTeamIndexes,
+        });
+        unitVisibleDict.set(unit, isVisible);
+        return isVisible;
     };
 }
 
@@ -1214,8 +1214,8 @@ function getActionUnitBeLoaded(actionPlanner: ActionPlanners_IActionPlanner.IAct
         const loader = actionPlanner.getWar().getUnitMap().getUnitOnMap(destination);
         return (loader) && (loader.checkCanLoadUnit(focusUnit))
             ? [{
-                actionType  : Units_Constants.ActionTypeId.BeLoaded,
-                callback    : () => ActionPlanners_States_RequestingUnitBeLoaded.RequestingUnitBeLoaded.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.BeLoaded,
+                callback   : () => ActionPlanners_States_RequestingUnitBeLoaded.RequestingUnitBeLoaded.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
@@ -1229,15 +1229,15 @@ function getActionUnitJoin(actionPlanner: ActionPlanners_IActionPlanner.IActionP
         const target = actionPlanner.getWar().getUnitMap().getUnitOnMap(destination);
         return (target) && (focusUnit.checkCanJoinUnit(target))
             ? [{
-                actionType  : Units_Constants.ActionTypeId.Join,
-                callback    : () => {
+                actionType : Units_Constants.ActionTypeId.Join,
+                callback   : () => {
                     const cb = () => ActionPlanners_States_RequestingUnitJoin.RequestingUnitJoin.getInstance().doApplyOnChooseAction(actionPlanner);
                     if (target.getActionState() === Units_Constants.ActionStateId.Acted) {
                         cb();
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0885),
-                            callback    : cb,
+                            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0885),
+                            callback   : cb,
                         });
                     }
                 },
@@ -1274,21 +1274,21 @@ function getActionUnitUseCoSuperPower(actionPlanner: ActionPlanners_IActionPlann
         return !focusUnit.checkCanUseCoSkill(skillType)
             ? []
             : [{
-                actionType  : Units_Constants.ActionTypeId.UseCoSuperPower,
-                callback    : () => {
+                actionType : Units_Constants.ActionTypeId.UseCoSuperPower,
+                callback   : () => {
                     const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0058),
-                            callback: () => {
+                            callback   : () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
                                 ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
                             },
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
-                            callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
+                            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
                 },
@@ -1304,21 +1304,21 @@ function getActionUnitUseCoPower(actionPlanner: ActionPlanners_IActionPlanner.IA
         return !focusUnit.checkCanUseCoSkill(skillType)
             ? []
             : [{
-                actionType  : Units_Constants.ActionTypeId.UseCoPower,
-                callback    : () => {
+                actionType : Units_Constants.ActionTypeId.UseCoPower,
+                callback   : () => {
                     const targetsCount = CoSkills_Utils_Common.getPowerSkillTargetsCount(focusUnit.getPlayer().getCoBasicCfg(), skillType);
                     if (targetsCount <= 0) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0054),
-                            callback: () => {
+                            callback   : () => {
                                 actionPlanner.setCoActiveSkillSkillType(skillType);
                                 ActionPlanners_States_RequestingUnitUseCoActiveSkill.RequestingUnitUseCoActiveSkill.getInstance().doApplyOnChooseAction(actionPlanner, skillType, null);
                             },
                         });
                     } else {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                            getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
-                            callback    : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
+                            getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0205, targetsCount),
+                            callback   : () => ActionPlanners_States_ChoosingCoActiveSkillTarget.ChoosingCoActiveSkillTarget.getInstance().doApplyOnChooseAction(actionPlanner, skillType),
                         });
                     }
                 },
@@ -1331,8 +1331,8 @@ function getActionUnitBoardedByCo(actionPlanner: ActionPlanners_IActionPlanner.I
     } else {
         return Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanCoBoardAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()))
             ? [{
-                actionType  : Units_Constants.ActionTypeId.CoBoard,
-                callback    : () => ActionPlanners_States_RequestingUnitBoardedByCo.RequestingUnitBoardedByCo.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.CoBoard,
+                callback   : () => ActionPlanners_States_RequestingUnitBoardedByCo.RequestingUnitBoardedByCo.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
@@ -1340,8 +1340,8 @@ function getActionUnitBoardedByCo(actionPlanner: ActionPlanners_IActionPlanner.I
 function getActionUnitAttack(actionPlanner: ActionPlanners_IActionPlanner.IActionPlanner): BaseWar_Model_BwTypes.DataForUnitAction[] {
     return actionPlanner.createAttackableGridsForUnitWeapon().length
         ? [{
-            actionType  : Units_Constants.ActionTypeId.Attack,
-            callback    : () => ActionPlanners_States_ChoosingUnitAttackTarget.ChoosingUnitAttackTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType : Units_Constants.ActionTypeId.Attack,
+            callback   : () => ActionPlanners_States_ChoosingUnitAttackTarget.ChoosingUnitAttackTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }]
         : [];
 }
@@ -1351,8 +1351,8 @@ function getActionUnitCapture(actionPlanner: ActionPlanners_IActionPlanner.IActi
     } else {
         return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanCaptureTile(actionPlanner.getWar().getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex())))
             ? [{
-                actionType: Units_Constants.ActionTypeId.CaptureTile,
-                callback: () => ActionPlanners_States_RequestingUnitCaptureTile.RequestingUnitCaptureTile.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.CaptureTile,
+                callback   : () => ActionPlanners_States_RequestingUnitCaptureTile.RequestingUnitCaptureTile.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
@@ -1364,8 +1364,8 @@ function getActionUnitCrushUnit(actionPlanner: ActionPlanners_IActionPlanner.IAc
         return [];
     } else {
         return [{
-            actionType  : Units_Constants.ActionTypeId.CrushUnit,
-            callback    : () => ActionPlanners_States_ChoosingUnitCrushTarget.ChoosingUnitCrushTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType : Units_Constants.ActionTypeId.CrushUnit,
+            callback   : () => ActionPlanners_States_ChoosingUnitCrushTarget.ChoosingUnitCrushTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }];
     }
 }
@@ -1375,8 +1375,8 @@ function getActionUnitDive(actionPlanner: ActionPlanners_IActionPlanner.IActionP
     } else {
         return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanDive())
             ? [{
-                actionType: Units_Constants.ActionTypeId.Dive,
-                callback: () => ActionPlanners_States_RequestingUnitDive.RequestingUnitDive.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.Dive,
+                callback   : () => ActionPlanners_States_RequestingUnitDive.RequestingUnitDive.getInstance().doApplyOnChooseAction(actionPlanner),
             }]
             : [];
     }
@@ -1387,10 +1387,10 @@ function getActionUnitSurface(actionPlanner: ActionPlanners_IActionPlanner.IActi
     } else {
         return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanSurface())
             ? [{
-                actionType  : Units_Constants.ActionTypeId.Surface,
-                callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                    callback    : () => ActionPlanners_States_RequestingUnitSurface.RequestingUnitSurface.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.Surface,
+                callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+                    callback   : () => ActionPlanners_States_RequestingUnitSurface.RequestingUnitSurface.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }]
             : [];
@@ -1404,9 +1404,9 @@ function getActionsUnitLaunchUnit(actionPlanner: ActionPlanners_IActionPlanner.I
         for (const unit of focusUnit.getLoadedUnits()) {
             if ((unit.getActionState() === Units_Constants.ActionStateId.Idle) && (tile.getMoveCostByUnit(unit) != null)) {
                 dataList.push({
-                    actionType      : Units_Constants.ActionTypeId.LaunchUnit,
-                    callback        : () => ActionPlanners_States_ChoosingUnitMovePath.ChoosingUnitMovePath.getInstance().doApplyOnChooseAction(actionPlanner, unit),
-                    unitForLaunch   : unit,
+                    actionType    : Units_Constants.ActionTypeId.LaunchUnit,
+                    callback      : () => ActionPlanners_States_ChoosingUnitMovePath.ChoosingUnitMovePath.getInstance().doApplyOnChooseAction(actionPlanner, unit),
+                    unitForLaunch : unit,
                 });
             }
         }
@@ -1420,8 +1420,8 @@ function getActionUnitRepairUnit(actionPlanner: ActionPlanners_IActionPlanner.IA
         return [];
     } else {
         return [{
-            actionType  : Units_Constants.ActionTypeId.RepairUnit,
-            callback    : () => ActionPlanners_States_ChoosingUnitRepairTarget.ChoosingUnitRepairTarget.getInstance().doApplyOnChooseAction(actionPlanner),
+            actionType : Units_Constants.ActionTypeId.RepairUnit,
+            callback   : () => ActionPlanners_States_ChoosingUnitRepairTarget.ChoosingUnitRepairTarget.getInstance().doApplyOnChooseAction(actionPlanner),
         }];
     }
 }
@@ -1432,10 +1432,10 @@ function getActionUnitSelfDetonate(actionPlanner: ActionPlanners_IActionPlanner.
         const selfDetonateCfg = Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).getTemplateCfg().getSelfDetonateCfg();
         if (selfDetonateCfg) {
             return [{
-                actionType  : Units_Constants.ActionTypeId.SelfDetonate,
-                callback    : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                    getContent  : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
-                    callback    : () => ActionPlanners_States_RequestingUnitSelfDetonate.RequestingUnitSelfDetonate.getInstance().doApplyOnChooseAction(actionPlanner),
+                actionType : Units_Constants.ActionTypeId.SelfDetonate,
+                callback   : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
+                    getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0209, selfDetonateCfg.getRadius(), selfDetonateCfg.getDamage()),
+                    callback   : () => ActionPlanners_States_RequestingUnitSelfDetonate.RequestingUnitSelfDetonate.getInstance().doApplyOnChooseAction(actionPlanner),
                 }),
             }];
         }
@@ -1455,12 +1455,12 @@ function getActionUnitSupply(actionPlanner: ActionPlanners_IActionPlanner.IActio
                 if ((unit) && (unit !== focusUnit) && (unit.getPlayerIndex() === playerIndex) && (unit.checkCanBeSupplied())) {
                     const cb = () => ActionPlanners_States_RequestingUnitSupply.RequestingUnitSupply.getInstance().doApplyOnChooseAction(actionPlanner);
                     return [{
-                        actionType  : Units_Constants.ActionTypeId.Supply,
-                        callback    : !canDropUnits
+                        actionType : Units_Constants.ActionTypeId.Supply,
+                        callback   : !canDropUnits
                             ? cb
                             : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                                getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
-                                callback    : cb,
+                                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                                callback   : cb,
                             }),
                     }];
                 }
@@ -1480,12 +1480,12 @@ function getActionUnitBuildTile(actionPlanner: ActionPlanners_IActionPlanner.IAc
         } else {
             const cb = () => ActionPlanners_States_RequestingUnitBuildTile.RequestingUnitBuildTile.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : Units_Constants.ActionTypeId.BuildTile,
-                callback    : !canDropUnits
+                actionType : Units_Constants.ActionTypeId.BuildTile,
+                callback   : !canDropUnits
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
-                        callback    : cb,
+                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        callback   : cb,
                     }),
             }];
         }
@@ -1501,10 +1501,10 @@ function getActionUnitLaunchFlare(actionPlanner: ActionPlanners_IActionPlanner.I
         return [];
     } else {
         return [{
-            actionType  : Units_Constants.ActionTypeId.LaunchFlare,
-            callback    : () => ActionPlanners_States_ChoosingUnitFlareDestination.ChoosingUnitFlareDestination.getInstance().doApplyOnChooseAction(
+            actionType : Units_Constants.ActionTypeId.LaunchFlare,
+            callback   : () => ActionPlanners_States_ChoosingUnitFlareDestination.ChoosingUnitFlareDestination.getInstance().doApplyOnChooseAction(
                 actionPlanner,
-                Helpers_Misc.getExisted(focusUnit.getFlareRadius(movePath[movePath.length - 1].getGridIndex()))
+                Helpers_Misc.getExisted(focusUnit.getFlareRadius(movePath[movePath.length - 1].getGridIndex())),
             ),
         }];
     }
@@ -1514,10 +1514,10 @@ function getActionUnitLaunchSilo(actionPlanner: ActionPlanners_IActionPlanner.IA
     const tile  = war.getTileMap().getTile(actionPlanner.getMovePathDestination().getGridIndex());
     return (Helpers_Misc.getExisted(actionPlanner.getFocusUnit()).checkCanLaunchSiloOnTile(tile))
         ? [{
-            actionType  : Units_Constants.ActionTypeId.LaunchSilo,
-            callback    : () => ActionPlanners_States_ChoosingUnitSiloDestination.ChoosingUnitSiloDestination.getInstance().doApplyOnChooseAction(
+            actionType : Units_Constants.ActionTypeId.LaunchSilo,
+            callback   : () => ActionPlanners_States_ChoosingUnitSiloDestination.ChoosingUnitSiloDestination.getInstance().doApplyOnChooseAction(
                 actionPlanner,
-                tile.getTemplateCfg().getLaunchSiloParams()[2]
+                tile.getTemplateCfg().getLaunchSiloParams()[2],
             ),
         }]
         : [];
@@ -1562,38 +1562,38 @@ function getActionUnitProduceUnit(actionPlanner: ActionPlanners_IActionPlanner.I
 
         if (focusUnit.getCurrentProduceMaterial() < 1) {
             return [{
-                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
-                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0051)),
-                costForProduceUnit  : costForProduceUnit,
-                produceUnitType     : produceUnitType,
+                actionType         : Units_Constants.ActionTypeId.ProduceUnit,
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0051)),
+                costForProduceUnit : costForProduceUnit,
+                produceUnitType    : produceUnitType,
             }];
         } else if (focusUnit.getLoadedUnitsCount() >= Helpers_Misc.getExisted(focusUnit.getMaxLoadUnitsCount())) {
             return [{
-                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
-                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0052)),
-                costForProduceUnit  : costForProduceUnit,
-                produceUnitType     : produceUnitType,
+                actionType         : Units_Constants.ActionTypeId.ProduceUnit,
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0052)),
+                costForProduceUnit : costForProduceUnit,
+                produceUnitType    : produceUnitType,
             }];
         } else if (player.getFund() < costForProduceUnit) {
             return [{
-                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
-                callback            : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0053)),
-                costForProduceUnit  : costForProduceUnit,
-                produceUnitType     : produceUnitType,
+                actionType         : Units_Constants.ActionTypeId.ProduceUnit,
+                callback           : () => FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.B0053)),
+                costForProduceUnit : costForProduceUnit,
+                produceUnitType    : produceUnitType,
             }];
         } else if ((maxUnitsCount != null) && (currentUnitsCount >= maxUnitsCount)) {
             return [{
-                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
-                callback            : () => FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0266, currentUnitsCount, maxUnitsCount)),
-                costForProduceUnit  : costForProduceUnit,
-                produceUnitType     : produceUnitType,
+                actionType         : Units_Constants.ActionTypeId.ProduceUnit,
+                callback           : () => FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0266, currentUnitsCount, maxUnitsCount)),
+                costForProduceUnit : costForProduceUnit,
+                produceUnitType    : produceUnitType,
             }];
         } else {
             return [{
-                actionType          : Units_Constants.ActionTypeId.ProduceUnit,
-                callback            : () => ActionPlanners_States_RequestingUnitProduceUnit.RequestingUnitProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner),
-                costForProduceUnit  : costForProduceUnit,
-                produceUnitType     : produceUnitType,
+                actionType         : Units_Constants.ActionTypeId.ProduceUnit,
+                callback           : () => ActionPlanners_States_RequestingUnitProduceUnit.RequestingUnitProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner),
+                costForProduceUnit : costForProduceUnit,
+                produceUnitType    : produceUnitType,
             }];
         }
     }
@@ -1606,23 +1606,23 @@ function getActionUnitWait(actionPlanner: ActionPlanners_IActionPlanner.IActionP
         if (actionPlanner.getChosenUnitsForDrop().length) {
             const cb = () => ActionPlanners_States_RequestingUnitDrop.RequestingUnitDrop.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : Units_Constants.ActionTypeId.Wait,
-                callback    : !hasOtherAction
+                actionType : Units_Constants.ActionTypeId.Wait,
+                callback   : !hasOtherAction
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
-                        callback    : cb,
+                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        callback   : cb,
                     }),
             }];
         } else {
             const cb = () => ActionPlanners_States_RequestingUnitWait.RequestingUnitWait.getInstance().doApplyOnChooseAction(actionPlanner);
             return [{
-                actionType  : Units_Constants.ActionTypeId.Wait,
-                callback    : !hasOtherAction
+                actionType : Units_Constants.ActionTypeId.Wait,
+                callback   : !hasOtherAction
                     ? cb
                     : () => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                        getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
-                        callback    : cb,
+                        getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0055),
+                        callback   : cb,
                     }),
             }];
         }

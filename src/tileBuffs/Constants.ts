@@ -2,7 +2,7 @@ import {
     Turns_Constants,
 } from "../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum EndTimeModification {
     MaxEndPlayerIndex = 10000,
     MinEndPlayerIndex = -MaxEndPlayerIndex,
@@ -10,7 +10,7 @@ export const enum EndTimeModification {
     MinEndTurnIndex   = -MaxEndTurnIndex,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum BuffTypeId {
     NoProduction    = 1,
     NoIncome        = 2,

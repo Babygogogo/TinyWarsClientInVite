@@ -54,11 +54,13 @@ export class Assignment extends ExpressionParsers_Nodes_Base.Base {
         localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
     }): ExpressionParsers_Enums.ResultType {
-        const resultType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const resultType = this._rhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (!checkIsValidResultType(resultType)) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("=", 1, ValidResultTypes, resultType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorAssign_GetResultType_00
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorAssign_GetResultType_00,
             );
         }
 

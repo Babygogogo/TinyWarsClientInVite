@@ -90,9 +90,9 @@ export class UiProgressBar extends Ui_Components_UiContainer.UiContainer impleme
             const revisedStartValue     = isNegative ? -startValue : startValue;
             const revisedEndValue       = isNegative ? -endValue : endValue;
             const revisedCurrentValue   = Numbers_Utils.getValueInRange({
-                minValue    : revisedStartValue,
-                maxValue    : revisedEndValue,
-                rawValue    : this.getCurrentValue() * (isNegative ? -1 : 1),
+                minValue : revisedStartValue,
+                maxValue : revisedEndValue,
+                rawValue : this.getCurrentValue() * (isNegative ? -1 : 1),
             });
             graphicMask.width = (revisedCurrentValue - revisedStartValue) / (revisedEndValue - revisedStartValue) * maxWidth;
         }

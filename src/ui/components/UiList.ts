@@ -20,8 +20,7 @@ import {
 
 export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemData>
     extends Ui_Components_UiLayoutBase.UiLayoutBase
-    implements Ui_Interfaces_IUiList.IUiList<DataForRenderer>
-{
+    implements Ui_Interfaces_IUiList.IUiList<DataForRenderer> {
     private _previousSelectedItems? : Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
     private _selectedItems?         : Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForRenderer>[];
 
@@ -331,7 +330,7 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
         if ((item instanceof Ui_Components_UiListItemRenderer.UiListItemRenderer) && (item.getSkinInfo())) {
             Ui_Utils_UiSkinHelpers.loadSkinStateRecursively(
                 item,
-                Ui_Types_UiSkinState.UiSkinState.Down
+                Ui_Types_UiSkinState.UiSkinState.Down,
             );
         }
     }
@@ -357,11 +356,11 @@ export class UiList<DataForRenderer extends Ui_Types_UiListItemData.UiListItemDa
             this.dispatchEventWith(
                 isSelected ? Ui_Types_UiCommonEventType.UiCommonEventType.ListItemSelectedByTap : Ui_Types_UiCommonEventType.UiCommonEventType.ListItemDeselectedByTap,
                 undefined,
-                itemIndex
+                itemIndex,
             );
         }
 
-        renderer.onItemTapEvent({ itemIndex: itemIndex });
+        renderer.onItemTapEvent({ itemIndex : itemIndex });
     }
     private _onItemPointerUp(e: Egret_Egret.Event): void {
         // log(`UiList._onItemPointerUp`, e);

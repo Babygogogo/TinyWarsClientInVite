@@ -41,10 +41,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -77,9 +77,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     = this._generateDataForListPlayer();
         const dataCount     = dataArray.length;
         const listHeight    = Numbers_Utils.getValueInRange({
-            minValue    : 80,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight - 80,
-            rawValue    : dataCount * 40 + (dataCount - 1) * 6,
+            minValue : 80,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight - 80,
+            rawValue : dataCount * 40 + (dataCount - 1) * 6,
         });
         this._group.setUnscaledManualHeight(listHeight + 80);
 
@@ -103,9 +103,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray     : DataForPlayerRenderer[] = [];
         for (const playerInfo of openData.playerInfoArray) {
             dataArray.push({
-                gameConfig  : gameConfig,
-                warId       : warId,
-                playerInfo  : playerInfo,
+                gameConfig : gameConfig,
+                warId      : warId,
+                playerInfo : playerInfo,
             });
         }
 
@@ -136,10 +136,10 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,        callback: this._onTouchedGroupCo, },
-            { ui: this._groupPlayer,    callback: this._onTouchedGroupPlayer, },
-            { ui: this._btnChat,        callback: this._onTouchedBtnChat, },
-            { ui: this._btnRelation,    callback: this._onTouchedBtnRelation },
+            { ui : this._groupCo,        callback : this._onTouchedGroupCo },
+            { ui : this._groupPlayer,    callback : this._onTouchedGroupPlayer },
+            { ui : this._btnChat,        callback : this._onTouchedBtnChat },
+            { ui : this._btnRelation,    callback : this._onTouchedBtnRelation },
         ]);
     }
 
@@ -191,8 +191,8 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-            gameConfig  : openData.gameConfig,
-            coId        : openData.playerInfo.coId,
+            gameConfig : openData.gameConfig,
+            coId       : openData.playerInfo.coId,
         });
     }
 
@@ -204,7 +204,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const userId = openData.playerInfo.userId;
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
@@ -224,16 +224,16 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         if (userId !== Users_Model.getSelfUserId()) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
-                toTarget    : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
-                    toUserId    : userId,
+                toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
+                    toUserId : userId,
                 }),
             });
         } else {
             const warId = openData.warId;
             if (warId != null) {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
-                    toTarget    : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
-                        toWarAndSelf    : warId * Chat_Constants.Common.TeamDivider + playerIndex,
+                    toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
+                        toWarAndSelf : warId * Chat_Constants.Common.TeamDivider + playerIndex,
                     }),
                 });
             }
@@ -248,7 +248,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
         const userId = openData.playerInfo.userId;
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetRelationPanel, { userId: userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserSetRelationPanel, { userId : userId });
         }
     }
 }

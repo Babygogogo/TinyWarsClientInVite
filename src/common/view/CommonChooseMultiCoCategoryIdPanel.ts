@@ -26,7 +26,7 @@ import {
     Ui_Utils_UiSkinHelpers,
 } from "../../internal.ts";
 
-// eslint-disable-next-line no-shadow
+ 
 const enum InfoType {
     CoName,
     BpRates,
@@ -77,14 +77,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnMap,         callback: this._onTouchedBtnMap },
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
-            { ui: this._groupSelectAll, callback: this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnMap,         callback : this._onTouchedBtnMap },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
+            { ui : this._groupSelectAll, callback : this._onTouchedGroupSelectAll },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -360,7 +360,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const maxChooseCount    = openData?.maxChooseCount;
         this._groupSelectAll.setIsVisible(
             (openData?.callbackOnConfirm != null)                                                           &&
-            ((maxChooseCount == null) || (maxChooseCount >= openData.availableCoCategoryIdArray.length))
+            ((maxChooseCount == null) || (maxChooseCount >= openData.availableCoCategoryIdArray.length)),
         );
 
         this._updateImgSelectAll();
@@ -396,8 +396,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const uiCoInfo = this._uiCoInfo;
         uiCoInfo.setOpenData({
-            gameConfig  : gameConfig,
-            coId        : gameConfig.getEnabledCoIdByCategoryId(coCategoryId) ?? gameConfig.getCoIdByCategoryId(coCategoryId),
+            gameConfig : gameConfig,
+            coId       : gameConfig.getEnabledCoIdByCategoryId(coCategoryId) ?? gameConfig.getCoIdByCategoryId(coCategoryId),
         });
         await uiCoInfo.applyOpenData();
     }
@@ -433,7 +433,7 @@ class RendererForCoCategory extends Ui_Components_UiContainer.UiContainer {
 
         Ui_Utils_UiSkinHelpers.loadSkinByPath(
             this,
-            isBan ? "component/coInfo/CoHead006.exml" : "component/coInfo/CoHead005.exml"
+            isBan ? "component/coInfo/CoHead006.exml" : "component/coInfo/CoHead005.exml",
         );
     }
 
@@ -563,9 +563,9 @@ class RendererForCoCategory extends Ui_Components_UiContainer.UiContainer {
 
 function createCoContainer(): Ui_Interfaces_IUiLayout.IUiLayout {
     const layout = new Ui_Components_UiLayout.UiLayout({
-        itemsHMargin        : 10,
-        itemsVMargin        : 10,
-        multiItemsPerBlock  : true,
+        itemsHMargin       : 10,
+        itemsVMargin       : 10,
+        multiItemsPerBlock : true,
     });
     layout.setUnscaledManualWidth(310);
 

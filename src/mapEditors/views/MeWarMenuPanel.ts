@@ -36,15 +36,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback: this._onNotifyMsgUserSetMapEditorAutoSaveTime },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetMapEditorAutoSaveTime,     callback : this._onNotifyMsgUserSetMapEditorAutoSaveTime },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnAutoSave,            callback: this._onTouchedBtnAutoSave },
-            { ui: this._btnGameSettings,        callback: this._onTouchedBtnGameSettings },
-            { ui: this._btnGotoLobby,           callback: this._onTouchedBtnGotoLobby },
-            { ui: this._btnGotoMapList,         callback: this._onTouchedBtnGotoMapList },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnAutoSave,            callback : this._onTouchedBtnAutoSave },
+            { ui : this._btnGameSettings,        callback : this._onTouchedBtnGameSettings },
+            { ui : this._btnGotoLobby,           callback : this._onTouchedBtnGotoLobby },
+            { ui : this._btnGotoMapList,         callback : this._onTouchedBtnGotoMapList },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -63,12 +63,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const minValue  = MapEditors_Constants.AutoSaveConstants.MinAutoSaveTime;
         const maxValue  = MapEditors_Constants.AutoSaveConstants.MaxAutoSaveTime;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0709),
-            currentValue    : currValue ?? maxValue,
-            minValue        : minValue,
-            maxValue        : maxValue,
-            getHelpText     : () => Lang_Utils.getText(Lang_Constants.TextType.A0246),
-            callback        : value => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0709),
+            currentValue : currValue ?? maxValue,
+            minValue     : minValue,
+            maxValue     : maxValue,
+            getHelpText  : () => Lang_Utils.getText(Lang_Constants.TextType.A0246),
+            callback     : value => {
                 if (value != currValue) {
                     Users_Proxy.reqSetMapEditorAutoSaveTime(value);
                 }
@@ -82,7 +82,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
             getContent : () => this.getOpenData()?.war.getIsMapModified() ? Lang_Utils.getText(Lang_Constants.TextType.A0143) : Lang_Utils.getText(Lang_Constants.TextType.A0025),
-            callback: () => Helpers_GameFlow.gotoLobby(),
+            callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
     private _onTouchedBtnGotoMapList(): void {
@@ -90,9 +90,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmReviewListPanel, void 0);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1275),
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
-                callback    : () => Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me),
+                getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1275),
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0072),
+                callback   : () => Helpers_GameFlow.gotoMyWarListPanel(WarTypes_Constants.WarTypeId.Me),
             });
         }
     }

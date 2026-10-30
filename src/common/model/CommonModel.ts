@@ -207,13 +207,15 @@ export function getCachedUnitImageSource({ gcData, version, skinId, unitType, is
 
     const dict4 = Helpers_Misc.getExisted(dict3.get(skinId));
     if (!dict4.has(unitType)) {
-        dict4.set(unitType, { source: null, tick: null });
+        dict4.set(unitType, { source : null, tick : null });
     }
 
     const cfg = Helpers_Misc.getExisted(dict4.get(unitType));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = Helpers_ImageSource.getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount });
+        cfg.source  = Helpers_ImageSource.getUnit({
+            gcData, version, skinId, unitType, isDark, animationType, tickCount, 
+        });
     }
 
     return Helpers_Misc.getExisted(cfg.source);
@@ -280,13 +282,15 @@ export function getCachedTileBaseImageSource({ version, themeType, skinId, baseT
 
     const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
-        dict6.set(tickCount, { source: null, tick: null });
+        dict6.set(tickCount, { source : null, tick : null });
     }
 
     const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = Helpers_ImageSource.getTileBase({ version, themeType, skinId, baseType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileBase({
+            version, themeType, skinId, baseType, isDark, shapeId, tickCount, 
+        });
     }
 
     return Helpers_Misc.getExisted(cfg.source);
@@ -336,13 +340,15 @@ export function getCachedTileDecorationImageSource({ version, themeType, skinId,
 
     const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
-        dict6.set(tickCount, { source: null, tick: null });
+        dict6.set(tickCount, { source : null, tick : null });
     }
 
     const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = Helpers_ImageSource.getTileDecoration({ version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileDecoration({
+            version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount, 
+        });
     }
 
     return Helpers_Misc.getExisted(cfg.source);
@@ -388,13 +394,15 @@ export function getCachedTileObjectImageSource({ version, themeType, skinId, obj
 
     const dict6 = Helpers_Misc.getExisted(dict5.get(shapeId));
     if (!dict6.has(tickCount)) {
-        dict6.set(tickCount, { source: null, tick: null });
+        dict6.set(tickCount, { source : null, tick : null });
     }
 
     const cfg = Helpers_Misc.getExisted(dict6.get(tickCount));
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
-        cfg.source  = Helpers_ImageSource.getTileObject({ version, themeType, skinId, objectType, isDark, shapeId, tickCount });
+        cfg.source  = Helpers_ImageSource.getTileObject({
+            version, themeType, skinId, objectType, isDark, shapeId, tickCount, 
+        });
     }
 
     return Helpers_Misc.getExisted(cfg.source);

@@ -31,16 +31,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserLogin,                callback: this._onMsgUserLogin },
-            { type: Notifications_TypeId.TypeId.MsgUserLoginAsGuest,         callback: this._onMsgUserLoginAsGuest },
-            { type: Notifications_TypeId.TypeId.MsgUserLogout,               callback: this._onMsgUserLogout },
-            { type: Notifications_TypeId.TypeId.MsgUserSetNickname,          callback: this._onMsgUserSetNickname },
-            { type: Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback: this._onNotifyMsgUserSetAvatarId },
-            { type: Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,  callback: this._onNotifyMsgUserSetShowMEdalIdArray },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserLogin,                callback : this._onMsgUserLogin },
+            { type : Notifications_TypeId.TypeId.MsgUserLoginAsGuest,         callback : this._onMsgUserLoginAsGuest },
+            { type : Notifications_TypeId.TypeId.MsgUserLogout,               callback : this._onMsgUserLogout },
+            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,          callback : this._onMsgUserSetNickname },
+            { type : Notifications_TypeId.TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
+            { type : Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,  callback : this._onNotifyMsgUserSetShowMEdalIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupUserInfo,  callback: this._onTouchedGroupUserInfo },
+            { ui : this._groupUserInfo,  callback : this._onTouchedGroupUserInfo },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -78,25 +78,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().UserOnlineUsersPanel);
         GamePanels_Manager.closePanel(GamePanels_Dict.getDict().ChatPanel);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
-            userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
+            userId : Helpers_Misc.getExisted(Users_Model.getSelfUserId()),
         });
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: -40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : -40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: -40 },
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : -40 },
         });
 
         await Timer_TimerModel.wait();

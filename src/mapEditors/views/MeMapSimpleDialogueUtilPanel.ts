@@ -28,13 +28,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,  callback: this._onNotifyMeMapSimpleDialogueChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,  callback : this._onNotifyMeMapSimpleDialogueChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnDeleteAll,           callback: this._onTouchedBtnDeleteAll },
-            { ui: this._btnDeleteRedundancy,    callback: this._onTouchedBtnDeleteRedundancy },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnDeleteAll,           callback : this._onTouchedBtnDeleteAll },
+            { ui : this._btnDeleteRedundancy,    callback : this._onTouchedBtnDeleteRedundancy },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -69,7 +69,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 war.deleteAllMapSimpleDialogues();
                 for (const rule of war.getTemplateWarRuleArray()) {
                     rule.setMapSimpleDialogueIdArray([]);
@@ -108,7 +108,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0191, unusedDialogueIdArray.map(v => `#${v}`).join(`, `)),
-                callback: () => {
+                callback   : () => {
                     war.deleteMapSimpleDialogues(unusedDialogueIdArray);
                     FloatText.showLang(Lang_Constants.TextType.OperationSucceeded);
 

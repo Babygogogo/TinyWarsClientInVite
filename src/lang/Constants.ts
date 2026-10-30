@@ -2,14 +2,14 @@
 
 export const UndefinedError = `UndefErr`;
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum LanguageType {
     Chinese = 0,
     English = 1,
     Spanish = 2,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum TextType {
     A0000, A0001, A0002, A0003, A0004, A0005, A0006, A0007, A0008, A0009,
     A0010, A0011, A0012, A0013, A0014, A0015, A0016, A0017, A0018, A0019,

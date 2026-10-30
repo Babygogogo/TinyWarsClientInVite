@@ -32,10 +32,10 @@ export function getErrorCode(data: MapSimpleDialogue, playersCountUnneutral: num
         const dialogueNameArray = data.getDialogueNameArray();
         if ((dialogueNameArray == null)                                     ||
             (!Lang_Utils.checkIsValidLanguageTextArray({
-                list            : dialogueNameArray,
-                maxTextLength   : Dialogues_Constants.Common.DialogueNameMaxLength,
-                minTextLength   : 1,
-                minTextCount    : 1,
+                list          : dialogueNameArray,
+                maxTextLength : Dialogues_Constants.Common.DialogueNameMaxLength,
+                minTextLength : 1,
+                minTextCount  : 1,
             }))
         ) {
             return Utils_ClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_03;
@@ -97,19 +97,19 @@ function getErrorCodeForDataForCoDialogue(data: DataForCoDialogue, playersCountU
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getTextArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxTextLength,
-        minTextCount    : 1,
+        list          : data.getTextArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxTextLength,
+        minTextCount  : 1,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_04;
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getNameArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxNameLength,
-        minTextCount    : 0,
+        list          : data.getNameArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxNameLength,
+        minTextCount  : 0,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_05;
     }
@@ -118,10 +118,10 @@ function getErrorCodeForDataForCoDialogue(data: DataForCoDialogue, playersCountU
 }
 function getErrorCodeForDataForAside(data: DataForAside): Utils_ClientErrorCode.ClientErrorCode {
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : data.getTextArray(),
-        minTextLength   : 1,
-        maxTextLength   : Dialogues_Constants.Common.MaxTextLength,
-        minTextCount    : 1,
+        list          : data.getTextArray(),
+        minTextLength : 1,
+        maxTextLength : Dialogues_Constants.Common.MaxTextLength,
+        minTextCount  : 1,
     })) {
         return Utils_ClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForAside_00;
     }
@@ -171,10 +171,10 @@ export function getErrorTip(data: MapSimpleDialogue, playersCountUnneutral: numb
         const dialogueNameArray = data.getDialogueNameArray();
         if ((dialogueNameArray == null)                                     ||
             (!Lang_Utils.checkIsValidLanguageTextArray({
-                list            : dialogueNameArray,
-                maxTextLength   : Dialogues_Constants.Common.DialogueNameMaxLength,
-                minTextLength   : 1,
-                minTextCount    : 1,
+                list          : dialogueNameArray,
+                maxTextLength : Dialogues_Constants.Common.DialogueNameMaxLength,
+                minTextLength : 1,
+                minTextCount  : 1,
             }))
         ) {
             return Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, Lang_Utils.getText(Lang_Constants.TextType.B0162));

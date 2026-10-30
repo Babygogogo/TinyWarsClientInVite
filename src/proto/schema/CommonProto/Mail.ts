@@ -1,14 +1,14 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../$runtime.js";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+ 
 export interface MailJson extends $ProtoSchemaJsonBase {
 }
 
 export class Mail extends $ProtoSchemaBase {
     // No member data.
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     public static fromJson(obj: MailJson): Mail {
         return new Mail().loadJson(obj);
     }

@@ -26,10 +26,10 @@ export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict
     }
 
     if (!Lang_Utils.checkIsValidLanguageTextArray({
-        list            : conditionNode.getNodeNameArray(),
-        maxTextLength   : WarEvents_Constants.Event.MaxNameLength,
-        minTextLength   : 1,
-        minTextCount    : 0,
+        list          : conditionNode.getNodeNameArray(),
+        maxTextLength : WarEvents_Constants.Event.MaxNameLength,
+        minTextLength : 1,
+        minTextCount  : 0,
     })) {
         return false;
     }
@@ -175,8 +175,8 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
                 const newSubNodeIdAndFlagsArray: NodeIdAndFlags[] = [];
                 for (const subNodeIdAndFlags of srcNode.getSubNodeIdAndFlagsArray()) {
                     newSubNodeIdAndFlagsArray.push(NodeIdAndFlags.fromJson({
-                        nodeId      : cloneNode(fullData, subNodeIdAndFlags.getNodeId(), isShallowClone),
-                        isNegated   : subNodeIdAndFlags.getIsNegated(),
+                        nodeId    : cloneNode(fullData, subNodeIdAndFlags.getNodeId(), isShallowClone),
+                        isNegated : subNodeIdAndFlags.getIsNegated(),
                     }));
                 }
                 newNode.setSubNodeIdAndFlagsArray(newSubNodeIdAndFlagsArray);
@@ -210,24 +210,24 @@ export function createAndAddRootNodeInEvent({ fullData, eventId, isNeedAnd, isNe
     for (let newNodeId = 1; ; ++newNodeId) {
         if (!nodeArray.some(v => v.getNodeId() === newNodeId)) {
             nodeArray.push(WarEventConditionNode.fromJson({
-                nodeId                      : newNodeId,
-                isNeedAnd                   : isNeedAnd,
-                isNeedFalse                 : isNeedFalse,
-                conditionIdAndFlagsArray    : conditionIdAndFlagsArray.map(v => v.toJson()),
-                subNodeIdAndFlagsArray      : subNodeIdAndFlagsArray.map(v => v.toJson()),
-                nodeNameArray               : [],
-                deprecatedSubNodeIdArray    : [],
-                deprecatedConditionIdArray  : [],
+                nodeId                     : newNodeId,
+                isNeedAnd                  : isNeedAnd,
+                isNeedFalse                : isNeedFalse,
+                conditionIdAndFlagsArray   : conditionIdAndFlagsArray.map(v => v.toJson()),
+                subNodeIdAndFlagsArray     : subNodeIdAndFlagsArray.map(v => v.toJson()),
+                nodeNameArray              : [],
+                deprecatedSubNodeIdArray   : [],
+                deprecatedConditionIdArray : [],
             }));
             nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             // const oldNodeId         = event.conditionNodeId;
             rootNodeAndActionsArray.push(ConditionNodeAndActions.fromJson({
-                nodeIdAndFlags  : {
-                    nodeId      : newNodeId,
-                    isNegated   : false,
+                nodeIdAndFlags : {
+                    nodeId    : newNodeId,
+                    isNegated : false,
                 },
-                actionIdArray   : [],
+                actionIdArray : [],
             }));
             // checkAndDeleteUnusedNode(fullData, oldNodeId);
 
@@ -258,14 +258,14 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
     for (let nodeId = 1; ; ++nodeId) {
         if (!nodeArray.some(v => v.getNodeId() === nodeId)) {
             nodeArray.push(WarEventConditionNode.fromJson({
-                nodeId                      : nodeId,
-                isNeedAnd                   : isNeedAnd,
-                isNeedFalse                 : isNeedFalse,
-                conditionIdAndFlagsArray    : conditionIdAndFlagsArray.map(v => v.toJson()),
-                subNodeIdAndFlagsArray      : subNodeIdAndFlagsArray.map(v => v.toJson()),
-                nodeNameArray               : [],
-                deprecatedSubNodeIdArray    : [],
-                deprecatedConditionIdArray  : [],
+                nodeId                     : nodeId,
+                isNeedAnd                  : isNeedAnd,
+                isNeedFalse                : isNeedFalse,
+                conditionIdAndFlagsArray   : conditionIdAndFlagsArray.map(v => v.toJson()),
+                subNodeIdAndFlagsArray     : subNodeIdAndFlagsArray.map(v => v.toJson()),
+                nodeNameArray              : [],
+                deprecatedSubNodeIdArray   : [],
+                deprecatedConditionIdArray : [],
             }));
             nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 

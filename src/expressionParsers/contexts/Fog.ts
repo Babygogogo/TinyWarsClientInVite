@@ -24,7 +24,7 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
     public static readonly Variables    = Fog.generateVariables();
     private static generateVariables(): ExpressionParsers_Types.EpVariableInfoDict {
         const variables = ExpressionParsers_Utils.extendVariableInfoDict(ExpressionParsers_Contexts_War.War.Variables);
-        variables.set(Fog.VnWar,         { desc: Lang_Constants.TextType.A0384, resultType: ExpressionParsers_Enums.ResultType.War, isExtension: false });
+        variables.set(Fog.VnWar,         { desc : Lang_Constants.TextType.A0384, resultType : ExpressionParsers_Enums.ResultType.War, isExtension : false });
 
         return variables;
     }
@@ -38,21 +38,23 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
                     if (argArray.length !== 1) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterCount(Fog.FnEnabled, `1`, argArray.length),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_00
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_00,
                         );
                     }
 
-                    const argResultType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+                    const argResultType = argArray[0].getResultType({
+                        contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+                    });
                     if (argResultType !== ExpressionParsers_Enums.ResultType.Number) {
                         throw Helpers_Misc.newError(
                             ExpressionParsers_Utils.getErrorTextForParameterType(Fog.FnEnabled, 1, ExpressionParsers_Enums.ResultType.Number, argResultType),
-                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_01
+                            Utils_ClientErrorCode.ClientErrorCode.EpContextFog_GenerateFunctions_01,
                         );
                     }
 
                     return ExpressionParsers_Enums.ResultType.Number;
                 },
-            )
+            ),
         );
 
         return functions;

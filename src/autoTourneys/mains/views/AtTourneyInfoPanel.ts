@@ -67,19 +67,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.TimeTick,                callback: this._onNotifyTimeTick },
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgAtSetName,            callback: this._onNotifyMsgAtSetName },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchMakeRequest,  callback: this._onNotifyMsgMpwWatchMakeRequest },
+            { type : Notifications_TypeId.TypeId.TimeTick,                callback : this._onNotifyTimeTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgAtSetName,            callback : this._onNotifyMsgAtSetName },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchMakeRequest,  callback : this._onNotifyMsgMpwWatchMakeRequest },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnSettings,            callback: this._onTouchedBtnSettings },
-            { ui: this._btnNextTourney,         callback: this._onTouchedBtnNextTourney },
-            { ui: this._btnPreviousTourney,     callback: this._onTouchedBtnPreviousTourney },
-            { ui: this._btnNextBracket,         callback: this._onTouchedBtnNextBracket },
-            { ui: this._btnPreviousBracket,     callback: this._onTouchedBtnPreviousBracket },
-            { ui: this._groupMapName,           callback: this._onTouchedGroupMapName },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSettings,            callback : this._onTouchedBtnSettings },
+            { ui : this._btnNextTourney,         callback : this._onTouchedBtnNextTourney },
+            { ui : this._btnPreviousTourney,     callback : this._onTouchedBtnPreviousTourney },
+            { ui : this._btnNextBracket,         callback : this._onTouchedBtnNextBracket },
+            { ui : this._btnPreviousBracket,     callback : this._onTouchedBtnPreviousBracket },
+            { ui : this._groupMapName,           callback : this._onTouchedGroupMapName },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -114,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnSettings(): void {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtTourneySettingsPanel, { tourneyId: this._tourneyId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().AtTourneySettingsPanel, { tourneyId : this._tourneyId });
     }
     private async _onTouchedBtnNextTourney(): Promise<void> {
         const tourneyIdArray    = await AutoTourneys_Mains_Provider.getAllTourneyIdArray();
@@ -153,9 +153,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    mapRawData          : mapRawData,
-                    gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                    overridingPlayers   : null,
+                    mapRawData        : mapRawData,
+                    gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                    overridingPlayers : null,
                 },
             });
         }
@@ -274,7 +274,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private async _updateLabelTourneyId(): Promise<void> {
         const tourneyId             = this._tourneyId;
-        const tourneyName           = Lang_Utils.getLanguageText({ textArray: (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() });
+        const tourneyName           = Lang_Utils.getLanguageText({ textArray : (await AutoTourneys_Mains_Provider.getAtTourneyInfo(tourneyId))?.getNameArray() });
         this._labelTourneyId.setText(`#${tourneyId} ${tourneyName ?? ``}`);
     }
     private async _updateLabelMapName(): Promise<void> {
@@ -354,14 +354,14 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupName1,                 callback: this._onTouchedGroupName1 },
-            { ui: this._groupName2,                 callback: this._onTouchedGroupName2 },
-            { ui: this._btnReplay,                  callback: this._onTouchedBtnReplay },
-            { ui: this._btnSpectateRequest,         callback: this._onTouchedBtnSpectate },
-            { ui: this._btnSpectateContinue,        callback: this._onTouchedBtnSpectate },
+            { ui : this._groupName1,                 callback : this._onTouchedGroupName1 },
+            { ui : this._groupName2,                 callback : this._onTouchedGroupName2 },
+            { ui : this._btnReplay,                  callback : this._onTouchedBtnReplay },
+            { ui : this._btnSpectateRequest,         callback : this._onTouchedBtnSpectate },
+            { ui : this._btnSpectateContinue,        callback : this._onTouchedBtnSpectate },
         ]);
 
         this._updateComponentsForLanguage();
@@ -403,14 +403,14 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
     private _onTouchedGroupName1(): void {
         const userId = (this.getOpenData()?.bracketInfo.getUserIdArray() ?? [])[0];
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onTouchedGroupName2(): void {
         const userId = (this.getOpenData()?.bracketInfo.getUserIdArray() ?? [])[1];
         if (userId != null) {
-            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: userId });
+            GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         }
     }
@@ -419,7 +419,7 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         if (replayId != null) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0406),
-                callback: async () => {
+                callback   : async () => {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
                         title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
                         content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
@@ -457,7 +457,7 @@ class BracketRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
             }
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WwMakeRequestDetailPanel, {
-                warId   : warId,
+                warId : warId,
             });
         }
     }

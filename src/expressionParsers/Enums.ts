@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ContextType {
     Unknown,
 
@@ -28,7 +28,7 @@ export const enum ContextType {
     CustomCounter,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ResultType {
     Unknown,
 
@@ -56,7 +56,7 @@ export const enum ResultType {
     Lambda,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum Priority {
     Ternary             = 1,
     LogicalOr,
@@ -70,7 +70,7 @@ export const enum Priority {
     Leaf,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum OperatorCode {
     // 新增code时不能插入在中间，只能加在后面，否则会造成不兼容
     LogicalOr   = 1,
@@ -96,7 +96,7 @@ export const enum OperatorCode {
     Not,
 }
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum Token {
     Unknown,
 

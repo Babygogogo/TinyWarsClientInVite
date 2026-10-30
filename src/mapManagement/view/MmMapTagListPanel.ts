@@ -36,16 +36,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmSetMapTagSingleData,    callback: this._onNotifyMsgMmSetMapTagSingleData },
-            { type: Notifications_TypeId.TypeId.MsgMapGetMapTag,             callback: this._onNotifyMsgMapGetMapTag },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmSetMapTagSingleData,    callback : this._onNotifyMsgMmSetMapTagSingleData },
+            { type : Notifications_TypeId.TypeId.MsgMapGetMapTag,             callback : this._onNotifyMsgMapGetMapTag },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
 
-            { ui: this._btnRename,          callback: this._onTouchedBtnRename },
-            { ui: this._btnEnable,          callback: this._onTouchedBtnEnable },
-            { ui: this._btnDisable,         callback: this._onTouchedBtnDisable },
+            { ui : this._btnRename,          callback : this._onTouchedBtnRename },
+            { ui : this._btnEnable,          callback : this._onTouchedBtnEnable },
+            { ui : this._btnDisable,         callback : this._onTouchedBtnDisable },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -88,13 +88,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const mapTagData = (await NormalMap_Model_NormalMapModel.getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagId);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-            currentTextArray    : mapTagData?.getNameArray() ?? [],
-            maxTextLength       : MapTags_Constants.Constants.MaxNameLength,
-            getHelpText         : () => Lang_Utils.getText(Lang_Constants.TextType.A0313),
-            callback            : textArray => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
-                mapTagId    : mapTagId,
-                isEnabled   : !!mapTagData?.getIsEnabled(),
-                nameArray   : textArray.map(v => v.toJson()),
+            currentTextArray : mapTagData?.getNameArray() ?? [],
+            maxTextLength    : MapTags_Constants.Constants.MaxNameLength,
+            getHelpText      : () => Lang_Utils.getText(Lang_Constants.TextType.A0313),
+            callback         : textArray => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
+                mapTagId  : mapTagId,
+                isEnabled : !!mapTagData?.getIsEnabled(),
+                nameArray : textArray.map(v => v.toJson()),
             })),
         });
     }
@@ -112,17 +112,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const nameArray = mapTagData.getNameArray();
-        if (Lang_Utils.getLanguageText({ textArray: nameArray }) == null) {
+        if (Lang_Utils.getLanguageText({ textArray : nameArray }) == null) {
             FloatText.showLang(Lang_Constants.TextType.A0311);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
-                mapTagId    : mapTagId,
-                isEnabled   : !mapTagData.getIsEnabled(),
-                nameArray   : nameArray.map(v => v.toJson()),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
+                mapTagId  : mapTagId,
+                isEnabled : !mapTagData.getIsEnabled(),
+                nameArray : nameArray.map(v => v.toJson()),
             })),
         });
     }
@@ -140,18 +140,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const nameArray = mapTagData.getNameArray();
-        if (Lang_Utils.getLanguageText({ textArray: nameArray }) == null) {
+        if (Lang_Utils.getLanguageText({ textArray : nameArray }) == null) {
             FloatText.showLang(Lang_Constants.TextType.A0311);
             return;
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
-                mapTagId    : mapTagId,
-                isEnabled   : !mapTagData.getIsEnabled(),
-                nameArray   : nameArray.map(v => v.toJson()),
-            }))
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => NormalMap_Model_NormalMapProxy.reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
+                mapTagId  : mapTagId,
+                isEnabled : !mapTagData.getIsEnabled(),
+                nameArray : nameArray.map(v => v.toJson()),
+            })),
         });
     }
 
@@ -172,8 +172,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray : DataForMapTagRenderer[] = [];
         for (let mapTagId = MapTags_Constants.Constants.MinId; mapTagId <= MapTags_Constants.Constants.MaxId; ++mapTagId) {
             dataArray.push({
-                mapTagId    : mapTagId,
-                panel       : this,
+                mapTagId : mapTagId,
+                panel    : this,
             });
         }
 
@@ -206,7 +206,7 @@ class MapTagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -216,9 +216,9 @@ class MapTagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -256,7 +256,7 @@ class MapTagRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const labelIsEnabled    = this._labelIsEnabled;
         labelIsEnabled.setLangText(isEnabled ? Lang_Constants.TextType.B0431 : Lang_Constants.TextType.B0432);
         labelIsEnabled.setTextColor(isEnabled ? 0x00FF00 : 0xC9D3DF);
-        this._labelMapTagName.setText(Lang_Utils.getLanguageText({ textArray: mapTagData?.getNameArray() }) ?? '--');
+        this._labelMapTagName.setText(Lang_Utils.getLanguageText({ textArray : mapTagData?.getNameArray() }) ?? '--');
         this._layoutName.arrangeItems();
     }
 }

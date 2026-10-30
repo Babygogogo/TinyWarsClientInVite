@@ -35,10 +35,10 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : Ui_Types_UiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align : Ui_Types_UiHorizontalAlign.UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listRule.setItemRendererClass(RuleRenderer);
@@ -69,7 +69,7 @@ export class Page extends Ui_Components_UiOpenableComponent.UiOpenableComponent<
 
         const dataArray: DataForRuleRenderer[] = [];
         dataArray.push({
-            campaignId: campaignId,
+            campaignId : campaignId,
         });
         await listRule.bindData(dataArray);
     }
@@ -90,7 +90,7 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
         ]);
 
         this._listStd.setItemRendererClass(UserRenderer);
@@ -140,11 +140,11 @@ class RuleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             const score = rankData.getScore() ?? 0;
             for (const userId of rankData.getUserIdArray()) {
                 dataArray.push({
-                    index       : 0,
-                    rank        : 0,
-                    userId      : userId,
-                    score       : score,
-                    isLast      : false,
+                    index  : 0,
+                    rank   : 0,
+                    userId : userId,
+                    score  : score,
+                    isLast : false,
                 });
             }
         }
@@ -209,7 +209,7 @@ class UserRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -78,38 +78,38 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnReset,                   callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,                  callback: this._onTouchedBtnSearch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnReset,                   callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,                  callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnModifyNormalMapId,       callback: this._onTouchedBtnModifyNormalMapId },
-            { ui: this._btnDeleteNormalMapId,       callback: this._onTouchedBtnDeleteNormalMapId },
+            { ui : this._btnModifyNormalMapId,       callback : this._onTouchedBtnModifyNormalMapId },
+            { ui : this._btnDeleteNormalMapId,       callback : this._onTouchedBtnDeleteNormalMapId },
 
-            { ui: this._btnModifyGameMode,          callback: this._onTouchedBtnModifyGameMode },
-            { ui: this._btnDeleteGameMode,          callback: this._onTouchedBtnDeleteGameMode },
+            { ui : this._btnModifyGameMode,          callback : this._onTouchedBtnModifyGameMode },
+            { ui : this._btnDeleteGameMode,          callback : this._onTouchedBtnDeleteGameMode },
 
-            { ui: this._btnModifyMinTurnIndex,      callback: this._onTouchedBtnModifyMinTurnIndex },
-            { ui: this._btnDeleteMinTurnIndex,      callback: this._onTouchedBtnDeleteMinTurnIndex },
+            { ui : this._btnModifyMinTurnIndex,      callback : this._onTouchedBtnModifyMinTurnIndex },
+            { ui : this._btnDeleteMinTurnIndex,      callback : this._onTouchedBtnDeleteMinTurnIndex },
 
-            { ui: this._btnModifyMaxTurnIndex,      callback: this._onTouchedBtnModifyMaxTurnIndex },
-            { ui: this._btnDeleteMaxTurnIndex,      callback: this._onTouchedBtnDeleteMaxTurnIndex },
+            { ui : this._btnModifyMaxTurnIndex,      callback : this._onTouchedBtnModifyMaxTurnIndex },
+            { ui : this._btnDeleteMaxTurnIndex,      callback : this._onTouchedBtnDeleteMaxTurnIndex },
 
-            { ui: this._btnModifyMinRankScore,      callback: this._onTouchedBtnModifyMinRankScore },
-            { ui: this._btnDeleteMinRankScore,      callback: this._onTouchedBtnDeleteMinRankScore },
+            { ui : this._btnModifyMinRankScore,      callback : this._onTouchedBtnModifyMinRankScore },
+            { ui : this._btnDeleteMinRankScore,      callback : this._onTouchedBtnDeleteMinRankScore },
 
-            { ui: this._btnModifyMaxRankScore,      callback: this._onTouchedBtnModifyMaxRankScore },
-            { ui: this._btnDeleteMaxRankScore,      callback: this._onTouchedBtnDeleteMaxRankScore },
+            { ui : this._btnModifyMaxRankScore,      callback : this._onTouchedBtnModifyMaxRankScore },
+            { ui : this._btnDeleteMaxRankScore,      callback : this._onTouchedBtnDeleteMaxRankScore },
 
-            { ui: this._btnModifyHasFog,            callback: this._onTouchedBtnModifyHasFog },
-            { ui: this._btnDeleteHasFog,            callback: this._onTouchedBtnDeleteHasFog },
+            { ui : this._btnModifyHasFog,            callback : this._onTouchedBtnModifyHasFog },
+            { ui : this._btnDeleteHasFog,            callback : this._onTouchedBtnDeleteHasFog },
 
-            { ui: this._btnModifyIncludeMirrorGame, callback: this._onTouchedBtnModifyIncludeMirrorGame },
+            { ui : this._btnModifyIncludeMirrorGame, callback : this._onTouchedBtnModifyIncludeMirrorGame },
 
-            { ui: this._btnModifyShowDeprecatedCo,  callback: this._onTouchedBtnModifyShowDeprecatedCo },
+            { ui : this._btnModifyShowDeprecatedCo,  callback : this._onTouchedBtnModifyShowDeprecatedCo },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -149,12 +149,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...normalMapIdSet],
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : [...normalMapIdSet],
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            callback                  : normalMapId => {
                 this._filter.normalMapId = normalMapId;
                 this._updateLabelNormalMapId();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteNormalMapId(): void {
@@ -166,24 +166,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter        = this._filter;
         const currentMode   = filter.gameMode;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            availableNumberArray    : [
+            availableNumberArray : [
                 GameModes_Constants.ModeId.Versus,
                 GameModes_Constants.ModeId.Free,
                 GameModes_Constants.ModeId.UnrankedMatch,
                 GameModes_Constants.ModeId.RankedMatch,
                 GameModes_Constants.ModeId.AutoTourney,
             ],
-            currentNumber           : filter.gameMode,
-            keepOrder               : true,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0153),
-            getNumberMainText       : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
-            getNumberHelpText       : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : mode => {
+            currentNumber     : filter.gameMode,
+            keepOrder         : true,
+            getTitleText      : () => Lang_Utils.getText(Lang_Constants.TextType.B0153),
+            getNumberMainText : mode => Lang_Utils.getGameModeName(mode) ?? Lang_Constants.UndefinedError,
+            getNumberHelpText : mode => Lang_Utils.getGameModeHelpText(mode) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm : mode => {
                 if (currentMode != mode) {
                     filter.gameMode = mode;
                     this._updateLabelGameMode();
                 }
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteGameMode(): void {
@@ -194,14 +194,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMinTurnIndex(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0611),
-            minValue        : 6,
-            maxValue        : filter.maxTurnIndex ?? Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : filter.minTurnIndex,
-            callback        : minTurnIndex => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0611),
+            minValue     : 6,
+            maxValue     : filter.maxTurnIndex ?? Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : filter.minTurnIndex,
+            callback     : minTurnIndex => {
                 filter.minTurnIndex = minTurnIndex;
                 this._updateLabelMinTurnIndex();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinTurnIndex(): void {
@@ -212,14 +212,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMaxTurnIndex(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0621),
-            minValue        : filter.minTurnIndex ?? 6,
-            maxValue        : Turns_Constants.TurnIndex.MaxLimit,
-            currentValue    : filter.maxTurnIndex,
-            callback        : maxTurnIndex => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0621),
+            minValue     : filter.minTurnIndex ?? 6,
+            maxValue     : Turns_Constants.TurnIndex.MaxLimit,
+            currentValue : filter.maxTurnIndex,
+            callback     : maxTurnIndex => {
                 filter.maxTurnIndex = maxTurnIndex;
                 this._updateLabelMaxTurnIndex();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMaxTurnIndex(): void {
@@ -230,14 +230,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMinRankScore(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0687),
-            minValue        : 0,
-            maxValue        : filter.maxRankScore ?? 9999,
-            currentValue    : filter.minRankScore,
-            callback        : minRankScore => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0687),
+            minValue     : 0,
+            maxValue     : filter.maxRankScore ?? 9999,
+            currentValue : filter.minRankScore,
+            callback     : minRankScore => {
                 filter.minRankScore = minRankScore;
                 this._updateLabelMinRankScore();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMinRankScore(): void {
@@ -248,14 +248,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModifyMaxRankScore(): void {
         const filter = this._filter;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B0863),
-            minValue        : filter.minRankScore ?? 0,
-            maxValue        : 9999,
-            currentValue    : filter.maxRankScore,
-            callback        : maxRankScore => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0863),
+            minValue     : filter.minRankScore ?? 0,
+            maxValue     : 9999,
+            currentValue : filter.maxRankScore,
+            callback     : maxRankScore => {
                 filter.maxRankScore = maxRankScore;
                 this._updateLabelMaxRankScore();
-            }
+            },
         });
     }
     private _onTouchedBtnDeleteMaxRankScore(): void {
@@ -322,7 +322,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const normalMapId = this._filter.normalMapId;
         this._labelNormalMapId.setText(normalMapId == null
             ? ``
-            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? Lang_Constants.UndefinedError)
+            : (await NormalMap_Model_NormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? Lang_Constants.UndefinedError),
         );
     }
     private _updateLabelGameMode(): void {

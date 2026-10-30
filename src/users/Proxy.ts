@@ -40,51 +40,55 @@ import type { SceneBgmSettingsJson } from "../proto/schema/CommonProto/User/User
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserLogin,                            callback: _onMsgUserLogin, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserLoginAsGuest,                     callback: _onMsgUserLoginAsGuest },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserRegister,                         callback: _onMsgUserRegister, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserLogout,                           callback: _onMsgUserLogout, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetPublicInfo,                    callback: _onMsgUserGetPublicInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetPublicInfoArray,               callback: _onMsgUserGetPublicInfoArray, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetBriefInfo,                     callback: _onMsgUserGetBriefInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetOnlineState,                   callback: _onMsgUserGetOnlineState },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetUsersByNickname,               callback: _onMsgUserGetUsersByNickname },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetNickname,                      callback: _onMsgUserSetNickname, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetDiscordInfo,                   callback: _onMsgUserSetDiscordInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserGetOnlineUserIdArray,             callback: _onMsgUserGetOnlineUserIdArray, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetPassword,                      callback: _onMsgUserSetPassword, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetSettings,                      callback: _onMsgUserSetSettings, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetMapRating,                     callback: _onMsgUserSetMapRating },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetRelation,                      callback: _onMsgUserSetRelation },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserModifyFavoriteReplayIdArray,      callback: _onMsgUserModifyFavoriteReplayIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserRequestEmailVerificationCode,     callback: _onMsgUserRequestEmailVerificationCode },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserRequestPasswordVerificationCode,  callback: _onMsgUserRequestPasswordVerificationCode },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserResetPasswordWithEmail,           callback: _onMsgUserResetPasswordWithEmail },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetAvatarId,                      callback: _onMsgUserSetAvatarId },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetMapEditorAutoSaveTime,         callback: _onMsgUserSetMapEditorAutoSaveTime },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetCoBgmSettings,                 callback: _onMsgUserSetCoBgmSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetSceneBgmSettings,              callback: _onMsgUserSetSceneBgmSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserSetShowMedalIdArray,              callback: _onMsgUserSetShowMedalIdArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgUserVerifyEmail,                      callback: _onMsgUserVerifyEmail },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserLogin,                            callback : _onMsgUserLogin },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserLoginAsGuest,                     callback : _onMsgUserLoginAsGuest },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserRegister,                         callback : _onMsgUserRegister },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserLogout,                           callback : _onMsgUserLogout },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetPublicInfo,                    callback : _onMsgUserGetPublicInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetPublicInfoArray,               callback : _onMsgUserGetPublicInfoArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetBriefInfo,                     callback : _onMsgUserGetBriefInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetOnlineState,                   callback : _onMsgUserGetOnlineState },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetUsersByNickname,               callback : _onMsgUserGetUsersByNickname },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetNickname,                      callback : _onMsgUserSetNickname },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetDiscordInfo,                   callback : _onMsgUserSetDiscordInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserGetOnlineUserIdArray,             callback : _onMsgUserGetOnlineUserIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetPassword,                      callback : _onMsgUserSetPassword },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetSettings,                      callback : _onMsgUserSetSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetMapRating,                     callback : _onMsgUserSetMapRating },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetRelation,                      callback : _onMsgUserSetRelation },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserModifyFavoriteReplayIdArray,      callback : _onMsgUserModifyFavoriteReplayIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserRequestEmailVerificationCode,     callback : _onMsgUserRequestEmailVerificationCode },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserRequestPasswordVerificationCode,  callback : _onMsgUserRequestPasswordVerificationCode },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserResetPasswordWithEmail,           callback : _onMsgUserResetPasswordWithEmail },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetAvatarId,                      callback : _onMsgUserSetAvatarId },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetMapEditorAutoSaveTime,         callback : _onMsgUserSetMapEditorAutoSaveTime },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetCoBgmSettings,                 callback : _onMsgUserSetCoBgmSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetSceneBgmSettings,              callback : _onMsgUserSetSceneBgmSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserSetShowMedalIdArray,              callback : _onMsgUserSetShowMedalIdArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgUserVerifyEmail,                      callback : _onMsgUserVerifyEmail },
     ]);
 }
 
 export function reqLogin(account: string, rawPassword: string, isAutoRelogin: boolean): void {
     Networks_Manager.send({
-        MsgUserLogin: { c: {
-            account,
-            password    : Helpers_Sha1Generator.b64_sha1(rawPassword),
-            isAutoRelogin,
-        } },
+        MsgUserLogin : {
+            c : {
+                account,
+                password : Helpers_Sha1Generator.b64_sha1(rawPassword),
+                isAutoRelogin,
+            }, 
+        },
     });
 }
 export function reqRawLogin(account: string, password: string): void {
     Networks_Manager.send({
-        MsgUserLogin: { c: {
-            account,
-            password,
-            isAutoRelogin   : false,
-        } },
+        MsgUserLogin : {
+            c : {
+                account,
+                password,
+                isAutoRelogin : false,
+            }, 
+        },
     });
 }
 function _onMsgUserLogin(e: Egret_Egret.Event): void {
@@ -97,10 +101,12 @@ function _onMsgUserLogin(e: Egret_Egret.Event): void {
 
 export function reqUserLoginAsGuest(userId: number | null, isAutoRelogin: boolean): void {
     Networks_Manager.send({
-        MsgUserLoginAsGuest: { c: {
-            userId,
-            isAutoRelogin,
-        } },
+        MsgUserLoginAsGuest : {
+            c : {
+                userId,
+                isAutoRelogin,
+            }, 
+        },
     });
 }
 function _onMsgUserLoginAsGuest(e: Egret_Egret.Event): void {
@@ -113,11 +119,13 @@ function _onMsgUserLoginAsGuest(e: Egret_Egret.Event): void {
 
 export function reqUserRegister(account: string, rawPassword: string, nickname: string): void {
     Networks_Manager.send({
-        MsgUserRegister: { c: {
-            account,
-            password: Helpers_Sha1Generator.b64_sha1(rawPassword),
-            nickname,
-        } },
+        MsgUserRegister : {
+            c : {
+                account,
+                password : Helpers_Sha1Generator.b64_sha1(rawPassword),
+                nickname,
+            }, 
+        },
     });
 }
 function _onMsgUserRegister(e: Egret_Egret.Event): void {
@@ -129,8 +137,10 @@ function _onMsgUserRegister(e: Egret_Egret.Event): void {
 
 export function reqLogout(): void {
     Networks_Manager.send({
-        MsgUserLogout: { c: {
-        } },
+        MsgUserLogout : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgUserLogout(e: Egret_Egret.Event): void {
@@ -142,9 +152,11 @@ function _onMsgUserLogout(e: Egret_Egret.Event): void {
 
 export function reqUserGetPublicInfo(userId: number): void {
     Networks_Manager.send({
-        MsgUserGetPublicInfo: { c: {
-            userId,
-        } },
+        MsgUserGetPublicInfo : {
+            c : {
+                userId,
+            }, 
+        },
     });
 }
 function _onMsgUserGetPublicInfo(e: Egret_Egret.Event): void {
@@ -159,9 +171,11 @@ function _onMsgUserGetPublicInfo(e: Egret_Egret.Event): void {
 
 export function reqUserGetPublicInfoArray(userIdArray: number[]): void {
     Networks_Manager.send({
-        MsgUserGetPublicInfoArray: { c: {
-            userIdArray : userIdArray,
-        } },
+        MsgUserGetPublicInfoArray : {
+            c : {
+                userIdArray : userIdArray,
+            }, 
+        },
     });
 }
 function _onMsgUserGetPublicInfoArray(e: Egret_Egret.Event): void {
@@ -173,9 +187,11 @@ function _onMsgUserGetPublicInfoArray(e: Egret_Egret.Event): void {
 
 export function reqUserGetBriefInfo(userId: number): void {
     Networks_Manager.send({
-        MsgUserGetBriefInfo: { c: {
-            userId,
-        } },
+        MsgUserGetBriefInfo : {
+            c : {
+                userId,
+            }, 
+        },
     });
 }
 function _onMsgUserGetBriefInfo(e: Egret_Egret.Event): void {
@@ -190,9 +206,11 @@ function _onMsgUserGetBriefInfo(e: Egret_Egret.Event): void {
 
 export function reqUserGetOnlineState(userId: number): void {
     Networks_Manager.send({
-        MsgUserGetOnlineState: { c: {
-            userId,
-        } },
+        MsgUserGetOnlineState : {
+            c : {
+                userId,
+            }, 
+        },
     });
 }
 function _onMsgUserGetOnlineState(e: Egret_Egret.Event): void {
@@ -207,10 +225,12 @@ function _onMsgUserGetOnlineState(e: Egret_Egret.Event): void {
 
 export function reqUserGetUsersByNickname(nickname: string, isFollowing: boolean | null): void {
     Networks_Manager.send({
-        MsgUserGetUsersByNickname: { c: {
-            nickname    : nickname,
-            isFollowing : isFollowing,
-        } },
+        MsgUserGetUsersByNickname : {
+            c : {
+                nickname    : nickname,
+                isFollowing : isFollowing,
+            }, 
+        },
     });
 }
 function _onMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
@@ -222,9 +242,11 @@ function _onMsgUserGetUsersByNickname(e: Egret_Egret.Event): void {
 
 export function reqSetNickname(nickname: string): void {
     Networks_Manager.send({
-        MsgUserSetNickname: { c: {
-            nickname,
-        }, },
+        MsgUserSetNickname : {
+            c : {
+                nickname,
+            }, 
+        },
     });
 }
 async function _onMsgUserSetNickname(e: Egret_Egret.Event): Promise<void> {
@@ -239,9 +261,11 @@ async function _onMsgUserSetNickname(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSetDiscordInfo(discordInfo: UserDiscordInfoJson): void {
     Networks_Manager.send({
-        MsgUserSetDiscordInfo: { c: {
-            discordInfo : discordInfo,
-        }, },
+        MsgUserSetDiscordInfo : {
+            c : {
+                discordInfo : discordInfo,
+            }, 
+        },
     });
 }
 async function _onMsgUserSetDiscordInfo(e: Egret_Egret.Event): Promise<void> {
@@ -256,7 +280,7 @@ async function _onMsgUserSetDiscordInfo(e: Egret_Egret.Event): Promise<void> {
 
 export function reqUserGetOnlineUserIdArray(): void {
     Networks_Manager.send({
-        MsgUserGetOnlineUserIdArray: { c: {} },
+        MsgUserGetOnlineUserIdArray : { c : {} },
     });
 }
 function _onMsgUserGetOnlineUserIdArray(e: Egret_Egret.Event): void {
@@ -267,10 +291,14 @@ function _onMsgUserGetOnlineUserIdArray(e: Egret_Egret.Event): void {
 }
 
 export function reqUserSetPassword(oldRawPassword: string, newRawPassword: string): void {
-    Networks_Manager.send({ MsgUserSetPassword: { c: {
-        oldPassword : Helpers_Sha1Generator.b64_sha1(oldRawPassword),
-        newPassword : Helpers_Sha1Generator.b64_sha1(newRawPassword),
-    } } });
+    Networks_Manager.send({
+        MsgUserSetPassword : {
+            c : {
+                oldPassword : Helpers_Sha1Generator.b64_sha1(oldRawPassword),
+                newPassword : Helpers_Sha1Generator.b64_sha1(newRawPassword),
+            }, 
+        }, 
+    });
 }
 function _onMsgUserSetPassword(e: Egret_Egret.Event): void {
     const data = e.data as UserSetPasswordResponse;
@@ -280,9 +308,13 @@ function _onMsgUserSetPassword(e: Egret_Egret.Event): void {
 }
 
 export function reqUserSetSettings(userSettings: UserSettingsJson): void {
-    Networks_Manager.send({ MsgUserSetSettings: { c: {
-        userSettings    : userSettings,
-    } } });
+    Networks_Manager.send({
+        MsgUserSetSettings : {
+            c : {
+                userSettings : userSettings,
+            }, 
+        }, 
+    });
 }
 function _onMsgUserSetSettings(e: Egret_Egret.Event): void {
     const data = e.data as UserSetSettingsResponse;
@@ -293,10 +325,14 @@ function _onMsgUserSetSettings(e: Egret_Egret.Event): void {
 }
 
 export function reqUserSetMapRating(normalMapId: number, rating: number): void {
-    Networks_Manager.send({ MsgUserSetMapRating: { c: {
-        normalMapId : normalMapId,
-        rating,
-    } } });
+    Networks_Manager.send({
+        MsgUserSetMapRating : {
+            c : {
+                normalMapId : normalMapId,
+                rating,
+            }, 
+        }, 
+    });
 }
 function _onMsgUserSetMapRating(e: Egret_Egret.Event): void {
     const data = e.data as UserSetMapRatingResponse;
@@ -307,11 +343,15 @@ function _onMsgUserSetMapRating(e: Egret_Egret.Event): void {
 }
 
 export function reqUserSetRelation(targetUserId: number, isFollow: boolean, isBlock: boolean): void {
-    Networks_Manager.send({ MsgUserSetRelation: { c: {
-        targetUserId    : targetUserId,
-        isFollowing     : isFollow,
-        isBlocking      : isBlock,
-    }}});
+    Networks_Manager.send({
+        MsgUserSetRelation : {
+            c : {
+                targetUserId : targetUserId,
+                isFollowing  : isFollow,
+                isBlocking   : isBlock,
+            }, 
+        }, 
+    });
 }
 function _onMsgUserSetRelation(e: Egret_Egret.Event): void {
     const data = e.data as UserSetRelationResponse;
@@ -322,10 +362,14 @@ function _onMsgUserSetRelation(e: Egret_Egret.Event): void {
 }
 
 export function reqUserModifyFavoriteReplayIdArray(addIdArray: number[], deleteIdArray: number[]): void {
-    Networks_Manager.send({ MsgUserModifyFavoriteReplayIdArray: { c: {
-        addIdArray      : addIdArray,
-        deleteIdArray   : deleteIdArray,
-    }}});
+    Networks_Manager.send({
+        MsgUserModifyFavoriteReplayIdArray : {
+            c : {
+                addIdArray    : addIdArray,
+                deleteIdArray : deleteIdArray,
+            }, 
+        }, 
+    });
 }
 function _onMsgUserModifyFavoriteReplayIdArray(e: Egret_Egret.Event): void {
     const data = e.data as UserModifyFavoriteReplayIdArrayResponse;
@@ -337,9 +381,11 @@ function _onMsgUserModifyFavoriteReplayIdArray(e: Egret_Egret.Event): void {
 
 export function reqSetAvatarId(avatarId: number): void {
     Networks_Manager.send({
-        MsgUserSetAvatarId: { c: {
-            avatarId,
-        }, },
+        MsgUserSetAvatarId : {
+            c : {
+                avatarId,
+            }, 
+        },
     });
 }
 async function _onMsgUserSetAvatarId(e: Egret_Egret.Event): Promise<void> {
@@ -354,9 +400,11 @@ async function _onMsgUserSetAvatarId(e: Egret_Egret.Event): Promise<void> {
 
 export function reqSetMapEditorAutoSaveTime(time: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): void {
     Networks_Manager.send({
-        MsgUserSetMapEditorAutoSaveTime: { c: {
-            time,
-        }, },
+        MsgUserSetMapEditorAutoSaveTime : {
+            c : {
+                time,
+            }, 
+        },
     });
 }
 function _onMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
@@ -371,10 +419,12 @@ function _onMsgUserSetMapEditorAutoSaveTime(e: Egret_Egret.Event): void {
 
 export function reqUserSetCoBgmSettings(coCategoryId: number, bgmCodeArray: number[] | null): void {
     Networks_Manager.send({
-        MsgUserSetCoBgmSettings: { c: {
-            coCategoryId    : coCategoryId,
-            bgmCodeArray    : bgmCodeArray ?? [],
-        } }
+        MsgUserSetCoBgmSettings : {
+            c : {
+                coCategoryId : coCategoryId,
+                bgmCodeArray : bgmCodeArray ?? [],
+            }, 
+        },
     });
 }
 function _onMsgUserSetCoBgmSettings(e: Egret_Egret.Event): void {
@@ -387,9 +437,11 @@ function _onMsgUserSetCoBgmSettings(e: Egret_Egret.Event): void {
 
 export function reqUserSetSceneBgmSettings(settings: SceneBgmSettingsJson): void {
     Networks_Manager.send({
-        MsgUserSetSceneBgmSettings: { c: {
-            sceneBgmSettings    : settings,
-        } },
+        MsgUserSetSceneBgmSettings : {
+            c : {
+                sceneBgmSettings : settings,
+            }, 
+        },
     });
 }
 function _onMsgUserSetSceneBgmSettings(e: Egret_Egret.Event): void {
@@ -402,9 +454,11 @@ function _onMsgUserSetSceneBgmSettings(e: Egret_Egret.Event): void {
 
 export function reqUserSetShowMedalIdArray(showMedalIdArray: number[]): void {
     Networks_Manager.send({
-        MsgUserSetShowMedalIdArray: { c: {
-            showMedalIdArray    : showMedalIdArray,
-        } },
+        MsgUserSetShowMedalIdArray : {
+            c : {
+                showMedalIdArray : showMedalIdArray,
+            }, 
+        },
     });
 }
 function _onMsgUserSetShowMedalIdArray(e: Egret_Egret.Event): void {
@@ -417,9 +471,11 @@ function _onMsgUserSetShowMedalIdArray(e: Egret_Egret.Event): void {
 
 export function reqUserRequestEmailVerificationCode(address: string): void {
     Networks_Manager.send({
-        MsgUserRequestEmailVerificationCode: { c: {
-            emailAddress    : address,
-        } },
+        MsgUserRequestEmailVerificationCode : {
+            c : {
+                emailAddress : address,
+            }, 
+        },
     });
 }
 function _onMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event): void {
@@ -434,9 +490,11 @@ function _onMsgUserRequestEmailVerificationCode(e: Egret_Egret.Event): void {
 
 export function reqUserVerifyEmail(code: string): void {
     Networks_Manager.send({
-        MsgUserVerifyEmail: { c: {
-            verificationCode    : code,
-        } },
+        MsgUserVerifyEmail : {
+            c : {
+                verificationCode : code,
+            }, 
+        },
     });
 }
 function _onMsgUserVerifyEmail(e: Egret_Egret.Event): void {
@@ -449,9 +507,11 @@ function _onMsgUserVerifyEmail(e: Egret_Egret.Event): void {
 
 export function reqUserRequestPasswordVerificationCode(account: string): void {
     Networks_Manager.send({
-        MsgUserRequestPasswordVerificationCode: { c: {
-            account : account,
-        } },
+        MsgUserRequestPasswordVerificationCode : {
+            c : {
+                account : account,
+            }, 
+        },
     });
 }
 function _onMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event): void {
@@ -465,11 +525,13 @@ function _onMsgUserRequestPasswordVerificationCode(e: Egret_Egret.Event): void {
 
 export function reqUserResetPasswordWithEmail(code: string, account: string, newRawPassword: string): void {
     Networks_Manager.send({
-        MsgUserResetPasswordWithEmail: { c: {
-            verificationCode    : code,
-            account             : account,
-            newPassword         : Helpers_Sha1Generator.b64_sha1(newRawPassword),
-        } },
+        MsgUserResetPasswordWithEmail : {
+            c : {
+                verificationCode : code,
+                account          : account,
+                newPassword      : Helpers_Sha1Generator.b64_sha1(newRawPassword),
+            }, 
+        },
     });
 }
 function _onMsgUserResetPasswordWithEmail(e: Egret_Egret.Event): void {

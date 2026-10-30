@@ -43,14 +43,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
-            { ui: this._btnWeatherType,                 callback: this._onTouchedBtnWeatherType },
-            { ui: this._btnHasFogCurrently,             callback: this._onTouchedBtnHasFogCurrently },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
+            { ui : this._btnWeatherType,                 callback : this._onTouchedBtnWeatherType },
+            { ui : this._btnHasFogCurrently,             callback : this._onTouchedBtnHasFogCurrently },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -74,9 +74,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
     private _onTouchedBtnWeatherType(): void {
@@ -87,12 +87,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const condition = this._getCondition();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : condition.getWeatherTypeArray(),
-            availableNumberArray    : gameConfig.getAllWeatherTypeArray(),
-            showNumber              : true,
-            getTitleText            : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.Weather)),
-            getNumberMainText       : weatherType => Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError,
-            callbackOnConfirm       : weatherTypeArray => {
+            currentNumberArray   : condition.getWeatherTypeArray(),
+            availableNumberArray : gameConfig.getAllWeatherTypeArray(),
+            showNumber           : true,
+            getTitleText         : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0092, Lang_Utils.getText(Lang_Constants.TextType.Weather)),
+            getNumberMainText    : weatherType => Lang_Utils.getWeatherName(weatherType, gameConfig) ?? Lang_Constants.UndefinedError,
+            callbackOnConfirm    : weatherTypeArray => {
                 condition.setWeatherTypeArray(weatherTypeArray);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },

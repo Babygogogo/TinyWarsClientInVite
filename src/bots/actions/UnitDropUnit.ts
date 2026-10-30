@@ -53,8 +53,8 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
         const index = targetTileArray.findIndex(v => commonParams.getMoveCost(loadedUnit, v) != null);
         if (index >= 0) {
             dropDestinations.push(DropDestination.fromJson({
-                unitId      : loadedUnit.getUnitId(),
-                gridIndex   : targetTileArray[index].getGridIndex().toProto().toJson(),
+                unitId    : loadedUnit.getUnitId(),
+                gridIndex : targetTileArray[index].getGridIndex().toProto().toJson(),
             }));
             targetTileArray.splice(index, 1);
         }
@@ -65,17 +65,19 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
     } else {
         const score = await getScoreForActionUnitDropUnit(dropDestinations);
         return {
-            score   : score,
-            action  : WoContainer.fromJson({ WoUnitDropUnit: {
-                path        : {
-                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                    isBlocked       : false,
-                },
-                launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-                dropDestinations: dropDestinations.map(v => v.toJson()),
-                isDropBlocked   : false,
-            } }),
+            score  : score,
+            action : WoContainer.fromJson({
+                WoUnitDropUnit : {
+                    path : {
+                        nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                        fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                        isBlocked       : false,
+                    },
+                    launchUnitId     : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+                    dropDestinations : dropDestinations.map(v => v.toJson()),
+                    isDropBlocked    : false,
+                }, 
+            }),
         };
     }
 }

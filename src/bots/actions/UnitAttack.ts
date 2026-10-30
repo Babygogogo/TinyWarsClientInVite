@@ -48,13 +48,13 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
         const unitOnDestination = unitMap.getUnitOnMap(destination);
         if ((pathLength > 1) && (unitOnDestination)) {
             if (Visibilities_Utils.checkIsUnitOnMapVisibleToTeam({
-                war                 : war,
-                observerTeamIndex   : teamIndex,
-                gridIndex           : destination,
-                unitType            : unitOnDestination.getUnitType(),
-                unitPlayerIndex     : unitOnDestination.getPlayerIndex(),
-                isDiving            : unitOnDestination.getIsDiving(),
-                isInvisible         : unitOnDestination.checkIsInvisible(destination),
+                war               : war,
+                observerTeamIndex : teamIndex,
+                gridIndex         : destination,
+                unitType          : unitOnDestination.getUnitType(),
+                unitPlayerIndex   : unitOnDestination.getPlayerIndex(),
+                isDiving          : unitOnDestination.getIsDiving(),
+                isInvisible       : unitOnDestination.checkIsInvisible(destination),
             })) {
                 return null;
             }
@@ -63,7 +63,7 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
 
     const totalMoveCost = destinationNode.getTotalMoveCost();
     const promiseArray  : Promise<Bots_Types.ScoreAndAction>[] = [];
-    for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: minRange, maxDistance: maxRange, mapSize: commonParams.getMapSize() })) {
+    for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance : minRange, maxDistance : maxRange, mapSize : commonParams.getMapSize() })) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
         if ((Bots_Utils.IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
             continue;
@@ -100,41 +100,45 @@ export async function getScoreAndActionUnitAttack(commonParams: Bots_CommonParam
             await Timer_TimerModel.checkAndCallLater();
 
             const battleInfo = DamageCalculators_Utils.getEstimatedBattleInfo({
-                war                         : war,
-                movePath1                   : pathNodes.map(v => v.getGridIndex()),
-                launchUnitId1               : launchUnitId,
-                gridIndex2                  : targetGridIndex,
-                observerTeamIndexSet        : null,
-                useDamagePreviewSettings    : false,
-                fuelConsumption             : totalMoveCost,
-                isAttackUnit                : isAttackUnit,
+                war                      : war,
+                movePath1                : pathNodes.map(v => v.getGridIndex()),
+                launchUnitId1            : launchUnitId,
+                gridIndex2               : targetGridIndex,
+                observerTeamIndexSet     : null,
+                useDamagePreviewSettings : false,
+                fuelConsumption          : totalMoveCost,
+                isAttackUnit             : isAttackUnit,
             });
             return {
-                score   : await getScoreForActionUnitAttack({
+                score : await getScoreForActionUnitAttack({
                     commonParams,
-                    focusUnit               : unit,
-                    focusUnitGridIndex      : destination,
-                    battleDamageInfoArray   : battleInfo.damageInfoArray,
+                    focusUnit             : unit,
+                    focusUnitGridIndex    : destination,
+                    battleDamageInfoArray : battleInfo.damageInfoArray,
                 }),
-                action  : unitMap.getUnitOnMap(targetGridIndex) != null
-                    ? WoContainer.fromJson({ WoUnitAttackUnit: {
-                        path        : {
-                            nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                            fuelConsumption : totalMoveCost,
-                            isBlocked       : false,
-                        },
-                        targetGridIndex     : targetGridIndex.toProto().toJson(),
-                        launchUnitId        : launchUnitId,
-                    } })
-                    : WoContainer.fromJson({ WoUnitAttackTile: {
-                        path        : {
-                            nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                            fuelConsumption : totalMoveCost,
-                            isBlocked       : false,
-                        },
-                        targetGridIndex     : targetGridIndex.toProto().toJson(),
-                        launchUnitId        : launchUnitId,
-                    }, }),
+                action : unitMap.getUnitOnMap(targetGridIndex) != null
+                    ? WoContainer.fromJson({
+                        WoUnitAttackUnit : {
+                            path : {
+                                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                                fuelConsumption : totalMoveCost,
+                                isBlocked       : false,
+                            },
+                            targetGridIndex : targetGridIndex.toProto().toJson(),
+                            launchUnitId    : launchUnitId,
+                        }, 
+                    })
+                    : WoContainer.fromJson({
+                        WoUnitAttackTile : {
+                            path : {
+                                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                                fuelConsumption : totalMoveCost,
+                                isBlocked       : false,
+                            },
+                            targetGridIndex : targetGridIndex.toProto().toJson(),
+                            launchUnitId    : launchUnitId,
+                        }, 
+                    }),
             };
         })());
     }

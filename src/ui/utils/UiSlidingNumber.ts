@@ -104,8 +104,7 @@ export class UiSlidingNumber {
 
             if (tempPosition > this._min) {
                 this.setPosition(tempPosition - (tempPosition - this._min) / 1.5);
-            }
-            else if (tempPosition < this._max) {
+            } else if (tempPosition < this._max) {
                 this.setPosition(tempPosition + (this._max - tempPosition) / 1.5);
             }
         }

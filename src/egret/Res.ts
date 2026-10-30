@@ -82,11 +82,11 @@ export interface FileTree {
 }
 
 export function getResourceInfo(path: string): ResourceInfo | null | undefined {
-    let result: ResourceInfo | null | undefined = config.config.fileSystem!.getFile(path);
+    let result: ResourceInfo | null | undefined = getConfig().config.fileSystem!.getFile(path);
     if (!result) {
         // let resourceNameSelector = (path: string): string => path;
         // path = resourceNameSelector(path);
-        result = config.config.fileSystem!.getFile(path);
+        result = getConfig().config.fileSystem!.getFile(path);
     }
     return result;
 }
@@ -209,24 +209,23 @@ export function getVirtualUrl(url: string): string {
 }
 
 export function profile(): void {
-    config.config.fileSystem!.profile();
-    console.log(tempCache);
-    let totalImageSize: number = 0;
-    let key: string;
-    for (key in tempCache) {
-        const img: unknown = tempCache[key];
-        if (img instanceof Egret_Egret.Texture) {
-            totalImageSize += img.$bitmapWidth * img.$bitmapHeight * 4;
-        }
-    }
-    console.log("gpu size : " + (totalImageSize / 1024).toFixed(3) + "kb");
+    ResHelper.profile();
 }
 
+export function getHost(): ProcessHost {
+    // TODO 原api为 export const host: ProcessHost = ...
+    return ResHelper.getHost();
+}
 
+export function getConfig(): ResourceConfig {
+    // TODO 原api为 export const config: ResourceConfig = new ResourceConfig();
+    return ResHelper.getConfig();
+}
 
-
-
-
+export function getQueue(): ResourceLoader {
+    // TODO 原api为 export const queue: ResourceLoader = new ResourceLoader();
+    return ResHelper.getQueue();
+}
 
 function isResourceManagerError(error: unknown): error is ResourceManagerError {
     return typeof error === "object" && error !== null && "__resource_manager_error__" in error && !!error.__resource_manager_error__;
@@ -272,14 +271,14 @@ export class ResourceConfig {
             };
         }
 
-        return queue.pushResItem(configItem).catch((reason: unknown): Promise<never> => {
+        return getQueue().pushResItem(configItem).catch((reason: unknown): Promise<never> => {
             let error: unknown = reason;
             if (!isResourceManagerError(error)) {
                 const details: { error?: { stack?: string }; stack?: string } = error as { error?: { stack?: string }; stack?: string };
                 console.error(details.error ? details.error.stack : details.stack);
                 error = new ResourceManagerError(1002);
             }
-            host.remove(configItem);
+            getHost().remove(configItem);
             return Promise.reject(error);
         });
     }
@@ -291,7 +290,7 @@ export class ResourceConfig {
         }
         for (let i: number = 0; i < group.length; i++) {
             const paramKey: string = group[i]!;
-            const entry: ResourceWithSubkey | null = config.getResourceWithSubkey(paramKey);
+            const entry: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(paramKey);
             if (entry == null) {
                 continue;
             }
@@ -367,13 +366,13 @@ export class ResourceConfig {
         if (!data.type) {
             data.type = this.__temp__get__type__via__url(data.url);
         }
-        config.config.fileSystem!.addFile(data);
+        getConfig().config.fileSystem!.addFile(data);
     }
     public removeResourceData(data: ResourceInfo): void {
         if (!hasRes(data.name)) {
             return;
         }
-        config.config.fileSystem!.removeFile(data.url);
+        getConfig().config.fileSystem!.removeFile(data.url);
         if (this.config.alias[data.name]) {
             delete this.config.alias[data.name];
         }
@@ -496,7 +495,7 @@ export class ResourceLoader {
         this.loadResource(r).then((response: unknown): void => {
             this.loadingCount--;
             delete this.itemLoadDic[r.root + r.name];
-            host.save(r, response);
+            getHost().save(r, response);
             if (this.promiseHash[r.root + r.name] != null) {
                 const dispatcher: Egret_Egret.EventDispatcher = this.deleteDispatcher(r.root + r.name);
                 dispatcher.dispatchEventWith("complete", false, response);
@@ -521,7 +520,7 @@ export class ResourceLoader {
             }
             delete this.itemLoadDic[r.root + r.name];
             this.loadingCount--;
-            delete host.state[r.root + r.name];
+            delete getHost().state[r.root + r.name];
             const times: number = this.retryTimesDic[r.name] || 1;
             if (times > this.maxRetryTimes) {
                 delete this.retryTimesDic[r.name];
@@ -625,9 +624,9 @@ export class ResourceLoader {
     public loadResource(r: ResourceInfo, p?: Egret_Processor.Processor): Promise<unknown> {
         if (!p) {
             {
-                const s: number | undefined = host.state[r.root + r.name];
+                const s: number | undefined = getHost().state[r.root + r.name];
                 if (s == 2) {
-                    return Promise.resolve(host.get(r));
+                    return Promise.resolve(getHost().get(r));
                 }
                 if (s == 1) {
                     return r.promise!;
@@ -638,23 +637,23 @@ export class ResourceLoader {
         if (!p) {
             throw new ResourceManagerError(2001, r.name, r.type);
         }
-        host.state[r.root + r.name] = 1;
-        const promise: Promise<unknown> = p.onLoadStart(host, r);
+        getHost().state[r.root + r.name] = 1;
+        const promise: Promise<unknown> = p.onLoadStart(getHost(), r);
         r.promise = promise;
         return promise;
     }
     public unloadResource(r: ResourceInfo): boolean {
-        const data: unknown = host.get(r);
+        const data: unknown = getHost().get(r);
         if (!data) {
             console.warn("�����ͷŲ����ڵ���Դ:", r.name);
             return false;
         }
         const p: Egret_Processor.Processor | undefined = Egret_Processor.isSupport(r);
         if (p) {
-            p.onRemoveStart(host, r);
-            host.remove(r);
+            p.onRemoveStart(getHost(), r);
+            getHost().remove(r);
             if (r.extra == 1) {
-                config.removeResourceData(r);
+                getConfig().removeResourceData(r);
             }
         }
         return true;
@@ -665,7 +664,7 @@ Egret_Egret.__reflect(ResourceLoader.prototype, "RES.ResourceLoader");
 export class Resource extends Egret_Egret.EventDispatcher {
     public isVcsInit: boolean = false;
     public vcs: IVersionController | undefined;
-    public normalLoadConfig: () => Promise<void> = (): Promise<void> => config.init().then(
+    public normalLoadConfig: () => Promise<void> = (): Promise<void> => getConfig().init().then(
         (_data: unknown): void => {
             void _data;
 
@@ -704,11 +703,11 @@ export class Resource extends Egret_Egret.EventDispatcher {
     }
 
     public isGroupLoaded(name: string): boolean {
-        const resources: ResourceInfo[] = config.getGroupByName(name);
-        return resources.every((r: ResourceInfo): boolean => host.get(r) != null);
+        const resources: ResourceInfo[] = getConfig().getGroupByName(name);
+        return resources.every((r: ResourceInfo): boolean => getHost().get(r) != null);
     }
     public getGroupByName(name: string): ResourceInfo[] {
-        return config.getGroupByName(name);
+        return getConfig().getGroupByName(name);
     }
     public loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> {
         const reporterDelegate: PromiseTaskReporter = {
@@ -722,13 +721,13 @@ export class Resource extends Egret_Egret.EventDispatcher {
         return this._loadGroup(name, priority, reporterDelegate).then((_data: unknown): void => {
             void _data;
 
-            if (config.config.loadGroup.indexOf(name) == -1) {
-                config.config.loadGroup.push(name);
+            if (getConfig().config.loadGroup.indexOf(name) == -1) {
+                getConfig().config.loadGroup.push(name);
             }
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
         }, (error: GroupLoadError): Promise<never> => {
-            if (config.config.loadGroup.indexOf(name) == -1) {
-                config.config.loadGroup.push(name);
+            if (getConfig().config.loadGroup.indexOf(name) == -1) {
+                getConfig().config.loadGroup.push(name);
             }
             if (error.itemList) {
                 const itemList: ResourceInfo[] = error.itemList;
@@ -744,33 +743,33 @@ export class Resource extends Egret_Egret.EventDispatcher {
         });
     }
     public _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<unknown> {
-        const resources: ResourceInfo[] = config.getGroupByName(name);
+        const resources: ResourceInfo[] = getConfig().getGroupByName(name);
         if (resources.length == 0) {
             return Promise.reject({ error : new ResourceManagerError(2005, name) });
         }
-        return queue.pushResGroup(resources, name, priority, reporter);
+        return getQueue().pushResGroup(resources, name, priority, reporter);
     }
     public createGroup(name: string, keys: string[], override: boolean = false): boolean {
-        return config.createGroup(name, keys, override);
+        return getConfig().createGroup(name, keys, override);
     }
     public hasRes(key: string): boolean | null {
-        return config.getResourceWithSubkey(key) != null;
+        return getConfig().getResourceWithSubkey(key) != null;
     }
     public getRes<T = unknown>(resKey: string): T | null | undefined {
-        const result: ResourceWithSubkey | null = config.getResourceWithSubkey(resKey);
+        const result: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(resKey);
         if (!result) {
             return null;
         }
         const r: ResourceInfo = result.r;
         const p: Egret_Processor.Processor | undefined = Egret_Processor.isSupport(r);
         if (p && p.getData && result.subkey) {
-            return p.getData(host, r, result.key, result.subkey) as T;
+            return p.getData(getHost(), r, result.key, result.subkey) as T;
         }
-        return host.get<T>(r);
+        return getHost().get<T>(r);
     }
     public getResAsync<T = unknown>(key: string, compFunc?: ResourceCallback<T>, thisObject?: unknown): Promise<T> | null {
         const paramKey: string = key;
-        const tempResult: ResourceWithSubkey | null = config.getResourceWithSubkey(key);
+        const tempResult: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(key);
         if (tempResult == null) {
             if (compFunc) {
                 compFunc.call(thisObject, null, paramKey);
@@ -788,18 +787,18 @@ export class Resource extends Egret_Egret.EventDispatcher {
         }
         const r: ResourceInfo = tempResult.r;
         const subkey: string = tempResult.subkey;
-        return queue.pushResItem(r).then((value: unknown): T => {
-            host.save(r, value);
+        return getQueue().pushResItem(r).then((value: unknown): T => {
+            getHost().save(r, value);
             const p: Egret_Processor.Processor | undefined = Egret_Processor.isSupport(r);
             if (p && p.getData && subkey) {
-                value = p.getData(host, r, key, subkey);
+                value = p.getData(getHost(), r, key, subkey);
             }
             if (compFunc) {
                 compFunc.call(thisObject, value as T, paramKey);
             }
             return value as T;
         }, (error: unknown): Promise<never> => {
-            host.remove(r);
+            getHost().remove(r);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r);
             if (compFunc) {
                 compFunc.call(thisObject, null, paramKey);
@@ -809,29 +808,29 @@ export class Resource extends Egret_Egret.EventDispatcher {
         });
     }
     public getResByUrl<T = unknown>(url: string, compFunc?: ResourceCallback<T>, thisObject?: unknown, type: string = ""): Promise<T> | null {
-        let r: ResourceInfo | null = config.getResource(url);
+        let r: ResourceInfo | null = getConfig().getResource(url);
         if (!r) {
             if (!type) {
-                type = config.__temp__get__type__via__url(url);
+                type = getConfig().__temp__get__type__via__url(url);
             }
             r = {
                 name : url, url : url, type : type, root : "", extra : 1,
             };
-            config.addResourceData(r);
-            r = config.getResource(url);
+            getConfig().addResourceData(r);
+            r = getConfig().getResource(url);
             if (!r) {
                 throw "never";
             }
         }
         const resource: ResourceInfo = r;
-        return queue.pushResItem(resource).then((value: unknown): T => {
-            host.save(resource, value);
+        return getQueue().pushResItem(resource).then((value: unknown): T => {
+            getHost().save(resource, value);
             if (compFunc) {
                 compFunc.call(thisObject, value as T, resource.url);
             }
             return value as T;
         }, (error: unknown): Promise<never> => {
-            host.remove(resource);
+            getHost().remove(resource);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", resource);
             if (compFunc) {
                 compFunc.call(thisObject, null, url);
@@ -841,24 +840,24 @@ export class Resource extends Egret_Egret.EventDispatcher {
         });
     }
     public destroyRes(name: string, force: boolean = true): boolean {
-        const group: ResourceInfo[] = config.getGroupByName(name);
+        const group: ResourceInfo[] = getConfig().getGroupByName(name);
         if (group && group.length > 0) {
-            const index: number = config.config.loadGroup.indexOf(name);
+            const index: number = getConfig().config.loadGroup.indexOf(name);
             if (index == -1) {
                 return false;
             }
-            if (force || (config.config.loadGroup.length == 1 && config.config.loadGroup[0] == name)) {
+            if (force || (getConfig().config.loadGroup.length == 1 && getConfig().config.loadGroup[0] == name)) {
                 for (let i: number = 0; i < group.length; i++) {
                     const item: ResourceInfo = group[i]!;
-                    queue.unloadResource(item);
+                    getQueue().unloadResource(item);
                 }
-                config.config.loadGroup.splice(index, 1);
+                getConfig().config.loadGroup.splice(index, 1);
             } else {
                 const removeItemHash: Record<string, number> = {};
-                const loadedGroups: string[] = config.config.loadGroup;
+                const loadedGroups: string[] = getConfig().config.loadGroup;
                 for (let i: number = 0; i < loadedGroups.length; i++) {
                     const groupName: string = loadedGroups[i]!;
-                    const keys: string[] = config.config.groups[groupName]!;
+                    const keys: string[] = getConfig().config.groups[groupName]!;
                     for (let j: number = 0; j < keys.length; j++) {
                         const tmpname: string = keys[j]!;
                         removeItemHash[tmpname] = removeItemHash[tmpname] ? removeItemHash[tmpname]! + 1 : 1;
@@ -867,16 +866,16 @@ export class Resource extends Egret_Egret.EventDispatcher {
                 for (let i: number = 0; i < group.length; i++) {
                     const item: ResourceInfo = group[i]!;
                     if (removeItemHash[item.name] && removeItemHash[item.name] == 1) {
-                        queue.unloadResource(item);
+                        getQueue().unloadResource(item);
                     }
                 }
-                config.config.loadGroup.splice(index, 1);
+                getConfig().config.loadGroup.splice(index, 1);
             }
             return true;
         }
-        const item: ResourceInfo | null = config.getResource(name);
+        const item: ResourceInfo | null = getConfig().getResource(name);
         if (item) {
-            return queue.unloadResource(item);
+            return getQueue().unloadResource(item);
         }
         console.warn("���ڴ�" + name + "��Դ������");
         return false;
@@ -885,14 +884,14 @@ export class Resource extends Egret_Egret.EventDispatcher {
         if (thread < 1) {
             thread = 1;
         }
-        queue.thread = thread;
+        getQueue().thread = thread;
     }
     public setMaxRetryTimes(retry: number): void {
-        queue.maxRetryTimes = Math.max(retry, 0);
+        getQueue().maxRetryTimes = Math.max(retry, 0);
     }
     public addResourceData(data: ResourceInfo): void {
         data.root = "";
-        config.addResourceData(data);
+        getConfig().addResourceData(data);
     }
 }
 Egret_Egret.__reflect(Resource.prototype, "RES.Resource");
@@ -1017,12 +1016,12 @@ export class ResourceItemHelper {
 
     public static convertToResItem(r: ResourceInfo): ResourceItem {
         let name: string = r.name;
-        if (!config.config) {
+        if (!getConfig().config) {
             name = r.url;
         } else {
             let aliasName: string;
-            for (aliasName in config.config.alias) {
-                if (config.config.alias[aliasName] == r.url) {
+            for (aliasName in getConfig().config.alias) {
+                if (getConfig().config.alias[aliasName] == r.url) {
                     name = aliasName;
                 }
             }
@@ -1058,30 +1057,64 @@ export class ResourceManagerError extends Error {
 }
 Egret_Egret.__reflect(ResourceManagerError.prototype, "RES.ResourceManagerError");
 
-const tempCache: Record<string, unknown> = {};
+export class ResHelper {
+    private static __tempCache: Record<string, unknown> = {};
+    private static _host: ProcessHost | undefined;
+    private static readonly _config = new ResourceConfig();
+    private static readonly _queue = new ResourceLoader();
 
-export const config = new ResourceConfig();
-export const queue = new ResourceLoader();
-export const host: ProcessHost = {
-    state          : {},
-    resourceConfig : config,
-    load<T = unknown>(r: ResourceInfo, processorName?: string | Egret_Processor.Processor<T>): Promise<T> {
-        const p: Egret_Processor.Processor | undefined = typeof processorName == "string" ? Egret_Processor._map[processorName] : processorName;
-        return queue.loadResource(r, p) as Promise<T>;
-    },
-    unload(r: ResourceInfo): boolean {
-        return queue.unloadResource(r);
-    },
-    save(resource: ResourceInfo, data: unknown): void {
-        host.state[resource.root + resource.name] = 2;
-        delete resource.promise;
-        tempCache[resource.root + resource.name] = data;
-    },
-    get<T = unknown>(resource: ResourceInfo): T | undefined {
-        return tempCache[resource.root + resource.name] as T | undefined;
-    },
-    remove(resource: ResourceInfo): void {
-        delete host.state[resource.root + resource.name];
-        delete tempCache[resource.root + resource.name];
-    },
-};
+    public static profile(): void {
+        ResHelper._config.config.fileSystem!.profile();
+        console.log(ResHelper.__tempCache);
+        let totalImageSize: number = 0;
+        let key: string;
+        for (key in ResHelper.__tempCache) {
+            const img: unknown = ResHelper.__tempCache[key];
+            if (img instanceof Egret_Egret.Texture) {
+                totalImageSize += img.$bitmapWidth * img.$bitmapHeight * 4;
+            }
+        }
+        console.log("gpu size : " + (totalImageSize / 1024).toFixed(3) + "kb");
+    }
+
+    public static getHost(): ProcessHost {
+        if (!ResHelper._host) {
+            const host: ProcessHost = {
+                state : {},
+                get resourceConfig(): ResourceConfig {
+                    return ResHelper._config;
+                },
+                load<T = unknown>(r: ResourceInfo, processorName?: string | Egret_Processor.Processor<T>): Promise<T> {
+                    const p: Egret_Processor.Processor | undefined = typeof processorName == "string" ? Egret_Processor.getMap()[processorName] : processorName;
+                    return ResHelper._queue.loadResource(r, p) as Promise<T>;
+                },
+                unload(r: ResourceInfo): boolean {
+                    return ResHelper._queue.unloadResource(r);
+                },
+                save(resource: ResourceInfo, data: unknown): void {
+                    host.state[resource.root + resource.name] = 2;
+                    delete resource.promise;
+                    ResHelper.__tempCache[resource.root + resource.name] = data;
+                },
+                get<T = unknown>(resource: ResourceInfo): T | undefined {
+                    return ResHelper.__tempCache[resource.root + resource.name] as T | undefined;
+                },
+                remove(resource: ResourceInfo): void {
+                    delete host.state[resource.root + resource.name];
+                    delete ResHelper.__tempCache[resource.root + resource.name];
+                },
+            };
+            ResHelper._host = host;
+        }
+
+        return ResHelper._host;
+    }
+
+    public static getConfig(): ResourceConfig {
+        return ResHelper._config;
+    }
+
+    public static getQueue(): ResourceLoader {
+        return ResHelper._queue;
+    }
+}

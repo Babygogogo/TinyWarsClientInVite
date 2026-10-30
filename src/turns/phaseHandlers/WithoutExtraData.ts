@@ -73,7 +73,7 @@ export function endPhaseMain(turnManager: Turns_ITurnManager.ITurnManager, isFas
 function runPhaseResetHasUnitOnBeginningTurn(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     turnManager.setHasUnitOnBeginningTurn(turnManager.getWar().getUnitMap().checkHasUnitForPlayer(turnManager.getPlayerIndexInTurn()));
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseHandleUnitBuffEffect(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
@@ -173,9 +173,9 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             (!unit.checkIsMeetLoadedState(loadedState))                                             ||
                             ((unitActionStateId != null) && (unit.getActionState() !== unitActionStateId))          ||
                             (!unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius                : coZoneRadius,
-                                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                                coZoneRadius             : coZoneRadius,
+                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                             }))
                         ) {
                             continue;
@@ -207,7 +207,7 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             : Math.min(
                                 normalizedMaxHp - normalizedCurrentHp,
                                 recoverAmount,
-                                Math.floor(currentFund * normalizedMaxHp / revisedProductionCost)
+                                Math.floor(currentFund * normalizedMaxHp / revisedProductionCost),
                             );
                         const repairAmount = (normalizedRepairHp + normalizedCurrentHp) * Units_Constants.Hp.Normalizer - currentHp;
 
@@ -218,16 +218,16 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             {
                                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - normalizedCurrentHp;
                                 if (offsetNormalizedHp !== 0) {
-                                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                                    const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                                     if (observerTeamIndexes != null) {
                                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                            unitType                    : unit.getUnitType(),
-                                            dstPlayerIndex              : playerIndex,
-                                            unitGain                    : 0,
-                                            unitLoss                    : 0,
-                                            normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                            normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                            groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                            unitType                   : unit.getUnitType(),
+                                            dstPlayerIndex             : playerIndex,
+                                            unitGain                   : 0,
+                                            unitLoss                   : 0,
+                                            normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                            normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                         }));
                                     }
                                 }
@@ -252,9 +252,9 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
                             (unit.checkIsMeetLoadedState(loadedState))                                              &&
                             (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius                : coZoneRadius,
-                                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                                coZoneRadius             : coZoneRadius,
+                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                             }))
                         ) {
                             const maxFuel       = unit.getMaxFuel();
@@ -283,9 +283,9 @@ function runPhaseRecoverUnitByCo(turnManager: Turns_ITurnManager.ITurnManager, i
                             (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
                             (unit.checkIsMeetLoadedState(loadedState))                                              &&
                             (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
-                                coZoneRadius                : coZoneRadius,
-                                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                                coSkillAreaType          : recoverCfg.getCoSkillAreaTypeId(),
+                                coZoneRadius             : coZoneRadius,
+                                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                             }))
                         ) {
                             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
@@ -346,13 +346,13 @@ function runPhaseRepairUnitByTile(turnManager: Turns_ITurnManager.ITurnManager, 
                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                    : unit.getUnitType(),
-                            dstPlayerIndex              : playerIndex,
-                            unitGain                    : 0,
-                            unitLoss                    : 0,
-                            normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                            normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                            groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                            unitType                   : unit.getUnitType(),
+                            dstPlayerIndex             : playerIndex,
+                            unitGain                   : 0,
+                            unitLoss                   : 0,
+                            normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                            normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                         }));
                     }
                 }
@@ -383,9 +383,9 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: Turns_ITurnManager.ITurnMana
             const gridIndex = unit.getGridIndex();
             if (isPathVisionEnabled) {
                 fogMap.updateMapFromPathsByUnitAndPath({
-                    unit            : unit,
-                    unitVisionInfo  : unit.getVisionInfo(),
-                    path            : [gridIndex],
+                    unit           : unit,
+                    unitVisionInfo : unit.getVisionInfo(),
+                    path           : [gridIndex],
                 });
             }
 
@@ -432,13 +432,13 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
                     const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                    : unit.getUnitType(),
-                            dstPlayerIndex              : playerIndex,
-                            unitGain                    : 0,
-                            unitLoss                    : 0,
-                            normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                            normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                            groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                            unitType                   : unit.getUnitType(),
+                            dstPlayerIndex             : playerIndex,
+                            unitGain                   : 0,
+                            unitLoss                   : 0,
+                            normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                            normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                         }));
                     }
                 }
@@ -495,7 +495,7 @@ function runPhaseRepairUnitByUnit(turnManager: Turns_ITurnManager.ITurnManager, 
         }
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function runPhaseActivateMapWeapon(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
@@ -619,7 +619,7 @@ function runPhaseResetVisionForCurrentPlayer(turnManager: Turns_ITurnManager.ITu
     const war = turnManager.getWar();
     war.getFogMap().resetMapFromPathsForPlayerWithEncodedData(war.getPlayerIndexInTurn());
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseHandleUnitBuffEffect2(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
@@ -712,7 +712,7 @@ function runPhaseResetSkillState(turnManager: Turns_ITurnManager.ITurnManager, i
 function runPhaseResetVotesForDraw(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
@@ -723,13 +723,13 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: Turns_ITurnManager.ITurnM
         weatherManager.getView().resetView(false);
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseUpdateAllTileBuffArray(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     for (const tile of turnManager.getWar().getTileMap().getAllTiles()) {
         tile.updateUnfixedBuffArrayOnPlayerTurnSwitched(!isFastExecute);
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseUpdateAllUnitBuffArray(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     for (const unit of turnManager.getWar().getUnitMap().getAllUnits()) {
         unit.updateBuffArrayOnPlayerTurnSwitched(!isFastExecute);
@@ -741,7 +741,7 @@ function runPhaseResetVisionForNextPlayer(turnManager: Turns_ITurnManager.ITurnM
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 function runPhaseWaitBeginTurn(turnManager: Turns_ITurnManager.ITurnManager, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView().resetMarkLayer();
@@ -798,7 +798,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Interface_IBwWar.IBwWar, 
         if (deltaHp || deltaFuelPercentage || deltaPrimaryAmmoPercentage) {
             const warStatisticsManager  = war.getWarStatisticsManager();
             const canBeFatal            = data.getCanBeFatal();
-            for (const gridIndex of tile.getGridIndex().getGridsWithinDistance({ minDistance: 0, maxDistance: data.getRadius(), mapSize: unitMap.getMapSize() })) {
+            for (const gridIndex of tile.getGridIndex().getGridsWithinDistance({ minDistance : 0, maxDistance : data.getRadius(), mapSize : unitMap.getMapSize() })) {
                 const unit = unitMap.getUnitOnMap(gridIndex);
                 if (unit == null) {
                     continue;
@@ -813,13 +813,13 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Interface_IBwWar.IBwWar, 
                         if (deltaFuelPercentage < 0) {
                             unit.setCurrentFuel(Math.max(
                                 0,
-                                Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100)
+                                Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100),
                             ));
                         } else {
                             const maxFuel = unit.getMaxFuel();
                             unit.setCurrentFuel(Math.min(
                                 maxFuel,
-                                Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100)
+                                Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                             ));
                         }
                     }
@@ -844,13 +844,13 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Interface_IBwWar.IBwWar, 
                                 const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                                 if (observerTeamIndexes != null) {
                                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                        unitType                    : unit.getUnitType(),
-                                        dstPlayerIndex              : unit.getPlayerIndex(),
-                                        unitGain                    : 0,
-                                        unitLoss                    : 0,
-                                        normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                        normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                        groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                        unitType                   : unit.getUnitType(),
+                                        dstPlayerIndex             : unit.getPlayerIndex(),
+                                        unitGain                   : 0,
+                                        unitLoss                   : 0,
+                                        normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                        normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                        groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }
@@ -859,7 +859,7 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Interface_IBwWar.IBwWar, 
                         if (deltaHp > 0) {
                             unit.setCurrentHp(Math.min(
                                 unit.getMaxHp(),
-                                (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer)
+                                (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer),
                             );
                             warStatisticsUpdater();
 
@@ -869,9 +869,9 @@ async function handleMapWeaponTileCrystal(war: BaseWar_Interface_IBwWar.IBwWar, 
                                 Destructions_Utils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
                             } else {
                                 unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                                    rawValue    : rawNewHp,
-                                    minValue    : 1,
-                                    maxValue    : unit.getMaxHp(),
+                                    rawValue : rawNewHp,
+                                    minValue : 1,
+                                    maxValue : unit.getMaxHp(),
                                 }));
                                 warStatisticsUpdater();
                             }
@@ -938,13 +938,13 @@ async function handleMapWeaponTileCannon(war: BaseWar_Interface_IBwWar.IBwWar, t
                 if (deltaFuelPercentage < 0) {
                     unit.setCurrentFuel(Math.max(
                         0,
-                        Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100)
+                        Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100),
                     ));
                 } else {
                     const maxFuel = unit.getMaxFuel();
                     unit.setCurrentFuel(Math.min(
                         maxFuel,
-                        Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100)
+                        Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                     ));
                 }
             }
@@ -966,16 +966,16 @@ async function handleMapWeaponTileCannon(war: BaseWar_Interface_IBwWar.IBwWar, t
                 const warStatisticsUpdater  = () => {
                     const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                     if (offsetNormalizedHp != 0) {
-                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                        const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                         if (observerTeamIndexes != null) {
                             warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                unitType                    : unit.getUnitType(),
-                                dstPlayerIndex              : unit.getPlayerIndex(),
-                                unitGain                    : 0,
-                                unitLoss                    : 0,
-                                normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes)
+                                unitType                   : unit.getUnitType(),
+                                dstPlayerIndex             : unit.getPlayerIndex(),
+                                unitGain                   : 0,
+                                unitLoss                   : 0,
+                                normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                             }));
                         }
                     }
@@ -984,7 +984,7 @@ async function handleMapWeaponTileCannon(war: BaseWar_Interface_IBwWar.IBwWar, t
                 if (deltaHp > 0) {
                     unit.setCurrentHp(Math.min(
                         unit.getMaxHp(),
-                        (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer)
+                        (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer),
                     );
                     warStatisticsUpdater();
 
@@ -994,9 +994,9 @@ async function handleMapWeaponTileCannon(war: BaseWar_Interface_IBwWar.IBwWar, t
                         Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
                     } else {
                         unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                            rawValue    : rawNewHp,
-                            minValue    : 1,
-                            maxValue    : unit.getMaxHp(),
+                            rawValue : rawNewHp,
+                            minValue : 1,
+                            maxValue : unit.getMaxHp(),
                         }));
                         warStatisticsUpdater();
                     }
@@ -1054,7 +1054,7 @@ function generateCandidateUnitArrayForCannon(war: BaseWar_Interface_IBwWar.IBwWa
     })) {
         unitAndFinalCostArray.push({
             unit,
-            cost    : unit.getProductionFinalCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp(),
+            cost : unit.getProductionFinalCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp(),
         });
     }
     unitAndFinalCostArray.sort((info1, info2) => {
@@ -1099,13 +1099,13 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Interface_IBwWar.IBwW
                     if (deltaFuelPercentage < 0) {
                         unit.setCurrentFuel(Math.max(
                             0,
-                            Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100)
+                            Math.floor(unit.getCurrentFuel() * (100 + deltaFuelPercentage) / 100),
                         ));
                     } else {
                         const maxFuel = unit.getMaxFuel();
                         unit.setCurrentFuel(Math.min(
                             maxFuel,
-                            Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100)
+                            Math.floor(unit.getCurrentFuel() + maxFuel * deltaFuelPercentage / 100),
                         ));
                     }
                 }
@@ -1127,16 +1127,16 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Interface_IBwWar.IBwW
                     const warStatisticsUpdater  = () => {
                         const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                         if (offsetNormalizedHp != 0) {
-                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                            const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex : unit.getGridIndex() });
                             if (observerTeamIndexes != null) {
                                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                                    unitType                    : unit.getUnitType(),
-                                    dstPlayerIndex              : unit.getPlayerIndex(),
-                                    unitGain                    : 0,
-                                    unitLoss                    : 0,
-                                    normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
-                                    normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                                    unitType                   : unit.getUnitType(),
+                                    dstPlayerIndex             : unit.getPlayerIndex(),
+                                    unitGain                   : 0,
+                                    unitLoss                   : 0,
+                                    normalizedHpGain           : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
+                                    normalizedHpLoss           : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
+                                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                                 }));
                             }
                         }
@@ -1145,7 +1145,7 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Interface_IBwWar.IBwW
                     if (deltaHp > 0) {
                         unit.setCurrentHp(Math.min(
                             unit.getMaxHp(),
-                            (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer)
+                            (oldNormalizedHp + deltaHp) * Units_Constants.Hp.Normalizer),
                         );
                         warStatisticsUpdater();
 
@@ -1155,9 +1155,9 @@ async function handleMapWeaponTileLaserTurret(war: BaseWar_Interface_IBwWar.IBwW
                             Destructions_Utils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
                         } else {
                             unit.setCurrentHp(Numbers_Utils.getValueInRange({
-                                rawValue    : rawNewHp,
-                                minValue    : 1,
-                                maxValue    : unit.getMaxHp(),
+                                rawValue : rawNewHp,
+                                minValue : 1,
+                                maxValue : unit.getMaxHp(),
                             }));
                             warStatisticsUpdater();
                         }

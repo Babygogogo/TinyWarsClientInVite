@@ -81,25 +81,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback: this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
-            { type: Notifications_TypeId.TypeId.MsgMpwCommonMarkTile,                            callback: this._onNotifyMsgMpwCommonMarkTile },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback : this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
+            { type : Notifications_TypeId.TypeId.MsgMpwCommonMarkTile,                            callback : this._onNotifyMsgMpwCommonMarkTile },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnImport,          callback: this._onTouchedBtnImport },
-            { ui: this._btnExport,          callback: this._onTouchedBtnExport },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnImport,          callback : this._onTouchedBtnImport },
+            { ui : this._btnExport,          callback : this._onTouchedBtnExport },
 
-            { ui: this._btnShow,            callback: this._onTouchedBtnShow },
+            { ui : this._btnShow,            callback : this._onTouchedBtnShow },
 
-            { ui: this._groupHelpBatchMark, callback: this._onTouchedGroupHelpBatchMark },
-            { ui: this._btnPositionFilter,  callback: this._onTouchedBtnPositionFilter },
-            { ui: this._btnTileFilter,      callback: this._onTouchedBtnTileFilter },
-            { ui: this._btnUnitFilter,      callback: this._onTouchedBtnUnitFilter },
-            { ui: this._btnInVision,        callback: this._onTouchedBtnInVision },
-            { ui: this._btnBatchMark,       callback: this._onTouchedBtnBatchMark },
-            { ui: this._btnBatchUnmark,     callback: this._onTouchedBtnBatchUnmark },
-            { ui: this._btnMarkType,        callback: this._onTouchedBtnMarkType },
+            { ui : this._groupHelpBatchMark, callback : this._onTouchedGroupHelpBatchMark },
+            { ui : this._btnPositionFilter,  callback : this._onTouchedBtnPositionFilter },
+            { ui : this._btnTileFilter,      callback : this._onTouchedBtnTileFilter },
+            { ui : this._btnUnitFilter,      callback : this._onTouchedBtnUnitFilter },
+            { ui : this._btnInVision,        callback : this._onTouchedBtnInVision },
+            { ui : this._btnBatchMark,       callback : this._onTouchedBtnBatchMark },
+            { ui : this._btnBatchUnmark,     callback : this._onTouchedBtnBatchUnmark },
+            { ui : this._btnMarkType,        callback : this._onTouchedBtnMarkType },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -181,15 +181,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
@@ -236,15 +236,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent          : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
-                getTextForConfirm   : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                getTextForCancel    : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
-                showButtonClose     : false,
-                callback            : async () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0979),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.B0026),
+                showButtonClose   : false,
+                callback          : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
-                callbackOnCancel    : async () => {
+                callbackOnCancel : async () => {
                     Common_Model_CommonModel.setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
@@ -304,12 +304,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePositionFilterPanel, {
-            currentFilter   : this._positionFilter,
-            mapSize         : mapSize,
-            callback        : positionFilter => {
+            currentFilter : this._positionFilter,
+            mapSize       : mapSize,
+            callback      : positionFilter => {
                 this._positionFilter = positionFilter;
                 this._updateLabelPositionFilter();
-            }
+            },
         });
     }
 
@@ -320,14 +320,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            currentFilter           : this._unitFilter,
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            gameConfig              : war.getGcData(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            callback                : unitFilter => {
+            currentFilter         : this._unitFilter,
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            gameConfig            : war.getGcData(),
+            mapSize               : war.getTileMap().getMapSize(),
+            callback              : unitFilter => {
                 this._unitFilter = unitFilter;
                 this._updateLabelUnitFilter();
-            }
+            },
         });
     }
 
@@ -338,14 +338,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            currentFilter           : this._tileFilter,
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            gameConfig              : war.getGcData(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            callback                : tileFilter => {
+            currentFilter         : this._tileFilter,
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            gameConfig            : war.getGcData(),
+            mapSize               : war.getTileMap().getMapSize(),
+            callback              : tileFilter => {
                 this._tileFilter = tileFilter;
                 this._updateLabelTileFilter();
-            }
+            },
         });
     }
 
@@ -378,8 +378,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0090);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, addGridIdArray.length),
-                callback    : () => {
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, addGridIdArray.length),
+                callback   : () => {
                     if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
                         MultiPlayerWar_Model_MpwProxy.reqMpwCommonMarkGrid(Helpers_Misc.getExisted(war.getWarId()), addGridIdArray, [], _selectedMarkTypeId);
 
@@ -425,8 +425,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0090);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
-                callback    : () => {
+                getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
+                callback   : () => {
                     if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
                         MultiPlayerWar_Model_MpwProxy.reqMpwCommonMarkGrid(Helpers_Misc.getExisted(war.getWarId()), [], deleteGridIdArray, _selectedMarkTypeId);
 
@@ -457,8 +457,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnMarkType(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleGridMarkPanel, {
-            currentMarkTypeId   : _selectedMarkTypeId,
-            callback            : markTypeId => {
+            currentMarkTypeId : _selectedMarkTypeId,
+            callback          : markTypeId => {
                 _selectedMarkTypeId = markTypeId;
                 this._updateImgMarkType();
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonChooseSingleGridMarkPanel);
@@ -512,7 +512,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         const list      = this._listPlayer;
-        const dataArray = GridMarks_Constants.AllGridMarkTypeId.map(v => ({ markTypeId: v }));
+        const dataArray = GridMarks_Constants.AllGridMarkTypeId.map(v => ({ markTypeId : v }));
         await list.bindData(dataArray);
 
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
@@ -625,8 +625,7 @@ interface DataForPlayerRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class PlayerRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForPlayerRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForPlayerRenderer> {
     private readonly _groupShow!    : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _imgMark!      : Ui_Interfaces_IUiImage.IUiImage;
 

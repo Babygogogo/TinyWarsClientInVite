@@ -57,10 +57,10 @@ async function resetDataByTemplateWarRuleId(templateWarRuleId: number | null): P
     } else {
         const templateWarRule = Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId));
         settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
-            templateWarRule             : templateWarRule,
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : templateWarRule,
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         }));
     }
 
@@ -74,7 +74,7 @@ async function resetDataByTemplateWarRuleId(templateWarRuleId: number | null): P
                 gameConfig      : gameConfig,
                 hasFogByDefault : hasFogByDefault,
                 includeRandom   : false,
-            })])
+            })]),
         );
     }
 }

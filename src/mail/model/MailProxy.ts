@@ -14,10 +14,10 @@ import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/N
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailGetAllMailArray,  callback: _onMsgMailGetAllMailArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailGetMail,          callback: _onMsgMailGetMail },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailDeleteMail,       callback: _onMsgMailDeleteMail },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgMailSetIsNew,         callback: _onMsgMailSetIsNew },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMailGetAllMailArray,  callback : _onMsgMailGetAllMailArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMailGetMail,          callback : _onMsgMailGetMail },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMailDeleteMail,       callback : _onMsgMailDeleteMail },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgMailSetIsNew,         callback : _onMsgMailSetIsNew },
     ], null);
 }
 
@@ -34,9 +34,13 @@ function _onMsgMailGetMail(e: Egret_Egret.Event): void {
 }
 
 export function reqMailDeleteMail(mailId: number): void {
-    Networks_Manager.send({ MsgMailDeleteMail: { c: {
-        mailId  : mailId,
-    } }, });
+    Networks_Manager.send({
+        MsgMailDeleteMail : {
+            c : {
+                mailId : mailId,
+            }, 
+        }, 
+    });
 }
 function _onMsgMailDeleteMail(e: Egret_Egret.Event): void {
     const data = e.data as MailDeleteMailResponse;
@@ -47,10 +51,14 @@ function _onMsgMailDeleteMail(e: Egret_Egret.Event): void {
 }
 
 export function reqMailSetIsNew(mailId: number, isNew: boolean): void {
-    Networks_Manager.send({ MsgMailSetIsNew: { c: {
-        mailId  : mailId,
-        isNew   : isNew,
-    }}});
+    Networks_Manager.send({
+        MsgMailSetIsNew : {
+            c : {
+                mailId : mailId,
+                isNew  : isNew,
+            }, 
+        }, 
+    });
 }
 function _onMsgMailSetIsNew(e: Egret_Egret.Event): void {
     const data = e.data as MailSetIsNewResponse;

@@ -14,18 +14,18 @@ import {
 } from "../../internal.ts";
 
 const COLOR_MATRIX_FILTERS = {
-    [Graphics_Constants.ColorId.Gray]: new Egret_Egret.ColorMatrixFilter([
+    [Graphics_Constants.ColorId.Gray] : new Egret_Egret.ColorMatrixFilter([
         0.3, 0.6, 0, 0, 0,
         0.3, 0.6, 0, 0, 0,
         0.3, 0.6, 0, 0, 0,
-        0, 0, 0, 1, 0
+        0, 0, 0, 1, 0,
     ]),
 
-    [Graphics_Constants.ColorId.Dark]: new Egret_Egret.ColorMatrixFilter([
+    [Graphics_Constants.ColorId.Dark] : new Egret_Egret.ColorMatrixFilter([
         0.625,  0,      0,      0,  0,
         0,      0.625,  0,      0,  0,
         0,      0,      0.625,  0,  0,
-        0,      0,      0,      1,  0
+        0,      0,      0,      1,  0,
     ]),
 };
 
@@ -47,7 +47,7 @@ function getColorMatrix(color: Graphics_Constants.ColorId, value = 100): number[
                 1, 0, 0, 0, 0,
                 0, 1, 0, 0, 0,
                 0, 0, 1, 0, value,
-                0, 0, 0, 1, 0
+                0, 0, 0, 1, 0,
             ];
 
         case Graphics_Constants.ColorId.Green:
@@ -55,7 +55,7 @@ function getColorMatrix(color: Graphics_Constants.ColorId, value = 100): number[
                 1, 0, 0, 0, 0,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, 0,
-                0, 0, 0, 1, 0
+                0, 0, 0, 1, 0,
             ];
 
         case Graphics_Constants.ColorId.Red:
@@ -63,7 +63,7 @@ function getColorMatrix(color: Graphics_Constants.ColorId, value = 100): number[
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, 0,
                 0, 0, 1, 0, 0,
-                0, 0, 0, 1, 0
+                0, 0, 0, 1, 0,
             ];
 
         case Graphics_Constants.ColorId.White:
@@ -71,7 +71,7 @@ function getColorMatrix(color: Graphics_Constants.ColorId, value = 100): number[
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, value,
-                0, 0, 0, 1, 0
+                0, 0, 0, 1, 0,
             ];
 
         case Graphics_Constants.ColorId.Yellow:
@@ -79,7 +79,7 @@ function getColorMatrix(color: Graphics_Constants.ColorId, value = 100): number[
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, 0,
-                0, 0, 0, 1, 0
+                0, 0, 0, 1, 0,
             ];
 
         default:
@@ -107,7 +107,7 @@ export function getWorldScale(con: Egret_Egret.DisplayObject | null): { x: numbe
         y *= con.scaleY;
         con = con.parent;
     }
-    return { x: x, y: y };
+    return { x : x, y : y };
 }
 export function getWorldVisible(con: Egret_Egret.DisplayObject | null): boolean {
     const stage = Stages_StageManager.getStage();
@@ -140,10 +140,10 @@ export function getAabbToParent({ unscaledWidth, unscaledHeight, scaleX, scaleY,
     const maxX              = Math.max(x1, x2, x3, x4);
     const maxY              = Math.max(y1, y2, y3, y4);
     return {
-        x       : minX - anchorOffsetX,
-        y       : minY - anchorOffsetY,
-        width   : maxX - minX,
-        height  : maxY - minY,
+        x      : minX - anchorOffsetX,
+        y      : minY - anchorOffsetY,
+        width  : maxX - minX,
+        height : maxY - minY,
     };
 }
 
@@ -364,9 +364,9 @@ export function getUnscaledSize(obj: Egret_Egret.DisplayObject): AuxiliaryTypes_
         (obj instanceof Ui_Components_UiImage.UiImage)            ||
         (obj instanceof Ui_Components_UiLabel.UiLabel)
     ) {
-        return { width: obj.getUnscaledWidth(), height: obj.getUnscaledHeight() };
+        return { width : obj.getUnscaledWidth(), height : obj.getUnscaledHeight() };
     } else {
-        return { width: obj.width, height: obj.height };
+        return { width : obj.width, height : obj.height };
     }
 }
 

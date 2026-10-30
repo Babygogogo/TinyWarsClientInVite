@@ -21,9 +21,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getWeatherType(),
-            expressionInfo          : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherType,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getWeatherType(),
+            expressionInfo       : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherType,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -31,9 +31,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getWeatherTurnsCount(),
-            expressionInfo          : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherTurnsCount,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getWeatherTurnsCount(),
+            expressionInfo       : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherTurnsCount,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -61,9 +61,9 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
     {
         const info      = WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherType;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getWeatherType(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getWeatherType(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -73,9 +73,9 @@ export function getErrorTip(data: WeaSetWeatherExpr, customCounterNameSet: Set<s
     {
         const info      = WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherTurnsCount;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getWeatherTurnsCount(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getWeatherTurnsCount(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -121,9 +121,9 @@ export async function applyWithoutExtraData(action: WeaSetWeatherExpr, isFast: b
             const turnManager = war.getTurnManager();
             weatherManager.setExpirePlayerIndex(turnManager.getPlayerIndexInTurn());
             weatherManager.setExpireTurnIndex(Numbers_Utils.getValueInRange({
-                minValue: 0,
-                maxValue: Numbers_Constants.MaxInt32,
-                rawValue: turnsCount + turnManager.getTurnIndex()
+                minValue : 0,
+                maxValue : Numbers_Constants.MaxInt32,
+                rawValue : turnsCount + turnManager.getTurnIndex(),
             }));
         }
 

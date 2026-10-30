@@ -51,11 +51,11 @@ export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettin
 
         } else {
             const errorCodeForWarRule = WarRules_Utils_Instance.getErrorCode({
-                instanceWarRule         : Helpers_Misc.getExisted(settings.getInstanceWarRule(), Utils_ClientErrorCode.ClientErrorCode.BwCommonSettingManager_Init_01),
-                gameConfig              : gameConfig,
-                playersCountUnneutral   : playersCountUnneutral,
-                warType                 : warType,
-                mapSize                 : mapSize,
+                instanceWarRule       : Helpers_Misc.getExisted(settings.getInstanceWarRule(), Utils_ClientErrorCode.ClientErrorCode.BwCommonSettingManager_Init_01),
+                gameConfig            : gameConfig,
+                playersCountUnneutral : playersCountUnneutral,
+                warType               : warType,
+                mapSize               : mapSize,
             });
             if (errorCodeForWarRule) {
                 throw Helpers_Misc.newError(`Invalid warRule.`, errorCodeForWarRule);
@@ -85,14 +85,14 @@ export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettin
             const templateWarRule   = war.getRevisedTemplateWarRuleArray(war.getField().getMaxPlayerIndex())[0];
             const settingsForCommon = war.getCommonSettingManager().getSettingsForCommon();
             return SettingsForCommon.fromJson({
-                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
-                configVersion       : settingsForCommon.getConfigVersion(),
-                instanceWarRule     : WarRules_Utils_Instance.create({
-                    templateWarRule             : templateWarRule,
-                    warEventFullData            : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
-                    taskObjectiveFullData       : war.getTaskObjectiveFullData(),
-                    allMapSimpleDialogueArray   : war.getMapSimpleDialogueArray(),
+                turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+                configVersion      : settingsForCommon.getConfigVersion(),
+                instanceWarRule    : WarRules_Utils_Instance.create({
+                    templateWarRule           : templateWarRule,
+                    warEventFullData          : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
+                    taskObjectiveFullData     : war.getTaskObjectiveFullData(),
+                    allMapSimpleDialogueArray : war.getMapSimpleDialogueArray(),
                 }).toJson(),
             });
 
@@ -109,16 +109,16 @@ export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettin
             const settingsForCommon         = war.getCommonSettingManager().getSettingsForCommon();
             const allMapSimpleDialogueArray = war.getMapSimpleDialogueArray();
             return SettingsForCommon.fromJson({
-                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
-                configVersion       : settingsForCommon.getConfigVersion(),
-                instanceWarRule     : WarRules_Utils_Instance.create({
-                    templateWarRule             : templateWarRule,
-                    warEventFullData            : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
-                    taskObjectiveFullData       : war.getTaskObjectiveFullData(),
-                    allMapSimpleDialogueArray   : Helpers_Collection.getNonNullElements(templateWarRule
+                turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+                configVersion      : settingsForCommon.getConfigVersion(),
+                instanceWarRule    : WarRules_Utils_Instance.create({
+                    templateWarRule           : templateWarRule,
+                    warEventFullData          : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
+                    taskObjectiveFullData     : war.getTaskObjectiveFullData(),
+                    allMapSimpleDialogueArray : Helpers_Collection.getNonNullElements(templateWarRule
                         .getMapSimpleDialogueIdArray()
-                        .map(id => allMapSimpleDialogueArray.find(data => (data.getDialogueId()) === id))
+                        .map(id => allMapSimpleDialogueArray.find(data => (data.getDialogueId()) === id)),
                     ),
                 }).toJson(),
             });
@@ -132,14 +132,14 @@ export class BwCommonSettingManager implements BaseWar_Interface_IBwCommonSettin
         if (war instanceof MapEditor_Model_MeWar.MeWar) {
             const settingsForCommon = war.getCommonSettingManager().getSettingsForCommon();
             return SettingsForCommon.fromJson({
-                turnsLimit          : Turns_Constants.TurnIndex.DefaultLimit,
-                warOperationsLimit  : WarOperations_Constants.Common.DefaultLimit,
-                configVersion       : settingsForCommon.getConfigVersion(),
-                instanceWarRule     : WarRules_Utils_Instance.create({
-                    templateWarRule             : templateWarRule,
-                    warEventFullData            : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
-                    taskObjectiveFullData       : war.getTaskObjectiveFullData(),
-                    allMapSimpleDialogueArray   : war.getMapSimpleDialogueArray(),
+                turnsLimit         : Turns_Constants.TurnIndex.DefaultLimit,
+                warOperationsLimit : WarOperations_Constants.Common.DefaultLimit,
+                configVersion      : settingsForCommon.getConfigVersion(),
+                instanceWarRule    : WarRules_Utils_Instance.create({
+                    templateWarRule           : templateWarRule,
+                    warEventFullData          : settingsForCommon.getInstanceWarRule()?.getWarEventFullData(),
+                    taskObjectiveFullData     : war.getTaskObjectiveFullData(),
+                    allMapSimpleDialogueArray : war.getMapSimpleDialogueArray(),
                 }).toJson(),
             });
 

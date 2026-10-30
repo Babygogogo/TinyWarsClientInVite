@@ -505,13 +505,13 @@ export async function applyWithoutExtraData(data: WeaSetUnitStateSimple, isFastE
                     const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
                     if (observerTeamIndexes != null) {
                         warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                            unitType                    : unit.getUnitType(),
-                            dstPlayerIndex              : unit.getPlayerIndex(),
-                            unitGain                    : 0,
-                            unitLoss                    : 0,
-                            normalizedHpGain            : offsetHp > 0 ? offsetHp : 0,
-                            normalizedHpLoss            : offsetHp < 0 ? -offsetHp : 0,
-                            groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                            unitType                   : unit.getUnitType(),
+                            dstPlayerIndex             : unit.getPlayerIndex(),
+                            unitGain                   : 0,
+                            unitLoss                   : 0,
+                            normalizedHpGain           : offsetHp > 0 ? offsetHp : 0,
+                            normalizedHpLoss           : offsetHp < 0 ? -offsetHp : 0,
+                            groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                         }));
                     }
                 }
@@ -540,10 +540,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setCurrentHp((act == null)
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 1,
-                maxValue    : unit.getMaxHp(),
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 1,
+                maxValue : unit.getMaxHp(),
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -552,10 +552,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setCurrentFuel((act == null)
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getMaxFuel(),
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getMaxFuel(),
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -564,10 +564,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setPrimaryWeaponCurrentAmmo(((act == null) || (currentValue == null))
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getPrimaryWeaponMaxAmmo() ?? 0,
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getPrimaryWeaponMaxAmmo() ?? 0,
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -576,10 +576,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setCurrentPromotion((act == null)
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getMaxPromotion(),
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getMaxPromotion(),
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -588,10 +588,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setFlareCurrentAmmo(((act == null) || (currentValue == null))
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getFlareMaxAmmo() ?? 0,
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getFlareMaxAmmo() ?? 0,
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -600,10 +600,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setCurrentBuildMaterial(((act == null) || (currentValue == null))
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getMaxBuildMaterial() ?? 0,
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getMaxBuildMaterial() ?? 0,
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -612,10 +612,10 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         data.setCurrentProduceMaterial(((act == null) || (currentValue == null))
             ? currentValue
             : Numbers_Utils.getValueInRange({
-                minValue    : 0,
-                maxValue    : unit.getMaxProduceMaterial() ?? 0,
-                rawValue    : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
-            })
+                minValue : 0,
+                maxValue : unit.getMaxProduceMaterial() ?? 0,
+                rawValue : MultiplierAndOffsets_Utils.getResultValue(act, currentValue),
+            }),
         );
     }
     {
@@ -639,7 +639,7 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         const currentValue  = unit.getGroupedTagId();
         data.setGroupedTagId(act == null
             ? currentValue
-            : Units_Utils_Common.getEncodedTagId(ArrayModifiers_Utils.getResultValue(act, Units_Utils_Common.getTagIdList(currentValue, true)))
+            : Units_Utils_Common.getEncodedTagId(ArrayModifiers_Utils.getResultValue(act, Units_Utils_Common.getTagIdList(currentValue, true))),
         );
     }
     {
@@ -647,7 +647,7 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         const currentValue  = unit.getForbiddenGroupedLocationIdArray();
         data.setForbiddenGroupedLocationIdArray((act == null)
             ? currentValue
-            : Locations_Utils.encode(ArrayModifiers_Utils.getResultValue(act, Locations_Utils.decode(currentValue)))
+            : Locations_Utils.encode(ArrayModifiers_Utils.getResultValue(act, Locations_Utils.decode(currentValue))),
         );
     }
     {
@@ -655,7 +655,7 @@ function createNewUnitData(action: WeaSetUnitStateSimple, unit: Units_IUnit.IUni
         const currentValue          = unit.getAiWeightedDestination();
         data.setAiWeightedDestination(((act == null) || (currentValue == null))
             ? currentValue?.toProto()
-            : act
+            : act,
         );
     }
     data.setCustomNameId(evalActCustomNameId(action, unit));

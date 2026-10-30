@@ -17,15 +17,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserLogout,           callback: this._onMsgUserLogout },
-            { type: Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback: this._onNotifyMsgMailGetAllMailArray },
-            { type: Notifications_TypeId.TypeId.MsgMailGetMail,          callback: this._onNotifyMsgMailGetMail },
-            { type: Notifications_TypeId.TypeId.MsgMailDeleteMail,       callback: this._onNotifyMsgMailDeleteMail },
-            { type: Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback: this._onNotifyMsgMailSetIsNew },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserLogout,           callback : this._onMsgUserLogout },
+            { type : Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback : this._onNotifyMsgMailGetAllMailArray },
+            { type : Notifications_TypeId.TypeId.MsgMailGetMail,          callback : this._onNotifyMsgMailGetMail },
+            { type : Notifications_TypeId.TypeId.MsgMailDeleteMail,       callback : this._onNotifyMsgMailDeleteMail },
+            { type : Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback : this._onNotifyMsgMailSetIsNew },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSettings,    callback: this._onTouchedBtnSettings },
+            { ui : this._btnSettings,    callback : this._onTouchedBtnSettings },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -62,18 +62,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0, customY: -40 },
-            endProps    : { customAlpha: 1, customY: 0 },
+            obj        : this._group,
+            beginProps : { customAlpha : 0, customY : -40 },
+            endProps   : { customAlpha : 1, customY : 0 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1, customY: 0 },
-            endProps    : { customAlpha: 0, customY: -40 },
+            obj        : this._group,
+            beginProps : { customAlpha : 1, customY : 0 },
+            endProps   : { customAlpha : 0, customY : -40 },
         });
 
         await Timer_TimerModel.wait();

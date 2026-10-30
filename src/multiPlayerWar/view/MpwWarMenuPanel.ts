@@ -48,23 +48,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback: this._onNotifyMsgMpwWatchGetIncomingInfo },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetIncomingInfo,          callback : this._onNotifyMsgMpwWatchGetIncomingInfo },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                   callback: this.closePanel },
-            { ui: this._btnDamageCalculator,                        callback: this._onTouchedBtnDamageCalculator },
-            { ui: this._btnSettings,                                callback: this._onTouchedBtnSettings, },
+            { ui : this._btnClose,                                   callback : this.closePanel },
+            { ui : this._btnDamageCalculator,                        callback : this._onTouchedBtnDamageCalculator },
+            { ui : this._btnSettings,                                callback : this._onTouchedBtnSettings },
 
-            { ui: this._btnMapSimpleDialogue,                       callback: this._onTouchedBtnMapSimpleDialogue },
-            { ui: this._btnSync,                                    callback: this._onTouchedBtnSync },
-            { ui: this._btnAdvanced,                                callback: this._onTouchedBtnAdvanced },
-            { ui: this._btnReplay,                                  callback: this._onTouchedBtnReplay },
-            { ui: this._btnSpectate,                                callback: this._onTouchedBtnSpectate },
-            { ui: this._btnSimulation,                              callback: this._onTouchedBtnSimulation },
+            { ui : this._btnMapSimpleDialogue,                       callback : this._onTouchedBtnMapSimpleDialogue },
+            { ui : this._btnSync,                                    callback : this._onTouchedBtnSync },
+            { ui : this._btnAdvanced,                                callback : this._onTouchedBtnAdvanced },
+            { ui : this._btnReplay,                                  callback : this._onTouchedBtnReplay },
+            { ui : this._btnSpectate,                                callback : this._onTouchedBtnSpectate },
+            { ui : this._btnSimulation,                              callback : this._onTouchedBtnSimulation },
 
-            { ui: this._btnGotoWarList,                             callback: this._onTouchedBtnGotoWarList },
-            { ui: this._btnGotoLobby,                               callback: this._onTouchedBtnGotoLobby },
+            { ui : this._btnGotoWarList,                             callback : this._onTouchedBtnGotoWarList },
+            { ui : this._btnGotoLobby,                               callback : this._onTouchedBtnGotoLobby },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -95,9 +95,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            war                     : war,
-            needReviseWeaponType    : true,
-            data                    : null,
+            war                  : war,
+            needReviseWeaponType : true,
+            data                 : null,
         });
         this.closePanel();
     }
@@ -114,7 +114,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (war.getWarEventManager().getCalledDialogueActionIdArray().length) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMapSimpleDialogueListPanel, {
-                war     : war,
+                war : war,
             });
             this.closePanel();
 
@@ -135,7 +135,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
             } else {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwMapSimpleDialogueListPanel, {
-                    war     : war,
+                    war : war,
                 });
                 this.closePanel();
             }
@@ -152,7 +152,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             war,
             war.getActionPlanner().checkIsStateRequesting()
                 ? Wars_Constants.SyncRequestTypeId.PlayerForce
-                : Wars_Constants.SyncRequestTypeId.PlayerRequest
+                : Wars_Constants.SyncRequestTypeId.PlayerRequest,
         );
         this.closePanel();
     }
@@ -164,7 +164,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         this.closePanel();
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwWarAdvancedMenuPanel, { war: war });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MpwWarAdvancedMenuPanel, { war : war });
     }
 
     private _onTouchedBtnReplay(): void {
@@ -175,7 +175,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0249),
-            callback: async () => {
+            callback   : async () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
                     title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
                     content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
@@ -214,25 +214,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent  : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+            callback   : () => {
                 const warData = war.serializeForCreateSfw();
                 warData.createIfNotExistsSettingsForSfw();
 
                 const playerLoggedIn = war.getPlayerLoggedIn();
                 Helpers_GameFlow.gotoSinglePlayerWar({
-                    warData         : warData,
-                    slotIndex       : null,
-                    slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                        mpwWarId                : war.getWarId(),
-                        overridingSkinIdArray   : [],
-                        gridMarkData            : GridMarkData.fromJson({
+                    warData       : warData,
+                    slotIndex     : null,
+                    slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                        mpwWarId              : war.getWarId(),
+                        overridingSkinIdArray : [],
+                        gridMarkData          : GridMarkData.fromJson({
                             gridIdAndMarkTypeIdList : playerLoggedIn?.getGridMarkList().map(v => v.toJson()) ?? [],
                             hiddenMarkTypeIdList    : playerLoggedIn?.getHiddenGridMarkTypeIdList() ?? [],
                         }).toJson(),
                     }),
                 });
-            }
+            },
         });
     }
 
@@ -246,7 +246,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0652),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 if (war?.getPlayerLoggedIn() != null) {
                     Helpers_GameFlow.gotoMyWarListPanel(war.getWarType());
                 } else {
@@ -265,7 +265,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0025),
-            callback: () => Helpers_GameFlow.gotoLobby(),
+            callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
 

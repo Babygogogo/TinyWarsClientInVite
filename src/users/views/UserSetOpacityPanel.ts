@@ -60,24 +60,24 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupUnitOpacity,           callback: this._onTouchedGroupUnitOpacity },
-            { ui: this._groupUnitOpacity,           callback: this._onTouchMoveGroupUnitOpacity,            eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupUnitOpacity,           callback : this._onTouchedGroupUnitOpacity },
+            { ui : this._groupUnitOpacity,           callback : this._onTouchMoveGroupUnitOpacity,            eventType : Helpers_PointerInput.PointerEventType.PressMove },
 
-            { ui: this._groupTileBaseOpacity,       callback: this._onTouchedGroupTileBaseOpacity },
-            { ui: this._groupTileBaseOpacity,       callback: this._onTouchMoveGroupTileBaseOpacity,        eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupTileBaseOpacity,       callback : this._onTouchedGroupTileBaseOpacity },
+            { ui : this._groupTileBaseOpacity,       callback : this._onTouchMoveGroupTileBaseOpacity,        eventType : Helpers_PointerInput.PointerEventType.PressMove },
 
-            { ui: this._groupTileObjectOpacity,     callback: this._onTouchedGroupTileObjectOpacity },
-            { ui: this._groupTileObjectOpacity,     callback: this._onTouchMoveGroupTileObjectOpacity,      eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupTileObjectOpacity,     callback : this._onTouchedGroupTileObjectOpacity },
+            { ui : this._groupTileObjectOpacity,     callback : this._onTouchMoveGroupTileObjectOpacity,      eventType : Helpers_PointerInput.PointerEventType.PressMove },
 
-            { ui: this._groupTileDecoratorOpacity,  callback: this._onTouchedGroupTileDecorationOpacity },
-            { ui: this._groupTileDecoratorOpacity,  callback: this._onTouchMoveGroupTileDecorationOpacity,  eventType: Helpers_PointerInput.PointerEventType.PressMove },
+            { ui : this._groupTileDecoratorOpacity,  callback : this._onTouchedGroupTileDecorationOpacity },
+            { ui : this._groupTileDecoratorOpacity,  callback : this._onTouchMoveGroupTileDecorationOpacity,  eventType : Helpers_PointerInput.PointerEventType.PressMove },
 
-            { ui: this._btnClose,                   callback: this._onTouchedBtnClose },
-            { ui: this._btnDefault,                 callback: this._onTouchedBtnDefault },
-            { ui: this._btnConfirm,                 callback: this._onTouchedBtnConfirm },
+            { ui : this._btnClose,                   callback : this._onTouchedBtnClose },
+            { ui : this._btnDefault,                 callback : this._onTouchedBtnDefault },
+            { ui : this._btnConfirm,                 callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel(() => {
@@ -177,10 +177,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnDefault(): void {
         Users_Model.setSelfSettingsOpacitySettings(UserOpacitySettings.fromJson({
-            unitOpacity             : 100,
-            tileBaseOpacity         : 100,
-            tileDecorationOpacity   : 100,
-            tileObjectOpacity       : 100,
+            unitOpacity           : 100,
+            tileBaseOpacity       : 100,
+            tileDecorationOpacity : 100,
+            tileObjectOpacity     : 100,
         }));
 
         this._updateView();

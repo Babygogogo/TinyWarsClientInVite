@@ -26,7 +26,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -43,9 +43,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._updateLabelTips();
 
         this._group.setUnscaledManualHeight(Numbers_Utils.getValueInRange({
-            rawValue    : labelContent.getScaledHeight() + 80,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
-            minValue    : 140,
+            rawValue : labelContent.getScaledHeight() + 80,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
+            minValue : 140,
         }));
     }
 

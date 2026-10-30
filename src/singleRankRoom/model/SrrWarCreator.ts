@@ -34,13 +34,13 @@ export class SrrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         slotExtraData.setSlotComment(this.getSlotComment());
 
         return SpmCreateSrwRequest.fromJson({
-            settingsForCommon   : this.getSettingsForCommon().toJson(),
-            normalMapId         : this.getSettingsForSrw().getNormalMapId(),
+            settingsForCommon : this.getSettingsForCommon().toJson(),
+            normalMapId       : this.getSettingsForSrw().getNormalMapId(),
 
-            playerInfoList      : this._getPlayerInfoList().map(v => v.toJson()),
+            playerInfoList : this._getPlayerInfoList().map(v => v.toJson()),
 
-            slotIndex           : this.getSaveSlotIndex(),
-            slotExtraData       : slotExtraData.toJson(),
+            slotIndex     : this.getSaveSlotIndex(),
+            slotExtraData : slotExtraData.toJson(),
         });
     }
 
@@ -52,10 +52,10 @@ export class SrrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
         const mapRawData        = this.getMapRawData();
         const settingsForCommon = this.getSettingsForCommon();
         settingsForCommon.setInstanceWarRule(WarRules_Utils_Instance.create({
-            templateWarRule             : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : Helpers_Misc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         }));
 
         const oldPlayerInfoList = this._getPlayerInfoList();
@@ -77,19 +77,19 @@ export class SrrWarCreator extends AuxiliaryTypes_WarCreatorBase.WarCreatorBase 
             if (existingPlayerInfo) {
                 const coId = existingPlayerInfo.getCoId();
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
-                    playerIndex         : playerIndex,
-                    isReady             : true,
-                    userId              : srwAiCoId == null ? selfUserId : null,
-                    unitAndTileSkinId   : existingPlayerInfo.getUnitAndTileSkinId(),
-                    coId                : srwAiCoId ?? (availableCoIdSetForHuman.has(coId) ? coId : Cos_Utils.pickRandomCo([...availableCoIdSetForHuman])),
+                    playerIndex       : playerIndex,
+                    isReady           : true,
+                    userId            : srwAiCoId == null ? selfUserId : null,
+                    unitAndTileSkinId : existingPlayerInfo.getUnitAndTileSkinId(),
+                    coId              : srwAiCoId ?? (availableCoIdSetForHuman.has(coId) ? coId : Cos_Utils.pickRandomCo([...availableCoIdSetForHuman])),
                 }));
             } else {
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
-                    playerIndex         : playerIndex,
-                    isReady             : true,
-                    userId              : srwAiCoId == null ? selfUserId : null,
-                    unitAndTileSkinId   : playerIndex,
-                    coId                : srwAiCoId ?? Cos_Utils.pickRandomCo([...availableCoIdSetForHuman]),
+                    playerIndex       : playerIndex,
+                    isReady           : true,
+                    userId            : srwAiCoId == null ? selfUserId : null,
+                    unitAndTileSkinId : playerIndex,
+                    coId              : srwAiCoId ?? Cos_Utils.pickRandomCo([...availableCoIdSetForHuman]),
                 }));
             }
         }

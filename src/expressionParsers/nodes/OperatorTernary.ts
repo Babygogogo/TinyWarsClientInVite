@@ -53,27 +53,33 @@ export class OperatorTernary extends ExpressionParsers_Nodes_Base.Base {
         localVariableDict       : Map<string, ExpressionParsers_Enums.ResultType> | null;
         customCounterNameSet    : Set<string>;
     }): ExpressionParsers_Enums.ResultType {
-        const conditionType = this._condition.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const conditionType = this._condition.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (conditionType !== ExpressionParsers_Enums.ResultType.Number) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("?:", 1, ExpressionParsers_Enums.ResultType.Number, conditionType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_00
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_00,
             );
         }
 
-        const lhsType = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const lhsType = this._lhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (ValidOperandTypes.indexOf(lhsType) < 0) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("?:", 2, ValidOperandTypes, lhsType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_01
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_01,
             );
         }
 
-        const rhsType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
+        const rhsType = this._rhs.getResultType({
+            contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet, 
+        });
         if (rhsType !== lhsType) {
             throw Helpers_Misc.newError(
                 ExpressionParsers_Utils.getErrorTextForOperandType("?:", 3, lhsType, rhsType),
-                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_02
+                Utils_ClientErrorCode.ClientErrorCode.EpNodeOperatorTernary_GetResultType_02,
             );
         }
 

@@ -31,9 +31,9 @@ export function checkIsEffective({
     }
 
     if (!gridIndex.checkIsInsideCoSkillArea({
-        coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
-        coZoneRadius                : coZoneRadius,
-        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
+        coZoneRadius             : coZoneRadius,
+        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
     })) {
         return false;
     }

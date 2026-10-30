@@ -38,12 +38,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnCancel,              callback: this._onTouchedBtnCancel },
-            { ui: this._groupSelectAll,         callback: this._onTouchedGroupSelectAll },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,              callback : this._onTouchedBtnCancel },
+            { ui : this._groupSelectAll,         callback : this._onTouchedGroupSelectAll },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
@@ -120,9 +120,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray             : DataForTagRenderer[] = [];
         for (const tagId of Units_Constants.AllTagIdArray) {
             dataArray.push({
-                tagId       : tagId,
-                useCount    : inUseDict.get(tagId) ?? 0,
-                panel       : this,
+                tagId    : tagId,
+                useCount : inUseDict.get(tagId) ?? 0,
+                panel    : this,
             });
             if (tagIdList.includes(tagId)) {
                 selectedItemIndexes.push(index);

@@ -12,9 +12,9 @@ export function checkIsValidEnergy(energy: number): boolean {
 }
 export function getValidEnergy(energy: number): number {
     return Numbers_Utils.getValueInRange({
-        minValue    : Cos_Constants.EnergyHardLimit.Min,
-        maxValue    : Cos_Constants.EnergyHardLimit.Max,
-        rawValue    : Math.floor(energy),
+        minValue : Cos_Constants.EnergyHardLimit.Min,
+        maxValue : Cos_Constants.EnergyHardLimit.Max,
+        rawValue : Math.floor(energy),
     });
 }
 

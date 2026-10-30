@@ -103,7 +103,7 @@ export function getErrorTip(data: WeaAddUnitOnMapSimple, war: BaseWar_Interface_
                 unitData,
                 mapSize,
                 playersCountUnneutral,
-                gameConfig: war.getGcData(),
+                gameConfig : war.getGcData(),
             }));
     };
     if (!unitArray.every(validator)) {
@@ -145,7 +145,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
             unitData,
             mapSize,
             gameConfig,
-            playersCountUnneutral   : Players_Constants.PlayerIndex.Max,
+            playersCountUnneutral : Players_Constants.PlayerIndex.Max,
         })) {
             throw Helpers_Misc.newError(`Invalid unitData: ${JSON.stringify(unitData)}`);
         }
@@ -160,7 +160,7 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
         }
 
         const gridIndex = getGridIndexForAddUnit({
-            origin  : rawGridIndex,
+            origin : rawGridIndex,
             tileMap,
             unitMap,
             canBeBlockedByUnit,
@@ -187,13 +187,13 @@ export async function applyWithoutExtraData(action: WeaAddUnitOnMapSimple, isFas
             const observerTeamIndexes = Visibilities_Utils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
-                    unitType                    : unitType,
-                    dstPlayerIndex              : playerIndex,
-                    unitGain                    : 1,
-                    unitLoss                    : 0,
-                    normalizedHpGain            : unit.getNormalizedCurrentHp(),
-                    normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
+                    unitType                   : unitType,
+                    dstPlayerIndex             : playerIndex,
+                    unitGain                   : 1,
+                    unitLoss                   : 0,
+                    normalizedHpGain           : unit.getNormalizedCurrentHp(),
+                    normalizedHpLoss           : 0,
+                    groupedObserverTeamIndexes : Helpers_Team.encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }
@@ -236,7 +236,7 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
                 }
 
                 return true;
-            }
+            },
         })[0];
         if (gridIndex) {
             return gridIndex;

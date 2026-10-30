@@ -97,7 +97,7 @@ export class BwExecutedOperationManager implements BaseWar_Interface_IBwExecuted
         return arr[arr.length - 1];
     }
     // public addExecutedOperation(rawOperation: IWoContainer): void {
-        /** 目前存在一个bug，服务器是执行战局操作的具体顺序是操作数递增-执行操作-保存操作，与前端不同，会导致相关战局事件判定出错 */
+    /** 目前存在一个bug，服务器是执行战局操作的具体顺序是操作数递增-执行操作-保存操作，与前端不同，会导致相关战局事件判定出错 */
     //     const executedOperationsCount = this.getExecutedOperationsCount();
     //     if (rawOperation.operationId !== executedOperationsCount) {
     //         throw Helpers.newError(`Invalid operationId: ${rawOperation.operationId}`);

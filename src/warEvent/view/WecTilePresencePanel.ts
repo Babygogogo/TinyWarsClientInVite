@@ -55,20 +55,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged, callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                       callback: this.closePanel },
-            { ui: this._btnType,                        callback: this._onTouchedBtnType },
+            { ui : this._btnClose,                       callback : this.closePanel },
+            { ui : this._btnType,                        callback : this._onTouchedBtnType },
 
-            { ui: this._btnPlayerFilter,                callback: this._onTouchedBtnPlayerFilter },
+            { ui : this._btnPlayerFilter,                callback : this._onTouchedBtnPlayerFilter },
 
-            { ui: this._btnUnitFilter,                  callback: this._onTouchedBtnUnitFilter },
-            { ui: this._btnUnitComparator,              callback: this._onTouchedBtnUnitComparator },
+            { ui : this._btnUnitFilter,                  callback : this._onTouchedBtnUnitFilter },
+            { ui : this._btnUnitComparator,              callback : this._onTouchedBtnUnitComparator },
 
-            { ui: this._btnTileFilter,                  callback: this._onTouchedBtnTileFilter },
-            { ui: this._btnTileComparator,              callback: this._onTouchedBtnTileComparator },
+            { ui : this._btnTileFilter,                  callback : this._onTouchedBtnTileFilter },
+            { ui : this._btnTileComparator,              callback : this._onTouchedBtnTileComparator },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -93,9 +93,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeConditionTypeListPanel, {
-            fullData    : openData.fullData,
-            condition   : openData.condition,
-            war         : openData.war,
+            fullData  : openData.fullData,
+            condition : openData.condition,
+            war       : openData.war,
         });
     }
 
@@ -111,10 +111,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WePlayerFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            currentFilter           : condition.getConPlayerFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            currentFilter         : condition.getConPlayerFilter(),
+            callback              : filter => {
                 condition.setConPlayerFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -132,11 +132,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeUnitFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : condition.getConUnitFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : condition.getConUnitFilter(),
+            callback              : filter => {
                 condition.setConUnitFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -155,33 +155,33 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = condition.getConUnitComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
-            currentValue    : oldCon?.getValue(),
-            minValue        : 0,
-            maxValue        : 100000,
-            callback        : unitsCount => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0160),
+            currentValue : oldCon?.getValue(),
+            minValue     : 0,
+            maxValue     : 100000,
+            callback     : unitsCount => {
                 if (unitsCount == null) {
                     condition.setConUnitComparator(null);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                        getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
-                        availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-                        currentNumber           : oldCon?.getComparator(),
-                        getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-                        callbackOnConfirm       : sign => {
+                        getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+                        availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+                        currentNumber        : oldCon?.getComparator(),
+                        getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+                        callbackOnConfirm    : sign => {
                             if (oldCon) {
                                 oldCon.setValue(unitsCount);
                                 oldCon.setComparator(sign);
                             } else {
                                 condition.setConUnitComparator(ValueAndComparator.fromJson({
-                                    value       : unitsCount,
-                                    comparator  : sign,
+                                    value      : unitsCount,
+                                    comparator : sign,
                                 }));
                             }
 
                             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                        }
+                        },
                     });
                 }
             },
@@ -199,11 +199,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeTileFilterPanel, {
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : war.getPlayersCountUnneutral(),
-            mapSize                 : war.getTileMap().getMapSize(),
-            currentFilter           : condition.getConTileFilter(),
-            callback                : filter => {
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : war.getPlayersCountUnneutral(),
+            mapSize               : war.getTileMap().getMapSize(),
+            currentFilter         : condition.getConTileFilter(),
+            callback              : filter => {
                 condition.setConTileFilter(filter);
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
             },
@@ -222,33 +222,33 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const oldCon = condition.getConTileComparator();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.B0778),
-            currentValue    : oldCon?.getValue(),
-            minValue        : 0,
-            maxValue        : Maps_Constants.Common.MaxGridsCount,
-            callback        : unitsCount => {
+            getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B0778),
+            currentValue : oldCon?.getValue(),
+            minValue     : 0,
+            maxValue     : Maps_Constants.Common.MaxGridsCount,
+            callback     : unitsCount => {
                 if (unitsCount == null) {
                     condition.setConTileComparator(null);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
                 } else {
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                        getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
-                        availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-                        currentNumber           : oldCon?.getComparator(),
-                        getNumberMainText       : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
-                        callbackOnConfirm       : sign => {
+                        getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.Comparator),
+                        availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+                        currentNumber        : oldCon?.getComparator(),
+                        getNumberMainText    : num => Lang_Utils.getComparatorName(num) ?? Lang_Constants.UndefinedError,
+                        callbackOnConfirm    : sign => {
                             if (oldCon) {
                                 oldCon.setValue(unitsCount);
                                 oldCon.setComparator(sign);
                             } else {
                                 condition.setConTileComparator(ValueAndComparator.fromJson({
-                                    value       : unitsCount,
-                                    comparator  : sign,
+                                    value      : unitsCount,
+                                    comparator : sign,
                                 }));
                             }
 
                             Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
-                        }
+                        },
                     });
                 }
             },
@@ -305,7 +305,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const comparator = this._getCondition()?.getConUnitComparator();
         this._labelUnitComparator.setText(comparator == null
             ? ``
-            : ValueAndComparators_Utils.getBriefDesc(comparator)
+            : ValueAndComparators_Utils.getBriefDesc(comparator),
         );
     }
     private _updateLabelTileFilter(): void {
@@ -315,7 +315,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const comparator = this._getCondition()?.getConTileComparator();
         this._labelTileComparator.setText(comparator == null
             ? ``
-            : ValueAndComparators_Utils.getBriefDesc(comparator)
+            : ValueAndComparators_Utils.getBriefDesc(comparator),
         );
     }
 

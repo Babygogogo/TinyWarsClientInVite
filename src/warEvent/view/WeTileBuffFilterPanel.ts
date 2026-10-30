@@ -62,23 +62,23 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,         callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
-            { ui: this._btnClear,                               callback: this._onTouchedBtnClear },
+            { ui : this._btnClose,                               callback : this._onTouchedBtnClose },
+            { ui : this._btnClear,                               callback : this._onTouchedBtnClear },
 
-            { ui: this._btnConBuffTypeIdArray,                  callback: this._onTouchedBtnConBuffTypeIdArray },
-            { ui: this._btnConBuffTypeIdArrayPredicate,         callback: this._onTouchedBtnConBuffTypeIdArrayPredicate },
+            { ui : this._btnConBuffTypeIdArray,                  callback : this._onTouchedBtnConBuffTypeIdArray },
+            { ui : this._btnConBuffTypeIdArrayPredicate,         callback : this._onTouchedBtnConBuffTypeIdArrayPredicate },
 
-            { ui: this._btnConIsEverlasting,                    callback: this._onTouchedBtnConIsEverlasting },
+            { ui : this._btnConIsEverlasting,                    callback : this._onTouchedBtnConIsEverlasting },
 
-            { ui: this._btnConEndTurnIndex,                     callback: this._onTouchedBtnConEndTurnIndex },
-            { ui: this._btnConIsRelativeEndTurnIndex,           callback: this._onTouchedBtnConIsRelativeEndTurnIndex },
+            { ui : this._btnConEndTurnIndex,                     callback : this._onTouchedBtnConEndTurnIndex },
+            { ui : this._btnConIsRelativeEndTurnIndex,           callback : this._onTouchedBtnConIsRelativeEndTurnIndex },
 
-            { ui: this._btnConEndPlayerIndex,                   callback: this._onTouchedBtnConEndPlayerIndex },
-            { ui: this._btnConIsRelativeEndPlayerIndex,         callback: this._onTouchedBtnConIsRelativeEndPlayerIndex },
+            { ui : this._btnConEndPlayerIndex,                   callback : this._onTouchedBtnConEndPlayerIndex },
+            { ui : this._btnConIsRelativeEndPlayerIndex,         callback : this._onTouchedBtnConIsRelativeEndPlayerIndex },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
@@ -105,26 +105,26 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             this.closePanel();
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
-                getTextForConfirm      : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
-                getTextForCancel       : () => Lang_Utils.getText(Lang_Constants.TextType.No),
-                callback            : () => {
+                getContent        : () => Lang_Utils.getText(Lang_Constants.TextType.A0418),
+                getTextForConfirm : () => Lang_Utils.getText(Lang_Constants.TextType.Yes),
+                getTextForCancel  : () => Lang_Utils.getText(Lang_Constants.TextType.No),
+                callback          : () => {
                     const tileBuffFilter = this._getTileBuffFilter();
                     callback(TileBuffs_Utils_Filter.checkIsEmpty(tileBuffFilter) ? null : tileBuffFilter);
                     this.closePanel();
                 },
-                callbackOnCancel    : () => this.closePanel(),
-                showButtonClose     : true,
+                callbackOnCancel : () => this.closePanel(),
+                showButtonClose  : true,
             });
         }
     }
     private _onTouchedBtnClear(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => {
                 this._tileBuffFilter = new TileBuffFilter();
                 this._updateView();
-            }
+            },
         });
     }
 
@@ -132,15 +132,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileBuffFilter();
         const oldCon = filter.getConBuffTypeId();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
-            availableNumberArray    : TileBuffs_Constants.AllBuffTypeIdArray,
-            getNumberMainText       : typeId => Lang_Utils.getTileBuffName(typeId) ?? Lang_Constants.UndefinedError,
-            callbackOnHelp          : typeId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
-                getTitle    : () => Lang_Utils.getTileBuffName(typeId) ?? Lang_Constants.UndefinedError,
-                getContent  : () => Lang_Utils.getTileBuffDesc(typeId) ?? Lang_Constants.UndefinedError,
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.AbnormalStateTypeId),
+            availableNumberArray : TileBuffs_Constants.AllBuffTypeIdArray,
+            getNumberMainText    : typeId => Lang_Utils.getTileBuffName(typeId) ?? Lang_Constants.UndefinedError,
+            callbackOnHelp       : typeId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+                getTitle   : () => Lang_Utils.getTileBuffName(typeId) ?? Lang_Constants.UndefinedError,
+                getContent : () => Lang_Utils.getTileBuffDesc(typeId) ?? Lang_Constants.UndefinedError,
             }),
-            currentNumberArray      : oldCon == null ? null : oldCon.getValueArray(),
-            callbackOnConfirm       : arr => {
+            currentNumberArray : oldCon == null ? null : oldCon.getValueArray(),
+            callbackOnConfirm  : arr => {
                 if (!arr.length) {
                     filter.setConBuffTypeId(undefined);
                 } else {
@@ -148,8 +148,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         oldCon.setValueArray(arr);
                     } else {
                         filter.setConBuffTypeId(ValueArrayAndPredicate.fromJson({
-                            valueArray  : arr,
-                            isOneOf     : true,
+                            valueArray : arr,
+                            isOneOf    : true,
                         }));
                     }
                 }
@@ -165,8 +165,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             ValueArrayAndPredicates_Utils.tickIsOneOf(oldCon);
         } else {
             filter.setConBuffTypeId(ValueArrayAndPredicate.fromJson({
-                valueArray  : [TileBuffs_Constants.AllBuffTypeIdArray[0]],
-                isOneOf     : true,
+                valueArray : [TileBuffs_Constants.AllBuffTypeIdArray[0]],
+                isOneOf    : true,
             }));
         }
 
@@ -190,16 +190,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileBuffFilter();
         const oldCon = filter.getConEndTurnIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            getNumberMainText       : comparator => Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError,
-            currentNumber           : oldCon ? oldCon.getComparator() : null,
-            callbackOnConfirm       : comparator => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                maxValue        : TileBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
-                minValue        : TileBuffs_Constants.EndTimeModification.MinEndTurnIndex,
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            getNumberMainText    : comparator => Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError,
+            currentNumber        : oldCon ? oldCon.getComparator() : null,
+            callbackOnConfirm    : comparator => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndTurnIndex),
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                maxValue     : TileBuffs_Constants.EndTimeModification.MaxEndTurnIndex,
+                minValue     : TileBuffs_Constants.EndTimeModification.MinEndTurnIndex,
+                callback     : value => {
                     if (value == null) {
                         filter.setConEndTurnIndex(null);
                     } else {
@@ -208,8 +208,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(comparator);
                         } else {
                             filter.setConEndTurnIndex(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : comparator,
+                                value      : value,
+                                comparator : comparator,
                             }));
                         }
                         filter.setConIsEverlasting(false);
@@ -227,8 +227,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (filter.getConEndTurnIndex() == null) {
             filter.setConEndTurnIndex(ValueAndComparator.fromJson({
-                value       : 0,
-                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                value      : 0,
+                comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
             }));
         }
 
@@ -239,16 +239,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const filter = this._getTileBuffFilter();
         const oldCon = filter.getConEndPlayerIndex();
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
-            availableNumberArray    : ValueAndComparators_Constants.AllComparatorIdArray,
-            getNumberMainText       : comparator => Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError,
-            currentNumber           : oldCon ? oldCon.getComparator() : null,
-            callbackOnConfirm       : comparator => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
-                currentValue    : oldCon == null ? null : oldCon.getValue(),
-                maxValue        : TileBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
-                minValue        : TileBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
-                callback        : value => {
+            getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+            availableNumberArray : ValueAndComparators_Constants.AllComparatorIdArray,
+            getNumberMainText    : comparator => Lang_Utils.getComparatorName(comparator) ?? Lang_Constants.UndefinedError,
+            currentNumber        : oldCon ? oldCon.getComparator() : null,
+            callbackOnConfirm    : comparator => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputNullableIntegerPanel, {
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.EndPlayerIndex),
+                currentValue : oldCon == null ? null : oldCon.getValue(),
+                maxValue     : TileBuffs_Constants.EndTimeModification.MaxEndPlayerIndex,
+                minValue     : TileBuffs_Constants.EndTimeModification.MinEndPlayerIndex,
+                callback     : value => {
                     if (value == null) {
                         filter.setConEndPlayerIndex(null);
                     } else {
@@ -257,8 +257,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                             oldCon.setComparator(comparator);
                         } else {
                             filter.setConEndPlayerIndex(ValueAndComparator.fromJson({
-                                value       : value,
-                                comparator  : comparator,
+                                value      : value,
+                                comparator : comparator,
                             }));
                         }
                         filter.setConIsEverlasting(false);
@@ -276,8 +276,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         if (filter.getConEndPlayerIndex() == null) {
             filter.setConEndPlayerIndex(ValueAndComparator.fromJson({
-                value       : 0,
-                comparator  : ValueAndComparators_Constants.ComparatorId.EqualTo,
+                value      : 0,
+                comparator : ValueAndComparators_Constants.ComparatorId.EqualTo,
             }));
         }
 
@@ -355,7 +355,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const isEverlasting = filter.getConIsEverlasting();
         this._labelConIsEverlasting.setText(isEverlasting == null
             ? ``
-            : Lang_Utils.getTextForYesOrNo(isEverlasting)
+            : Lang_Utils.getTextForYesOrNo(isEverlasting),
         );
     }
     private _updateLabelsForConEndTurnIndex() {

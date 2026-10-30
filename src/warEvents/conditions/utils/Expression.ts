@@ -25,7 +25,7 @@ export function getDetailedDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<
 
     return [
         Lang_Utils.getText(Lang_Constants.TextType.A0830),
-        `${data.getExpression() ?? Lang_Constants.UndefinedError}`
+        `${data.getExpression() ?? Lang_Constants.UndefinedError}`,
     ].join(`\n`);
 }
 export function getErrorTip(data: WecExpression, customCounterNameSet: Set<string>): string | null {
@@ -43,10 +43,10 @@ export function getErrorTip(data: WecExpression, customCounterNameSet: Set<strin
     }
 
     const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString({
-        str                     : expression,
-        contextType             : ExpressionParsers_Enums.ContextType.War,
-        resultTypes             : [ExpressionParsers_Enums.ResultType.Number],
-        customCounterNameSet    : customCounterNameSet,
+        str                  : expression,
+        contextType          : ExpressionParsers_Enums.ContextType.War,
+        resultTypes          : [ExpressionParsers_Enums.ResultType.Number],
+        customCounterNameSet : customCounterNameSet,
     });
     if (errorData.errorCode) {
         return errorData.errorText ?? Lang_Utils.getErrorText(errorData.errorCode);
@@ -69,10 +69,10 @@ export function checkIsValid(condition: AuxiliaryTypes_AuxiliaryTypes.Undefinabl
     }
 
     return ExpressionParsers_Parser.Parser.checkIsValidString({
-        str                     : expression,
-        contextType             : ExpressionParsers_Enums.ContextType.War,
-        resultTypes             : [ExpressionParsers_Enums.ResultType.Number],
-        customCounterNameSet    : customCounterNameSet,
+        str                  : expression,
+        contextType          : ExpressionParsers_Enums.ContextType.War,
+        resultTypes          : [ExpressionParsers_Enums.ResultType.Number],
+        customCounterNameSet : customCounterNameSet,
     });
 }
 

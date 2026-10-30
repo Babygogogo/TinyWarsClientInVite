@@ -37,16 +37,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                  callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmSetWarRuleAvailability,      callback: this._onNotifyMsgMmSetWarRuleAvailability },
-            { type: Notifications_TypeId.TypeId.MsgMmSetWarRuleName,              callback: this._onNotifyMsgMmSetWarRuleName },
-            { type: Notifications_TypeId.TypeId.MsgMmSetWarRuleFixedTileTheme,    callback: this._onNotifyMsgMmSetWarRuleFixedTileTheme },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                  callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleAvailability,      callback : this._onNotifyMsgMmSetWarRuleAvailability },
+            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleName,              callback : this._onNotifyMsgMmSetWarRuleName },
+            { type : Notifications_TypeId.TypeId.MsgMmSetWarRuleFixedTileTheme,    callback : this._onNotifyMsgMmSetWarRuleFixedTileTheme },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnSetAvailability, callback: this._onTouchedBtnSetAvailability, },
-            { ui: this._btnSetRuleName,     callback: this._onTouchedBtnSetRuleName, },
-            { ui: this._btnSetTileTheme,    callback: this._onTouchedBtnSetTileTheme },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnSetAvailability, callback : this._onTouchedBtnSetAvailability },
+            { ui : this._btnSetRuleName,     callback : this._onTouchedBtnSetRuleName },
+            { ui : this._btnSetTileTheme,    callback : this._onTouchedBtnSetTileTheme },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -91,19 +91,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const gameConfig            = await GameConfigs_Provider.getLatestGameConfig();
         const currentGameModeArray  = GameModes_Utils.getEnumArray(existingWarRule.getRuleAvailability());
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-            availableNumberArray    : [
+            availableNumberArray : [
                 GameModes_Constants.ModeId.Versus,
                 GameModes_Constants.ModeId.RankedMatch,
                 GameModes_Constants.ModeId.Coop,
                 GameModes_Constants.ModeId.WarRoom,
             ],
-            currentNumberArray      : currentGameModeArray,
-            getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0406),
-            getNumberMainText       : gameMode => Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError,
-            callbackOnHelp          : gameMode => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
+            currentNumberArray : currentGameModeArray,
+            getTitleText       : () => Lang_Utils.getText(Lang_Constants.TextType.B0406),
+            getNumberMainText  : gameMode => Lang_Utils.getGameModeName(gameMode) ?? Lang_Constants.UndefinedError,
+            callbackOnHelp     : gameMode => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonHelpPanel, {
                 getContent : () => Lang_Utils.getGameModeHelpText(gameMode) ?? Lang_Constants.UndefinedError,
             }),
-            callbackOnConfirm       : newGameModeArray => {
+            callbackOnConfirm : newGameModeArray => {
                 const currentGameModeSet = new Set(currentGameModeArray);
                 if ((currentGameModeSet.size === newGameModeArray.length) &&
                     (newGameModeArray.every(v => currentGameModeSet.has(v)))
@@ -128,9 +128,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                     FloatText.show(Lang_Utils.getErrorText(errorCode));
                 } else {
                     NormalMap_Model_NormalMapProxy.reqMmSetWarRuleAvailability({
-                        normalMapId     : normalMapId,
-                        ruleId          : ruleId,
-                        availability    : availability,
+                        normalMapId  : normalMapId,
+                        ruleId       : ruleId,
+                        availability : availability,
                     });
                 }
             },
@@ -150,9 +150,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputShortLangTextPanel, {
-                currentTextArray    : templateWarRule.getRuleNameArray(),
-                maxTextLength       : WarRules_Constants.Constants.MaxNameLength,
-                callback            : textArray => NormalMap_Model_NormalMapProxy.reqMmSetWarRuleName(normalMapId, ruleId, textArray),
+                currentTextArray : templateWarRule.getRuleNameArray(),
+                maxTextLength    : WarRules_Constants.Constants.MaxNameLength,
+                callback         : textArray => NormalMap_Model_NormalMapProxy.reqMmSetWarRuleName(normalMapId, ruleId, textArray),
             });
         }
     }
@@ -170,11 +170,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.YouCanNotDoThisRightNow);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNumberPanel, {
-                availableNumberArray    : [-1].concat(Helpers_Collection.getNonNullElements(Tiles_Constants_Common.AllThemeTypeIdArray)),
-                currentNumber           : templateWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B1113),
-                getNumberMainText           : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_Constants.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
-                callbackOnConfirm       : tileTheme => {
+                availableNumberArray : [-1].concat(Helpers_Collection.getNonNullElements(Tiles_Constants_Common.AllThemeTypeIdArray)),
+                currentNumber        : templateWarRule.getWarRuleCommonData()?.getFixedTileTheme() ?? -1,
+                getTitleText         : () => Lang_Utils.getText(Lang_Constants.TextType.B1113),
+                getNumberMainText    : tileTheme => tileTheme === -1 ? Lang_Utils.getText(Lang_Constants.TextType.B0890) : (Lang_Utils.getTileThemeName(tileTheme) ?? Lang_Constants.UndefinedError),
+                callbackOnConfirm    : tileTheme => {
                     NormalMap_Model_NormalMapProxy.reqMmSetWarRuleFixedTileTheme(normalMapId, templateWarRuleId, tileTheme === -1 ? null : tileTheme);
                 },
             });

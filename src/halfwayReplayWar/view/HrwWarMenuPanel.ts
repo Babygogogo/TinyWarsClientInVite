@@ -38,18 +38,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnCalculator,              callback: this._onTouchedBtnCalculator },
-            { ui: this._btnSettings,                callback: this._onTouchedBtnSettings },
-            { ui: this._btnSimulation,              callback: this._onTouchedBtnSimulation },
-            { ui: this._btnFreeMode,                callback: this._onTouchedBtnFreeMode },
-            { ui: this._btnOverrideSkin,            callback: this._onTouchedBtnOverrideSkin },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnCalculator,              callback : this._onTouchedBtnCalculator },
+            { ui : this._btnSettings,                callback : this._onTouchedBtnSettings },
+            { ui : this._btnSimulation,              callback : this._onTouchedBtnSimulation },
+            { ui : this._btnFreeMode,                callback : this._onTouchedBtnFreeMode },
+            { ui : this._btnOverrideSkin,            callback : this._onTouchedBtnOverrideSkin },
 
-            { ui: this._btnOngoingWar,              callback: this._onTouchedBtnOngoingWar },
-            { ui: this._btnLobby,                   callback: this._onTouchedBtnLobby },
+            { ui : this._btnOngoingWar,              callback : this._onTouchedBtnOngoingWar },
+            { ui : this._btnLobby,                   callback : this._onTouchedBtnLobby },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -74,9 +74,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            war                     : war,
-            needReviseWeaponType    : true,
-            data                    : null,
+            war                  : war,
+            needReviseWeaponType : true,
+            data                 : null,
         });
         this.closePanel();
     }
@@ -95,21 +95,21 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.show(Lang_Utils.getText(Lang_Constants.TextType.A0103));
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-                getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
-                callback    : () => {
+                getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0931),
+                callback   : () => {
                     const warData = war.serializeForCreateSfw();
                     warData.createIfNotExistsSettingsForSfw();
 
                     Helpers_GameFlow.gotoSinglePlayerWar({
-                        warData         : warData,
-                        slotIndex       : null,
-                        slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
-                            mpwWarId                : war.getWarId(),
-                            overridingSkinIdArray   : [],
-                            gridMarkData            : war.getGridMarkData().toJson(),
+                        warData       : warData,
+                        slotIndex     : null,
+                        slotExtraData : SpmWarSaveSlotExtraData.fromJson({
+                            mpwWarId              : war.getWarId(),
+                            overridingSkinIdArray : [],
+                            gridMarkData          : war.getGridMarkData().toJson(),
                         }),
                     });
-                }
+                },
             });
         }
     }
@@ -133,9 +133,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => `${Lang_Utils.getText(Lang_Constants.TextType.R0007)}\n\n\n${Lang_Utils.getText(Lang_Constants.TextType.A0201)}`,
-            callback: () => {
+            callback   : () => {
                 Helpers_GameFlow.gotoMfrCreateSettingsPanel(warData);
-            }
+            },
         });
     }
     private _onTouchedBtnOverrideSkin(): void {
@@ -155,7 +155,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0711),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback: async () => {
+            callback   : async () => {
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
                     title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
                     content : Lang_Utils.getText(Lang_Constants.TextType.A0040),
@@ -169,14 +169,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 }
 
                 GamePanels_Manager.closePanel(GamePanels_Dict.getDict().CommonBlockPanel);
-            }
+            },
         });
     }
     private _onTouchedBtnLobby(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0054),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0025),
-            callback: () => Helpers_GameFlow.gotoLobby(),
+            callback   : () => Helpers_GameFlow.gotoLobby(),
         });
     }
 

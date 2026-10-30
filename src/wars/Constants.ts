@@ -24,10 +24,10 @@ export const enum BasicSettingsTypeId {
     WarComment,
     WarRuleTitle,
     HasFog,
-    // eslint-disable-next-line no-shadow
+     
     Weather,
     TileTheme,
-    // eslint-disable-next-line no-shadow
+     
     WarEvent,
     TimerType,
     TimerRegularParam,

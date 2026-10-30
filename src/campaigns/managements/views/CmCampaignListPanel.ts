@@ -34,12 +34,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCmCreateCampaign,         callback: this._onNotifyMsgCmCreateCampaign },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCmCreateCampaign,         callback : this._onNotifyMsgCmCreateCampaign },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnCreateCampaign,  callback: this._onTouchedBtnCreateCampaign },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnCreateCampaign,  callback : this._onTouchedBtnCreateCampaign },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -64,9 +64,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnCreateCampaign(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B1134),
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => Campaigns_Managements_Gateway.reqCmCreateCampaign(),
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B1134),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => Campaigns_Managements_Gateway.reqCmCreateCampaign(),
         });
     }
 
@@ -110,7 +110,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         } else {
             label.setIsVisible(false);
 
-            const dataArray: DataForCampaignRenderer[] = campaignIdArray.sort((v1, v2) => v1 - v2).map(v => ({ index: 0, campaignId: v }));
+            const dataArray: DataForCampaignRenderer[] = campaignIdArray.sort((v1, v2) => v1 - v2).map(v => ({ index : 0, campaignId : v }));
             for (let i = 0; i < dataArray.length; ++i) {
                 dataArray[i].index = i;
             }
@@ -130,11 +130,11 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback: this._onNotifyMsgCmSetCampaignName },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCmSetCampaignName,    callback : this._onNotifyMsgCmSetCampaignName },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnModify,                      callback: this._onTouchedBtnModify },
+            { ui : this._btnModify,                      callback : this._onTouchedBtnModify },
         ]);
     }
 
@@ -156,7 +156,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     private _onTouchedBtnModify(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CmCampaignCommandsPanel, {
-            campaignId  : this.getOpenData()?.campaignId,
+            campaignId : this.getOpenData()?.campaignId,
         });
     }
 
@@ -176,7 +176,7 @@ class CampaignRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
         const campaignInfo = await Campaigns_Mains_Provider.getCampaignInfo(campaignId);
         if (campaignId === this.getOpenData()?.campaignId) {
-            label.setText(`#${campaignId} ${Lang_Utils.getLanguageText({ textArray: campaignInfo?.getNameArray() }) ?? Lang_Utils.getText(Lang_Constants.TextType.B0277)}`);
+            label.setText(`#${campaignId} ${Lang_Utils.getLanguageText({ textArray : campaignInfo?.getNameArray() }) ?? Lang_Utils.getText(Lang_Constants.TextType.B0277)}`);
         }
     }
 }

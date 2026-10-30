@@ -21,7 +21,7 @@ export function checkIsValid(
     data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteUnitBuffSimple>,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
@@ -84,7 +84,7 @@ export function getErrorTip(
     data                    : WeaDeleteUnitBuffSimple,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): string | null {
     {
         const filter = data.getConPlayerFilter();

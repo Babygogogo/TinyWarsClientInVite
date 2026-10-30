@@ -20,10 +20,10 @@ export function getErrorCode(data: UnitCustomName): Utils_ClientErrorCode.Client
 
     {
         if (!Lang_Utils.checkIsValidLanguageTextArray({
-            list            : data.getNameTextArray(),
-            minTextLength   : Units_Constants.CustomName.MinLength,
-            maxTextLength   : Units_Constants.CustomName.MaxLength,
-            minTextCount    : 1
+            list          : data.getNameTextArray(),
+            minTextLength : Units_Constants.CustomName.MinLength,
+            maxTextLength : Units_Constants.CustomName.MaxLength,
+            minTextCount  : 1,
         })) {
             return Utils_ClientErrorCode.ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomName_01;
         }

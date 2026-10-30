@@ -16,8 +16,7 @@ import {
 
 export class UiTab<DataForTabItemRenderer extends Ui_Types_UiListItemData.UiListItemData, DataForPage>
     extends     Ui_Components_UiContainer.UiContainer
-    implements  Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, DataForPage>
-{
+    implements  Ui_Interfaces_IUiTab.IUiTab<DataForTabItemRenderer, DataForPage> {
     private readonly _bar?              : Ui_Interfaces_IUiList.IUiList<DataForTabItemRenderer>;   // 页签栏
     private readonly _page?             : Ui_Interfaces_IUiContainer.IUiContainer;                      // 页面内容，仅用于占位
 

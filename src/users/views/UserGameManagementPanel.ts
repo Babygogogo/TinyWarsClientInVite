@@ -36,17 +36,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnDeleteAllSpmRank,        callback: this._onTouchedBtnDeleteAllSpmRank },
-            { ui: this._btnSetPrivilege,            callback: this._onTouchedBtnSetPrivilege },
-            { ui: this._btnMapManagement,           callback: this._onTouchedBtnMapManagement },
-            { ui: this._btnManageBroadcast,         callback: this._onTouchedBtnManageBroadcast },
-            { ui: this._btnAutoTourneyManagement,   callback: this._onTouchedBtnAutoTourneyManagement },
-            { ui: this._btnCampaignManagement,      callback: this._onTouchedBtnCampaignManagement },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnDeleteAllSpmRank,        callback : this._onTouchedBtnDeleteAllSpmRank },
+            { ui : this._btnSetPrivilege,            callback : this._onTouchedBtnSetPrivilege },
+            { ui : this._btnMapManagement,           callback : this._onTouchedBtnMapManagement },
+            { ui : this._btnManageBroadcast,         callback : this._onTouchedBtnManageBroadcast },
+            { ui : this._btnAutoTourneyManagement,   callback : this._onTouchedBtnAutoTourneyManagement },
+            { ui : this._btnCampaignManagement,      callback : this._onTouchedBtnCampaignManagement },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -66,13 +66,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnDeleteAllSpmRank(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getTitle       : () => Lang_Utils.getText(Lang_Constants.TextType.B0879),
-            getContent     : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => Gm_Model_GmProxy.reqGmDeleteSpmAllScoreAndReplay(),
+            getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0879),
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
+            callback   : () => Gm_Model_GmProxy.reqGmDeleteSpmAllScoreAndReplay(),
         });
     }
     private _onTouchedBtnSetPrivilege(): void {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, { userId: Helpers_Misc.getExisted(Users_Model.getSelfUserId()) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().GmSetUserFullPrivilegePanel, { userId : Helpers_Misc.getExisted(Users_Model.getSelfUserId()) });
     }
     private _onTouchedBtnMapManagement(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().MmMainMenuPanel, void 0);

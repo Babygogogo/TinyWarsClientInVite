@@ -35,14 +35,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnUserInfo,            callback: this._onTouchedBtnUserInfo },
-            { ui: this._btnPrivateChat,         callback: this._onTouchedBtnPrivateChat },
-            { ui: this._btnDeleteMessage,       callback: this._onTouchedBtnDeleteMessage },
-            { ui: this._btnCopyMessage,         callback: this._onTouchedBtnCopyMessage },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnUserInfo,            callback : this._onTouchedBtnUserInfo },
+            { ui : this._btnPrivateChat,         callback : this._onTouchedBtnPrivateChat },
+            { ui : this._btnDeleteMessage,       callback : this._onTouchedBtnDeleteMessage },
+            { ui : this._btnCopyMessage,         callback : this._onTouchedBtnCopyMessage },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -62,7 +62,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, {
-            userId  : userId,
+            userId : userId,
         });
         this.closePanel();
     }
@@ -72,9 +72,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({
-            toUserId    : userId,
-        }) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
+            toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
+                toUserId : userId,
+            }), 
+        });
         this.closePanel();
     }
     private _onTouchedBtnDeleteMessage(): void {
@@ -85,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0286),
-            callback: () => {
+            callback   : () => {
                 Chat_Proxy.reqChatDeleteMessage(messageId);
                 this.closePanel();
             },

@@ -104,17 +104,17 @@ export function revise(war: BaseWar_Interface_IBwWar.IBwWar, rawAction: WoPlayer
         * Units_Utils_Common.getNormalizedHp(unitHp)
         * playerInTurn.getUnitCostModifier(unitType)
         / 100
-        / Units_Constants.Hp.Normalizer
+        / Units_Constants.Hp.Normalizer,
     );
     if (cost > playerInTurn.getFund()) {
         throw Helpers_Misc.newError(`Invalid cost: ${cost}`, Utils_ClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_15);
     }
 
     return WoContainer.fromJson({
-        WoPlayerProduceUnit: {
-            gridIndex   : gridIndex.toProto().toJson(),
-            unitHp      : unitHp,
-            unitType    : unitType,
+        WoPlayerProduceUnit : {
+            gridIndex : gridIndex.toProto().toJson(),
+            unitHp    : unitHp,
+            unitType  : unitType,
         },
     });
 }

@@ -93,7 +93,7 @@ export async function handlePlayerActionAndAutoActions(war: SinglePlayerWar_Inte
     await WarOperations_Executors_Executor.checkAndExecute(
         war,
         WarOperations_Revisers_Reviser.revise(war, action, Users_Model.getSelfUserId()),
-        false
+        false,
     );
 
     await checkAndHandleAutoActionsAndRobotRecursively(war);
@@ -131,7 +131,7 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePl
         await WarOperations_Executors_Executor.checkAndExecute(
             war,
             WarOperations_Revisers_Reviser.revise(war, data.warOperation, data.userId),
-            false
+            false,
         );
     }
 

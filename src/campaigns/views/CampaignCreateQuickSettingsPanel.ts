@@ -56,13 +56,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCampaignCreateWar,        callback: this._onNotifyMsgCampaignCreateWar },
-            { type: Notifications_TypeId.TypeId.MsgCampaignCreateWarFailed,  callback: this._onNotifyMsgCampaignCreateWarFailed },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCampaignCreateWar,        callback : this._onNotifyMsgCampaignCreateWar },
+            { type : Notifications_TypeId.TypeId.MsgCampaignCreateWarFailed,  callback : this._onNotifyMsgCampaignCreateWarFailed },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnStart,           callback: this._onTouchedBtnStart },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnStart,           callback : this._onTouchedBtnStart },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -98,9 +98,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const data = e.data as CampaignCreateWarResponse;
         Helpers_GameFlow.gotoSinglePlayerWar({
-            slotIndex       : Helpers_Misc.getExisted(data.getSlotIndex()),
-            slotExtraData   : Helpers_Misc.getExisted(data.getSlotExtraData()),
-            warData         : Helpers_Misc.getExisted(data.getWarData()),
+            slotIndex     : Helpers_Misc.getExisted(data.getSlotIndex()),
+            slotExtraData : Helpers_Misc.getExisted(data.getSlotExtraData()),
+            warData       : Helpers_Misc.getExisted(data.getWarData()),
         });
     }
     private _onNotifyMsgCampaignCreateWarFailed(): void {
@@ -114,16 +114,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
-            currentSlotIndex        : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
-            needComment             : false,
-            needConfirmOverwrite    : true,
-            callback                : slotIndex => {
+            currentSlotIndex     : await SinglePlayerMode_Model_SpmModel.getAvailableSlotIndex(),
+            needComment          : false,
+            needConfirmOverwrite : true,
+            callback             : slotIndex => {
                 Campaigns_Mains_Gateway.reqCampaignCreateWar({
-                    slotIndex           : slotIndex,
-                    slotExtraData       : new SpmWarSaveSlotExtraData(),
-                    campaignId          : openData.campaignId,
-                    campaignMapId       : openData.campaignMapId,
-                    playerCoInfoArray   : [...this._playerCoDict.entries()].map(v => PlayerCoInfo.fromJson({ playerIndex: v[0], coId: v[1] })),
+                    slotIndex         : slotIndex,
+                    slotExtraData     : new SpmWarSaveSlotExtraData(),
+                    campaignId        : openData.campaignId,
+                    campaignMapId     : openData.campaignMapId,
+                    playerCoInfoArray : [...this._playerCoDict.entries()].map(v => PlayerCoInfo.fromJson({ playerIndex : v[0], coId : v[1] })),
                 });
                 GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonBlockPanel, {
                     title   : Lang_Utils.getText(Lang_Constants.TextType.B0088),
@@ -161,7 +161,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const campaignMapId                 = openData.campaignMapId;
         const [mapRawData, configVersion]   = await Promise.all([
             Campaigns_Mains_Provider.getCampaignMapRawData(campaignId, campaignMapId),
-            GameConfigs_Provider.getLatestConfigVersion()
+            GameConfigs_Provider.getLatestConfigVersion(),
         ]);
         if (openData !== this.getOpenData()) {
             return;
@@ -200,9 +200,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         const dataCount = listPlayer.getBoundDataArray()?.length ?? 0;
         this._group.setUnscaledManualWidth(Numbers_Utils.getValueInRange({
-            rawValue    : dataCount * 140 + (dataCount - 1) * 10 + 40,
-            minValue    : 330,
-            maxValue    : Stages_Constants.Dimension.DesignWidth,
+            rawValue : dataCount * 140 + (dataCount - 1) * 10 + 40,
+            minValue : 330,
+            maxValue : Stages_Constants.Dimension.DesignWidth,
         }));
     }
 
@@ -224,12 +224,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         for (let playerIndex = Players_Constants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
             const playerRule = WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex);
             dataList.push({
-                campaignId      : campaignId,
-                campaignMapId   : campaignMapId,
-                playerIndex     : playerIndex,
-                mapRawData      : mapRawData,
-                coId            : playerRule.getCampaignAiCoId() ?? Helpers_Misc.getExisted(playerCoDict.get(playerIndex)),
-                panel           : this,
+                campaignId    : campaignId,
+                campaignMapId : campaignMapId,
+                playerIndex   : playerIndex,
+                mapRawData    : mapRawData,
+                coId          : playerRule.getCampaignAiCoId() ?? Helpers_Misc.getExisted(playerCoDict.get(playerIndex)),
+                panel         : this,
             });
         }
 
@@ -276,7 +276,7 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,                callback: this._onTouchedGroupCo },
+            { ui : this._groupCo,                callback : this._onTouchedGroupCo },
         ]);
     }
 
@@ -298,16 +298,16 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         const coId              = openData.coId;
         if (coIdArray.length <= 1) {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonCoInfoPanel, {
-                gameConfig  : await GameConfigs_Provider.getLatestGameConfig(),
-                coId        : coId,
+                gameConfig : await GameConfigs_Provider.getLatestGameConfig(),
+                coId       : coId,
             });
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleCoIdPanel, {
-                gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                currentCoId         : coId,
-                isBan               : false,
-                availableCoIdArray  : coIdArray,
-                callbackOnConfirm   : newCoId => {
+                gameConfig         : await GameConfigs_Provider.getLatestGameConfig(),
+                currentCoId        : coId,
+                isBan              : false,
+                availableCoIdArray : coIdArray,
+                callbackOnConfirm  : newCoId => {
                     if (newCoId !== coId) {
                         openData.panel.updateOnSelectCo(playerIndex, newCoId);
                     }

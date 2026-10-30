@@ -41,25 +41,25 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback: this._onMsgUserGetPublicInfo },
-            { type: Notifications_TypeId.TypeId.MsgUserSetNickname,      callback: this._onMsgUserSetNickname },
-            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,   callback: this._onMsgUserSetDiscordId },
-            { type: Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback: this._onMsgMailSetIsNew },
-            { type: Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback: this._onMsgMailGetAllMailArray },
-            { type: Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback: this._onMsgMmGetReviewingMaps },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,    callback : this._onMsgUserGetPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,      callback : this._onMsgUserSetNickname },
+            { type : Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,   callback : this._onMsgUserSetDiscordId },
+            { type : Notifications_TypeId.TypeId.MsgMailSetIsNew,         callback : this._onMsgMailSetIsNew },
+            { type : Notifications_TypeId.TypeId.MsgMailGetAllMailArray,  callback : this._onMsgMailGetAllMailArray },
+            { type : Notifications_TypeId.TypeId.MsgMmGetReviewingMaps,   callback : this._onMsgMmGetReviewingMaps },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnDamageCalculator,        callback: this._onTouchedBtnDamageCalculator },
-            { ui: this._btnGraphicSettings,         callback: this._onTouchedBtnGraphicSettings },
-            { ui: this._btnChangeGameVersion,       callback: this._onTouchedBtnChangeGameVersion },
-            { ui: this._btnSoundSettings,           callback: this._onTouchedBtnSoundSettings },
-            { ui: this._btnMiscSettings,            callback: this._onTouchedBtnMiscSettings },
-            { ui: this._btnMail,                    callback: this._onTouchedBtnMail },
-            { ui: this._btnComplaint,               callback: this._onTouchedBtnComplaint },
-            { ui: this._btnGameChart,               callback: this._onTouchedBtnGameChart },
-            { ui: this._btnGameManagement,          callback: this._onTouchedBtnGameManagement },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnDamageCalculator,        callback : this._onTouchedBtnDamageCalculator },
+            { ui : this._btnGraphicSettings,         callback : this._onTouchedBtnGraphicSettings },
+            { ui : this._btnChangeGameVersion,       callback : this._onTouchedBtnChangeGameVersion },
+            { ui : this._btnSoundSettings,           callback : this._onTouchedBtnSoundSettings },
+            { ui : this._btnMiscSettings,            callback : this._onTouchedBtnMiscSettings },
+            { ui : this._btnMail,                    callback : this._onTouchedBtnMail },
+            { ui : this._btnComplaint,               callback : this._onTouchedBtnComplaint },
+            { ui : this._btnGameChart,               callback : this._onTouchedBtnGameChart },
+            { ui : this._btnGameManagement,          callback : this._onTouchedBtnGameManagement },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -98,9 +98,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnDamageCalculator(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonDamageCalculatorPanel, {
-            data                    : null,
-            war                     : null,
-            needReviseWeaponType    : true,
+            data                 : null,
+            war                  : null,
+            needReviseWeaponType : true,
         });
     }
     private _onTouchedBtnGraphicSettings(): void {
@@ -121,9 +121,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnComplaint(): void {
         // this.closePanel();
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, { toTarget: new AuxiliaryTypes_ChatToTarget.ChatToTarget({
-            toUserId: Users_Constants.Common.AdminUserId,
-        }) });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().ChatPanel, {
+            toTarget : new AuxiliaryTypes_ChatToTarget.ChatToTarget({
+                toUserId : Users_Constants.Common.AdminUserId,
+            }), 
+        });
     }
     private async _onTouchedBtnGameChart(): Promise<void> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonGameChartPanel, void 0);

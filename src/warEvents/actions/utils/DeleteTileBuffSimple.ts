@@ -22,7 +22,7 @@ export function checkIsValid(
     data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaDeleteTileBuffSimple>,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
@@ -67,7 +67,7 @@ export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<We
             if (comparator != null) {
                 conTextArray.push(`- ${ValueAndComparators_Utils.getDesc(
                     comparator,
-                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419)
+                    Lang_Utils.getText(data.getConUnitFilter() == null ? Lang_Constants.TextType.B1418 : Lang_Constants.TextType.B1419),
                 )}`);
             }
         }
@@ -88,7 +88,7 @@ export function getErrorTip(
     data                    : WeaDeleteTileBuffSimple,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): string | null {
     {
         const filter = data.getConPlayerFilter();

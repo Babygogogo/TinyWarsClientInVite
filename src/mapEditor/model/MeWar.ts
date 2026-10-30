@@ -123,58 +123,58 @@ export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interf
         }
 
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().serializeForCreateSfwWithTemplateWarRule(warRule).toJson(),
-            settingsForMcw              : null,
-            settingsForMrw              : null,
-            settingsForMmw              : null,
-            settingsForAtw              : null,
-            settingsForMfw              : null,
-            settingsForCcw              : null,
-            settingsForScw              : null,
-            settingsForSfw              : null,
+            settingsForCommon : this.getCommonSettingManager().serializeForCreateSfwWithTemplateWarRule(warRule).toJson(),
+            settingsForMcw    : null,
+            settingsForMrw    : null,
+            settingsForMmw    : null,
+            settingsForAtw    : null,
+            settingsForMfw    : null,
+            settingsForCcw    : null,
+            settingsForScw    : null,
+            settingsForSfw    : null,
 
-            warId                       : this.getWarId(),
-            isEnded                     : false,
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            executedOperationManager    : null,
-            remainingVotesForDraw       : null,
-            drawVoteManager             : new SerialDrawVoteManager().toJson(),
-            weatherManager              : this.getWeatherManager().serializeForCreateSfw().toJson(),
-            warEventManager             : this.getWarEventManager().serializeForCreateSfw().toJson(),
-            playerManager               : playerManagerData.toJson(),
-            turnManager                 : this.getTurnManager().serializeForCreateSfw().toJson(),
-            field                       : this.getField().serializeForCreateSfw().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serializeForCreateSfw().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateSfw().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : false,
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            executedOperationManager : null,
+            remainingVotesForDraw    : null,
+            drawVoteManager          : new SerialDrawVoteManager().toJson(),
+            weatherManager           : this.getWeatherManager().serializeForCreateSfw().toJson(),
+            warEventManager          : this.getWarEventManager().serializeForCreateSfw().toJson(),
+            playerManager            : playerManagerData.toJson(),
+            turnManager              : this.getTurnManager().serializeForCreateSfw().toJson(),
+            field                    : this.getField().serializeForCreateSfw().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForCreateSfw().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForCreateSfw().toJson(),
         });
     }
     public serializeForCreateMfrWithTemplateWarRule(warRule: TemplateWarRule): SerialWar {
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().serializeForCreateMfwWithTemplateWarRule(warRule).toJson(),
-            settingsForMcw              : null,
-            settingsForMrw              : null,
-            settingsForMmw              : null,
-            settingsForAtw              : null,
-            settingsForMfw              : null,
-            settingsForCcw              : null,
-            settingsForScw              : null,
-            settingsForSfw              : null,
+            settingsForCommon : this.getCommonSettingManager().serializeForCreateMfwWithTemplateWarRule(warRule).toJson(),
+            settingsForMcw    : null,
+            settingsForMrw    : null,
+            settingsForMmw    : null,
+            settingsForAtw    : null,
+            settingsForMfw    : null,
+            settingsForCcw    : null,
+            settingsForScw    : null,
+            settingsForSfw    : null,
 
-            warId                       : this.getWarId(),
-            isEnded                     : false,
-            seedRandomInitialState      : null,
-            seedRandomCurrentState      : null,
-            executedOperationManager    : null,
-            remainingVotesForDraw       : null,
-            drawVoteManager             : new SerialDrawVoteManager().toJson(),
-            weatherManager              : this.getWeatherManager().serializeForCreateMfr().toJson(),
-            warEventManager             : this.getWarEventManager().serializeForCreateMfr().toJson(),
-            playerManager               : this.getPlayerManager().serializeForCreateMfr().toJson(),
-            turnManager                 : this.getTurnManager().serializeForCreateMfr().toJson(),
-            field                       : this.getField().serializeForCreateMfr().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serializeForCreateMfr().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateMfr().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : false,
+            seedRandomInitialState   : null,
+            seedRandomCurrentState   : null,
+            executedOperationManager : null,
+            remainingVotesForDraw    : null,
+            drawVoteManager          : new SerialDrawVoteManager().toJson(),
+            weatherManager           : this.getWeatherManager().serializeForCreateMfr().toJson(),
+            warEventManager          : this.getWarEventManager().serializeForCreateMfr().toJson(),
+            playerManager            : this.getPlayerManager().serializeForCreateMfr().toJson(),
+            turnManager              : this.getTurnManager().serializeForCreateMfr().toJson(),
+            field                    : this.getField().serializeForCreateMfr().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serializeForCreateMfr().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serializeForCreateMfr().toJson(),
         });
     }
     public override async serializeForMap(): Promise<MapRawData> {
@@ -186,26 +186,26 @@ export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interf
         const serialTileMap         = this.getTileMap().serialize();
         const serialUnitMap         = unitMap.serialize();
         return MapRawData.fromJson({
-            designerName            : this.getMapDesignerName(),
-            designerUserId          : this.getMapDesignerUserId(),
-            mapNameArray            : this.getMapNameArray().map(v => v.toJson()),
-            mapWidth                : mapSize.getWidth(),
-            mapHeight               : mapSize.getHeight(),
-            playersCountUnneutral   : playersCountUnneutral,
-            modifiedTime            : Timer_TimerModel.getServerTimestamp(),
-            tileDataArray           : serialTileMap.getTiles().map(v => v.toJson()),
-            unitDataArray           : serialUnitMap.getUnits().map(v => v.toJson()),
-            templateWarRuleArray    : this.getRevisedTemplateWarRuleArray(playersCountUnneutral).map(v => v.toJson()),
-            mapTagIdFlags           : this.getGroupedMapTagId(),
-            warEventFullData        : this.getWarEventManager().getWarEventFullData()?.toJson(),
-            mapSimpleDialogueArray  : this.getMapSimpleDialogueArray().map(v => v.toJson()),
-            campaignMapData         : this.getCampaignMapData()?.toJson(),
-            taskObjectiveFullData   : this.getTaskObjectiveFullData()?.toJson(),
-            mapExtraText            : {
-                mapDescription      : this.getMapDescArray().map(v => v.toJson()),
+            designerName           : this.getMapDesignerName(),
+            designerUserId         : this.getMapDesignerUserId(),
+            mapNameArray           : this.getMapNameArray().map(v => v.toJson()),
+            mapWidth               : mapSize.getWidth(),
+            mapHeight              : mapSize.getHeight(),
+            playersCountUnneutral  : playersCountUnneutral,
+            modifiedTime           : Timer_TimerModel.getServerTimestamp(),
+            tileDataArray          : serialTileMap.getTiles().map(v => v.toJson()),
+            unitDataArray          : serialUnitMap.getUnits().map(v => v.toJson()),
+            templateWarRuleArray   : this.getRevisedTemplateWarRuleArray(playersCountUnneutral).map(v => v.toJson()),
+            mapTagIdFlags          : this.getGroupedMapTagId(),
+            warEventFullData       : this.getWarEventManager().getWarEventFullData()?.toJson(),
+            mapSimpleDialogueArray : this.getMapSimpleDialogueArray().map(v => v.toJson()),
+            campaignMapData        : this.getCampaignMapData()?.toJson(),
+            taskObjectiveFullData  : this.getTaskObjectiveFullData()?.toJson(),
+            mapExtraText           : {
+                mapDescription : this.getMapDescArray().map(v => v.toJson()),
             },
-            tileCustomNameArray     : serialTileMap.getTileCustomNameArray().map(v => v.toJson()),
-            unitCustomNameArray     : serialUnitMap.getUnitCustomNameArray().map(v => v.toJson()),
+            tileCustomNameArray : serialTileMap.getTileCustomNameArray().map(v => v.toJson()),
+            unitCustomNameArray : serialUnitMap.getUnitCustomNameArray().map(v => v.toJson()),
         });
     }
 
@@ -334,8 +334,8 @@ export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interf
                             && (playerIndex >= Players_Constants.PlayerIndex.First);
                     })
                     .sort((v1, v2) =>
-                        v1.getPlayerIndex() - v2.getPlayerIndex()
-                    )
+                        v1.getPlayerIndex() - v2.getPlayerIndex(),
+                    ),
             );
             revisedTemplateWarRuleArray.push(revisedRule);
         }
@@ -387,12 +387,12 @@ export class MeWar extends BaseWar_Model_BwWar.BwWar implements MapEditor_Interf
         for (let dialogueId = 1; ; ++dialogueId) {
             if (!dialogueArray.some(v => (v.getDialogueId()) === dialogueId)) {
                 dialogueArray.push(MapSimpleDialogue.fromJson({
-                    dialogueId              : dialogueId,
-                    dialogueNameArray       : [
+                    dialogueId        : dialogueId,
+                    dialogueNameArray : [
                         // { languageType: LanguageType.Chinese, text: `${Lang.getText(LangTextType.B1097, LanguageType.Chinese)} #${dialogueId}` },
                         // { languageType: LanguageType.English, text: `${Lang.getText(LangTextType.B1097, LanguageType.English)} #${dialogueId}` },
                     ],
-                    dataArray               : [
+                    dataArray : [
                         WarEvents_Actions_Utils_Common.getDefaultSimpleCoDialogueData().toJson(),
                     ],
                 }));

@@ -27,9 +27,9 @@ export class BwCursor implements BaseWar_Interface_IBwCursor.IBwCursor {
     private _war?               : BaseWar_Interface_IBwWar.IBwWar;
 
     private _notifyListeners: Notifications_Types.Listener[] = [
-        { type: Notifications_TypeId.TypeId.BwCursorTapped,          callback: this._onNotifyBwCursorTapped },
-        { type: Notifications_TypeId.TypeId.BwCursorDragged,         callback: this._onNotifyBwCursorDragged },
-        { type: Notifications_TypeId.TypeId.ActionPlannerStateSet,   callback: this._onNotifyActionPlannerStateChanged },
+        { type : Notifications_TypeId.TypeId.BwCursorTapped,          callback : this._onNotifyBwCursorTapped },
+        { type : Notifications_TypeId.TypeId.BwCursorDragged,         callback : this._onNotifyBwCursorDragged },
+        { type : Notifications_TypeId.TypeId.ActionPlannerStateSet,   callback : this._onNotifyActionPlannerStateChanged },
     ];
 
     public init(mapSize: AuxiliaryTypes_MapSize.MapSize): void {

@@ -48,13 +48,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnDeleteAll,           callback: this._onTouchedBtnDeleteAll },
-            { ui: this._btnDeleteRedundancy,    callback: this._onTouchedBtnDeleteRedundancy },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnDeleteAll,           callback : this._onTouchedBtnDeleteAll },
+            { ui : this._btnDeleteRedundancy,    callback : this._onTouchedBtnDeleteRedundancy },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -87,7 +87,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getTitle   : () => Lang_Utils.getText(Lang_Constants.TextType.B0931),
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0320),
-            callback: () => {
+            callback   : () => {
                 const warEventFullData = openData.fullData;
                 warEventFullData.getActionArray().length = 0;
                 warEventFullData.getConditionArray().length = 0;
@@ -112,7 +112,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0188),
-            callback: () => {
+            callback   : () => {
                 const result = WarEvents_FullDatas_Utils.checkAndDeleteUnusedComponents(Helpers_Misc.getExisted(openData.war.getWarEventManager().getWarEventFullData()));
                 FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0063, result.deletedNodesCount, result.deletedConditionsCount, result.deletedActionsCount));
                 Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -146,13 +146,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray             : DataForEventRenderer[] = [];
         for (const eventData of openData.fullData.getEventArray()) {
             dataArray.push({
-                war                     : war,
-                gameConfig              : gameConfig,
-                selectedEventId         : selectedEventId,
-                templateWarRuleArray    : templateWarRuleArray,
-                eventId                 : eventData?.getEventId(),
-                fullData                : fullData,
-                panel                   : this,
+                war                  : war,
+                gameConfig           : gameConfig,
+                selectedEventId      : selectedEventId,
+                templateWarRuleArray : templateWarRuleArray,
+                eventId              : eventData?.getEventId(),
+                fullData             : fullData,
+                panel                : this,
             });
         }
 
@@ -180,13 +180,13 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnDeepClone,       callback: this._onTouchedBtnDeepClone },
-            { ui: this._btnShallowClone,    callback: this._onTouchedBtnShallowClone },
-            { ui: this._btnSelect,          callback: this._onTouchedBtnSelect },
-            { ui: this._btnDelete,          callback: this._onTouchedBtnDelete },
+            { ui : this._btnDeepClone,       callback : this._onTouchedBtnDeepClone },
+            { ui : this._btnShallowClone,    callback : this._onTouchedBtnShallowClone },
+            { ui : this._btnSelect,          callback : this._onTouchedBtnSelect },
+            { ui : this._btnDelete,          callback : this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -208,7 +208,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                callback: () => {
+                callback   : () => {
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, false);
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
@@ -228,7 +228,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.AreYouSureYouWantToContinue),
-                callback: () => {
+                callback   : () => {
                     const newEventId = WarEvents_Events_Utils.cloneEvent(openData.fullData, openData.eventId, true);
                     FloatText.show(Lang_Utils.getFormattedText(Lang_Constants.TextType.F0084, `E${newEventId}`));
 
@@ -259,7 +259,7 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                 getTitle   : () => `${Lang_Utils.getText(Lang_Constants.TextType.B0479)} E${eventId}`,
                 getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0935),
-                callback: () => {
+                callback   : () => {
                     const war           = openData.war;
                     const eventArray    = Helpers_Misc.getExisted(war.getWarEventManager().getWarEventFullData()?.getEventArray());
                     Helpers_Collection.deleteElementFromList(eventArray, eventArray.find(v => v.getEventId() === eventId));
@@ -300,8 +300,8 @@ class ConditionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
         const eventId = openData.eventId;
         this._labelDesc.setText([
             Helpers_Text.getTruncatedText(
-                `E${eventId} ${Lang_Utils.getLanguageText({ textArray: openData.fullData.getEventArray()?.find(v => v.getEventId() === eventId)?.getEventNameArray() }) ?? `----`}`,
-                15
+                `E${eventId} ${Lang_Utils.getLanguageText({ textArray : openData.fullData.getEventArray()?.find(v => v.getEventId() === eventId)?.getEventNameArray() }) ?? `----`}`,
+                15,
             ),
             openData.templateWarRuleArray.filter(rule => rule.getWarEventIdArray()?.some(v => v === eventId)).map(v => `R${v.getRuleId()}`).join(', ') || `----`,
         ].join(`\n`));

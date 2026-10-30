@@ -30,31 +30,33 @@ import type { LanguageText } from "../../proto/schema/CommonProto/Structure/Lang
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetGlobalSettings,          callback: _onMsgAtGetGlobalSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetGlobalSettings,          callback: _onMsgAtSetGlobalSettings },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtCreateTourney,              callback: _onMsgAtCreateTourney },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtDeleteLastTourney,          callback: _onMsgAtDeleteLastTourney },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetRegistrationDuration,    callback: _onMsgAtSetRegistrationDuration },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetAdjustmentDuration,      callback: _onMsgAtSetAdjustmentDuration },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetInitialBrackets,         callback: _onMsgAtSetInitialBrackets },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtDeleteUser,                 callback: _onMsgAtDeleteUser },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetMapPool,                 callback: _onMsgAtSetMapPool },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetName,                    callback: _onMsgAtSetName },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtSetBootTimer,               callback: _onMsgAtSetBootTimer },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetPhaseInfo,               callback: _onMsgAtGetPhaseInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetRegistrationInfo,        callback: _onMsgAtGetRegistrationInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetTourneyInfo,             callback: _onMsgAtGetTourneyInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetFullMapInfo,             callback: _onMsgAtGetFullMapInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetFullBracketInfo,         callback: _onMsgAtGetFullBracketInfo, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtGetUserArray,               callback: _onMsgAtGetUserArray },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgAtRegister,                   callback: _onMsgAtRegister, },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetGlobalSettings,          callback : _onMsgAtGetGlobalSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetGlobalSettings,          callback : _onMsgAtSetGlobalSettings },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtCreateTourney,              callback : _onMsgAtCreateTourney },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtDeleteLastTourney,          callback : _onMsgAtDeleteLastTourney },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetRegistrationDuration,    callback : _onMsgAtSetRegistrationDuration },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetAdjustmentDuration,      callback : _onMsgAtSetAdjustmentDuration },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetInitialBrackets,         callback : _onMsgAtSetInitialBrackets },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtDeleteUser,                 callback : _onMsgAtDeleteUser },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetMapPool,                 callback : _onMsgAtSetMapPool },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetName,                    callback : _onMsgAtSetName },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtSetBootTimer,               callback : _onMsgAtSetBootTimer },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetPhaseInfo,               callback : _onMsgAtGetPhaseInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetRegistrationInfo,        callback : _onMsgAtGetRegistrationInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetTourneyInfo,             callback : _onMsgAtGetTourneyInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetFullMapInfo,             callback : _onMsgAtGetFullMapInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetFullBracketInfo,         callback : _onMsgAtGetFullBracketInfo },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtGetUserArray,               callback : _onMsgAtGetUserArray },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgAtRegister,                   callback : _onMsgAtRegister },
     ]);
 }
 
 export function reqAtGetGlobalSettings(): void {
     Networks_Manager.send({
-        MsgAtGetGlobalSettings: { c: {
-        } },
+        MsgAtGetGlobalSettings : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgAtGetGlobalSettings(e: Egret_Egret.Event): void {
@@ -67,12 +69,14 @@ function _onMsgAtGetGlobalSettings(e: Egret_Egret.Event): void {
 
 export function reqAtSetGlobalSettings(isEnabled: boolean, interval: number): void {
     Networks_Manager.send({
-        MsgAtSetGlobalSettings: { c: {
-            globalSettings  : {
-                isEnabled   : isEnabled,
-                interval    : interval,
-            },
-        } },
+        MsgAtSetGlobalSettings : {
+            c : {
+                globalSettings : {
+                    isEnabled : isEnabled,
+                    interval  : interval,
+                },
+            }, 
+        },
     });
 }
 function _onMsgAtSetGlobalSettings(e: Egret_Egret.Event): void {
@@ -84,8 +88,10 @@ function _onMsgAtSetGlobalSettings(e: Egret_Egret.Event): void {
 
 export function reqAtCreateTourney(): void {
     Networks_Manager.send({
-        MsgAtCreateTourney: { c: {
-        } },
+        MsgAtCreateTourney : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgAtCreateTourney(e: Egret_Egret.Event): void {
@@ -97,8 +103,10 @@ function _onMsgAtCreateTourney(e: Egret_Egret.Event): void {
 
 export function reqAtDeleteLastTourney(): void {
     Networks_Manager.send({
-        MsgAtDeleteLastTourney: { c: {
-        } },
+        MsgAtDeleteLastTourney : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgAtDeleteLastTourney(e: Egret_Egret.Event): void {
@@ -110,10 +118,12 @@ function _onMsgAtDeleteLastTourney(e: Egret_Egret.Event): void {
 
 export function reqAtSetRegistrationDuration(tourneyId: number, duration: number): void {
     Networks_Manager.send({
-        MsgAtSetRegistrationDuration: { c: {
-            tourneyId   : tourneyId,
-            duration    : duration,
-        } },
+        MsgAtSetRegistrationDuration : {
+            c : {
+                tourneyId : tourneyId,
+                duration  : duration,
+            }, 
+        },
     });
 }
 function _onMsgAtSetRegistrationDuration(e: Egret_Egret.Event): void {
@@ -125,10 +135,12 @@ function _onMsgAtSetRegistrationDuration(e: Egret_Egret.Event): void {
 
 export function reqAtSetAdjustmentDuration(tourneyId: number, duration: number): void {
     Networks_Manager.send({
-        MsgAtSetAdjustmentDuration: { c: {
-            tourneyId   : tourneyId,
-            duration    : duration,
-        } },
+        MsgAtSetAdjustmentDuration : {
+            c : {
+                tourneyId : tourneyId,
+                duration  : duration,
+            }, 
+        },
     });
 }
 function _onMsgAtSetAdjustmentDuration(e: Egret_Egret.Event): void {
@@ -140,10 +152,12 @@ function _onMsgAtSetAdjustmentDuration(e: Egret_Egret.Event): void {
 
 export function reqAtSetInitialBrackets(tourneyId: number, bracketArray: InitialBracket[]): void {
     Networks_Manager.send({
-        MsgAtSetInitialBrackets: { c: {
-            tourneyId           : tourneyId,
-            initialBracketArray : bracketArray.map(v => v.toJson()),
-        } },
+        MsgAtSetInitialBrackets : {
+            c : {
+                tourneyId           : tourneyId,
+                initialBracketArray : bracketArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 function _onMsgAtSetInitialBrackets(e: Egret_Egret.Event): void {
@@ -155,10 +169,12 @@ function _onMsgAtSetInitialBrackets(e: Egret_Egret.Event): void {
 
 export function reqAtDeleteUser(tourneyId: number, userIdArray: number[]): void {
     Networks_Manager.send({
-        MsgAtDeleteUser: { c: {
-            tourneyId   : tourneyId,
-            userIdArray : userIdArray,
-        } },
+        MsgAtDeleteUser : {
+            c : {
+                tourneyId   : tourneyId,
+                userIdArray : userIdArray,
+            }, 
+        },
     });
 }
 function _onMsgAtDeleteUser(e: Egret_Egret.Event): void {
@@ -170,10 +186,12 @@ function _onMsgAtDeleteUser(e: Egret_Egret.Event): void {
 
 export function reqAtSetMapPool(tourneyId: number, mapInfoArray: SimpleMapInfo[]): void {
     Networks_Manager.send({
-        MsgAtSetMapPool: { c: {
-            tourneyId           : tourneyId,
-            simpleMapInfoArray  : mapInfoArray.map(v => v.toJson()),
-        } },
+        MsgAtSetMapPool : {
+            c : {
+                tourneyId          : tourneyId,
+                simpleMapInfoArray : mapInfoArray.map(v => v.toJson()),
+            }, 
+        },
     });
 }
 function _onMsgAtSetMapPool(e: Egret_Egret.Event): void {
@@ -184,10 +202,14 @@ function _onMsgAtSetMapPool(e: Egret_Egret.Event): void {
 }
 
 export function reqAtSetName(tourneyId: number, nameArray: LanguageText[]): void {
-    Networks_Manager.send({ MsgAtSetName: { c: {
-        tourneyId   : tourneyId,
-        nameArray   : nameArray.map(v => v.toJson()),
-    } } });
+    Networks_Manager.send({
+        MsgAtSetName : {
+            c : {
+                tourneyId : tourneyId,
+                nameArray : nameArray.map(v => v.toJson()),
+            }, 
+        }, 
+    });
 }
 async function _onMsgAtSetName(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtSetNameResponse;
@@ -198,10 +220,14 @@ async function _onMsgAtSetName(e: Egret_Egret.Event): Promise<void> {
 }
 
 export function reqAtSetBootTimer(tourneyId: number, bootTimerParams: number[]): void {
-    Networks_Manager.send({ MsgAtSetBootTimer: { c: {
-        tourneyId       : tourneyId,
-        bootTimerParams : bootTimerParams,
-    } } });
+    Networks_Manager.send({
+        MsgAtSetBootTimer : {
+            c : {
+                tourneyId       : tourneyId,
+                bootTimerParams : bootTimerParams,
+            }, 
+        }, 
+    });
 }
 async function _onMsgAtSetBootTimer(e: Egret_Egret.Event): Promise<void> {
     const data = e.data as AtSetBootTimerResponse;
@@ -213,8 +239,10 @@ async function _onMsgAtSetBootTimer(e: Egret_Egret.Event): Promise<void> {
 
 export function reqAtGetPhaseInfo(): void {
     Networks_Manager.send({
-        MsgAtGetPhaseInfo: { c: {
-        } },
+        MsgAtGetPhaseInfo : {
+            c : {
+            }, 
+        },
     });
 }
 function _onMsgAtGetPhaseInfo(e: Egret_Egret.Event): void {
@@ -227,9 +255,11 @@ function _onMsgAtGetPhaseInfo(e: Egret_Egret.Event): void {
 
 export function reqAtGetRegistrationInfo(tourneyId: number): void {
     Networks_Manager.send({
-        MsgAtGetRegistrationInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+        MsgAtGetRegistrationInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
 function _onMsgAtGetRegistrationInfo(e: Egret_Egret.Event): void {
@@ -242,9 +272,11 @@ function _onMsgAtGetRegistrationInfo(e: Egret_Egret.Event): void {
 
 export function reqAtGetTourneyInfo(tourneyId: number): void {
     Networks_Manager.send({
-        MsgAtGetTourneyInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+        MsgAtGetTourneyInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
 function _onMsgAtGetTourneyInfo(e: Egret_Egret.Event): void {
@@ -257,9 +289,11 @@ function _onMsgAtGetTourneyInfo(e: Egret_Egret.Event): void {
 
 export function reqAtGetFullMapInfo(tourneyId: number): void {
     Networks_Manager.send({
-        MsgAtGetFullMapInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+        MsgAtGetFullMapInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
 function _onMsgAtGetFullMapInfo(e: Egret_Egret.Event): void {
@@ -272,9 +306,11 @@ function _onMsgAtGetFullMapInfo(e: Egret_Egret.Event): void {
 
 export function reqAtGetFullBracketInfo(tourneyId: number): void {
     Networks_Manager.send({
-        MsgAtGetFullBracketInfo: { c: {
-            tourneyId   : tourneyId,
-        } },
+        MsgAtGetFullBracketInfo : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
 function _onMsgAtGetFullBracketInfo(e: Egret_Egret.Event): void {
@@ -287,9 +323,11 @@ function _onMsgAtGetFullBracketInfo(e: Egret_Egret.Event): void {
 
 export function reqAtGetUserArray(tourneyId: number): void {
     Networks_Manager.send({
-        MsgAtGetUserArray: { c: {
-            tourneyId   : tourneyId,
-        } },
+        MsgAtGetUserArray : {
+            c : {
+                tourneyId : tourneyId,
+            }, 
+        },
     });
 }
 function _onMsgAtGetUserArray(e: Egret_Egret.Event): void {
@@ -302,10 +340,12 @@ function _onMsgAtGetUserArray(e: Egret_Egret.Event): void {
 
 export function reqAtRegister(tourneyId: number, isRegister: boolean): void {
     Networks_Manager.send({
-        MsgAtRegister: { c: {
-            tourneyId   : tourneyId,
-            isRegister  : isRegister,
-        } },
+        MsgAtRegister : {
+            c : {
+                tourneyId  : tourneyId,
+                isRegister : isRegister,
+            }, 
+        },
     });
 }
 function _onMsgAtRegister(e: Egret_Egret.Event): void {

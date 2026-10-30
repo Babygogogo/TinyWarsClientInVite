@@ -48,11 +48,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnSkip,        callback: this._onTouchedBtnSkip },
-            { ui: this._imgTouchMask,   callback: this._onTouchedImgTouchMask },
+            { ui : this._btnSkip,        callback : this._onTouchedBtnSkip },
+            { ui : this._imgTouchMask,   callback : this._onTouchedImgTouchMask },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,  callback : this._onNotifyLanguageChanged },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -77,7 +77,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSkip(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
             getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0226),
-            callback: () => this.closePanel(),
+            callback   : () => this.closePanel(),
         });
     }
     private _onTouchedImgTouchMask(): void {
@@ -195,7 +195,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             const playerIndex   = dataForCoDialogue.getPlayerIndex();
             const coId          = playerIndex == null ? Helpers_Misc.getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
             const coImageSource = Helpers_ImageSource.getCoHead(gameConfig, coId) ?? Lang_Constants.UndefinedError;
-            const coName        = Lang_Utils.getLanguageText({ textArray: dataForCoDialogue.getNameArray() }) ?? gameConfig.getCoNameAndTierText(coId) ?? Lang_Constants.UndefinedError;
+            const coName        = Lang_Utils.getLanguageText({ textArray : dataForCoDialogue.getNameArray() }) ?? gameConfig.getCoNameAndTierText(coId) ?? Lang_Constants.UndefinedError;
             const side          = dataForCoDialogue.getSide();
 
             if (side === Dialogues_Constants.SmallDialogueSideId.Bottom) {
@@ -203,7 +203,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._labelName1.setText(coName);
                 this._imgCo1.loadSource(coImageSource);
                 this._labelContent1.setText(war.getWarEventManager().handleEscapeText(
-                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray : dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
                 Ui_Utils_UiHelpers.changeColor(groupCo1, Graphics_Constants.ColorId.Origin);
                 Ui_Utils_UiHelpers.changeColor(groupCo2, Graphics_Constants.ColorId.Dark);
@@ -213,7 +213,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._labelName2.setText(coName);
                 this._imgCo2.loadSource(coImageSource);
                 this._labelContent2.setText(war.getWarEventManager().handleEscapeText(
-                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray : dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
                 Ui_Utils_UiHelpers.changeColor(groupCo1, Graphics_Constants.ColorId.Dark);
                 Ui_Utils_UiHelpers.changeColor(groupCo2, Graphics_Constants.ColorId.Origin);
@@ -229,7 +229,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._labelName1.setText(``);
                 this._imgCo1.loadSource(``);
                 this._labelContent1.setText(war.getWarEventManager().handleEscapeText(
-                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray : dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
                 Ui_Utils_UiHelpers.changeColor(groupCo1, Graphics_Constants.ColorId.Origin);
                 Ui_Utils_UiHelpers.changeColor(groupCo2, Graphics_Constants.ColorId.Dark);
@@ -239,7 +239,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 this._labelName2.setText(``);
                 this._imgCo2.loadSource(``);
                 this._labelContent2.setText(war.getWarEventManager().handleEscapeText(
-                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                    Helpers_Misc.getExisted(Lang_Utils.getLanguageText({ textArray : dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
                 Ui_Utils_UiHelpers.changeColor(groupCo1, Graphics_Constants.ColorId.Dark);
                 Ui_Utils_UiHelpers.changeColor(groupCo2, Graphics_Constants.ColorId.Origin);
@@ -252,18 +252,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 0 },
-            endProps    : { customAlpha: 1 },
+            obj        : this._group,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customAlpha: 1 },
-            endProps    : { customAlpha: 0 },
+            obj        : this._group,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();

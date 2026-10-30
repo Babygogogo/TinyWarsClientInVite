@@ -46,13 +46,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgCommonGetRankList,   callback : this._onMsgCommonGetRankList },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnPreviousVersion,     callback: this._onTouchedBtnPreviousVersion },
-            { ui: this._btnNextVersion,         callback: this._onTouchedBtnNextVersion },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnPreviousVersion,     callback : this._onTouchedBtnPreviousVersion },
+            { ui : this._btnNextVersion,         callback : this._onTouchedBtnNextVersion },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -131,12 +131,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                 const length    = dataArray.length;
                 const score     = Helpers_Misc.getExisted(data.getScore());
                 dataArray.push({
-                    gameConfig  : gameConfig,
-                    index       : length + 1,
-                    userId      : Helpers_Misc.getExisted(data.getUserId()),
-                    score       : score,
-                    isLast      : false,
-                    rank        : length === 0
+                    gameConfig : gameConfig,
+                    index      : length + 1,
+                    userId     : Helpers_Misc.getExisted(data.getUserId()),
+                    score      : score,
+                    isLast     : false,
+                    rank       : length === 0
                         ? 1
                         : (score === dataArray[length - 1].score ? dataArray[length - 1].rank : length + 1),
                 });
@@ -165,8 +165,7 @@ interface DataForSpmUserRenderer extends Ui_Types_UiListItemData.UiListItemData 
 }
 class SpmUserRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSpmUserRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSpmUserRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSpmUserRenderer> {
     private readonly _group!            : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _imgAvatar!        : Ui_Interfaces_IUiImage.IUiImage;
     private readonly _imgBottom!        : Ui_Interfaces_IUiImage.IUiImage;
@@ -186,7 +185,7 @@ class SpmUserRenderer
     }
 
     public onItemTapEvent(): void {
-        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId : this.getOpenData()?.userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -36,7 +36,7 @@ function fastExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, action: 
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }
 
@@ -48,9 +48,9 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerVoteForDraw_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
@@ -62,11 +62,11 @@ async function normalExePlayerVoteForDraw(war: BaseWar_Interface_IBwWar.IBwWar, 
 
     war.getDrawVoteManager().handleVote(
         (actionExtraData ? actionExtraData.getPlayerIndex() : action.getPlayerIndex()) ?? war.getPlayerIndexInTurn(),
-        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree())
+        !!(actionExtraData ? actionExtraData.getIsAgree() : action.getIsAgree()),
     );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function getDesc(war: BaseWar_Interface_IBwWar.IBwWar, action: WoPlayerVoteForDraw): Promise<string | null> {
 
     if (war instanceof MapEditor_Model_MeWar.MeWar) {

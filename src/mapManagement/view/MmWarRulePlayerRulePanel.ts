@@ -45,14 +45,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,                  callback: this._onNotifyMeMapSimpleDialogueChanged },
-            { type: Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MeMapSimpleDialogueChanged,                  callback : this._onNotifyMeMapSimpleDialogueChanged },
+            { type : Notifications_TypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback : this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnBatch,       callback: this._onTouchedBtnBatch },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnBatch,       callback : this._onTouchedBtnBatch },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -99,17 +99,17 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnBatch(): void {
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
-            getContent             : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
-            callback            : () => {
+            getContent : () => Lang_Utils.getText(Lang_Constants.TextType.A0940),
+            callback   : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
             },
-            callbackOnCancel    : () => {
+            callbackOnCancel : () => {
                 this._setIsBatch(false);
                 this._updateBtnBatch();
             },
-            getTextForConfirm  : () => Lang_Utils.getTextForYesOrNo(true),
-            getTextForCancel   : () => Lang_Utils.getTextForYesOrNo(false),
+            getTextForConfirm : () => Lang_Utils.getTextForYesOrNo(true),
+            getTextForCancel  : () => Lang_Utils.getTextForYesOrNo(false),
         });
     }
 
@@ -145,20 +145,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._labelNoData.setIsVisible(!playerRulesCount);
 
         const dataArrayForListRuleTitle     = this._createDataArrayForListRuleTitle(widthForListRuleTitle);
-        const dataArrayForListPlayerIndex   = playerRuleArray?.map(v => ({ playerRule: v }) as DataForPlayerIndexRenderer);
+        const dataArrayForListPlayerIndex   = playerRuleArray?.map(v => ({ playerRule : v }) as DataForPlayerIndexRenderer);
         const dataArrayForListPlayerRule    : Ui_Components_UiPlayerRuleRenderer.DataForUiPlayerRuleRenderer[] = [];
         for (const dataForListRuleTitle of dataArrayForListRuleTitle) {
             const ruleType = dataForListRuleTitle.ruleType;
             for (const playerRule of playerRuleArray) {
                 dataArrayForListPlayerRule.push({
-                    canModify           : true,
-                    gcData              : gcData,
-                    gameModeId          : null,
-                    instanceWarRule     : null,
-                    warRuleCommonData   : warRuleCommonData,
-                    playerRule          : playerRule,
-                    playerRuleType      : ruleType,
-                    getIsBatch          : getIsBatch,
+                    canModify         : true,
+                    gcData            : gcData,
+                    gameModeId        : null,
+                    instanceWarRule   : null,
+                    warRuleCommonData : warRuleCommonData,
+                    playerRule        : playerRule,
+                    playerRuleType    : ruleType,
+                    getIsBatch        : getIsBatch,
                 });
             }
         }
@@ -174,42 +174,42 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private _createDataArrayForListRuleTitle(itemWidth: number): DataForRuleTitleRenderer[] {
         const dataArray: DataForRuleTitleRenderer[] = [
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.TeamIndex },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.BannedCoCategoryIdArray },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.BannedUnitTypeArray },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CanActivateCoSkill },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CanCoBoard },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CanUnitJoin },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.InitialFund },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.IncomeMultiplier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.MaxUnitsCount },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.EnergyAddPctOnCoBoard },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.EnergyLossPctOnCoDie },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.EnergyGrowthMultiplier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.MoveRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.AttackPowerModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.DefenseModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.UnitVisionRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.TileVisionRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.LuckLowerLimit },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.LuckUpperLimit },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.TeamIndex },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.BannedCoCategoryIdArray },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.BannedUnitTypeArray },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CanActivateCoSkill },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CanCoBoard },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CanUnitJoin },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.InitialFund },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.IncomeMultiplier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.MaxUnitsCount },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.EnergyAddPctOnCoBoard },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.EnergyLossPctOnCoDie },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.EnergyGrowthMultiplier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.MoveRangeModifier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.AttackPowerModifier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.DefenseModifier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.UnitVisionRangeModifier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.TileVisionRangeModifier },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.LuckLowerLimit },
+            { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.LuckUpperLimit },
         ];
         if (this.getOpenData()?.mapRawData.getCampaignMapData()) {
             dataArray.push(
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CampaignHumanCoIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CampaignAiCoId },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CampaignSkinId },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CampaignHumanCoIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CampaignAiCoId },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CampaignSkinId },
             );
         } else {
             dataArray.push(
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.McwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.MmwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.MrwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.AtwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CcwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.CcwAiCoId },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.WarRoomHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRules_Constants.RuleTypeId.WarRoomAiCoId },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.McwHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.MmwHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.MrwHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.AtwHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CcwHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.CcwAiCoId },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.WarRoomHumanCoCategoryIdArray },
+                { index : 0, itemWidth : itemWidth, ruleType : PlayerRules_Constants.RuleTypeId.WarRoomAiCoId },
             );
         }
         for (let i = 0; i < dataArray.length; ++i) {
@@ -234,10 +234,10 @@ class RuleTitleRenderer extends Ui_Components_UiListItemRenderer.UiListItemRende
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupHelp,  callback: this._onTouchedGroupHelp },
+            { ui : this._groupHelp,  callback : this._onTouchedGroupHelp },
         ]);
     }
     private _onNotifyLanguageChanged(): void {

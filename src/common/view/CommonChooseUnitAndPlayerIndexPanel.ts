@@ -41,11 +41,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -171,8 +171,7 @@ interface DataForSkinRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class SkinRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForSkinRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForSkinRenderer> {
     private readonly _imgColor! : Ui_Interfaces_IUiImage.IUiImage;
 
     public updateOnLoadedSkin(): void {
@@ -213,8 +212,8 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.UnitAnimationTick,   callback : this._onNotifyUnitAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -257,11 +256,11 @@ class TypeRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
         }
 
         this._unitView.update(new Ui_Types_UiUnitViewData.UiUnitViewData({
-            gameConfig          : openData.gameConfig,
-            skinId              : openData.finalSkinId,
-            overridingSkinId    : undefined,
-            unitData            : Units_Utils_Serialization.createDefault({
-                gridIndex   : { x: 0, y: 0 },
+            gameConfig       : openData.gameConfig,
+            skinId           : openData.finalSkinId,
+            overridingSkinId : undefined,
+            unitData         : Units_Utils_Serialization.createDefault({
+                gridIndex   : { x : 0, y : 0 },
                 playerIndex : openData.playerIndex,
                 unitTypeId  : openData.unitType,
                 unitId      : -1,

@@ -36,20 +36,20 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserGetPublicInfo,            callback: this._onMsgUserGetPublicInfo },
-            { type: Notifications_TypeId.TypeId.MsgUserSetNickname,              callback: this._onMsgUserSetNickname },
-            { type: Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
-            { type: Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,      callback: this._onMsgUserSetShowMedalIdArray },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserGetPublicInfo,            callback : this._onMsgUserGetPublicInfo },
+            { type : Notifications_TypeId.TypeId.MsgUserSetNickname,              callback : this._onMsgUserSetNickname },
+            { type : Notifications_TypeId.TypeId.MsgUserSetDiscordInfo,           callback : this._onMsgUserSetDiscordId },
+            { type : Notifications_TypeId.TypeId.MsgUserSetShowMedalIdArray,      callback : this._onMsgUserSetShowMedalIdArray },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnChangeAvatar,        callback: this._onTouchedBtnChangeAvatar },
-            { ui: this._btnChangeNickname,      callback: this._onTouchedBtnChangeNickname },
-            { ui: this._btnChangePassword,      callback: this._onTouchedBtnChangePassword },
-            { ui: this._btnChangeDiscordId,     callback: this._onTouchedBtnChangeDiscordId },
-            { ui: this._btnChangeMedal,         callback: this._onTouchedBtnChangeMedal },
-            { ui: this._btnChangeEmail,         callback: this._onTouchedBtnChangeEmail },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnChangeAvatar,        callback : this._onTouchedBtnChangeAvatar },
+            { ui : this._btnChangeNickname,      callback : this._onTouchedBtnChangeNickname },
+            { ui : this._btnChangePassword,      callback : this._onTouchedBtnChangePassword },
+            { ui : this._btnChangeDiscordId,     callback : this._onTouchedBtnChangeDiscordId },
+            { ui : this._btnChangeMedal,         callback : this._onTouchedBtnChangeMedal },
+            { ui : this._btnChangeEmail,         callback : this._onTouchedBtnChangeEmail },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -86,13 +86,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private _onTouchedBtnChangeNickname(): void {
         const currentNickname = Users_Model.getSelfNickname() ?? ``;
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputPanel, {
-            title           : Lang_Utils.getText(Lang_Constants.TextType.B0149),
-            tips            : Lang_Utils.getText(Lang_Constants.TextType.A0066),
-            minLength       : Users_Constants.Common.NicknameMinLength,
-            maxChars        : Users_Constants.Common.NicknameMaxLength,
-            charRestrict    : null,
-            currentValue    : currentNickname,
-            callback        : panel => {
+            title        : Lang_Utils.getText(Lang_Constants.TextType.B0149),
+            tips         : Lang_Utils.getText(Lang_Constants.TextType.A0066),
+            minLength    : Users_Constants.Common.NicknameMinLength,
+            maxChars     : Users_Constants.Common.NicknameMaxLength,
+            charRestrict : null,
+            currentValue : currentNickname,
+            callback     : panel => {
                 const nickname = panel.getInputText();
                 if (nickname === currentNickname) {
                     return;

@@ -59,10 +59,10 @@ export class RequestingUnitBuildTile implements ActionPlanners_States_IState.ISt
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
                 operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
                 WoUnitBuildTile : {
-                    path    : {
-                        nodes   : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    launchUnitId : actionPlanner.getUnitIdForFocusUnitLoaded(),
                 },
             }));
 
@@ -76,7 +76,7 @@ export class RequestingUnitBuildTile implements ActionPlanners_States_IState.ISt
             SinglePlayerWar_Model_SpwLocalProxy.reqUnitBuildTile(
                 war,
                 actionPlanner.generateProtoMovePath(),
-                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null
+                actionPlanner.getFocusUnitLoaded()?.getUnitId() ?? null,
             );
         }
     }

@@ -105,7 +105,7 @@ export abstract class SpwWar extends BaseWar_Model_BwWar.BwWar implements Single
                 SinglePlayerWars_Constants.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
-                + this.getTaskObjectiveManager().getScore()
+                + this.getTaskObjectiveManager().getScore(),
             ),
         });
     }

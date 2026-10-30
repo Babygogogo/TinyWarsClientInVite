@@ -27,14 +27,16 @@ export async function getScoreAndActionUnitJoin(commonParams: Bots_CommonParams.
     const score = await getScoreForActionUnitJoin(commonParams, unit, gridIndex);
     return {
         score,
-        action  : WoContainer.fromJson({ WoUnitJoinUnit: {
-            path        : {
-                nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
-                fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
-                isBlocked       : false,
-            },
-            launchUnitId: unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
-        } }),
+        action : WoContainer.fromJson({
+            WoUnitJoinUnit : {
+                path : {
+                    nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
+                    fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
+                    isBlocked       : false,
+                },
+                launchUnitId : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
+            }, 
+        }),
     };
 }
 

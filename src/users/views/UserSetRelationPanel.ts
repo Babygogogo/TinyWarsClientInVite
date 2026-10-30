@@ -41,16 +41,16 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgUserSetRelation,  callback: this._onNotifyMsgUserSetRelation },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgUserSetRelation,  callback : this._onNotifyMsgUserSetRelation },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupFollow,            callback: this._onTouchedGroupFollow },
-            { ui: this._groupHelpFollow,        callback: this._onTouchedGroupHelpFollow },
-            { ui: this._groupBlock,             callback: this._onTouchedGroupBlock },
-            { ui: this._groupHelpBlock,         callback: this._onTouchedGroupHelpBlock },
-            { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm },
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._groupFollow,            callback : this._onTouchedGroupFollow },
+            { ui : this._groupHelpFollow,        callback : this._onTouchedGroupHelpFollow },
+            { ui : this._groupBlock,             callback : this._onTouchedGroupBlock },
+            { ui : this._groupHelpBlock,         callback : this._onTouchedGroupHelpBlock },
+            { ui : this._btnConfirm,             callback : this._onTouchedBtnConfirm },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();

@@ -57,12 +57,12 @@ export class RequestingUnitProduceUnit implements ActionPlanners_States_IState.I
         const war = actionPlanner.getWar();
         if (war instanceof MultiPlayerWar_Model_MpwWar.MpwWar) {
             MultiPlayerWar_Model_MpwProxy.reqMpwExecuteWarOperation(war, WoContainer.fromJson({
-                operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
-                WoUnitProduceUnit   : {
-                    path            : {
-                        nodes       : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
+                operationId       : war.getExecutedOperationManager().getExecutedOperationsCount(),
+                WoUnitProduceUnit : {
+                    path : {
+                        nodes : actionPlanner.getMovePath().map(v => v.getGridIndex().toProto().toJson()),
                     },
-                    launchUnitId    : actionPlanner.getUnitIdForFocusUnitLoaded(),
+                    launchUnitId : actionPlanner.getUnitIdForFocusUnitLoaded(),
                 },
             }));
 

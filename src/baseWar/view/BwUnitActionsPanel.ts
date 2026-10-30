@@ -41,11 +41,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.ZoomableContentsMoved,      callback: this._onNotifyZoomableContentsMoved },
+            { type : Notifications_TypeId.TypeId.ZoomableContentsMoved,      callback : this._onNotifyZoomableContentsMoved },
         ]);
         this._setKeyboardListener({
-            callback    : this._onKeyboard,
-            thisObject  : this,
+            callback   : this._onKeyboard,
+            thisObject : this,
         });
         this._listAction.setItemRendererClass(UnitActionRenderer);
     }
@@ -124,15 +124,15 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             if (produceUnitType == null) {
                 dataArray.push({
                     war,
-                    actionType          : data.actionType,
-                    callback            : data.callback,
-                    unit                : data.unitForDrop || data.unitForLaunch,
-                    costForProduceUnit  : data.costForProduceUnit ?? null,
+                    actionType         : data.actionType,
+                    callback           : data.callback,
+                    unit               : data.unitForDrop || data.unitForLaunch,
+                    costForProduceUnit : data.costForProduceUnit ?? null,
                 });
             } else {
                 const unitForProduce = new Units_Unit.Unit();
                 unitForProduce.init(Units_Utils_Serialization.createDefault({
-                    gridIndex   : { x: 0, y: 0 },
+                    gridIndex   : { x : 0, y : 0 },
                     unitId      : -1,
                     unitTypeId  : produceUnitType,
                     playerIndex : war.getPlayerIndexInTurn(),
@@ -142,10 +142,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
                 dataArray.push({
                     war,
-                    actionType          : data.actionType,
-                    callback            : data.callback,
-                    unit                : unitForProduce,
-                    costForProduceUnit  : data.costForProduceUnit ?? null,
+                    actionType         : data.actionType,
+                    callback           : data.callback,
+                    unit               : unitForProduce,
+                    costForProduceUnit : data.costForProduceUnit ?? null,
                 });
             }
         }
@@ -167,8 +167,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const stage     = Stages_StageManager.getStage();
         const group     = this._group;
         const point     = container.getContentsContainerLocalToGlobal({
-            x: (gridIndex.getX() + 1) * getGridWidth(),
-            y: (gridIndex.getY() + 1) * getGridHeight(),
+            x : (gridIndex.getX() + 1) * getGridWidth(),
+            y : (gridIndex.getY() + 1) * getGridHeight(),
         });
         group.setX(Math.max(0, Math.min(point.x, stage.stageWidth - 140)));
         group.setY(Math.max(40, Math.min(point.y, stage.stageHeight - group.getScaledHeight())));
@@ -176,10 +176,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._group,
-            beginProps  : { customScaleX: 0, customScaleY: 0 },
-            endProps    : { customScaleX: 1, customScaleY: 1 },
-            tweenTime   : 100,
+            obj        : this._group,
+            beginProps : { customScaleX : 0, customScaleY : 0 },
+            endProps   : { customScaleX : 1, customScaleY : 1 },
+            tweenTime  : 100,
         });
 
         await Timer_TimerModel.wait(100);
@@ -223,9 +223,9 @@ class UnitActionRenderer extends Ui_Components_UiListItemRenderer.UiListItemRend
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.3 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.3 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         this._unitView.stopRunningView();

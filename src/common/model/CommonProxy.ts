@@ -12,10 +12,10 @@ import type { S as CommonGetServerStatusResponse } from "../../proto/schema/Comm
 
 export function init(): void {
     Networks_Manager.addListeners([
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
-        { msgCode: Networks_MessageCodes.MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonError,                  callback : _onMsgCommonError },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetServerStatus,        callback : _onMsgCommonGetServerStatus },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetRankList,            callback : _onMsgCommonGetRankList },
+        { msgCode : Networks_MessageCodes.MessageCodes.MsgCommonGetCoStatistics,        callback : _onMsgCommonGetCoStatistics },
     ], null);
 }
 
@@ -25,7 +25,7 @@ function _onMsgCommonError(e: Egret_Egret.Event): void {
 }
 
 export function reqCommonGetServerStatus(): void {
-    Networks_Manager.send({ MsgCommonGetServerStatus: { c: {} }, });
+    Networks_Manager.send({ MsgCommonGetServerStatus : { c : {} } });
 }
 function _onMsgCommonGetServerStatus(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetServerStatusResponse;
@@ -35,7 +35,7 @@ function _onMsgCommonGetServerStatus(e: Egret_Egret.Event): void {
 }
 
 export function reqGetRankList(): void {
-    Networks_Manager.send({ MsgCommonGetRankList: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetRankList : { c : {} } });
 }
 function _onMsgCommonGetRankList(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetRankListResponse;
@@ -46,7 +46,7 @@ function _onMsgCommonGetRankList(e: Egret_Egret.Event): void {
 }
 
 export function reqCommonGetCoStatistics(): void {
-    Networks_Manager.send({ MsgCommonGetCoStatistics: { c: {} } });
+    Networks_Manager.send({ MsgCommonGetCoStatistics : { c : {} } });
 }
 function _onMsgCommonGetCoStatistics(e: Egret_Egret.Event): void {
     const data = e.data as CommonGetCoStatisticsResponse;

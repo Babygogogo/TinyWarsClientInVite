@@ -142,7 +142,7 @@ class MessageRenderer extends Ui_Components_UiListItemRenderer.UiListItemRendere
         const labelContent  = this._labelContent;
         labelContent.setText(textArray == null
             ? Lang_Constants.UndefinedError
-            : (Lang_Utils.getLanguageText({ textArray }) || Lang_Constants.UndefinedError)
+            : (Lang_Utils.getLanguageText({ textArray }) || Lang_Constants.UndefinedError),
         );
 
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 38);

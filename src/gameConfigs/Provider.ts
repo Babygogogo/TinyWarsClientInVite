@@ -18,7 +18,7 @@ const _gameConfigAccessor       = new AuxiliaryTypes_CachedDataAccessor.CachedDa
             `resource/config/FullConfig${version}.bin`,
             void 0,
             null,
-            Egret_Res.ResourceItemHelper.TYPE_BIN
+            Egret_Res.ResourceItemHelper.TYPE_BIN,
         );
         const rawConfig = configBin ? FullConfig.decode(new Uint8Array(configBin)) : null;
 

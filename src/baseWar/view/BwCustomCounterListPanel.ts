@@ -35,11 +35,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,     callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
+            { ui : this._btnClose,               callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -109,10 +109,10 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgSelected,                        callback: this._onTouchedImgSelected },
+            { ui : this._imgSelected,                        callback : this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.BwCustomCountersChanged,     callback: this._onNotifyBwCustomCountersChanged },
+            { type : Notifications_TypeId.TypeId.BwCustomCountersChanged,     callback : this._onNotifyBwCustomCountersChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -122,9 +122,9 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Tween_Executor.Executor.removeTweens(imgSelected);
-        Tween_Executor.Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Tween_Executor.Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Tween_Executor.Executor.removeTweens(this._imgSelected);
@@ -147,11 +147,11 @@ class CustomCounterRenderer extends Ui_Components_UiListItemRenderer.UiListItemR
             const id                = openData.id;
             const warEventManager   = war.getWarEventManager();
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputIntegerPanel, {
-                getTitle           : () => Lang_Utils.getText(Lang_Constants.TextType.B1143),
-                minValue        : Number.MIN_SAFE_INTEGER,
-                maxValue        : Number.MAX_SAFE_INTEGER,
-                currentValue    : warEventManager.getCustomCounter(id),
-                callback        : num => warEventManager.setCustomCounter(id, num),
+                getTitle     : () => Lang_Utils.getText(Lang_Constants.TextType.B1143),
+                minValue     : Number.MIN_SAFE_INTEGER,
+                maxValue     : Number.MAX_SAFE_INTEGER,
+                currentValue : warEventManager.getCustomCounter(id),
+                callback     : num => warEventManager.setCustomCounter(id, num),
             });
         }
     }

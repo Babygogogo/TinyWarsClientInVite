@@ -58,19 +58,19 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                         callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.WarEventFullDataChanged,                 callback : this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                                       callback: this.closePanel },
-            { ui: this._btnType,                                        callback: this._onTouchedBtnType },
-            { ui: this._btnIdentifier,                                  callback: this._onTouchedBtnIdentifier },
+            { ui : this._btnClose,                                       callback : this.closePanel },
+            { ui : this._btnType,                                        callback : this._onTouchedBtnType },
+            { ui : this._btnIdentifier,                                  callback : this._onTouchedBtnIdentifier },
 
-            { ui: this._groupModifyWeatherType,                         callback: this._onTouchedGroupModifyWeatherType },
-            { ui: this._btnWeatherType,                                 callback: this._onTouchedBtnWeatherType },
+            { ui : this._groupModifyWeatherType,                         callback : this._onTouchedGroupModifyWeatherType },
+            { ui : this._btnWeatherType,                                 callback : this._onTouchedBtnWeatherType },
 
-            { ui: this._groupModifyWeatherTurnsCount,                   callback: this._onTouchedGroupModifyWeatherTurnsCount },
-            { ui: this._btnWeatherTurnsCount,                           callback: this._onTouchedBtnWeatherTurnsCount },
+            { ui : this._groupModifyWeatherTurnsCount,                   callback : this._onTouchedGroupModifyWeatherTurnsCount },
+            { ui : this._btnWeatherTurnsCount,                           callback : this._onTouchedBtnWeatherTurnsCount },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -94,9 +94,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().WeActionTypeListPanel, {
-            fullData    : openData.fullData,
-            action      : openData.action,
-            war         : openData.war,
+            fullData : openData.fullData,
+            action   : openData.action,
+            war      : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
@@ -122,11 +122,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getWeatherType(),
-            expressionInfo  : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherType,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getWeatherType(),
+            expressionInfo : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherType,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getWeatherType() != text) {
                     action.setWeatherType(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);
@@ -153,11 +153,11 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         }
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonInputExpressionPanel, {
-            currentValue    : action.getWeatherTurnsCount(),
-            expressionInfo  : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherTurnsCount,
-            fullData        : openData.fullData,
-            isReviewingMap  : openData.war.getIsReviewingMap(),
-            callback        : text => {
+            currentValue   : action.getWeatherTurnsCount(),
+            expressionInfo : WarEvents_Actions_Constants_SetWeatherExpr.ExpressionInfoDict.WeatherTurnsCount,
+            fullData       : openData.fullData,
+            isReviewingMap : openData.war.getIsReviewingMap(),
+            callback       : text => {
                 if (action.getWeatherTurnsCount() != text) {
                     action.setWeatherTurnsCount(text);
                     Notifications_Dispatcher.dispatch(Notifications_TypeId.TypeId.WarEventFullDataChanged);

@@ -56,13 +56,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback: this._onNotifyMsgMpwWatchGetRequestedWarIdArray },
-            { type: Notifications_TypeId.TypeId.MsgMpwWatchHandleRequest,            callback: this._onNotifyMsgMpwWatchHandleRequest },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchGetRequestedWarIdArray,   callback : this._onNotifyMsgMpwWatchGetRequestedWarIdArray },
+            { type : Notifications_TypeId.TypeId.MsgMpwWatchHandleRequest,            callback : this._onNotifyMsgMpwWatchHandleRequest },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
-            { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
+            { ui : this._btnBack,        callback : this._onTouchedBtnBack },
+            { ui : this._btnNextStep,    callback : this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonCancel01);
@@ -154,14 +154,14 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
             FloatText.showLang(Lang_Constants.TextType.A0300);
         } else {
             GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseMultiNumberPanel, {
-                currentNumberArray      : [],
-                availableNumberArray    : requestSrcUserIdArray,
-                showNumber              : true,
-                columnsCount            : 3,
-                getTitleText            : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
-                getHelpText             : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
-                getNumberMainText       : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
-                getNumberMainTextColor  : userId => {
+                currentNumberArray     : [],
+                availableNumberArray   : requestSrcUserIdArray,
+                showNumber             : true,
+                columnsCount           : 3,
+                getTitleText           : () => Lang_Utils.getText(Lang_Constants.TextType.B0208),
+                getHelpText            : () => Lang_Utils.getText(Lang_Constants.TextType.A0859),
+                getNumberMainText      : async userId => (await Users_Model.getUserNickname(userId)) ?? Lang_Constants.UndefinedError,
+                getNumberMainTextColor : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
                         return Graphics_Constants.ColorValue.Yellow;
                     }
@@ -171,13 +171,13 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
                         ? Graphics_Constants.ColorValue.Yellow
                         : Graphics_Constants.ColorValue.White;
                 },
-                callbackOnHelp          : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
-                callbackOnConfirm       : acceptUserIdArray => {
+                callbackOnHelp    : userId => GamePanels_Manager.openPanel(GamePanels_Dict.getDict().UserPanel, { userId }),
+                callbackOnConfirm : acceptUserIdArray => {
                     const acceptUserIdSet       = new Set(acceptUserIdArray);
                     const declineUserIdArray    = requestSrcUserIdArray.filter(v => !acceptUserIdSet.has(v));
                     GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonConfirmPanel, {
                         getContent : () => Lang_Utils.getFormattedText(Lang_Constants.TextType.F0082, acceptUserIdArray.length, declineUserIdArray.length),
-                        callback: () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
+                        callback   : () => WatchWar_Model_WwProxy.reqWatchHandleRequest(warId, acceptUserIdArray, declineUserIdArray),
                     });
                 },
             });
@@ -191,22 +191,22 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0298) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0298) },
                 pageClass   : Common_View_CommonWarMapInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0224) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0224) },
                 pageClass   : Common_View_CommonWarPlayerInfoPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0002) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0002) },
                 pageClass   : Common_View_CommonWarBasicSettingsPage.Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: Lang_Utils.getText(Lang_Constants.TextType.B0003) },
+                tabItemData : { name : Lang_Utils.getText(Lang_Constants.TextType.B0003) },
                 pageClass   : Common_View_CommonWarAdvancedSettingsPage.Page,
                 pageData    : null,
             },
@@ -269,8 +269,8 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const dataArray: DataForWarRenderer[] = [];
         for (const info of WatchWar_Model_WwModel.getRequestedWarIdArray() || []) {
             dataArray.push({
-                warId: info,
-                panel   : this,
+                warId : info,
+                panel : this,
             });
         }
 
@@ -295,58 +295,58 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     protected async _showOpenAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0 },
+            endProps   : { customAlpha : 1 },
         });
 
         await Timer_TimerModel.wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Tween_Executor.Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupWarList,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupWarList,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._btnNextStep,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._btnNextStep,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Tween_Executor.Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1 },
+            endProps   : { customAlpha : 0 },
         });
 
         await Timer_TimerModel.wait();
@@ -370,8 +370,7 @@ interface DataForWarRenderer extends Ui_Types_UiListItemData.UiListItemData {
 }
 class WarRenderer
     extends     Ui_Components_UiListItemRenderer.UiListItemRenderer<DataForWarRenderer>
-    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarRenderer>
-{
+    implements  Ui_Interfaces_IUiListItemRenderer.IUiListItemRenderer<DataForWarRenderer> {
     private readonly _layoutName!   : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _labelType!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _labelId!      : Ui_Interfaces_IUiLabel.IUiLabel;

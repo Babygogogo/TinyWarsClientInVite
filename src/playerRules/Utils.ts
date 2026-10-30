@@ -15,37 +15,37 @@ import type { RuleAvailability } from "../proto/schema/CommonProto/WarRule/RuleA
 
 export function createDefaultPlayerRule(playerIndex: number, gcData: GameConfigs_GameConfig.GameConfig): PlayerRule {
     return PlayerRule.fromJson({
-        playerIndex                 : playerIndex,
-        teamIndex                   : playerIndex,
-        bannedCoCategoryIdArray     : [],
-        bannedUnitTypeArray         : [],
-        initialFund                 : PlayerRules_Constants.InitialFund.Default,
-        incomeMultiplier            : PlayerRules_Constants.IncomeMultiplier.Default,
-        maxUnitsCount               : null,
-        energyAddPctOnCoBoard       : PlayerRules_Constants.EnergyAddPctOnCoBoard.Default,
-        energyLossPctOnCoDie        : PlayerRules_Constants.EnergyLossPctOnCoDie.Default,
-        energyGrowthMultiplier      : PlayerRules_Constants.EnergyGrowthMultiplier.Default,
-        canActivateCoSkill          : true,
-        canCoBoard                  : true,
-        canUnitJoin                 : true,
-        moveRangeModifier           : PlayerRules_Constants.MoveRangeModifier.Default,
-        unitVisionRangeModifier     : PlayerRules_Constants.UnitVisionRangeModifier.Default,
-        tileVisionRangeModifier     : PlayerRules_Constants.TileVisionRangeModifier.Default,
-        mcwHumanCoCategoryIdArray   : [],
-        mmwHumanCoCategoryIdArray   : [],
-        mrwHumanCoCategoryIdArray   : [],
-        atwHumanCoCategoryIdArray   : [],
-        ccwHumanCoCategoryIdArray   : [],
-        srwHumanCoCategoryIdArray   : [],
-        campaignHumanCoIdArray      : [],
-        ccwAiCoId                   : null,
-        srwAiCoId                   : null,
-        campaignAiCoId              : null,
-        campaignSkinId              : null,
-        attackPowerModifier         : PlayerRules_Constants.AttackPowerModifier.Default,
-        defenseModifier             : PlayerRules_Constants.DefenseModifier.Default,
-        luckLowerLimit              : PlayerRules_Constants.Luck.DefaultLowerLimit,
-        luckUpperLimit              : gcData.getSystemCfg().getDefaultLuckUpperLimit(),
+        playerIndex               : playerIndex,
+        teamIndex                 : playerIndex,
+        bannedCoCategoryIdArray   : [],
+        bannedUnitTypeArray       : [],
+        initialFund               : PlayerRules_Constants.InitialFund.Default,
+        incomeMultiplier          : PlayerRules_Constants.IncomeMultiplier.Default,
+        maxUnitsCount             : null,
+        energyAddPctOnCoBoard     : PlayerRules_Constants.EnergyAddPctOnCoBoard.Default,
+        energyLossPctOnCoDie      : PlayerRules_Constants.EnergyLossPctOnCoDie.Default,
+        energyGrowthMultiplier    : PlayerRules_Constants.EnergyGrowthMultiplier.Default,
+        canActivateCoSkill        : true,
+        canCoBoard                : true,
+        canUnitJoin               : true,
+        moveRangeModifier         : PlayerRules_Constants.MoveRangeModifier.Default,
+        unitVisionRangeModifier   : PlayerRules_Constants.UnitVisionRangeModifier.Default,
+        tileVisionRangeModifier   : PlayerRules_Constants.TileVisionRangeModifier.Default,
+        mcwHumanCoCategoryIdArray : [],
+        mmwHumanCoCategoryIdArray : [],
+        mrwHumanCoCategoryIdArray : [],
+        atwHumanCoCategoryIdArray : [],
+        ccwHumanCoCategoryIdArray : [],
+        srwHumanCoCategoryIdArray : [],
+        campaignHumanCoIdArray    : [],
+        ccwAiCoId                 : null,
+        srwAiCoId                 : null,
+        campaignAiCoId            : null,
+        campaignSkinId            : null,
+        attackPowerModifier       : PlayerRules_Constants.AttackPowerModifier.Default,
+        defenseModifier           : PlayerRules_Constants.DefenseModifier.Default,
+        luckLowerLimit            : PlayerRules_Constants.Luck.DefaultLowerLimit,
+        luckUpperLimit            : gcData.getSystemCfg().getDefaultLuckUpperLimit(),
     });
 }
 export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcData: GameConfigs_GameConfig.GameConfig): PlayerRule[] {
@@ -348,10 +348,10 @@ export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, play
     for (const data of playerRuleList) {
         {
             const errorCode = getErrorCode({
-                playerRule              : data,
-                gameConfig              : gameConfig,
-                playersCountUnneutral   : playersCountUnneutral,
-                isCampaignMap           : isCampaignMap,
+                playerRule            : data,
+                gameConfig            : gameConfig,
+                playersCountUnneutral : playersCountUnneutral,
+                isCampaignMap         : isCampaignMap,
             });
             if (errorCode !== Utils_ClientErrorCode.ClientErrorCode.NoError) {
                 return errorCode;
@@ -485,55 +485,55 @@ export function checkIsSame(playerRule1: PlayerRule, playerRule2: PlayerRule): b
 
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getBannedCoCategoryIdArray()),
-        new Set(playerRule2.getBannedCoCategoryIdArray())
+        new Set(playerRule2.getBannedCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getBannedUnitTypeArray()),
-        new Set(playerRule2.getBannedUnitTypeArray())
+        new Set(playerRule2.getBannedUnitTypeArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getSrwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getSrwHumanCoCategoryIdArray())
+        new Set(playerRule2.getSrwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMcwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getMcwHumanCoCategoryIdArray())
+        new Set(playerRule2.getMcwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getCcwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getCcwHumanCoCategoryIdArray())
+        new Set(playerRule2.getCcwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMmwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getMmwHumanCoCategoryIdArray())
+        new Set(playerRule2.getMmwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getMrwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getMrwHumanCoCategoryIdArray())
+        new Set(playerRule2.getMrwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getAtwHumanCoCategoryIdArray()),
-        new Set(playerRule2.getAtwHumanCoCategoryIdArray())
+        new Set(playerRule2.getAtwHumanCoCategoryIdArray()),
     )) {
         return false;
     }
     if (!Helpers_Collection.checkIsSameSet(
         new Set(playerRule1.getCampaignHumanCoIdArray()),
-        new Set(playerRule2.getCampaignHumanCoIdArray())
+        new Set(playerRule2.getCampaignHumanCoIdArray()),
     )) {
         return false;
     }

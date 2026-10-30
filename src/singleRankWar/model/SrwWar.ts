@@ -24,23 +24,23 @@ export class SrwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements Singl
     public serialize(): SerialWar {
         const randomNumberManager = this.getRandomNumberManager();
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForSrw              : this._getSettingsForSrw().toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSrw    : this._getSettingsForSrw().toJson(),
 
-            warId                       : this.getWarId(),
-            isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
-            remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
-            drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
-            weatherManager              : this.getWeatherManager().serialize().toJson(),
-            warEventManager             : this.getWarEventManager().serialize().toJson(),
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : this.getTurnManager().serialize().toJson(),
-            field                       : this.getField().serialize().toJson(),
-            executedOperationManager    : this.getExecutedOperationManager().serialize().toJson(),
-            warStatisticsManager        : this.getWarStatisticsManager().serialize().toJson(),
-            taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
+            warId                    : this.getWarId(),
+            isEnded                  : this.getIsEnded(),
+            seedRandomInitialState   : Helpers_Misc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : randomNumberManager.getSeedRandomCurrentStateJson(),
+            remainingVotesForDraw    : this.getDrawVoteManager().getRemainingVotes(),
+            drawVoteManager          : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
+            weatherManager           : this.getWeatherManager().serialize().toJson(),
+            warEventManager          : this.getWarEventManager().serialize().toJson(),
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : this.getTurnManager().serialize().toJson(),
+            field                    : this.getField().serialize().toJson(),
+            executedOperationManager : this.getExecutedOperationManager().serialize().toJson(),
+            warStatisticsManager     : this.getWarStatisticsManager().serialize().toJson(),
+            taskObjectiveManager     : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
     public serializeForValidation(): SerialWar {
@@ -48,23 +48,23 @@ export class SrwWar extends SinglePlayerWar_Model_SpwWar.SpwWar implements Singl
         settingsForSrw.setTotalScore(this.calculateTotalScore());
 
         return SerialWar.fromJson({
-            settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
-            settingsForSrw              : settingsForSrw.toJson(),
+            settingsForCommon : this.getCommonSettingManager().getSettingsForCommon().toJson(),
+            settingsForSrw    : settingsForSrw.toJson(),
 
-            warId                       : null,
-            isEnded                     : null,
-            seedRandomInitialState      : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
-            seedRandomCurrentState      : null,
-            remainingVotesForDraw       : null,
-            drawVoteManager             : new SerialDrawVoteManager().toJson(),
-            weatherManager              : null,
-            warEventManager             : null,
-            playerManager               : this.getPlayerManager().serialize().toJson(),
-            turnManager                 : null,
-            field                       : null,
-            executedOperationManager    : this.getExecutedOperationManager().serializeForSrwValidation().toJson(),
-            warStatisticsManager        : null,
-            taskObjectiveManager        : null,
+            warId                    : null,
+            isEnded                  : null,
+            seedRandomInitialState   : Helpers_Misc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomCurrentState   : null,
+            remainingVotesForDraw    : null,
+            drawVoteManager          : new SerialDrawVoteManager().toJson(),
+            weatherManager           : null,
+            warEventManager          : null,
+            playerManager            : this.getPlayerManager().serialize().toJson(),
+            turnManager              : null,
+            field                    : null,
+            executedOperationManager : this.getExecutedOperationManager().serializeForSrwValidation().toJson(),
+            warStatisticsManager     : null,
+            taskObjectiveManager     : null,
         });
     }
 

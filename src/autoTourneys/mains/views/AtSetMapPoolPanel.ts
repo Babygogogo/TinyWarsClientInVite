@@ -44,12 +44,12 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: Notifications_TypeId.TypeId.MsgAtSetMapPool,     callback: this._onNotifyMsgAtSetMapPool },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.MsgAtSetMapPool,     callback : this._onNotifyMsgAtSetMapPool },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnCancel,          callback: this.closePanel },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,          callback : this.closePanel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -78,10 +78,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const data              = dataArray[dataIndex];
         data.normalMapId        = normalMapId;
         data.instanceWarRule    = WarRules_Utils_Instance.create({
-            templateWarRule             : mapRawData.getTemplateWarRuleArray()[0],
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : mapRawData.getTemplateWarRuleArray()[0],
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         });
         this._listMap.updateSingleData(dataIndex, data);
     }
@@ -103,10 +103,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         const ruleId            = data.instanceWarRule.getTemplateWarRuleId() ?? 0;
         const templateWarRule   = templateWarRuleArray[(templateWarRuleArray.findIndex(v => (v.getRuleId()) === ruleId) + 1) % rulesCount];
         data.instanceWarRule    = WarRules_Utils_Instance.create({
-            templateWarRule             : templateWarRule,
-            warEventFullData            : mapRawData.getWarEventFullData(),
-            allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-            taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+            templateWarRule           : templateWarRule,
+            warEventFullData          : mapRawData.getWarEventFullData(),
+            allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+            taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
         });
         this._listMap.updateSingleData(dataIndex, data);
     }
@@ -254,15 +254,15 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._layoutName,     callback: this._onTouchedLayoutName },
-            { ui: this._btnMap,         callback: this._onTouchedBtnMap },
-            { ui: this._btnRule,        callback: this._onTouchedBtnRule },
-            { ui: this._btnUp,          callback: this._onTouchedBtnUp },
-            { ui: this._btnAdd,         callback: this._onTouchedBtnAdd },
-            { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
+            { ui : this._layoutName,     callback : this._onTouchedLayoutName },
+            { ui : this._btnMap,         callback : this._onTouchedBtnMap },
+            { ui : this._btnRule,        callback : this._onTouchedBtnRule },
+            { ui : this._btnUp,          callback : this._onTouchedBtnUp },
+            { ui : this._btnAdd,         callback : this._onTouchedBtnAdd },
+            { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
         ]);
     }
 
@@ -286,10 +286,10 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
 
         Sounds_SoundPlayer.playShortSfx(Sounds_Constants.ShortSfxCode.ButtonNeutral01);
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonShowMapPanel, {
-            mapInfo: {
-                mapRawData          : mapRawData,
-                gameConfig          : await GameConfigs_Provider.getLatestGameConfig(),
-                overridingPlayers   : null,
+            mapInfo : {
+                mapRawData        : mapRawData,
+                gameConfig        : await GameConfigs_Provider.getLatestGameConfig(),
+                overridingPlayers : null,
             },
         });
     }
@@ -312,13 +312,13 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         await Promise.all(promiseArray);
 
         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : normalMapIdArray,
-            getTitleText                : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : normalMapIdArray,
+            getTitleText              : () => Lang_Utils.getText(Lang_Constants.TextType.B0227),
+            callback                  : normalMapId => {
                 if ((normalMapId != null) && (normalMapId !== openData.normalMapId)) {
                     openData.panel.updateOnSetMap(openData.mapIndex, normalMapId);
                 }
-            }
+            },
         });
     }
     private _onTouchedBtnRule(): void {
@@ -373,7 +373,7 @@ class MapRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<Da
         }
 
         const textForMode = Lang_Utils.getText(rule.getWarRuleCommonData()?.getHasFogByDefault() ? Lang_Constants.TextType.B0549 : Lang_Constants.TextType.B0548);
-        this._labelRuleName.setText(`#${rule.getTemplateWarRuleId() ?? 0} (${textForMode}) ${(Lang_Utils.getLanguageText({ textArray: rule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError)}`);
+        this._labelRuleName.setText(`#${rule.getTemplateWarRuleId() ?? 0} (${textForMode}) ${(Lang_Utils.getLanguageText({ textArray : rule.getRuleNameArray() }) ?? Lang_Constants.UndefinedError)}`);
         this._layoutName.arrangeItems();
     }
 }

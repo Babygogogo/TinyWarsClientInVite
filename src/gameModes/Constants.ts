@@ -1,6 +1,6 @@
 
 
-// eslint-disable-next-line no-shadow
+ 
 export const enum ModeId {
     Versus          = 1,
     Coop            = 2,

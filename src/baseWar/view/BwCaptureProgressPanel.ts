@@ -44,7 +44,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
         Tween_Executor.Executor.removeTweens(pbar);
         Tween_Executor.Executor.get(pbar)
             .wait(250)
-            .to({ currentValue: newValue }, 250)
+            .to({ currentValue : newValue }, 250)
             .wait(500)
             .call(() => {
                 if (newValue >= maxValue) {

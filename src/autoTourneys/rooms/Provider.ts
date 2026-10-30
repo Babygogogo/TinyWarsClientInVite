@@ -59,7 +59,7 @@ export async function getSelfSettings(roomId: number): Promise<AuxiliaryTypes_Au
     } else {
         const newData = new MultiPlayerRooms_SelfSettings.SelfSettings(
             roomInfo,
-            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion()))
+            await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(roomInfo.getSettingsForCommon()?.getConfigVersion())),
         );
         _selfSettingsDict.set(roomId, newData);
         return newData;
@@ -121,11 +121,11 @@ export async function updateOnMsgAtrSetSelfSettings(data: AtrSetSelfSettingsResp
     } else {
         Logger.warn(`AtrModel.updateOnMsgAtrSetSelfSettings() playerData == null.`);
         dataArray.push(DataForPlayerInRoom.fromJson({
-            playerIndex         : playerIndex,
-            userId              : null,
-            coId                : coId,
-            unitAndTileSkinId   : unitAndTileSkinId,
-            isReady             : true,
+            playerIndex       : playerIndex,
+            userId            : null,
+            coId              : coId,
+            unitAndTileSkinId : unitAndTileSkinId,
+            isReady           : true,
         }));
     }
 }
@@ -176,37 +176,37 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryType
     for (const playerInfo of roomInfo.getPlayerDataList()) {
         const playerIndex = playerInfo.getPlayerIndex();
         playerInfoArray.push({
-            playerIndex         : playerIndex,
-            teamIndex           : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
-            isAi                : false,
-            userId              : playerInfo.getUserId() ?? null,
-            coId                : playerInfo.getCoId(),
-            unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId(),
-            isReady             : playerInfo.getIsReady(),
-            isInTurn            : null,
-            isDefeat            : null,
-            restTimeToBoot      : null,
+            playerIndex       : playerIndex,
+            teamIndex         : WarRules_Utils_CommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
+            isAi              : false,
+            userId            : playerInfo.getUserId() ?? null,
+            coId              : playerInfo.getCoId(),
+            unitAndTileSkinId : playerInfo.getUnitAndTileSkinId(),
+            isReady           : playerInfo.getIsReady(),
+            isInTurn          : null,
+            isDefeat          : null,
+            restTimeToBoot    : null,
         });
     }
 
     return {
-        gameConfig              : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())),
-        playersCountUnneutral   : WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData),
-        roomOwnerPlayerIndex    : null,
-        callbackOnExitRoom      : null,
-        callbackOnDeletePlayer  : null,
-        callbackOnAddDummy      : null,
-        callbackOnChangeDummy   : null,
-        playerInfoArray         : playerInfoArray,
-        enterTurnTime           : null,
-        isReplay                : false,
+        gameConfig             : await GameConfigs_Provider.getGameConfig(Helpers_Misc.getExisted(settingsForCommon.getConfigVersion())),
+        playersCountUnneutral  : WarRules_Utils_CommonData.getPlayersCountUnneutral(warRuleCommonData),
+        roomOwnerPlayerIndex   : null,
+        callbackOnExitRoom     : null,
+        callbackOnDeletePlayer : null,
+        callbackOnAddDummy     : null,
+        callbackOnChangeDummy  : null,
+        playerInfoArray        : playerInfoArray,
+        enterTurnTime          : null,
+        isReplay               : false,
     };
 }
 
 export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>): Promise<Common_View_CommonWarBasicSettingsPage.OpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
-        return { dataArrayForListSettings: [] };
+        return { dataArrayForListSettings : [] };
     }
 
     const settingsForCommon = Helpers_Misc.getExisted(roomInfo.getSettingsForCommon());
@@ -218,91 +218,91 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryT
     const bootTimerParams   = settingsForAtw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as BootTimers_Constants.TimerTypeId;
     const openData          : Common_View_CommonWarBasicSettingsPage.OpenData = {
-        dataArrayForListSettings    : [
+        dataArrayForListSettings : [
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.NormalMapId,
-                currentValue    : normalMapId,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.NormalMapId,
+                currentValue     : normalMapId,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarRuleTitle,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.HasFog,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.HasFog,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.Weather,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.Weather,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType        : Wars_Constants.BasicSettingsTypeId.TileTheme,
-                currentValue        : null,
-                instanceWarRule     : instanceWarRule,
-                gameConfig          : gameConfig,
-                warEventFullData    : warEventFullData,
-                callbackOnModify    : null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TileTheme,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.WarEvent,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.WarEvent,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
-                currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                currentValue     : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerType,
-                currentValue    : timerType,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TimerType,
+                currentValue     : timerType,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         ],
     };
     if (timerType === BootTimers_Constants.TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType    : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
-            currentValue    : bootTimerParams[1],
-            instanceWarRule : instanceWarRule,
-            gameConfig      : gameConfig,
-            warEventFullData: warEventFullData,
-            callbackOnModify: null,
+            settingsType     : Wars_Constants.BasicSettingsTypeId.TimerRegularParam,
+            currentValue     : bootTimerParams[1],
+            instanceWarRule  : instanceWarRule,
+            gameConfig       : gameConfig,
+            warEventFullData : warEventFullData,
+            callbackOnModify : null,
         });
     } else if (timerType === BootTimers_Constants.TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType    : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
-                currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : Wars_Constants.BasicSettingsTypeId.TimerIncrementalParams,
+                currentValue     : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         );
     } else {

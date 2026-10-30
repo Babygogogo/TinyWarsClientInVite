@@ -20,10 +20,10 @@ export function getErrorCode(data: TileCustomName): Utils_ClientErrorCode.Client
 
     {
         if (!Lang_Utils.checkIsValidLanguageTextArray({
-            list            : data.getNameTextArray(),
-            minTextLength   : Tiles_Constants_Common.CustomName.MinLength,
-            maxTextLength   : Tiles_Constants_Common.CustomName.MaxLength,
-            minTextCount    : 1
+            list          : data.getNameTextArray(),
+            minTextLength : Tiles_Constants_Common.CustomName.MinLength,
+            maxTextLength : Tiles_Constants_Common.CustomName.MaxLength,
+            minTextCount  : 1,
         })) {
             return Utils_ClientErrorCode.ClientErrorCode.PhStructureTileCustomNames_GetErrorCodeForTileCustomName_01;
         }

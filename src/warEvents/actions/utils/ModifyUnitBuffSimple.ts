@@ -25,7 +25,7 @@ export function checkIsValid(
     data                    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
@@ -54,7 +54,7 @@ export function getBriefDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<Wea
     return Lang_Utils.getFormattedText(
         Lang_Constants.TextType.F0254,
         Lang_Utils.getText(Lang_Constants.TextType.B1468),
-        textArray.join(`, `) || Lang_Utils.getText(Lang_Constants.TextType.None)
+        textArray.join(`, `) || Lang_Utils.getText(Lang_Constants.TextType.None),
     );
 }
 export function getDetailDesc(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<WeaModifyUnitBuffSimple>): string | null {
@@ -156,7 +156,7 @@ export function getErrorTip(
     data                    : WeaModifyUnitBuffSimple,
     mapSize                 : AuxiliaryTypes_MapSize.MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigs_GameConfig.GameConfig
+    gcData                  : GameConfigs_GameConfig.GameConfig,
 ): string | null {
     {
         const filter = data.getConPlayerFilter();
@@ -331,7 +331,7 @@ export async function applyWithoutExtraData(action: WeaModifyUnitBuffSimple, isF
                         oldBuff,
                         warTurnIndex,
                         warPlayerIndex,
-                        playersCountNeutral
+                        playersCountNeutral,
                     );
                     if (newBuff) {
                         newBuffList.push(newBuff);
@@ -371,7 +371,7 @@ function calculateExpiringTimePart(
     mode        : number,
     actionTime  : number,
     buffTime    : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
-    warTime     : number
+    warTime     : number,
 ): AuxiliaryTypes_AuxiliaryTypes.Undefinable<number> {
     if (mode == WarEvents_Actions_Constants_Common.BuffEndTimeModificationMode.Delete) {
         return null;
@@ -403,13 +403,13 @@ function calculateExpiringTime(
     buffEndPlayerIndex  : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>,
     warTurnIndex        : number,
     warPlayerIndex      : number,
-    playersCountNeutral : number
+    playersCountNeutral : number,
 ): (number | null)[] {
     let turnIndex = calculateExpiringTimePart(
         action.getActEndTurnIndexMode(),
         action.getActEndTurnIndex() ?? 0,
         buffEndTurnIndex,
-        warTurnIndex
+        warTurnIndex,
     );
     if (turnIndex == null) {
         return [null, null];
@@ -419,7 +419,7 @@ function calculateExpiringTime(
         action.getActEndPlayerIndexMode(),
         action.getActEndPlayerIndex() ?? 0,
         buffEndPlayerIndex,
-        warPlayerIndex
+        warPlayerIndex,
     );
     if (playerIndex == null) {
         return [null, null];
@@ -443,7 +443,7 @@ function generateNewBuff(
     oldBuff             : UnitBuff,
     warTurnIndex        : number,
     warPlayerIndex      : number,
-    playersCountNeutral : number
+    playersCountNeutral : number,
 ): UnitBuff | null {
     const [expiringTurnIndex, expiringPlayerIndex] = calculateExpiringTime(
         action,
@@ -451,7 +451,7 @@ function generateNewBuff(
         oldBuff.getExpiringPlayerIndex(),
         warTurnIndex,
         warPlayerIndex,
-        playersCountNeutral
+        playersCountNeutral,
     );
     const newBuff = UnitBuff.fromJson({
         buffTypeId          : action.getActBuffType() ?? oldBuff.getBuffTypeId(),

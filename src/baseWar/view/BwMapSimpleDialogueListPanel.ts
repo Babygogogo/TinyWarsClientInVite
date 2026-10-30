@@ -44,10 +44,10 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData>{
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -90,18 +90,18 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData>{
         const dataArrayForListRepeatable: DataForDialogueRenderer[] = [];
         for (const dialogueData of war.getInstanceWarRule().getMapSimpleDialogueArray()) {
             dataArrayForListRepeatable.push({
-                war         : war,
-                dialogueId  : dialogueData.getDialogueId(),
-                actionId    : null,
+                war        : war,
+                dialogueId : dialogueData.getDialogueId(),
+                actionId   : null,
             });
         }
 
         const dataArrayForListWarEvent: DataForDialogueRenderer[] = [];
         for (const actionId of war.getWarEventManager().getCalledDialogueActionIdArray()) {
             dataArrayForListWarEvent.push({
-                war         : war,
-                dialogueId  : null,
-                actionId    : actionId,
+                war        : war,
+                dialogueId : null,
+                actionId   : actionId,
             });
         }
 
@@ -127,9 +127,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData>{
 
         const sclContent    = this._sclContent;
         const groupHeight   = Numbers_Utils.getValueInRange({
-            rawValue    : layoutContent.getScaledHeight() + 80,
-            minValue    : 140,
-            maxValue    : Stages_Constants.Dimension.DesignMinHeight,
+            rawValue : layoutContent.getScaledHeight() + 80,
+            minValue : 140,
+            maxValue : Stages_Constants.Dimension.DesignMinHeight,
         });
         sclContent.scrollTop();
         sclContent.setUnscaledManualHeight(groupHeight - 80);
@@ -147,10 +147,10 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnPlay,  callback: this._onTouchedBtnPlay },
+            { ui : this._btnPlay,  callback : this._onTouchedBtnPlay },
         ]);
         this._setNotifyListenerArray([
-            { type: Notifications_TypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : Notifications_TypeId.TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -189,8 +189,8 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     const act = action.getWeaBigDialogueSimple();
                     if (act) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwBigDialoguePanel, {
-                            war         : war,
-                            actionData  : act,
+                            war             : war,
+                            actionData      : act,
                             callbackOnClose : () => {
                                 // nothing to do
                             },
@@ -202,8 +202,8 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
                     const act = action.getWeaSmallDialogueSimple();
                     if (act) {
                         GamePanels_Manager.openPanel(GamePanels_Dict.getDict().BwSmallDialoguePanel, {
-                            war         : war,
-                            actionData  : act,
+                            war             : war,
+                            actionData      : act,
                             callbackOnClose : () => {
                                 // nothing to do
                             },
@@ -236,7 +236,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
             const dialogueId    = openData.dialogueId;
             if (dialogueId != null) {
                 btnPlay.setText(Lang_Utils.getLanguageText({
-                    textArray: war.getInstanceWarRule().getMapSimpleDialogueArray().find(v => v.getDialogueId() === dialogueId)?.getDialogueNameArray()
+                    textArray : war.getInstanceWarRule().getMapSimpleDialogueArray().find(v => v.getDialogueId() === dialogueId)?.getDialogueNameArray(),
                 }) ?? Lang_Constants.UndefinedError);
                 return;
             }
@@ -244,7 +244,7 @@ class DialogueRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
         {
             const actionId = openData.actionId;
             if (actionId != null) {
-                btnPlay.setText(Lang_Utils.getLanguageText({ textArray: war.getWarEventManager().getWarEventAction(actionId).getWeaCommonData()?.getActionNameArray() }) ?? `A${actionId}`);
+                btnPlay.setText(Lang_Utils.getLanguageText({ textArray : war.getWarEventManager().getWarEventAction(actionId).getWeaCommonData()?.getActionNameArray() }) ?? `A${actionId}`);
                 return;
             }
         }

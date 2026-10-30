@@ -39,9 +39,9 @@ function fastExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, action: W
         if (focusUnit) {
             if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
                 war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit            : focusUnit,
-                    unitVisionInfo  : focusUnit.getVisionInfo(),
-                    path            : [gridIndex],
+                    unit           : focusUnit,
+                    unitVisionInfo : focusUnit.getVisionInfo(),
+                    path           : [gridIndex],
                 });
             }
 
@@ -60,15 +60,15 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, a
     if (actionExtraData) {
         const commonExtraData = Helpers_Misc.getExisted(actionExtraData.getCommonExtraData(), Utils_ClientErrorCode.ClientErrorCode.WarOperationExecutor_NormalExePlayerDeleteUnit_00);
         await war.moveExtraUnit({
-            movingUnitAndPath       : commonExtraData.getMovingUnitAndPath(),
-            aiming                  : null,
-            deleteViewAfterMoving   : true,
+            movingUnitAndPath     : commonExtraData.getMovingUnitAndPath(),
+            aiming                : null,
+            deleteViewAfterMoving : true,
         });
 
         WarOperations_Executors_Utils_Common.handleCommonExtraData({
             war,
             commonExtraData,
-            isFastExecute   : false,
+            isFastExecute : false,
         });
 
     } else {
@@ -77,9 +77,9 @@ async function normalExePlayerDeleteUnit(war: BaseWar_Interface_IBwWar.IBwWar, a
         if (focusUnit) {
             if (war.getGcData().getSystemCfg().getIsPathVisionEnabled()) {
                 war.getFogMap().updateMapFromPathsByUnitAndPath({
-                    unit            : focusUnit,
-                    unitVisionInfo  : focusUnit.getVisionInfo(),
-                    path            : [gridIndex],
+                    unit           : focusUnit,
+                    unitVisionInfo : focusUnit.getVisionInfo(),
+                    path           : [gridIndex],
                 });
             }
 

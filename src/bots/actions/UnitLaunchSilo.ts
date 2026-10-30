@@ -26,7 +26,7 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: Bots_CommonP
     const unitMap                                   = war.getUnitMap();
     const launchSiloParams                          = tile.getTemplateCfg().getLaunchSiloParams();
     const siloDamage                                = Helpers_Misc.getExisted(launchSiloParams[3], Utils_ClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_01);
-        for (let x = 0; x < mapWidth; ++x) {
+    for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
             const targetUnit = unitMap.getUnitOnMap(new AuxiliaryTypes_GridIndex.GridIndex(x, y));
             if ((!targetUnit) || (targetUnit === unit)) {
@@ -46,8 +46,8 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: Bots_CommonP
             const newMaxScore           = await getScoreForActionUnitLaunchSilo(commonParams, unitValueMap, newTargetGridIndex, launchSiloParams[2]);
             if (scoreAndGridIndex == null) {
                 scoreAndGridIndex = {
-                    score       : newMaxScore,
-                    gridIndex   : newTargetGridIndex,
+                    score     : newMaxScore,
+                    gridIndex : newTargetGridIndex,
                 };
             } else if (newMaxScore > scoreAndGridIndex.score) {
                 scoreAndGridIndex.score     = newMaxScore;
@@ -58,17 +58,17 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: Bots_CommonP
 
     return scoreAndGridIndex
         ? {
-            score   : scoreAndGridIndex.score,
-            action  : WoContainer.fromJson({
-                WoUnitLaunchSilo: {
-                    path        : {
+            score  : scoreAndGridIndex.score,
+            action : WoContainer.fromJson({
+                WoUnitLaunchSilo : {
+                    path : {
                         nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                         fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
                         isBlocked       : false,
                     },
                     launchUnitId    : unit.getLoaderUnitId() == null ? null : unit.getUnitId(),
                     targetGridIndex : scoreAndGridIndex.gridIndex.toProto().toJson(),
-                }
+                },
             }),
         }
         : null;
@@ -78,7 +78,7 @@ async function getScoreForActionUnitLaunchSilo(commonParams: Bots_CommonParams.C
     await Timer_TimerModel.checkAndCallLater();
 
     let score = 9999;
-    for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: siloRadius, mapSize: commonParams.getMapSize() })) {
+    for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance : 0, maxDistance : siloRadius, mapSize : commonParams.getMapSize() })) {
         score += unitValueMap[gridIndex.getX()][gridIndex.getY()] ?? 0;
     }
 

@@ -26,9 +26,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getConUnitFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ConUnitFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConUnitFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ConUnitFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -36,9 +36,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActDestination(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActDestination,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActDestination(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActDestination,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -46,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypes_AuxiliaryTypes.Undefinable<W
 
     {
         if (!ExpressionParsers_Parser.Parser.checkIsValidString2({
-            str                     : action.getActAlternativeTileFilter(),
-            expressionInfo          : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActAlternativeTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActAlternativeTileFilter(),
+            expressionInfo       : WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActAlternativeTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -80,9 +80,9 @@ export function getErrorTip(data: WeaSetUnitPositionExpr, customCounterNameSet: 
     {
         const info      = WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ConUnitFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getConUnitFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConUnitFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -92,9 +92,9 @@ export function getErrorTip(data: WeaSetUnitPositionExpr, customCounterNameSet: 
     {
         const info      = WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActDestination;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActDestination(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActDestination(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -104,9 +104,9 @@ export function getErrorTip(data: WeaSetUnitPositionExpr, customCounterNameSet: 
     {
         const info      = WarEvents_Actions_Constants_SetUnitPositionExpr.ExpressionInfoDict.ActAlternativeTileFilter;
         const errorData = ExpressionParsers_Parser.Parser.getErrorDataForString2({
-            str                     : data.getActAlternativeTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActAlternativeTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${Lang_Utils.getFormattedText(Lang_Constants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -184,7 +184,7 @@ export function applyWithoutExtraData(action: WeaSetUnitPositionExpr, isFast: bo
 
     return applyDestinationDict(destinationDict, war, action, isFast);
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 async function applyDestinationDict(dict: Map<Units_IUnit.IUnit, AuxiliaryTypes_GridIndex.GridIndex>, war: BaseWar_Interface_IBwWar.IBwWar, action: WeaSetUnitPositionExpr, isFast: boolean): Promise<void> {
     const unitMap       = war.getUnitMap();
     const tileMap       = war.getTileMap();
@@ -206,10 +206,10 @@ async function applyDestinationDict(dict: Map<Units_IUnit.IUnit, AuxiliaryTypes_
         if (!isFast) {
             const moveType      = unit.getMoveTypeId();
             const movableArea   = AuxiliaryTypes_MovableArea.MovableArea.create({
-                gridIndex       : unitGridIndex,
-                maxMoveCost     : 1000,
-                mapSize         : mapSize,
-                moveCostGetter  : g => tileMap.getTile(g).getMoveCostByMoveType(moveType),
+                gridIndex      : unitGridIndex,
+                maxMoveCost    : 1000,
+                mapSize        : mapSize,
+                moveCostGetter : g => tileMap.getTile(g).getMoveCostByMoveType(moveType),
             });
             const { x: newX, y: newY } = newDestination.getXY();
             if (movableArea.checkHasGrid(newX, newY)) {
@@ -281,6 +281,6 @@ function getAlternativeDestination(action: WeaSetUnitPositionExpr, unit: Units_I
                 return evalActAlternativeTileFilter(action, tile);
             }
         },
-        limit       : 1
+        limit : 1,
     })[0] ?? null;
 }
