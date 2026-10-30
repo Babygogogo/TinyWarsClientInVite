@@ -108,7 +108,7 @@ import {
     getSelfUserId,
     getUserNickname,
 } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import {
     getPlayerRule,

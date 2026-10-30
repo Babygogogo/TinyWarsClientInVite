@@ -53,7 +53,7 @@ import type { LanguageText } from "../../proto/schema/CommonProto/Structure/Lang
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

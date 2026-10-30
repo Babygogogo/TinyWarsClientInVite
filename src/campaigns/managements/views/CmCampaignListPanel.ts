@@ -23,7 +23,7 @@ import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
 import { getIsSelfCampaignManager } from "../../../users/Model.ts";
-import type { Event } from "../../../vendor/egret/Egret.ts";
+import type { Event } from "../../../egret/Egret.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

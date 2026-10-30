@@ -59,7 +59,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import {
     setTimeout,
     clearTimeout,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 import {
     getPlayerRule,
     tickDefaultWeatherType,

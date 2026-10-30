@@ -28,7 +28,7 @@ import {
     getUiButtonClass,
     getUiContainerClass,
 } from "../utils/UiFactory.ts";
-import type { DisplayObject } from "../../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../../egret/Egret.ts";
 
 const NAMES_FOR_GROUP = [
     `_group`,

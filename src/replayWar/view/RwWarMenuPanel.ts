@@ -28,7 +28,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { checkIsFavoriteReplayId } from "../../users/Model.ts";
 import { reqUserModifyFavoriteReplayIdArray } from "../../users/Proxy.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import type { IRwWar } from "../interface/IRwWar.ts";
 import { getReplaySelfRating } from "../model/RwModel.ts";
 import { reqReplaySetSelfRating } from "../model/RwProxy.ts";

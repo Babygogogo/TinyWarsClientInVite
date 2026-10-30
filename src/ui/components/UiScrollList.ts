@@ -10,7 +10,7 @@ import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
 import { getUiListClass } from "../utils/UiFactory.ts";
-import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
+import type { DisplayObjectContainer } from "../../egret/Egret.ts";
 
 export class UiScrollList<DataForRenderer extends UiListItemData>
     extends     UiScrollerBase

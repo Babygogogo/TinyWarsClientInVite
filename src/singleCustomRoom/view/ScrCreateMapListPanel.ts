@@ -45,7 +45,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import {
     callLater,
     Event,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;

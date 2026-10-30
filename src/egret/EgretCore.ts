@@ -39,8 +39,6 @@ export type GradientTypeValue = "linear" | "radial";
 export type JointStyleValue = JointStyleConstants[keyof JointStyleConstants];
 export type HttpRequest<TResponse = string | ArrayBuffer | Blob | Document | null> = WebHttpRequest<TResponse>;
 export type URLLoaderFormat = "binary" | "text" | "variables" | "texture" | "sound";
-export type ScrollEaseFunction = (ratio: number, start?: number, change?: number, duration?: number) => number;
-export type ScrollTweenProperties = Record<string, unknown>;
 export type ScrollPolicy = "auto" | "on" | "off";
 export type URLRequestData = Document | XMLHttpRequestBodyInit | URLVariables | null;
 export type URLLoaderData = string | ArrayBuffer | Blob | Document | URLVariables | Texture | Sound | null;
@@ -52,9 +50,6 @@ export type SocketMessage = string | ArrayBuffer | MessageEvent<string | ArrayBu
 export type SocketCallback = (this: unknown) => void;
 export type SocketDataCallback = (this: unknown, message: SocketMessage) => void;
 export type SocketSendData = string | ArrayBuffer | ArrayBufferView | Blob;
-export type TweenProperties = Record<string, unknown>;
-export type TweenTarget = object & { tween_count?: number };
-export type EaseFunction = (ratio: number, start?: number, change?: number, duration?: number) => number;
 export type ExternalCallback<TValue = string> = (value: TValue) => void;
 export type DeferredCallback = (this: unknown, ...args: unknown[]) => unknown;
 export type TickCallback = (this: unknown, timeStamp: number) => boolean | void;
@@ -69,7 +64,7 @@ export type LocaleStringTables = Record<string, LocaleStrings | undefined>;
 export type KTXData = ArrayBuffer;
 export type EventPhaseValue = 1 | 2 | 3;
 export type EventPropertyData = Record<string, unknown>;
-type ScrollTweenTarget = object & { tween_count?: number };
+export type XML = webXML;
 type PixelBuffer = Uint8ClampedArray | number[];
 type RGBA = [number, number, number, number];
 type EventMap = Record<string, EventBin[] | null | undefined>;
@@ -126,14 +121,6 @@ export interface FPSDisplay {
     updateWarn?(info: string): void;
     updateError?(info: string): void;
 }
-export interface CompressedTextureData {
-    glInternalFormat: number;
-    width: number;
-    height: number;
-    byteArray: Uint8Array;
-    face: number;
-    level: number;
-}
 export interface ITextStyle {
     textColor?: number;
     strokeColor?: number;
@@ -180,17 +167,6 @@ export interface TextHit {
     lineIndex: number;
     textElementIndex: number;
 }
-export interface GeolocationEvent<TData = unknown> {
-    altitude: number | null;
-    heading: number | null;
-    accuracy: number;
-    latitude: number;
-    longitude: number;
-    speed: number | null;
-    altitudeAccuracy: number | null;
-    errorType: string;
-    errorMessage: string;
-}
 export interface MotionAcceleration {
     x: number | null;
     y: number | null;
@@ -200,11 +176,6 @@ export interface MotionRotationRate {
     alpha: number | null;
     beta: number | null;
     gamma: number | null;
-}
-export interface MotionEvent<TData = unknown> {
-    acceleration: MotionAcceleration;
-    accelerationIncludingGravity: MotionAcceleration;
-    rotationRate: MotionRotationRate;
 }
 export interface SoundChannel extends IEventDispatcher {
     volume: number;
@@ -267,37 +238,6 @@ export interface MovieClipDataSet {
     mc: Record<string, MovieClipSource>;
     res: Record<string, MovieClipTextureData>;
 }
-export interface ScrollTweenOptions {
-    useTicks?: boolean;
-    ignoreGlobalPause?: boolean;
-    loop?: boolean;
-    onChange?: EventListener;
-    onChangeObj?: unknown;
-    override?: boolean;
-    paused?: boolean;
-    position?: number;
-}
-export interface ScrollTweenStep {
-    d: number;
-    t: number;
-    p0: ScrollTweenProperties;
-    p1: ScrollTweenProperties;
-    e?: ScrollEaseFunction | undefined;
-    v?: boolean;
-}
-export interface ScrollTweenAction {
-    t: number;
-    execute: () => void;
-}
-export interface ScrollTweenPlugin {
-    init(tween: ScrollTween, name: string, value: unknown): unknown;
-    step?(tween: ScrollTween, name: string, oldValue: unknown, newValue: unknown, injectProps: ScrollTweenProperties): void;
-    tween(tween: ScrollTween, name: string, value: unknown, start: ScrollTweenProperties, end: ScrollTweenProperties, ratio: number, isWait: boolean, isEnd: boolean): unknown;
-}
-export interface URLRequestHeader {
-    name: string;
-    value: string;
-}
 export interface ScrollPoint {
     x: number;
     y: number;
@@ -306,52 +246,12 @@ export interface ScrollAnimationData {
     position: number;
     duration: number;
 }
-export interface TweenOptions {
-    useTicks?: boolean;
-    ignoreGlobalPause?: boolean;
-    loop?: boolean;
-    onChange?: EventListener;
-    onChangeObj?: unknown;
-    override?: boolean;
-    paused?: boolean;
-    position?: number;
-}
-export interface TweenStep {
-    type: "step";
-    d: number;
-    t: number;
-    p0: TweenProperties;
-    p1: TweenProperties;
-    e?: EaseFunction | null | undefined;
-    v?: boolean | undefined;
-}
-export interface TweenAction {
-    type: "action";
-    t: number;
-    execute(): void;
-}
-export interface TweenPlugin {
-    init(tween: Tween, name: string, value: unknown): unknown;
-    step?(tween: Tween, name: string, oldValue: unknown, newValue: unknown, injectProps: TweenProperties): void;
-    tween(tween: Tween, name: string, value: unknown, start: TweenProperties, end: TweenProperties, ratio: number, isWait: boolean, isEnd: boolean): unknown;
-}
-export interface Texture {
-    $renderBuffer?: RenderBuffer | null;
-}
 export interface EngineWebGLTexture {
     isCanvas?: boolean;
     smoothing?: boolean;
     UNPACK_PREMULTIPLY_ALPHA_WEBGL?: boolean;
     is_compressed_texture?: boolean;
     etc_alpha_mask?: EngineWebGLTexture;
-}
-export interface OrientationEvent {
-    beta: number | null;
-    gamma: number | null;
-    alpha: number | null;
-}
-export interface XML extends webXML {
-
 }
 export interface InputTextFieldState {
     13: string;
@@ -423,9 +323,6 @@ export interface BitmapDataSource {
     readonly byteLength?: number;
     src?: string;
     dispose?(): void;
-}
-export interface Texture {
-    scale9Grid?: Rectangle | null;
 }
 export interface SpriteConstructor {
     $EVENT_ADD_TO_STAGE_LIST: DisplayObject[];
@@ -530,10 +427,12 @@ export function $markCannotUse<TValue>(instance: PrototypeOwner, property: Prope
             return defaultValue;
         },
         set : function (_value: TValue): void {
+            void _value;
+
             $error(1009, getQualifiedClassName(instance), property);
         },
         enumerable   : true,
-        configurable : true
+        configurable : true,
     });
 }
 export function log(...messages: unknown[]): void {
@@ -589,7 +488,7 @@ export function registerClass<T extends object>(classDefinition: { prototype: T 
     Object.defineProperty(prototype, '__class__', {
         value      : className,
         enumerable : false,
-        writable   : true
+        writable   : true,
     });
     let types: string[] = [className];
     if (interfaceNames) {
@@ -608,7 +507,7 @@ export function registerClass<T extends object>(classDefinition: { prototype: T 
     Object.defineProperty(prototype, '__types__', {
         value      : types,
         enumerable : false,
-        writable   : true
+        writable   : true,
     });
 }
 export function callLater<TThis, TArgs extends unknown[], TResult>(
@@ -650,7 +549,7 @@ export function superSetter<TThis, TArgs extends unknown[]>(
     setter.apply(thisObj, values);
 }
 export function superGetter<TResult = unknown, TThis = unknown>(
-    currentClass: AccessorClass<TThis, unknown[], TResult>, thisObj: TThis, type: string
+    currentClass: AccessorClass<TThis, unknown[], TResult>, thisObj: TThis, type: string,
 ): TResult | undefined {
     const cla: object = currentClass.prototype;
     if (!Object.prototype.hasOwnProperty.call(currentClass, "__gets__")) {
@@ -683,7 +582,7 @@ export function getDefinitionByName<T = unknown>(name: string): T | null {
     }
     const paths: string[] = name.split(".");
     const length: number = paths.length;
-    definition = (globalThis as any).global ?? globalThis;
+    definition = (globalThis as typeof globalThis & { global?: unknown }).global ?? globalThis;
     for (let i: number = 0; i < length; i++) {
         const path: string = paths[i]!;
         definition = (definition as Record<string, unknown>)[path];
@@ -713,7 +612,7 @@ export function getQualifiedClassName(value: unknown): string {
     Object.defineProperty(prototype, "__class__", {
         value      : className,
         enumerable : false,
-        writable   : true
+        writable   : true,
     });
     return className;
 }
@@ -825,7 +724,9 @@ export function getFontString(node: TextNode, format: ITextStyle): string {
     const size: number = format.size == null ? node.size : format.size;
     const fontFamily: string = format.fontFamily || node.fontFamily;
     let font: string = italic ? "italic " : "normal ";
-    font += bold ? "bold " : "normal "; font += size + "px " + fontFamily; return font;
+    font += bold ? "bold " : "normal ";
+    font += size + "px " + fontFamily;
+    return font;
 }
 export function getRGBAString(color: number, alpha: number): string {
     const red: number = color >> 16;
@@ -853,6 +754,8 @@ export function __reflect(prototype: object, className: string, types?: string[]
     metadata.__types__ = metadata.__types__ ? types.concat(metadata.__types__) : types;
 }
 function getGradient(context: CanvasContext, type: GradientTypeValue, colors: number[], alphas: number[], ratios: number[], _matrix: Matrix): CanvasGradient {
+    void _matrix;
+
     const gradient: CanvasGradient = type == GradientType.LINEAR ? context.createLinearGradient(-1, 0, 1, 0) : context.createRadialGradient(0, 0, 0, 0, 0, 1);
     for (let i: number = 0; i < colors.length; i++) {
         gradient.addColorStop(ratios[i]! / 255, getRGBAString(colors[i]!, alphas[i]!));
@@ -878,7 +781,8 @@ function colorFilter(buffer: PixelBuffer, w: number, h: number, matrix: readonly
     }
 }
 function blurFilter(buffer: PixelBuffer, w: number, h: number, blurX: number, blurY: number): void {
-    blurFilterH(buffer, w, h, blurX); blurFilterV(buffer, w, h, blurY);
+    blurFilterH(buffer, w, h, blurX);
+    blurFilterV(buffer, w, h, blurY);
 }
 function blurFilterH(buffer: PixelBuffer, w: number, h: number, blurX: number): void {
     const lineBuffer: PixelBuffer = Use8ClampHelper.getUse8Clamp() ? new Uint8ClampedArray(w * 4) : new Array<number>(w * 4);
@@ -886,32 +790,46 @@ function blurFilterH(buffer: PixelBuffer, w: number, h: number, blurX: number): 
     const windowLength: number = blurX * 2 + 1;
     for (let y: number = 0; y < h; y++) {
         const pLineStart: number = y * lineSize;
-        let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number = 0, alpha2: number = 0;
+        let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number, alpha2: number;
         for (let ptr: number = -blurX * 4, end: number = blurX * 4 + 4; ptr < end; ptr += 4) {
             const key: number = pLineStart + ptr;
             if (key < pLineStart || key >= pLineStart + lineSize) {
                 continue;
             }
             alpha = buffer[key + 3]!;
-            rs += buffer[key]! * alpha; gs += buffer[key + 1]! * alpha; bs += buffer[key + 2]! * alpha; as += alpha;
+            rs += buffer[key]! * alpha;
+            gs += buffer[key + 1]! * alpha;
+            bs += buffer[key + 2]! * alpha;
+            as += alpha;
         }
         for (let ptr: number = pLineStart, end: number = pLineStart + lineSize, linePtr: number = 0, lastPtr: number = ptr - blurX * 4, nextPtr: number = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
             if (as === 0) {
                 lineBuffer[linePtr] = lineBuffer[linePtr + 1] = lineBuffer[linePtr + 2] = lineBuffer[linePtr + 3] = 0;
             } else {
-                lineBuffer[linePtr] = rs / as; lineBuffer[linePtr + 1] = gs / as; lineBuffer[linePtr + 2] = bs / as; lineBuffer[linePtr + 3] = as / windowLength;
+                lineBuffer[linePtr] = rs / as;
+                lineBuffer[linePtr + 1] = gs / as;
+                lineBuffer[linePtr + 2] = bs / as;
+                lineBuffer[linePtr + 3] = as / windowLength;
             }
-            alpha = buffer[nextPtr + 3]!; alpha2 = buffer[lastPtr + 3]!;
+            alpha = buffer[nextPtr + 3]!;
+            alpha2 = buffer[lastPtr + 3]!;
             if (alpha || alpha == 0) {
                 if (alpha2 || alpha2 == 0) {
                     rs += buffer[nextPtr]! * alpha - buffer[lastPtr]! * alpha2;
                     gs += buffer[nextPtr + 1]! * alpha - buffer[lastPtr + 1]! * alpha2;
-                    bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2; as += alpha - alpha2;
+                    bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2;
+                    as += alpha - alpha2;
                 } else {
-                    rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha;
+                    rs += buffer[nextPtr]! * alpha;
+                    gs += buffer[nextPtr + 1]! * alpha;
+                    bs += buffer[nextPtr + 2]! * alpha;
+                    as += alpha;
                 }
             } else if (alpha2 || alpha2 == 0) {
-                rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2;
+                rs += -buffer[lastPtr]! * alpha2;
+                gs += -buffer[lastPtr + 1]! * alpha2;
+                bs += -buffer[lastPtr + 2]! * alpha2;
+                as += -alpha2;
             }
         }
         if (Use8ClampHelper.getUse8Clamp()) {
@@ -927,36 +845,53 @@ function blurFilterV(buffer: PixelBuffer, w: number, h: number, blurY: number): 
     const windowLength: number = blurY * 2 + 1;
     for (let x: number = 0; x < w; x++) {
         const pColumnStart: number = x * 4;
-        let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number = 0, alpha2: number = 0;
+        let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number, alpha2: number;
         for (let ptr: number = -blurY * stride, end: number = blurY * stride + stride; ptr < end; ptr += stride) {
             const key: number = pColumnStart + ptr;
             if (key < pColumnStart || key >= pColumnStart + h * stride) {
                 continue;
             }
             alpha = buffer[key + 3]!;
-            rs += buffer[key]! * alpha; gs += buffer[key + 1]! * alpha; bs += buffer[key + 2]! * alpha; as += alpha;
+            rs += buffer[key]! * alpha;
+            gs += buffer[key + 1]! * alpha;
+            bs += buffer[key + 2]! * alpha;
+            as += alpha;
         }
         for (let ptr: number = pColumnStart, end: number = pColumnStart + h * stride, columnPtr: number = 0, lastPtr: number = pColumnStart - blurY * stride, nextPtr: number = pColumnStart + (blurY + 1) * stride; ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
             if (as === 0) {
                 columnBuffer[columnPtr] = columnBuffer[columnPtr + 1] = columnBuffer[columnPtr + 2] = columnBuffer[columnPtr + 3] = 0;
             } else {
-                columnBuffer[columnPtr] = rs / as; columnBuffer[columnPtr + 1] = gs / as; columnBuffer[columnPtr + 2] = bs / as; columnBuffer[columnPtr + 3] = as / windowLength;
+                columnBuffer[columnPtr] = rs / as;
+                columnBuffer[columnPtr + 1] = gs / as;
+                columnBuffer[columnPtr + 2] = bs / as;
+                columnBuffer[columnPtr + 3] = as / windowLength;
             }
-            alpha = buffer[nextPtr + 3]!; alpha2 = buffer[lastPtr + 3]!;
+            alpha = buffer[nextPtr + 3]!;
+            alpha2 = buffer[lastPtr + 3]!;
             if (alpha || alpha == 0) {
                 if (alpha2 || alpha2 == 0) {
                     rs += buffer[nextPtr]! * alpha - buffer[lastPtr]! * alpha2;
                     gs += buffer[nextPtr + 1]! * alpha - buffer[lastPtr + 1]! * alpha2;
-                    bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2; as += alpha - alpha2;
+                    bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2;
+                    as += alpha - alpha2;
                 } else {
-                    rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha;
+                    rs += buffer[nextPtr]! * alpha;
+                    gs += buffer[nextPtr + 1]! * alpha;
+                    bs += buffer[nextPtr + 2]! * alpha;
+                    as += alpha;
                 }
             } else if (alpha2 || alpha2 == 0) {
-                rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2;
+                rs += -buffer[lastPtr]! * alpha2;
+                gs += -buffer[lastPtr + 1]! * alpha2;
+                bs += -buffer[lastPtr + 2]! * alpha2;
+                as += -alpha2;
             }
         }
         for (let i: number = x * 4, end: number = i + h * stride, j: number = 0; i < end; i += stride, j += 4) {
-            buffer[i] = columnBuffer[j]!; buffer[i + 1] = columnBuffer[j + 1]!; buffer[i + 2] = columnBuffer[j + 2]!; buffer[i + 3] = columnBuffer[j + 3]!;
+            buffer[i] = columnBuffer[j]!;
+            buffer[i + 1] = columnBuffer[j + 1]!;
+            buffer[i + 2] = columnBuffer[j + 2]!;
+            buffer[i + 3] = columnBuffer[j + 3]!;
         }
     }
 }
@@ -982,7 +917,10 @@ function alphaFilter(buffer: PixelBuffer, color: RGBA = [0, 0, 0, 0]): PixelBuff
     const colorR: number = color[0], colorG: number = color[1], colorB: number = color[2], colorA: number = color[3];
     for (let ptr: number = 0, end: number = plane.length; ptr < end; ptr += 4) {
         const alpha: number = plane[ptr + 3]!;
-        plane[ptr] = colorR * alpha; plane[ptr + 1] = colorG * alpha; plane[ptr + 2] = colorB * alpha; plane[ptr + 3] = colorA * alpha;
+        plane[ptr] = colorR * alpha;
+        plane[ptr + 1] = colorG * alpha;
+        plane[ptr + 2] = colorB * alpha;
+        plane[ptr + 3] = colorA * alpha;
     }
     return plane;
 }
@@ -1036,7 +974,10 @@ function compositeSourceOver(dst: PixelBuffer, src: PixelBuffer): void {
     for (let ptr: number = 0, end: number = dst.length; ptr < end; ptr += 4) {
         const Dr: number = dst[ptr]!, Dg: number = dst[ptr + 1]!, Db: number = dst[ptr + 2]!, Da: number = dst[ptr + 3]! / 255;
         const Sr: number = src[ptr]!, Sg: number = src[ptr + 1]!, Sb: number = src[ptr + 2]!, Sa: number = src[ptr + 3]! / 255;
-        dst[ptr] = Sr + Dr * (1 - Sa); dst[ptr + 1] = Sg + Dg * (1 - Sa); dst[ptr + 2] = Sb + Db * (1 - Sa); dst[ptr + 3] = (Sa + Da * (1 - Sa)) * 255;
+        dst[ptr] = Sr + Dr * (1 - Sa);
+        dst[ptr + 1] = Sg + Dg * (1 - Sa);
+        dst[ptr + 2] = Sb + Db * (1 - Sa);
+        dst[ptr + 3] = (Sa + Da * (1 - Sa)) * 255;
     }
 }
 function mix(v1: number, v2: number, rate: number): number {
@@ -1045,10 +986,10 @@ function mix(v1: number, v2: number, rate: number): number {
 function dropShadowFilter2(buffer: PixelBuffer, w: number, h: number, color: RGBA, blurX: number, blurY: number, angle: number, distance: number, strength: number, inner: number, knockout: number, hideObject: number): void {
     const plane: PixelBuffer = Use8ClampHelper.getUse8Clamp() ? new Uint8ClampedArray(buffer.length) : new Array<number>(buffer.length);
     const alpha: number = color[3];
-    let curDistanceX: number = 0, curDistanceY: number = 0;
+    let curDistanceX: number, curDistanceY: number;
     const offsetX: number = distance * Math.cos(angle), offsetY: number = distance * Math.sin(angle);
     const linearSamplingTimes: number = 7, circleSamplingTimes: number = 12;
-    const PI: number = 3.14159265358979323846264;
+    const PI: number = Math.PI;
     let cosAngle: number, sinAngle: number;
     const stepX: number = blurX / linearSamplingTimes, stepY: number = blurY / linearSamplingTimes;
     for (let u: number = 0; u < w; u++) {
@@ -1058,16 +999,19 @@ function dropShadowFilter2(buffer: PixelBuffer, w: number, h: number, color: RGB
             const r: number = buffer[key]! / 255, g: number = buffer[key + 1]! / 255, b: number = buffer[key + 2]! / 255;
             let a: number = buffer[key + 3]! / 255;
             for (let sampleAngle: number = 0; sampleAngle <= PI * 2; sampleAngle += PI * 2 / circleSamplingTimes) {
-                cosAngle = Math.cos(sampleAngle + offset); sinAngle = Math.sin(sampleAngle + offset);
+                cosAngle = Math.cos(sampleAngle + offset);
+                sinAngle = Math.sin(sampleAngle + offset);
                 for (let i: number = 0; i < linearSamplingTimes; i++) {
-                    curDistanceX = i * stepX * cosAngle; curDistanceY = i * stepY * sinAngle;
+                    curDistanceX = i * stepX * cosAngle;
+                    curDistanceY = i * stepY * sinAngle;
                     const sampleU: number = Math.round(u + curDistanceX - offsetX), sampleV: number = Math.round(v + curDistanceY - offsetY);
                     let sampleAlpha: number = 0;
                     if (!(sampleU >= w || sampleU < 0 || sampleV < 0 || sampleV >= h)) {
                         const sampleKey: number = sampleV * w * 4 + sampleU * 4;
                         sampleAlpha = buffer[sampleKey + 3]! / 255;
                     }
-                    totalAlpha += (linearSamplingTimes - i) * sampleAlpha; maxTotalAlpha += linearSamplingTimes - i;
+                    totalAlpha += (linearSamplingTimes - i) * sampleAlpha;
+                    maxTotalAlpha += linearSamplingTimes - i;
                 }
             }
             a = Math.max(a, 0.0001);
@@ -1079,7 +1023,10 @@ function dropShadowFilter2(buffer: PixelBuffer, w: number, h: number, color: RGB
             const rate2: number = outerGlowAlpha / (innerGlowAlpha + a + outerGlowAlpha);
             const r2: number = mix(r1, color[0], rate2), g2: number = mix(g1, color[1], rate2), b2: number = mix(b1, color[2], rate2);
             const resultAlpha: number = Math.min(a + outerGlowAlpha + innerGlowAlpha, 1);
-            plane[key] = r2 * 255; plane[key + 1] = g2 * 255; plane[key + 2] = b2 * 255; plane[key + 3] = resultAlpha * 255;
+            plane[key] = r2 * 255;
+            plane[key + 1] = g2 * 255;
+            plane[key + 2] = b2 * 255;
+            plane[key + 3] = resultAlpha * 255;
         }
     }
     if (Use8ClampHelper.getUse8Clamp()) {
@@ -1123,7 +1070,7 @@ function getBezierPointByFactor(pointsData: readonly number[], t: number): Point
         const x1: number = pointsData[i++]!;
         const y1: number = pointsData[i++]!;
         const x2: number = pointsData[i++]!;
-        const y2: number = pointsData[i++]!;
+        const y2: number = pointsData[i]!;
         x = getCurvePoint(x0, x1, x2, t);
         y = getCurvePoint(y0, y1, y2, t);
     } else if (len / 2 == 4) {
@@ -1134,7 +1081,7 @@ function getBezierPointByFactor(pointsData: readonly number[], t: number): Point
         const x2: number = pointsData[i++]!;
         const y2: number = pointsData[i++]!;
         const x3: number = pointsData[i++]!;
-        const y3: number = pointsData[i++]!;
+        const y3: number = pointsData[i]!;
         x = getCubicCurvePoint(x0, x1, x2, x3, t);
         y = getCubicCurvePoint(y0, y1, y2, y3, t);
     }
@@ -1436,10 +1383,10 @@ class Use8ClampHelper {
         return Use8ClampHelper.use8Clamp ??= Use8ClampHelper.checkUse8Clamp();
     }
     private static checkUse8Clamp(): boolean {
-        let use8Clamp: boolean = false;
+        let use8Clamp: boolean;
         try {
             use8Clamp = typeof Uint8ClampedArray !== "undefined";
-        } catch (e: unknown) {
+        } catch {
             return false;
         }
         return use8Clamp;
@@ -1476,7 +1423,7 @@ export class EventDispatcher extends HashObject implements IEventDispatcher {
             0 : target ? target : this,
             1 : {},
             2 : {},
-            3 : 0
+            3 : 0,
         };
     }
 
@@ -1529,7 +1476,7 @@ export class EventDispatcher extends HashObject implements IEventDispatcher {
             priority     : priority,
             target       : this,
             useCapture   : useCapture,
-            dispatchOnce : !!dispatchOnce
+            dispatchOnce : !!dispatchOnce,
         };
         if (insertIndex !== -1) {
             list.splice(insertIndex, 0, eventBin);
@@ -1643,8 +1590,8 @@ export class Filter extends HashObject {
     }
 
     public onPropertyChange(): void {
-        const self: this = this;
-        self.updatePadding();
+
+        this.updatePadding();
     }
 }
 __reflect(Filter.prototype, "egret.Filter");
@@ -1724,25 +1671,25 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $onAddToStage(stage: Stage, nestLevel: number): void {
-        const self: this = this;
-        self.$stage = stage;
-        self.$nestLevel = nestLevel;
-        self.$hasAddToStage = true;
-        Sprite.$EVENT_ADD_TO_STAGE_LIST.push(self);
+
+        this.$stage = stage;
+        this.$nestLevel = nestLevel;
+        this.$hasAddToStage = true;
+        Sprite.$EVENT_ADD_TO_STAGE_LIST.push(this);
     }
 
     public $onRemoveFromStage(): void {
-        const self: this = this;
-        self.$nestLevel = 0;
-        Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(self);
+
+        this.$nestLevel = 0;
+        Sprite.$EVENT_REMOVE_FROM_STAGE_LIST.push(this);
     }
 
     public $updateUseTransform(): void {
-        const self: this = this;
-        if (self.$scaleX == 1 && self.$scaleY == 1 && self.$skewX == 0 && self.$skewY == 0) {
-            self.$useTranslate = false;
+
+        if (this.$scaleX == 1 && this.$scaleY == 1 && this.$skewX == 0 && this.$skewY == 0) {
+            this.$useTranslate = false;
         } else {
-            self.$useTranslate = true;
+            this.$useTranslate = true;
         }
     }
 
@@ -1759,71 +1706,71 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $getMatrix(): Matrix {
-        const self: this = this;
-        if (self.$matrixDirty) {
-            self.$matrixDirty = false;
-            self.$matrix.$updateScaleAndRotation(self.$scaleX, self.$scaleY, self.$skewX, self.$skewY);
+
+        if (this.$matrixDirty) {
+            this.$matrixDirty = false;
+            this.$matrix.$updateScaleAndRotation(this.$scaleX, this.$scaleY, this.$skewX, this.$skewY);
         }
-        self.$matrix.tx = self.$x;
-        self.$matrix.ty = self.$y;
-        return self.$matrix;
+        this.$matrix.tx = this.$x;
+        this.$matrix.ty = this.$y;
+        return this.$matrix;
     }
 
     public $setMatrix(matrix: Matrix, needUpdateProperties: boolean = true): void {
-        const self: this = this;
-        const m: Matrix = self.$matrix;
+
+        const m: Matrix = this.$matrix;
         m.a = matrix.a;
         m.b = matrix.b;
         m.c = matrix.c;
         m.d = matrix.d;
-        self.$x = matrix.tx;
-        self.$y = matrix.ty;
-        self.$matrixDirty = false;
+        this.$x = matrix.tx;
+        this.$y = matrix.ty;
+        this.$matrixDirty = false;
         if (m.a == 1 && m.b == 0 && m.c == 0 && m.d == 1) {
-            self.$useTranslate = false;
+            this.$useTranslate = false;
         } else {
-            self.$useTranslate = true;
+            this.$useTranslate = true;
         }
         if (needUpdateProperties) {
-            self.$scaleX = m.$getScaleX();
-            self.$scaleY = m.$getScaleY();
-            self.$skewX = matrix.$getSkewX();
-            self.$skewY = matrix.$getSkewY();
-            self.$skewXdeg = clampRotation(self.$skewX * 180 / Math.PI);
-            self.$skewYdeg = clampRotation(self.$skewY * 180 / Math.PI);
-            self.$rotation = clampRotation(self.$skewY * 180 / Math.PI);
+            this.$scaleX = m.$getScaleX();
+            this.$scaleY = m.$getScaleY();
+            this.$skewX = matrix.$getSkewX();
+            this.$skewY = matrix.$getSkewY();
+            this.$skewXdeg = clampRotation(this.$skewX * 180 / Math.PI);
+            this.$skewYdeg = clampRotation(this.$skewY * 180 / Math.PI);
+            this.$rotation = clampRotation(this.$skewY * 180 / Math.PI);
         }
     }
 
     public $getConcatenatedMatrix(): Matrix {
-        const self: this = this;
-        let matrix: Matrix | undefined = self.$concatenatedMatrix;
+
+        let matrix: Matrix | undefined = this.$concatenatedMatrix;
         if (!matrix) {
-            matrix = self.$concatenatedMatrix = new Matrix();
+            matrix = this.$concatenatedMatrix = new Matrix();
         }
-        if (self.$parent) {
-            self.$parent.$getConcatenatedMatrix().$preMultiplyInto(self.$getMatrix(), matrix);
+        if (this.$parent) {
+            this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(), matrix);
         } else {
-            matrix.copyFrom(self.$getMatrix());
+            matrix.copyFrom(this.$getMatrix());
         }
-        const offsetX: number = self.$anchorOffsetX;
-        const offsetY: number = self.$anchorOffsetY;
-        const rect: Rectangle | null = self.$scrollRect;
+        const offsetX: number = this.$anchorOffsetX;
+        const offsetY: number = this.$anchorOffsetY;
+        const rect: Rectangle | null = this.$scrollRect;
         if (rect) {
             matrix.$preMultiplyInto(Matrix.$TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
         } else if (offsetX != 0 || offsetY != 0) {
             matrix.$preMultiplyInto(Matrix.$TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
         }
-        return self.$concatenatedMatrix!;
+        return this.$concatenatedMatrix!;
     }
 
     public $getInvertedConcatenatedMatrix(): Matrix {
-        const self: this = this;
-        if (!self.$invertedConcatenatedMatrix) {
-            self.$invertedConcatenatedMatrix = new Matrix();
+
+        if (!this.$invertedConcatenatedMatrix) {
+            this.$invertedConcatenatedMatrix = new Matrix();
         }
-        self.$getConcatenatedMatrix().$invertInto(self.$invertedConcatenatedMatrix);
-        return self.$invertedConcatenatedMatrix;
+        this.$getConcatenatedMatrix().$invertInto(this.$invertedConcatenatedMatrix);
+        return this.$invertedConcatenatedMatrix;
     }
 
     public get x(): number {
@@ -1839,18 +1786,18 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setX(value: number): boolean {
-        const self: this = this;
-        if (self.$x == value) {
+
+        if (this.$x == value) {
             return false;
         }
-        self.$x = value;
+        this.$x = value;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -1872,18 +1819,18 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setY(value: number): boolean {
-        const self: this = this;
-        if (self.$y == value) {
+
+        if (this.$y == value) {
             return false;
         }
-        self.$y = value;
+        this.$y = value;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -1905,20 +1852,20 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setScaleX(value: number): void {
-        const self: this = this;
-        if (self.$scaleX == value) {
+
+        if (this.$scaleX == value) {
             return;
         }
-        self.$scaleX = value;
-        self.$matrixDirty = true;
-        self.$updateUseTransform();
+        this.$scaleX = value;
+        this.$matrixDirty = true;
+        this.$updateUseTransform();
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -1939,20 +1886,20 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setScaleY(value: number): void {
-        const self: this = this;
-        if (self.$scaleY == value) {
+
+        if (this.$scaleY == value) {
             return;
         }
-        self.$scaleY = value;
-        self.$matrixDirty = true;
-        self.$updateUseTransform();
+        this.$scaleY = value;
+        this.$matrixDirty = true;
+        this.$updateUseTransform();
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -1974,24 +1921,24 @@ export class DisplayObject extends EventDispatcher {
 
     public $setRotation(value: number): void {
         value = clampRotation(value);
-        const self: this = this;
-        if (value == self.$rotation) {
+
+        if (value == this.$rotation) {
             return;
         }
-        const delta: number = value - self.$rotation;
+        const delta: number = value - this.$rotation;
         const angle: number = delta / 180 * Math.PI;
-        self.$skewX += angle;
-        self.$skewY += angle;
-        self.$rotation = value;
-        self.$matrixDirty = true;
-        self.$updateUseTransform();
+        this.$skewX += angle;
+        this.$skewY += angle;
+        this.$rotation = value;
+        this.$matrixDirty = true;
+        this.$updateUseTransform();
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2008,23 +1955,23 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setSkewX(value: number): void {
-        const self: this = this;
-        if (value == self.$skewXdeg) {
+
+        if (value == this.$skewXdeg) {
             return;
         }
-        self.$skewXdeg = value;
+        this.$skewXdeg = value;
         value = clampRotation(value);
         value = value / 180 * Math.PI;
-        self.$skewX = value;
-        self.$matrixDirty = true;
-        self.$updateUseTransform();
+        this.$skewX = value;
+        this.$matrixDirty = true;
+        this.$updateUseTransform();
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2041,23 +1988,23 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setSkewY(value: number): void {
-        const self: this = this;
-        if (value == self.$skewYdeg) {
+
+        if (value == this.$skewYdeg) {
             return;
         }
-        self.$skewYdeg = value;
+        this.$skewYdeg = value;
         value = clampRotation(value);
-        value = (value + self.$rotation) / 180 * Math.PI;
-        self.$skewY = value;
-        self.$matrixDirty = true;
-        self.$updateUseTransform();
+        value = (value + this.$rotation) / 180 * Math.PI;
+        this.$skewY = value;
+        this.$matrixDirty = true;
+        this.$updateUseTransform();
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2074,8 +2021,8 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $getWidth(): number {
-        const self: this = this;
-        return isNaN(self.$explicitWidth) ? self.$getOriginalBounds().width : self.$explicitWidth;
+
+        return isNaN(this.$explicitWidth) ? this.$getOriginalBounds().width : this.$explicitWidth;
     }
 
     public $setWidth(value: number): void {
@@ -2095,8 +2042,8 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $getHeight(): number {
-        const self: this = this;
-        return isNaN(self.$explicitHeight) ? self.$getOriginalBounds().height : self.$explicitHeight;
+
+        return isNaN(this.$explicitHeight) ? this.$getOriginalBounds().height : this.$explicitHeight;
     }
 
     public $setHeight(value: number): void {
@@ -2124,18 +2071,18 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setAnchorOffsetX(value: number): void {
-        const self: this = this;
-        if (self.$anchorOffsetX == value) {
+
+        if (this.$anchorOffsetX == value) {
             return;
         }
-        self.$anchorOffsetX = value;
+        this.$anchorOffsetX = value;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2152,18 +2099,18 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setAnchorOffsetY(value: number): void {
-        const self: this = this;
-        if (self.$anchorOffsetY == value) {
+
+        if (this.$anchorOffsetY == value) {
             return;
         }
-        self.$anchorOffsetY = value;
+        this.$anchorOffsetY = value;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2180,19 +2127,19 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setVisible(value: boolean): void {
-        const self: this = this;
-        if (self.$visible == value) {
+
+        if (this.$visible == value) {
             return;
         }
-        self.$visible = value;
+        this.$visible = value;
         {
-            self.$updateRenderMode();
-            const p: DisplayObjectContainer | null = self.$parent;
+            this.$updateRenderMode();
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2205,25 +2152,25 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public set cacheAsBitmap(value: boolean) {
-        const self: this = this;
-        self.$cacheAsBitmap = value;
-        self.$setHasDisplayList(value);
+
+        this.$cacheAsBitmap = value;
+        this.$setHasDisplayList(value);
     }
 
     public $setHasDisplayList(value: boolean): void {
-        const self: this = this;
-        const hasDisplayList: boolean = !!self.$displayList;
+
+        const hasDisplayList: boolean = !!this.$displayList;
         if (hasDisplayList == value) {
             return;
         }
         if (value) {
-            const displayList: DisplayList | null = runtime.sys.DisplayList.create(self);
+            const displayList: DisplayList | null = runtime.sys.DisplayList.create(this);
             if (displayList) {
-                self.$displayList = displayList;
-                self.$cacheDirty = true;
+                this.$displayList = displayList;
+                this.$cacheDirty = true;
             }
         } else {
-            self.$displayList = null;
+            this.$displayList = null;
         }
     }
 
@@ -2244,19 +2191,19 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setAlpha(value: number): void {
-        const self: this = this;
-        if (self.$alpha == value) {
+
+        if (this.$alpha == value) {
             return;
         }
-        self.$alpha = value;
+        this.$alpha = value;
         {
-            self.$updateRenderMode();
-            const p: DisplayObjectContainer | null = self.$parent;
+            this.$updateRenderMode();
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2289,26 +2236,26 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $setScrollRect(value: Rectangle | null): void {
-        const self: this = this;
-        if (!value && !self.$scrollRect) {
-            self.$updateRenderMode();
+
+        if (!value && !this.$scrollRect) {
+            this.$updateRenderMode();
             return;
         }
         if (value) {
-            if (!self.$scrollRect) {
-                self.$scrollRect = new Rectangle();
+            if (!this.$scrollRect) {
+                this.$scrollRect = new Rectangle();
             }
-            self.$scrollRect.copyFrom(value);
+            this.$scrollRect.copyFrom(value);
         } else {
-            self.$scrollRect = null;
+            this.$scrollRect = null;
         }
-        self.$updateRenderMode();
-        const p: DisplayObjectContainer | null = self.$parent;
+        this.$updateRenderMode();
+        const p: DisplayObjectContainer | null = this.$parent;
         if (p && !p.$cacheDirty) {
             p.$cacheDirty = true;
             p.$cacheDirtyUp();
         }
-        const maskedObject: DisplayObject | null = self.$maskedObject;
+        const maskedObject: DisplayObject | null = this.$maskedObject;
         if (maskedObject && !maskedObject.$cacheDirty) {
             maskedObject.$cacheDirty = true;
             maskedObject.$cacheDirtyUp();
@@ -2320,20 +2267,20 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public set blendMode(value: string) {
-        const self: this = this;
+
         const mode: number = runtime.sys.blendModeToNumber(value);
-        if (self.$blendMode == mode) {
+        if (this.$blendMode == mode) {
             return;
         }
-        self.$blendMode = mode;
+        this.$blendMode = mode;
         {
-            self.$updateRenderMode();
-            const p: DisplayObjectContainer | null = self.$parent;
+            this.$updateRenderMode();
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -2342,69 +2289,69 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public get mask(): DisplayObject | Rectangle | null {
-        const self: this = this;
-        return self.$mask ? self.$mask : self.$maskRect;
+
+        return this.$mask ? this.$mask : this.$maskRect;
     }
 
     public set mask(value: DisplayObject | Rectangle | null) {
-        const self: this = this;
-        if (value === self) {
+
+        if (value === this) {
             return;
         }
         if (value) {
             if (value instanceof DisplayObject) {
-                if (value == self.$mask) {
+                if (value == this.$mask) {
                     return;
                 }
                 if (value.$maskedObject) {
                     value.$maskedObject.mask = null;
                 }
-                value.$maskedObject = self;
-                self.$mask = value;
+                value.$maskedObject = this;
+                this.$mask = value;
                 value.$updateRenderMode();
-                if (self.$maskRect) {
-                    self.$maskRect = null;
+                if (this.$maskRect) {
+                    this.$maskRect = null;
                 }
             } else {
-                if (!self.$maskRect) {
-                    self.$maskRect = new Rectangle();
+                if (!this.$maskRect) {
+                    this.$maskRect = new Rectangle();
                 }
-                self.$maskRect.copyFrom(value);
-                if (self.$mask) {
-                    self.$mask.$maskedObject = null;
-                    self.$mask.$updateRenderMode();
+                this.$maskRect.copyFrom(value);
+                if (this.$mask) {
+                    this.$mask.$maskedObject = null;
+                    this.$mask.$updateRenderMode();
                 }
-                if (self.mask) {
-                    self.$mask = null;
+                if (this.mask) {
+                    this.$mask = null;
                 }
             }
         } else {
-            if (self.$mask) {
-                self.$mask.$maskedObject = null;
-                self.$mask.$updateRenderMode();
+            if (this.$mask) {
+                this.$mask.$maskedObject = null;
+                this.$mask.$updateRenderMode();
             }
-            if (self.mask) {
-                self.$mask = null;
+            if (this.mask) {
+                this.$mask = null;
             }
-            if (self.$maskRect) {
-                self.$maskRect = null;
+            if (this.$maskRect) {
+                this.$maskRect = null;
             }
         }
-        self.$updateRenderMode();
+        this.$updateRenderMode();
     }
 
     public $setMaskRect(value: Rectangle | null): void {
-        const self: this = this;
-        if (!value && !self.$maskRect) {
+
+        if (!value && !this.$maskRect) {
             return;
         }
         if (value) {
-            if (!self.$maskRect) {
-                self.$maskRect = new Rectangle();
+            if (!this.$maskRect) {
+                this.$maskRect = new Rectangle();
             }
-            self.$maskRect.copyFrom(value);
+            this.$maskRect.copyFrom(value);
         } else {
-            self.$maskRect = null;
+            this.$maskRect = null;
         }
     }
 
@@ -2413,18 +2360,18 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public set filters(value: Filter[] | null | undefined) {
-        const self: this = this;
-        const filters: Filter[] | null | undefined = self.$filters;
+
+        const filters: Filter[] | null | undefined = this.$filters;
         if (!filters && !value) {
-            self.$filters = value;
+            this.$filters = value;
             {
-                self.$updateRenderMode();
-                const p: DisplayObjectContainer | null = self.$parent;
+                this.$updateRenderMode();
+                const p: DisplayObjectContainer | null = this.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
                     p.$cacheDirtyUp();
                 }
-                const maskedObject: DisplayObject | null = self.$maskedObject;
+                const maskedObject: DisplayObject | null = this.$maskedObject;
                 if (maskedObject && !maskedObject.$cacheDirty) {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
@@ -2434,17 +2381,17 @@ export class DisplayObject extends EventDispatcher {
         }
         if (value && value.length) {
             value = value.concat();
-            self.$filters = value;
+            this.$filters = value;
         } else {
-            self.$filters = value;
+            this.$filters = value;
         }
-        self.$updateRenderMode();
-        const p: DisplayObjectContainer | null = self.$parent;
+        this.$updateRenderMode();
+        const p: DisplayObjectContainer | null = this.$parent;
         if (p && !p.$cacheDirty) {
             p.$cacheDirty = true;
             p.$cacheDirtyUp();
         }
-        const maskedObject: DisplayObject | null = self.$maskedObject;
+        const maskedObject: DisplayObject | null = this.$maskedObject;
         if (maskedObject && !maskedObject.$cacheDirty) {
             maskedObject.$cacheDirty = true;
             maskedObject.$cacheDirtyUp();
@@ -2457,36 +2404,36 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public getBounds(resultRect?: Rectangle | null, calculateAnchor: boolean = true): Rectangle {
-        const self: this = this;
-        resultRect = self.$getTransformedBounds(self, resultRect);
+
+        resultRect = this.$getTransformedBounds(this, resultRect);
         if (calculateAnchor) {
-            if (self.$anchorOffsetX != 0) {
-                resultRect.x -= self.$anchorOffsetX;
+            if (this.$anchorOffsetX != 0) {
+                resultRect.x -= this.$anchorOffsetX;
             }
-            if (self.$anchorOffsetY != 0) {
-                resultRect.y -= self.$anchorOffsetY;
+            if (this.$anchorOffsetY != 0) {
+                resultRect.y -= this.$anchorOffsetY;
             }
         }
         return resultRect;
     }
 
     public $getTransformedBounds(targetCoordinateSpace?: DisplayObject | null, resultRect?: Rectangle | null): Rectangle {
-        const self: this = this;
-        const bounds: Rectangle = self.$getOriginalBounds();
+
+        const bounds: Rectangle = this.$getOriginalBounds();
         if (!resultRect) {
             resultRect = new Rectangle();
         }
         resultRect.copyFrom(bounds);
-        if (targetCoordinateSpace == self) {
+        if (targetCoordinateSpace == this) {
             return resultRect;
         }
         let m: Matrix;
         if (targetCoordinateSpace) {
             m = Matrix.$TempMatrix;
             const invertedTargetMatrix: Matrix = targetCoordinateSpace.$getInvertedConcatenatedMatrix();
-            invertedTargetMatrix.$preMultiplyInto(self.$getConcatenatedMatrix(), m);
+            invertedTargetMatrix.$preMultiplyInto(this.$getConcatenatedMatrix(), m);
         } else {
-            m = self.$getConcatenatedMatrix();
+            m = this.$getConcatenatedMatrix();
         }
         m.$transformBounds(resultRect);
         return resultRect;
@@ -2507,10 +2454,10 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $getOriginalBounds(): Rectangle {
-        const self: this = this;
-        const bounds: Rectangle = self.$getContentBounds();
-        self.$measureChildBounds(bounds);
-        const offset: FilterOffset = self.$measureFiltersOffset(false);
+
+        const bounds: Rectangle = this.$getContentBounds();
+        this.$measureChildBounds(bounds);
+        const offset: FilterOffset = this.$measureFiltersOffset(false);
         if (offset) {
             bounds.x += offset.minX;
             bounds.y += offset.minY;
@@ -2521,6 +2468,8 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $measureChildBounds(_bounds: Rectangle): void {
+        void _bounds;
+
     }
 
     public $getContentBounds(): Rectangle {
@@ -2531,39 +2480,42 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $measureContentBounds(_bounds: Rectangle): void {
+        void _bounds;
+
     }
 
     public $getRenderNode(): RenderNode | null {
-        const self: this = this;
-        let node: RenderNode | null = self.$renderNode;
+
+        let node: RenderNode | null = this.$renderNode;
         if (!node) {
             return null;
         }
-        if (self.$renderDirty) {
+        if (this.$renderDirty) {
             node.cleanBeforeRender();
-            self.$updateRenderNode();
-            self.$renderDirty = false;
-            node = self.$renderNode;
+            this.$updateRenderNode();
+            this.$renderDirty = false;
+            node = this.$renderNode;
         }
         return node;
     }
 
     public $updateRenderMode(): void {
-        const self: this = this;
-        if (!self.$visible || self.$alpha <= 0 || self.$maskedObject) {
-            self.$renderMode = 1;
-        } else if (self.filters && self.filters.length > 0) {
-            self.$renderMode = 2;
-        } else if (self.$blendMode !== 0 || (self.$mask && self.$mask.$stage)) {
-            self.$renderMode = 3;
-        } else if (self.$scrollRect || self.$maskRect) {
-            self.$renderMode = 4;
+
+        if (!this.$visible || this.$alpha <= 0 || this.$maskedObject) {
+            this.$renderMode = 1;
+        } else if (this.filters && this.filters.length > 0) {
+            this.$renderMode = 2;
+        } else if (this.$blendMode !== 0 || (this.$mask && this.$mask.$stage)) {
+            this.$renderMode = 3;
+        } else if (this.$scrollRect || this.$maskRect) {
+            this.$renderMode = 4;
         } else {
-            self.$renderMode = null;
+            this.$renderMode = null;
         }
     }
 
     public $measureFiltersOffset(fromParent: boolean): FilterOffset {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias -- Mutable cursor walks the display-object ancestry.
         let display: DisplayObject | null = this;
         let minX: number = 0;
         let minY: number = 0;
@@ -2577,9 +2529,9 @@ export class DisplayObject extends EventDispatcher {
                     const filter: Filter = filters[i]!;
                     // Filter ����������ʱ�ṩ����ԭ�� type ���ȷ����Ӧ�Ľṹ��
                     if (filter.type == "blur") {
-                        const blurFilter: BlurFilterShape = filter as BlurFilterShape;
-                        const offsetX: number = blurFilter.blurX;
-                        const offsetY: number = blurFilter.blurY;
+                        const blur: BlurFilterShape = filter as BlurFilterShape;
+                        const offsetX: number = blur.blurX;
+                        const offsetY: number = blur.blurY;
                         minX -= offsetX;
                         minY -= offsetY;
                         maxX += offsetX;
@@ -2594,8 +2546,8 @@ export class DisplayObject extends EventDispatcher {
                         maxY += offsetY;
                         const distance: number = glowFilter.distance || 0;
                         const angle: number = glowFilter.angle || 0;
-                        let distanceX: number = 0;
-                        let distanceY: number = 0;
+                        let distanceX: number;
+                        let distanceY: number;
                         if (distance != 0) {
                             distanceX = distance * NumberUtils.cos(angle);
                             if (distanceX > 0) {
@@ -2638,13 +2590,14 @@ export class DisplayObject extends EventDispatcher {
             minX : minX,
             minY : minY,
             maxX : maxX,
-            maxY : maxY
+            maxY : maxY,
         };
     }
 
     public $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
         const invertMatrix: Matrix = root.$getInvertedConcatenatedMatrix();
         if (invertMatrix.a === 0 || invertMatrix.d === 0) {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias -- Mutable cursor walks the display-object ancestry.
             let target: DisplayObject = this;
             const rootLevel: number = root.$nestLevel;
             matrix.identity();
@@ -2665,44 +2618,44 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public $hitTest(stageX: number, stageY: number): DisplayObject | null {
-        const self: this = this;
-        if ((!self.$renderNode) || !self.$visible || self.$scaleX == 0 || self.$scaleY == 0) {
+
+        if ((!this.$renderNode) || !this.$visible || this.$scaleX == 0 || this.$scaleY == 0) {
             return null;
         }
-        const m: Matrix = self.$getInvertedConcatenatedMatrix();
+        const m: Matrix = this.$getInvertedConcatenatedMatrix();
         if (m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0) {
             return null;
         }
-        const bounds: Rectangle = self.$getContentBounds();
+        const bounds: Rectangle = this.$getContentBounds();
         const localX: number = m.a * stageX + m.c * stageY + m.tx;
         const localY: number = m.b * stageX + m.d * stageY + m.ty;
         if (bounds.contains(localX, localY)) {
-            if (!self.$children) {
-                const rect: Rectangle | null = self.$scrollRect ? self.$scrollRect : self.$maskRect;
+            if (!this.$children) {
+                const rect: Rectangle | null = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                 if (rect && !rect.contains(localX, localY)) {
                     return null;
                 }
-                if (self.$mask && !self.$mask.$hitTest(stageX, stageY)) {
+                if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                     return null;
                 }
             }
-            return self;
+            return this;
         }
         return null;
     }
 
     public hitTestPoint(x: number, y: number, shapeFlag?: boolean): boolean {
-        const self: this = this;
+
         if (!shapeFlag) {
-            if (self.$scaleX == 0 || self.$scaleY == 0) {
+            if (this.$scaleX == 0 || this.$scaleY == 0) {
                 return false;
             }
-            const m: Matrix = self.$getInvertedConcatenatedMatrix();
-            const bounds: Rectangle = self.getBounds(null, false);
+            const m: Matrix = this.$getInvertedConcatenatedMatrix();
+            const bounds: Rectangle = this.getBounds(null, false);
             const localX: number = m.a * x + m.c * y + m.tx;
             const localY: number = m.b * x + m.d * y + m.ty;
             if (bounds.contains(localX, localY)) {
-                const rect: Rectangle | null = self.$scrollRect ? self.$scrollRect : self.$maskRect;
+                const rect: Rectangle | null = this.$scrollRect ? this.$scrollRect : this.$maskRect;
                 if (rect && !rect.contains(localX, localY)) {
                     return false;
                 }
@@ -2710,18 +2663,18 @@ export class DisplayObject extends EventDispatcher {
             }
             return false;
         } else {
-            const m: Matrix = self.$getInvertedConcatenatedMatrix();
+            const m: Matrix = this.$getInvertedConcatenatedMatrix();
             const localX: number = m.a * x + m.c * y + m.tx;
             const localY: number = m.b * x + m.d * y + m.ty;
             let data: Uint8Array | Uint8ClampedArray;
             {
-                const displayList: DisplayList | null = self.$displayList;
+                const displayList: DisplayList | null = this.$displayList;
                 if (displayList) {
                     const buffer: RenderBuffer = displayList.renderBuffer;
                     try {
                         data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                     } catch (e: unknown) {
-                        throw new Error(runtime.sys.tr(1039));
+                        throw new Error(runtime.sys.tr(1039), { cause : e });
                     }
                 } else {
                     const buffer: RenderBuffer = runtime.sys.RenderBuffHelper.customHitTestBuffer!;
@@ -2734,7 +2687,7 @@ export class DisplayObject extends EventDispatcher {
                     try {
                         data = buffer.getPixels(1, 1);
                     } catch (e: unknown) {
-                        throw new Error(runtime.sys.tr(1039));
+                        throw new Error(runtime.sys.tr(1039), { cause : e });
                     }
                 }
                 if (data[3] === 0) {
@@ -2812,6 +2765,7 @@ export class DisplayObject extends EventDispatcher {
     }
 
     public override willTrigger(type: string): boolean {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias -- Mutable cursor walks the display-object ancestry.
         let parent: DisplayObject | null = this;
         while (parent) {
             if (parent.hasEventListener(type)) {
@@ -2849,6 +2803,10 @@ export class DisplayObject extends EventDispatcher {
 __reflect(DisplayObject.prototype, "egret.DisplayObject");
 
 export class Texture extends HashObject {
+    public declare $renderBuffer?: RenderBuffer | null;
+
+    public declare scale9Grid?: Rectangle | null;
+
     public static $TextureScaleFactor: number = 1;
 
     private static sharedCanvas: HTMLCanvasElement | undefined;
@@ -2953,7 +2911,7 @@ export class Texture extends HashObject {
         textureHeight: number,
         sourceWidth: number,
         sourceHeight: number,
-        rotated: boolean = false
+        rotated: boolean = false,
     ): void {
         const scale: number = Texture.$TextureScaleFactor;
         this.$bitmapX = bitmapX / scale;
@@ -3003,12 +2961,9 @@ export class Texture extends HashObject {
         surface.height = iHeight;
 
         if (Capabilities.renderMode == "webgl") {
-            let renderTexture: Texture;
+            const renderTexture: Texture = this.$renderBuffer ? this : new RenderTexture();
             if (!this.$renderBuffer) {
-                renderTexture = new RenderTexture();
                 (renderTexture as RenderTexture).drawToTexture(new Bitmap(this));
-            } else {
-                renderTexture = this;
             }
             const pixels: Uint8Array | Uint8ClampedArray = renderTexture.$renderBuffer!.getPixels(rect.x, rect.y, iWidth, iHeight);
             const imageData: ImageData = new ImageData(iWidth, iHeight);
@@ -3033,7 +2988,7 @@ export class Texture extends HashObject {
                 offsetX,
                 offsetY,
                 rect.width,
-                rect.height
+                rect.height,
             );
         }
         return surface;
@@ -3041,11 +2996,9 @@ export class Texture extends HashObject {
 
     public getPixels(x: number, y: number, width: number = 1, height: number = 1): Uint8Array | Uint8ClampedArray | undefined {
         if (Capabilities.renderMode == "webgl") {
-            let renderTexture: Texture;
+            const renderTexture: Texture = this.$renderBuffer ? this : new RenderTexture();
             if (!this.$renderBuffer) {
-                renderTexture = new RenderTexture(); (renderTexture as RenderTexture).drawToTexture(new Bitmap(this));
-            } else {
-                renderTexture = this;
+                (renderTexture as RenderTexture).drawToTexture(new Bitmap(this));
             }
             const pixels: Uint8Array | Uint8ClampedArray = renderTexture.$renderBuffer!.getPixels(x, y, width, height);
             return pixels;
@@ -3216,7 +3169,7 @@ export class Event<TData = unknown> extends HashObject {
     public static create<TEvent extends Event>(EventClass: EventConstructor<TEvent>, type: string, bubbles?: boolean, cancelable?: boolean): TEvent {
         const constructor: PooledEventConstructor<TEvent> = EventClass as PooledEventConstructor<TEvent>;
         let eventPool: TEvent[] | undefined;
-        const hasEventPool: boolean = constructor.hasOwnProperty("eventPool");
+        const hasEventPool: boolean = Object.hasOwn(constructor, "eventPool");
         if (hasEventPool) {
             eventPool = constructor.eventPool;
         }
@@ -3354,6 +3307,8 @@ export class DisplayObjectContainer extends DisplayObject {
     }
 
     public setChildrenSortMode(_value: string): void {
+        void _value;
+
     }
 
     public addChild(child: DisplayObject): DisplayObject {
@@ -3376,25 +3331,25 @@ export class DisplayObjectContainer extends DisplayObject {
     }
 
     public $doAddChild(child: DisplayObject, index: number, notifyListeners: boolean = true): DisplayObject {
-        const self: this = this;
-        if (child == self) {
+
+        if (child == this) {
             $error(1005);
-        } else if (child instanceof DisplayObjectContainer && child.contains(self)) {
+        } else if (child instanceof DisplayObjectContainer && child.contains(this)) {
             $error(1004);
         }
         const host: DisplayObjectContainer | null = child.$parent;
-        if (host == self) {
-            self.doSetChildIndex(child, index);
+        if (host == this) {
+            this.doSetChildIndex(child, index);
             return child;
         }
         if (host) {
             host.removeChild(child);
         }
-        self.$children.splice(index, 0, child);
-        child.$setParent(self);
-        const stage: Stage | null = self.$stage;
+        this.$children.splice(index, 0, child);
+        child.$setParent(this);
+        const stage: Stage | null = this.$stage;
         if (stage) {
-            child.$onAddToStage(stage, self.$nestLevel + 1);
+            child.$onAddToStage(stage, this.$nestLevel + 1);
         }
         if (notifyListeners) {
             child.dispatchEventWith(Event.ADDED, true);
@@ -3411,14 +3366,14 @@ export class DisplayObjectContainer extends DisplayObject {
         if (child.$maskedObject) {
             child.$maskedObject.$updateRenderMode();
         }
-        if (!self.$cacheDirty) {
-            self.$cacheDirty = true;
-            const p: DisplayObjectContainer | null = self.$parent;
+        if (!this.$cacheDirty) {
+            this.$cacheDirty = true;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -3487,7 +3442,7 @@ export class DisplayObjectContainer extends DisplayObject {
 
     public $doRemoveChild(index: number, notifyListeners: boolean = true): DisplayObject {
         index = +index | 0;
-        const self: this = this;
+
         const children: DisplayObject[] = this.$children;
         // �ڲ���������ԭʵ�ֵ�Լ����index �����Ӧһ���������
         const child: DisplayObject = children[index]!;
@@ -3517,14 +3472,14 @@ export class DisplayObjectContainer extends DisplayObject {
             if (child.$maskedObject) {
                 child.$maskedObject.$updateRenderMode();
             }
-            if (!self.$cacheDirty) {
-                self.$cacheDirty = true;
-                const p: DisplayObjectContainer | null = self.$parent;
+            if (!this.$cacheDirty) {
+                this.$cacheDirty = true;
+                const p: DisplayObjectContainer | null = this.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
                     p.$cacheDirtyUp();
                 }
-                const maskedObject: DisplayObject | null = self.$maskedObject;
+                const maskedObject: DisplayObject | null = this.$maskedObject;
                 if (maskedObject && !maskedObject.$cacheDirty) {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
@@ -3543,7 +3498,7 @@ export class DisplayObjectContainer extends DisplayObject {
     }
 
     public doSetChildIndex(child: DisplayObject, index: number): void {
-        const self: this = this;
+
         const lastIndex: number = this.$children.indexOf(child);
         if (lastIndex < 0) {
             $error(1006);
@@ -3556,14 +3511,14 @@ export class DisplayObjectContainer extends DisplayObject {
         this.$children.splice(index, 0, child);
         this.$childAdded(child, index);
         {
-            if (!self.$cacheDirty) {
-                self.$cacheDirty = true;
-                const p: DisplayObjectContainer | null = self.$parent;
+            if (!this.$cacheDirty) {
+                this.$cacheDirty = true;
+                const p: DisplayObjectContainer | null = this.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
                     p.$cacheDirtyUp();
                 }
-                const maskedObject: DisplayObject | null = self.$maskedObject;
+                const maskedObject: DisplayObject | null = this.$maskedObject;
                 if (maskedObject && !maskedObject.$cacheDirty) {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
@@ -3593,7 +3548,7 @@ export class DisplayObjectContainer extends DisplayObject {
     }
 
     public doSwapChildrenAt(index1: number, index2: number): void {
-        const self: this = this;
+
         if (index1 > index2) {
             const temp: number = index2;
             index2 = index1;
@@ -3611,14 +3566,14 @@ export class DisplayObjectContainer extends DisplayObject {
         this.$childAdded(child2, index1);
         this.$childAdded(child1, index2);
         {
-            if (!self.$cacheDirty) {
-                self.$cacheDirty = true;
-                const p: DisplayObjectContainer | null = self.$parent;
+            if (!this.$cacheDirty) {
+                this.$cacheDirty = true;
+                const p: DisplayObjectContainer | null = this.$parent;
                 if (p && !p.$cacheDirty) {
                     p.$cacheDirty = true;
                     p.$cacheDirtyUp();
                 }
-                const maskedObject: DisplayObject | null = self.$maskedObject;
+                const maskedObject: DisplayObject | null = this.$maskedObject;
                 if (maskedObject && !maskedObject.$cacheDirty) {
                     maskedObject.$cacheDirty = true;
                     maskedObject.$cacheDirtyUp();
@@ -3635,9 +3590,17 @@ export class DisplayObjectContainer extends DisplayObject {
     }
 
     public $childAdded(_child: DisplayObject, _index: number): void {
+        void _child;
+
+        void _index;
+
     }
 
     public $childRemoved(_child: DisplayObject, _index: number): void {
+        void _child;
+
+        void _index;
+
     }
 
     public override $onAddToStage(stage: Stage, nestLevel: number): void {
@@ -3779,7 +3742,7 @@ export class DisplayObjectContainer extends DisplayObject {
         this.$sortDirty = false;
         let sortRequired: boolean = false;
         const children: DisplayObject[] = this.$children;
-        let child: DisplayObject | null = null;
+        let child: DisplayObject | null;
         const length: number = children.length;
         for (let i: number = 0; i < length; ++i) {
             child = children[i]!;
@@ -3821,7 +3784,7 @@ export class SpriteSheet extends HashObject {
         offsetX: number = 0,
         offsetY: number = 0,
         textureWidth: number = offsetX + bitmapWidth,
-        textureHeight: number = offsetY + bitmapHeight
+        textureHeight: number = offsetY + bitmapHeight,
     ): Texture {
         const texture: Texture = new Texture();
         texture.disposeBitmapData = false;
@@ -3891,69 +3854,69 @@ export class Bitmap extends DisplayObject {
     }
 
     public set texture(value: Texture | null | undefined) {
-        const self: this = this;
-        self.$setTexture(value);
-        if (value && self.$renderNode) {
-            self.$renderNode.rotated = value.$rotated;
+
+        this.$setTexture(value);
+        if (value && this.$renderNode) {
+            this.$renderNode.rotated = value.$rotated;
         }
     }
 
     public $setTexture(value?: Texture | null): boolean {
-        const self: this = this;
-        const oldTexture: Texture | null | undefined = self.$texture;
+
+        const oldTexture: Texture | null | undefined = this.$texture;
         if (value == oldTexture) {
             return false;
         }
-        self.$texture = value;
+        this.$texture = value;
         if (value) {
-            self.$refreshImageData();
+            this.$refreshImageData();
         } else {
             if (oldTexture) {
-                BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
+                BitmapData.$removeDisplayObject(this, oldTexture.$bitmapData);
             }
-            self.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            self.$renderDirty = true;
-            const p: DisplayObjectContainer | null = self.$parent;
+            this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            this.$renderDirty = true;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
             }
             return true;
         }
-        if (self.$stage) {
+        if (this.$stage) {
             if (oldTexture && oldTexture.$bitmapData) {
                 const oldHashCode: number = oldTexture.$bitmapData.hashCode;
                 const newHashCode: number = value.$bitmapData ? value.$bitmapData.hashCode : -1;
                 if (oldHashCode == newHashCode) {
-                    self.$renderDirty = true;
-                    const p: DisplayObjectContainer | null = self.$parent;
+                    this.$renderDirty = true;
+                    const p: DisplayObjectContainer | null = this.$parent;
                     if (p && !p.$cacheDirty) {
                         p.$cacheDirty = true;
                         p.$cacheDirtyUp();
                     }
-                    const maskedObject: DisplayObject | null = self.$maskedObject;
+                    const maskedObject: DisplayObject | null = this.$maskedObject;
                     if (maskedObject && !maskedObject.$cacheDirty) {
                         maskedObject.$cacheDirty = true;
                         maskedObject.$cacheDirtyUp();
                     }
                     return true;
                 }
-                BitmapData.$removeDisplayObject(self, oldTexture.$bitmapData);
+                BitmapData.$removeDisplayObject(this, oldTexture.$bitmapData);
             }
-            BitmapData.$addDisplayObject(self, value.$bitmapData);
+            BitmapData.$addDisplayObject(this, value.$bitmapData);
         }
-        self.$renderDirty = true;
-        const p: DisplayObjectContainer | null = self.$parent;
+        this.$renderDirty = true;
+        const p: DisplayObjectContainer | null = this.$parent;
         if (p && !p.$cacheDirty) {
             p.$cacheDirty = true;
             p.$cacheDirtyUp();
         }
-        const maskedObject: DisplayObject | null = self.$maskedObject;
+        const maskedObject: DisplayObject | null = this.$maskedObject;
         if (maskedObject && !maskedObject.$cacheDirty) {
             maskedObject.$cacheDirty = true;
             maskedObject.$cacheDirtyUp();
@@ -3983,7 +3946,7 @@ export class Bitmap extends DisplayObject {
         textureWidth: number,
         textureHeight: number,
         sourceWidth: number,
-        sourceHeight: number
+        sourceHeight: number,
     ): void {
         this.$bitmapData = bitmapData;
         this.$bitmapX = bitmapX;
@@ -4007,16 +3970,16 @@ export class Bitmap extends DisplayObject {
     }
 
     public $setScale9Grid(value: Rectangle | null): void {
-        const self: this = this;
-        self.$scale9Grid = value;
-        self.$renderDirty = true;
+
+        this.$scale9Grid = value;
+        this.$renderDirty = true;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -4033,19 +3996,19 @@ export class Bitmap extends DisplayObject {
     }
 
     public $setFillMode(value: string): boolean {
-        const self: this = this;
-        if (value == self.$fillMode) {
+
+        if (value == this.$fillMode) {
             return false;
         }
-        self.$fillMode = value;
+        this.$fillMode = value;
         {
-            self.$renderDirty = true;
-            const p: DisplayObjectContainer | null = self.$parent;
+            this.$renderDirty = true;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -4059,18 +4022,18 @@ export class Bitmap extends DisplayObject {
     }
 
     public set smoothing(value: boolean) {
-        const self: this = this;
+
         if (value == this.$smoothing) {
             return;
         }
         this.$smoothing = value;
         this.$renderNode.smoothing = value;
-        const p: DisplayObjectContainer | null = self.$parent;
+        const p: DisplayObjectContainer | null = this.$parent;
         if (p && !p.$cacheDirty) {
             p.$cacheDirty = true;
             p.$cacheDirtyUp();
         }
-        const maskedObject: DisplayObject | null = self.$maskedObject;
+        const maskedObject: DisplayObject | null = this.$maskedObject;
         if (maskedObject && !maskedObject.$cacheDirty) {
             maskedObject.$cacheDirty = true;
             maskedObject.$cacheDirtyUp();
@@ -4078,19 +4041,19 @@ export class Bitmap extends DisplayObject {
     }
 
     public override $setWidth(value: number): boolean {
-        const self: this = this;
-        if (value < 0 || value == self.$explicitBitmapWidth) {
+
+        if (value < 0 || value == this.$explicitBitmapWidth) {
             return false;
         }
-        self.$explicitBitmapWidth = value;
-        self.$renderDirty = true;
+        this.$explicitBitmapWidth = value;
+        this.$renderDirty = true;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -4100,19 +4063,19 @@ export class Bitmap extends DisplayObject {
     }
 
     public override $setHeight(value: number): boolean {
-        const self: this = this;
-        if (value < 0 || value == self.$explicitBitmapHeight) {
+
+        if (value < 0 || value == this.$explicitBitmapHeight) {
             return false;
         }
-        self.$explicitBitmapHeight = value;
-        self.$renderDirty = true;
+        this.$explicitBitmapHeight = value;
+        this.$renderDirty = true;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
                 p.$cacheDirty = true;
                 p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
                 maskedObject.$cacheDirty = true;
                 maskedObject.$cacheDirtyUp();
@@ -4204,38 +4167,38 @@ export class GlowFilter extends Filter {
         strength: number = 2,
         quality: number = 1,
         inner: boolean = false,
-        knockout: boolean = false
+        knockout: boolean = false,
     ) {
         super();
-        const self: this = this;
-        self.type = "glow";
-        self.$color = color;
-        self.$blue = color & 0x0000FF;
-        self.$green = (color & 0x00ff00) >> 8;
-        self.$red = color >> 16;
-        self.$alpha = alpha;
-        self.$blurX = blurX;
-        self.$blurY = blurY;
-        self.$strength = strength;
-        self.$quality = quality;
-        self.$inner = inner;
-        self.$knockout = knockout;
-        self.$uniforms.color = {
+
+        this.type = "glow";
+        this.$color = color;
+        this.$blue = color & 0x0000FF;
+        this.$green = (color & 0x00ff00) >> 8;
+        this.$red = color >> 16;
+        this.$alpha = alpha;
+        this.$blurX = blurX;
+        this.$blurY = blurY;
+        this.$strength = strength;
+        this.$quality = quality;
+        this.$inner = inner;
+        this.$knockout = knockout;
+        this.$uniforms.color = {
             x : this.$red / 255,
             y : this.$green / 255,
             z : this.$blue / 255,
-            w : 1
+            w : 1,
         };
-        self.$uniforms.alpha = alpha;
-        self.$uniforms.blurX = blurX;
-        self.$uniforms.blurY = blurY;
-        self.$uniforms.strength = strength;
-        self.$uniforms.inner = inner ? 1 : 0;
-        self.$uniforms.knockout = knockout ? 0 : 1;
-        self.$uniforms.dist = 0;
-        self.$uniforms.angle = 0;
-        self.$uniforms.hideObject = 0;
-        self.onPropertyChange();
+        this.$uniforms.alpha = alpha;
+        this.$uniforms.blurX = blurX;
+        this.$uniforms.blurY = blurY;
+        this.$uniforms.strength = strength;
+        this.$uniforms.inner = inner ? 1 : 0;
+        this.$uniforms.knockout = knockout ? 0 : 1;
+        this.$uniforms.dist = 0;
+        this.$uniforms.angle = 0;
+        this.$uniforms.hideObject = 0;
+        this.onPropertyChange();
     }
 
     public get color(): number {
@@ -4272,13 +4235,13 @@ export class GlowFilter extends Filter {
     }
 
     public set blurX(value: number) {
-        const self: this = this;
-        if (self.$blurX == value) {
+
+        if (this.$blurX == value) {
             return;
         }
-        self.$blurX = value;
-        self.$uniforms.blurX = value;
-        self.onPropertyChange();
+        this.$blurX = value;
+        this.$uniforms.blurX = value;
+        this.onPropertyChange();
     }
 
     public get blurY(): number {
@@ -4286,13 +4249,13 @@ export class GlowFilter extends Filter {
     }
 
     public set blurY(value: number) {
-        const self: this = this;
-        if (self.$blurY == value) {
+
+        if (this.$blurY == value) {
             return;
         }
-        self.$blurY = value;
-        self.$uniforms.blurY = value;
-        self.onPropertyChange();
+        this.$blurY = value;
+        this.$uniforms.blurY = value;
+        this.onPropertyChange();
     }
 
     public get strength(): number {
@@ -4347,11 +4310,11 @@ export class GlowFilter extends Filter {
     }
 
     public override updatePadding(): void {
-        const self: this = this;
-        self.paddingLeft = self.blurX;
-        self.paddingRight = self.blurX;
-        self.paddingTop = self.blurY;
-        self.paddingBottom = self.blurY;
+
+        this.paddingLeft = this.blurX;
+        this.paddingRight = this.blurX;
+        this.paddingTop = this.blurY;
+        this.paddingBottom = this.blurY;
     }
 }
 __reflect(GlowFilter.prototype, "egret.GlowFilter");
@@ -4516,7 +4479,7 @@ export class WebGLUtils {
                 const canvas: HTMLCanvasElement = document.createElement("canvas");
                 WebGLUtils.canUseWebGL = !!window.WebGLRenderingContext
                     && !!(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
-            } catch (e: unknown) {
+            } catch {
                 WebGLUtils.canUseWebGL = false;
             }
         }
@@ -4568,6 +4531,24 @@ export class FocusEvent extends Event {
 __reflect(FocusEvent.prototype, "egret.FocusEvent");
 
 export class GeolocationEvent<TData = unknown> extends Event<TData> {
+    public declare altitude: number | null;
+
+    public declare heading: number | null;
+
+    public declare accuracy: number;
+
+    public declare latitude: number;
+
+    public declare longitude: number;
+
+    public declare speed: number | null;
+
+    public declare altitudeAccuracy: number | null;
+
+    public declare errorType: string;
+
+    public declare errorMessage: string;
+
     public static PERMISSION_DENIED: string = "permissionDenied";
     public static UNAVAILABLE: string = "unavailable";
 
@@ -4616,6 +4597,12 @@ export class IOErrorEvent extends Event {
 __reflect(IOErrorEvent.prototype, "egret.IOErrorEvent");
 
 export class MotionEvent<TData = unknown> extends Event<TData> {
+    public declare acceleration: MotionAcceleration;
+
+    public declare accelerationIncludingGravity: MotionAcceleration;
+
+    public declare rotationRate: MotionRotationRate;
+
     public constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: TData) {
         super(type, bubbles, cancelable, data);
     }
@@ -4623,6 +4610,12 @@ export class MotionEvent<TData = unknown> extends Event<TData> {
 __reflect(MotionEvent.prototype, "egret.MotionEvent");
 
 export class OrientationEvent<TData = unknown> extends Event<TData> {
+    public declare beta: number | null;
+
+    public declare gamma: number | null;
+
+    public declare alpha: number | null;
+
     public constructor(type: string, bubbles?: boolean, cancelable?: boolean, data?: TData) {
         super(type, bubbles, cancelable, data);
     }
@@ -4709,6 +4702,18 @@ export class TimerEvent extends Event {
 __reflect(TimerEvent.prototype, "egret.TimerEvent");
 
 export class CompressedTextureData {
+    public declare glInternalFormat: number;
+
+    public declare width: number;
+
+    public declare height: number;
+
+    public declare byteArray: Uint8Array;
+
+    public declare face: number;
+
+    public declare level: number;
+
     public constructor() {
     }
 }
@@ -4749,7 +4754,7 @@ export class BitmapData extends HashObject {
     public static create(type: "arraybuffer", data: ArrayBuffer, callback?: BitmapDataCallback): BitmapData;
     public static create(type: "base64", data: string, callback?: BitmapDataCallback): BitmapData;
     public static create(type: BitmapDataInputType, data: ArrayBuffer | string, callback?: BitmapDataCallback): BitmapData {
-        let base64: string = "";
+        let base64: string;
         if (type === "arraybuffer") {
             base64 = Base64Util.encode(data as ArrayBuffer);
         } else {
@@ -4993,7 +4998,7 @@ export class TouchEvent extends Event {
         stageX?: number,
         stageY?: number,
         touchPointID?: number,
-        touchDown: boolean = false
+        touchDown: boolean = false,
     ): boolean {
         if (!bubbles && !target.hasEventListener(type)) {
             return true;
@@ -5017,14 +5022,14 @@ export class BlurFilter extends Filter {
 
     public constructor(blurX: number = 4, blurY: number = 4, quality: number = 1) {
         super();
-        const self: this = this;
-        self.type = "blur";
-        self.$blurX = blurX;
-        self.$blurY = blurY;
-        self.$quality = quality;
-        self.blurXFilter = new BlurXFilter(blurX);
-        self.blurYFilter = new BlurYFilter(blurY);
-        self.onPropertyChange();
+
+        this.type = "blur";
+        this.$blurX = blurX;
+        this.$blurY = blurY;
+        this.$quality = quality;
+        this.blurXFilter = new BlurXFilter(blurX);
+        this.blurYFilter = new BlurYFilter(blurY);
+        this.onPropertyChange();
     }
 
     public get blurX(): number {
@@ -5032,13 +5037,13 @@ export class BlurFilter extends Filter {
     }
 
     public set blurX(value: number) {
-        const self: this = this;
-        if (self.$blurX == value) {
+
+        if (this.$blurX == value) {
             return;
         }
-        self.$blurX = value;
-        self.blurXFilter.blurX = value;
-        self.onPropertyChange();
+        this.$blurX = value;
+        this.blurXFilter.blurX = value;
+        this.onPropertyChange();
     }
 
     public get blurY(): number {
@@ -5046,13 +5051,13 @@ export class BlurFilter extends Filter {
     }
 
     public set blurY(value: number) {
-        const self: this = this;
-        if (self.$blurY == value) {
+
+        if (this.$blurY == value) {
             return;
         }
-        self.$blurY = value;
-        self.blurYFilter.blurY = value;
-        self.onPropertyChange();
+        this.$blurY = value;
+        this.blurYFilter.blurY = value;
+        this.onPropertyChange();
     }
 
     public override $toJson(): string {
@@ -5060,16 +5065,16 @@ export class BlurFilter extends Filter {
     }
 
     public override updatePadding(): void {
-        const self: this = this;
-        self.paddingLeft = self.blurX;
-        self.paddingRight = self.blurX;
-        self.paddingTop = self.blurY;
-        self.paddingBottom = self.blurY;
+
+        this.paddingLeft = this.blurX;
+        this.paddingRight = this.blurX;
+        this.paddingTop = this.blurY;
+        this.paddingBottom = this.blurY;
     }
 
     public override onPropertyChange(): void {
-        const self: this = this;
-        self.updatePadding();
+
+        this.updatePadding();
     }
 }
 __reflect(BlurFilter.prototype, "egret.BlurFilter");
@@ -5082,7 +5087,7 @@ class BlurXFilter extends Filter implements IBlurXFilter {
         this.type = "blurX";
         this.$uniforms.blur = {
             x : blurX,
-            y : 0
+            y : 0,
         };
         this.onPropertyChange();
     }
@@ -5105,7 +5110,7 @@ class BlurYFilter extends Filter implements IBlurYFilter {
         this.type = "blurY";
         this.$uniforms.blur = {
             x : 0,
-            y : blurY
+            y : blurY,
         };
         this.onPropertyChange();
     }
@@ -5132,13 +5137,13 @@ export class ColorMatrixFilter extends Filter {
             1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1, 0,
-            0, 0, 0, 1
+            0, 0, 0, 1,
         ];
         this.$uniforms.colorAdd = {
             x : 0,
             y : 0,
             z : 0,
-            w : 0
+            w : 0,
         };
         this.setMatrix(matrix);
         this.onPropertyChange();
@@ -5219,12 +5224,12 @@ export class CustomFilter extends Filter {
     }
 
     public set padding(value: number) {
-        const self: this = this;
-        if (self.$padding == value) {
+
+        if (this.$padding == value) {
             return;
         }
-        self.$padding = value;
-        self.onPropertyChange();
+        this.$padding = value;
+        this.onPropertyChange();
     }
 
     public get uniforms(): FilterUniforms {
@@ -5252,17 +5257,17 @@ export class DropShadowFilter extends GlowFilter {
         quality: number = 1,
         inner: boolean = false,
         knockout: boolean = false,
-        hideObject: boolean = false
+        hideObject: boolean = false,
     ) {
         super(color, alpha, blurX, blurY, strength, quality, inner, knockout);
-        const self: this = this;
-        self.$distance = distance;
-        self.$angle = angle;
-        self.$hideObject = hideObject;
-        self.$uniforms.dist = distance;
-        self.$uniforms.angle = angle / 180 * Math.PI;
-        self.$uniforms.hideObject = hideObject ? 1 : 0;
-        self.onPropertyChange();
+
+        this.$distance = distance;
+        this.$angle = angle;
+        this.$hideObject = hideObject;
+        this.$uniforms.dist = distance;
+        this.$uniforms.angle = angle / 180 * Math.PI;
+        this.$uniforms.hideObject = hideObject ? 1 : 0;
+        this.onPropertyChange();
     }
 
     public get distance(): number {
@@ -5270,13 +5275,13 @@ export class DropShadowFilter extends GlowFilter {
     }
 
     public set distance(value: number) {
-        const self: this = this;
-        if (self.$distance == value) {
+
+        if (this.$distance == value) {
             return;
         }
-        self.$distance = value;
-        self.$uniforms.dist = value;
-        self.onPropertyChange();
+        this.$distance = value;
+        this.$uniforms.dist = value;
+        this.onPropertyChange();
     }
 
     public get angle(): number {
@@ -5284,13 +5289,13 @@ export class DropShadowFilter extends GlowFilter {
     }
 
     public set angle(value: number) {
-        const self: this = this;
-        if (self.$angle == value) {
+
+        if (this.$angle == value) {
             return;
         }
-        self.$angle = value;
-        self.$uniforms.angle = value / 180 * Math.PI;
-        self.onPropertyChange();
+        this.$angle = value;
+        this.$uniforms.angle = value / 180 * Math.PI;
+        this.onPropertyChange();
     }
 
     public get hideObject(): boolean {
@@ -5310,15 +5315,15 @@ export class DropShadowFilter extends GlowFilter {
     }
 
     public override updatePadding(): void {
-        const self: this = this;
-        self.paddingLeft = self.blurX;
-        self.paddingRight = self.blurX;
-        self.paddingTop = self.blurY;
-        self.paddingBottom = self.blurY;
-        const distance: number = self.distance || 0;
-        const angle: number = self.angle || 0;
-        let distanceX: number = 0;
-        let distanceY: number = 0;
+
+        this.paddingLeft = this.blurX;
+        this.paddingRight = this.blurX;
+        this.paddingTop = this.blurY;
+        this.paddingBottom = this.blurY;
+        const distance: number = this.distance || 0;
+        const angle: number = this.angle || 0;
+        let distanceX: number;
+        let distanceY: number;
         if (distance != 0) {
             distanceX = distance * NumberUtils.cos(angle);
             if (distanceX > 0) {
@@ -5332,10 +5337,10 @@ export class DropShadowFilter extends GlowFilter {
             } else {
                 distanceY = Math.floor(distanceY);
             }
-            self.paddingLeft += distanceX;
-            self.paddingRight += distanceX;
-            self.paddingTop += distanceY;
-            self.paddingBottom += distanceY;
+            this.paddingLeft += distanceX;
+            this.paddingRight += distanceX;
+            this.paddingTop += distanceY;
+            this.paddingBottom += distanceY;
         }
     }
 }
@@ -5389,11 +5394,12 @@ export class Graphics extends HashObject {
                 this.topLeftStrokeWidth = 1;
                 this.bottomRightStrokeWidth = 2;
                 break;
-            default:
+            default: {
                 const half: number = Math.ceil(width * 0.5) | 0;
                 this.topLeftStrokeWidth = half;
                 this.bottomRightStrokeWidth = half;
                 break;
+            }
         }
     }
 
@@ -5426,8 +5432,12 @@ export class Graphics extends HashObject {
         caps: CapsStyleValue | null = null,
         joints: JointStyleValue | null = null,
         miterLimit: number = 3,
-        lineDash?: number[]
+        lineDash?: number[],
     ): void {
+        void _pixelHinting;
+
+        void _scaleMode;
+
         thickness = +thickness || 0;
         color = +color || 0;
         alpha = +alpha || 0;
@@ -5451,8 +5461,12 @@ export class Graphics extends HashObject {
         height = +height || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.drawRect(x, y, width, height);
-        strokePath && strokePath.drawRect(x, y, width, height);
+        if (fillPath) {
+            fillPath.drawRect(x, y, width, height);
+        }
+        if (strokePath) {
+            strokePath.drawRect(x, y, width, height);
+        }
         this.extendBoundsByPoint(x + width, y + height);
         this.updatePosition(x, y);
         this.dirty();
@@ -5467,8 +5481,12 @@ export class Graphics extends HashObject {
         ellipseHeight = +ellipseHeight! || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
-        strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+        if (fillPath) {
+            fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+        }
+        if (strokePath) {
+            strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+        }
         const radiusX: number = (ellipseWidth * 0.5) | 0;
         const radiusY: number = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
         const right: number = x + width;
@@ -5486,8 +5504,12 @@ export class Graphics extends HashObject {
         radius = +radius || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.drawCircle(x, y, radius);
-        strokePath && strokePath.drawCircle(x, y, radius);
+        if (fillPath) {
+            fillPath.drawCircle(x, y, radius);
+        }
+        if (strokePath) {
+            strokePath.drawCircle(x, y, radius);
+        }
         this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
         this.extendBoundsByPoint(x + radius + 2, y + radius + 2);
         this.updatePosition(x + radius, y);
@@ -5501,8 +5523,12 @@ export class Graphics extends HashObject {
         height = +height || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.drawEllipse(x, y, width, height);
-        strokePath && strokePath.drawEllipse(x, y, width, height);
+        if (fillPath) {
+            fillPath.drawEllipse(x, y, width, height);
+        }
+        if (strokePath) {
+            strokePath.drawEllipse(x, y, width, height);
+        }
         this.extendBoundsByPoint(x - 1, y - 1);
         this.extendBoundsByPoint(x + width + 2, y + height + 2);
         this.updatePosition(x + width, y + height * 0.5);
@@ -5514,8 +5540,12 @@ export class Graphics extends HashObject {
         y = +y || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.moveTo(x, y);
-        strokePath && strokePath.moveTo(x, y);
+        if (fillPath) {
+            fillPath.moveTo(x, y);
+        }
+        if (strokePath) {
+            strokePath.moveTo(x, y);
+        }
         this.includeLastPosition = false;
         this.lastX = x;
         this.lastY = y;
@@ -5527,8 +5557,12 @@ export class Graphics extends HashObject {
         y = +y || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.lineTo(x, y);
-        strokePath && strokePath.lineTo(x, y);
+        if (fillPath) {
+            fillPath.lineTo(x, y);
+        }
+        if (strokePath) {
+            strokePath.lineTo(x, y);
+        }
         this.updatePosition(x, y);
         this.dirty();
     }
@@ -5540,8 +5574,12 @@ export class Graphics extends HashObject {
         anchorY = +anchorY || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
-        strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
+        if (fillPath) {
+            fillPath.curveTo(controlX, controlY, anchorX, anchorY);
+        }
+        if (strokePath) {
+            strokePath.curveTo(controlX, controlY, anchorX, anchorY);
+        }
         const lastX: number = this.lastX || 0;
         const lastY: number = this.lastY || 0;
         const bezierPoints: Point[] = createBezierPoints([lastX, lastY, controlX, controlY, anchorX, anchorY], 50);
@@ -5564,8 +5602,12 @@ export class Graphics extends HashObject {
         anchorY = +anchorY || 0;
         const fillPath: Path2D | null = this.fillPath;
         const strokePath: Path2D | null = this.strokePath;
-        fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
-        strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+        if (fillPath) {
+            fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+        }
+        if (strokePath) {
+            strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+        }
         const lastX: number = this.lastX || 0;
         const lastY: number = this.lastY || 0;
         const bezierPoints: Point[] = createBezierPoints([lastX, lastY, controlX1, controlY1, controlX2, controlY2, anchorX, anchorY], 50);
@@ -5615,9 +5657,9 @@ export class Graphics extends HashObject {
     }
 
     public dirty(): void {
-        const self: this = this;
-        self.$renderNode.dirtyRender = true;
-        const target: DisplayObject = self.$targetDisplay;
+
+        this.$renderNode.dirtyRender = true;
+        const target: DisplayObject = this.$targetDisplay;
         target.$cacheDirty = true;
         const p: DisplayObjectContainer | null = target.$parent;
         if (p && !p.$cacheDirty) {
@@ -5653,10 +5695,14 @@ export class Graphics extends HashObject {
         const endRange: number = endAngle / (PI * 0.5);
         for (let i: number = Math.ceil(startRange); i <= endRange; i++) {
             switch (i % 4) {
-                case 0: xMax = radius; break;
-                case 1: yMax = radius; break;
-                case 2: xMin = -radius; break;
-                case 3: yMin = -radius; break;
+                case 0: xMax = radius;
+                    break;
+                case 1: yMax = radius;
+                    break;
+                case 2: xMin = -radius;
+                    break;
+                case 3: yMin = -radius;
+                    break;
             }
         }
         xMin = Math.floor(xMin);
@@ -5739,7 +5785,7 @@ export class Graphics extends HashObject {
                 return null;
             }
         } catch (e: unknown) {
-            throw new Error(runtime.sys.tr(1039));
+            throw new Error(runtime.sys.tr(1039), { cause : e });
         }
         return target;
     }
@@ -5965,9 +6011,9 @@ export class Matrix extends HashObject {
     }
 
     public deltaTransformPoint(point: Point): Point {
-        const self: this = this;
-        const x: number = self.a * point.x + self.c * point.y;
-        const y: number = self.b * point.x + self.d * point.y;
+
+        const x: number = this.a * point.x + this.c * point.y;
+        const y: number = this.b * point.x + this.d * point.y;
         return new Point(x, y);
     }
 
@@ -5976,23 +6022,23 @@ export class Matrix extends HashObject {
     }
 
     public createBox(scaleX: number, scaleY: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
-        const self: this = this;
+
         if (rotation !== 0) {
             rotation = rotation / Matrix.DEG_TO_RAD;
             const u: number = NumberUtils.cos(rotation);
             const v: number = NumberUtils.sin(rotation);
-            self.a = u * scaleX;
-            self.b = v * scaleY;
-            self.c = -v * scaleX;
-            self.d = u * scaleY;
+            this.a = u * scaleX;
+            this.b = v * scaleY;
+            this.c = -v * scaleX;
+            this.d = u * scaleY;
         } else {
-            self.a = scaleX;
-            self.b = 0;
-            self.c = 0;
-            self.d = scaleY;
+            this.a = scaleX;
+            this.b = 0;
+            this.c = 0;
+            this.d = scaleY;
         }
-        self.tx = tx;
-        self.ty = ty;
+        this.tx = tx;
+        this.ty = ty;
     }
 
     public createGradientBox(width: number, height: number, rotation: number = 0, tx: number = 0, ty: number = 0): void {
@@ -6018,7 +6064,7 @@ export class Matrix extends HashObject {
         let y2: number = b * xMax + d * yMax + ty;
         let x3: number = a * x + c * yMax + tx;
         let y3: number = b * x + d * yMax + ty;
-        let tmp: number = 0;
+        let tmp: number;
         if (x0 > x1) {
             tmp = x0;
             x0 = x1;
@@ -6050,20 +6096,20 @@ export class Matrix extends HashObject {
     }
 
     public $getScaleX(): number {
-        const m: this = this;
-        if (m.b == 0) {
-            return m.a;
+
+        if (this.b == 0) {
+            return this.a;
         }
-        const result: number = Math.sqrt(m.a * m.a + m.b * m.b);
+        const result: number = Math.sqrt(this.a * this.a + this.b * this.b);
         return this.getDeterminant() < 0 ? -result : result;
     }
 
     public $getScaleY(): number {
-        const m: this = this;
-        if (m.c == 0) {
-            return m.d;
+
+        if (this.c == 0) {
+            return this.d;
         }
-        const result: number = Math.sqrt(m.c * m.c + m.d * m.d);
+        const result: number = Math.sqrt(this.c * this.c + this.d * this.d);
         return this.getDeterminant() < 0 ? -result : result;
     }
 
@@ -6415,6 +6461,10 @@ export class KTXContainer {
     public arrayBuffer: ArrayBuffer;
 
     public constructor(arrayBuffer: ArrayBuffer, facesExpected: number, _threeDExpected?: boolean, _textureArrayExpected?: boolean) {
+        void _threeDExpected;
+
+        void _textureArrayExpected;
+
         this.arrayBuffer = arrayBuffer;
         const identifier: Uint8Array = new Uint8Array(arrayBuffer, 0, 12);
         const expected: readonly number[] = [0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A];
@@ -6439,17 +6489,21 @@ export class KTXContainer {
         this.numberOfMipmapLevels = header.getUint32(11 * dataSize, littleEndian);
         this.bytesOfKeyValueData = header.getUint32(12 * dataSize, littleEndian);
         if (this.glType !== 0) {
-            console.error("only compressed formats currently supported"); return;
+            console.error("only compressed formats currently supported");
+            return;
         }
         this.numberOfMipmapLevels = Math.max(1, this.numberOfMipmapLevels);
         if (this.pixelHeight === 0 || this.pixelDepth !== 0) {
-            console.error("only 2D textures currently supported"); return;
+            console.error("only 2D textures currently supported");
+            return;
         }
         if (this.numberOfArrayElements !== 0) {
-            console.error("texture arrays not currently supported"); return;
+            console.error("texture arrays not currently supported");
+            return;
         }
         if (this.numberOfFaces !== facesExpected) {
-            console.error("number of faces expected" + facesExpected + ", but found " + this.numberOfFaces); return;
+            console.error("number of faces expected" + facesExpected + ", but found " + this.numberOfFaces);
+            return;
         }
         this.loadType = KTXContainer.COMPRESSED_2D;
     }
@@ -6488,7 +6542,8 @@ export class KTXContainer {
         }
         const compressed2d: CompressedTextureData | null | undefined = bitmapData.getCompressed2dTextureData();
         if (compressed2d) {
-            bitmapData.width = compressed2d.width; bitmapData.height = compressed2d.height;
+            bitmapData.width = compressed2d.width;
+            bitmapData.height = compressed2d.height;
         }
     }
 }
@@ -6501,7 +6556,7 @@ export class CanvasRenderer {
     private static readonly CAPS_STYLES: Record<CapsStyleValue, CanvasLineCap> = {
         none   : "butt",
         square : "square",
-        round  : "round"
+        round  : "round",
     };
     private static readonly renderBufferPool: CanvasRenderBuffer[] = [];
     private static readonly renderBufferPool_Filters: CanvasRenderBuffer[] = [];
@@ -6510,6 +6565,8 @@ export class CanvasRenderer {
     public renderingMask: boolean = false;
 
     public render(displayObject: DisplayObject, buffer: RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
+        void _forRenderTexture;
+
         this.nestLevel++;
         const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
         context.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
@@ -6544,7 +6601,8 @@ export class CanvasRenderer {
         displayObject.$cacheDirty = false;
         if (node) {
             drawCalls++;
-            context.$offsetX = offsetX; context.$offsetY = offsetY;
+            context.$offsetX = offsetX;
+            context.$offsetY = offsetY;
             this.renderNode(node, context);
             context.$offsetX = context.$offsetY = 0;
         }
@@ -6560,22 +6618,31 @@ export class CanvasRenderer {
                 let offsetY2: number;
                 if (child.$useTranslate) {
                     const m: Matrix = child.$getMatrix();
-                    offsetX2 = offsetX + child.$x; offsetY2 = offsetY + child.$y;
-                    context.save(); context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
-                    offsetX2 = -child.$anchorOffsetX; offsetY2 = -child.$anchorOffsetY;
+                    offsetX2 = offsetX + child.$x;
+                    offsetY2 = offsetY + child.$y;
+                    context.save();
+                    context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
+                    offsetX2 = -child.$anchorOffsetX;
+                    offsetY2 = -child.$anchorOffsetY;
                 } else {
-                    offsetX2 = offsetX + child.$x - child.$anchorOffsetX; offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                    offsetX2 = offsetX + child.$x - child.$anchorOffsetX;
+                    offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
                 }
                 let tempAlpha: number | undefined;
                 if (child.$alpha != 1) {
-                    tempAlpha = context.globalAlpha; context.globalAlpha *= child.$alpha;
+                    tempAlpha = context.globalAlpha;
+                    context.globalAlpha *= child.$alpha;
                 }
                 switch (child.$renderMode) {
                     case 1: break;
-                    case 2: drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2); break;
-                    case 3: drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2); break;
-                    case 4: drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2); break;
-                    default: drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2); break;
+                    case 2: drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2);
+                        break;
+                    case 3: drawCalls += this.drawWithClip(child, context, offsetX2, offsetY2);
+                        break;
+                    case 4: drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2);
+                        break;
+                    default: drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2);
+                        break;
                 }
                 if (child.$useTranslate) {
                     context.restore();
@@ -6658,7 +6725,10 @@ export class CanvasRenderer {
         }
         if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
             if (scrollRect) {
-                context.save(); context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
+                context.save();
+                context.beginPath();
+                context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+                context.clip();
             }
             if (hasBlendMode) {
                 context.globalCompositeOperation = compositeOp;
@@ -6679,7 +6749,9 @@ export class CanvasRenderer {
                 this.renderingMask = true;
                 context.save();
                 const maskMatrix: Matrix = Matrix.create();
-                maskMatrix.copyFrom(mask.$getConcatenatedMatrix()); mask.$getConcatenatedMatrixAt(displayObject, maskMatrix); maskMatrix.prepend(1, 0, 0, 1, offsetX, offsetY);
+                maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+                mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+                maskMatrix.prepend(1, 0, 0, 1, offsetX, offsetY);
                 context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 let calls: number = this.drawDisplayObject(mask, context, 0, 0);
                 this.renderingMask = false;
@@ -6687,10 +6759,13 @@ export class CanvasRenderer {
                 context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 Matrix.release(maskMatrix);
                 if (scrollRect) {
-                    context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
+                    context.beginPath();
+                    context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+                    context.clip();
                 }
                 calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-                context.restore(); return calls;
+                context.restore();
+                return calls;
             }
         }
         const displayBounds: Rectangle = displayObject.$getOriginalBounds();
@@ -6710,17 +6785,22 @@ export class CanvasRenderer {
         if (mask) {
             const maskRenderNode: RenderNode | null = mask.$getRenderNode();
             const maskMatrix: Matrix = Matrix.create();
-            maskMatrix.copyFrom(mask.$getConcatenatedMatrix()); mask.$getConcatenatedMatrixAt(displayObject, maskMatrix); maskMatrix.translate(-displayBoundsX, -displayBoundsY);
+            maskMatrix.copyFrom(mask.$getConcatenatedMatrix());
+            mask.$getConcatenatedMatrixAt(displayObject, maskMatrix);
+            maskMatrix.translate(-displayBoundsX, -displayBoundsY);
             if ((maskRenderNode && maskRenderNode.$getRenderCount() == 1) || mask.$displayList) {
-                displayContext.globalCompositeOperation = "destination-in"; displayContext.save();
+                displayContext.globalCompositeOperation = "destination-in";
+                displayContext.save();
                 displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
-                drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0); displayContext.restore();
+                drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0);
+                displayContext.restore();
             } else {
                 const maskBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
                 const maskContext: CanvasContext = maskBuffer.context;
                 maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
-                displayContext.globalCompositeOperation = "destination-in"; displayContext.drawImage(maskBuffer.surface, 0, 0);
+                displayContext.globalCompositeOperation = "destination-in";
+                displayContext.drawImage(maskBuffer.surface, 0, 0);
                 CanvasRenderer.renderBufferPool.push(maskBuffer);
             }
             Matrix.release(maskMatrix);
@@ -6731,7 +6811,10 @@ export class CanvasRenderer {
                 context.globalCompositeOperation = compositeOp;
             }
             if (scrollRect) {
-                context.save(); context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
+                context.save();
+                context.beginPath();
+                context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+                context.clip();
             }
             context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
             if (scrollRect) {
@@ -6750,11 +6833,16 @@ export class CanvasRenderer {
             return 0;
         }
         if (displayObject.$scrollRect) {
-            offsetX -= scrollRect.x; offsetY -= scrollRect.y;
+            offsetX -= scrollRect.x;
+            offsetY -= scrollRect.y;
         }
-        context.save(); context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
+        context.save();
+        context.beginPath();
+        context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height);
+        context.clip();
         const drawCalls: number = this.drawDisplayObject(displayObject, context, offsetX, offsetY);
-        context.restore(); return drawCalls;
+        context.restore();
+        return drawCalls;
     }
     public drawNodeToBuffer(node: RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
         const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
@@ -6769,7 +6857,8 @@ export class CanvasRenderer {
         const node: RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
         let drawCalls: number = 0;
         if (node) {
-            drawCalls++; this.renderNode(node, context);
+            drawCalls++;
+            this.renderNode(node, context);
         }
         const children: DisplayObject[] | null = displayObject.$children;
         if (children) {
@@ -6777,10 +6866,14 @@ export class CanvasRenderer {
                 const child: DisplayObject = children[i]!;
                 switch (child.$renderMode) {
                     case 1: break;
-                    case 2: drawCalls += this.drawWithFilter(child, context, 0, 0); break;
-                    case 3: drawCalls += this.drawWithClip(child, context, 0, 0); break;
-                    case 4: drawCalls += this.drawWithScrollRect(child, context, 0, 0); break;
-                    default: drawCalls += this.drawDisplayObject(child, context, 0, 0); break;
+                    case 2: drawCalls += this.drawWithFilter(child, context, 0, 0);
+                        break;
+                    case 3: drawCalls += this.drawWithClip(child, context, 0, 0);
+                        break;
+                    case 4: drawCalls += this.drawWithScrollRect(child, context, 0, 0);
+                        break;
+                    default: drawCalls += this.drawDisplayObject(child, context, 0, 0);
+                        break;
                 }
             }
         }
@@ -6790,7 +6883,8 @@ export class CanvasRenderer {
         // RenderNode.type ��ԭ���������ʱ�б��ֶΣ��������ݲ����ɶ�Ӧ���ඨ�塣
         switch (node.type) {
             case 1: return this.renderBitmap(node as BitmapNode, context);
-            case 2: this.renderText(node as TextNode, context); return 1;
+            case 2: this.renderText(node as TextNode, context);
+                return 1;
             case 3: return this.renderGraphics(node as GraphicsNode, context, forHitTest);
             case 4: return this.renderGroup(node as GroupNode, context);
             case 5: return this.renderMesh(node as MeshNode, context);
@@ -6816,8 +6910,10 @@ export class CanvasRenderer {
             const offsetY: number = node.drawY;
             const destHeight: number = node.drawW;
             const destWidth: number = node.drawH;
-            context.save(); context.transform(0, -1, 1, 0, 0, destWidth);
-            context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight); context.restore();
+            context.save();
+            context.transform(0, -1, 1, 0, 0, destWidth);
+            context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight);
+            context.restore();
         } else {
             context.drawImage(source, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX + context.$offsetX, node.drawY + context.$offsetY, node.drawW, node.drawH);
         }
@@ -6842,9 +6938,13 @@ export class CanvasRenderer {
         let offsetX: number | undefined;
         let offsetY: number | undefined;
         if (m) {
-            context.save(); saved = true;
+            context.save();
+            saved = true;
             if (context.$offsetX != 0 || context.$offsetY != 0) {
-                context.translate(context.$offsetX, context.$offsetY); offsetX = context.$offsetX; offsetY = context.$offsetY; context.$offsetX = context.$offsetY = 0;
+                context.translate(context.$offsetX, context.$offsetY);
+                offsetX = context.$offsetX;
+                offsetY = context.$offsetY;
+                context.$offsetX = context.$offsetY = 0;
             }
             context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
@@ -6853,7 +6953,8 @@ export class CanvasRenderer {
         }
         let originAlpha: number | undefined;
         if (alpha == alpha) {
-            originAlpha = context.globalAlpha; context.globalAlpha *= alpha;
+            originAlpha = context.globalAlpha;
+            context.globalAlpha *= alpha;
         }
         let drawCalls: number = 0;
         const filter: ColorMatrixFilter | null = node.filter;
@@ -6867,7 +6968,10 @@ export class CanvasRenderer {
             let destWidth: number = data[6]!;
             let destHeight: number = data[7]!;
             if (node.rotated) {
-                sourceWidth = data[3]!; sourceHeight = data[2]!; destWidth = data[7]!; destHeight = data[6]!;
+                sourceWidth = data[3]!;
+                sourceHeight = data[2]!;
+                destWidth = data[7]!;
+                destHeight = data[6]!;
             }
             const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(destWidth, destHeight);
             const displayContext: CanvasContext = displayBuffer.context;
@@ -6894,8 +6998,10 @@ export class CanvasRenderer {
                     const drawY: number = data[pos++]!;
                     const destHeight: number = data[pos++]!;
                     const destWidth: number = data[pos++]!;
-                    context.save(); context.transform(0, -1, 1, 0, 0, destWidth);
-                    context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, drawX + context.$offsetX, drawY + context.$offsetY, destWidth, destHeight); context.restore();
+                    context.save();
+                    context.transform(0, -1, 1, 0, 0, destWidth);
+                    context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, drawX + context.$offsetX, drawY + context.$offsetY, destWidth, destHeight);
+                    context.restore();
                 } else {
                     context.drawImage(source, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]!, data[pos++]!);
                 }
@@ -6920,10 +7026,16 @@ export class CanvasRenderer {
         return drawCalls;
     }
     public renderMesh(_node: MeshNode, _context: CanvasContext): number {
+        void _node;
+
+        void _context;
+
         return 0;
     }
     public renderText(node: TextNode, context: CanvasContext): void {
-        context.textAlign = "left"; context.textBaseline = "middle"; context.lineJoin = "round";
+        context.textAlign = "left";
+        context.textBaseline = "middle";
+        context.lineJoin = "round";
         const drawData: (number | string | ITextStyle)[] = node.drawData;
         let pos: number = 0;
         while (pos < drawData.length) {
@@ -6935,9 +7047,11 @@ export class CanvasRenderer {
             const textColor: number = format.textColor == null ? node.textColor : format.textColor;
             const strokeColor: number = format.strokeColor == null ? node.strokeColor : format.strokeColor;
             const stroke: number = format.stroke == null ? node.stroke : format.stroke;
-            context.fillStyle = toColorString(textColor); context.strokeStyle = toColorString(strokeColor);
+            context.fillStyle = toColorString(textColor);
+            context.strokeStyle = toColorString(strokeColor);
             if (stroke) {
-                context.lineWidth = stroke * 2; context.strokeText(text, x + context.$offsetX, y + context.$offsetY);
+                context.lineWidth = stroke * 2;
+                context.strokeText(text, x + context.$offsetX, y + context.$offsetY);
             }
             context.fillText(text, x + context.$offsetX, y + context.$offsetY);
         }
@@ -6965,14 +7079,20 @@ export class CanvasRenderer {
                     context.fillStyle = forHitTest ? CanvasRenderer.BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                     context.save();
                     const m: Matrix = g.matrix;
-                    this.renderPath(path, context); context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty); context.fill(); context.restore(); break;
+                    this.renderPath(path, context);
+                    context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    context.fill();
+                    context.restore();
+                    break;
                 }
                 case 3: {
                     const strokeFill: StrokePath = path as StrokePath;
                     const lineWidth: number = strokeFill.lineWidth;
                     context.lineWidth = lineWidth;
                     context.strokeStyle = forHitTest ? CanvasRenderer.BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
-                    context.lineCap = CanvasRenderer.CAPS_STYLES[strokeFill.caps]; context.lineJoin = strokeFill.joints; context.miterLimit = strokeFill.miterLimit;
+                    context.lineCap = CanvasRenderer.CAPS_STYLES[strokeFill.caps];
+                    context.lineJoin = strokeFill.joints;
+                    context.miterLimit = strokeFill.miterLimit;
                     if (context.setLineDash) {
                         context.setLineDash(strokeFill.lineDash);
                     }
@@ -6980,7 +7100,8 @@ export class CanvasRenderer {
                     if (isSpecialCaseWidth) {
                         context.translate(0.5, 0.5);
                     }
-                    this.renderPath(path, context); context.stroke();
+                    this.renderPath(path, context);
+                    context.stroke();
                     if (isSpecialCaseWidth) {
                         context.translate(-0.5, -0.5);
                     }
@@ -6998,10 +7119,14 @@ export class CanvasRenderer {
         for (let commandIndex: number = 0; commandIndex < commands.length; commandIndex++) {
             const command: PathCommand = commands[commandIndex]!;
             switch (command) {
-                case 4: context.bezierCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
-                case 3: context.quadraticCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
-                case 2: context.lineTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
-                case 1: context.moveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
+                case 4: context.bezierCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY);
+                    break;
+                case 3: context.quadraticCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY);
+                    break;
+                case 2: context.lineTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY);
+                    break;
+                case 1: context.moveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY);
+                    break;
             }
         }
     }
@@ -7011,9 +7136,13 @@ export class CanvasRenderer {
         let offsetX: number | undefined;
         let offsetY: number | undefined;
         if (m) {
-            context.save(); saved = true;
+            context.save();
+            saved = true;
             if (context.$offsetX != 0 || context.$offsetY != 0) {
-                context.translate(context.$offsetX, context.$offsetY); offsetX = context.$offsetX; offsetY = context.$offsetY; context.$offsetX = context.$offsetY = 0;
+                context.translate(context.$offsetX, context.$offsetY);
+                offsetX = context.$offsetX;
+                offsetY = context.$offsetY;
+                context.$offsetX = context.$offsetY = 0;
             }
             context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
@@ -7050,7 +7179,8 @@ export class Mesh extends Bitmap {
     public _bounds: Rectangle = new Rectangle();
     public declare $renderNode: MeshNode;
     public constructor(value?: Texture | null) {
-        super(value); this.$renderNode = new runtime.sys.MeshNode();
+        super(value);
+        this.$renderNode = new runtime.sys.MeshNode();
     }
     public override $updateRenderNode(): void {
         const image: BitmapData | null = this.$bitmapData;
@@ -7058,7 +7188,10 @@ export class Mesh extends Bitmap {
             return;
         }
         const node: MeshNode = this.$renderNode;
-        node.smoothing = this.$smoothing; node.image = image; node.imageWidth = this.$sourceWidth; node.imageHeight = this.$sourceHeight;
+        node.smoothing = this.$smoothing;
+        node.image = image;
+        node.imageWidth = this.$sourceWidth;
+        node.imageHeight = this.$sourceHeight;
         const destW: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
         const destH: number = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
         const tsX: number = destW / this.$textureWidth, tsY: number = destH / this.$textureHeight;
@@ -7066,15 +7199,18 @@ export class Mesh extends Bitmap {
         node.drawMesh(this.$bitmapX, this.$bitmapY, bitmapWidth, bitmapHeight, this.$offsetX * tsX, this.$offsetY * tsY, tsX * bitmapWidth, tsY * bitmapHeight);
     }
     public $updateVertices(): void {
-        this._verticesDirty = true; this.$renderDirty = true;
+        this._verticesDirty = true;
+        this.$renderDirty = true;
         {
             const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true; p.$cacheDirtyUp();
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
             }
             const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
             }
         }
     }
@@ -7100,7 +7236,8 @@ export class Mesh extends Bitmap {
                         this._bounds.height = y;
                     }
                 }
-                this._bounds.width -= this._bounds.x; this._bounds.height -= this._bounds.y;
+                this._bounds.width -= this._bounds.x;
+                this._bounds.height -= this._bounds.y;
             } else {
                 this._bounds.setTo(0, 0, 0, 0);
             }
@@ -7117,7 +7254,8 @@ export class RenderTexture extends Texture {
         super();
         this.$renderBuffer = new runtime.sys.RenderBuffHelper.RenderBuffer!();
         const bitmapData: BitmapData = new BitmapData(this.$renderBuffer.surface as HTMLCanvasElement);
-        bitmapData.$deleteSource = false; this._setBitmapData(bitmapData);
+        bitmapData.$deleteSource = false;
+        this._setBitmapData(bitmapData);
     }
     public drawToTexture(displayObject: DisplayObject, clipBounds?: Rectangle | null, scale: number = 1): boolean {
         if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
@@ -7130,33 +7268,42 @@ export class RenderTexture extends Texture {
         scale /= Texture.$TextureScaleFactor;
         let width: number = (bounds.x + bounds.width) * scale, height: number = (bounds.y + bounds.height) * scale;
         if (clipBounds) {
-            width = bounds.width * scale; height = bounds.height * scale;
+            width = bounds.width * scale;
+            height = bounds.height * scale;
         }
         const renderBuffer: RenderBuffer | null = this.$renderBuffer;
         if (!renderBuffer) {
             return false;
         }
-        renderBuffer.resize(width, height); this.$bitmapData!.width = width; this.$bitmapData!.height = height;
+        renderBuffer.resize(width, height);
+        this.$bitmapData!.width = width;
+        this.$bitmapData!.height = height;
         {
-            const matrix: Matrix = Matrix.create(); matrix.identity(); matrix.scale(scale, scale);
+            const matrix: Matrix = Matrix.create();
+            matrix.identity();
+            matrix.scale(scale, scale);
             if (clipBounds) {
                 matrix.translate(-clipBounds.x, -clipBounds.y);
             }
             runtime.sys.RenderBuffHelper.systemRenderer!.render(displayObject, renderBuffer, matrix, true);
             Matrix.release(matrix);
         }
-        this.$initData(0, 0, width, height, 0, 0, width, height, width, height); return true;
+        this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+        return true;
     }
     public override getPixel32(x: number, y: number): Uint8Array | Uint8ClampedArray | undefined {
         let data: Uint8Array | Uint8ClampedArray | undefined;
         if (this.$renderBuffer) {
             const scale: number = Texture.$TextureScaleFactor;
-            x = Math.round(x / scale); y = Math.round(y / scale); data = this.$renderBuffer.getPixels(x, y, 1, 1);
+            x = Math.round(x / scale);
+            y = Math.round(y / scale);
+            data = this.$renderBuffer.getPixels(x, y, 1, 1);
         }
         return data;
     }
     public override dispose(): void {
-        super.dispose(); this.$renderBuffer = null;
+        super.dispose();
+        this.$renderBuffer = null;
     }
 }
 __reflect(RenderTexture.prototype, "egret.RenderTexture");
@@ -7164,7 +7311,9 @@ __reflect(RenderTexture.prototype, "egret.RenderTexture");
 export class Shape extends DisplayObject {
     public $graphics: Graphics;
     public constructor() {
-        super(); this.$graphics = new Graphics(); this.$graphics.$setTarget(this);
+        super();
+        this.$graphics = new Graphics();
+        this.$graphics.$setTarget(this);
     }
     public get graphics(): Graphics {
         return this.$graphics;
@@ -7176,10 +7325,12 @@ export class Shape extends DisplayObject {
         let target: DisplayObject | null = super.$hitTest(stageX, stageY);
         if (target == this) {
             target = this.$graphics.$hitTest(stageX, stageY);
-        } return target;
+        }
+        return target;
     }
     public override $onRemoveFromStage(): void {
-        super.$onRemoveFromStage(); if (this.$graphics) {
+        super.$onRemoveFromStage();
+        if (this.$graphics) {
             this.$graphics.$onRemoveFromStage();
         }
     }
@@ -7193,7 +7344,7 @@ export class BitmapFont extends SpriteSheet {
         super(texture);
         if (typeof config == "string") {
             this.charList = this.parseConfig(config);
-        } else if (config && config.hasOwnProperty("frames")) {
+        } else if (config && Object.hasOwn(config, "frames")) {
             this.charList = config.frames;
         } else {
             this.charList = {};
@@ -7206,7 +7357,8 @@ export class BitmapFont extends SpriteSheet {
             if (!c) {
                 return null;
             }
-            texture = this.createTexture(name, c.x, c.y, c.w, c.h, c.offX, c.offY, c.sourceW, c.sourceH); this._textureMap[name] = texture;
+            texture = this.createTexture(name, c.x, c.y, c.w, c.h, c.offX, c.offY, c.sourceW, c.sourceH);
+            this._textureMap[name] = texture;
         }
         return texture;
     }
@@ -7221,11 +7373,15 @@ export class BitmapFont extends SpriteSheet {
                 if (c) {
                     let sourceH: number | undefined = c.sourceH;
                     if (sourceH === undefined) {
-                        const h: number = c.h === undefined ? 0 : c.h; const offY: number = c.offY === undefined ? 0 : c.offY; sourceH = h + offY;
+                        const h: number = c.h === undefined ? 0 : c.h;
+                        const offY: number = c.offY === undefined ? 0 : c.offY;
+                        sourceH = h + offY;
                     }
                     if (sourceH <= 0) {
                         continue;
-                    } this.firstCharHeight = sourceH; break;
+                    }
+                    this.firstCharHeight = sourceH;
+                    break;
                 }
             }
         }
@@ -7246,7 +7402,7 @@ export class BitmapFont extends SpriteSheet {
                 h        : this.getConfigByKey(charText, "height"),
                 offX     : this.getConfigByKey(charText, "xoffset"),
                 offY     : this.getConfigByKey(charText, "yoffset"),
-                xadvance : this.getConfigByKey(charText, "xadvance")
+                xadvance : this.getConfigByKey(charText, "xadvance"),
             };
             chars[letter] = c;
         }
@@ -7257,7 +7413,8 @@ export class BitmapFont extends SpriteSheet {
         for (let i: number = 0; i < itemConfigTextList.length; i++) {
             const itemConfigText: string = itemConfigTextList[i]!;
             if (key == itemConfigText.substring(0, key.length)) {
-                const value: string = itemConfigText.substring(key.length + 1); return parseInt(value);
+                const value: string = itemConfigText.substring(key.length + 1);
+                return parseInt(value);
             }
         }
         return 0;
@@ -7298,15 +7455,18 @@ export class BitmapText extends DisplayObject {
     public set smoothing(value: boolean) {
         if (value == this.$smoothing) {
             return;
-        } this.$smoothing = value;
+        }
+        this.$smoothing = value;
         {
             const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true; p.$cacheDirtyUp();
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
             }
             const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
             }
         }
     }
@@ -7320,7 +7480,10 @@ export class BitmapText extends DisplayObject {
         const text: string = value == null ? "" : String(value);
         if (text == this.$text) {
             return false;
-        } this.$text = text; this.$invalidateContentBounds(); return true;
+        }
+        this.$text = text;
+        this.$invalidateContentBounds();
+        return true;
     }
     public override $getWidth(): number {
         return isNaN(this.$textFieldWidth) ? this.$getContentBounds().width : this.$textFieldWidth;
@@ -7328,10 +7491,15 @@ export class BitmapText extends DisplayObject {
     public override $setWidth(value: number): boolean {
         if (value < 0 || value == this.$textFieldWidth) {
             return false;
-        } this.$textFieldWidth = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$textFieldWidth = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public $invalidateContentBounds(): void {
-        this.$renderDirty = true; this.$textLinesChanged = true; this.$updateRenderNode();
+        this.$renderDirty = true;
+        this.$textLinesChanged = true;
+        this.$updateRenderNode();
     }
     public override $getHeight(): number {
         return isNaN(this.$textFieldHeight) ? this.$getContentBounds().height : this.$textFieldHeight;
@@ -7339,7 +7507,10 @@ export class BitmapText extends DisplayObject {
     public override $setHeight(value: number): boolean {
         if (value < 0 || value == this.$textFieldHeight) {
             return false;
-        } this.$textFieldHeight = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$textFieldHeight = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public get font(): BitmapFont | null {
         return this.$font;
@@ -7350,7 +7521,11 @@ export class BitmapText extends DisplayObject {
     public $setFont(value: BitmapFont | null): boolean {
         if (this.$font == value) {
             return false;
-        } this.$font = value; this.$fontStringChanged = true; this.$invalidateContentBounds(); return true;
+        }
+        this.$font = value;
+        this.$fontStringChanged = true;
+        this.$invalidateContentBounds();
+        return true;
     }
     public get lineSpacing(): number {
         return this.$lineSpacing;
@@ -7361,7 +7536,10 @@ export class BitmapText extends DisplayObject {
     public $setLineSpacing(value: number): boolean {
         if (this.$lineSpacing == value) {
             return false;
-        } this.$lineSpacing = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$lineSpacing = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public get letterSpacing(): number {
         return this.$letterSpacing;
@@ -7372,7 +7550,10 @@ export class BitmapText extends DisplayObject {
     public $setLetterSpacing(value: number): boolean {
         if (this.$letterSpacing == value) {
             return false;
-        } this.$letterSpacing = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$letterSpacing = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public get textAlign(): string {
         return this.$textAlign;
@@ -7383,7 +7564,10 @@ export class BitmapText extends DisplayObject {
     public $setTextAlign(value: string): boolean {
         if (this.$textAlign == value) {
             return false;
-        } this.$textAlign = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$textAlign = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public get verticalAlign(): string {
         return this.$verticalAlign;
@@ -7394,7 +7578,10 @@ export class BitmapText extends DisplayObject {
     public $setVerticalAlign(value: string): boolean {
         if (this.$verticalAlign == value) {
             return false;
-        } this.$verticalAlign = value; this.$invalidateContentBounds(); return true;
+        }
+        this.$verticalAlign = value;
+        this.$invalidateContentBounds();
+        return true;
     }
     public override $updateRenderNode(): void {
         const textLines: string[] = this.$getTextLines();
@@ -7442,11 +7629,13 @@ export class BitmapText extends DisplayObject {
                         xPos += emptyWidth;
                     } else {
                         $warn(1046, character);
-                    } continue;
+                    }
+                    continue;
                 }
                 const bitmapWidth: number = texture.$bitmapWidth, bitmapHeight: number = texture.$bitmapHeight;
                 {
-                    node!.imageWidth = texture.$sourceWidth; node!.imageHeight = texture.$sourceHeight;
+                    node!.imageWidth = texture.$sourceWidth;
+                    node!.imageHeight = texture.$sourceHeight;
                     node!.drawImage(texture.$bitmapX, texture.$bitmapY, bitmapWidth, bitmapHeight, xPos + texture.$offsetX, yPos + texture.$offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
                 }
                 xPos += (bitmapFont.getConfig(character, "xadvance") || texture.$getTextureWidth()) + this.$letterSpacing;
@@ -7463,10 +7652,12 @@ export class BitmapText extends DisplayObject {
         }
     }
     public get textWidth(): number {
-        this.$getTextLines(); return this.$textWidth;
+        this.$getTextLines();
+        return this.$textWidth;
     }
     public get textHeight(): number {
-        this.$getTextLines(); return this.$textHeight;
+        this.$getTextLines();
+        return this.$textHeight;
     }
     public $getTextLines(): string[] {
         if (!this.$textLinesChanged) {
@@ -7475,11 +7666,14 @@ export class BitmapText extends DisplayObject {
         const textLines: string[] = [];
         this.textLines = textLines;
         const textLinesWidth: number[] = [];
-        this.$textLinesWidth = textLinesWidth; this.$textLinesChanged = false;
+        this.$textLinesWidth = textLinesWidth;
+        this.$textLinesChanged = false;
         const lineHeights: number[] = [];
         this.$lineHeights = lineHeights;
         if (!this.$text || !this.$font) {
-            this.$textWidth = 0; this.$textHeight = 0; return textLines;
+            this.$textWidth = 0;
+            this.$textHeight = 0;
+            return textLines;
         }
         const lineSpacing: number = this.$lineSpacing, letterSpacing: number = this.$letterSpacing;
         let textWidth: number = 0, textHeight: number = 0;
@@ -7495,7 +7689,10 @@ export class BitmapText extends DisplayObject {
         for (let i: number = 0; i < textArr.length; i++) {
             let line: string = textArr[i]!;
             let len: number = line.length;
-            lineHeight = 0; xPos = 0; isFirstChar = true; isLastChar = false;
+            lineHeight = 0;
+            xPos = 0;
+            isFirstChar = true;
+            isLastChar = false;
             for (let j: number = 0; j < len; j++) {
                 if (!isFirstChar) {
                     xPos += letterSpacing;
@@ -7505,11 +7702,14 @@ export class BitmapText extends DisplayObject {
                 const texture: Texture | null = bitmapFont.getTexture(character);
                 if (!texture) {
                     if (character == " ") {
-                        textureWidth = emptyWidth; textureHeight = emptyHeight;
+                        textureWidth = emptyWidth;
+                        textureHeight = emptyHeight;
                     } else {
-                        $warn(1046, character); if (isFirstChar) {
+                        $warn(1046, character);
+                        if (isFirstChar) {
                             isFirstChar = false;
-                        } continue;
+                        }
+                        continue;
                     }
                 } else {
                     textureWidth = texture.$getTextureWidth();
@@ -7525,9 +7725,12 @@ export class BitmapText extends DisplayObject {
                     if (!setLineData(line.substring(0, j))) {
                         break;
                     }
-                    line = line.substring(j); len = line.length; j = 0;
+                    line = line.substring(j);
+                    len = line.length;
+                    j = 0;
                     xPos = j == len - 1 ? textureWidth : bitmapFont.getConfig(character, "xadvance") || textureWidth;
-                    lineHeight = textureHeight; continue;
+                    lineHeight = textureHeight;
+                    continue;
                 }
                 xPos += j == len - 1 ? textureWidth : bitmapFont.getConfig(character, "xadvance") || textureWidth;
                 lineHeight = Math.max(textureHeight, lineHeight);
@@ -7548,10 +7751,18 @@ export class BitmapText extends DisplayObject {
             if (!isFirstChar && !isLastChar) {
                 xPos -= letterSpacing;
             }
-            textLines.push(str); lineHeights.push(lineHeight); textLinesWidth.push(xPos); textWidth = Math.max(xPos, textWidth); return true;
+            textLines.push(str);
+            lineHeights.push(lineHeight);
+            textLinesWidth.push(xPos);
+            textWidth = Math.max(xPos, textWidth);
+            return true;
         }
         textHeight -= lineSpacing;
-        this.$textWidth = textWidth; this.$textHeight = textHeight; this.$textOffsetX = textOffsetX; this.$textOffsetY = textOffsetY; this.$textStartX = this.$textStartY = 0;
+        this.$textWidth = textWidth;
+        this.$textHeight = textHeight;
+        this.$textOffsetX = textOffsetX;
+        this.$textOffsetY = textOffsetY;
+        this.$textStartX = this.$textStartY = 0;
         let alignType: string;
         if (textFieldWidth > textWidth) {
             alignType = this.$textAlign;
@@ -7633,7 +7844,7 @@ export class TextField extends DisplayObject {
             35 : null,
             36 : null,
             37 : TextFieldInputType.TEXT,
-            38 : false
+            38 : false,
         };
     }
     public isInput(): boolean {
@@ -7949,13 +8160,18 @@ export class TextField extends DisplayObject {
         return 0;
     }
     public $setSelection(_beginIndex: number, _endIndex: number): boolean {
+        void _beginIndex;
+
+        void _endIndex;
+
         return false;
     }
     public $getLineHeight(): number {
         return this.$TextField[1] + this.$TextField[0];
     }
     public get numLines(): number {
-        this.$getLinesArr(); return this.$TextField[29];
+        this.$getLinesArr();
+        return this.$TextField[29];
     }
     public get multiline(): boolean {
         return this.$TextField[30];
@@ -7988,7 +8204,9 @@ export class TextField extends DisplayObject {
     public set restrict(value: string | null) {
         const values: TextFieldState = this.$TextField;
         if (value == null) {
-            values[35] = null; values[36] = null; return;
+            values[35] = null;
+            values[36] = null;
+            return;
         }
         let index: number = -1;
         while (index < value.length) {
@@ -8005,11 +8223,14 @@ export class TextField extends DisplayObject {
             }
         }
         if (index == 0) {
-            values[35] = null; values[36] = value.substring(index + 1);
+            values[35] = null;
+            values[36] = value.substring(index + 1);
         } else if (index > 0) {
-            values[35] = value.substring(0, index); values[36] = value.substring(index + 1);
+            values[35] = value.substring(0, index);
+            values[36] = value.substring(index + 1);
         } else {
-            values[35] = value; values[36] = null;
+            values[35] = value;
+            values[36] = null;
         }
     }
     public override $setWidth(value: number): boolean {
@@ -8159,8 +8380,10 @@ export class TextField extends DisplayObject {
         }
         if (graphics) {
             const bounds: Rectangle = this.$getRenderBounds();
-            graphics.x = bounds.x; graphics.y = bounds.y;
-            graphics.width = bounds.width; graphics.height = bounds.height;
+            graphics.x = bounds.x;
+            graphics.y = bounds.y;
+            graphics.width = bounds.width;
+            graphics.height = bounds.height;
             Rectangle.release(bounds);
         }
     }
@@ -8187,18 +8410,20 @@ export class TextField extends DisplayObject {
         }
     }
     public $invalidateTextField(): void {
-        const self: this = this;
-        self.$renderDirty = true;
-        self.$TextField[18] = true;
-        self.$TextField[38] = true;
+
+        this.$renderDirty = true;
+        this.$TextField[18] = true;
+        this.$TextField[38] = true;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true; p.$cacheDirtyUp();
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
             }
         }
     }
@@ -8207,11 +8432,13 @@ export class TextField extends DisplayObject {
         const tmpBounds: Rectangle = Rectangle.create();
         tmpBounds.copyFrom(bounds);
         if (this.$TextField[31]) {
-            tmpBounds.width += 2; tmpBounds.height += 2;
+            tmpBounds.width += 2;
+            tmpBounds.height += 2;
         }
         const strokeDouble: number = this.$TextField[27] * 2;
         if (strokeDouble > 0) {
-            tmpBounds.width += strokeDouble * 2; tmpBounds.height += strokeDouble * 2;
+            tmpBounds.width += strokeDouble * 2;
+            tmpBounds.height += strokeDouble * 2;
         }
         tmpBounds.x -= strokeDouble + 2;
         tmpBounds.y -= strokeDouble + 2;
@@ -8221,8 +8448,8 @@ export class TextField extends DisplayObject {
     }
     public override $measureContentBounds(bounds: Rectangle): void {
         this.$getLinesArr();
-        let w: number = 0;
-        let h: number = 0;
+        let w: number;
+        let h: number;
         {
             w = !isNaN(this.$TextField[3]) ? this.$TextField[3] : this.$TextField[5];
             h = !isNaN(this.$TextField[4]) ? this.$TextField[4] : TextFieldUtils.$getTextHeight(this);
@@ -8233,7 +8460,8 @@ export class TextField extends DisplayObject {
         if (this.isInput()) {
             this.inputUtils!._updateProperties();
             if (this.$isTyping) {
-                this.fillBackground(); return;
+                this.fillBackground();
+                return;
             }
         } else if (this.$TextField[3] == 0) {
             const graphics: GraphicsNode | null = this.$graphicsNode;
@@ -8246,8 +8474,10 @@ export class TextField extends DisplayObject {
         this.fillBackground(underLines);
         const bounds: Rectangle = this.$getRenderBounds();
         const node: TextNode = this.textNode;
-        node.x = bounds.x; node.y = bounds.y;
-        node.width = Math.ceil(bounds.width); node.height = Math.ceil(bounds.height);
+        node.x = bounds.x;
+        node.y = bounds.y;
+        node.width = Math.ceil(bounds.width);
+        node.height = Math.ceil(bounds.height);
         Rectangle.release(bounds);
     }
     public get textFlow(): ITextElement[] {
@@ -8277,7 +8507,8 @@ export class TextField extends DisplayObject {
         let passText: string = "";
         for (let i: number = 0, num: number = text.length; i < num; i++) {
             switch (text.charAt(i)) {
-                case '\n': passText += "\n"; break;
+                case '\n': passText += "\n";
+                    break;
                 case '\r': break;
                 default: passText += '*';
             }
@@ -8322,7 +8553,8 @@ export class TextField extends DisplayObject {
         values[18] = false;
         const text2Arr: ITextElement[] = this.textArr;
         this.linesArr.length = 0;
-        values[6] = 0; values[5] = 0;
+        values[6] = 0;
+        values[5] = 0;
         const textFieldWidth: number = values[3];
         if (!isNaN(textFieldWidth) && textFieldWidth == 0) {
             values[29] = 0;
@@ -8331,7 +8563,7 @@ export class TextField extends DisplayObject {
                 height      : 0,
                 charNum     : 0,
                 elements    : [],
-                hasNextLine : false
+                hasNextLine : false,
             }];
         }
         const linesArr: TextLine[] = this.linesArr;
@@ -8344,8 +8576,11 @@ export class TextField extends DisplayObject {
             const element: ITextElement = text2Arr[i]!;
             if (!element.text) {
                 if (lineElement) {
-                    lineElement.width = lineW; lineElement.height = lineH; lineElement.charNum = lineCharNum;
-                    values[5] = Math.max(values[5], lineW); values[6] += lineH;
+                    lineElement.width = lineW;
+                    lineElement.height = lineH;
+                    lineElement.charNum = lineCharNum;
+                    values[5] = Math.max(values[5], lineW);
+                    values[6] += lineH;
                 }
                 continue;
             }
@@ -8359,10 +8594,12 @@ export class TextField extends DisplayObject {
                         height      : 0,
                         elements    : [],
                         charNum     : 0,
-                        hasNextLine : false
+                        hasNextLine : false,
                     };
                     linesArr[lineCount] = lineElement;
-                    lineW = 0; lineH = 0; lineCharNum = 0;
+                    lineW = 0;
+                    lineH = 0;
+                    lineCharNum = 0;
                 }
                 if (values[24] == TextFieldType.INPUT) {
                     lineH = values[0];
@@ -8382,7 +8619,7 @@ export class TextField extends DisplayObject {
                         lineElement!.elements.push({
                             width : w,
                             text  : textArr[j]!,
-                            style : element.style
+                            style : element.style,
                         });
                         if (j == textArrLength - 1) {
                             isNextLine = false;
@@ -8391,7 +8628,7 @@ export class TextField extends DisplayObject {
                         lineElement!.elements.push({
                             width : w,
                             text  : textArr[j]!,
-                            style : element.style
+                            style : element.style,
                         });
                         lineW += w;
                         lineCharNum += textArr[j]!.length;
@@ -8413,7 +8650,8 @@ export class TextField extends DisplayObject {
                                 const charCodeLow: number = words[k + 1]!.charCodeAt(0);
                                 if (charCodeHigh >= 0xD800 && charCodeHigh <= 0xDBFF && (charCodeLow & 0xFC00) == 0xDC00) {
                                     const realWord: string = words[k]! + words[k + 1]!;
-                                    codeLen = 2; has4BytesUnicode = true;
+                                    codeLen = 2;
+                                    has4BytesUnicode = true;
                                     w = measureTextWidth(realWord, values, element.style);
                                 } else {
                                     w = measureTextWidth(words[k]!, values, element.style);
@@ -8434,7 +8672,8 @@ export class TextField extends DisplayObject {
                                         const charCodeLow: number = words2[k2 + 1]!.charCodeAt(0);
                                         if (charCodeHigh >= 0xD800 && charCodeHigh <= 0xDBFF && (charCodeLow & 0xFC00) == 0xDC00) {
                                             const realWord: string = words2[k2]! + words2[k2 + 1]!;
-                                            codeLen = 2; has4BytesUnicode2 = true;
+                                            codeLen = 2;
+                                            has4BytesUnicode2 = true;
                                             w = measureTextWidth(realWord, values, element.style);
                                         } else {
                                             w = measureTextWidth(words2[k2]!, values, element.style);
@@ -8445,13 +8684,19 @@ export class TextField extends DisplayObject {
                                     if (k2 > 0 && lineW + w > textFieldWidth) {
                                         break;
                                     }
-                                    charNum += codeLen; ww += w; lineW += w; lineCharNum += charNum;
+                                    charNum += codeLen;
+                                    ww += w;
+                                    lineW += w;
+                                    lineCharNum += charNum;
                                     if (has4BytesUnicode2) {
                                         k2++;
                                     }
                                 }
                             } else {
-                                charNum += codeLen; ww += w; lineW += w; lineCharNum += charNum;
+                                charNum += codeLen;
+                                ww += w;
+                                lineW += w;
+                                lineCharNum += charNum;
                             }
                             if (has4BytesUnicode) {
                                 k++;
@@ -8461,7 +8706,7 @@ export class TextField extends DisplayObject {
                             lineElement!.elements.push({
                                 width : ww,
                                 text  : word.substring(0, charNum),
-                                style : element.style
+                                style : element.style,
                             });
                             const leftWord: string = word.substring(charNum);
                             let m: number;
@@ -8474,22 +8719,30 @@ export class TextField extends DisplayObject {
                             textArr[j] = leftWord.substring(m);
                         }
                         if (textArr[j] != "") {
-                            j--; isNextLine = false;
+                            j--;
+                            isNextLine = false;
                         }
                     }
                 }
                 if (isNextLine) {
-                    lineCharNum++; lineElement!.hasNextLine = true;
+                    lineCharNum++;
+                    lineElement!.hasNextLine = true;
                 }
                 if (j < textArr.length - 1) {
-                    lineElement!.width = lineW; lineElement!.height = lineH; lineElement!.charNum = lineCharNum;
-                    values[5] = Math.max(values[5], lineW); values[6] += lineH;
+                    lineElement!.width = lineW;
+                    lineElement!.height = lineH;
+                    lineElement!.charNum = lineCharNum;
+                    values[5] = Math.max(values[5], lineW);
+                    values[6] += lineH;
                     lineCount++;
                 }
             }
             if (i == text2Arr.length - 1 && lineElement) {
-                lineElement.width = lineW; lineElement.height = lineH; lineElement.charNum = lineCharNum;
-                values[5] = Math.max(values[5], lineW); values[6] += lineH;
+                lineElement.width = lineW;
+                lineElement.height = lineH;
+                lineElement.charNum = lineCharNum;
+                values[5] = Math.max(values[5], lineW);
+                values[6] += lineH;
             }
         }
         values[29] = linesArr.length;
@@ -8502,9 +8755,13 @@ export class TextField extends DisplayObject {
     public drawText(): (number | undefined)[] {
         const node: TextNode = this.textNode;
         const values: TextFieldState = this.$TextField;
-        node.bold = values[15]; node.fontFamily = values[8] || TextField.default_fontFamily;
-        node.italic = values[16]; node.size = values[0]; node.stroke = values[27];
-        node.strokeColor = values[25]; node.textColor = values[2];
+        node.bold = values[15];
+        node.fontFamily = values[8] || TextField.default_fontFamily;
+        node.italic = values[16];
+        node.size = values[0];
+        node.stroke = values[27];
+        node.strokeColor = values[25];
+        node.textColor = values[2];
         const lines: TextLine[] | undefined = this.$getLinesArr();
         if (values[5] == 0) {
             return [];
@@ -8520,7 +8777,7 @@ export class TextField extends DisplayObject {
         }
         drawY = Math.round(drawY);
         const hAlign: number = TextFieldUtils.$getHalign(this);
-        let drawX: number = 0;
+        let drawX: number;
         const underLineData: (number | undefined)[] = [];
         for (let i: number = startLine, numLinesLength: number = values[29]; i < numLinesLength; i++) {
             const line: TextLine = lines![i]!;
@@ -8657,7 +8914,7 @@ export class TextFieldUtils {
         }
         let line: number = 0;
         const textHeight: number = TextFieldUtils.$getTextHeight(textfield);
-        let startY: number = 0;
+        let startY: number;
         const textFieldHeight: number = textfield.$TextField[4];
         if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
             const valign: number = TextFieldUtils.$getValign(textfield);
@@ -8701,7 +8958,7 @@ export class TextFieldUtils {
             } else if (lineW < x) {
                 return {
                     lineIndex        : line - 1,
-                    textElementIndex : i
+                    textElementIndex : i,
                 };
             }
         }
@@ -8767,7 +9024,7 @@ export class Base64Util {
         let bufferLength: number = base64.length * 0.75;
         const len: number = base64.length;
         let p: number = 0;
-        let encoded1: number = 0, encoded2: number = 0, encoded3: number = 0, encoded4: number = 0;
+        let encoded1: number, encoded2: number, encoded3: number, encoded4: number;
         if (base64[base64.length - 1] === '=') {
             bufferLength--;
             if (base64[base64.length - 2] === '=') {
@@ -8941,9 +9198,11 @@ export class ByteArray {
         if (buffer) {
             let uint8: Uint8Array;
             if (buffer instanceof Uint8Array) {
-                uint8 = buffer; wpos = buffer.length;
+                uint8 = buffer;
+                wpos = buffer.length;
             } else {
-                wpos = buffer.byteLength; uint8 = new Uint8Array(buffer);
+                wpos = buffer.byteLength;
+                uint8 = new Uint8Array(buffer);
             }
             if (bufferExtSize == 0) {
                 bytes = new Uint8Array(wpos);
@@ -8967,7 +9226,9 @@ export class ByteArray {
     public set endian(value: string) {
         this.$endian = value == Endian.LITTLE_ENDIAN ? 0 : 1;
     }
-    public setArrayBuffer(_buffer: ArrayBuffer): void { }
+    public setArrayBuffer(_buffer: ArrayBuffer): void {
+        void _buffer;
+    }
     public get readAvailable(): number {
         return this.write_position - this._position;
     }
@@ -9044,8 +9305,10 @@ export class ByteArray {
     }
     public clear(): void {
         const buffer: ArrayBuffer = new ArrayBuffer(this.bufferExtSize);
-        this.data = new DataView(buffer); this._bytes = new Uint8Array(buffer);
-        this._position = 0; this.write_position = 0;
+        this.data = new DataView(buffer);
+        this._bytes = new Uint8Array(buffer);
+        this._position = 0;
+        this.write_position = 0;
     }
     public readBoolean(): boolean | undefined {
         if (this.validate(1)) {
@@ -9064,12 +9327,14 @@ export class ByteArray {
         const pos: number = this._position;
         const available: number = this.write_position - pos;
         if (available < 0) {
-            $error(1025); return;
+            $error(1025);
+            return;
         }
         if (length == 0) {
             length = available;
         } else if (length > available) {
-            $error(1025); return;
+            $error(1025);
+            return;
         }
         const position: number = bytes._position;
         bytes._position = 0;
@@ -9142,10 +9407,12 @@ export class ByteArray {
         return this.decodeUTF8(bytes);
     }
     public writeBoolean(value: boolean): void {
-        this.validateBuffer(1); this._bytes[this.position++] = +value;
+        this.validateBuffer(1);
+        this._bytes[this.position++] = +value;
     }
     public writeByte(value: number): void {
-        this.validateBuffer(1); this._bytes[this.position++] = value & 0xff;
+        this.validateBuffer(1);
+        this._bytes[this.position++] = value & 0xff;
     }
     public writeBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
         let writeLength: number;
@@ -9163,22 +9430,34 @@ export class ByteArray {
         }
     }
     public writeDouble(value: number): void {
-        this.validateBuffer(8); this.data.setFloat64(this._position, value, this.$endian == 0); this.position += 8;
+        this.validateBuffer(8);
+        this.data.setFloat64(this._position, value, this.$endian == 0);
+        this.position += 8;
     }
     public writeFloat(value: number): void {
-        this.validateBuffer(4); this.data.setFloat32(this._position, value, this.$endian == 0); this.position += 4;
+        this.validateBuffer(4);
+        this.data.setFloat32(this._position, value, this.$endian == 0);
+        this.position += 4;
     }
     public writeInt(value: number): void {
-        this.validateBuffer(4); this.data.setInt32(this._position, value, this.$endian == 0); this.position += 4;
+        this.validateBuffer(4);
+        this.data.setInt32(this._position, value, this.$endian == 0);
+        this.position += 4;
     }
     public writeShort(value: number): void {
-        this.validateBuffer(2); this.data.setInt16(this._position, value, this.$endian == 0); this.position += 2;
+        this.validateBuffer(2);
+        this.data.setInt16(this._position, value, this.$endian == 0);
+        this.position += 2;
     }
     public writeUnsignedInt(value: number): void {
-        this.validateBuffer(4); this.data.setUint32(this._position, value, this.$endian == 0); this.position += 4;
+        this.validateBuffer(4);
+        this.data.setUint32(this._position, value, this.$endian == 0);
+        this.position += 4;
     }
     public writeUnsignedShort(value: number): void {
-        this.validateBuffer(2); this.data.setUint16(this._position, value, this.$endian == 0); this.position += 2;
+        this.validateBuffer(2);
+        this.data.setUint16(this._position, value, this.$endian == 0);
+        this.position += 2;
     }
     public writeUTF(value: string): void {
         const utf8bytes: Uint8Array = this.encodeUTF8(value);
@@ -9228,11 +9507,14 @@ export class ByteArray {
             } else {
                 let count: number = NaN, offset: number = NaN;
                 if (this.inRange(code_point, 0x0080, 0x07FF)) {
-                    count = 1; offset = 0xC0;
+                    count = 1;
+                    offset = 0xC0;
                 } else if (this.inRange(code_point, 0x0800, 0xFFFF)) {
-                    count = 2; offset = 0xE0;
+                    count = 2;
+                    offset = 0xE0;
                 } else if (this.inRange(code_point, 0x10000, 0x10FFFF)) {
-                    count = 3; offset = 0xF0;
+                    count = 3;
+                    offset = 0xF0;
                 }
                 outputBytes.push(this.div(code_point, Math.pow(64, count)) + offset);
                 while (count > 0) {
@@ -9248,7 +9530,7 @@ export class ByteArray {
         const fatal: boolean = false;
         let pos: number = 0;
         let result: string = "";
-        let code_point: number | null = null;
+        let code_point: number | null;
         let utf8_code_point: number = 0;
         let utf8_bytes_needed: number = 0;
         let utf8_bytes_seen: number = 0;
@@ -9267,11 +9549,17 @@ export class ByteArray {
                         code_point = byte;
                     } else {
                         if (this.inRange(byte, 0xC2, 0xDF)) {
-                            utf8_bytes_needed = 1; utf8_lower_boundary = 0x80; utf8_code_point = byte - 0xC0;
+                            utf8_bytes_needed = 1;
+                            utf8_lower_boundary = 0x80;
+                            utf8_code_point = byte - 0xC0;
                         } else if (this.inRange(byte, 0xE0, 0xEF)) {
-                            utf8_bytes_needed = 2; utf8_lower_boundary = 0x800; utf8_code_point = byte - 0xE0;
+                            utf8_bytes_needed = 2;
+                            utf8_lower_boundary = 0x800;
+                            utf8_code_point = byte - 0xE0;
                         } else if (this.inRange(byte, 0xF0, 0xF4)) {
-                            utf8_bytes_needed = 3; utf8_lower_boundary = 0x10000; utf8_code_point = byte - 0xF0;
+                            utf8_bytes_needed = 3;
+                            utf8_lower_boundary = 0x10000;
+                            utf8_code_point = byte - 0xF0;
                         } else {
                             this.decoderError(fatal);
                         }
@@ -9279,7 +9567,10 @@ export class ByteArray {
                         code_point = null;
                     }
                 } else if (!this.inRange(byte, 0x80, 0xBF)) {
-                    utf8_code_point = 0; utf8_bytes_needed = 0; utf8_bytes_seen = 0; utf8_lower_boundary = 0;
+                    utf8_code_point = 0;
+                    utf8_bytes_needed = 0;
+                    utf8_bytes_seen = 0;
+                    utf8_lower_boundary = 0;
                     pos--;
                     code_point = this.decoderError(fatal, byte);
                 } else {
@@ -9290,7 +9581,10 @@ export class ByteArray {
                     } else {
                         const cp: number = utf8_code_point;
                         const lower_boundary: number = utf8_lower_boundary;
-                        utf8_code_point = 0; utf8_bytes_needed = 0; utf8_bytes_seen = 0; utf8_lower_boundary = 0;
+                        utf8_code_point = 0;
+                        utf8_bytes_needed = 0;
+                        utf8_bytes_seen = 0;
+                        utf8_lower_boundary = 0;
                         if (this.inRange(cp, lower_boundary, 0x10FFFF) && !this.inRange(cp, 0xD800, 0xDFFF)) {
                             code_point = cp;
                         } else {
@@ -9457,7 +9751,8 @@ export class Timer extends EventDispatcher {
         return this._running;
     }
     public reset(): void {
-        this.stop(); this._currentCount = 0;
+        this.stop();
+        this._currentCount = 0;
     }
     public start(): void {
         if (this._running) {
@@ -9732,871 +10027,6 @@ export class MovieClipEvent extends Event {
 }
 __reflect(MovieClipEvent.prototype, "egret.MovieClipEvent");
 
-export class ScrollEase {
-    public constructor() {
-        $error(1014);
-    }
-    public static get(amount: number): ScrollEaseFunction {
-        if (amount < -1) {
-            amount = -1;
-        }
-        if (amount > 1) {
-            amount = 1;
-        }
-        return (t: number): number => {
-            if (amount == 0) {
-                return t;
-            }
-            if (amount < 0) {
-                return t * (t * -amount + 1 + amount);
-            }
-            return t * ((2 - t) * amount + (1 - amount));
-        };
-    }
-    public static getPowOut(pow: number): ScrollEaseFunction {
-        return (t: number): number => 1 - Math.pow(1 - t, pow);
-    }
-    public static quintOut: ScrollEaseFunction = ScrollEase.getPowOut(5);
-    public static quartOut: ScrollEaseFunction = ScrollEase.getPowOut(4);
-}
-__reflect(ScrollEase.prototype, "egret.ScrollEase");
-
-export class ScrollTween extends EventDispatcher {
-    public static _tweens: ScrollTween[] = [];
-    public static IGNORE: object = {};
-    public static _plugins: Record<string, ScrollTweenPlugin[]> = {};
-    public static _inited: boolean = false;
-    public static _lastTime: number = 0;
-    public _target: ScrollTweenTarget | null = null;
-    public _useTicks: boolean | undefined = false;
-    public ignoreGlobalPause: boolean | undefined = false;
-    public loop: boolean | undefined = false;
-    public pluginData: ScrollTweenProperties | null = null;
-    public _steps: ScrollTweenStep[] = [];
-    public _actions: ScrollTweenAction[] = [];
-    public paused: boolean = false;
-    public duration: number = 0;
-    public _prevPos: number = -1;
-    public position: number | null = null;
-    public _prevPosition: number = 0;
-    public _stepPosition: number = 0;
-    public passive: boolean = false;
-    public _curQueueProps: ScrollTweenProperties = {};
-    public _initQueueProps: ScrollTweenProperties = {};
-
-    public constructor(target: object, props: ScrollTweenOptions | null = null, pluginData: ScrollTweenProperties | null = null) {
-        super();
-        this.initialize(target, props, pluginData);
-    }
-    public static get(target: object, props: ScrollTweenOptions | null = null, pluginData: ScrollTweenProperties | null = null, override: boolean = false): ScrollTween {
-        if (override) {
-            ScrollTween.removeTweens(target);
-        }
-        return new ScrollTween(target, props, pluginData);
-    }
-    public static removeTweens(target: ScrollTweenTarget): void {
-        if (!target.tween_count) {
-            return;
-        }
-        const tweens: ScrollTween[] = ScrollTween._tweens;
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) {
- tweens[i]!.paused = true; tweens.splice(i, 1);
-            }
-        }
-        target.tween_count = 0;
-    }
-    public static tick(timeStamp: number, paused: boolean = false): boolean {
-        const delta: number = timeStamp - ScrollTween._lastTime;
-        ScrollTween._lastTime = timeStamp;
-        const tweens: ScrollTween[] = ScrollTween._tweens.concat();
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            const tween: ScrollTween = tweens[i]!;
-            if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
-                continue;
-            }
-            tween.tick(tween._useTicks ? 1 : delta);
-        }
-        return false;
-    }
-    public static _register(tween: ScrollTween, value: boolean): void {
-        const target: ScrollTweenTarget | null = tween._target;
-        const tweens: ScrollTween[] = ScrollTween._tweens;
-        if (value) {
-            if (target) {
-                target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1;
-            }
-            tweens.push(tween);
-            if (!ScrollTween._inited) {
-                ScrollTween._lastTime = getTimer();
-                getTicker().$startTick(ScrollTween.tick, null);
-                ScrollTween._inited = true;
-            }
-        } else {
-            if (target) {
-                target.tween_count = (target.tween_count ?? NaN) - 1;
-            }
-            let i: number = tweens.length;
-            while (i--) {
-                if (tweens[i] == tween) {
-                    tweens.splice(i, 1); return;
-                }
-            }
-        }
-    }
-    public initialize(target: object, props: ScrollTweenOptions | null, pluginData: ScrollTweenProperties | null): void {
-        this._target = target;
-        if (props) {
-            this._useTicks = props.useTicks;
-            this.ignoreGlobalPause = props.ignoreGlobalPause;
-            this.loop = props.loop;
-            if (props.onChange) {
-                this.addEventListener("change", props.onChange, props.onChangeObj);
-            }
-            if (props.override) {
-                ScrollTween.removeTweens(target);
-            }
-        }
-        this.pluginData = pluginData || {};
-        this._curQueueProps = {};
-        this._initQueueProps = {};
-        this._steps = [];
-        this._actions = [];
-        if (props && props.paused) {
-            this.paused = true;
-        } else {
-            ScrollTween._register(this, true);
-        }
-        if (props && props.position != null) {
-            this.setPosition(props.position);
-        }
-    }
-    public setPosition(value: number, actionsMode: number = 1): boolean {
-        if (value < 0) {
-            value = 0;
-        }
-        let t: number = value;
-        let end: boolean = false;
-        if (t >= this.duration) {
-            if (this.loop) {
-                t = t % this.duration;
-            } else {
-                t = this.duration; end = true;
-            }
-        }
-        if (t == this._prevPos) {
-            return end;
-        }
-        const prevPos: number = this._prevPos;
-        this.position = this._prevPos = t;
-        this._prevPosition = value;
-        if (this._target) {
-            if (end) {
-                this._updateTargetProps(null, 1);
-            } else if (this._steps.length > 0) {
-                let i: number = 0;
-                const length: number = this._steps.length;
-                for (; i < length; i++) {
-                    if (this._steps[i]!.t > t) {
-                        break;
-                    }
-                }
-                const step: ScrollTweenStep = this._steps[i - 1]!;
-                this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
-            }
-        }
-        if (end) {
-            this.setPaused(true);
-        }
-        if (actionsMode != 0 && this._actions.length > 0) {
-            if (this._useTicks) {
-                this._runActions(t, t);
-            } else if (actionsMode == 1 && t < prevPos) {
-                if (prevPos != this.duration) {
-                    this._runActions(prevPos, this.duration);
-                }
-                this._runActions(0, t, true);
-            } else {
-                this._runActions(prevPos, t);
-            }
-        }
-        this.dispatchEventWith("change");
-        return end;
-    }
-    public _runActions(startPos: number, endPos: number, includeStart: boolean = false): void {
-        let sPos: number = startPos;
-        let ePos: number = endPos;
-        let i: number = -1;
-        let j: number = this._actions.length;
-        let k: number = 1;
-        if (startPos > endPos) {
-            sPos = endPos; ePos = startPos; i = j; j = k = -1;
-        }
-        while ((i += k) != j) {
-            const action: ScrollTweenAction = this._actions[i]!;
-            const pos: number = action.t;
-            if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
-                action.execute();
-            }
-        }
-    }
-    public _updateTargetProps(step: ScrollTweenStep | null, ratio: number): void {
-        let p0: ScrollTweenProperties;
-        let p1: ScrollTweenProperties;
-        if (!step && ratio == 1) {
-            this.passive = false; p0 = p1 = this._curQueueProps;
-        } else {
-            this.passive = !!step!.v;
-            if (this.passive) {
-                return;
-            }
-            if (step!.e) {
-                ratio = step!.e(ratio, 0, 1, 1);
-            }
-            p0 = step!.p0;
-            p1 = step!.p1;
-        }
-        let n: string;
-        for (n in this._initQueueProps) {
-            let v0: unknown = p0[n];
-            let v1: unknown = p1[n];
-            if (v0 == null) {
-                p0[n] = v0 = this._initQueueProps[n];
-            }
-            if (v1 == null) {
-                p1[n] = v1 = v0;
-            }
-            let v: unknown;
-            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") {
-                v = ratio == 1 ? v1 : v0;
-            } else {
-                v = v0 + (Number(v1) - v0) * ratio;
-            }
-            let ignore: boolean = false;
-            const plugins: ScrollTweenPlugin[] | undefined = ScrollTween._plugins[n];
-            if (plugins) {
-                for (let i: number = 0; i < plugins.length; i++) {
-                    const plugin: ScrollTweenPlugin = plugins[i]!;
-                    const v2: unknown = plugin.tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                    if (v2 == ScrollTween.IGNORE) {
-                        ignore = true;
-                    } else {
-                        v = v2;
-                    }
-                }
-            }
-            if (!ignore) {
-                (this._target as ScrollTweenProperties)[n] = v;
-            }
-        }
-    }
-    public setPaused(value: boolean): this {
-        this.paused = value; ScrollTween._register(this, !value); return this;
-    }
-    public _cloneProps(props: ScrollTweenProperties): ScrollTweenProperties {
-        const output: ScrollTweenProperties = {};
-        let n: string;
-        for (n in props) {
-            output[n] = props[n];
-        }
-        return output;
-    }
-    public _addStep(step: ScrollTweenStep): this {
-        if (step.d > 0) {
-            this._steps.push(step); step.t = this.duration; this.duration += step.d;
-        }
-        return this;
-    }
-    public _appendQueueProps(props: ScrollTweenProperties): ScrollTweenProperties {
-        let injectProps: ScrollTweenProperties | undefined;
-        let n: string;
-        for (n in props) {
-            if (this._initQueueProps[n] === undefined) {
-                let oldValue: unknown = (this._target as ScrollTweenProperties)[n];
-                const plugins: ScrollTweenPlugin[] | undefined = ScrollTween._plugins[n];
-                if (plugins) {
-                    for (let i: number = 0; i < plugins.length; i++) {
-                        const plugin: ScrollTweenPlugin = plugins[i]!;
-                        oldValue = plugin.init(this, n, oldValue);
-                    }
-                }
-                this._initQueueProps[n] = this._curQueueProps[n] = oldValue === undefined ? null : oldValue;
-            }
-        }
-        for (n in props) {
-            const oldValue: unknown = this._curQueueProps[n];
-            const plugins: ScrollTweenPlugin[] | undefined = ScrollTween._plugins[n];
-            if (plugins) {
-                injectProps = injectProps || {};
-                for (let i: number = 0; i < plugins.length; i++) {
-                    const plugin: ScrollTweenPlugin = plugins[i]!;
-                    if (plugin.step) {
-                        plugin.step(this, n, oldValue, props[n], injectProps);
-                    }
-                }
-            }
-            this._curQueueProps[n] = props[n];
-        }
-        if (injectProps) {
-            this._appendQueueProps(injectProps);
-        }
-        return this._curQueueProps;
-    }
-    public _addAction(action: ScrollTweenAction): this {
-        action.t = this.duration; this._actions.push(action); return this;
-    }
-    public to(props: ScrollTweenProperties, duration: number, ease?: ScrollEaseFunction): this {
-        if (isNaN(duration) || duration < 0) {
-            duration = 0;
-        }
-        return this._addStep({
-            t  : 0,
-            d  : duration || 0,
-            p0 : this._cloneProps(this._curQueueProps),
-            e  : ease,
-            p1 : this._cloneProps(this._appendQueueProps(props))
-        });
-    }
-    public call<TThis, TArgs extends unknown[]>(callback: (this: TThis, ...args: TArgs) => unknown, thisObj?: TThis, params?: TArgs): this {
-        const context: TThis = (thisObj ? thisObj : this._target) as TThis;
-        const args: TArgs = (params ? params : []) as TArgs;
-        return this._addAction({
-            t       : 0,
-            execute : (): void => {
-                callback.apply(context, args);
-            }
-        });
-    }
-    public tick(delta: number): void {
-        if (!this.paused) {
-            this.setPosition(this._prevPosition + delta);
-        }
-    }
-}
-__reflect(ScrollTween.prototype, "egret.ScrollTween");
-
-export class ScrollView extends DisplayObjectContainer {
-    public static weight: number[] = [1, 1.33, 1.66, 2, 2.33];
-    public scrollBeginThreshold: number = 10;
-    public scrollSpeed: number = 1;
-    public _content: DisplayObject | null = null;
-    public delayTouchBeginEvent: TouchEvent | null = null;
-    public touchBeginTimer: Timer | null = null;
-    public _ScrV_Props_: ScrollViewProperties;
-    public _tempStage: Stage | null = null;
-
-    public constructor(content: DisplayObject | null = null) {
-        super();
-        this.touchEnabled = true;
-        this._ScrV_Props_ = new ScrollViewProperties();
-        if (content) {
-            this.setContent(content);
-        }
-    }
-    public get bounces(): boolean {
-        return this._ScrV_Props_._bounces;
-    }
-    public set bounces(value: boolean) {
-        this._ScrV_Props_._bounces = !!value;
-    }
-    public setContent(content: DisplayObject | null): void {
-        if (this._content === content) {
-            return;
-        }
-        this.removeContent();
-        if (content) {
-            this._content = content; super.addChild(content); this._addEvents();
-        }
-    }
-    public removeContent(): void {
-        if (this._content) {
-            this._removeEvents(); super.removeChildAt(0);
-        }
-        this._content = null;
-    }
-    public get verticalScrollPolicy(): ScrollPolicy {
-        return this._ScrV_Props_._verticalScrollPolicy;
-    }
-    public set verticalScrollPolicy(value: ScrollPolicy) {
-        if (value == this._ScrV_Props_._verticalScrollPolicy) {
-            return;
-        }
-        this._ScrV_Props_._verticalScrollPolicy = value;
-    }
-    public get horizontalScrollPolicy(): ScrollPolicy {
-        return this._ScrV_Props_._horizontalScrollPolicy;
-    }
-    public set horizontalScrollPolicy(value: ScrollPolicy) {
-        if (value == this._ScrV_Props_._horizontalScrollPolicy) {
-            return;
-        }
-        this._ScrV_Props_._horizontalScrollPolicy = value;
-    }
-    public get scrollLeft(): number {
-        return this._ScrV_Props_._scrollLeft;
-    }
-    public set scrollLeft(value: number) {
-        if (value == this._ScrV_Props_._scrollLeft) {
-            return;
-        }
-        this._ScrV_Props_._scrollLeft = value;
-        this._validatePosition(false, true);
-        this._updateContentPosition();
-    }
-    public get scrollTop(): number {
-        return this._ScrV_Props_._scrollTop;
-    }
-    public set scrollTop(value: number) {
-        if (value == this._ScrV_Props_._scrollTop) {
-            return;
-        }
-        this._ScrV_Props_._scrollTop = value;
-        this._validatePosition(true, false);
-        this._updateContentPosition();
-    }
-    public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
-        if (isOffset && top == 0 && left == 0) {
-            return;
-        }
-        if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left) {
-            return;
-        }
-        const oldTop: number = this._ScrV_Props_._scrollTop;
-        const oldLeft: number = this._ScrV_Props_._scrollLeft;
-        if (isOffset) {
-            const maxLeft: number = this.getMaxScrollLeft();
-            const maxTop: number = this.getMaxScrollTop();
-            if (oldTop <= 0 || oldTop >= maxTop) {
-                top /= 2;
-            }
-            if (oldLeft <= 0 || oldLeft >= maxLeft) {
-                left /= 2;
-            }
-            let newTop: number = oldTop + top;
-            let newLeft: number = oldLeft + left;
-            const bounces: boolean = this._ScrV_Props_._bounces;
-            if (!bounces) {
-                if (newTop <= 0 || newTop >= maxTop) {
-                    newTop = Math.max(0, Math.min(newTop, maxTop));
-                }
-                if (newLeft <= 0 || newLeft >= maxLeft) {
-                    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-                }
-            }
-            this._ScrV_Props_._scrollTop = newTop;
-            this._ScrV_Props_._scrollLeft = newLeft;
-        } else {
-            this._ScrV_Props_._scrollTop = top; this._ScrV_Props_._scrollLeft = left;
-        }
-        this._validatePosition(true, true);
-        this._updateContentPosition();
-    }
-    public _validatePosition(top: boolean = false, left: boolean = false): void {
-        if (top) {
-            const height: number = this.height;
-            const contentHeight: number = this._getContentHeight();
-            this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, -height / 2);
-            this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? contentHeight - height / 2 : height / 2);
-        }
-        if (left) {
-            const width: number = this.width;
-            const contentWidth: number = this._getContentWidth();
-            this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, -width / 2);
-            this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? contentWidth - width / 2 : width / 2);
-        }
-    }
-    public $setWidth(value: number): void {
-        if (this.$explicitWidth == value) {
-            return;
-        }
-        super.$setWidth(value);
-        this._updateContentPosition();
-    }
-    public $setHeight(value: number): void {
-        if (this.$explicitHeight == value) {
-            return;
-        }
-        super.$setHeight(value);
-        this._updateContentPosition();
-    }
-    public _updateContentPosition(): void {
-        const height: number = this.height;
-        const width: number = this.width;
-        this.scrollRect = new Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
-        this.dispatchEvent(new Event(Event.CHANGE));
-    }
-    public _checkScrollPolicy(): boolean {
-        const hpolicy: ScrollPolicy = this._ScrV_Props_._horizontalScrollPolicy;
-        const hCanScroll: boolean = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
-        this._ScrV_Props_._hCanScroll = hCanScroll;
-        const vpolicy: ScrollPolicy = this._ScrV_Props_._verticalScrollPolicy;
-        const vCanScroll: boolean = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
-        this._ScrV_Props_._vCanScroll = vCanScroll;
-        return hCanScroll || vCanScroll;
-    }
-    public __checkScrollPolicy(policy: ScrollPolicy, contentLength: number, viewLength: number): boolean {
-        if (policy == "on") {
-            return true;
-        }
-        if (policy == "off") {
-            return false;
-        }
-        return contentLength > viewLength;
-    }
-    public _addEvents(): void {
-        this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-        this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-        this.addEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-    }
-    public _removeEvents(): void {
-        this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-        this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-        this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-    }
-    public _onTouchBegin(event: Event): void {
-        const e: TouchEvent = event as TouchEvent;
-        if (e.$isDefaultPrevented) {
-            return;
-        }
-        const canScroll: boolean = this._checkScrollPolicy();
-        if (!canScroll) {
-            return;
-        }
-        this._ScrV_Props_._touchStartPosition.x = e.stageX;
-        this._ScrV_Props_._touchStartPosition.y = e.stageY;
-        if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
-            this._onScrollFinished();
-        }
-        this._tempStage = this.stage;
-        this._tempStage!.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-        this._tempStage!.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
-        this._tempStage!.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-        this.addEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
-        this._logTouchEvent(e);
-        e.preventDefault();
-    }
-    public _onTouchBeginCapture(baseEvent: Event): void {
-        const event: TouchEvent = baseEvent as TouchEvent;
-        let canScroll: boolean = this._checkScrollPolicy();
-        if (!canScroll) {
-            return;
-        }
-        let target: DisplayObject = event.target as DisplayObject;
-        while (target != this) {
-            if ("_checkScrollPolicy" in target && typeof target._checkScrollPolicy === "function") {
-                canScroll = Boolean(target._checkScrollPolicy());
-                if (canScroll) {
-                    return;
-                }
-            }
-            target = target.parent!;
-        }
-        event.stopPropagation();
-        const evt: TouchEvent = this.cloneTouchEvent(event);
-        this.delayTouchBeginEvent = evt;
-        if (!this.touchBeginTimer) {
-            this.touchBeginTimer = new Timer(100, 1);
-            this.touchBeginTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
-        }
-        this.touchBeginTimer.start();
-        this._onTouchBegin(event);
-    }
-    public _onTouchEndCapture(baseEvent: Event): void {
-        const event: TouchEvent = baseEvent as TouchEvent;
-        if (!this.delayTouchBeginEvent) {
-            return;
-        }
-        this._onTouchBeginTimer();
-        event.stopPropagation();
-        const evt: TouchEvent = this.cloneTouchEvent(event);
-        callLater((): void => {
-            if (this.stage) {
-                this.dispatchPropagationEvent(evt);
-            }
-        }, this);
-    }
-    public _onTouchBeginTimer(): void {
-        this.touchBeginTimer!.stop();
-        const event: TouchEvent = this.delayTouchBeginEvent!;
-        this.delayTouchBeginEvent = null;
-        if (this.stage) {
-            this.dispatchPropagationEvent(event);
-        }
-    }
-    public dispatchPropagationEvent(event: TouchEvent): void {
-        const target: DisplayObject | null = event.$target as DisplayObject | null;
-        const list: DisplayObject[] = this.$getPropagationList(target);
-        const length: number = list.length;
-        let targetIndex: number = list.length * 0.5;
-        let startIndex: number = -1;
-        for (let i: number = 0; i < length; i++) {
-            if (list[i] === this._content) {
-                startIndex = i; break;
-            }
-        }
-        list.splice(0, startIndex + 1);
-        targetIndex -= startIndex + 1;
-        this.$dispatchPropagationEvent(event, list, targetIndex);
-        Event.release(event);
-    }
-    public _onTouchMove(baseEvent: Event): void {
-        const event: TouchEvent = baseEvent as TouchEvent;
-        if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY) {
-            return;
-        }
-        if (!this._ScrV_Props_._scrollStarted) {
-            const x: number = event.stageX - this._ScrV_Props_._touchStartPosition.x;
-            const y: number = event.stageY - this._ScrV_Props_._touchStartPosition.y;
-            const distance: number = Math.sqrt(x * x + y * y);
-            if (distance < this.scrollBeginThreshold) {
-                this._logTouchEvent(event); return;
-            }
-        }
-        this._ScrV_Props_._scrollStarted = true;
-        if (this.delayTouchBeginEvent) {
-            this.delayTouchBeginEvent = null; this.touchBeginTimer!.stop();
-        }
-        this.touchChildren = false;
-        const offset: ScrollPoint = this._getPointChange(event);
-        this.setScrollPosition(offset.y, offset.x, true);
-        this._calcVelocitys(event);
-        this._logTouchEvent(event);
-    }
-    public _onTouchEnd(_event: Event): void {
-        this.touchChildren = true;
-        this._ScrV_Props_._scrollStarted = false;
-        this._tempStage!.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-        this._tempStage!.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
-        this._tempStage!.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-        this.removeEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
-        this._moveAfterTouchEnd();
-    }
-    public _onEnterFrame(_event: Event): void {
-        const time: number = getTimer();
-        if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
-            this._calcVelocitys(this._ScrV_Props_._lastTouchEvent!);
-        }
-    }
-    public _logTouchEvent(e: TouchEvent): void {
-        this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-        this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-        this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
-        this._ScrV_Props_._lastTouchTime = getTimer();
-    }
-    public _getPointChange(e: TouchEvent): ScrollPoint {
-        return {
-            x : this._ScrV_Props_._hCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.x - e.stageX,
-            y : this._ScrV_Props_._vCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.y - e.stageY
-        };
-    }
-    public _calcVelocitys(e: TouchEvent): void {
-        const time: number = getTimer();
-        if (this._ScrV_Props_._lastTouchTime == 0) {
-            this._ScrV_Props_._lastTouchTime = time; return;
-        }
-        const change: ScrollPoint = this._getPointChange(e);
-        const timeoffset: number = time - this._ScrV_Props_._lastTouchTime;
-        change.x /= timeoffset;
-        change.y /= timeoffset;
-        this._ScrV_Props_._velocitys.push(change);
-        if (this._ScrV_Props_._velocitys.length > 5) {
-            this._ScrV_Props_._velocitys.shift();
-        }
-        this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-        this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-    }
-    public _getContentWidth(): number {
-        return this._content!.$explicitWidth || this._content!.width;
-    }
-    public _getContentHeight(): number {
-        return this._content!.$explicitHeight || this._content!.height;
-    }
-    public getMaxScrollLeft(): number {
-        const max: number = this._getContentWidth() - this.width; return Math.max(0, max);
-    }
-    public getMaxScrollTop(): number {
-        const max: number = this._getContentHeight() - this.height; return Math.max(0, max);
-    }
-    public _moveAfterTouchEnd(): void {
-        if (this._ScrV_Props_._velocitys.length == 0) {
-            return;
-        }
-        const sum: ScrollPoint = {
-            x : 0,
-            y : 0
-        };
-        let totalW: number = 0;
-        for (let i: number = 0; i < this._ScrV_Props_._velocitys.length; i++) {
-            const v: ScrollPoint = this._ScrV_Props_._velocitys[i]!;
-            const w: number = ScrollView.weight[i]!;
-            sum.x += v.x * w;
-            sum.y += v.y * w;
-            totalW += w;
-        }
-        this._ScrV_Props_._velocitys.length = 0;
-        if (this.scrollSpeed <= 0) {
-            this.scrollSpeed = 1;
-        }
-        const x: number = sum.x / totalW * this.scrollSpeed;
-        const y: number = sum.y / totalW * this.scrollSpeed;
-        const pixelsPerMSX: number = Math.abs(x);
-        const pixelsPerMSY: number = Math.abs(y);
-        const maxLeft: number = this.getMaxScrollLeft();
-        const maxTop: number = this.getMaxScrollTop();
-        const datax: ScrollAnimationData = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
-            position : this._ScrV_Props_._scrollLeft,
-            duration : 1
-        };
-        const datay: ScrollAnimationData = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
-            position : this._ScrV_Props_._scrollTop,
-            duration : 1
-        };
-        this.setScrollLeft(datax.position, datax.duration);
-        this.setScrollTop(datay.position, datay.duration);
-    }
-    public onTweenFinished(tw: ScrollTween): void {
-        if (tw == this._ScrV_Props_._vScrollTween) {
-            this._ScrV_Props_._isVTweenPlaying = false;
-        }
-        if (tw == this._ScrV_Props_._hScrollTween) {
-            this._ScrV_Props_._isHTweenPlaying = false;
-        }
-        if (!this._ScrV_Props_._isHTweenPlaying && !this._ScrV_Props_._isVTweenPlaying) {
-            this._onScrollFinished();
-        }
-    }
-    public _onScrollStarted(): void { }
-    public _onScrollFinished(): void {
-        ScrollTween.removeTweens(this);
-        this._ScrV_Props_._hScrollTween = null;
-        this._ScrV_Props_._vScrollTween = null;
-        this._ScrV_Props_._isHTweenPlaying = false;
-        this._ScrV_Props_._isVTweenPlaying = false;
-        this.dispatchEvent(new Event(Event.COMPLETE));
-    }
-    public setScrollTop(scrollTop: number, duration: number = 0): void {
-        const finalPosition: number = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
-        if (duration == 0) {
-            this.scrollTop = finalPosition; return;
-        }
-        if (!this._ScrV_Props_._bounces) {
-            scrollTop = finalPosition;
-        }
-        const vtween: ScrollTween = ScrollTween.get(this).to({ scrollTop : scrollTop }, duration, ScrollEase.quartOut);
-        if (finalPosition != scrollTop) {
-            vtween.to({ scrollTop : finalPosition }, 300, ScrollEase.quintOut);
-        }
-        this._ScrV_Props_._isVTweenPlaying = true;
-        this._ScrV_Props_._vScrollTween = vtween;
-        vtween.call(this.onTweenFinished, this, [vtween]);
-        if (!this._ScrV_Props_._isHTweenPlaying) {
-            this._onScrollStarted();
-        }
-    }
-    public setScrollLeft(scrollLeft: number, duration: number = 0): void {
-        const finalPosition: number = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
-        if (duration == 0) {
-            this.scrollLeft = finalPosition; return;
-        }
-        if (!this._ScrV_Props_._bounces) {
-            scrollLeft = finalPosition;
-        }
-        const htween: ScrollTween = ScrollTween.get(this).to({ scrollLeft : scrollLeft }, duration, ScrollEase.quartOut);
-        if (finalPosition != scrollLeft) {
-            htween.to({ scrollLeft : finalPosition }, 300, ScrollEase.quintOut);
-        }
-        this._ScrV_Props_._isHTweenPlaying = true;
-        this._ScrV_Props_._hScrollTween = htween;
-        htween.call(this.onTweenFinished, this, [htween]);
-        if (!this._ScrV_Props_._isVTweenPlaying) {
-            this._onScrollStarted();
-        }
-    }
-    public getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): ScrollAnimationData {
-        const absPixelsPerMS: number = Math.abs(pixelsPerMS);
-        const extraFricition: number = 0.95;
-        let duration: number = 0;
-        const friction: number = 0.998;
-        const minVelocity: number = 0.02;
-        let posTo: number = curPos + pixelsPerMS * 500;
-        if (posTo < 0 || posTo > maxPos) {
-            posTo = curPos;
-            while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
-                posTo += pixelsPerMS;
-                if (posTo < 0 || posTo > maxPos) {
-                    pixelsPerMS *= friction * extraFricition;
-                } else {
-                    pixelsPerMS *= friction;
-                }
-                duration++;
-            }
-        } else {
-            duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
-        }
-        const result: ScrollAnimationData = {
-            position : Math.min(maxPos + 50, Math.max(posTo, -50)),
-            duration : duration
-        };
-        return result;
-    }
-    public cloneTouchEvent(event: TouchEvent): TouchEvent {
-        const evt: TouchEvent = new TouchEvent(event.type, event.bubbles, event.cancelable);
-        evt.touchPointID = event.touchPointID;
-        evt.$stageX = event.stageX;
-        evt.$stageY = event.stageY;
-        evt.touchDown = event.touchDown;
-        evt.$isDefaultPrevented = false;
-        evt.$target = event.target;
-        return evt;
-    }
-    public throwNotSupportedError(): never {
-        return $error(1023);
-    }
-    public addChild(_child: DisplayObject): never {
-        return this.throwNotSupportedError();
-    }
-    public addChildAt(_child: DisplayObject, _index: number): never {
-        return this.throwNotSupportedError();
-    }
-    public removeChild(_child: DisplayObject): never {
-        return this.throwNotSupportedError();
-    }
-    public removeChildAt(_index: number): never {
-        return this.throwNotSupportedError();
-    }
-    public setChildIndex(_child: DisplayObject, _index: number): void {
-        this.throwNotSupportedError();
-    }
-    public swapChildren(_child1: DisplayObject, _child2: DisplayObject): void {
-        this.throwNotSupportedError();
-    }
-    public swapChildrenAt(_index1: number, _index2: number): void {
-        this.throwNotSupportedError();
-    }
-}
-__reflect(ScrollView.prototype, "egret.ScrollView");
-
-export class ScrollViewProperties {
-    public _verticalScrollPolicy: ScrollPolicy = "auto";
-    public _horizontalScrollPolicy: ScrollPolicy = "auto";
-    public _scrollLeft: number = 0;
-    public _scrollTop: number = 0;
-    public _hCanScroll: boolean = false;
-    public _vCanScroll: boolean = false;
-    public _lastTouchPosition: Point = new Point(0, 0);
-    public _touchStartPosition: Point = new Point(0, 0);
-    public _scrollStarted: boolean = false;
-    public _lastTouchTime: number = 0;
-    public _lastTouchEvent: TouchEvent | null = null;
-    public _velocitys: ScrollPoint[] = [];
-    public _isHTweenPlaying: boolean = false;
-    public _isVTweenPlaying: boolean = false;
-    public _hScrollTween: ScrollTween | null = null;
-    public _vScrollTween: ScrollTween | null = null;
-    public _bounces: boolean = true;
-}
-__reflect(ScrollViewProperties.prototype, "egret.ScrollViewProperties");
-
 export class MovieClip extends DisplayObject {
     public $texture: Texture | null = null;
     public offsetPoint: Point = Point.create(0, 0);
@@ -10661,7 +10091,8 @@ export class MovieClip extends DisplayObject {
     }
     public _initFrame(): void {
         if (this.$movieClipData!.$isTextureValid()) {
-            this.advanceFrame(); this.constructFrame();
+            this.advanceFrame();
+            this.constructFrame();
         }
     }
     public $updateRenderNode(): void {
@@ -10699,7 +10130,8 @@ export class MovieClip extends DisplayObject {
         }
     }
     public $onRemoveFromStage(): void {
-        super.$onRemoveFromStage(); this.setIsStopped(true);
+        super.$onRemoveFromStage();
+        this.setIsStopped(true);
     }
     public getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel | null {
         if (ignoreCase) {
@@ -10765,7 +10197,8 @@ export class MovieClip extends DisplayObject {
         }
     }
     public stop(): void {
-        this.$isPlaying = false; this.setIsStopped(true);
+        this.$isPlaying = false;
+        this.setIsStopped(true);
     }
     public prevFrame(): void {
         this.gotoAndStop(this.$currentFrameNum - 1);
@@ -10780,7 +10213,8 @@ export class MovieClip extends DisplayObject {
         if (typeof frame === "string") {
             this.getFrameStartEnd(frame);
         } else {
-            this.$frameLabelStart = 0; this.$frameLabelEnd = 0;
+            this.$frameLabelStart = 0;
+            this.$frameLabelEnd = 0;
         }
         this.play(playTimes);
         this.gotoFrame(frame);
@@ -10816,41 +10250,43 @@ export class MovieClip extends DisplayObject {
         this.handlePendingEvent();
     }
     public advanceTime(timeStamp: number): boolean {
-        const self: this = this;
-        const advancedTime: number = timeStamp - self.lastTime;
-        self.lastTime = timeStamp;
-        const frameIntervalTime: number = self.frameIntervalTime;
-        const currentTime: number = self.passedTime + advancedTime;
-        self.passedTime = currentTime % frameIntervalTime;
+
+        const advancedTime: number = timeStamp - this.lastTime;
+        this.lastTime = timeStamp;
+        const frameIntervalTime: number = this.frameIntervalTime;
+        const currentTime: number = this.passedTime + advancedTime;
+        this.passedTime = currentTime % frameIntervalTime;
         let num: number = currentTime / frameIntervalTime;
         if (num < 1) {
             return false;
         }
         while (num >= 1) {
             num--;
-            self.$nextFrameNum++;
-            if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd!)) {
-                if (self.playTimes == -1) {
- self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1;
+            this.$nextFrameNum++;
+            if (this.$nextFrameNum > this.$totalFrames || (this.$frameLabelStart > 0 && this.$nextFrameNum > this.$frameLabelEnd!)) {
+                if (this.playTimes == -1) {
+ this.$eventPool!.push(Event.LOOP_COMPLETE);
+ this.$nextFrameNum = 1;
                 } else {
-                    self.playTimes--;
-                    if (self.playTimes > 0) {
- self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1;
+                    this.playTimes--;
+                    if (this.playTimes > 0) {
+ this.$eventPool!.push(Event.LOOP_COMPLETE);
+ this.$nextFrameNum = 1;
                     } else {
-                        self.$nextFrameNum = self.$totalFrames;
-                        self.$eventPool!.push(Event.COMPLETE);
-                        self.stop();
+                        this.$nextFrameNum = this.$totalFrames;
+                        this.$eventPool!.push(Event.COMPLETE);
+                        this.stop();
                         break;
                     }
                 }
             }
-            if (self.$currentFrameNum == self.$frameLabelEnd) {
-                self.$nextFrameNum = self.$frameLabelStart;
+            if (this.$currentFrameNum == this.$frameLabelEnd) {
+                this.$nextFrameNum = this.$frameLabelStart;
             }
-            self.advanceFrame();
+            this.advanceFrame();
         }
-        self.constructFrame();
-        self.handlePendingEvent();
+        this.constructFrame();
+        this.handlePendingEvent();
         return false;
     }
     public advanceFrame(): void {
@@ -10861,38 +10297,42 @@ export class MovieClip extends DisplayObject {
         }
     }
     public constructFrame(): void {
-        const self: this = this;
-        const currentFrameNum: number = self.$currentFrameNum;
-        if (self.displayedKeyFrameNum == currentFrameNum) {
+
+        const currentFrameNum: number = this.$currentFrameNum;
+        if (this.displayedKeyFrameNum == currentFrameNum) {
             return;
         }
-        const texture: Texture | null = self.$movieClipData!.getTextureByFrame(currentFrameNum);
-        self.$texture = texture;
-        self.$movieClipData!.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
-        self.displayedKeyFrameNum = currentFrameNum;
-        self.$renderDirty = true;
+        const texture: Texture | null = this.$movieClipData!.getTextureByFrame(currentFrameNum);
+        this.$texture = texture;
+        this.$movieClipData!.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
+        this.displayedKeyFrameNum = currentFrameNum;
+        this.$renderDirty = true;
         {
-            const p: DisplayObjectContainer | null = self.$parent;
+            const p: DisplayObjectContainer | null = this.$parent;
             if (p && !p.$cacheDirty) {
-                p.$cacheDirty = true; p.$cacheDirtyUp();
+                p.$cacheDirty = true;
+                p.$cacheDirtyUp();
             }
-            const maskedObject: DisplayObject | null = self.$maskedObject;
+            const maskedObject: DisplayObject | null = this.$maskedObject;
             if (maskedObject && !maskedObject.$cacheDirty) {
-                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+                maskedObject.$cacheDirty = true;
+                maskedObject.$cacheDirtyUp();
             }
         }
     }
     public $renderFrame(): void {
-        const self: this = this;
-        self.$texture = self.$movieClipData!.getTextureByFrame(self.$currentFrameNum);
-        self.$renderDirty = true;
-        const p: DisplayObjectContainer | null = self.$parent;
+
+        this.$texture = this.$movieClipData!.getTextureByFrame(this.$currentFrameNum);
+        this.$renderDirty = true;
+        const p: DisplayObjectContainer | null = this.$parent;
         if (p && !p.$cacheDirty) {
-            p.$cacheDirty = true; p.$cacheDirtyUp();
+            p.$cacheDirty = true;
+            p.$cacheDirtyUp();
         }
-        const maskedObject: DisplayObject | null = self.$maskedObject;
+        const maskedObject: DisplayObject | null = this.$maskedObject;
         if (maskedObject && !maskedObject.$cacheDirty) {
-            maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+            maskedObject.$cacheDirty = true;
+            maskedObject.$cacheDirtyUp();
         }
     }
     public handlePendingEvent(): void {
@@ -10987,7 +10427,8 @@ export class URLRequest extends HashObject {
     public url: string | null = "";
     public requestHeaders: URLRequestHeader[] = [];
     public constructor(url: string | null = null) {
-        super(); this.url = url;
+        super();
+        this.url = url;
     }
 }
 __reflect(URLRequest.prototype, "egret.URLRequest");
@@ -11128,6 +10569,8 @@ export class Recycler<T extends object = object> extends HashObject {
         }
     }
     private static onUpdate(_timeStamp: number): boolean {
+        void _timeStamp;
+
         const list: RecyclerFrameCheck[] = Recycler._callBackList;
         for (let i: number = list.length - 1; i >= 0; i--) {
  list[i]!.$checkFrame();
@@ -11166,7 +10609,8 @@ export class Recycler<T extends object = object> extends HashObject {
     }
     public dispose(): void {
         if (this._length > 0) {
-            this.objectPool = []; this._length = 0;
+            this.objectPool = [];
+            this._length = 0;
         }
         this.frameCount = 0;
         const list: RecyclerFrameCheck[] = Recycler._callBackList;
@@ -11192,6 +10636,10 @@ export class WebSocket extends EventDispatcher {
     private socket: HTML5WebSocket;
 
     public constructor(_host: string = "", _port: number = 0) {
+        void _host;
+
+        void _port;
+
         super();
         this.socket = new runtime.web.HTML5WebSocket();
         this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
@@ -11239,10 +10687,12 @@ export class WebSocket extends EventDispatcher {
     }
     public flush(): void {
         if (!this._connected) {
-            $warn(3101); return;
+            $warn(3101);
+            return;
         }
         if (this._writeMessage) {
-            this.socket.send(this._writeMessage); this._writeMessage = "";
+            this.socket.send(this._writeMessage);
+            this._writeMessage = "";
         }
         if (this._bytesWrite) {
             this.socket.send(this._writeByte!.buffer);
@@ -11252,7 +10702,8 @@ export class WebSocket extends EventDispatcher {
     }
     public writeUTF(message: string): void {
         if (!this._connected) {
-            $warn(3101); return;
+            $warn(3101);
+            return;
         }
         if (this._type == WebSocket.TYPE_BINARY) {
             this._bytesWrite = true;
@@ -11269,16 +10720,19 @@ export class WebSocket extends EventDispatcher {
             message = this._readByte!.readUTF()!;
             this._readByte!.clear();
         } else {
-            message = this._readMessage; this._readMessage = "";
+            message = this._readMessage;
+            this._readMessage = "";
         }
         return message;
     }
     public writeBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
         if (!this._connected) {
-            $warn(3101); return;
+            $warn(3101);
+            return;
         }
         if (!this._writeByte) {
-            $warn(3102); return;
+            $warn(3102);
+            return;
         }
         this._bytesWrite = true;
         this._writeByte.writeBytes(bytes, offset, length);
@@ -11286,7 +10740,8 @@ export class WebSocket extends EventDispatcher {
     }
     public readBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
         if (!this._readByte) {
-            $warn(3102); return;
+            $warn(3102);
+            return;
         }
         this._readByte.position = 0;
         this._readByte.readBytes(bytes, offset, length);
@@ -11308,538 +10763,6 @@ export class WebSocket extends EventDispatcher {
 }
 __reflect(WebSocket.prototype, "egret.WebSocket");
 
-export class Ease {
-    public constructor() {
-        $error(1014);
-    }
-    public static get(amount: number): EaseFunction {
-        if (amount < -1) {
-            amount = -1;
-        }
-        if (amount > 1) {
-            amount = 1;
-        }
-        return (t: number): number => {
-            if (amount == 0) {
-                return t;
-            }
-            if (amount < 0) {
-                return t * (t * -amount + 1 + amount);
-            }
-            return t * ((2 - t) * amount + (1 - amount));
-        };
-    }
-    public static getPowIn(pow: number): EaseFunction {
-        return (t: number): number => Math.pow(t, pow);
-    }
-    public static getPowOut(pow: number): EaseFunction {
-        return (t: number): number => 1 - Math.pow(1 - t, pow);
-    }
-    public static getPowInOut(pow: number): EaseFunction {
-        return (t: number): number => {
-            if ((t *= 2) < 1) {
-                return 0.5 * Math.pow(t, pow);
-            }
-            return 1 - 0.5 * Math.abs(Math.pow(2 - t, pow));
-        };
-    }
-    public static sineIn(t: number): number {
-        return 1 - Math.cos(t * Math.PI / 2);
-    }
-    public static sineOut(t: number): number {
-        return Math.sin(t * Math.PI / 2);
-    }
-    public static sineInOut(t: number): number {
-        return -0.5 * (Math.cos(Math.PI * t) - 1);
-    }
-    public static getBackIn(amount: number): EaseFunction {
-        return (t: number): number => t * t * ((amount + 1) * t - amount);
-    }
-    public static getBackOut(amount: number): EaseFunction {
-        return (t: number): number => --t * t * ((amount + 1) * t + amount) + 1;
-    }
-    public static getBackInOut(amount: number): EaseFunction {
-        amount *= 1.525;
-        return (t: number): number => {
-            if ((t *= 2) < 1) {
-                return 0.5 * (t * t * ((amount + 1) * t - amount));
-            }
-            return 0.5 * ((t -= 2) * t * ((amount + 1) * t + amount) + 2);
-        };
-    }
-    public static circIn(t: number): number {
-        return -(Math.sqrt(1 - t * t) - 1);
-    }
-    public static circOut(t: number): number {
-        return Math.sqrt(1 - --t * t);
-    }
-    public static circInOut(t: number): number {
-        if ((t *= 2) < 1) {
-            return -0.5 * (Math.sqrt(1 - t * t) - 1);
-        }
-        return 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1);
-    }
-    public static bounceIn(t: number): number {
-        return 1 - Ease.bounceOut(1 - t);
-    }
-    public static bounceOut(t: number): number {
-        if (t < 1 / 2.75) {
-            return 7.5625 * t * t;
-        }
-        if (t < 2 / 2.75) {
-            return 7.5625 * (t -= 1.5 / 2.75) * t + 0.75;
-        }
-        if (t < 2.5 / 2.75) {
-            return 7.5625 * (t -= 2.25 / 2.75) * t + 0.9375;
-        }
-        return 7.5625 * (t -= 2.625 / 2.75) * t + 0.984375;
-    }
-    public static bounceInOut(t: number): number {
-        if (t < 0.5) {
-            return Ease.bounceIn(t * 2) * 0.5;
-        }
-        return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
-    }
-    public static getElasticIn(amplitude: number, period: number): EaseFunction {
-        const pi2: number = Math.PI * 2;
-        return (t: number): number => {
-            if (t == 0 || t == 1) {
-                return t;
-            }
-            const s: number = period / pi2 * Math.asin(1 / amplitude);
-            return -(amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
-        };
-    }
-    public static getElasticOut(amplitude: number, period: number): EaseFunction {
-        const pi2: number = Math.PI * 2;
-        return (t: number): number => {
-            if (t == 0 || t == 1) {
-                return t;
-            }
-            const s: number = period / pi2 * Math.asin(1 / amplitude);
-            return amplitude * Math.pow(2, -10 * t) * Math.sin((t - s) * pi2 / period) + 1;
-        };
-    }
-    public static getElasticInOut(amplitude: number, period: number): EaseFunction {
-        const pi2: number = Math.PI * 2;
-        return (t: number): number => {
-            const s: number = period / pi2 * Math.asin(1 / amplitude);
-            if ((t *= 2) < 1) {
-                return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
-            }
-            return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
-        };
-    }
-    public static quadIn: EaseFunction = Ease.getPowIn(2);
-    public static quadOut: EaseFunction = Ease.getPowOut(2);
-    public static quadInOut: EaseFunction = Ease.getPowInOut(2);
-    public static cubicIn: EaseFunction = Ease.getPowIn(3);
-    public static cubicOut: EaseFunction = Ease.getPowOut(3);
-    public static cubicInOut: EaseFunction = Ease.getPowInOut(3);
-    public static quartIn: EaseFunction = Ease.getPowIn(4);
-    public static quartOut: EaseFunction = Ease.getPowOut(4);
-    public static quartInOut: EaseFunction = Ease.getPowInOut(4);
-    public static quintIn: EaseFunction = Ease.getPowIn(5);
-    public static quintOut: EaseFunction = Ease.getPowOut(5);
-    public static quintInOut: EaseFunction = Ease.getPowInOut(5);
-    public static backIn: EaseFunction = Ease.getBackIn(1.7);
-    public static backOut: EaseFunction = Ease.getBackOut(1.7);
-    public static backInOut: EaseFunction = Ease.getBackInOut(1.7);
-    public static elasticIn: EaseFunction = Ease.getElasticIn(1, 0.3);
-    public static elasticOut: EaseFunction = Ease.getElasticOut(1, 0.3);
-    public static elasticInOut: EaseFunction = Ease.getElasticInOut(1, 0.3 * 1.5);
-}
-__reflect(Ease.prototype, "egret.Ease");
-
-export class Tween extends EventDispatcher {
-    public static NONE: number = 0;
-    public static LOOP: number = 1;
-    public static REVERSE: number = 2;
-    public static _tweens: Tween[] = [];
-    public static IGNORE: object = {};
-    public static _plugins: Record<string, TweenPlugin[]> = {};
-    public static _inited: boolean = false;
-    public static _lastTime: number = 0;
-    public _target: TweenTarget | null = null;
-    public _useTicks: boolean | undefined = false;
-    public ignoreGlobalPause: boolean | undefined = false;
-    public loop: boolean | undefined = false;
-    public pluginData: TweenProperties | null = null;
-    public _steps: (TweenStep | TweenAction)[] = [];
-    public paused: boolean = false;
-    public duration: number = 0;
-    public _prevPos: number = -1;
-    public position: number | null = null;
-    public _prevPosition: number = 0;
-    public _stepPosition: number = 0;
-    public passive: boolean = false;
-    public _curQueueProps: TweenProperties = {};
-    public _initQueueProps: TweenProperties = {};
-
-    public constructor(target: object, props?: TweenOptions | null, pluginData?: TweenProperties | null) {
-        super();
-        this.initialize(target, props, pluginData);
-    }
-    public static get(target: object, props?: TweenOptions | null, pluginData: TweenProperties | null = null, override: boolean = false): Tween {
-        if (override) {
-            Tween.removeTweens(target);
-        }
-        return new Tween(target, props, pluginData);
-    }
-    public static removeTweens(target: TweenTarget): void {
-        if (!target.tween_count) {
-            return;
-        }
-        const tweens: Tween[] = Tween._tweens;
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) {
- tweens[i]!.paused = true; tweens.splice(i, 1);
-            }
-        }
-        target.tween_count = 0;
-    }
-    public static pauseTweens(target: TweenTarget): void {
-        if (!target.tween_count) {
-            return;
-        }
-        const tweens: Tween[] = Tween._tweens;
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) {
- tweens[i]!.paused = true;
-            }
-        }
-    }
-    public static resumeTweens(target: TweenTarget): void {
-        if (!target.tween_count) {
-            return;
-        }
-        const tweens: Tween[] = Tween._tweens;
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) {
- tweens[i]!.paused = false;
-            }
-        }
-    }
-    public static tick(timeStamp: number, paused: boolean = false): boolean {
-        const delta: number = timeStamp - Tween._lastTime;
-        Tween._lastTime = timeStamp;
-        const tweens: Tween[] = Tween._tweens.concat();
-        for (let i: number = tweens.length - 1; i >= 0; i--) {
-            const tween: Tween = tweens[i]!;
-            if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
-                continue;
-            }
-            tween.$tick(tween._useTicks ? 1 : delta);
-        }
-        return false;
-    }
-    public static _register(tween: Tween, value: boolean): void {
-        const target: TweenTarget | null = tween._target;
-        const tweens: Tween[] = Tween._tweens;
-        if (value) {
-            if (target) {
-                target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1;
-            }
-            tweens.push(tween);
-            if (!Tween._inited) {
-                Tween._lastTime = getTimer();
-                getTicker().$startTick(Tween.tick, null);
-                Tween._inited = true;
-            }
-        } else {
-            if (target) {
-                target.tween_count = (target.tween_count ?? NaN) - 1;
-            }
-            let i: number = tweens.length;
-            while (i--) {
-                if (tweens[i] == tween) {
-                    tweens.splice(i, 1); return;
-                }
-            }
-        }
-    }
-    public static removeAllTweens(): void {
-        const tweens: Tween[] = Tween._tweens;
-        for (let i: number = 0, l: number = tweens.length; i < l; i++) {
-            const tween: Tween = tweens[i]!;
-            tween.paused = true;
-            tween._target!.tween_count = 0;
-        }
-        tweens.length = 0;
-    }
-    private initialize(target: object, props: TweenOptions | null | undefined, pluginData: TweenProperties | null | undefined): void {
-        this._target = target;
-        if (props) {
-            this._useTicks = props.useTicks;
-            this.ignoreGlobalPause = props.ignoreGlobalPause;
-            this.loop = props.loop;
-            if (props.onChange) {
-                this.addEventListener("change", props.onChange, props.onChangeObj);
-            }
-            if (props.override) {
-                Tween.removeTweens(target);
-            }
-        }
-        this.pluginData = pluginData || {};
-        this._curQueueProps = {};
-        this._initQueueProps = {};
-        this._steps = [];
-        if (props && props.paused) {
-            this.paused = true;
-        } else {
-            Tween._register(this, true);
-        }
-        if (props && props.position != null) {
-            this.setPosition(props.position, Tween.NONE);
-        }
-    }
-    public setPosition(value: number, actionsMode: number = 1): boolean {
-        if (value < 0) {
-            value = 0;
-        }
-        let t: number = value;
-        let end: boolean = false;
-        if (t >= this.duration) {
-            if (this.loop) {
-                const newTime: number = t % this.duration;
-                t = t > 0 && newTime === 0 ? this.duration : newTime;
-            } else {
-                t = this.duration; end = true;
-            }
-        }
-        if (t == this._prevPos) {
-            return end;
-        }
-        if (end) {
-            this.setPaused(true);
-        }
-        const prevPos: number = this._prevPos;
-        this.position = this._prevPos = t;
-        this._prevPosition = value;
-        if (this._target && this._steps.length > 0) {
-            const l: number = this._steps.length;
-            let stepIndex: number = -1;
-            for (let i: number = 0; i < l; i++) {
-                const step: TweenStep | TweenAction = this._steps[i]!;
-                if (step.type == "step") {
-                    stepIndex = i;
-                    if (step.t <= t && step.t + step.d >= t) {
-                        break;
-                    }
-                }
-            }
-            for (let i: number = 0; i < l; i++) {
-                const step: TweenStep | TweenAction = this._steps[i]!;
-                if (step.type == "action") {
-                    if (actionsMode != 0) {
-                        if (this._useTicks) {
-                            this._runAction(step, t, t);
-                        } else if (actionsMode == 1 && t < prevPos) {
-                            if (prevPos != this.duration) {
-                                this._runAction(step, prevPos, this.duration);
-                            }
-                            this._runAction(step, 0, t, true);
-                        } else {
-                            this._runAction(step, prevPos, t);
-                        }
-                    }
-                } else if (stepIndex == i) {
-                    this._updateTargetProps(step, Math.min((this._stepPosition = t - step.t) / step.d, 1));
-                }
-            }
-        }
-        this.dispatchEventWith("change");
-        return end;
-    }
-    private _runAction(action: TweenAction, startPos: number, endPos: number, includeStart: boolean = false): void {
-        let sPos: number = startPos;
-        let ePos: number = endPos;
-        if (startPos > endPos) {
-            sPos = endPos; ePos = startPos;
-        }
-        const pos: number = action.t;
-        if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
-            action.execute();
-        }
-    }
-    private _updateTargetProps(step: TweenStep | null, ratio: number): void {
-        let p0: TweenProperties;
-        let p1: TweenProperties;
-        if (!step && ratio == 1) {
-            this.passive = false; p0 = p1 = this._curQueueProps;
-        } else {
-            this.passive = !!step!.v;
-            if (this.passive) {
-                return;
-            }
-            if (step!.e) {
-                ratio = step!.e(ratio, 0, 1, 1);
-            }
-            p0 = step!.p0;
-            p1 = step!.p1;
-        }
-        let n: string;
-        for (n in this._initQueueProps) {
-            let v0: unknown = p0[n];
-            let v1: unknown = p1[n];
-            if (v0 == null) {
-                p0[n] = v0 = this._initQueueProps[n];
-            }
-            if (v1 == null) {
-                p1[n] = v1 = v0;
-            }
-            let v: unknown;
-            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") {
-                v = ratio == 1 ? v1 : v0;
-            } else {
-                v = v0 + (Number(v1) - v0) * ratio;
-            }
-            let ignore: boolean = false;
-            const plugins: TweenPlugin[] | undefined = Tween._plugins[n];
-            if (plugins) {
-                for (let i: number = 0, l: number = plugins.length; i < l; i++) {
-                    const v2: unknown = plugins[i]!.tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                    if (v2 == Tween.IGNORE) {
-                        ignore = true;
-                    } else {
-                        v = v2;
-                    }
-                }
-            }
-            if (!ignore) {
-                (this._target as TweenProperties)[n] = v;
-            }
-        }
-    }
-    public setPaused(value: boolean): this {
-        if (this.paused == value) {
-            return this;
-        }
-        this.paused = value;
-        Tween._register(this, !value);
-        return this;
-    }
-    private _cloneProps(props: TweenProperties): TweenProperties {
-        const output: TweenProperties = {};
-        let n: string;
-        for (n in props) {
-            output[n] = props[n];
-        }
-        return output;
-    }
-    private _addStep(step: Omit<TweenStep, "type" | "t">): this {
-        if (step.d > 0) {
-            this._steps.push({
-                ...step,
-                type : "step",
-                t    : this.duration
-            });
-            this.duration += step.d;
-        }
-        return this;
-    }
-    private _appendQueueProps(props: TweenProperties | undefined): TweenProperties {
-        let injectProps: TweenProperties | undefined;
-        let n: string;
-        for (n in props) {
-            if (this._initQueueProps[n] === undefined) {
-                let oldValue: unknown = (this._target as TweenProperties)[n];
-                const plugins: TweenPlugin[] | undefined = Tween._plugins[n];
-                if (plugins) {
-                    for (let i: number = 0, l: number = plugins.length; i < l; i++) {
-                        oldValue = plugins[i]!.init(this, n, oldValue);
-                    }
-                }
-                this._initQueueProps[n] = this._curQueueProps[n] = oldValue === undefined ? null : oldValue;
-            }
-        }
-        for (n in props) {
-            const oldValue: unknown = this._curQueueProps[n];
-            const plugins: TweenPlugin[] | undefined = Tween._plugins[n];
-            if (plugins) {
-                injectProps = injectProps || {};
-                for (let i: number = 0, l: number = plugins.length; i < l; i++) {
-                    const plugin: TweenPlugin = plugins[i]!;
-                    if (plugin.step) {
-                        plugin.step(this, n, oldValue, props![n], injectProps);
-                    }
-                }
-            }
-            this._curQueueProps[n] = props![n];
-        }
-        if (injectProps) {
-            this._appendQueueProps(injectProps);
-        }
-        return this._curQueueProps;
-    }
-    private _addAction(execute: () => void): this {
-        this._steps.push({
-            type    : "action",
-            t       : this.duration,
-            execute : execute
-        });
-        return this;
-    }
-    private _set(props: TweenProperties | undefined, target: object): void {
-        let n: string;
-        for (n in props) {
-            (target as TweenProperties)[n] = props![n];
-        }
-    }
-    public wait(duration: number, passive?: boolean): this {
-        if (duration == null || duration <= 0) {
-            return this;
-        }
-        const props: TweenProperties = this._cloneProps(this._curQueueProps);
-        return this._addStep({
-            d  : duration,
-            p0 : props,
-            p1 : props,
-            v  : passive
-        });
-    }
-    public to(props: TweenProperties | undefined, duration: number = 0, ease?: EaseFunction | null): this {
-        if (isNaN(duration) || duration < 0) {
-            duration = 0;
-        }
-        this._addStep({
-            d  : duration || 0,
-            p0 : this._cloneProps(this._curQueueProps),
-            e  : ease,
-            p1 : this._cloneProps(this._appendQueueProps(props))
-        });
-        return this.set(props);
-    }
-    public call<TThis, TArgs extends unknown[], TResult>(callback: (this: TThis, ...args: TArgs) => TResult, thisObj?: TThis, params?: TArgs): this {
-        const context: TThis = (thisObj ? thisObj : this._target) as TThis;
-        return this._addAction((): void => {
-            callback.apply(context, (params ? params : []) as TArgs);
-        });
-    }
-    public set(props: TweenProperties | undefined, target: object | null = null): this {
-        this._appendQueueProps(props);
-        const destination: object = target ? target : this._target!;
-        return this._addAction((): void => {
-            this._set(props, destination);
-        });
-    }
-    public play(tween: Tween | null = null): this {
-        const target: Tween = tween || this;
-        return this.call(target.setPaused, target, [false]);
-    }
-    public pause(tween: Tween | null = null): this {
-        const target: Tween = tween || this;
-        return this.call(target.setPaused, target, [true]);
-    }
-    public $tick(delta: number): void {
-        if (this.paused) {
-            return;
-        }
-        this.setPosition(this._prevPosition + delta);
-    }
-}
-__reflect(Tween.prototype, "egret.Tween");
-
 export class HtmlTextParser {
     public replaceArr: [RegExp, string][] = [];
     public resutlArr: ITextElement[] = [];
@@ -11859,18 +10782,21 @@ export class HtmlTextParser {
         return value;
     }
     public parse(htmltext: string): ITextElement[] {
-        this.stackArray = []; this.resutlArr = [];
+        this.stackArray = [];
+        this.resutlArr = [];
         let firstIdx: number = 0;
         const length: number = htmltext.length;
         while (firstIdx < length) {
             const starIdx: number = htmltext.indexOf("<", firstIdx);
             if (starIdx < 0) {
-                this.addToResultArr(htmltext.substring(firstIdx)); firstIdx = length;
+                this.addToResultArr(htmltext.substring(firstIdx));
+                firstIdx = length;
             } else {
                 this.addToResultArr(htmltext.substring(firstIdx, starIdx));
                 let fontEnd: number = htmltext.indexOf(">", starIdx);
                 if (fontEnd == -1) {
-                    $error(1038); fontEnd = starIdx;
+                    $error(1038);
+                    fontEnd = starIdx;
                 } else if (htmltext.charAt(starIdx + 1) == "/") {
                     this.stackArray.pop();
                 } else {
@@ -11887,11 +10813,12 @@ export class HtmlTextParser {
     public addToResultArr(value: string): void {
         if (value == "") {
             return;
-        } value = this.replaceSpecial(value);
+        }
+        value = this.replaceSpecial(value);
         if (this.stackArray.length > 0) {
             this.resutlArr.push({
                 text  : value,
-                style : this.stackArray[this.stackArray.length - 1]!
+                style : this.stackArray[this.stackArray.length - 1]!,
             });
         } else {
             this.resutlArr.push({ text : value });
@@ -11903,22 +10830,28 @@ export class HtmlTextParser {
         let header: RegExpMatchArray | null;
         if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u") {
             this.addProperty(info, str, "true");
-        } else if (header = str.match(/^(font|a)\s/)) {
+        } else if ((header = str.match(/^(font|a)\s/))) {
             str = str.substring(header[0].length).trim();
-            let next: number = 0;
+            let next: number;
             let titles: RegExpMatchArray | null;
-            while (titles = str.match(this.getHeadReg())) {
+            while ((titles = str.match(this.getHeadReg()))) {
                 const title: string = titles[0];
-                let value: string = "";
+                let value: string;
                 str = str.substring(title.length).trim();
                 if (str.charAt(0) == "\"") {
-                    next = str.indexOf("\"", 1); value = str.substring(1, next); next++;
+                    next = str.indexOf("\"", 1);
+                    value = str.substring(1, next);
+                    next++;
                 } else if (str.charAt(0) == "'") {
-                    next = str.indexOf("'", 1); value = str.substring(1, next); next++;
+                    next = str.indexOf("'", 1);
+                    value = str.substring(1, next);
+                    next++;
                 } else {
-                    value = str.match(/(\S)+/)![0]; next = value.length;
+                    value = str.match(/(\S)+/)![0];
+                    next = value.length;
                 }
-                this.addProperty(info, title.substring(0, title.length - 1).trim(), value.trim()); str = str.substring(next).trim();
+                this.addProperty(info, title.substring(0, title.length - 1).trim(), value.trim());
+                str = str.substring(next).trim();
             }
         }
         return info;
@@ -11928,16 +10861,28 @@ export class HtmlTextParser {
     }
     public addProperty(info: ITextStyle, head: string, value: string): void {
         switch (head.toLowerCase()) {
-            case "color": case "textcolor": value = value.replace(/#/, "0x"); info.textColor = parseInt(value); break;
-            case "strokecolor": value = value.replace(/#/, "0x"); info.strokeColor = parseInt(value); break;
-            case "stroke": info.stroke = parseInt(value); break;
-            case "b": case "bold": info.bold = value == "true"; break;
-            case "u": info.underline = value == "true"; break;
-            case "i": case "italic": info.italic = value == "true"; break;
-            case "size": info.size = parseInt(value); break;
-            case "fontfamily": info.fontFamily = value; break;
-            case "href": info.href = this.replaceSpecial(value); break;
-            case "target": info.target = this.replaceSpecial(value); break;
+            case "color": case "textcolor": value = value.replace(/#/, "0x");
+                info.textColor = parseInt(value);
+                break;
+            case "strokecolor": value = value.replace(/#/, "0x");
+                info.strokeColor = parseInt(value);
+                break;
+            case "stroke": info.stroke = parseInt(value);
+                break;
+            case "b": case "bold": info.bold = value == "true";
+                break;
+            case "u": info.underline = value == "true";
+                break;
+            case "i": case "italic": info.italic = value == "true";
+                break;
+            case "size": info.size = parseInt(value);
+                break;
+            case "fontfamily": info.fontFamily = value;
+                break;
+            case "href": info.href = this.replaceSpecial(value);
+                break;
+            case "target": info.target = this.replaceSpecial(value);
+                break;
         }
     }
     public addToArray(infoStr: string): void {
@@ -11978,11 +10923,13 @@ export class InputController extends HashObject {
         if (!this._text!.$inputEnabled) {
  this._text!.$touchEnabled = true;
         }
-        this.tempStage = this._text!.stage!; this.stageText.$addToStage();
+        this.tempStage = this._text!.stage!;
+        this.stageText.$addToStage();
         this.stageText.addEventListener("updateText", this.updateTextHandler, this);
         this._text!.addEventListener(TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
         this.stageText.addEventListener("blur", this.blurHandler, this);
-        this.stageText.addEventListener("focus", this.focusHandler, this); this.stageTextAdded = true;
+        this.stageText.addEventListener("focus", this.focusHandler, this);
+        this.stageTextAdded = true;
     }
     public _removeStageText(): void {
         if (!this.stageTextAdded) {
@@ -11996,7 +10943,8 @@ export class InputController extends HashObject {
         this._text!.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
         this.tempStage.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         this.stageText.removeEventListener("blur", this.blurHandler, this);
-        this.stageText.removeEventListener("focus", this.focusHandler, this); this.stageTextAdded = false;
+        this.stageText.removeEventListener("focus", this.focusHandler, this);
+        this.stageTextAdded = false;
     }
     public _getText(): string {
         return this.stageText.$getText();
@@ -12017,12 +10965,19 @@ export class InputController extends HashObject {
         }
     }
     public blurHandler(_event: Event): void {
+        void _event;
+
         if (this._isFocus) {
-            this._isFocus = false; this.tempStage.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
-            this._text!.$setIsTyping(false); this.stageText.$onBlur(); this._text!.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_OUT, true));
+            this._isFocus = false;
+            this.tempStage.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this._text!.$setIsTyping(false);
+            this.stageText.$onBlur();
+            this._text!.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_OUT, true));
         }
     }
     public onMouseDownHandler(_event: Event): void {
+        void _event;
+
         this.$onFocus();
     }
     public $onFocus(): void {
@@ -12041,21 +10996,30 @@ export class InputController extends HashObject {
         }
     }
     public updateTextHandler(_event: Event): void {
+        void _event;
+
         const values: InputTextFieldState = this._text!.$TextField;
         let textValue: string = this.stageText.$getText();
         let isChanged: boolean = false;
         let reg: RegExp;
         let result: RegExpMatchArray | null;
         if (values[35] != null) {
-            reg = new RegExp("[" + values[35] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true;
+            reg = new RegExp("[" + values[35] + "]", "g");
+            result = textValue.match(reg);
+            textValue = result ? result.join("") : "";
+            isChanged = true;
         }
         if (values[36] != null) {
-            reg = new RegExp("[^" + values[36] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true;
+            reg = new RegExp("[^" + values[36] + "]", "g");
+            result = textValue.match(reg);
+            textValue = result ? result.join("") : "";
+            isChanged = true;
         }
         if (isChanged && this.stageText.$getText() != textValue) {
             this.stageText.$setText(textValue);
         }
-        this.resetText(); this._text!.dispatchEvent(new Event(Event.CHANGE, true));
+        this.resetText();
+        this._text!.dispatchEvent(new Event(Event.CHANGE, true));
     }
     public resetText(): void {
  this._text!.$setBaseText(this.stageText.$getText());
@@ -12070,9 +11034,13 @@ export class InputController extends HashObject {
     }
     public _updateProperties(): void {
         if (this._isFocus) {
-            this.stageText.$resetStageText(); this.updateInput(); return;
+            this.stageText.$resetStageText();
+            this.updateInput();
+            return;
         }
-        this.stageText.$setText(this._text!.$TextField[13]); this.stageText.$resetStageText(); this.updateInput();
+        this.stageText.$setText(this._text!.$TextField[13]);
+        this.stageText.$resetStageText();
+        this.updateInput();
     }
 }
 __reflect(InputController.prototype, "egret.InputController");

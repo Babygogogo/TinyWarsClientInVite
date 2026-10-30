@@ -101,7 +101,7 @@ import {
     getSelfUserId,
     getSelfSettingsTextureVersion,
 } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
 

@@ -2,7 +2,7 @@ import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
-import type { DisplayObject } from "../../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../../egret/Egret.ts";
 
 export class UiContainer extends UiContainerBase implements IUiContainer {
     public getUiChildAt(index: number): IUiComponent | undefined {

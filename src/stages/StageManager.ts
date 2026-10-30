@@ -20,12 +20,12 @@ import {
     Event,
     updateAllScreens,
     DisplayObject,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 import {
     ScreenAdapterHelper,
     type IScreenAdapter,
     type StageSize,
-} from "../vendor/egret/Sys.ts";
+} from "../egret/Sys.ts";
 
 // The game is in landscape mode, which means that its design max height equals its design width, 960.
 const RATIO_FOR_MIN_HEIGHT = Dimension.DesignWidth / Dimension.DesignMinHeight;

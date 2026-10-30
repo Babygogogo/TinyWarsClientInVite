@@ -27,7 +27,7 @@ import {
 import type {
     DisplayObject,
     Event,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 export class UiList<DataForRenderer extends UiListItemData>
     extends UiLayoutBase

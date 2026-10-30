@@ -1,5 +1,5 @@
 import type { TypeId } from "./TypeId.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 
 export interface Listener {
     type        : TypeId,

@@ -30,7 +30,7 @@ import type { S as MfrSetReadyResponse } from "../../proto/schema/CommonProto/Ne
 import type { C as MfrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/C.ts";
 import type { S as MfrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrSetSelfSettings/S.ts";
 import type { S as MfrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrStartWar/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

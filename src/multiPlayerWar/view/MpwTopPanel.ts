@@ -55,7 +55,7 @@ import {
     getUserOnlineState as getModelUserOnlineState,
     getSelfSettingsCoBgmCodeArray,
 } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 // eslint-disable-next-line no-shadow
 enum PanelSkinState {

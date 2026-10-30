@@ -15,7 +15,7 @@ import type { S as MpwWatchGetRequestedWarIdArrayResponse } from "../../proto/sc
 import type { S as MpwWatchGetWatchedWarIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetWatchedWarIdArray/S.ts";
 import type { S as MpwWatchHandleRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchHandleRequest/S.ts";
 import type { S as MpwWatchMakeRequestResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchMakeRequest/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import {
     setRequestableWarIdArray,
     setOngoingWarIdArray,

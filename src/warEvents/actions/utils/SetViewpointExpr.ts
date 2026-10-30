@@ -17,7 +17,7 @@ import {
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { WeaSetViewpointExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
-import { setTimeout } from "../../../vendor/egret/Egret.ts";
+import { setTimeout } from "../../../egret/Egret.ts";
 import { ExpressionInfoDict } from "../constants/SetViewpointExpr.ts";
 
 export function checkIsValid(action: Undefinable<WeaSetViewpointExpr>, customCounterNameSet: Set<string>): boolean {

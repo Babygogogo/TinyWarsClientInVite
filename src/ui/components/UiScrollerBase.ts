@@ -15,7 +15,7 @@ import {
     Rectangle,
     Point,
     Event,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 export abstract class UiScrollerBase extends UiContainerBase implements IUiScrollerBase {
     private readonly _borderMask    = new Rectangle();

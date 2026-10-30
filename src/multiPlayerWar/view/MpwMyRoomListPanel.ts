@@ -122,7 +122,7 @@ import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiItemTapEventData } from "../../ui/types/UiItemTapEventData.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = void;

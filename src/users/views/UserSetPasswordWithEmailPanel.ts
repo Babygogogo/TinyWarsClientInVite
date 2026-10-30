@@ -25,7 +25,7 @@ import {
     reqUserResetPasswordWithEmail,
 } from "../Proxy.ts";
 import { checkIsAccountValid } from "../Utils.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 let _lastRequestTimestamp = 0;
 

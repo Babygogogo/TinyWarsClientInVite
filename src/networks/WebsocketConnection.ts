@@ -6,7 +6,7 @@ import {
     IOErrorEvent,
     ProgressEvent,
     ByteArray,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 export class WebsocketConnection extends WebSocket {
     private _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;

@@ -4,7 +4,7 @@ import { sineOut } from "./Ease.ts";
 import {
     EventDispatcher,
     getTimer,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 const NONE      = 0;
 // const LOOP      = 1;

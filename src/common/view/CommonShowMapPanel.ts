@@ -47,7 +47,7 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { getMapRating } from "../../users/Model.ts";
 import { reqUserSetMapRating } from "../../users/Proxy.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface OpenData {
     warInfo?    : {

@@ -12,7 +12,7 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
 import type { S as CommonGetRankListResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
 import type { S as CommonGetServerStatusResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

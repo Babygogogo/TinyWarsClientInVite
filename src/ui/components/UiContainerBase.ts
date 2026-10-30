@@ -19,7 +19,7 @@ import {
     DisplayObjectContainer,
     DisplayObject,
     Rectangle as EgretRectangle,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 // const con = new egret.DisplayObjectContainer();
 // con.touchChildren;

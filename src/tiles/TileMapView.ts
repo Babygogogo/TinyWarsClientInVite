@@ -52,7 +52,7 @@ import {
 import type {
     DisplayObject,
     Event,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);

@@ -10,7 +10,7 @@ import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type {
     DisplayObject,
     Event,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 export interface UiListener {
     ui          : DisplayObject,

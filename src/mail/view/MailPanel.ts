@@ -78,7 +78,7 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUserNickname } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { getWatchWarData } from "../../watchWar/model/WwModel.ts";
 
 export type OpenData = void;

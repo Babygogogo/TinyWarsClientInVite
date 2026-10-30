@@ -16,7 +16,7 @@ import type { S as MailDeleteMailResponse } from "../../proto/schema/CommonProto
 import type { S as MailGetAllMailArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailGetAllMailArray/S.ts";
 import type { S as MailGetMailResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailGetMail/S.ts";
 import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

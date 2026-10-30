@@ -31,7 +31,7 @@ import type { S as MrrSetBannedNormalMapIdArrayResponse } from "../../proto/sche
 import type { S as MrrSetBootTimerDaysRangeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetBootTimerDaysRange/S.ts";
 import type { S as MrrSetMaxConcurrentCountResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetMaxConcurrentCount/S.ts";
 import type { S as MrrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetSelfSettings/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

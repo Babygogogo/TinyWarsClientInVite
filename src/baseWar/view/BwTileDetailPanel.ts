@@ -93,7 +93,7 @@ import {
     CategoryId,
 } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
 
 let _selectedMarkTypeId         = GridMarksTypeId.MinMarkTypeId;

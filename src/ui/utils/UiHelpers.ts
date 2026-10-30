@@ -19,7 +19,7 @@ import {
     DisplayObject,
     DisplayObjectContainer,
     Shape,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 const COLOR_MATRIX_FILTERS = {
     [ColorId.Gray]: new ColorMatrixFilter([

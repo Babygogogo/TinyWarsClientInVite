@@ -19,7 +19,7 @@ import type { UiSizerVerticalAlignOptions } from "../types/UiSizerVerticalAlignO
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { getUiContainerClass } from "./UiFactory.ts";
-import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
+import type { DisplayObjectContainer } from "../../egret/Egret.ts";
 
 export function init(): void {
     addTickCallback(applyAutoSizerInfoDict, -1);

@@ -66,7 +66,7 @@ import {
     getUiContainerClass,
     getUiImageClass,
 } from "../../ui/utils/UiFactory.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 const _PULSE_IN_DURATION                    = 150;
 const _PULSE_OUT_DURATION                   = 150;

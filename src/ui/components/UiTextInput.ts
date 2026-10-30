@@ -32,7 +32,7 @@ import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
 import type {
     Matrix,
     TextField,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 interface CanvasBounds {
     top     : number;

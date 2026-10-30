@@ -77,7 +77,7 @@ import { UiSkinState } from "../../ui/types/UiSkinState.ts";
 import { loadSkinStateRecursively } from "../../ui/utils/UiSkinHelpers.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 // eslint-disable-next-line no-shadow

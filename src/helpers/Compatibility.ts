@@ -3,7 +3,7 @@ import { TextType } from "../lang/Constants.ts";
 import { getText } from "../lang/Utils.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { Point } from "../vendor/egret/Egret.ts";
+import type { Point } from "../egret/Egret.ts";
 
 export const isMobileOrTablet   = checkIsMobileOrTablet();
 export const isPc               = !isMobileOrTablet;

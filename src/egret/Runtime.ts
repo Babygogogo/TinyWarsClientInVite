@@ -30,5 +30,5 @@ export const runtime = {
     },
     get processor(): typeof processor {
         return getModules().processor;
-    }
+    },
 };

@@ -44,11 +44,11 @@ import {
     Capabilities,
     clearTimeout,
     setTimeout,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 import {
     getResByUrl,
     ResourceItemHelper,
-} from "../vendor/egret/Res.ts";
+} from "../egret/Res.ts";
 
 export const DEFAULT_MUTE   = false;
 export const DEFAULT_VOLUME = 1;

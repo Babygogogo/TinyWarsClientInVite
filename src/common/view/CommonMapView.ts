@@ -54,7 +54,7 @@ import {
     getSelfSettingsTextureVersion,
 } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import type { DisplayObject } from "../../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../../egret/Egret.ts";
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

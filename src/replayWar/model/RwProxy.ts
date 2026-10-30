@@ -25,7 +25,7 @@ import {
     updateOnFailedMsgReplayGetInfoVersion,
     updateOnMsgReplayGetInfoVersion,
 } from "./RwModel.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

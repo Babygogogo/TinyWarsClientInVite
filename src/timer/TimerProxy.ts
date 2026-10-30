@@ -7,7 +7,7 @@ import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 import { updateOnMsgCommonHeartbeat } from "./TimerModel.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

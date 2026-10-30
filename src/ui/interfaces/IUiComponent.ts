@@ -7,7 +7,7 @@ import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import type {
     DisplayObjectContainer,
     Point,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 export interface IUiComponent {
     ////////////////////////////////////////////////////////////////////////////////////////////////////

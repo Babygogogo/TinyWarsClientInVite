@@ -4,7 +4,7 @@ import { getServerTimestamp } from "../timer/TimerModel.ts";
 import {
     setTimeout,
     clearTimeout,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 export class CachedDataAccessor<KeyType, DataType> {
     private _dataDict                   = new Map<KeyType, Undefinable<DataType>>();

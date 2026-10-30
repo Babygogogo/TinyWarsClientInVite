@@ -7,7 +7,7 @@ import { MessageCodes } from "../networks/MessageCodes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { S as CommonLatestConfigVersionResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonLatestConfigVersion/S.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 import { setLatestConfigVersion } from "./Provider.ts";
 
 export function init(): void {

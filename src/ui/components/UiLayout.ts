@@ -3,7 +3,7 @@ import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiLayout } from "../interfaces/IUiLayout.ts";
 import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
-import type { DisplayObject } from "../../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../../egret/Egret.ts";
 
 export class UiLayout extends UiLayoutBase implements IUiLayout {
     public getItemAt(index: number): IUiComponent | undefined {

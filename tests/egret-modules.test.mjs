@@ -124,3 +124,77 @@ test('resource processors use the same registry as the resource host', async () 
   assert.equal(await res.getHost().load(resource), 'loaded')
   assert.equal(await res.getHost().load({ ...resource, name: 'named' }, 'test'), 'loaded')
 })
+
+test('display-object ancestry cursors preserve parent traversal', async () => {
+  const module = await loadModules('Egret')
+  const egret = await module('Egret')
+  const root = new egret.DisplayObjectContainer()
+  const parent = new egret.DisplayObjectContainer()
+  const child = new egret.Shape()
+  root.addChild(parent)
+  parent.addChild(child)
+  const listener = () => {}
+  root.addEventListener('ancestor-event', listener, undefined)
+  assert.equal(child.willTrigger('ancestor-event'), true)
+  assert.equal(child.willTrigger('missing-event'), false)
+  root.removeEventListener('ancestor-event', listener, undefined)
+  assert.equal(child.willTrigger('ancestor-event'), false)
+
+  child.filters = [new egret.BlurFilter(2, 3)]
+  parent.filters = [new egret.BlurFilter(4, 5)]
+  root.filters = [new egret.BlurFilter(6, 7)]
+  const offsets = fromParent => {
+    const { minX, minY, maxX, maxY } = child.$measureFiltersOffset(fromParent)
+    return { minX, minY, maxX, maxY }
+  }
+  assert.deepEqual(offsets(false), { minX: -2, minY: -3, maxX: 2, maxY: 3 })
+  assert.deepEqual(offsets(true), { minX: -12, minY: -15, maxX: 12, maxY: 15 })
+
+  root.$nestLevel = 1
+  parent.$nestLevel = 2
+  child.$nestLevel = 3
+  root.scaleX = 0
+  parent.x = 20
+  parent.y = 30
+  child.x = 4
+  child.y = 5
+  child.scrollRect = new egret.Rectangle(1, 2, 10, 10)
+  const matrix = new egret.Matrix()
+  child.$getConcatenatedMatrixAt(root, matrix)
+  assert.deepEqual([matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty], [1, 0, 0, 1, 23, 33])
+})
+
+test('graphics drawing handles absent fill and stroke paths', async () => {
+  const module = await loadModules('Egret')
+  const egret = await module('Egret')
+  const shape = new egret.Shape()
+  const graphics = shape.graphics
+  graphics.drawRect(0, 0, 10, 20)
+  graphics.moveTo(1, 2)
+  graphics.lineTo(3, 4)
+  assert.equal(graphics.$renderNode.drawData.length, 0)
+  graphics.beginFill(0xff0000)
+  graphics.lineStyle(2, 0x000000)
+  graphics.drawRect(0, 0, 10, 20)
+  assert.equal(graphics.$renderNode.drawData.length, 2)
+  graphics.setStrokeWidth(4)
+  assert.deepEqual([graphics.topLeftStrokeWidth, graphics.bottomRightStrokeWidth], [2, 2])
+})
+
+test('pixel-read failures retain the original cause', async () => {
+  const module = await loadModules('Egret')
+  const egret = await module('Egret')
+  const shape = new egret.Shape()
+  const cause = new Error('pixel read denied')
+  shape.$displayList = {
+    offsetX: 0,
+    offsetY: 0,
+    renderBuffer: {
+      getPixels() { throw cause },
+    },
+  }
+  assert.throws(() => shape.hitTestPoint(0, 0, true), error => {
+    assert.equal(error.cause, cause)
+    return true
+  })
+})

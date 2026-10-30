@@ -52,7 +52,7 @@ import {
     TurnIndex,
 } from "../../turns/Constants.ts";
 import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { create } from "../../warRules/utils/Instance.ts";
 import {
     reqSpmGetAllWarSaveSlotTimestamps,

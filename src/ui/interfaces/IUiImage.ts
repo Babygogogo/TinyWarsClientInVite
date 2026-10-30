@@ -2,7 +2,7 @@ import type { IUiComponent } from "./IUiComponent.ts";
 import type {
     DisplayObject,
     Rectangle,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 export interface IUiImage extends IUiComponent {
     getSource(): string | undefined;

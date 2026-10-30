@@ -18,7 +18,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { getSelfMapEditorAutoSaveTime } from "../../users/Model.ts";
 import { reqSetMapEditorAutoSaveTime } from "../../users/Proxy.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export interface OpenData {

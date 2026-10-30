@@ -72,19 +72,6 @@ export interface BitmapDrawNode {
     smoothing: boolean;
     drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
 }
-export interface TextNode {
-    $canvasScaleX: number;
-    $canvasScaleY: number;
-    $textureWidth: number;
-    $textureHeight: number;
-    DrawLabel?: DrawLabel[];
-}
-export interface GraphicsNode {
-    $canvasScaleX: number;
-    $canvasScaleY: number;
-    $textureWidth: number;
-    $textureHeight: number;
-}
 export interface RenderBuffer {
     surface: HTMLCanvasElement | WebGLRenderTarget;
     resize(width: number, height: number, useMaxSize?: boolean): void;
@@ -142,7 +129,8 @@ export function mainCanvas(width: number, height: number): HTMLCanvasElement {
 export function createCanvas(width: number, height: number): HTMLCanvasElement {
     const canvas: HTMLCanvasElement = document.createElement("canvas");
     if (!isNaN(width) && !isNaN(height)) {
-        canvas.width = width; canvas.height = height;
+        canvas.width = width;
+        canvas.height = height;
     }
     return canvas;
 }
@@ -171,14 +159,16 @@ export function resizeContext(renderContext: WebGLRenderContext | null, width: n
 export function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingContext | null {
     const options: WebGLContextAttributes = {
         antialias : runtime.web.WebGLRenderContext.antialias,
-        stencil   : true
+        stencil   : true,
     };
     let gl: WebGLRenderingContext | null = null;
     const names: string[] = ["webgl", "experimental-webgl"];
     for (let i: number = 0; i < names.length; ++i) {
         try {
             gl = surface.getContext(names[i]!, options) as WebGLRenderingContext | null;
-        } catch { }
+        } catch {
+            // Some browsers throw for unsupported context names; try the next alias.
+        }
         if (gl) {
             break;
         }
@@ -195,7 +185,8 @@ export function createTexture(renderContext: WebGLRenderContext, bitmapData: Tex
     const gl: WebGLRenderingContext = renderContext.context;
     const texture: PremultipliedTexture | null = gl.createTexture() as PremultipliedTexture | null;
     if (!texture) {
-        renderContext.contextLost = true; return;
+        renderContext.contextLost = true;
+        return;
     }
     texture[DefinitionHelper.glContext] = gl;
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -212,7 +203,8 @@ export function _createTexture(renderContext: WebGLRenderContext, width: number,
     const gl: WebGLRenderingContext = renderContext.context;
     const texture: PremultipliedTexture | null = gl.createTexture() as PremultipliedTexture | null;
     if (!texture) {
-        renderContext.contextLost = true; return null;
+        renderContext.contextLost = true;
+        return null;
     }
     texture[DefinitionHelper.glContext] = gl;
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -237,6 +229,8 @@ export function measureTextWith(context: CanvasRenderingContext2D, text: string)
     return context.measureText(text).width;
 }
 export function createCanvasRenderBufferSurface(defaultFunc: (width: number, height: number, root?: boolean) => HTMLCanvasElement | null, width: number, height: number, _root?: boolean): HTMLCanvasElement | null {
+    void _root;
+
     return defaultFunc(width, height);
 }
 export function resizeCanvasRenderBuffer(renderContext: CanvasRenderBuffer, width: number, height: number, useMaxSize?: boolean): void {
@@ -244,10 +238,12 @@ export function resizeCanvasRenderBuffer(renderContext: CanvasRenderBuffer, widt
     if (useMaxSize) {
         let change: boolean = false;
         if (surface.width < width) {
-            surface.width = width; change = true;
+            surface.width = width;
+            change = true;
         }
         if (surface.height < height) {
-            surface.height = height; change = true;
+            surface.height = height;
+            change = true;
         }
         if (!change) {
             renderContext.context.globalCompositeOperation = "source-over";
@@ -273,13 +269,15 @@ export function $logToFPS(info: string): void {
 }
 export function $warnToFPS(info: string): void {
     if (!LoggerHelper.fpsDisplay) {
-        LoggerHelper.warnLines!.push(info); return;
+        LoggerHelper.warnLines!.push(info);
+        return;
     }
     LoggerHelper.fpsDisplay.updateWarn(info);
 }
 export function $errorToFPS(info: string): void {
     if (!LoggerHelper.fpsDisplay) {
-        LoggerHelper.errorLines!.push(info); return;
+        LoggerHelper.errorLines!.push(info);
+        return;
     }
     LoggerHelper.fpsDisplay.updateError(info);
 }
@@ -580,7 +578,7 @@ export class DisplayList extends HashObject {
         const displayList: DisplayList = new DisplayList(target);
         try {
             displayList.renderBuffer = new RenderBuffHelper.RenderBuffer!();
-        } catch (e: unknown) {
+        } catch {
             return null;
         }
         displayList.root = target;
@@ -610,7 +608,9 @@ export class DisplayList extends HashObject {
             if (!this.bitmapData) {
                 this.bitmapData = new BitmapData(surface);
             } else {
-                this.bitmapData.source = surface; this.bitmapData.width = width; this.bitmapData.height = height;
+                this.bitmapData.source = surface;
+                this.bitmapData.width = width;
+                this.bitmapData.height = height;
             }
             renderNode.image = this.bitmapData;
             renderNode.imageWidth = width;
@@ -691,12 +691,15 @@ export class Player extends HashObject {
         }
     }
     public stop(): void {
-        this.pause(); this.stage = null;
+        this.pause();
+        this.stage = null;
     }
     public pause(): void {
         if (!this.isPlaying) {
             return;
-        } this.isPlaying = false; getTicker().$removePlayer(this);
+        }
+        this.isPlaying = false;
+        getTicker().$removePlayer(this);
     }
     public $render(triggerByFrame: boolean, costTicker: number): void {
         const stage: Stage = this.stage!;
@@ -786,7 +789,7 @@ export class FPSImpl {
         this.costTicker += costTicker;
         if (this.totalTime >= 1000) {
             this.fpsDisplay.update({
-                fps : Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), getTicker().$frameRate), draw : Math.round(this.drawCalls / this.totalTick), costRender : Math.round(this.costRender / this.totalTick), costTicker : Math.round(this.costTicker / this.totalTick)
+                fps : Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), getTicker().$frameRate), draw : Math.round(this.drawCalls / this.totalTick), costRender : Math.round(this.costRender / this.totalTick), costTicker : Math.round(this.costTicker / this.totalTick),
             });
             this.totalTick = 0;
             this.totalTime %= 1000;
@@ -831,33 +834,41 @@ export class DefaultScreenAdapter extends HashObject implements IScreenAdapter {
         const scaleY: number = screenHeight / stageHeight || 0;
         switch (scaleMode) {
             case StageScaleMode.EXACT_FIT: break;
-            case StageScaleMode.FIXED_HEIGHT: stageWidth = Math.round(screenWidth / scaleY); break;
-            case StageScaleMode.FIXED_WIDTH: stageHeight = Math.round(screenHeight / scaleX); break;
+            case StageScaleMode.FIXED_HEIGHT: stageWidth = Math.round(screenWidth / scaleY);
+                break;
+            case StageScaleMode.FIXED_WIDTH: stageHeight = Math.round(screenHeight / scaleX);
+                break;
             case StageScaleMode.NO_BORDER:
                 if (scaleX > scaleY) {
                     displayHeight = Math.round(stageHeight * scaleX);
                 } else {
                     displayWidth = Math.round(stageWidth * scaleY);
-                } break;
+                }
+                break;
             case StageScaleMode.SHOW_ALL:
                 if (scaleX > scaleY) {
                     displayWidth = Math.round(stageWidth * scaleY);
                 } else {
                     displayHeight = Math.round(stageHeight * scaleX);
-                } break;
+                }
+                break;
             case StageScaleMode.FIXED_NARROW:
                 if (scaleX > scaleY) {
                     stageWidth = Math.round(screenWidth / scaleY);
                 } else {
                     stageHeight = Math.round(screenHeight / scaleX);
-                } break;
+                }
+                break;
             case StageScaleMode.FIXED_WIDE:
                 if (scaleX > scaleY) {
                     stageHeight = Math.round(screenHeight / scaleX);
                 } else {
                     stageWidth = Math.round(screenWidth / scaleY);
-                } break;
-            default: stageWidth = screenWidth; stageHeight = screenHeight; break;
+                }
+                break;
+            default: stageWidth = screenWidth;
+                stageHeight = screenHeight;
+                break;
         }
         if (Capabilities.runtimeType != RuntimeType.WXGAME) {
             if (stageWidth % 2 != 0) {
@@ -874,7 +885,7 @@ export class DefaultScreenAdapter extends HashObject implements IScreenAdapter {
             }
         }
         return {
-            stageWidth, stageHeight, displayWidth, displayHeight
+            stageWidth, stageHeight, displayWidth, displayHeight,
         };
     }
 }
@@ -934,14 +945,18 @@ export class SystemTicker {
         if (this.getTickIndex(callBack, thisObject) != -1) {
             return;
         }
-        this.concatTick(); this.callBackList.push(callBack); this.thisObjectList.push(thisObject);
+        this.concatTick();
+        this.callBackList.push(callBack);
+        this.thisObjectList.push(thisObject);
     }
     public $stopTick(callBack: TickCallback, thisObject: unknown): void {
         const index: number = this.getTickIndex(callBack, thisObject);
         if (index == -1) {
             return;
         }
-        this.concatTick(); this.callBackList.splice(index, 1); this.thisObjectList.splice(index, 1);
+        this.concatTick();
+        this.callBackList.splice(index, 1);
+        this.thisObjectList.splice(index, 1);
     }
     public getTickIndex(callBack: TickCallback, thisObject: unknown): number {
         for (let i: number = this.callBackList.length - 1; i >= 0; i--) {
@@ -952,7 +967,8 @@ export class SystemTicker {
         return -1;
     }
     public concatTick(): void {
-        this.callBackList = this.callBackList.concat(); this.thisObjectList = this.thisObjectList.concat();
+        this.callBackList = this.callBackList.concat();
+        this.thisObjectList = this.thisObjectList.concat();
     }
     public $setFrameRate(value: number): boolean {
         if (value <= 0 || this.$frameRate == value) {
@@ -981,12 +997,14 @@ export class SystemTicker {
         const timeStamp: number = getTimer();
         const contexts: LifecycleContext[] = LifecycleHelper.contexts;
         for (let i: number = 0; i < contexts.length; i++) {
-            const c: LifecycleContext = contexts[i]!; if (c.onUpdate) {
+            const c: LifecycleContext = contexts[i]!;
+            if (c.onUpdate) {
                 c.onUpdate();
             }
         }
         if (this.isPaused) {
-            this.lastTimeStamp = timeStamp; return;
+            this.lastTimeStamp = timeStamp;
+            return;
         }
         this.callLaterAsyncs();
         for (let i: number = 0; i < length; i++) {
@@ -1004,7 +1022,8 @@ export class SystemTicker {
             if (this.lastCount > 0) {
                 if (requestRenderingFlag) {
                     this.render(false, this.costEnterFrame + t2 - t1);
-                } return;
+                }
+                return;
             }
             this.lastCount += this.frameInterval;
         }
@@ -1049,7 +1068,9 @@ export class SystemTicker {
         const functionList: (DeferredCallback | null)[] = CallHelper.$callLaterFunctionList;
         const thisList: unknown[] = CallHelper.$callLaterThisList;
         const argsList: unknown[][] = CallHelper.$callLaterArgsList;
-        CallHelper.$callLaterFunctionList = []; CallHelper.$callLaterThisList = []; CallHelper.$callLaterArgsList = [];
+        CallHelper.$callLaterFunctionList = [];
+        CallHelper.$callLaterThisList = [];
+        CallHelper.$callLaterArgsList = [];
         for (let i: number = 0; i < functionList.length; i++) {
             const func: DeferredCallback | null | undefined = functionList[i];
             if (func != null) {
@@ -1083,7 +1104,7 @@ export class SystemTicker {
             originDelay : delay,
             execute     : (): void => {
                 listener.apply(thisObject, args);
-            }
+            },
         };
         this.setIntervalCount++;
         if (this.setIntervalCount == 1) {
@@ -1125,7 +1146,7 @@ export class SystemTicker {
             delay   : delay,
             execute : (): void => {
                 listener.apply(thisObject, args);
-            }
+            },
         };
         this.setTimeoutCount++;
         if (this.setTimeoutCount == 1) {
@@ -1181,10 +1202,12 @@ export class TouchHandler extends HashObject {
         if (this.useTouchesCount >= this.maxTouches) {
             return;
         }
-        this.lastTouchX = x; this.lastTouchY = y;
+        this.lastTouchX = x;
+        this.lastTouchY = y;
         const target: DisplayObject = this.findTarget(x, y);
         if (this.touchDownTarget[touchPointID] == null) {
-            this.touchDownTarget[touchPointID] = target; this.useTouchesCount++;
+            this.touchDownTarget[touchPointID] = target;
+            this.useTouchesCount++;
         }
         TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
     }
@@ -1192,7 +1215,8 @@ export class TouchHandler extends HashObject {
         if (this.touchDownTarget[touchPointID] == null || (this.lastTouchX == x && this.lastTouchY == y)) {
             return;
         }
-        this.lastTouchX = x; this.lastTouchY = y;
+        this.lastTouchX = x;
+        this.lastTouchY = y;
         const target: DisplayObject = this.findTarget(x, y);
         TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
     }
@@ -1202,7 +1226,8 @@ export class TouchHandler extends HashObject {
             return;
         }
         const target: DisplayObject = this.findTarget(x, y);
-        delete this.touchDownTarget[touchPointID]; this.useTouchesCount--;
+        delete this.touchDownTarget[touchPointID];
+        this.useTouchesCount--;
         TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
         if (oldTarget == target) {
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
@@ -1227,20 +1252,30 @@ export class BitmapNode extends RenderNode<number> implements BitmapDrawNode {
     public declare imageWidth: number;
     public declare imageHeight: number;
     public constructor() {
-        super(); this.type = 1;
+        super();
+        this.type = 1;
     }
     public drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void {
-        this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH); this.renderCount++;
+        this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+        this.renderCount++;
     }
     public override cleanBeforeRender(): void {
-        super.cleanBeforeRender(); this.image = null; this.matrix = null; this.blendMode = null; this.alpha = NaN; this.filter = null;
+        super.cleanBeforeRender();
+        this.image = null;
+        this.matrix = null;
+        this.blendMode = null;
+        this.alpha = NaN;
+        this.filter = null;
     }
     public static $updateTextureData(node: BitmapDrawNode, image: BitmapData | null, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, fillMode: string, smoothing: boolean): void {
         if (!image) {
             return;
         }
         const scale: number = Texture.$TextureScaleFactor;
-        node.smoothing = smoothing; node.image = image; node.imageWidth = sourceWidth; node.imageHeight = sourceHeight;
+        node.smoothing = smoothing;
+        node.image = image;
+        node.imageWidth = sourceWidth;
+        node.imageHeight = sourceHeight;
         if (fillMode == BitmapFillMode.SCALE) {
             const tsX: number = destW / textureWidth * scale;
             const tsY: number = destH / textureHeight * scale;
@@ -1262,9 +1297,13 @@ export class BitmapNode extends RenderNode<number> implements BitmapDrawNode {
         }
     }
     public static $updateTextureDataWithScale9Grid(node: BitmapDrawNode, image: BitmapData | null, scale9Grid: Rectangle, bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, sourceWidth: number, sourceHeight: number, smoothing: boolean): void {
-        node.smoothing = smoothing; node.image = image; node.imageWidth = sourceWidth; node.imageHeight = sourceHeight;
+        node.smoothing = smoothing;
+        node.image = image;
+        node.imageWidth = sourceWidth;
+        node.imageHeight = sourceHeight;
         const scale: number = Texture.$TextureScaleFactor;
-        destW -= textureWidth - bitmapWidth * scale; destH -= textureHeight - bitmapHeight * scale;
+        destW -= textureWidth - bitmapWidth * scale;
+        destH -= textureHeight - bitmapHeight * scale;
         const targetW0: number = scale9Grid.x - offsetX;
         const targetH0: number = scale9Grid.y - offsetY;
         let sourceW0: number = targetW0 / scale;
@@ -1272,12 +1311,14 @@ export class BitmapNode extends RenderNode<number> implements BitmapDrawNode {
         let sourceW1: number = scale9Grid.width / scale;
         let sourceH1: number = scale9Grid.height / scale;
         if (sourceH1 == 0) {
-            sourceH1 = 1; if (sourceH0 >= bitmapHeight) {
+            sourceH1 = 1;
+            if (sourceH0 >= bitmapHeight) {
                 sourceH0--;
             }
         }
         if (sourceW1 == 0) {
-            sourceW1 = 1; if (sourceW0 >= bitmapWidth) {
+            sourceW1 = 1;
+            if (sourceW0 >= bitmapWidth) {
                 sourceW0--;
             }
         }
@@ -1292,7 +1333,8 @@ export class BitmapNode extends RenderNode<number> implements BitmapDrawNode {
         const targetW2: number = sourceW2 * scale;
         const targetH2: number = sourceH2 * scale;
         if ((sourceW0 + sourceW2) * scale > destW || (sourceH0 + sourceH2) * scale > destH) {
-            node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH); return;
+            node.drawImage(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+            return;
         }
         const targetX0: number = offsetX;
         const targetX1: number = targetX0 + targetW0;
@@ -1365,14 +1407,23 @@ export class NormalBitmapNode extends RenderNode<number> implements BitmapDrawNo
     public declare drawW: number;
     public declare drawH: number;
     public constructor() {
-        super(); this.type = 6;
+        super();
+        this.type = 6;
     }
     public drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void {
-        this.sourceX = sourceX; this.sourceY = sourceY; this.sourceW = sourceW; this.sourceH = sourceH;
-        this.drawX = drawX; this.drawY = drawY; this.drawW = drawW; this.drawH = drawH; this.renderCount = 1;
+        this.sourceX = sourceX;
+        this.sourceY = sourceY;
+        this.sourceW = sourceW;
+        this.sourceH = sourceH;
+        this.drawX = drawX;
+        this.drawY = drawY;
+        this.drawW = drawW;
+        this.drawH = drawH;
+        this.renderCount = 1;
     }
     public override cleanBeforeRender(): void {
-        super.cleanBeforeRender(); this.image = null;
+        super.cleanBeforeRender();
+        this.image = null;
     }
 }
 __reflect(NormalBitmapNode.prototype, "egret.sys.NormalBitmapNode");
@@ -1392,13 +1443,17 @@ export class MeshNode extends RenderNode<number> {
     public declare imageWidth: number;
     public declare imageHeight: number;
     public constructor() {
-        super(); this.type = 5;
+        super();
+        this.type = 5;
     }
     public drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void {
-        this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH); this.renderCount++;
+        this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+        this.renderCount++;
     }
     public override cleanBeforeRender(): void {
-        super.cleanBeforeRender(); this.image = null; this.matrix = null;
+        super.cleanBeforeRender();
+        this.image = null;
+        this.matrix = null;
     }
 }
 __reflect(MeshNode.prototype, "egret.sys.MeshNode");
@@ -1406,7 +1461,8 @@ __reflect(MeshNode.prototype, "egret.sys.MeshNode");
 export class GroupNode extends RenderNode<RenderNode> {
     public matrix: Matrix | null = null;
     public constructor() {
-        super(); this.type = 4;
+        super();
+        this.type = 4;
     }
     public addNode(node: RenderNode): void {
         this.drawData.push(node);
@@ -1430,7 +1486,8 @@ export class FillPath extends Path2D {
     public declare fillColor: number;
     public declare fillAlpha: number;
     public constructor() {
-        super(); this.type = 1;
+        super();
+        this.type = 1;
     }
 }
 __reflect(FillPath.prototype, "egret.sys.FillPath");
@@ -1442,7 +1499,8 @@ export class GradientFillPath extends Path2D {
     public declare ratios: number[];
     public declare matrix: Matrix;
     public constructor() {
-        super(); this.type = 2;
+        super();
+        this.type = 2;
     }
 }
 __reflect(GradientFillPath.prototype, "egret.sys.GradientFillPath");
@@ -1456,12 +1514,21 @@ export class StrokePath extends Path2D {
     public declare miterLimit: number;
     public declare lineDash: number[];
     public constructor() {
-        super(); this.type = 3;
+        super();
+        this.type = 3;
     }
 }
 __reflect(StrokePath.prototype, "egret.sys.StrokePath");
 
 export class GraphicsNode extends RenderNode<Path2D> {
+    public declare $canvasScaleX: number;
+
+    public declare $canvasScaleY: number;
+
+    public declare $textureWidth: number;
+
+    public declare $textureHeight: number;
+
     public dirtyRender: boolean = true;
     public declare x: number;
     public declare y: number;
@@ -1469,32 +1536,47 @@ export class GraphicsNode extends RenderNode<Path2D> {
     public declare height: number;
     public declare $texture: EngineWebGLTexture | null | undefined;
     public constructor() {
-        super(); this.type = 3;
+        super();
+        this.type = 3;
     }
     public beginFill(color: number, alpha: number = 1, beforePath?: Path2D | null): FillPath {
-        const path: FillPath = new FillPath(); path.fillColor = color; path.fillAlpha = alpha;
+        const path: FillPath = new FillPath();
+        path.fillColor = color;
+        path.fillAlpha = alpha;
         if (beforePath) {
             this.drawData.splice(this.drawData.lastIndexOf(beforePath), 0, path);
         } else {
             this.drawData.push(path);
         }
-        this.renderCount++; return path;
+        this.renderCount++;
+        return path;
     }
     public beginGradientFill(type: GradientTypeValue, colors: number[], alphas: number[], ratios: number[], matrix?: Matrix | null, beforePath?: Path2D | null): GradientFillPath {
         const m: Matrix = new Matrix();
         if (matrix) {
-            m.a = matrix.a * 819.2; m.b = matrix.b * 819.2; m.c = matrix.c * 819.2; m.d = matrix.d * 819.2; m.tx = matrix.tx; m.ty = matrix.ty;
+            m.a = matrix.a * 819.2;
+            m.b = matrix.b * 819.2;
+            m.c = matrix.c * 819.2;
+            m.d = matrix.d * 819.2;
+            m.tx = matrix.tx;
+            m.ty = matrix.ty;
         } else {
-            m.a = 100; m.d = 100;
+            m.a = 100;
+            m.d = 100;
         }
         const path: GradientFillPath = new GradientFillPath();
-        path.gradientType = type; path.colors = colors; path.alphas = alphas; path.ratios = ratios; path.matrix = m;
+        path.gradientType = type;
+        path.colors = colors;
+        path.alphas = alphas;
+        path.ratios = ratios;
+        path.matrix = m;
         if (beforePath) {
             this.drawData.splice(this.drawData.lastIndexOf(beforePath), 0, path);
         } else {
             this.drawData.push(path);
         }
-        this.renderCount++; return path;
+        this.renderCount++;
+        return path;
     }
     public lineStyle(thickness: number, color: number, alpha: number = 1, caps: CapsStyleValue | null = null, joints: JointStyleValue | null = null, miterLimit: number = 3, lineDash: number[] = []): StrokePath {
         if (caps !== "none" && caps !== "round" && caps !== "square") {
@@ -1504,23 +1586,44 @@ export class GraphicsNode extends RenderNode<Path2D> {
             joints = "round";
         }
         const path: StrokePath = new StrokePath();
-        path.lineWidth = thickness; path.lineColor = color; path.lineAlpha = alpha; path.caps = caps || CapsStyle.ROUND;
-        path.joints = joints; path.miterLimit = miterLimit; path.lineDash = lineDash;
-        this.drawData.push(path); this.renderCount++; return path;
+        path.lineWidth = thickness;
+        path.lineColor = color;
+        path.lineAlpha = alpha;
+        path.caps = caps || CapsStyle.ROUND;
+        path.joints = joints;
+        path.miterLimit = miterLimit;
+        path.lineDash = lineDash;
+        this.drawData.push(path);
+        this.renderCount++;
+        return path;
     }
     public clear(): void {
-        this.drawData.length = 0; this.dirtyRender = true; this.renderCount = 0;
+        this.drawData.length = 0;
+        this.dirtyRender = true;
+        this.renderCount = 0;
     }
     public override cleanBeforeRender(): void { }
     public clean(): void {
         if (this.$texture) {
-            WebGLUtils.deleteWebGLTexture(this.$texture); this.$texture = null; this.dirtyRender = true;
+            WebGLUtils.deleteWebGLTexture(this.$texture);
+            this.$texture = null;
+            this.dirtyRender = true;
         }
     }
 }
 __reflect(GraphicsNode.prototype, "egret.sys.GraphicsNode");
 
 export class TextNode extends RenderNode<number | string | ITextStyle> {
+    public declare $canvasScaleX: number;
+
+    public declare $canvasScaleY: number;
+
+    public declare $textureWidth: number;
+
+    public declare $textureHeight: number;
+
+    public declare DrawLabel?: DrawLabel[];
+
     public declare x: number;
     public declare y: number;
     public declare width: number;
@@ -1535,18 +1638,24 @@ export class TextNode extends RenderNode<number | string | ITextStyle> {
     public dirtyRender: boolean = true;
     public declare $texture: EngineWebGLTexture | null | undefined;
     public constructor() {
-        super(); this.type = 2;
+        super();
+        this.type = 2;
     }
     public drawText(x: number, y: number, text: string, format: ITextStyle): void {
-        this.drawData.push(x, y, text, format); this.renderCount++; this.dirtyRender = true;
+        this.drawData.push(x, y, text, format);
+        this.renderCount++;
+        this.dirtyRender = true;
     }
     public clean(): void {
         if (this.$texture) {
-            WebGLUtils.deleteWebGLTexture(this.$texture); this.$texture = null; this.dirtyRender = true;
+            WebGLUtils.deleteWebGLTexture(this.$texture);
+            this.$texture = null;
+            this.dirtyRender = true;
         }
     }
     public override cleanBeforeRender(): void {
-        super.cleanBeforeRender(); this.dirtyRender = true;
+        super.cleanBeforeRender();
+        this.dirtyRender = true;
     }
 }
 __reflect(TextNode.prototype, "egret.sys.TextNode");

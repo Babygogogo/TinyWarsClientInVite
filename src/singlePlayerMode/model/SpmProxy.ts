@@ -43,7 +43,7 @@ import {
 } from "./SpmModel.ts";
 import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ISrwWar } from "../../singleRankWar/interface/ISrwWar.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

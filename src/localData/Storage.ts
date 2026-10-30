@@ -39,7 +39,7 @@ import { Scale } from "../stages/Constants.ts";
 import {
     setItem,
     getItem,
-} from "../vendor/egret/LocalStorage.ts";
+} from "../egret/LocalStorage.ts";
 
 const KEY_PREFIX                                = KeyPrefix;
 const KEY_ACCOUNT                               = KEY_PREFIX + "Account";

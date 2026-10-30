@@ -43,7 +43,7 @@ import {
     Event,
     setTimeout,
     clearTimeout,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

@@ -30,7 +30,7 @@ import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface OpenData {
     currentBgmCode      : Undefinable<number>;

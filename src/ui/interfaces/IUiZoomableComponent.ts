@@ -5,7 +5,7 @@ import type {
 import type { MouseStyleType } from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { Point as EgretPoint } from "../../vendor/egret/Egret.ts";
+import type { Point as EgretPoint } from "../../egret/Egret.ts";
 
 export interface IUiZoomableComponent extends IUiContainerBase {
     setMouseWheelListenerEnabled(enabled: boolean): void;

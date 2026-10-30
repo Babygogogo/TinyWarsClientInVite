@@ -3,7 +3,7 @@ import type {
     PointerEventType,
 } from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface UiPointerEventListener {
     ui              : IUiComponent;

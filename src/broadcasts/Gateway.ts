@@ -16,7 +16,7 @@ import type { S as BroadcastDoBroadcastResponse } from "../proto/schema/CommonPr
 import type { S as BroadcastGetAllMessageIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
 import type { S as BroadcastGetMessageDataResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

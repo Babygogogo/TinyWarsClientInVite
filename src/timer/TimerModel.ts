@@ -21,7 +21,7 @@ import {
     setTimeout,
     startTick,
     clearInterval,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10 * 1000;
 

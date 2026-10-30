@@ -30,7 +30,7 @@ import type { S as CcrSetReadyResponse } from "../../proto/schema/CommonProto/Ne
 import type { C as CcrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgCcrSetSelfSettings/C.ts";
 import type { S as CcrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrSetSelfSettings/S.ts";
 import type { S as CcrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrStartWar/S.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

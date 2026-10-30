@@ -72,7 +72,7 @@ import {
     reqUserSetSettings,
 } from "./Proxy.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
 import { reqMpwWatchRequestedWarIdArray } from "../watchWar/model/WwProxy.ts";
 

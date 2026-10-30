@@ -27,7 +27,7 @@ import {
     clearInterval,
     startTick,
     stopTick,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 type FrameCfg       = {
     source  : string | null;

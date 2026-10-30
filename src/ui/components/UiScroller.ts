@@ -8,7 +8,7 @@ import {
     getUiLayoutClass,
     getUiContainerClass,
 } from "../utils/UiFactory.ts";
-import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
+import type { DisplayObjectContainer } from "../../egret/Egret.ts";
 
 export class UiScroller<T extends IUiContainer | IUiLayout>
     extends     UiScrollerBase

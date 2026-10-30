@@ -18,7 +18,7 @@ import {
     getUiImageClass,
 } from "../ui/utils/UiFactory.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { DisplayObject } from "../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../egret/Egret.ts";
 import { AnimationType } from "./Constants.ts";
 import type { IManager } from "./IManager.ts";
 import type { IView } from "./IView.ts";

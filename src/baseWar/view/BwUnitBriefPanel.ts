@@ -36,7 +36,7 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 import type { IUnit } from "../../units/IUnit.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
 
 const _CELL_WIDTH   = 70;

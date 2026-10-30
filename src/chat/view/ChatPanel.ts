@@ -100,7 +100,7 @@ import {
     getUserBriefInfo,
     getUserPublicInfo,
 } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 let _preferredChatToTarget          = new ChatToTarget();

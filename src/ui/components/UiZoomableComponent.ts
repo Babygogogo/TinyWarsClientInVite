@@ -21,7 +21,7 @@ import type {
     DisplayObject,
     Point as EgretPoint,
     Event,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 const MAX_CONTENT_SCALE = 6;
 

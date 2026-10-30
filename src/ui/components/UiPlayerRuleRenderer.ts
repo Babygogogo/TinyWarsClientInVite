@@ -43,7 +43,7 @@ import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/W
 import { UiListItemRenderer } from "./UiListItemRenderer.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface DataForUiPlayerRuleRenderer extends UiListItemData {
     canModify               : boolean;

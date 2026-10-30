@@ -5,7 +5,7 @@ import {
     loadGroup,
     getResByUrl,
     type IVersionController,
-} from "./vendor/egret/Res";
+} from "./egret/Res.ts";
 
 import type { UiSkin } from "./ui/types/UiSkin.ts";
 import { error } from "./Logger.ts";

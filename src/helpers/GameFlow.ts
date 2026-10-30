@@ -246,7 +246,7 @@ import {
     reqUserLoginAsGuest,
 } from "../users/Proxy.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { Stage } from "../vendor/egret/Egret.ts";
+import type { Stage } from "../egret/Egret.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
 import { init as initWwProxy } from "../watchWar/model/WwProxy.ts";
 import { Manager } from "../weathers/Manager.ts";

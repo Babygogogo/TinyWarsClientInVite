@@ -37,7 +37,7 @@ import { playCoBgmWithWar } from "../../sounds/SoundPlayer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { setTimeout } from "../../vendor/egret/Egret.ts";
+import { setTimeout } from "../../egret/Egret.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 
 type TurnIndexAndPlayerIndex = {

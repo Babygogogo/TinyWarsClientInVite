@@ -124,12 +124,6 @@ export interface LegacyWindow extends Window {
 export interface InputCanvas extends HTMLCanvasElement {
     userTyping?: boolean;
 }
-export interface WebGLRenderContext {
-    surface: HTMLCanvasElement;
-    context: WebGLRenderingContext;
-    contextLost: boolean;
-    onResize(): void;
-}
 export interface TextureDrawData {
     texture: WebGLTexture | null;
     count: number;
@@ -145,9 +139,6 @@ export interface RunEgretOptions {
     calculateCanvasScaleFactor?: (context: CanvasContext) => number;
     screenAdapter?: IScreenAdapter;
     entryClass: typeof DisplayObjectContainer;
-}
-export interface WebPlayer {
-    updateScreenSize(): void;
 }
 export interface PlayerOptions {
     entryClass: typeof DisplayObjectContainer;
@@ -299,15 +290,20 @@ export function WebLifeCycleHandler(context: LifecycleContext): void {
     window.addEventListener("focus", context.resume, false);
     window.addEventListener("blur", context.pause, false);
     if (typeof document.hidden !== "undefined") {
-        hidden = "hidden"; visibilityChange = "visibilitychange";
+        hidden = "hidden";
+        visibilityChange = "visibilitychange";
     } else if (typeof visibilityDocument.mozHidden !== "undefined") {
-        hidden = "mozHidden"; visibilityChange = "mozvisibilitychange";
+        hidden = "mozHidden";
+        visibilityChange = "mozvisibilitychange";
     } else if (typeof visibilityDocument.msHidden !== "undefined") {
-        hidden = "msHidden"; visibilityChange = "msvisibilitychange";
+        hidden = "msHidden";
+        visibilityChange = "msvisibilitychange";
     } else if (typeof visibilityDocument.webkitHidden !== "undefined") {
-        hidden = "webkitHidden"; visibilityChange = "webkitvisibilitychange";
+        hidden = "webkitHidden";
+        visibilityChange = "webkitvisibilitychange";
     } else if (typeof visibilityDocument.oHidden !== "undefined") {
-        hidden = "oHidden"; visibilityChange = "ovisibilitychange";
+        hidden = "oHidden";
+        visibilityChange = "ovisibilitychange";
     }
     if ("onpageshow" in window && "onpagehide" in window) {
         window.addEventListener("pageshow", context.resume, false);
@@ -338,7 +334,7 @@ export function WebLifeCycleHandler(context: LifecycleContext): void {
     }
 }
 export function getPrefixStyleName(name: string, element?: object | null): string {
-    let header: string = "";
+    let header: string;
     if (element != null) {
         header = getPrefix(name, element);
     } else {
@@ -394,7 +390,8 @@ export function runEgret(options: RunEgretOptions): void {
         }
         RenderBuffHelper.CanvasRenderBuffer = CanvasRenderBuffer;
         if (ua.indexOf("egretnative") >= 0 && renderMode != "webgl") {
-            $warn(1051); renderMode = "webgl";
+            $warn(1051);
+            renderMode = "webgl";
         }
         setRenderMode(renderMode);
         let canvasScaleFactor: number;
@@ -506,7 +503,8 @@ function loadShader(gl: WebGLRenderingContext, type: number, source: string): We
     gl.compileShader(shader);
     const compiled: boolean = gl.getShaderParameter(shader, gl.COMPILE_STATUS) as boolean;
     if (!compiled) {
-        console.log("shader not compiled!"); console.log(gl.getShaderInfoLog(shader));
+        console.log("shader not compiled!");
+        console.log(gl.getShaderInfoLog(shader));
     }
     return shader;
 }
@@ -558,7 +556,7 @@ function __createCanvas__(width: number, height: number): HTMLCanvasElement {
                 },
                 set : function (this: SmoothingContext, value: boolean): void {
                     this[key] = value;
-                }
+                },
             });
         } catch {
             context.imageSmoothingEnabled = context[key]!;
@@ -592,7 +590,8 @@ function startTicker(ticker: SystemTicker): void {
     const schedule: typeof requestAnimationFrame = requestFrame;
     schedule(onTick);
     function onTick(): void {
-        schedule(onTick); ticker.update();
+        schedule(onTick);
+        ticker.update();
     }
 }
 function doResize(): void {
@@ -645,6 +644,8 @@ export class WebVideo extends DisplayObject implements Video {
     public declare $renderNode: BitmapNode;
 
     public constructor(url?: string, _cache: boolean = true) {
+        void _cache;
+
         super();
         this.$renderNode = new BitmapNode();
         this.src = url;
@@ -654,6 +655,8 @@ export class WebVideo extends DisplayObject implements Video {
         }
     }
     public screenChanged: (event: globalThis.Event) => void = (_e: globalThis.Event): void => {
+        void _e;
+
         const fullscreenDocument: FullscreenDocument = document;
         const isfullscreen: boolean | undefined = document.fullscreenEnabled || fullscreenDocument.webkitIsFullScreen;
         if (!isfullscreen) {
@@ -678,6 +681,8 @@ export class WebVideo extends DisplayObject implements Video {
         }, 200);
     };
     public load(url?: string, _cache: boolean = true): void {
+        void _cache;
+
         url = url || this.src;
         this.src = url;
         if (!url) {
@@ -704,7 +709,8 @@ export class WebVideo extends DisplayObject implements Video {
         video.addEventListener("canplay", (): void => {
             this.waiting = false;
             if (!firstPause) {
-                firstPause = true; video.pause();
+                firstPause = true;
+                video.pause();
             } else if (this.userPause) {
                 this.pause();
             } else if (this.userPlay) {
@@ -726,7 +732,10 @@ export class WebVideo extends DisplayObject implements Video {
     public play(startTime?: number, loop: boolean = false): void {
         if (this.loaded == false) {
             this.load(this.src);
-            this.once(Event.COMPLETE, (_e: Event): void => this.play(startTime, loop), this);
+            this.once(Event.COMPLETE, (_e: Event): void => {
+                void _e;
+                return this.play(startTime, loop);
+            }, this);
             return;
         }
         this.isPlayed = true;
@@ -751,7 +760,8 @@ export class WebVideo extends DisplayObject implements Video {
     public videoPlay(): void {
         this.userPause = false;
         if (this.waiting) {
-            this.userPlay = true; return;
+            this.userPlay = true;
+            return;
         }
         this.userPlay = false;
         this.video!.play();
@@ -852,7 +862,8 @@ export class WebVideo extends DisplayObject implements Video {
     public pause(): void {
         this.userPlay = false;
         if (this.waiting) {
-            this.userPause = true; return;
+            this.userPause = true;
+            return;
         }
         this.userPause = false;
         this.video!.pause();
@@ -905,6 +916,8 @@ export class WebVideo extends DisplayObject implements Video {
         }
         const imageLoader: ImageLoader = new (getImageLoader())();
         imageLoader.once(Event.COMPLETE, (_e: Event): void => {
+            void _e;
+
             this.posterData = imageLoader.data!;
             this.$renderDirty = true;
             this.posterData.width = this.getPlayWidth();
@@ -966,7 +979,8 @@ export class WebVideo extends DisplayObject implements Video {
         }
     }
     public markDirty(): boolean {
-        this.$renderDirty = true; return true;
+        this.$renderDirty = true;
+        return true;
     }
     public override $setHeight(value: number): void {
         this.heightSet = value;
@@ -1048,7 +1062,8 @@ export class WebHttpRequest<TResponse = ResponseValue> extends EventDispatcher {
         this._url = url;
         this._method = method;
         if (this._xhr) {
-            this._xhr.abort(); this._xhr = null;
+            this._xhr.abort();
+            this._xhr = null;
         }
         const xhr: LegacyXHR = this.getXHR();
         if (WebMiscHelper.browserWindow.XMLHttpRequest) {
@@ -1191,11 +1206,15 @@ export class WebImageLoader extends EventDispatcher implements ImageLoader {
         }
     }
     public onBlobLoaded(_event: Event): void {
+        void _event;
+
         const blob: Blob = this.request!.response!;
         this.request = undefined;
         this.loadImage(WebMiscHelper.winURL.createObjectURL(blob));
     }
     public onBlobError(_event: Event): void {
+        void _event;
+
         this.dispatchIOError(this.currentURL);
         this.request = undefined;
     }
@@ -1321,7 +1340,8 @@ export class HTML5StageText extends EventDispatcher implements StageText {
         this._initElement();
     }
     public onBlurHandler(): void {
-        this.htmlInput.clearInputElement(); window.scrollTo(0, 0);
+        this.htmlInput.clearInputElement();
+        window.scrollTo(0, 0);
     }
     public onFocusHandler(): void {
         window.setTimeout((): void => {
@@ -1357,10 +1377,13 @@ export class HTML5StageText extends EventDispatcher implements StageText {
     public $getText(): string {
         if (!this.textValue) {
             this.textValue = "";
-        } return this.textValue;
+        }
+        return this.textValue;
     }
     public $setText(value: string): boolean {
-        this.textValue = value; this.resetText(); return true;
+        this.textValue = value;
+        this.resetText();
+        return true;
     }
     public resetText(): void {
         if (this.inputElement) {
@@ -1368,7 +1391,9 @@ export class HTML5StageText extends EventDispatcher implements StageText {
         }
     }
     public $setColor(value: number): boolean {
-        this.colorValue = value; this.resetColor(); return true;
+        this.colorValue = value;
+        this.resetColor();
+        return true;
     }
     public resetColor(): void {
         if (this.inputElement) {
@@ -1416,7 +1441,8 @@ export class HTML5StageText extends EventDispatcher implements StageText {
         }
     }
     public _onDisconnect(): void {
-        this.inputElement = null; this.dispatchEvent(new Event("blur"));
+        this.inputElement = null;
+        this.dispatchEvent(new Event("blur"));
     }
     public setElementStyle(style: string, value: string): void {
         if (this.inputElement && this._styleInfoes[style] != value) {
@@ -1626,7 +1652,8 @@ export class CanvasRenderBuffer implements sysCanvasRenderBuffer {
         this.surface = createCanvasRenderBufferSurface(__createCanvas__, width, height, root)!;
         this.context = this.surface.getContext("2d") as CanvasContext;
         if (this.context) {
-            this.context.$offsetX = 0; this.context.$offsetY = 0;
+            this.context.$offsetX = 0;
+            this.context.$offsetY = 0;
         }
         this.resize(width, height);
     }
@@ -1765,16 +1792,20 @@ export class WebTouchHandler extends HashObject {
         let newx: number = x;
         let newy: number = y;
         if (this.rotation == 90) {
-            newx = y; newy = box.width - x;
+            newx = y;
+            newy = box.width - x;
         } else if (this.rotation == -90) {
-            newx = box.height - y; newy = x;
+            newx = box.height - y;
+            newy = x;
         }
         newx /= this.scaleX;
         newy /= this.scaleY;
         return Point.$TempPoint.setTo(Math.round(newx), Math.round(newy));
     }
     public updateScaleMode(scaleX: number, scaleY: number, rotation: number): void {
-        this.scaleX = scaleX; this.scaleY = scaleY; this.rotation = rotation;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.rotation = rotation;
     }
     public $updateMaxTouches(): void {
         this.touch.$initMaxTouches();
@@ -1875,7 +1906,8 @@ export class WebCapability {
             if (ua.indexOf("windows nt") != -1) {
                 capabilities.os = "Windows PC";
             } else if (navigator.platform == "MacIntel" && navigator.maxTouchPoints > 1) {
-                capabilities.os = "iOS"; capabilities.isMobile = true;
+                capabilities.os = "iOS";
+                capabilities.isMobile = true;
             } else if (ua.indexOf("mac os") != -1) {
                 capabilities.os = "Mac OS";
             }
@@ -1889,10 +1921,9 @@ export class WebCapability {
         WebCapability.injectUIntFixOnIE9();
 
         {
-            let language: string = navigator.language || WebMiscHelper.browserNavigator.browserLanguage || "en_US";
-            language = language.replace("-", "_");
-            if (language in LocaleStringsHelper.getLocaleStrings()) {
-                LocaleStringsHelper.setLanguage(language);
+            const locale: string = (navigator.language || WebMiscHelper.browserNavigator.browserLanguage || "en_US").replace("-", "_");
+            if (locale in LocaleStringsHelper.getLocaleStrings()) {
+                LocaleStringsHelper.setLanguage(locale);
             }
         }
     }
@@ -2043,11 +2074,11 @@ export class WebFps implements FPSDisplay {
         this.fpsHeight = this.container.offsetHeight;
     }
     public addLog(): void {
-        const log: HTMLDivElement = document.createElement("div");
-        log.style.maxWidth = document.body.clientWidth - 8 - this.panelX + "px";
-        log.style.wordWrap = "break-word";
-        this.log = log;
-        this.container.appendChild(log);
+        const logElement: HTMLDivElement = document.createElement("div");
+        logElement.style.maxWidth = document.body.clientWidth - 8 - this.panelX + "px";
+        logElement.style.wordWrap = "break-word";
+        this.log = logElement;
+        this.container.appendChild(logElement);
     }
     public update(datas: FPSMetrics, showLastData: boolean = false): void {
         let numFps: number;
@@ -2068,7 +2099,9 @@ export class WebFps implements FPSDisplay {
         let fpsTotal: number = 0;
         let lenFps: number = this.arrFps.length;
         if (lenFps > 101) {
-            lenFps = 101; this.arrFps.shift(); this.arrCost.shift();
+            lenFps = 101;
+            this.arrFps.shift();
+            this.arrCost.shift();
         }
         let fpsMin: number = this.arrFps[0]!;
         let fpsMax: number = this.arrFps[0]!;
@@ -2127,13 +2160,16 @@ export class WebFps implements FPSDisplay {
         this.fps.innerHTML = fpsOutput;
     }
     public updateInfo(info: string): void {
-        this.arrLog.push(info); this.updateLogLayout();
+        this.arrLog.push(info);
+        this.updateLogLayout();
     }
     public updateWarn(info: string): void {
-        this.arrLog.push("[Warning]" + info); this.updateLogLayout();
+        this.arrLog.push("[Warning]" + info);
+        this.updateLogLayout();
     }
     public updateError(info: string): void {
-        this.arrLog.push("[Error]" + info); this.updateLogLayout();
+        this.arrLog.push("[Error]" + info);
+        this.updateLogLayout();
     }
     public updateLogLayout(): void {
         this.log.innerHTML = this.arrLog.join("<br/>");
@@ -2219,7 +2255,7 @@ export class WebPlayer extends HashObject implements StageScreen {
             showFPS            : container.getAttribute("data-show-fps") == "true",
             fpsStyles          : styles,
             showLog            : container.getAttribute("data-show-log") == "true",
-            logFilter          : container.getAttribute("data-log-filter")
+            logFilter          : container.getAttribute("data-log-filter"),
         };
     }
     public attachCanvas(container: HTMLElement, canvas: HTMLCanvasElement): void {
@@ -2246,7 +2282,8 @@ export class WebPlayer extends HashObject implements StageScreen {
             return;
         }
         if (screenRect.top < 0) {
-            boundingClientHeight += screenRect.top; top = -screenRect.top;
+            boundingClientHeight += screenRect.top;
+            top = -screenRect.top;
         }
         let shouldRotate: boolean = false;
         const orientation: string = this.stage.$orientation;
@@ -2291,7 +2328,8 @@ export class WebPlayer extends HashObject implements StageScreen {
         let canvasScaleX: number = scalex * DisplayList.$canvasScaleFactor;
         let canvasScaleY: number = scaley * DisplayList.$canvasScaleFactor;
         if (Capabilities.renderMode == "canvas") {
-            canvasScaleX = Math.ceil(canvasScaleX); canvasScaleY = Math.ceil(canvasScaleY);
+            canvasScaleX = Math.ceil(canvasScaleX);
+            canvasScaleY = Math.ceil(canvasScaleY);
         }
         const m: Matrix = Matrix.create();
         m.identity();
@@ -2378,7 +2416,7 @@ export class WebGLDrawCmdManager {
             width         : 0,
             height        : 0,
             x             : 0,
-            y             : 0
+            y             : 0,
         };
     }
     public pushDrawRect(): void {
@@ -2421,12 +2459,14 @@ export class WebGLDrawCmdManager {
     }
     public pushPushMask(count: number = 1): void {
         const data: WebGLDrawData = this.nextData();
-        data.type = 2; data.count = count * 2;
+        data.type = 2;
+        data.count = count * 2;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushPopMask(count: number = 1): void {
         const data: WebGLDrawData = this.nextData();
-        data.type = 3; data.count = count * 2;
+        data.type = 3;
+        data.count = count * 2;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushSetBlend(value: string): void {
@@ -2439,7 +2479,9 @@ export class WebGLDrawCmdManager {
                     drawState = true;
                 }
                 if (!drawState && data.type == 4) {
-                    this.drawData.splice(i, 1); this.drawDataLen--; continue;
+                    this.drawData.splice(i, 1);
+                    this.drawDataLen--;
+                    continue;
                 }
                 if (data.type == 4) {
                     if (data.value == value) {
@@ -2451,12 +2493,16 @@ export class WebGLDrawCmdManager {
             }
         }
         const data: WebGLDrawData = this.nextData();
-        data.type = 4; data.value = value;
+        data.type = 4;
+        data.value = value;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushResize(buffer: WebGLRenderBuffer, width: number, height: number): void {
         const data: WebGLDrawData = this.nextData();
-        data.type = 5; data.buffer = buffer; data.width = width; data.height = height;
+        data.type = 5;
+        data.buffer = buffer;
+        data.width = width;
+        data.height = height;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushClearColor(): void {
@@ -2474,18 +2520,26 @@ export class WebGLDrawCmdManager {
                     drawState = true;
                 }
                 if (!drawState && data.type == 7) {
-                    this.drawData.splice(i, 1); this.drawDataLen--; continue;
+                    this.drawData.splice(i, 1);
+                    this.drawDataLen--;
+                    continue;
                 }
             }
         }
         const data: WebGLDrawData = this.nextData();
-        data.type = 7; data.buffer = buffer;
-        data.width = buffer.rootRenderTarget!.width; data.height = buffer.rootRenderTarget!.height;
+        data.type = 7;
+        data.buffer = buffer;
+        data.width = buffer.rootRenderTarget!.width;
+        data.height = buffer.rootRenderTarget!.height;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushEnableScissor(x: number, y: number, width: number, height: number): void {
         const data: WebGLDrawData = this.nextData();
-        data.type = 8; data.x = x; data.y = y; data.width = width; data.height = height;
+        data.type = 8;
+        data.x = x;
+        data.y = y;
+        data.width = width;
+        data.height = height;
         this.drawData[this.drawDataLen++] = data;
     }
     public pushDisableScissor(): void {
@@ -2496,9 +2550,19 @@ export class WebGLDrawCmdManager {
     public clear(): void {
         for (let i: number = 0; i < this.drawDataLen; i++) {
             const data: WebGLDrawData = this.drawData[i]!;
-            data.type = 0; data.count = 0; data.texture = null; data.filter = null; data.value = "";
-            data.buffer = null; data.width = 0; data.height = 0; data.textureWidth = 0; data.textureHeight = 0;
-            data.smoothing = false; data.x = 0; data.y = 0;
+            data.type = 0;
+            data.count = 0;
+            data.texture = null;
+            data.filter = null;
+            data.value = "";
+            data.buffer = null;
+            data.width = 0;
+            data.height = 0;
+            data.textureWidth = 0;
+            data.textureHeight = 0;
+            data.smoothing = false;
+            data.x = 0;
+            data.y = 0;
         }
         this.drawDataLen = 0;
     }
@@ -2531,15 +2595,20 @@ export class WebGLVertexArrayObject {
         this.indices = new Uint16Array(maxIndicesCount);
         this.indicesForMesh = new Uint16Array(maxIndicesCount);
         for (let i: number = 0, j: number = 0; i < maxIndicesCount; i += 6, j += 4) {
-            this.indices[i] = j; this.indices[i + 1] = j + 1; this.indices[i + 2] = j + 2;
-            this.indices[i + 3] = j; this.indices[i + 4] = j + 2; this.indices[i + 5] = j + 3;
+            this.indices[i] = j;
+            this.indices[i + 1] = j + 1;
+            this.indices[i + 2] = j + 2;
+            this.indices[i + 3] = j;
+            this.indices[i + 4] = j + 2;
+            this.indices[i + 5] = j + 3;
         }
     }
     public reachMaxSize(vertexCount: number = 4, indexCount: number = 6): boolean {
         return this.vertexIndex > this.maxVertexCount - vertexCount || this.indexIndex > this.maxIndicesCount - indexCount;
     }
     public getVertices(): Float32Array {
-        const view: Float32Array = this.vertices.subarray(0, this.vertexIndex * this.vertSize); return view;
+        const view: Float32Array = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
+        return view;
     }
     public getIndices(): Uint16Array {
         return this.indices;
@@ -2577,19 +2646,23 @@ export class WebGLVertexArrayObject {
         const offsetX: number = buffer.$offsetX;
         const offsetY: number = buffer.$offsetY;
         if (offsetX != 0 || offsetY != 0) {
-            tx = offsetX * a + offsetY * c + tx; ty = offsetX * b + offsetY * d + ty;
+            tx = offsetX * a + offsetY * c + tx;
+            ty = offsetX * b + offsetY * d + ty;
         }
         if (!meshVertices) {
             if (destX != 0 || destY != 0) {
-                tx = destX * a + destY * c + tx; ty = destX * b + destY * d + ty;
+                tx = destX * a + destY * c + tx;
+                ty = destX * b + destY * d + ty;
             }
             const a1: number = destWidth / sourceWidth;
             if (a1 != 1) {
-                a = a1 * a; b = a1 * b;
+                a = a1 * a;
+                b = a1 * b;
             }
             const d1: number = destHeight / sourceHeight;
             if (d1 != 1) {
-                c = d1 * c; d = d1 * d;
+                c = d1 * c;
+                d = d1 * d;
             }
         }
         const vertices: Float32Array = this.vertices;
@@ -2631,36 +2704,67 @@ export class WebGLVertexArrayObject {
                 const temp: number = sourceWidth;
                 sourceWidth = sourceHeight / width;
                 sourceHeight = temp / height;
-                vertices[index++] = tx; vertices[index++] = ty;
-                vertices[index++] = sourceWidth + sourceX; vertices[index++] = sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = a * w + tx; vertices[index++] = b * w + ty;
-                vertices[index++] = sourceWidth + sourceX; vertices[index++] = sourceHeight + sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = a * w + c * h + tx; vertices[index++] = d * h + b * w + ty;
-                vertices[index++] = sourceX; vertices[index++] = sourceHeight + sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = c * h + tx; vertices[index++] = d * h + ty;
-                vertices[index++] = sourceX; vertices[index++] = sourceY; verticesUint32View[index++] = alpha;
+                vertices[index++] = tx;
+                vertices[index++] = ty;
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = a * w + tx;
+                vertices[index++] = b * w + ty;
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = a * w + c * h + tx;
+                vertices[index++] = d * h + b * w + ty;
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = c * h + tx;
+                vertices[index++] = d * h + ty;
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceY;
+                verticesUint32View[index] = alpha;
             } else {
-                sourceWidth /= width; sourceHeight /= height;
-                vertices[index++] = tx; vertices[index++] = ty;
-                vertices[index++] = sourceX; vertices[index++] = sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = a * w + tx; vertices[index++] = b * w + ty;
-                vertices[index++] = sourceWidth + sourceX; vertices[index++] = sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = a * w + c * h + tx; vertices[index++] = d * h + b * w + ty;
-                vertices[index++] = sourceWidth + sourceX; vertices[index++] = sourceHeight + sourceY; verticesUint32View[index++] = alpha;
-                vertices[index++] = c * h + tx; vertices[index++] = d * h + ty;
-                vertices[index++] = sourceX; vertices[index++] = sourceHeight + sourceY; verticesUint32View[index++] = alpha;
+                sourceWidth /= width;
+                sourceHeight /= height;
+                vertices[index++] = tx;
+                vertices[index++] = ty;
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = a * w + tx;
+                vertices[index++] = b * w + ty;
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = a * w + c * h + tx;
+                vertices[index++] = d * h + b * w + ty;
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                verticesUint32View[index++] = alpha;
+                vertices[index++] = c * h + tx;
+                vertices[index++] = d * h + ty;
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                verticesUint32View[index] = alpha;
             }
             if (this.hasMesh) {
                 const indicesForMesh: Uint16Array = this.indicesForMesh;
-                indicesForMesh[this.indexIndex] = this.vertexIndex; indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
-                indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex; indicesForMesh[this.indexIndex + 3] = this.vertexIndex;
-                indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex; indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
+                indicesForMesh[this.indexIndex] = this.vertexIndex;
+                indicesForMesh[this.indexIndex + 1] = 1 + this.vertexIndex;
+                indicesForMesh[this.indexIndex + 2] = 2 + this.vertexIndex;
+                indicesForMesh[this.indexIndex + 3] = this.vertexIndex;
+                indicesForMesh[this.indexIndex + 4] = 2 + this.vertexIndex;
+                indicesForMesh[this.indexIndex + 5] = 3 + this.vertexIndex;
             }
-            this.vertexIndex += 4; this.indexIndex += 6;
+            this.vertexIndex += 4;
+            this.indexIndex += 6;
         }
     }
     public clear(): void {
-        this.hasMesh = false; this.vertexIndex = 0; this.indexIndex = 0;
+        this.hasMesh = false;
+        this.vertexIndex = 0;
+        this.indexIndex = 0;
     }
 }
 __reflect(WebGLVertexArrayObject.prototype, "egret.web.WebGLVertexArrayObject");
@@ -2682,14 +2786,18 @@ export class WebGLRenderTarget extends HashObject {
     }
 
     public _resize(width: number, height: number): void {
-        width = width || 1; height = height || 1;
+        width = width || 1;
+        height = height || 1;
         if (width < 1) {
-            warn("WebGLRenderTarget _resize width = " + width); width = 1;
+            warn("WebGLRenderTarget _resize width = " + width);
+            width = 1;
         }
         if (height < 1) {
-            warn("WebGLRenderTarget _resize height = " + height); height = 1;
+            warn("WebGLRenderTarget _resize height = " + height);
+            height = 1;
         }
-        this.width = width; this.height = height;
+        this.width = width;
+        this.height = height;
     }
     public resize(width: number, height: number): void {
         this._resize(width, height);
@@ -2699,21 +2807,25 @@ export class WebGLRenderTarget extends HashObject {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         }
         if (this.stencilBuffer) {
-            gl.deleteRenderbuffer(this.stencilBuffer); this.stencilBuffer = null;
+            gl.deleteRenderbuffer(this.stencilBuffer);
+            this.stencilBuffer = null;
         }
     }
     public activate(): void {
-        const gl: WebGLRenderingContext = this.gl; gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
+        const gl: WebGLRenderingContext = this.gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.getFrameBuffer());
     }
     public getFrameBuffer(): WebGLFramebuffer | null {
         if (!this.useFrameBuffer) {
             return null;
-        } return this.frameBuffer;
+        }
+        return this.frameBuffer;
     }
     public initFrameBuffer(): void {
         if (!this.frameBuffer) {
             const gl: WebGLRenderingContext = this.gl;
-            this.texture = this.createTexture(); this.frameBuffer = gl.createFramebuffer();
+            this.texture = this.createTexture();
+            this.frameBuffer = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
         }
@@ -2780,18 +2892,23 @@ export class WebGLRenderContext {
     public declare $filter: Filter | null;
     public constructor(width: number, height: number) {
         this.surface = mainCanvas(width, height)!;
-        this.initWebGL(); this.$bufferStack = [];
+        this.initWebGL();
+        this.$bufferStack = [];
         const gl: WebGLRenderingContext = this.context;
-        this.vertexBuffer = gl.createBuffer(); this.indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        this.drawCmdManager = new WebGLDrawCmdManager(); this.vao = new WebGLVertexArrayObject();
+        this.vertexBuffer = gl.createBuffer();
+        this.indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        this.drawCmdManager = new WebGLDrawCmdManager();
+        this.vao = new WebGLVertexArrayObject();
         this.setGlobalCompositeOperation("source-over");
     }
     public static getInstance(width: number, height: number): WebGLRenderContext {
         if (this.instance) {
             return this.instance;
         }
-        this.instance = new WebGLRenderContext(width, height); return this.instance;
+        this.instance = new WebGLRenderContext(width, height);
+        return this.instance;
     }
     public pushBuffer(buffer: WebGLRenderBuffer): void {
         this.$bufferStack.push(buffer);
@@ -2816,20 +2933,27 @@ export class WebGLRenderContext {
         if (!this.bindIndices) {
             this.uploadIndicesArray(this.vao.getIndices());
         }
-        buffer.restoreStencil(); buffer.restoreScissor(); this.onResize(width, height);
+        buffer.restoreStencil();
+        buffer.restoreScissor();
+        this.onResize(width, height);
     }
     public uploadVerticesArray(array: Float32Array): void {
-        const gl: WebGLRenderingContext = this.context; gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
+        const gl: WebGLRenderingContext = this.context;
+        gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
     }
     public uploadIndicesArray(array: Uint16Array): void {
-        const gl: WebGLRenderingContext = this.context; gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW); this.bindIndices = true;
+        const gl: WebGLRenderingContext = this.context;
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+        this.bindIndices = true;
     }
     public destroy(): void {
         this.surface.width = this.surface.height = 0;
     }
     public onResize(width?: number, height?: number): void {
-        width = width || this.surface.width; height = height || this.surface.height;
-        this.projectionX = width / 2; this.projectionY = -height / 2;
+        width = width || this.surface.width;
+        height = height || this.surface.height;
+        this.projectionX = width / 2;
+        this.projectionY = -height / 2;
         if (this.context) {
             this.context.viewport(0, 0, width, height);
         }
@@ -2846,7 +2970,7 @@ export class WebGLRenderContext {
             }
             const info: CompressedTextureInfo = {
                 extensionName    : extension.name,
-                supportedFormats : []
+                supportedFormats : [],
             };
             let key: string;
             for (key in extension) {
@@ -2882,7 +3006,7 @@ export class WebGLRenderContext {
         }
         Capabilities.supportedCompressedTexture = Capabilities.supportedCompressedTexture || {
             pvrtc : false,
-            etc1  : false
+            etc1  : false,
         };
         Capabilities.supportedCompressedTexture.pvrtc = !!this.pvrtc;
         Capabilities.supportedCompressedTexture.etc1 = !!this.etc1;
@@ -2892,31 +3016,44 @@ export class WebGLRenderContext {
         this.contextLost = true;
     }
     public handleContextRestored(): void {
-        this.initWebGL(); this.contextLost = false;
+        this.initWebGL();
+        this.contextLost = false;
     }
     public getWebGLContext(): void {
-        const gl: WebGLRenderingContext = getContextWebGL(this.surface)!; this.setContext(gl);
+        const gl: WebGLRenderingContext = getContextWebGL(this.surface)!;
+        this.setContext(gl);
     }
     public setContext(gl: WebGLRenderingContext): void {
         this.context = gl;
         const engineGL: WebGLRenderingContext & { id: number } = gl as WebGLRenderingContext & { id: number };
-        engineGL.id = WebGLRenderContext.glContextId++; this.glID = engineGL.id;
-        gl.disable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); gl.enable(gl.BLEND); gl.colorMask(true, true, true, true); gl.activeTexture(gl.TEXTURE0);
+        engineGL.id = WebGLRenderContext.glContextId++;
+        this.glID = engineGL.id;
+        gl.disable(gl.DEPTH_TEST);
+        gl.disable(gl.CULL_FACE);
+        gl.enable(gl.BLEND);
+        gl.colorMask(true, true, true, true);
+        gl.activeTexture(gl.TEXTURE0);
     }
     public enableStencilTest(): void {
-        const gl: WebGLRenderingContext = this.context; gl.enable(gl.STENCIL_TEST);
+        const gl: WebGLRenderingContext = this.context;
+        gl.enable(gl.STENCIL_TEST);
     }
     public disableStencilTest(): void {
-        const gl: WebGLRenderingContext = this.context; gl.disable(gl.STENCIL_TEST);
+        const gl: WebGLRenderingContext = this.context;
+        gl.disable(gl.STENCIL_TEST);
     }
     public enableScissorTest(rect: RenderRectangle): void {
-        const gl: WebGLRenderingContext = this.context; gl.enable(gl.SCISSOR_TEST); gl.scissor(rect.x, rect.y, rect.width, rect.height);
+        const gl: WebGLRenderingContext = this.context;
+        gl.enable(gl.SCISSOR_TEST);
+        gl.scissor(rect.x, rect.y, rect.width, rect.height);
     }
     public disableScissorTest(): void {
-        const gl: WebGLRenderingContext = this.context; gl.disable(gl.SCISSOR_TEST);
+        const gl: WebGLRenderingContext = this.context;
+        gl.disable(gl.SCISSOR_TEST);
     }
     public getPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array | Uint8ClampedArray): void {
-        const gl: WebGLRenderingContext = this.context; gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        const gl: WebGLRenderingContext = this.context;
+        gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
     }
     public createTexture(bitmapData: TexImageSource): EngineWebGLTexture | undefined {
         return createTexture(this, bitmapData);
@@ -2925,7 +3062,7 @@ export class WebGLRenderContext {
         for (let i: number = 0, length: number = supportedCompressedTextureInfo.length; i < length; ++i) {
             const ss: CompressedTextureInfo = supportedCompressedTextureInfo[i]!;
             const supportedFormats: [string, string | number][] = ss.supportedFormats;
-            for (let j: number = 0, length: number = supportedFormats.length; j < length; ++j) {
+            for (let j: number = 0, formatCount: number = supportedFormats.length; j < formatCount; ++j) {
                 if (supportedFormats[j]![1] === internalFormat) {
                     return true;
                 }
@@ -2941,7 +3078,7 @@ export class WebGLRenderContext {
                 const ss: CompressedTextureInfo = supportedCompressedTextureInfo[i]!;
                 if (ss.supportedFormats.length > 0) {
                     log("support = " + ss.extensionName);
-                    for (let j: number = 0, length: number = ss.supportedFormats.length; j < length; ++j) {
+                    for (let j: number = 0, formatCount: number = ss.supportedFormats.length; j < formatCount; ++j) {
                         const tp: [string, string | number] = ss.supportedFormats[j]!;
                         log(tp[0] + " : " + tp[1] + " : 0x" + (typeof tp[1] === "number" ? tp[1].toString(16) : tp[1].toString()));
                     }
@@ -2952,24 +3089,31 @@ export class WebGLRenderContext {
     public createCompressedTexture(data: Uint8Array, width: number, height: number, levels: number, internalFormat: number): EngineWebGLTexture | undefined {
         const checkSupported: boolean = this.checkCompressedTextureInternalFormat(this._supportedCompressedTextureInfo, internalFormat);
         if (!checkSupported) {
-            this.$debugLogCompressedTextureNotSupported(this._supportedCompressedTextureInfo, internalFormat); return this.defaultEmptyTexture;
+            this.$debugLogCompressedTextureNotSupported(this._supportedCompressedTextureInfo, internalFormat);
+            return this.defaultEmptyTexture;
         }
         const gl: WebGLRenderingContext = this.context;
         const texture: EngineWebGLTexture | null = gl.createTexture();
         if (!texture) {
-            this.contextLost = true; return;
+            this.contextLost = true;
+            return;
         }
-        texture[DefinitionHelper.glContext] = gl; texture[DefinitionHelper.is_compressed_texture] = true;
-        gl.bindTexture(gl.TEXTURE_2D, texture); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+        texture[DefinitionHelper.glContext] = gl;
+        texture[DefinitionHelper.is_compressed_texture] = true;
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
         texture[DefinitionHelper.UNPACK_PREMULTIPLY_ALPHA_WEBGL] = true;
         gl.compressedTexImage2D(gl.TEXTURE_2D, levels, internalFormat, width, height, 0, data);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.bindTexture(gl.TEXTURE_2D, null);
         return texture;
     }
     public updateTexture(texture: EngineWebGLTexture, bitmapData: TexImageSource): void {
-        const gl: WebGLRenderingContext = this.context; gl.bindTexture(gl.TEXTURE_2D, texture);
+        const gl: WebGLRenderingContext = this.context;
+        gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
     }
     public get defaultEmptyTexture(): EngineWebGLTexture | undefined {
@@ -2977,7 +3121,8 @@ export class WebGLRenderContext {
             const size: number = 16;
             const canvas: HTMLCanvasElement = createCanvas(size, size)!;
             const context: CanvasContext = getContext2d(canvas)!;
-            context.fillStyle = "white"; context.fillRect(0, 0, size, size);
+            context.fillStyle = "white";
+            context.fillRect(0, 0, size, size);
             this._defaultEmptyTexture = this.createTexture(canvas);
             this._defaultEmptyTexture![DefinitionHelper.engine_default_empty_texture] = true;
         }
@@ -3000,7 +3145,8 @@ export class WebGLRenderContext {
             }
             if (bitmapData.$deleteSource && bitmapData.webGLTexture) {
                 if (bitmapData.source) {
-                    bitmapData.source.src = ""; bitmapData.source = null;
+                    bitmapData.source.src = "";
+                    bitmapData.source = null;
                 }
                 bitmapData.clearCompressedTextureData();
             }
@@ -3014,14 +3160,23 @@ export class WebGLRenderContext {
         if (x != 0 || y != 0 || width != this.surface.width || height != this.surface.height) {
             const buffer: WebGLRenderBuffer = this.currentBuffer;
             if (buffer.$hasScissor) {
-                this.setGlobalCompositeOperation("destination-out"); this.drawRect(x, y, width, height); this.setGlobalCompositeOperation("source-over");
+                this.setGlobalCompositeOperation("destination-out");
+                this.drawRect(x, y, width, height);
+                this.setGlobalCompositeOperation("source-over");
             } else {
                 const m: Matrix = buffer.globalMatrix;
                 if (m.b == 0 && m.c == 0) {
-                    x = x * m.a + m.tx; y = y * m.d + m.ty; width *= m.a; height *= m.d;
-                    this.enableScissor(x, -y - height + buffer.height, width, height); this.clear(); this.disableScissor();
+                    x = x * m.a + m.tx;
+                    y = y * m.d + m.ty;
+                    width *= m.a;
+                    height *= m.d;
+                    this.enableScissor(x, -y - height + buffer.height, width, height);
+                    this.clear();
+                    this.disableScissor();
                 } else {
-                    this.setGlobalCompositeOperation("destination-out"); this.drawRect(x, y, width, height); this.setGlobalCompositeOperation("source-over");
+                    this.setGlobalCompositeOperation("destination-out");
+                    this.drawRect(x, y, width, height);
+                    this.setGlobalCompositeOperation("source-over");
                 }
             }
         } else {
@@ -3043,8 +3198,11 @@ export class WebGLRenderContext {
         const renderImage: RenderImage = image as RenderImage;
         if (renderImage.texture || (renderImage.source && renderImage.source.texture)) {
             texture = renderImage.texture || renderImage.source!.texture;
-            buffer.saveTransform(); offsetX = buffer.$offsetX; offsetY = buffer.$offsetY;
-            buffer.useOffset(); buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);
+            buffer.saveTransform();
+            offsetX = buffer.$offsetX;
+            offsetY = buffer.$offsetY;
+            buffer.useOffset();
+            buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);
         } else if (!renderImage.source && !renderImage.webGLTexture) {
             return;
         } else {
@@ -3055,7 +3213,9 @@ export class WebGLRenderContext {
         }
         this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, undefined, undefined, undefined, undefined, rotated, smoothing);
         if (renderImage.source && renderImage.source.texture) {
-            buffer.$offsetX = offsetX!; buffer.$offsetY = offsetY!; buffer.restoreTransform();
+            buffer.$offsetX = offsetX!;
+            buffer.$offsetY = offsetY!;
+            buffer.restoreTransform();
         }
     }
     public drawMesh(image: BitmapData | WebGLRenderTarget | null, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
@@ -3071,8 +3231,11 @@ export class WebGLRenderContext {
         const renderImage: RenderImage = image;
         if (renderImage.texture || (renderImage.source && renderImage.source.texture)) {
             texture = renderImage.texture || renderImage.source!.texture;
-            buffer.saveTransform(); offsetX = buffer.$offsetX; offsetY = buffer.$offsetY;
-            buffer.useOffset(); buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);
+            buffer.saveTransform();
+            offsetX = buffer.$offsetX;
+            offsetY = buffer.$offsetY;
+            buffer.useOffset();
+            buffer.transform(1, 0, 0, -1, 0, destHeight + destY * 2);
         } else if (!renderImage.source && !renderImage.webGLTexture) {
             return;
         } else {
@@ -3083,7 +3246,9 @@ export class WebGLRenderContext {
         }
         this.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, imageSourceWidth, imageSourceHeight, meshUVs, meshVertices, meshIndices, bounds, rotated, smoothing);
         if (renderImage.texture || (renderImage.source && renderImage.source.texture)) {
-            buffer.$offsetX = offsetX!; buffer.$offsetY = offsetY!; buffer.restoreTransform();
+            buffer.$offsetX = offsetX!;
+            buffer.$offsetY = offsetY!;
+            buffer.restoreTransform();
         }
     }
     public drawTexture(texture: EngineWebGLTexture, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number,
@@ -3119,7 +3284,8 @@ export class WebGLRenderContext {
         if (this.vao.reachMaxSize()) {
             this.$drawWebGL();
         }
-        this.drawCmdManager.pushDrawRect(); buffer.currentTexture = null;
+        this.drawCmdManager.pushDrawRect();
+        buffer.currentTexture = null;
         this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
     }
     public pushMask(x: number, y: number, width: number, height: number): void {
@@ -3131,12 +3297,13 @@ export class WebGLRenderContext {
             x,
             y,
             width,
-            height
+            height,
         });
         if (this.vao.reachMaxSize()) {
             this.$drawWebGL();
         }
-        this.drawCmdManager.pushPushMask(); buffer.currentTexture = null;
+        this.drawCmdManager.pushPushMask();
+        buffer.currentTexture = null;
         this.vao.cacheArrays(buffer, 0, 0, width, height, x, y, width, height, width, height);
     }
     public popMask(): void {
@@ -3148,7 +3315,8 @@ export class WebGLRenderContext {
         if (this.vao.reachMaxSize()) {
             this.$drawWebGL();
         }
-        this.drawCmdManager.pushPopMask(); buffer.currentTexture = null;
+        this.drawCmdManager.pushPopMask();
+        buffer.currentTexture = null;
         this.vao.cacheArrays(buffer, 0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
     }
     public clear(): void {
@@ -3156,10 +3324,13 @@ export class WebGLRenderContext {
     }
     public enableScissor(x: number, y: number, width: number, height: number): void {
         const buffer: WebGLRenderBuffer = this.currentBuffer;
-        this.drawCmdManager.pushEnableScissor(x, y, width, height); buffer.$hasScissor = true;
+        this.drawCmdManager.pushEnableScissor(x, y, width, height);
+        buffer.$hasScissor = true;
     }
     public disableScissor(): void {
-        const buffer: WebGLRenderBuffer = this.currentBuffer; this.drawCmdManager.pushDisableScissor(); buffer.$hasScissor = false;
+        const buffer: WebGLRenderBuffer = this.currentBuffer;
+        this.drawCmdManager.pushDisableScissor();
+        buffer.$hasScissor = false;
     }
     public $drawWebGL(): void {
         if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
@@ -3186,7 +3357,8 @@ export class WebGLRenderContext {
         if (this.vao.isMesh()) {
             this.uploadIndicesArray(this.vao.getIndices());
         }
-        this.drawCmdManager.clear(); this.vao.clear();
+        this.drawCmdManager.clear();
+        this.vao.clear();
     }
     public drawData(data: WebGLDrawData, offset: number): number;
     public drawData(data: null | undefined, offset: number): undefined;
@@ -3206,7 +3378,8 @@ export class WebGLRenderContext {
                         program = EgretWebGLProgram.getProgram(gl, customFilter.$vertexSrc, customFilter.$fragmentSrc, customFilter.$shaderKey);
                     } else if (filter.type === "colorTransform") {
                         if (data.texture![DefinitionHelper.etc_alpha_mask]) {
-                            gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, data.texture![DefinitionHelper.etc_alpha_mask]!);
+                            gl.activeTexture(gl.TEXTURE1);
+                            gl.bindTexture(gl.TEXTURE_2D, data.texture![DefinitionHelper.etc_alpha_mask]!);
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag_etc_alphamask_frag, "colorTransform_frag_etc_alphamask_frag");
                         } else {
                             program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.colorTransform_frag, "colorTransform");
@@ -3219,18 +3392,22 @@ export class WebGLRenderContext {
                 } else {
                     if (data.texture![DefinitionHelper.etc_alpha_mask]) {
                         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_etc_alphamask_frag, DefinitionHelper.etc_alpha_mask);
-                        gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, data.texture![DefinitionHelper.etc_alpha_mask]!);
+                        gl.activeTexture(gl.TEXTURE1);
+                        gl.bindTexture(gl.TEXTURE_2D, data.texture![DefinitionHelper.etc_alpha_mask]!);
                     } else {
                         program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.texture_frag, "texture");
                     }
                 }
-                this.activeProgram(gl, program!); this.syncUniforms(program!, filter, data.textureWidth, data.textureHeight);
-                offset += this.drawTextureElements(data, offset); break;
+                this.activeProgram(gl, program!);
+                this.syncUniforms(program!, filter, data.textureWidth, data.textureHeight);
+                offset += this.drawTextureElements(data, offset);
+                break;
             case 1:
             case 2:
             case 3:
                 program = EgretWebGLProgram.getProgram(gl, EgretShaderLib.default_vert, EgretShaderLib.primitive_frag, "primitive");
-                this.activeProgram(gl, program); this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
+                this.activeProgram(gl, program);
+                this.syncUniforms(program, filter, data.textureWidth, data.textureHeight);
                 if (data.type == 1) {
                     offset += this.drawRectElements(data, offset);
                 } else if (data.type == 2) {
@@ -3239,8 +3416,11 @@ export class WebGLRenderContext {
                     offset += this.drawPopMaskElements(data, offset);
                 }
                 break;
-            case 4: this.setBlendMode(data.value); break;
-            case 5: data.buffer!.rootRenderTarget!.resize(data.width, data.height); this.onResize(data.width, data.height); break;
+            case 4: this.setBlendMode(data.value);
+                break;
+            case 5: data.buffer!.rootRenderTarget!.resize(data.width, data.height);
+                this.onResize(data.width, data.height);
+                break;
             case 6:
                 if (this.activatedBuffer) {
                     const target: WebGLRenderTarget = this.activatedBuffer.rootRenderTarget!;
@@ -3249,7 +3429,8 @@ export class WebGLRenderContext {
                     }
                 }
                 break;
-            case 7: this.activateBuffer(data.buffer!, data.width, data.height); break;
+            case 7: this.activateBuffer(data.buffer!, data.width, data.height);
+                break;
             case 8:
                 buffer = this.activatedBuffer;
                 if (buffer) {
@@ -3259,15 +3440,19 @@ export class WebGLRenderContext {
                     buffer.enableScissor(data.x, data.y, data.width, data.height);
                 }
                 break;
-            case 9: buffer = this.activatedBuffer; if (buffer) {
-                buffer.disableScissor();
-            } break;
+            case 9: buffer = this.activatedBuffer;
+                if (buffer) {
+                    buffer.disableScissor();
+                }
+                break;
             case 10:
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
                 if (data.smoothing) {
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 } else {
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
                 }
                 break;
             default: break;
@@ -3281,11 +3466,14 @@ export class WebGLRenderContext {
             let key: string;
             for (key in attribute) {
                 if (key === "aVertexPosition") {
-                    gl.vertexAttribPointer(attribute.aVertexPosition!.location, 2, gl.FLOAT, false, 5 * 4, 0); gl.enableVertexAttribArray(attribute.aVertexPosition!.location);
+                    gl.vertexAttribPointer(attribute.aVertexPosition!.location, 2, gl.FLOAT, false, 5 * 4, 0);
+                    gl.enableVertexAttribArray(attribute.aVertexPosition!.location);
                 } else if (key === "aTextureCoord") {
-                    gl.vertexAttribPointer(attribute.aTextureCoord!.location, 2, gl.FLOAT, false, 5 * 4, 2 * 4); gl.enableVertexAttribArray(attribute.aTextureCoord!.location);
+                    gl.vertexAttribPointer(attribute.aTextureCoord!.location, 2, gl.FLOAT, false, 5 * 4, 2 * 4);
+                    gl.enableVertexAttribArray(attribute.aTextureCoord!.location);
                 } else if (key === "aColor") {
-                    gl.vertexAttribPointer(attribute.aColor!.location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4); gl.enableVertexAttribArray(attribute.aColor!.location);
+                    gl.vertexAttribPointer(attribute.aColor!.location, 4, gl.UNSIGNED_BYTE, true, 5 * 4, 4 * 4);
+                    gl.enableVertexAttribArray(attribute.aColor!.location);
                 }
             }
             this.currentProgram = program;
@@ -3298,19 +3486,20 @@ export class WebGLRenderContext {
             if (key === "projectionVector") {
  uniforms[key]!.setValue({
      x : this.projectionX,
-     y : this.projectionY
+     y : this.projectionY,
  });
             } else if (key === "uTextureSize") {
  uniforms[key]!.setValue({
      x : textureWidth!,
-     y : textureHeight!
+     y : textureHeight!,
  });
             } else if (key === "uSampler") {
  uniforms[key]!.setValue(0);
             } else if (key === "uSamplerAlphaMask") {
  uniforms[key]!.setValue(1);
             } else {
-                const value: unknown = filter!.$uniforms[key]; if (value !== undefined) {
+                const value: unknown = filter!.$uniforms[key];
+                if (value !== undefined) {
  uniforms[key]!.setValue(value as UniformInput);
                 }
             }
@@ -3322,7 +3511,8 @@ export class WebGLRenderContext {
     public drawRectElements(data: WebGLDrawData, offset: number): number {
         const gl: WebGLRenderingContext = this.context;
         const size: number = data.count * 3;
-        gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2); return size;
+        gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+        return size;
     }
     public drawPushMaskElements(data: WebGLDrawData, offset: number): number {
         const gl: WebGLRenderingContext = this.context;
@@ -3333,13 +3523,18 @@ export class WebGLRenderContext {
                 buffer.rootRenderTarget.enabledStencil();
             }
             if (buffer.stencilHandleCount == 0) {
-                buffer.enableStencil(); gl.clear(gl.STENCIL_BUFFER_BIT);
+                buffer.enableStencil();
+                gl.clear(gl.STENCIL_BUFFER_BIT);
             }
             const level: number = buffer.stencilHandleCount;
             buffer.stencilHandleCount++;
-            gl.colorMask(false, false, false, false); gl.stencilFunc(gl.EQUAL, level, 0xFF); gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+            gl.colorMask(false, false, false, false);
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF); gl.colorMask(true, true, true, true); gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.colorMask(true, true, true, true);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         }
         return size;
     }
@@ -3353,9 +3548,13 @@ export class WebGLRenderContext {
                 buffer.disableStencil();
             } else {
                 const level: number = buffer.stencilHandleCount;
-                gl.colorMask(false, false, false, false); gl.stencilFunc(gl.EQUAL, level + 1, 0xFF); gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+                gl.colorMask(false, false, false, false);
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-                gl.stencilFunc(gl.EQUAL, level, 0xFF); gl.colorMask(true, true, true, true); gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                gl.colorMask(true, true, true, true);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
             }
         }
         return size;
@@ -3376,7 +3575,9 @@ export class WebGLRenderContext {
                 const filter: Filter = filters[i]!;
                 const width: number = input.rootRenderTarget!.width;
                 const height: number = input.rootRenderTarget!.height;
-                output = WebGLRenderBuffer.create(width, height); output.setTransform(1, 0, 0, 1, 0, 0); output.globalAlpha = 1;
+                output = WebGLRenderBuffer.create(width, height);
+                output.setTransform(1, 0, 0, 1, 0, 0);
+                output.globalAlpha = 1;
                 this.drawToRenderTarget(filter, input, output);
                 if (input != originInput) {
                     WebGLRenderBuffer.release(input);
@@ -3407,19 +3608,25 @@ export class WebGLRenderContext {
             const blurXFilter: BlurFilter["blurXFilter"] = blurFilter.blurXFilter;
             const blurYFilter: BlurFilter["blurYFilter"] = blurFilter.blurYFilter;
             if (blurXFilter.blurX != 0 && blurYFilter.blurY != 0) {
-                temp = WebGLRenderBuffer.create(width, height); temp.setTransform(1, 0, 0, 1, 0, 0); temp.globalAlpha = 1;
+                temp = WebGLRenderBuffer.create(width, height);
+                temp.setTransform(1, 0, 0, 1, 0, 0);
+                temp.globalAlpha = 1;
                 this.drawToRenderTarget(blurXFilter, input, temp);
                 if (input != originInput) {
                     WebGLRenderBuffer.release(input);
                 }
-                input = temp; filter = blurYFilter;
+                input = temp;
+                filter = blurYFilter;
             } else {
                 filter = blurXFilter.blurX === 0 ? blurYFilter : blurXFilter;
             }
         }
-        output.saveTransform(); output.transform(1, 0, 0, -1, 0, height); output.currentTexture = input.rootRenderTarget!.texture;
+        output.saveTransform();
+        output.transform(1, 0, 0, -1, 0, height);
+        output.currentTexture = input.rootRenderTarget!.texture;
         this.vao.cacheArrays(output, 0, 0, width, height, 0, 0, width, height, width, height);
-        output.restoreTransform(); this.drawCmdManager.pushDrawTexture(input.rootRenderTarget!.texture, 2, filter, width, height);
+        output.restoreTransform();
+        this.drawCmdManager.pushDrawTexture(input.rootRenderTarget!.texture, 2, filter, width, height);
         if (input != originInput) {
             WebGLRenderBuffer.release(input);
         }
@@ -3483,12 +3690,14 @@ export class WebGLRenderBuffer extends HashObject implements RenderBuffer {
     }
     public enableStencil(): void {
         if (!this.stencilState) {
-            this.context.enableStencilTest(); this.stencilState = true;
+            this.context.enableStencilTest();
+            this.stencilState = true;
         }
     }
     public disableStencil(): void {
         if (this.stencilState) {
-            this.context.disableStencilTest(); this.stencilState = false;
+            this.context.disableStencilTest();
+            this.stencilState = false;
         }
     }
     public restoreStencil(): void {
@@ -3507,7 +3716,9 @@ export class WebGLRenderBuffer extends HashObject implements RenderBuffer {
     }
     public disableScissor(): void {
         if (this.$scissorState) {
-            this.$scissorState = false; this.scissorRect.setEmpty(); this.context.disableScissorTest();
+            this.$scissorState = false;
+            this.scissorRect.setEmpty();
+            this.context.disableScissorTest();
         }
     }
     public restoreScissor(): void {
@@ -3612,11 +3823,18 @@ export class WebGLRenderBuffer extends HashObject implements RenderBuffer {
         this.restoreScissor();
     }
     public clear(): void {
-        this.context.pushBuffer(this); this.context.clear(); this.context.popBuffer();
+        this.context.pushBuffer(this);
+        this.context.clear();
+        this.context.popBuffer();
     }
     public setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
         const matrix: Matrix = this.globalMatrix;
-        matrix.a = a; matrix.b = b; matrix.c = c; matrix.d = d; matrix.tx = tx; matrix.ty = ty;
+        matrix.a = a;
+        matrix.b = b;
+        matrix.c = c;
+        matrix.d = d;
+        matrix.tx = tx;
+        matrix.ty = ty;
     }
     public transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void {
         const matrix: Matrix = this.globalMatrix;
@@ -3654,7 +3872,8 @@ export class WebGLRenderBuffer extends HashObject implements RenderBuffer {
             buffer.$offsetX = 0;
             buffer.$offsetY = 0;
         } else {
-            buffer = new WebGLRenderBuffer(width, height); buffer.$computeDrawCall = false;
+            buffer = new WebGLRenderBuffer(width, height);
+            buffer.$computeDrawCall = false;
         }
         return buffer;
     }
@@ -3668,13 +3887,15 @@ export class WebGLRenderer implements SystemRenderer {
     private static readonly defaultCompositeOp: GlobalCompositeOperation = "source-over";
     private static readonly blendModes: GlobalCompositeOperation[] = ["source-over", "lighter", "destination-out"];
     private static readonly rendererBufferPool: WebGLRenderBuffer[] = [];
-    public static readonly property_drawLabel: "DrawLabel" = "DrawLabel";
+    public static readonly property_drawLabel = "DrawLabel";
 
     public wxiOS10: boolean = false;
     public nestLevel: number = 0;
     public declare canvasRenderer: CanvasRenderer | undefined;
     public declare canvasRenderBuffer: CanvasRenderBuffer | undefined;
     public render(displayObject: DisplayObject, buffer: RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
+        void _forRenderTexture;
+
         this.nestLevel++;
         const webglBuffer: WebGLRenderBuffer = buffer as WebGLRenderBuffer;
         const context: WebGLRenderContext = webglBuffer.context;
@@ -3736,10 +3957,12 @@ export class WebGLRenderer implements SystemRenderer {
                 let tempAlpha: number | undefined;
                 let tempTintColor: number | undefined;
                 if (child.$alpha != 1) {
-                    tempAlpha = buffer.globalAlpha; buffer.globalAlpha *= child.$alpha;
+                    tempAlpha = buffer.globalAlpha;
+                    buffer.globalAlpha *= child.$alpha;
                 }
                 if (child.tint !== 0xFFFFFF) {
-                    tempTintColor = buffer.globalTintColor; buffer.globalTintColor = child.$tintRGB;
+                    tempTintColor = buffer.globalTintColor;
+                    buffer.globalTintColor = child.$tintRGB;
                 }
                 let savedMatrix: Matrix | undefined;
                 if (child.$useTranslate) {
@@ -3757,10 +3980,14 @@ export class WebGLRenderer implements SystemRenderer {
                 }
                 switch (child.$renderMode) {
                     case 1: break;
-                    case 2: drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2); break;
-                    case 3: drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2); break;
-                    case 4: drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2); break;
-                    default: drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2); break;
+                    case 2: drawCalls += this.drawWithFilter(child, buffer, offsetX2, offsetY2);
+                        break;
+                    case 3: drawCalls += this.drawWithClip(child, buffer, offsetX2, offsetY2);
+                        break;
+                    case 4: drawCalls += this.drawWithScrollRect(child, buffer, offsetX2, offsetY2);
+                        break;
+                    default: drawCalls += this.drawDisplayObject(child, buffer, offsetX2, offsetY2);
+                        break;
                 }
                 if (tempAlpha) {
                     buffer.globalAlpha = tempAlpha;
@@ -3769,7 +3996,8 @@ export class WebGLRenderer implements SystemRenderer {
                     buffer.globalTintColor = tempTintColor;
                 }
                 if (savedMatrix) {
-                    buffer.globalMatrix.copyFrom(savedMatrix); Matrix.release(savedMatrix);
+                    buffer.globalMatrix.copyFrom(savedMatrix);
+                    Matrix.release(savedMatrix);
                 }
             }
         }
@@ -3967,7 +4195,8 @@ export class WebGLRenderer implements SystemRenderer {
             return drawCalls;
         }
         if (displayObject.$scrollRect) {
-            offsetX -= scrollRect.x; offsetY -= scrollRect.y;
+            offsetX -= scrollRect.x;
+            offsetY -= scrollRect.y;
         }
         const m: Matrix = buffer.globalMatrix;
         const context: WebGLRenderContext = buffer.context;
@@ -3988,7 +4217,10 @@ export class WebGLRenderer implements SystemRenderer {
             let maxX: number;
             let maxY: number;
             if (a == 1.0 && d == 1.0) {
-                minX = x + tx; minY = y + ty; maxX = xMax + tx; maxY = yMax + ty;
+                minX = x + tx;
+                minY = y + ty;
+                maxX = xMax + tx;
+                maxY = yMax + ty;
             } else {
                 let x0: number = a * x + tx;
                 let y0: number = d * y + ty;
@@ -3998,20 +4230,28 @@ export class WebGLRenderer implements SystemRenderer {
                 let y2: number = d * yMax + ty;
                 let x3: number = a * x + tx;
                 let y3: number = d * yMax + ty;
-                let tmp: number = 0;
+                let tmp: number;
                 if (x0 > x1) {
-                    tmp = x0; x0 = x1; x1 = tmp;
+                    tmp = x0;
+                    x0 = x1;
+                    x1 = tmp;
                 }
                 if (x2 > x3) {
-                    tmp = x2; x2 = x3; x3 = tmp;
+                    tmp = x2;
+                    x2 = x3;
+                    x3 = tmp;
                 }
                 minX = x0 < x2 ? x0 : x2;
                 maxX = x1 > x3 ? x1 : x3;
                 if (y0 > y1) {
-                    tmp = y0; y0 = y1; y1 = tmp;
+                    tmp = y0;
+                    y0 = y1;
+                    y1 = tmp;
                 }
                 if (y2 > y3) {
-                    tmp = y2; y2 = y3; y3 = tmp;
+                    tmp = y2;
+                    y2 = y3;
+                    y3 = tmp;
                 }
                 minY = y0 < y2 ? y0 : y2;
                 maxY = y1 > y3 ? y1 : y3;
@@ -4044,7 +4284,8 @@ export class WebGLRenderer implements SystemRenderer {
         const node: RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
         let drawCalls: number = 0;
         if (node) {
-            drawCalls++; this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
+            drawCalls++;
+            this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
         }
         const children: DisplayObject[] | null = displayObject.$children;
         if (children) {
@@ -4053,10 +4294,14 @@ export class WebGLRenderer implements SystemRenderer {
                 const child: DisplayObject = children[i]!;
                 switch (child.$renderMode) {
                     case 1: break;
-                    case 2: drawCalls += this.drawWithFilter(child, buffer, 0, 0); break;
-                    case 3: drawCalls += this.drawWithClip(child, buffer, 0, 0); break;
-                    case 4: drawCalls += this.drawWithScrollRect(child, buffer, 0, 0); break;
-                    default: drawCalls += this.drawDisplayObject(child, buffer, 0, 0); break;
+                    case 2: drawCalls += this.drawWithFilter(child, buffer, 0, 0);
+                        break;
+                    case 3: drawCalls += this.drawWithClip(child, buffer, 0, 0);
+                        break;
+                    case 4: drawCalls += this.drawWithScrollRect(child, buffer, 0, 0);
+                        break;
+                    default: drawCalls += this.drawDisplayObject(child, buffer, 0, 0);
+                        break;
                 }
             }
         }
@@ -4069,12 +4314,18 @@ export class WebGLRenderer implements SystemRenderer {
         buffer.$offsetX = offsetX;
         buffer.$offsetY = offsetY;
         switch (node.type) {
-            case 1: this.renderBitmap(node as BitmapNode, buffer); break;
-            case 2: this.renderText(node as TextNode, buffer); break;
-            case 3: this.renderGraphics(node as GraphicsNode, buffer, forHitTest); break;
-            case 4: this.renderGroup(node as GroupNode, buffer); break;
-            case 5: this.renderMesh(node as MeshNode, buffer); break;
-            case 6: this.renderNormalBitmap(node as NormalBitmapNode, buffer); break;
+            case 1: this.renderBitmap(node as BitmapNode, buffer);
+                break;
+            case 2: this.renderText(node as TextNode, buffer);
+                break;
+            case 3: this.renderGraphics(node as GraphicsNode, buffer, forHitTest);
+                break;
+            case 4: this.renderGroup(node as GroupNode, buffer);
+                break;
+            case 5: this.renderMesh(node as MeshNode, buffer);
+                break;
+            case 6: this.renderNormalBitmap(node as NormalBitmapNode, buffer);
+                break;
         }
     }
     public renderNormalBitmap(node: NormalBitmapNode, buffer: WebGLRenderBuffer): void {
@@ -4111,7 +4362,8 @@ export class WebGLRenderer implements SystemRenderer {
         }
         let originAlpha: number = buffer.globalAlpha;
         if (alpha == alpha) {
-            originAlpha = buffer.globalAlpha; buffer.globalAlpha *= alpha;
+            originAlpha = buffer.globalAlpha;
+            buffer.globalAlpha *= alpha;
         }
         if (node.filter) {
             buffer.context.$filter = node.filter;
@@ -4161,7 +4413,8 @@ export class WebGLRenderer implements SystemRenderer {
         }
         let originAlpha: number = buffer.globalAlpha;
         if (alpha == alpha) {
-            originAlpha = buffer.globalAlpha; buffer.globalAlpha *= alpha;
+            originAlpha = buffer.globalAlpha;
+            buffer.globalAlpha *= alpha;
         }
         if (node.filter) {
             buffer.context.$filter = node.filter;
@@ -4188,8 +4441,8 @@ export class WebGLRenderer implements SystemRenderer {
         }
     }
     public ___renderText____(node: TextNode, buffer: WebGLRenderBuffer): void {
-        let width: number = node.width - node.x;
-        let height: number = node.height - node.y;
+        const width: number = node.width - node.x;
+        const height: number = node.height - node.y;
         if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) {
             return;
         }
@@ -4202,12 +4455,14 @@ export class WebGLRenderer implements SystemRenderer {
         if (height * canvasScaleY > maxTextureSize) {
             canvasScaleY *= maxTextureSize / (height * canvasScaleY);
         }
-        width *= canvasScaleX;
-        height *= canvasScaleY;
+
+
         const x: number = node.x * canvasScaleX;
         const y: number = node.y * canvasScaleY;
         if (node.$canvasScaleX !== canvasScaleX || node.$canvasScaleY !== canvasScaleY) {
-            node.$canvasScaleX = canvasScaleX; node.$canvasScaleY = canvasScaleY; node.dirtyRender = true;
+            node.$canvasScaleX = canvasScaleX;
+            node.$canvasScaleY = canvasScaleY;
+            node.dirtyRender = true;
         }
         if (x || y) {
             buffer.transform(1, 0, 0, 1, x / canvasScaleX, y / canvasScaleY);
@@ -4264,7 +4519,9 @@ export class WebGLRenderer implements SystemRenderer {
         const x: number = node.x * canvasScaleX;
         const y: number = node.y * canvasScaleY;
         if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
-            node.$canvasScaleX = canvasScaleX; node.$canvasScaleY = canvasScaleY; node.dirtyRender = true;
+            node.$canvasScaleX = canvasScaleX;
+            node.$canvasScaleY = canvasScaleY;
+            node.dirtyRender = true;
         }
         if (this.wxiOS10) {
             if (!this.canvasRenderer) {
@@ -4300,11 +4557,13 @@ export class WebGLRenderer implements SystemRenderer {
             const surface: TextureCanvas = canvasBuffer.surface;
             this.canvasRenderer!.renderText(node, canvasBuffer.context);
             if (this.wxiOS10) {
-                surface.isCanvas = true; node.$texture = surface;
+                surface.isCanvas = true;
+                node.$texture = surface;
             } else {
                 let texture: EngineWebGLTexture | null | undefined = node.$texture;
                 if (!texture) {
-                    texture = buffer.context.createTexture(surface); node.$texture = texture;
+                    texture = buffer.context.createTexture(surface);
+                    node.$texture = texture;
                 } else {
                     buffer.context.updateTexture(texture, surface);
                 }
@@ -4335,7 +4594,9 @@ export class WebGLRenderer implements SystemRenderer {
             canvasScaleX = canvasScaleY = 1;
         }
         if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
-            node.$canvasScaleX = canvasScaleX; node.$canvasScaleY = canvasScaleY; node.dirtyRender = true;
+            node.$canvasScaleX = canvasScaleX;
+            node.$canvasScaleY = canvasScaleY;
+            node.dirtyRender = true;
         }
         width *= canvasScaleX;
         height *= canvasScaleY;
@@ -4378,20 +4639,24 @@ export class WebGLRenderer implements SystemRenderer {
             this.canvasRenderer!.renderGraphics(node, canvasBuffer.context, true);
             let texture: EngineWebGLTexture | null | undefined;
             if (this.wxiOS10) {
-                surface.isCanvas = true; texture = surface;
+                surface.isCanvas = true;
+                texture = surface;
             } else {
-                WebGLUtils.deleteWebGLTexture(surface); texture = buffer.context.getWebGLTexture(surface as TextureCanvas & BitmapData);
+                WebGLUtils.deleteWebGLTexture(surface);
+                texture = buffer.context.getWebGLTexture(surface as TextureCanvas & BitmapData);
             }
             buffer.context.drawTexture(texture!, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
         } else {
             if (node.dirtyRender) {
                 this.canvasRenderer!.renderGraphics(node, canvasBuffer.context);
                 if (this.wxiOS10) {
-                    surface.isCanvas = true; node.$texture = surface;
+                    surface.isCanvas = true;
+                    node.$texture = surface;
                 } else {
                     let texture: EngineWebGLTexture | null | undefined = node.$texture;
                     if (!texture) {
-                        texture = buffer.context.createTexture(surface); node.$texture = texture;
+                        texture = buffer.context.createTexture(surface);
+                        node.$texture = texture;
                     } else {
                         buffer.context.updateTexture(texture, surface);
                     }
@@ -4444,7 +4709,8 @@ export class WebGLRenderer implements SystemRenderer {
         if (buffer) {
             buffer.resize(width, height);
         } else {
-            buffer = new WebGLRenderBuffer(width, height); buffer.$computeDrawCall = false;
+            buffer = new WebGLRenderBuffer(width, height);
+            buffer.$computeDrawCall = false;
         }
         return buffer;
     }
@@ -4468,9 +4734,14 @@ export class TextBlock extends HashObject {
     public stroke2: number = 0;
     public constructor(width: number, height: number, measureWidth: number, measureHeight: number, canvasWidthOffset: number, canvasHeightOffset: number, stroke2: number, border: number) {
         super();
-        this._width = width; this._height = height; this._border = border;
-        this.measureWidth = measureWidth; this.measureHeight = measureHeight;
-        this.canvasWidthOffset = canvasWidthOffset; this.canvasHeightOffset = canvasHeightOffset; this.stroke2 = stroke2;
+        this._width = width;
+        this._height = height;
+        this._border = border;
+        this.measureWidth = measureWidth;
+        this.measureHeight = measureHeight;
+        this.canvasWidthOffset = canvasWidthOffset;
+        this.canvasHeightOffset = canvasHeightOffset;
+        this.stroke2 = stroke2;
     }
     public get border(): number {
         return this._border;
@@ -4500,10 +4771,12 @@ export class TextBlock extends HashObject {
         return true;
     }
     public get subImageOffsetX(): number {
-        const line: Line | null = this.line; return line ? line.x + this.x + this.border : 0;
+        const line: Line | null = this.line;
+        return line ? line.x + this.x + this.border : 0;
     }
     public get subImageOffsetY(): number {
-        const line: Line | null = this.line; return line ? line.y + this.y + this.border : 0;
+        const line: Line | null = this.line;
+        return line ? line.y + this.y + this.border : 0;
     }
 }
 __reflect(TextBlock.prototype, "egret.web.TextBlock");
@@ -4516,7 +4789,8 @@ export class Line extends HashObject {
     public x: number = 0;
     public y: number = 0;
     public constructor(maxWidth: number) {
-        super(); this.maxWidth = maxWidth;
+        super();
+        this.maxWidth = maxWidth;
     }
     public isCapacityOf(textBlock: TextBlock | null | undefined): boolean {
         if (!textBlock) {
@@ -4549,7 +4823,8 @@ export class Line extends HashObject {
         let posy: number = 0;
         const lastTxtBlock: TextBlock | null = this.lastTextBlock();
         if (lastTxtBlock) {
-            posx = lastTxtBlock.x + lastTxtBlock.width; posy = lastTxtBlock.y;
+            posx = lastTxtBlock.x + lastTxtBlock.width;
+            posy = lastTxtBlock.y;
         }
         textBlock.x = posx;
         textBlock.y = posy;
@@ -4567,7 +4842,9 @@ export class Page extends HashObject {
     public pageHeight: number = 0;
     public webGLTexture: EngineWebGLTexture | null | undefined = null;
     public constructor(pageWidth: number, pageHeight: number) {
-        super(); this.pageWidth = pageWidth; this.pageHeight = pageHeight;
+        super();
+        this.pageWidth = pageWidth;
+        this.pageHeight = pageHeight;
     }
     public addLine(line: Line | null | undefined): boolean {
         if (!line) {
@@ -4582,7 +4859,8 @@ export class Page extends HashObject {
             posy = lastLine.y + lastLine.dynamicMaxHeight;
         }
         if (line.maxWidth > this.pageWidth) {
-            console.error("line.maxWidth = " + line.maxWidth + ", this.pageWidth = " + this.pageWidth); return false;
+            console.error("line.maxWidth = " + line.maxWidth + ", this.pageWidth = " + this.pageWidth);
+            return false;
         }
         if (posy + line.dynamicMaxHeight > this.pageHeight) {
             return false;
@@ -4602,7 +4880,9 @@ export class Book extends HashObject {
     private _maxSize: number = 1024;
     private _border: number = 1;
     public constructor(maxSize: number, border: number) {
-        super(); this._maxSize = maxSize; this._border = border;
+        super();
+        this._maxSize = maxSize;
+        this._border = border;
     }
     public addTextBlock(textBlock: TextBlock): boolean {
         const result: [Page | null, Line] | null = this._addTextBlock(textBlock);
@@ -4615,7 +4895,8 @@ export class Book extends HashObject {
         for (let i: number = 0; i < sortLines.length; i++) {
             const line: Line = sortLines[i]!;
             if (line === result[1]) {
-                exist = true; break;
+                exist = true;
+                break;
             }
         }
         if (!exist) {
@@ -4643,7 +4924,8 @@ export class Book extends HashObject {
         }
         const newLine: Line = new Line(this._maxSize);
         if (!newLine.addTextBlock(textBlock, true)) {
-            console.error("_addTextBlock !newLine.addTextBlock(textBlock, true)"); return null;
+            console.error("_addTextBlock !newLine.addTextBlock(textBlock, true)");
+            return null;
         }
         const pages: Page[] = this._pages;
         for (let i: number = 0, length: number = pages.length; i < length; ++i) {
@@ -4654,7 +4936,8 @@ export class Book extends HashObject {
         }
         const newPage: Page = this.createPage(this._maxSize, this._maxSize);
         if (!newPage.addLine(newLine)) {
-            console.error("_addText newPage.addLine failed"); return null;
+            console.error("_addText newPage.addLine failed");
+            return null;
         }
         return [newPage, newLine];
     }
@@ -4687,7 +4970,9 @@ export class DrawLabel extends HashObject {
     public textBlocks: TextBlock[] = [];
     public static pool: DrawLabel[] = [];
     public clear(): void {
-        this.anchorX = 0; this.anchorY = 0; this.textBlocks.length = 0;
+        this.anchorX = 0;
+        this.anchorY = 0;
+        this.textBlocks.length = 0;
     }
     public static create(): DrawLabel {
         const pool: DrawLabel[] = DrawLabel.pool;
@@ -4702,7 +4987,8 @@ export class DrawLabel extends HashObject {
         }
         const pool: DrawLabel[] = DrawLabel.pool;
         if (checkRepeat && pool.indexOf(drawLabel) >= 0) {
-            console.error("DrawLabel.back repeat"); return;
+            console.error("DrawLabel.back repeat");
+            return;
         }
         drawLabel.clear();
         pool.push(drawLabel);
@@ -4786,11 +5072,12 @@ class CharImageRender extends HashObject {
         let canvasHeight: number = this.measureHeight;
         const strokeDouble: number = stroke * 2;
         if (strokeDouble > 0) {
-            canvasWidth += strokeDouble * 2; canvasHeight += strokeDouble * 2;
+            canvasWidth += strokeDouble * 2;
+            canvasHeight += strokeDouble * 2;
         }
         this.stroke2 = strokeDouble;
-        canvas.width = canvasWidth = Math.ceil(canvasWidth) + 2 * 2;
-        canvas.height = canvasHeight = Math.ceil(canvasHeight) + 2 * 2;
+        canvas.width = Math.ceil(canvasWidth) + 2 * 2;
+        canvas.height = Math.ceil(canvasHeight) + 2 * 2;
         this.canvasWidthOffset = (canvas.width - this.measureWidth) / 2;
         this.canvasHeightOffset = (canvas.height - this.measureHeight) / 2;
         const numberOfPrecision: number = 3;
@@ -4807,7 +5094,8 @@ class CharImageRender extends HashObject {
         context.strokeStyle = toColorString(strokeColor);
         context.clearRect(0, 0, canvas.width, canvas.height);
         if (stroke) {
-            context.lineWidth = stroke * 2; context.strokeText(text, canvas.width / 2, canvas.height / 2);
+            context.lineWidth = stroke * 2;
+            context.strokeText(text, canvas.width / 2, canvas.height / 2);
         }
         context.fillText(text, canvas.width / 2, canvas.height / 2);
         context.restore();
@@ -4856,10 +5144,10 @@ export class TextAtlasRender extends HashObject {
         drawLabels.length = 0;
         const offset: number = 4;
         const drawData: (number | string | ITextStyle)[] = textNode.drawData;
-        let anchorX: number = 0;
-        let anchorY: number = 0;
-        let labelString: string = "";
-        let labelFormat: ITextStyle = {};
+        let anchorX: number;
+        let anchorY: number;
+        let labelString: string;
+        let labelFormat: ITextStyle;
         const resultAsRenderTextBlocks: TextBlock[] = [];
         for (let i: number = 0, length: number = drawData.length; i < length; i += offset) {
             anchorX = drawData[i] as number;
@@ -4884,7 +5172,8 @@ export class TextAtlasRender extends HashObject {
             charImageRender.reset(char, styleKey);
             const cachedBlock: TextBlock | undefined = textBlockMap[charImageRender.charWithStyleHashCode];
             if (cachedBlock) {
-                resultAsRenderTextBlocks.push(cachedBlock); continue;
+                resultAsRenderTextBlocks.push(cachedBlock);
+                continue;
             }
             charImageRender.measureAndDraw(canvas);
             const txtBlock: TextBlock | null = this.book.createTextBlock(char, canvas.width, canvas.height, charImageRender.measureWidth, charImageRender.measureHeight, charImageRender.canvasWidthOffset, charImageRender.canvasHeightOffset, charImageRender.stroke2);
@@ -4950,21 +5239,31 @@ export class EgretWebGLAttribute {
         this.initFormat(gl);
     }
     public initCount(_gl: WebGLRenderingContext): void {
+        void _gl;
+
         const type: number = this.type;
         switch (type) {
-            case 5126: case 5120: case 5121: case 5123: this.count = 1; break;
-            case 35664: this.count = 2; break;
-            case 35665: this.count = 3; break;
-            case 35666: this.count = 4; break;
+            case 5126: case 5120: case 5121: case 5123: this.count = 1;
+                break;
+            case 35664: this.count = 2;
+                break;
+            case 35665: this.count = 3;
+                break;
+            case 35666: this.count = 4;
+                break;
         }
     }
     public initFormat(gl: WebGLRenderingContext): void {
         const type: number = this.type;
         switch (type) {
-            case 5126: case 35664: case 35665: case 35666: this.format = gl.FLOAT; break;
-            case 5121: this.format = gl.UNSIGNED_BYTE; break;
-            case 5123: this.format = gl.UNSIGNED_SHORT; break;
-            case 5120: this.format = gl.BYTE; break;
+            case 5126: case 35664: case 35665: case 35666: this.format = gl.FLOAT;
+                break;
+            case 5121: this.format = gl.UNSIGNED_BYTE;
+                break;
+            case 5123: this.format = gl.UNSIGNED_SHORT;
+                break;
+            case 5120: this.format = gl.BYTE;
+                break;
         }
     }
 }
@@ -4994,7 +5293,15 @@ export class EgretWebGLProgram {
         }
         return this.programCache[key]!;
     }
-    public static deleteProgram(_gl: WebGLRenderingContext, _vertSource: string, _fragSource: string, _key: string): void { }
+    public static deleteProgram(_gl: WebGLRenderingContext, _vertSource: string, _fragSource: string, _key: string): void {
+        void _gl;
+
+        void _vertSource;
+
+        void _fragSource;
+
+        void _key;
+    }
 }
 __reflect(EgretWebGLProgram.prototype, "egret.web.EgretWebGLProgram");
 
@@ -5020,13 +5327,20 @@ export class EgretWebGLUniform {
     public setDefaultValue(): void {
         const type: number = this.type;
         switch (type) {
-            case 5126: case 35678: case 35680: case 35670: case 5124: this.value = 0; break;
-            case 35664: case 35671: case 35667: this.value = [0, 0]; break;
-            case 35665: case 35672: case 35668: this.value = [0, 0, 0]; break;
-            case 35666: case 35673: case 35669: this.value = [0, 0, 0, 0]; break;
-            case 35674: this.value = new Float32Array([1, 0, 0, 1]); break;
-            case 35675: this.value = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]); break;
-            case 35676: this.value = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]); break;
+            case 5126: case 35678: case 35680: case 35670: case 5124: this.value = 0;
+                break;
+            case 35664: case 35671: case 35667: this.value = [0, 0];
+                break;
+            case 35665: case 35672: case 35668: this.value = [0, 0, 0];
+                break;
+            case 35666: case 35673: case 35669: this.value = [0, 0, 0, 0];
+                break;
+            case 35674: this.value = new Float32Array([1, 0, 0, 1]);
+                break;
+            case 35675: this.value = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+                break;
+            case 35676: this.value = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+                break;
         }
     }
     public generateSetValue(): void {
@@ -5046,7 +5360,8 @@ export class EgretWebGLUniform {
                     const vector: UniformVector2 = value as UniformVector2;
                     const current: number[] = this.value as number[];
                     const notEqual: boolean = current[0] !== vector.x || current[1] !== vector.y;
-                    current[0] = vector.x; current[1] = vector.y;
+                    current[0] = vector.x;
+                    current[1] = vector.y;
                     if (notEqual) {
                         this.upload();
                     }
@@ -5056,7 +5371,9 @@ export class EgretWebGLUniform {
                 this.setValue = function (this: EgretWebGLUniform, value: UniformInput): void {
                     const vector: UniformVector3 = value as UniformVector3;
                     const current: number[] = this.value as number[];
-                    current[0] = vector.x; current[1] = vector.y; current[2] = vector.z;
+                    current[0] = vector.x;
+                    current[1] = vector.y;
+                    current[2] = vector.z;
                     this.upload();
                 };
                 break;
@@ -5064,7 +5381,10 @@ export class EgretWebGLUniform {
                 this.setValue = function (this: EgretWebGLUniform, value: UniformInput): void {
                     const vector: UniformVector4 = value as UniformVector4;
                     const current: number[] = this.value as number[];
-                    current[0] = vector.x; current[1] = vector.y; current[2] = vector.z; current[3] = vector.w;
+                    current[0] = vector.x;
+                    current[1] = vector.y;
+                    current[2] = vector.z;
+                    current[3] = vector.w;
                     this.upload();
                 };
                 break;
@@ -5083,48 +5403,70 @@ export class EgretWebGLUniform {
         switch (type) {
             case 5126:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number = this.value as number; gl.uniform1f(location, value);
-                }; break;
+                    const value: number = this.value as number;
+                    gl.uniform1f(location, value);
+                };
+                break;
             case 35664:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform2f(location, value[0]!, value[1]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform2f(location, value[0]!, value[1]!);
+                };
+                break;
             case 35665:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform3f(location, value[0]!, value[1]!, value[2]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform3f(location, value[0]!, value[1]!, value[2]!);
+                };
+                break;
             case 35666:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform4f(location, value[0]!, value[1]!, value[2]!, value[3]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform4f(location, value[0]!, value[1]!, value[2]!, value[3]!);
+                };
+                break;
             case 35678: case 35680: case 35670: case 5124:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number = this.value as number; gl.uniform1i(location, value);
-                }; break;
+                    const value: number = this.value as number;
+                    gl.uniform1i(location, value);
+                };
+                break;
             case 35671: case 35667:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform2i(location, value[0]!, value[1]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform2i(location, value[0]!, value[1]!);
+                };
+                break;
             case 35672: case 35668:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform3i(location, value[0]!, value[1]!, value[2]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform3i(location, value[0]!, value[1]!, value[2]!);
+                };
+                break;
             case 35673: case 35669:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: number[] = this.value as number[]; gl.uniform4i(location, value[0]!, value[1]!, value[2]!, value[3]!);
-                }; break;
+                    const value: number[] = this.value as number[];
+                    gl.uniform4i(location, value[0]!, value[1]!, value[2]!, value[3]!);
+                };
+                break;
             case 35674:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: Float32Array = this.value as Float32Array; gl.uniformMatrix2fv(location, false, value);
-                }; break;
+                    const value: Float32Array = this.value as Float32Array;
+                    gl.uniformMatrix2fv(location, false, value);
+                };
+                break;
             case 35675:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: Float32Array = this.value as Float32Array; gl.uniformMatrix3fv(location, false, value);
-                }; break;
+                    const value: Float32Array = this.value as Float32Array;
+                    gl.uniformMatrix3fv(location, false, value);
+                };
+                break;
             case 35676:
                 this.upload = function (this: EgretWebGLUniform): void {
-                    const value: Float32Array = this.value as Float32Array; gl.uniformMatrix4fv(location, false, value);
-                }; break;
+                    const value: Float32Array = this.value as Float32Array;
+                    gl.uniformMatrix4fv(location, false, value);
+                };
+                break;
         }
     }
 }
@@ -5178,26 +5520,26 @@ export class HTML5WebSocket {
         this._bindEvent();
     }
     private _bindEvent(): void {
-        const that: HTML5WebSocket = this;
+
         const socket: BrowserSocket = this.socket;
         socket.onopen = (): void => {
-            if (that.onConnect) {
-                that.onConnect.call(that.thisObject);
+            if (this.onConnect) {
+                this.onConnect.call(this.thisObject);
             }
         };
         socket.onclose = (): void => {
-            if (that.onClose) {
-                that.onClose.call(that.thisObject);
+            if (this.onClose) {
+                this.onClose.call(this.thisObject);
             }
         };
         socket.onerror = (): void => {
-            if (that.onError) {
-                that.onError.call(that.thisObject);
+            if (this.onError) {
+                this.onError.call(this.thisObject);
             }
         };
         socket.onmessage = (e: MessageEvent<string | ArrayBuffer>): void => {
-            if (that.onSocketData) {
-                that.onSocketData.call(that.thisObject, e.data ? e.data : e);
+            if (this.onSocketData) {
+                this.onSocketData.call(this.thisObject, e.data ? e.data : e);
             }
         };
     }

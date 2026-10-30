@@ -1,4 +1,4 @@
-import { Capabilities } from "./vendor/egret/Egret.ts";
+import { Capabilities } from "./egret/Egret.ts";
 
 const LogLevel = {
     All   : 0,

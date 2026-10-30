@@ -54,7 +54,7 @@ import {
     Event,
     setTimeout,
     clearTimeout,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 const CONFIRM_INTERVAL_MS = 5000;

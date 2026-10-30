@@ -62,7 +62,7 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getSelfUserId } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import {
     getPlayerRule,
     getPlayersCountUnneutral,

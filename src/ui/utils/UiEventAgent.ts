@@ -5,7 +5,7 @@ import type { UiInputEventType } from "../types/UiInputEventType.ts";
 import type {
     Event,
     DisplayObject,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 type EnterFrameListener = {
     callback    : (e: Event) => void;

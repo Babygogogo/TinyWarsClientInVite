@@ -13,7 +13,7 @@ import { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
 import type { UiTabData } from "../types/UiTabData.ts";
 import { getUiOpenableComponentClass } from "../utils/UiFactory.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export class UiTab<DataForTabItemRenderer extends UiListItemData, DataForPage>
     extends     UiContainer

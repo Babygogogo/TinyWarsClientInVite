@@ -23,7 +23,7 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export type OpenData = {
     replayId: number;

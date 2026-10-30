@@ -44,7 +44,7 @@ import type { S as MpwCommonSyncWarResponse } from "../../proto/schema/CommonPro
 import type { S as MpwExecuteWarOperationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwExecuteWarOperation/S.ts";
 import type { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import { SyncRequestTypeId } from "../../wars/Constants.ts";
 
 export function init(): void {

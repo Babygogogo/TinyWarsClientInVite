@@ -23,7 +23,7 @@ import type { IUnitMapView } from "./IUnitMapView.ts";
 import type { IUnitView } from "./IUnitView.ts";
 import { getSelfSettingsOpacitySettings } from "../users/Model.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { DisplayObject } from "../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../egret/Egret.ts";
 import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
 const getGridWidth          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);

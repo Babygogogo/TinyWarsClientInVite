@@ -10,7 +10,7 @@ import type { S as GmDeleteSpmAllScoreAndReplayResponse } from "../../proto/sche
 import type { S as GmSetUserPrivilegeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgGmSetUserPrivilege/S.ts";
 import type { UserPrivilege } from "../../proto/schema/CommonProto/User/UserPrivilege.ts";
 import { updateOnMsgGmSetUserPrivilege } from "../../users/Model.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

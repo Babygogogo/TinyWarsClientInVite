@@ -26,7 +26,7 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUserBriefInfo } from "../Model.ts";
 import { reqUserGetOnlineUserIdArray } from "../Proxy.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

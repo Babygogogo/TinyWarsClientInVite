@@ -25,7 +25,7 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { getSelfSettings } from "../Model.ts";
 import { reqUserSetCoBgmSettings } from "../Proxy.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface OpenData {
     gameConfig  : GameConfig;

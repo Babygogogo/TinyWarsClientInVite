@@ -29,7 +29,7 @@ import {
 } from "../../units/Constants.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
-import type { DisplayObject } from "../../vendor/egret/Egret.ts";
+import type { DisplayObject } from "../../egret/Egret.ts";
 
 const getResolutionConfig           = createLazyFunc(() => getCurrentTextureResolutionConfig());
 const getGridWidth                  = createLazyFunc(() => getResolutionConfig().gridWidth);

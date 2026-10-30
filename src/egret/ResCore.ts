@@ -126,6 +126,10 @@ export function typeSelector(path: string): string {
 }
 
 export function registerAnalyzer(_type: string, _analyzerClass: abstract new (...args: never[]) => object): never {
+    void _type;
+
+    void _analyzerClass;
+
     throw new ResourceManagerError(2002);
 }
 
@@ -249,7 +253,7 @@ export class ConfigItemHelper {
             type : url.indexOf(".json") >= 0 ? "legacyResourceConfig" : "resourceConfig",
             root : root,
             url  : url,
-            name : url
+            name : url,
         };
     }
 
@@ -277,7 +281,7 @@ export class ResourceConfig {
                 resourceRoot  : configItem.root,
                 mergeSelector : null,
                 fileSystem    : null,
-                loadGroup     : []
+                loadGroup     : [],
             };
         }
 
@@ -331,11 +335,12 @@ export class ResourceConfig {
         const index: number = key.indexOf("#");
         let subkey: string = "";
         if (index >= 0) {
-            subkey = key.substr(index + 1); key = key.substr(0, index);
+            subkey = key.substr(index + 1);
+            key = key.substr(0, index);
         }
         const r: ResourceInfo | null = this.getResource(key);
         return r ? {
-            r : r, key : key, subkey : subkey
+            r : r, key : key, subkey : subkey,
         } : null;
     }
     public getKeyByAlias(aliasName: string): string {
@@ -536,7 +541,7 @@ export class ResourceLoader {
                 if (this.promiseHash[r.root + r.name] != null) {
                     const dispatcher: EventDispatcher = this.deleteDispatcher(r.root + r.name);
                     dispatcher.dispatchEventWith("error", false, {
-                        r : r, error : error
+                        r : r, error : error,
                     });
                 }
                 const groupNames: string[] | undefined = r.groupNames;
@@ -581,7 +586,8 @@ export class ResourceLoader {
             return undefined;
         }
         if (list.length == 0) {
-            delete this.itemListPriorityDic[maxPriority]; return this.getOneResourceInfoInGroup();
+            delete this.itemListPriorityDic[maxPriority];
+            return this.getOneResourceInfoInGroup();
         }
         return list.shift();
     }
@@ -609,7 +615,7 @@ export class ResourceLoader {
                 const error: ResourceManagerError | undefined = this.errorDic[groupName];
                 delete this.errorDic[groupName];
                 dispatcher.dispatchEventWith("error", false, {
-                    itemList : itemList, error : error
+                    itemList : itemList, error : error,
                 });
             } else {
                 dispatcher.dispatchEventWith("complete");
@@ -619,7 +625,7 @@ export class ResourceLoader {
             const itemList: ResourceInfo[] | undefined = this.loadItemErrorDic[groupName];
             delete this.loadItemErrorDic[groupName];
             dispatcher.dispatchEventWith("error", false, {
-                itemList : itemList, lastError : lastError
+                itemList : itemList, lastError : lastError,
             });
         }
     }
@@ -653,7 +659,8 @@ export class ResourceLoader {
     public unloadResource(r: ResourceInfo): boolean {
         const data: unknown = getHost().get(r);
         if (!data) {
-            console.warn("�����ͷŲ����ڵ���Դ:", r.name); return false;
+            console.warn("�����ͷŲ����ڵ���Դ:", r.name);
+            return false;
         }
         const p: Processor | undefined = runtime.processor.isSupport(r);
         if (p) {
@@ -673,13 +680,15 @@ export class Resource extends EventDispatcher {
     public vcs: IVersionController | undefined;
     public normalLoadConfig: () => Promise<void> = (): Promise<void> => getConfig().init().then(
         (_data: unknown): void => {
+            void _data;
+
             this._hasLoadConfig = true;
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_COMPLETE);
         },
         (error: unknown): Promise<never> => {
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.CONFIG_LOAD_ERROR);
             return Promise.reject(error);
-        }
+        },
     );
     private _hasLoadConfig = false;
     private static _instance: Resource | undefined;
@@ -715,13 +724,17 @@ export class Resource extends EventDispatcher {
         return getConfig().getGroupByName(name);
     }
     public loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> {
-        const reporterDelegate: PromiseTaskReporter = {onProgress : (current: number, total: number, resItem: ResourceInfo): void => {
-            if (reporter && reporter.onProgress) {
-                reporter.onProgress(current, total, resItem);
-            }
-            ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
-        }};
+        const reporterDelegate: PromiseTaskReporter = {
+            onProgress : (current: number, total: number, resItem: ResourceInfo): void => {
+                if (reporter && reporter.onProgress) {
+                    reporter.onProgress(current, total, resItem);
+                }
+                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
+            },
+        };
         return this._loadGroup(name, priority, reporterDelegate).then((_data: unknown): void => {
+            void _data;
+
             if (getConfig().config.loadGroup.indexOf(name) == -1) {
                 getConfig().config.loadGroup.push(name);
             }
@@ -802,7 +815,8 @@ export class Resource extends EventDispatcher {
             getHost().remove(r);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r);
             if (compFunc) {
-                compFunc.call(thisObject, null, paramKey); return Promise.reject(null);
+                compFunc.call(thisObject, null, paramKey);
+                return Promise.reject(null);
             }
             return Promise.reject(error);
         });
@@ -814,7 +828,7 @@ export class Resource extends EventDispatcher {
                 type = getConfig().__temp__get__type__via__url(url);
             }
             r = {
-                name : url, url : url, type : type, root : "", extra : 1
+                name : url, url : url, type : type, root : "", extra : 1,
             };
             getConfig().addResourceData(r);
             r = getConfig().getResource(url);
@@ -833,7 +847,8 @@ export class Resource extends EventDispatcher {
             getHost().remove(resource);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", resource);
             if (compFunc) {
-                compFunc.call(thisObject, null, url); return Promise.reject(null);
+                compFunc.call(thisObject, null, url);
+                return Promise.reject(null);
             }
             return Promise.reject(error);
         });
@@ -847,7 +862,8 @@ export class Resource extends EventDispatcher {
             }
             if (force || (getConfig().config.loadGroup.length == 1 && getConfig().config.loadGroup[0] == name)) {
                 for (let i: number = 0; i < group.length; i++) {
-                    const item: ResourceInfo = group[i]!; getQueue().unloadResource(item);
+                    const item: ResourceInfo = group[i]!;
+                    getQueue().unloadResource(item);
                 }
                 getConfig().config.loadGroup.splice(index, 1);
             } else {
@@ -881,13 +897,15 @@ export class Resource extends EventDispatcher {
     public setMaxLoadingThread(thread: number): void {
         if (thread < 1) {
             thread = 1;
-        } getQueue().thread = thread;
+        }
+        getQueue().thread = thread;
     }
     public setMaxRetryTimes(retry: number): void {
         getQueue().maxRetryTimes = Math.max(retry, 0);
     }
     public addResourceData(data: ResourceInfo): void {
-        data.root = ""; getConfig().addResourceData(data);
+        data.root = "";
+        getConfig().addResourceData(data);
     }
 }
 __reflect(Resource.prototype, "RES.Resource");
@@ -906,7 +924,8 @@ export class ResourceEvent extends Event {
         if (resItem) {
             event.resItem = ResourceItemHelper.convertToResItem(resItem);
         }
-        event.itemsLoaded = itemsLoaded; event.itemsTotal = itemsTotal;
+        event.itemsLoaded = itemsLoaded;
+        event.itemsTotal = itemsTotal;
         const result: boolean = target.dispatchEvent(event);
         Event.release(event);
         return result;
@@ -941,7 +960,7 @@ export class NewFileSystem {
         }
         const d: FileTree = this.resolve(folder) as FileTree;
         d[basefilename] = {
-            url : filename, type : type
+            url : filename, type : type,
         };
     }
     public getFile(filename: string): FileEntry | FileTree | undefined {
@@ -973,9 +992,11 @@ export class NewFileSystem {
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
         for (let i: number = 0; i < list.length; i++) {
-            const f: string = list[i]!; if (!current[f]) {
+            const f: string = list[i]!;
+            if (!current[f]) {
                 current[f] = {};
-            } current = current[f] as FileTree;
+            }
+            current = current[f] as FileTree;
         }
     }
     public exists(dirpath: string): boolean {
@@ -986,9 +1007,11 @@ export class NewFileSystem {
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
         for (let i: number = 0; i < list.length; i++) {
-            const f: string = list[i]!; if (!current[f]) {
+            const f: string = list[i]!;
+            if (!current[f]) {
                 return false;
-            } current = current[f] as FileTree;
+            }
+            current = current[f] as FileTree;
         }
         return true;
     }
@@ -1023,7 +1046,7 @@ export class ResourceItemHelper {
             url  : r.url,
             type : r.type,
             data : r,
-            root : r.root
+            root : r.root,
         };
     }
 }
@@ -1038,12 +1061,12 @@ export class ResourceManagerError extends Error {
     public static errorMessage: Record<ResourceErrorCode, string> = {
         1001 : '文件加载失败:{0}',
         1002 : "ResourceManager 初始化失败：配置文件加载失败",
-        2001 : "{0}解析失败,不支持指定解析类型:\'{1}\'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
+        2001 : "{0}解析失败,不支持指定解析类型:'{1}'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
         2002 : "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
         2003 : "{0}解析失败,错误原因:{1}",
         2004 : "无法找到文件类型:{0}",
         2005 : "RES加载了不存在或空的资源组:\"{0}\"",
-        2006 : "资源配置文件中无法找到特定的资源:{0}"
+        2006 : "资源配置文件中无法找到特定的资源:{0}",
     };
 }
 __reflect(ResourceManagerError.prototype, "RES.ResourceManagerError");
@@ -1093,7 +1116,7 @@ export class ResHelper {
                 remove(resource: ResourceInfo): void {
                     delete host.state[resource.root + resource.name];
                     delete ResHelper.__tempCache[resource.root + resource.name];
-                }
+                },
             };
             ResHelper._host = host;
         }

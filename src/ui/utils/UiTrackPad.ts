@@ -3,7 +3,7 @@ import {
     type ConstrainEase,
     UiSlidingNumber,
 } from "./UiSlidingNumber.ts";
-import { Point } from "../../vendor/egret/Egret.ts";
+import { Point } from "../../egret/Egret.ts";
 
 interface TrackPadOptions {
     /** override the easing function when constraining */

@@ -48,7 +48,7 @@ import {
 } from "../../tiles/utils/Serialization.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 import type { IMeDrawer } from "../interface/IMeDrawer.ts";
 import type { IMeWar } from "../interface/IMeWar.ts";
 import {

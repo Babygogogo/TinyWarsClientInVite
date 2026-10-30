@@ -47,7 +47,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import {
     setTimeout,
     clearTimeout,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 import { tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
 import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 

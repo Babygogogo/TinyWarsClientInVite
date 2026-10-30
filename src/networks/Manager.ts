@@ -22,7 +22,7 @@ import {
     Event,
     EventDispatcher,
     ByteArray,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.

@@ -37,7 +37,7 @@ import type { SimpleMapInfo } from "../../proto/schema/CommonProto/NetMessage/Ms
 import type { S as AtSetNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
 import type { S as AtSetRegistrationDurationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetRegistrationDuration/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

@@ -4,7 +4,7 @@ import {
     DisplayObjectContainer,
     Event,
     runEgret,
-} from './vendor/egret/Egret.ts';
+} from './egret/Egret.ts';
 import { startGame } from './helpers/GameFlow.ts';
 
 class Main extends DisplayObjectContainer {

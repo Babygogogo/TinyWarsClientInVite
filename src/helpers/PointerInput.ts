@@ -16,7 +16,7 @@ import {
     Stage,
     startTick,
     DisplayObjectContainer,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 /**
  * 已知的egret事件相关信息：

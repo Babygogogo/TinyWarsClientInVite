@@ -3,7 +3,7 @@ import { UiContainer } from "./UiContainer.ts";
 import type { IUiImage } from "../interfaces/IUiImage.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { IUiProgressBar } from "../interfaces/IUiProgressBar.ts";
-import { Rectangle } from "../../vendor/egret/Egret.ts";
+import { Rectangle } from "../../egret/Egret.ts";
 
 export class UiProgressBar extends UiContainer implements IUiProgressBar {
     private readonly _labelDisplay? : IUiLabel;

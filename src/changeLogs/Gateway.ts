@@ -10,7 +10,7 @@ import type { S as ChangeLogAddMessageResponse } from "../proto/schema/CommonPro
 import type { S as ChangeLogGetMessageListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogGetMessageList/S.ts";
 import type { S as ChangeLogModifyMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 import { setAllMessageList } from "./Provider.ts";
 
 export function init(): void {

@@ -20,7 +20,7 @@ import type { S as ChatGetAllMessagesResponse } from "../proto/schema/CommonProt
 import type { S as ChatGetAllReadProgressListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllReadProgressList/S.ts";
 import type { S as ChatUpdateReadProgressResponse } from "../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
-import type { Event } from "../vendor/egret/Egret.ts";
+import type { Event } from "../egret/Egret.ts";
 
 export function init(): void {
     addListeners([

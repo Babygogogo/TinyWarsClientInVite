@@ -6,7 +6,7 @@ import {
 } from "./Constants.ts";
 import type { TextureResolutionConfig } from "./Types.ts";
 import { getExisted } from "../helpers/Misc.ts";
-import { Capabilities } from "../vendor/egret/Egret.ts";
+import { Capabilities } from "../egret/Egret.ts";
 
 export function checkIsWebGl(): boolean {
     return Capabilities.renderMode === "webgl";

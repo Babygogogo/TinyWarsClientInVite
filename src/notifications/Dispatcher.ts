@@ -3,7 +3,7 @@ import type { Listener } from "./Types.ts";
 import {
     EventDispatcher,
     Event,
-} from "../vendor/egret/Egret.ts";
+} from "../egret/Egret.ts";
 
 const _DISPATCHER = new EventDispatcher();
 

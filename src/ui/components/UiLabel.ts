@@ -21,7 +21,7 @@ import {
     TextField,
     HorizontalAlign,
     VerticalAlign,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 // const textField = new egret.TextField();
 // textField.text;

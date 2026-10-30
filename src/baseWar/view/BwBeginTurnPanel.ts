@@ -24,7 +24,7 @@ import type { IUiPanel } from "../../ui/interfaces/IUiPanel.ts";
 import {
     setTimeout,
     clearTimeout,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 
 export interface OpenData {
     gameConfig          : GameConfig;

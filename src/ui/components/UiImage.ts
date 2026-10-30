@@ -31,14 +31,14 @@ import {
     Event,
     Rectangle as EgretRectangle,
     DisplayObject,
-} from "../../vendor/egret/Egret.ts";
+} from "../../egret/Egret.ts";
 import {
     hasRes,
     getResByUrl,
     ResourceItemHelper,
     getRes,
     getResAsync,
-} from "../../vendor/egret/Res.ts";
+} from "../../egret/Res.ts";
 
 // const obj = new egret.DisplayObject;
 // obj.x;

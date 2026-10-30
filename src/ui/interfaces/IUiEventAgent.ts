@@ -1,7 +1,7 @@
 import type { PointerEventType } from "../../helpers/PointerInput.ts";
 import type { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import type { UiInputEventType } from "../types/UiInputEventType.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export interface IUiEventAgent {
     addUiCommonEventListener(eventType: UiCommonEventType, callback: (e: Event) => void, thisObject: unknown): void;

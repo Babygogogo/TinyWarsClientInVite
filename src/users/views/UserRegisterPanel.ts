@@ -31,7 +31,7 @@ import {
     checkIsNicknameValid,
 } from "../Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import type { Event } from "../../vendor/egret/Egret.ts";
+import type { Event } from "../../egret/Egret.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
