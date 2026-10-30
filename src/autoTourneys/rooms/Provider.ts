@@ -1,37 +1,41 @@
-import { reqAtrGetRoomPublicInfo, reqAtrGetJoinedRoomIdArray } from "./Gateway.ts";
-import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    reqAtrGetRoomPublicInfo,
+    reqAtrGetJoinedRoomIdArray,
+} from "./Gateway.ts";
+import type {
+    Undefinable,
+    PlayerInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
+import type { OpenData as CommonWarAdvancedSettingsPageOpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import type { OpenData as CommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
+import type { OpenData as CommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
-import { getExisted, checkIsAnyPromiseTrue, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    checkIsAnyPromiseTrue,
+    newError,
+} from "../../helpers/Misc.ts";
 import { warn } from "../../Logger.ts";
 import { SelfSettings } from "../../multiPlayerRooms/SelfSettings.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import type { AtrRoomInfo } from "../../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
+import type { S as AtrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
+import type { S as AtrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
+import type { S as AtrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
+import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
 import { DataForPlayerBanCo } from "../../proto/schema/CommonProto/Structure/DataForPlayerBanCo.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
+import {
+    getPlayerRule,
+    getPlayersCountUnneutral,
+} from "../../warRules/utils/CommonData.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = OpenData;
-type OpenDataForCommonWarPlayerInfoPage         = CommonViewCommonWarPlayerInfoPageOpenData;
 const _selfSettingsDict         = new Map<number, SelfSettings>();
 const _roomInfoAccessor         = new CachedDataAccessor<number, AtrRoomInfo>({
     reqData : (roomId: number) => reqAtrGetRoomPublicInfo(roomId),
@@ -73,7 +77,7 @@ export async function getSelfSettings(roomId: number): Promise<Undefinable<SelfS
     }
 }
 
-export async function updateOnMsgAtrGetRoomPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS): Promise<void> {
+export async function updateOnMsgAtrGetRoomPublicInfo(data: AtrGetRoomPublicInfoResponse): Promise<void> {
     const roomId    = data.getRoomId() ?? 0;
     const roomInfo  = data.getRoomInfo();
     setRoomInfo(roomId, roomInfo);
@@ -82,14 +86,14 @@ export async function updateOnMsgAtrGetRoomPublicInfo(data: ProtoSchemaCommonPro
         (await getSelfSettings(roomId))?.resetData(roomInfo);
     }
 }
-export function updateOnFailedMsgAtrGetRoomPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS): void {
+export function updateOnFailedMsgAtrGetRoomPublicInfo(data: AtrGetRoomPublicInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomInfoAccessor.updateOnRequestFailed(roomId);
     }
 }
 
-export async function updateOnMsgAtrSetBannedCoIdArray(data: ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS): Promise<void> {
+export async function updateOnMsgAtrSetBannedCoIdArray(data: AtrSetBannedCoIdArrayResponse): Promise<void> {
     const roomId    = getExisted(data.getRoomId());
     const roomInfo  = await getRoomInfo(roomId);
     if (!roomInfo) {
@@ -110,7 +114,7 @@ export async function updateOnMsgAtrSetBannedCoIdArray(data: ProtoSchemaCommonPr
         }));
     }
 }
-export async function updateOnMsgAtrSetSelfSettings(data: ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS): Promise<void> {
+export async function updateOnMsgAtrSetSelfSettings(data: AtrSetSelfSettingsResponse): Promise<void> {
     const roomInfo = await getRoomInfo(getExisted(data.getRoomId()));
     if (!roomInfo) {
         return;
@@ -136,7 +140,7 @@ export async function updateOnMsgAtrSetSelfSettings(data: ProtoSchemaCommonProto
         }));
     }
 }
-export function updateOnMsgAtrDeleteRoomByServer(data: S): void {
+export function updateOnMsgAtrDeleteRoomByServer(data: AtrDeleteRoomByServerResponse): void {
     setRoomInfo(getExisted(data.getRoomId()), null);
 }
 
@@ -171,7 +175,7 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
     return false;
 }
 
-export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarPlayerInfoPage> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonWarPlayerInfoPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
@@ -210,7 +214,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarBasicSettingsPage> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<CommonWarBasicSettingsPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return { dataArrayForListSettings: [] };
@@ -224,7 +228,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const warEventFullData  = (await getRawData(normalMapId))?.getWarEventFullData();
     const bootTimerParams   = settingsForAtw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const openData          : OpenDataForCommonWarBasicSettingsPage = {
+    const openData          : CommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType    : BasicSettingsTypeId.NormalMapId,
@@ -319,7 +323,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<CommonWarAdvancedSettingsPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;

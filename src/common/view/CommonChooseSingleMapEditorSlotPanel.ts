@@ -2,13 +2,29 @@ import { showLang } from "../../FloatText.ts";
 import { ReviewStatus } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
-import { checkAndCreateSimulation, checkAndCreateMultiFreeWar } from "../../helpers/GameFlow.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    checkAndCreateSimulation,
+    checkAndCreateMultiFreeWar,
+} from "../../helpers/GameFlow.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText, getMapReviewStatusText } from "../../lang/Utils.ts";
-import { getMapEditorData, getMaxSlotsCount } from "../../mapEditor/model/MeModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+    getMapReviewStatusText,
+} from "../../lang/Utils.ts";
+import {
+    getMapEditorData,
+    getMaxSlotsCount,
+} from "../../mapEditor/model/MeModel.ts";
 import { getErrorCode } from "../../maps/utils/MapRawData.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

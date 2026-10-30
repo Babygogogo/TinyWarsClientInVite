@@ -6,7 +6,10 @@ import { getExisted } from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {

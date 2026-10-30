@@ -1,12 +1,21 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
-import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getUnitViewClass,
+    getUnitClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getUnitName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getWar } from "../../mapEditor/model/MeModel.ts";
 import type { DataForDrawUnit } from "../../mapEditor/model/MeTypes.ts";

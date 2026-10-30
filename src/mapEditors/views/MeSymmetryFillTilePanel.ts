@@ -11,7 +11,10 @@ import { getSymmetricalGridIndex } from "../../mapEditor/model/MeHelpers.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getSymmetricalTileBaseShapeId } from "../../tileBases/Utils.ts";
 import { getSymmetricalTileDecorationShapeId } from "../../tileDecorations/Utils.ts";
-import { getSymmetricalTileObjectShapeId, getSymmetricalTileObjectType } from "../../tileObjects/Utils.ts";
+import {
+    getSymmetricalTileObjectShapeId,
+    getSymmetricalTileObjectType,
+} from "../../tileObjects/Utils.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

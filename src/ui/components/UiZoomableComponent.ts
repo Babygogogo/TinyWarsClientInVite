@@ -1,7 +1,14 @@
-import type { Point, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Point as AuxiliaryTypesPoint,
+    TouchPoints,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getPointDistance } from "../../geometries/Utils.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { PointerEventType, MouseStyleType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import {
+    PointerEventType,
+    MouseStyleType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -10,7 +17,11 @@ import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import type { IUiZoomableComponent } from "../interfaces/IUiZoomableComponent.ts";
 import { getUiContainerClass } from "../utils/UiFactory.ts";
-import type { DisplayObject, Point as VendorEgretEgretPoint, Event } from "../../vendor/egret/Egret.ts";
+import type {
+    DisplayObject,
+    Point as EgretPoint,
+    Event,
+} from "../../vendor/egret/Egret.ts";
 
 const MAX_CONTENT_SCALE = 6;
 
@@ -20,8 +31,8 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
     private _spacingForBottom           = 0;
     private _spacingForLeft             = 0;
     private _spacingForRight            = 0;
-    private _currGlobalTouchPoints      = new Map<number, Point>();
-    private _prevGlobalTouchPoints      = new Map<number, Point>();
+    private _currGlobalTouchPoints      = new Map<number, AuxiliaryTypesPoint>();
+    private _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypesPoint>();
 
     public constructor() {
         super();
@@ -111,10 +122,10 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
     private _getContentsContainer(): IUiContainer {
         return this._contentsContainer;
     }
-    public getContentsContainerLocalToGlobal(point: Point): VendorEgretEgretPoint {
+    public getContentsContainerLocalToGlobal(point: AuxiliaryTypesPoint): EgretPoint {
         return this._getContentsContainer().localToGlobal(point.x, point.y);
     }
-    public getContentsContainerGlobalToLocal(point: Point): VendorEgretEgretPoint {
+    public getContentsContainerGlobalToLocal(point: AuxiliaryTypesPoint): EgretPoint {
         return this._getContentsContainer().globalToLocal(point.x, point.y);
     }
 
@@ -231,7 +242,7 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
         }
     }
 
-    public setDragByTouches(currGlobalPoint: Point, prevGlobalPoint: Point): void {
+    public setDragByTouches(currGlobalPoint: AuxiliaryTypesPoint, prevGlobalPoint: AuxiliaryTypesPoint): void {
         this.setContentX(this.getContentX() + currGlobalPoint.x - prevGlobalPoint.x, true);
         this.setContentY(this.getContentY() + currGlobalPoint.y - prevGlobalPoint.y, true);
     }
@@ -302,12 +313,12 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
     }
     private _getScaleModifierByTouches(currPoints: TouchPoints, prevPoints: TouchPoints): number {
         const contents  = this._getContentsContainer();
-        const newPoints : Point[] = [];
+        const newPoints : AuxiliaryTypesPoint[] = [];
         for (const [, point] of currPoints) {
             newPoints.push(contents.globalToLocal(point.x, point.y));
         }
 
-        const oldPoints: Point[] = [];
+        const oldPoints: AuxiliaryTypesPoint[] = [];
         for (const [, point] of prevPoints) {
             oldPoints.push(contents.globalToLocal(point.x, point.y));
         }
@@ -316,8 +327,8 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
             /  getPointDistance(oldPoints[0].x, oldPoints[0].y, oldPoints[1].x, oldPoints[1].y);
     }
 
-    private _getCenterPoint(touches: TouchPoints): Point {
-        const points: Point[] = [];
+    private _getCenterPoint(touches: TouchPoints): AuxiliaryTypesPoint {
+        const points: AuxiliaryTypesPoint[] = [];
         for (const [, point] of touches) {
             points.push({ x: point.x, y: point.y });
             if (points.length >= 2) {
@@ -337,14 +348,14 @@ export class UiZoomableComponent extends UiContainerBase implements IUiZoomableC
         }
     }
 
-    private _checkIsInsideContents(point: Point): boolean {
+    private _checkIsInsideContents(point: AuxiliaryTypesPoint): boolean {
         return (point.x >= 0)
             && (point.y >= 0)
             && (point.x <= this.getContentWidth())
             && (point.y <= this.getContentHeight());
     }
 
-    private _setZoom(focusPoint: Point, scaleModifier: number): void {
+    private _setZoom(focusPoint: AuxiliaryTypesPoint, scaleModifier: number): void {
         const currentScale = this.getContentScale();
         let newScale = currentScale * scaleModifier;
         newScale = Math.max(newScale, this._getMinContentScale());

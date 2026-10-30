@@ -1,27 +1,40 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
+import { getErrorCode as getMapSmallDialogueErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getCurrentLanguageType, getSecondaryLanguageType, getText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
-import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
+import {
+    getCurrentLanguageType,
+    getSecondaryLanguageType,
+    getText,
+    checkIsValidLanguageTextArray,
+} from "../../lang/Utils.ts";
+import {
+    createDefaultPlayerRuleList,
+    getErrorCodeForPlayerRuleList,
+} from "../../playerRules/Utils.ts";
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
 import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import { trimAndClone, getErrorCodeForFullData } from "../../taskObjectives/Utils.ts";
+import {
+    trimAndClone,
+    getErrorCodeForFullData,
+} from "../../taskObjectives/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { trimWarEventFullData, getErrorCodeForWarEventFullData } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    trimWarEventFullData,
+    getErrorCodeForWarEventFullData,
+} from "../../warEvents/fullDatas/Utils.ts";
 import { Constants } from "../Constants.ts";
-import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode } from "./CommonData.ts";
+import { getErrorCode as getCommonDataErrorCode } from "./CommonData.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type TemplateWarRuleSchema      = TemplateWarRule;
 export function create({ templateWarRule, warEventFullData, allMapSimpleDialogueArray, taskObjectiveFullData }: {
-    templateWarRule             : TemplateWarRuleSchema;
+    templateWarRule             : TemplateWarRule;
     warEventFullData            : Undefinable<WarEventFullData>;
     allMapSimpleDialogueArray   : Undefinable<MapSimpleDialogue[]>;
     taskObjectiveFullData       : Undefinable<TaskObjectiveFullData>;
@@ -106,7 +119,7 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
         return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_02;
     }
 
-    const errorCodeForGlobalParams = WarRulesUtilsCommonDataGetErrorCode(ruleForGlobalParams, gameConfig);
+    const errorCodeForGlobalParams = getCommonDataErrorCode(ruleForGlobalParams, gameConfig);
     if (errorCodeForGlobalParams) {
         return errorCodeForGlobalParams;
     }
@@ -130,7 +143,7 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
         }
 
         for (const mapSimpleDialogue of mapSimpleDialogueArray) {
-            const errorCode = DialoguesUtilsMapSmallDialogueGetErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
+            const errorCode = getMapSmallDialogueErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
             if (errorCode) {
                 return errorCode;
             }

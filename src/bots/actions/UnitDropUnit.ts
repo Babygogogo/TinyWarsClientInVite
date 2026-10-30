@@ -7,15 +7,12 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
 export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex, pathNodes }: {
     commonParams    : CommonParams;
-    unit            : IBwUnit;
+    unit            : IUnit;
     gridIndex       : GridIndex;
     pathNodes       : MovePathNode[];
-}): Promise<GrScoreAndAction | null> {
+}): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if ((!unit.getCfgCanDropLoadedUnit()) || (unit.getLoadedUnitsCount() <= 0)) {

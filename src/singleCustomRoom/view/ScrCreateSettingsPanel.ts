@@ -1,26 +1,35 @@
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import { showLang } from "../../FloatText.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
+import type { S as SpmCreateScwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
 import type { ScrWarCreator } from "../model/ScrWarCreator.ts";
 import {
-    type OpenData as SingleCustomRoomViewScrCreatePlayerInfoPageOpenData,
-    Page as SingleCustomRoomViewScrCreatePlayerInfoPage,
+    type OpenData as ScrCreatePlayerInfoPageOpenData,
+    Page as ScrCreatePlayerInfoPage,
 } from "./ScrCreatePlayerInfoPage.ts";
 import { checkIsEmpty } from "../../singlePlayerMode/model/SpmModel.ts";
 import { reqSpmCreateScw } from "../../singlePlayerMode/model/SpmProxy.ts";
@@ -37,14 +46,13 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
+import {
+    Event,
+    setTimeout,
+    clearTimeout,
+} from "../../vendor/egret/Egret.ts";
 import { tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
-
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
-type OpenDataForScrCreatePlayerInfoPage         = SingleCustomRoomViewScrCreatePlayerInfoPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 const CONFIRM_INTERVAL_MS = 5000;
 
@@ -59,7 +67,7 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _labelGameSettings!    : IUiLabel;
 
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForScrCreatePlayerInfoPage | OpenDataForCommonWarAdvancedSettingsPage>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | CommonWarMapInfoPageOpenData | CommonWarBasicSettingsPageOpenData | ScrCreatePlayerInfoPageOpenData | CommonWarAdvancedSettingsPageOpenData>;
 
     private readonly _btnBack!              : IUiButton;
     private readonly _btnConfirm!           : IUiButton;
@@ -149,7 +157,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgSpmCreateScw(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as SpmCreateScwResponse;
         gotoSinglePlayerWar({
             warData         : getExisted(data.getWarData()),
             slotExtraData   : getExisted(data.getExtraData()),
@@ -193,22 +201,22 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0224) },
-                pageClass   : SingleCustomRoomViewScrCreatePlayerInfoPage,
+                pageClass   : ScrCreatePlayerInfoPage,
                 pageData    : null,
             },
         ]);
@@ -243,7 +251,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<OpenDataForCommonWarBasicSettingsPage> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -255,7 +263,7 @@ export class Panel extends UiPanel<OpenData> {
         const mapRawData        = warCreator.getMapRawData();
         const warEventFullData  = mapRawData.getWarEventFullData();
         const warRuleCommonData = getExisted(instanceWarRule.getWarRuleCommonData());
-        const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
+        const openDataForPage   : CommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings: [
                 {
                     settingsType    : BasicSettingsTypeId.NormalMapId,
@@ -364,7 +372,7 @@ export class Panel extends UiPanel<OpenData> {
 
         return openDataForPage;
     }
-    private _createDataForCommonWarAdvancedSettingsPage(): OpenDataForCommonWarAdvancedSettingsPage {
+    private _createDataForCommonWarAdvancedSettingsPage(): CommonWarAdvancedSettingsPageOpenData {
         const warCreator = this.getOpenData()?.warCreator;
         if (warCreator == null) {
             return null;
@@ -377,7 +385,7 @@ export class Panel extends UiPanel<OpenData> {
             gcData          : warCreator.getGcData(),
         };
     }
-    private async _createDataForCommonMapInfoPage(): Promise<OpenDataForCommonWarMapInfoPage> {
+    private async _createDataForCommonMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -393,7 +401,7 @@ export class Panel extends UiPanel<OpenData> {
             },
         };
     }
-    private _createDataForScrCreatePlayerInfoPage(): OpenDataForScrCreatePlayerInfoPage {
+    private _createDataForScrCreatePlayerInfoPage(): ScrCreatePlayerInfoPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;

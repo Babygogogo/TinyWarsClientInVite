@@ -7,18 +7,20 @@ import {
     getCurrentLanguageType,
     getSecondaryLanguageType,
 } from "../../lang/Utils.ts";
-import { WarEvent as ProtoSchemaCommonProtoWarEventWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
+import { WarEvent as ProtoWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
 import { cloneAction } from "../actions/utils/Common.ts";
 import { cloneNode } from "../conditionNodes/Utils.ts";
-import { Event, ConditionNode } from "../Constants.ts";
+import {
+    Event,
+    ConditionNode,
+} from "../Constants.ts";
 
-type WarEvent               = ProtoSchemaCommonProtoWarEventWarEvent;
 export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DONE
-    warEvent    : WarEvent;
+    warEvent    : ProtoWarEvent;
     nodeDict    : Map<number, WarEventConditionNode>;
     actionDict  : Map<number, WarEventAction>;
 }): boolean {
@@ -92,7 +94,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
     return true;
 }
 
-export function getErrorTipForEvent(fullData: WarEventFullData, event: WarEvent): string | null {
+export function getErrorTipForEvent(fullData: WarEventFullData, event: ProtoWarEvent): string | null {
     const eventsCount = fullData.getEventArray().length;
     if (eventsCount > Event.MaxEventsPerMap) {
         return `${getText(TextType.A0182)} (${eventsCount}/${Event.MaxEventsPerMap})`;
@@ -127,7 +129,7 @@ export function getErrorTipForEvent(fullData: WarEventFullData, event: WarEvent)
     return null;
 }
 
-export function getErrorTipForEventCallCountInPlayerTurn(event: WarEvent): string | null {
+export function getErrorTipForEventCallCountInPlayerTurn(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountInPlayerTurn();
     if ((count == null) || (count < 1)) {
         return getText(TextType.A0181);
@@ -143,7 +145,7 @@ export function getErrorTipForEventCallCountInPlayerTurn(event: WarEvent): strin
     return null;
 }
 
-export function getErrorTipForEventCallCountTotal(event: WarEvent): string | null {
+export function getErrorTipForEventCallCountTotal(event: ProtoWarEvent): string | null {
     const count = event.getMaxCallCountTotal();
     if ((count == null) || (count < 1) || (count > Event.MaxCallCountTotal)) {
         return getText(TextType.A0181);
@@ -156,7 +158,7 @@ export function addEvent(fullData: WarEventFullData): number | null {
     const eventArray = fullData.getEventArray();
     for (let eventId = 1; ; ++eventId) {
         if (!eventArray.some(v => v.getEventId() === eventId)) {
-            eventArray.push(ProtoSchemaCommonProtoWarEventWarEvent.fromJson({
+            eventArray.push(ProtoWarEvent.fromJson({
                 eventId                             : eventId,
                 maxCallCountInPlayerTurn            : 1,
                 maxCallCountTotal                   : 1,
@@ -183,7 +185,7 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
 
         const srcRootNodeAndActionsArray = srcEvent.getRootNodeAndActionsArray();
         if (isShallowClone) {
-            eventArray.push(ProtoSchemaCommonProtoWarEventWarEvent.fromJson({
+            eventArray.push(ProtoWarEvent.fromJson({
                 eventId                             : eventId,
                 eventNameArray                      : srcEvent.getEventNameArray().map(v => v.toJson()),
                 maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),
@@ -193,7 +195,7 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
                 deprecatedActionIdArray             : [],
             }));
         } else {
-            eventArray.push(ProtoSchemaCommonProtoWarEventWarEvent.fromJson({
+            eventArray.push(ProtoWarEvent.fromJson({
                 eventId                             : eventId,
                 eventNameArray                      : srcEvent.getEventNameArray().map(v => v.clone().toJson()),
                 maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),

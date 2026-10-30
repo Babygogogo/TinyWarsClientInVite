@@ -3,7 +3,7 @@ import { GridIndex } from "./GridIndex.ts";
 import { Common } from "../maps/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
+import type { GridIndex as ProtoGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
@@ -86,7 +86,7 @@ export class MapSize {
             && (width * height <= Common.MaxGridsCount);
     }
 
-    public checkIsValidGridIndexSubset(gridIndexArray: ProtoSchemaCommonProtoStructureGridIndex[]): boolean {
+    public checkIsValidGridIndexSubset(gridIndexArray: ProtoGridIndex[]): boolean {
         const gridIdSet = new Set<number>();
         for (const g of gridIndexArray) {
             const gridIndex = GridIndex.convertGridIndex(g);

@@ -1,6 +1,9 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwExecutedOperationManager } from "../interface/IBwExecutedOperationManager.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 

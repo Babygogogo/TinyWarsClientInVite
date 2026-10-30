@@ -5,8 +5,15 @@ import { Parser } from "../../../expressionParsers/Parser.ts";
 import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { getMpwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getTextForYesOrNo,
+} from "../../../lang/Utils.ts";
 import type { WeaPersistentModifyUnitAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyUnitAttribute.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ExpressionInfoDict } from "../constants/PersistentModifyUnitAttribute.ts";

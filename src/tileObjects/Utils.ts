@@ -3,7 +3,10 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { SymmetryTypeId } from "../geometries/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import { ObjectCfgDict, ObjectSymmetryCfgDict } from "../tiles/constants/Common.ts";
+import {
+    ObjectCfgDict,
+    ObjectSymmetryCfgDict,
+} from "../tiles/constants/Common.ts";
 import type { TileObjectCfg } from "../tiles/Types.ts";
 
 export function getTileObjectCfg(tileObjectType: number): TileObjectCfg | null {

@@ -1,4 +1,7 @@
-import { EnergyHardLimit, CoId } from "./Constants.ts";
+import {
+    EnergyHardLimit,
+    CoId,
+} from "./Constants.ts";
 import { pickRandomElement } from "../helpers/Collection.ts";
 import { getValueInRange } from "../numbers/Utils.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";

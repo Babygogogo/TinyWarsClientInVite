@@ -1,10 +1,17 @@
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import { getFinalAtwHumanCoIdSet, getFinalMmwHumanCoIdSet, getFinalMrwHumanCoIdSet } from "../playerRules/Utils.ts";
+import {
+    getFinalAtwHumanCoIdSet,
+    getFinalMmwHumanCoIdSet,
+    getFinalMrwHumanCoIdSet,
+} from "../playerRules/Utils.ts";
 import { AtrRoomInfo } from "../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
 import { MmrRoomInfo } from "../proto/schema/CommonProto/MultiMatchRoom/MmrRoomInfo.ts";
 import { MrrRoomInfo } from "../proto/schema/CommonProto/MultiRankRoom/MrrRoomInfo.ts";

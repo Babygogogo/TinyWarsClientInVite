@@ -2,8 +2,15 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getWeatherName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getWeatherName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -16,7 +23,10 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    getErrorTipForCondition,
+    getDetailedDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 
 export interface OpenData {
     war         : IMeWar;

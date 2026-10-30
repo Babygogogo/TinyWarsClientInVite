@@ -5,12 +5,22 @@ import { TileBuff } from "../../../expressionParsers/contexts/TileBuff.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { TileBuff as ProtoTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { WeaModifyTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaModifyTileBuffExpr.ts";
-import { create, checkIsValid as TileBuffsUtilsCommonCheckIsValid, checkIsSame } from "../../../tileBuffs/utils/Common.ts";
+import {
+    create,
+    checkIsValid as checkIsValidTileBuff,
+    checkIsSame,
+} from "../../../tileBuffs/utils/Common.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/ModifyTileBuffExpr.ts";
 
@@ -188,7 +198,7 @@ function evalConTileFilter(action: WeaModifyTileBuffExpr, tile: ITile): boolean 
         return false;
     }
 }
-function evalConBuffFilter(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): boolean {
+function evalConBuffFilter(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): boolean {
     try {
         const result = Parser.getParseResult(action.getConBuffFilter() ?? ``).eval(new TileBuff(oldBuff, tile), false);
         return (result instanceof Num) && (result.num !== 0);
@@ -196,7 +206,7 @@ function evalConBuffFilter(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: 
         return false;
     }
 }
-function evalActBuffType(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): number {
+function evalActBuffType(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): number {
     const defaultValue  = oldBuff.getBuffTypeId();
     const act           = action.getActBuffType();
     if (!act) {
@@ -212,7 +222,7 @@ function evalActBuffType(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: Pr
         return defaultValue;
     }
 }
-function evalActExpiringTurnIndex(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): Undefinable<number> {
+function evalActExpiringTurnIndex(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): Undefinable<number> {
     const defaultValue  = oldBuff.getExpiringTurnIndex();
     const act           = action.getActExpiringTurnIndex();
     if (!act) {
@@ -231,7 +241,7 @@ function evalActExpiringTurnIndex(action: WeaModifyTileBuffExpr, tile: ITile, ol
         return defaultValue;
     }
 }
-function evalActExpiringPlayerIndex(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): Undefinable<number> {
+function evalActExpiringPlayerIndex(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): Undefinable<number> {
     const defaultValue  = oldBuff.getExpiringPlayerIndex();
     const act           = action.getActExpiringPlayerIndex();
     if (!act) {
@@ -250,7 +260,7 @@ function evalActExpiringPlayerIndex(action: WeaModifyTileBuffExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActExtraParams(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): number[] {
+function evalActExtraParams(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): number[] {
     const defaultValue  = oldBuff.getExtraParamArray();
     const act           = action.getActExtraParams();
     if (!act) {
@@ -273,7 +283,7 @@ export async function applyWithExtraData(action: WeaModifyTileBuffExpr, war: IBw
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function applyWithoutExtraData(action: WeaModifyTileBuffExpr, war: IBwWar, isFast: boolean): Promise<void> {
-    const newBuffArrayDict = new Map<ITile, ProtoSchemaCommonProtoStructureTileBuff[]>();
+    const newBuffArrayDict = new Map<ITile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
             continue;
@@ -284,7 +294,7 @@ export async function applyWithoutExtraData(action: WeaModifyTileBuffExpr, war: 
             continue;
         }
 
-        const newBuffArray  : ProtoSchemaCommonProtoStructureTileBuff[] = [];
+        const newBuffArray  : ProtoTileBuff[] = [];
         let isModified      = false;
         for (const oldBuff of oldBuffArray) {
             if (!evalConBuffFilter(action, tile, oldBuff)) {
@@ -314,7 +324,7 @@ export async function applyWithoutExtraData(action: WeaModifyTileBuffExpr, war: 
         // }
     }
 }
-function createModifiedBuff(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoSchemaCommonProtoStructureTileBuff): ProtoSchemaCommonProtoStructureTileBuff | null {
+function createModifiedBuff(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff: ProtoTileBuff): ProtoTileBuff | null {
     const newBuffType               = evalActBuffType(action, tile, oldBuff);
     const rawNewExpiringTurnIndex   = evalActExpiringTurnIndex(action, tile, oldBuff);
     const rawNewExpiringPlayerIndex = evalActExpiringPlayerIndex(action, tile, oldBuff);
@@ -327,5 +337,5 @@ function createModifiedBuff(action: WeaModifyTileBuffExpr, tile: ITile, oldBuff:
         expiringPlayerIndex : newExpiringPlayerIndex,
         extraParams         : newExtraParams,
     });
-    return (TileBuffsUtilsCommonCheckIsValid(newBuff)) && (!checkIsSame(newBuff, oldBuff)) ? newBuff : null;
+    return (checkIsValidTileBuff(newBuff)) && (!checkIsSame(newBuff, oldBuff)) ? newBuff : null;
 }

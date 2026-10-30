@@ -5,7 +5,10 @@ import { Parser } from "../../../expressionParsers/Parser.ts";
 import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import type { WeaSetUnitTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";

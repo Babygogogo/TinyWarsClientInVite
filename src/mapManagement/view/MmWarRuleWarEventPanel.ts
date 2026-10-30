@@ -1,9 +1,19 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { moveElementInList, deleteElementFromList } from "../../helpers/Collection.ts";
+import {
+    moveElementInList,
+    deleteElementFromList,
+} from "../../helpers/Collection.ts";
 import { getTruncatedText } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";

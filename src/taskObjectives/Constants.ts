@@ -1,7 +1,10 @@
-import {ContextType, ResultType} from "../expressionParsers/Enums.ts";
-import type {EpExpressionInfo} from "../expressionParsers/Types.ts";
-import {TextType} from "../lang/Constants.ts";
-import {getText} from "../lang/Utils.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../expressionParsers/Types.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
     UpdaterForCurrentProgress   : EpExpressionInfo;

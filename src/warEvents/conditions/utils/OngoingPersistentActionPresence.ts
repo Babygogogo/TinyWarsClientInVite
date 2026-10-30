@@ -1,9 +1,16 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getComparatorName,
+    getText,
+} from "../../../lang/Utils.ts";
 import type { WecOngoingPersistentActionPresence } from "../../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
-import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
+import {
+    checkIsValidValueComparatorId,
+    checkIsMeet1,
+} from "../../../valueAndComparators/Utils.ts";
 import { checkIsValidWarEventActionIdSubset } from "../../actions/utils/Common.ts";
 
 export function getBriefDesc(data: Undefinable<WecOngoingPersistentActionPresence>): string | null {

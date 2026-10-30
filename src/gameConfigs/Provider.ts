@@ -5,7 +5,10 @@ import { reqCommonLatestConfigVersion } from "./Gateway.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { getNumText } from "../helpers/Text.ts";
 import { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
-import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
+import {
+    getResByUrl,
+    ResourceItemHelper,
+} from "../vendor/egret/Res.ts";
 
 const _latestVersionAccessor    = new CachedDataAccessor<null, string>({
     reqData : () => reqCommonLatestConfigVersion(),

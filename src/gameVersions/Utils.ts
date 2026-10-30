@@ -1,5 +1,8 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TypeName, ConfigDict } from "./Constants.ts";
+import {
+    TypeName,
+    ConfigDict,
+} from "./Constants.ts";
 import type { GameVersionConfig } from "./Types.ts";
 import { getExisted } from "../helpers/Misc.ts";
 

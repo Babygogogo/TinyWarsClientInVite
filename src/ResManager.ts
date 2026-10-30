@@ -1,5 +1,11 @@
 
-import { registerVersionController, loadConfig, loadGroup, getResByUrl, type IVersionController } from "./vendor/egret/Res";
+import {
+    registerVersionController,
+    loadConfig,
+    loadGroup,
+    getResByUrl,
+    type IVersionController,
+} from "./vendor/egret/Res";
 
 import type { UiSkin } from "./ui/types/UiSkin.ts";
 import { error } from "./Logger.ts";

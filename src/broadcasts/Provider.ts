@@ -3,7 +3,7 @@ import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqBroadcastGetMessageData } from "./Gateway.ts";
 import { getNonNullElements } from "../helpers/Collection.ts";
 import type { BroadcastMessage } from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
+import type { S as BroadcastGetMessageDataResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
 
 const _allMessageIdArray    : number[] = [];
@@ -45,10 +45,10 @@ export async function getOngoingMessageIdArray(): Promise<number[]> {
     return getNonNullElements(await Promise.all(promiseArray));
 }
 
-export function updateOnMsgBroadcastGetMessageData(data: S): void {
+export function updateOnMsgBroadcastGetMessageData(data: BroadcastGetMessageDataResponse): void {
     setMessageData(data.getMessageId() ?? 0, data.getMessageData() ?? null);
 }
-export function updateOnFailedMsgBroadcastGetMessageData(data: S): void {
+export function updateOnFailedMsgBroadcastGetMessageData(data: BroadcastGetMessageDataResponse): void {
     const messageId = data.getMessageId();
     if (messageId != null) {
         _messageDataAccessor.updateOnRequestFailed(messageId);

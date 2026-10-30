@@ -12,7 +12,7 @@ import type { IBwRandomNumberManager } from "../baseWar/interface/IBwRandomNumbe
 import type { IBwWarEventManager } from "../baseWar/interface/IBwWarEventManager.ts";
 import type { IBwWarStatisticsManager } from "../baseWar/interface/IBwWarStatisticsManager.ts";
 import type { IBwWarView } from "../baseWar/interface/IBwWarView.ts";
-import type { IWar as CampaignsWarsIWar } from "../campaigns/wars/IWar.ts";
+import type { IWar as WarsIWar } from "../campaigns/wars/IWar.ts";
 import type { IField } from "../fields/IField.ts";
 import type { IFieldView } from "../fields/IFieldView.ts";
 import type { IFogMap } from "../fogMaps/IFogMap.ts";
@@ -45,10 +45,6 @@ import type { IUnitView } from "../units/IUnitView.ts";
 import type { IManager } from "../weathers/IManager.ts";
 import type { IView } from "../weathers/IView.ts";
 
-type IBwWeatherManager              = IManager;
-type IBwWeatherManagerView          = IView;
-type IAtwWar                        = IWar;
-type ICawWar                        = CampaignsWarsIWar;
 let _actionPlanner              : new () => IActionPlanner;
 let _actionPlannerView          : new () => IActionPlannerView;
 
@@ -63,12 +59,12 @@ let _bwRandomNumberManager      : new () => IBwRandomNumberManager;
 let _bwWarEventManager          : new () => IBwWarEventManager;
 let _bwWarStatisticsManager     : new () => IBwWarStatisticsManager;
 let _bwWarView                  : new () => IBwWarView;
-let _bwWeatherManager           : new () => IBwWeatherManager;
-let _bwWeatherManagerView       : new () => IBwWeatherManagerView;
+let _bwWeatherManager           : new () => IManager;
+let _bwWeatherManagerView       : new () => IView;
 
-let _atwWar                     : new () => IAtwWar;
+let _atwWar                     : new () => IWar;
 
-let _cawWar                     : new () => ICawWar;
+let _cawWar                     : new () => WarsIWar;
 
 let _ccwWar                     : new () => IMpwWar;
 
@@ -212,12 +208,12 @@ export function init({
     bwWarEventManager           : new () => IBwWarEventManager;
     bwWarStatisticsManager      : new () => IBwWarStatisticsManager;
     bwWarView                   : new () => IBwWarView;
-    bwWeatherManager            : new () => IBwWeatherManager;
-    bwWeatherManagerView        : new () => IBwWeatherManagerView;
+    bwWeatherManager            : new () => IManager;
+    bwWeatherManagerView        : new () => IView;
 
-    atwWar                      : new () => IAtwWar;
+    atwWar                      : new () => IWar;
 
-    cawWar                      : new () => ICawWar;
+    cawWar                      : new () => WarsIWar;
 
     ccwWar                      : new () => IMpwWar;
 
@@ -385,18 +381,18 @@ export function getBwWarStatisticsManagerClass(): new () => IBwWarStatisticsMana
 export function getBwWarViewClass(): new () => IBwWarView {
     return _bwWarView;
 }
-export function getBwWeatherManagerClass(): new () => IBwWeatherManager {
+export function getBwWeatherManagerClass(): new () => IManager {
     return _bwWeatherManager;
 }
-export function getBwWeatherManagerViewClass(): new () => IBwWeatherManagerView {
+export function getBwWeatherManagerViewClass(): new () => IView {
     return _bwWeatherManagerView;
 }
 
-export function getAtwWarClass(): new () => IAtwWar {
+export function getAtwWarClass(): new () => IWar {
     return _atwWar;
 }
 
-export function getCawWarClass(): new () => ICawWar {
+export function getCawWarClass(): new () => WarsIWar {
     return _cawWar;
 }
 

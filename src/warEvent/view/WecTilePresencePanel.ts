@@ -4,8 +4,14 @@ import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getComparatorName,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
@@ -20,7 +26,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    getErrorTipForCondition,
+    getDetailedDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 
 export interface OpenData {
     war         : IBwWar;

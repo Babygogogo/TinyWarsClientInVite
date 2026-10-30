@@ -8,9 +8,15 @@ import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
-import { TextureResolutionId, TextureVersionId } from "../../graphics/Constants.ts";
+import {
+    TextureResolutionId,
+    TextureVersionId,
+} from "../../graphics/Constants.ts";
 import { isPc } from "../../helpers/Compatibility.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import {
     getShowUnitAnimation,

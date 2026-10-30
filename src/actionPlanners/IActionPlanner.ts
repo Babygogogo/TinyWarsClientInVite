@@ -12,10 +12,6 @@ import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
-type IBwTile            = ITile;
-type IBwUnit            = IUnit;
-type ApStateId          = StateId;
-
 export interface IActionPlanner {
     init(mapSize: MapSize): void;
     fastInit(): void;
@@ -34,9 +30,9 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for setting common state.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getStateId(): ApStateId;
-    getPreviousStateId(): ApStateId;
-    setStateId(state: ApStateId): void;
+    getStateId(): StateId;
+    getPreviousStateId(): StateId;
+    setStateId(state: StateId): void;
 
     cancelCurrentState(): void;
 
@@ -46,19 +42,19 @@ export interface IActionPlanner {
     getView(): IActionPlannerView;
     updateView(): void;
 
-    checkCanControlUnit(unit: IBwUnit): boolean;
+    checkCanControlUnit(unit: IUnit): boolean;
 
     getMapSize(): MapSize;
 
     checkIsStateRequesting(): boolean;
 
-    getFocusUnit(): IBwUnit | null;
-    getFocusUnitOnMap(): IBwUnit | null;
-    setFocusUnitOnMap(unit: IBwUnit): void;
+    getFocusUnit(): IUnit | null;
+    getFocusUnitOnMap(): IUnit | null;
+    setFocusUnitOnMap(unit: IUnit): void;
     clearFocusUnitOnMap(): void;
 
-    getFocusUnitLoaded(): IBwUnit | null;
-    setFocusUnitLoaded(unit: IBwUnit): void;
+    getFocusUnitLoaded(): IUnit | null;
+    setFocusUnitLoaded(unit: IUnit): void;
     clearFocusUnitLoaded(): void;
     getUnitIdForFocusUnitLoaded(): number | null;
 
@@ -66,8 +62,8 @@ export interface IActionPlanner {
     setAvailableDropDestinations(destinations: GridIndex[]): void;
     clearAvailableDropDestinations(): void;
 
-    getChoosingUnitForDrop(): IBwUnit | null;
-    setChoosingUnitForDrop(unit: IBwUnit): void;
+    getChoosingUnitForDrop(): IUnit | null;
+    setChoosingUnitForDrop(unit: IUnit): void;
     clearChoosingUnitForDrop(): void;
 
     getChosenUnitsForDrop(): ChosenUnitForDrop[];
@@ -134,15 +130,15 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitsForPreviewingAttackableArea(): Map<number, IBwUnit>;
-    getTilesForPreviewingAttackableArea(): Set<IBwTile>;
+    getUnitsForPreviewingAttackableArea(): Map<number, IUnit>;
+    getTilesForPreviewingAttackableArea(): Set<ITile>;
 
     getAreaForPreviewingAttackableArea(): AttackableArea;
     clearDataForPreviewingAttackableArea(): void;
-    addUnitForPreviewAttackableArea(unit: IBwUnit): void;
-    addTileForPreviewAttackableArea(tile: IBwTile): void;
+    addUnitForPreviewAttackableArea(unit: IUnit): void;
+    addTileForPreviewAttackableArea(tile: ITile): void;
 
-    updateAreaForPreviewingAttackableArea(unit: IBwUnit): void;
+    updateAreaForPreviewingAttackableArea(unit: IUnit): void;
 
     getIsIgnoreAllyForPreviewingAttackableArea(): boolean;
     setIsIgnoreAllyForPreviewingAttackableArea(isIgnore: boolean): void;
@@ -153,9 +149,9 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing movable area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingMovableArea(): IBwUnit | null;
+    getUnitForPreviewingMovableArea(): IUnit | null;
     getAreaForPreviewingMovableArea(): MovableArea | null;
-    setUnitForPreviewingMovableArea(unit: IBwUnit): void;
+    setUnitForPreviewingMovableArea(unit: IUnit): void;
     clearDataForPreviewingMovableArea(): void;
     resetAreaForPreviewingMovableArea(): void;
 
@@ -165,15 +161,15 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing visible area.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getUnitForPreviewingVisibleArea(): IBwUnit | null;
+    getUnitForPreviewingVisibleArea(): IUnit | null;
     getAreaForPreviewingVisible(): GridIndex[] | null;
     clearDataForPreviewingVisibleArea(): void;
-    setUnitForPreviewingVisibleArea(unit: IBwUnit): void;
+    setUnitForPreviewingVisibleArea(unit: IUnit): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     checkCanFocusUnitOnMapAttackTarget(gridIndex: GridIndex): boolean;
 
-    calculateAvailableDropDestination(unitForDrop: IBwUnit, chosenDropDestinations: GridIndex[]): GridIndex[];
+    calculateAvailableDropDestination(unitForDrop: IUnit, chosenDropDestinations: GridIndex[]): GridIndex[];
 }

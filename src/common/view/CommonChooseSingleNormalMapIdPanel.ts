@@ -6,9 +6,20 @@ import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
-import { getRawData, checkIsMeetFilter, sortMapArray, getBriefData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
+import {
+    getRawData,
+    checkIsMeetFilter,
+    sortMapArray,
+    getBriefData,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

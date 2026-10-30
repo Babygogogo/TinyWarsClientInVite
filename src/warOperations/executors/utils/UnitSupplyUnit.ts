@@ -1,6 +1,12 @@
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
@@ -13,9 +19,11 @@ import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
-type IBwUnit            = IUnit;
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;
@@ -109,7 +117,7 @@ async function normalExeUnitSupplyUnit(war: IBwWar, action: WoUnitSupplyUnit): P
              });
 
         } else {
-            const suppliedUnits : IBwUnit[] = [];
+            const suppliedUnits : IUnit[] = [];
             const playerIndex   = focusUnit.getPlayerIndex();
             for (const gridIndex of pathNodes[pathNodes.length - 1].getAdjacentGrids(unitMap.getMapSize())) {
                 const unit = unitMap.getUnitOnMap(gridIndex);

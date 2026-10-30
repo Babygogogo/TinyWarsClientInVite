@@ -10,7 +10,10 @@ import { Position } from "../../../expressionParsers/results/Position.ts";
 import { PositionArray } from "../../../expressionParsers/results/PositionArray.ts";
 import { Tile } from "../../../expressionParsers/results/Tile.ts";
 import { TileArray } from "../../../expressionParsers/results/TileArray.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { WeaSetViewpointExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";

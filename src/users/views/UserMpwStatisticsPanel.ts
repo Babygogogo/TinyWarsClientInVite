@@ -11,7 +11,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getUserNickname, getUserMpwStatisticsData } from "../Model.ts";
+import {
+    getUserNickname,
+    getUserMpwStatisticsData,
+} from "../Model.ts";
 import { reqUserGetPublicInfo } from "../Proxy.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 

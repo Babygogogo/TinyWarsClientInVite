@@ -1,8 +1,18 @@
 import { StateId } from "../actionPlanners/Constants.ts";
-import { getRwWarBaseClass, getRwWarClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getRwWarBaseClass,
+    getRwWarClass,
+} from "../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { createLazyFunc, getExisted, newError } from "../helpers/Misc.ts";
-import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import {
+    createLazyFunc,
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { UiContainer } from "../ui/components/UiContainer.ts";
 import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";

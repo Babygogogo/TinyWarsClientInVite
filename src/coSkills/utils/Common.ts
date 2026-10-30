@@ -1,4 +1,7 @@
-import { AllSkillTypeIdArray, SkillTypeId } from "../Constants.ts";
+import {
+    AllSkillTypeIdArray,
+    SkillTypeId,
+} from "../Constants.ts";
 import { newError } from "../../helpers/Misc.ts";
 import type { CoBasicCfg } from "../../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 

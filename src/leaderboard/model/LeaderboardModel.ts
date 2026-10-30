@@ -1,15 +1,18 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
-import { reqLbSpmOverallGetTopDataArray, reqLbSpmOverallGetRankInfo, reqLbMrwGetRankIndex } from "./LeaderboardProxy.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
+import {
+    reqLbSpmOverallGetTopDataArray,
+    reqLbSpmOverallGetRankInfo,
+    reqLbMrwGetRankIndex,
+} from "./LeaderboardProxy.ts";
 import type { LbSpmOverall } from "../../proto/schema/CommonProto/Leaderboard/LbSpmOverall.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
+import type { S as LbMrwGetRankIndexResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
+import type { S as LbSpmOverallGetRankInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
+import type { S as LbSpmOverallGetTopDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 type SpmOverallRankInfo = {
@@ -51,7 +54,7 @@ export function getMrwRankIndex(warType: WarTypeId, userId: number): Promise<Und
     }
 }
 
-export function updateOnMsgLbMrwGetRankIndex(data: S): void {
+export function updateOnMsgLbMrwGetRankIndex(data: LbMrwGetRankIndexResponse): void {
     const userId    = getExisted(data.getUserId());
     const warType   = data.getWarType();
     const rankIndex = data.getRankIndex() ?? null;
@@ -63,7 +66,7 @@ export function updateOnMsgLbMrwGetRankIndex(data: S): void {
         throw newError(`Invalid warType: ${warType}`);
     }
 }
-export function updateOnFailedMsgLbMrwGetRankIndex(data: S): void {
+export function updateOnFailedMsgLbMrwGetRankIndex(data: LbMrwGetRankIndexResponse): void {
     const warType               = data.getWarType();
     const userId                = data.getUserId();
     const playersCountUnneutral = data.getPlayersCountUnneutral();
@@ -80,11 +83,11 @@ export function updateOnFailedMsgLbMrwGetRankIndex(data: S): void {
     }
 }
 
-export function updateOnMsgLbSpmOverallGetTopDataArray(data: ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS): void {
+export function updateOnMsgLbSpmOverallGetTopDataArray(data: LbSpmOverallGetTopDataArrayResponse): void {
     _spmOverallTopDataArrayAccessor.setData(getExisted(data.getConfigVersion()), data.getLeaderboard() ?? null);
 }
 
-export function updateOnMsgLbSpmOverallGetRankInfo(data: ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS): void {
+export function updateOnMsgLbSpmOverallGetRankInfo(data: LbSpmOverallGetRankInfoResponse): void {
     setSpmOverallRankInfo(
         data.getUserId() ?? 0,
         {
@@ -93,7 +96,7 @@ export function updateOnMsgLbSpmOverallGetRankInfo(data: ProtoSchemaCommonProtoN
         },
     );
 }
-export function updateOnFailedMsgLbSpmOverallGetRankInfo(data: ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS): void {
+export function updateOnFailedMsgLbSpmOverallGetRankInfo(data: LbSpmOverallGetRankInfoResponse): void {
     const userId = data.getUserId();
     if (userId != null) {
         _spmOverallRankInfoAccessor.updateOnRequestFailed(userId);

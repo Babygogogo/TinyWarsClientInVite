@@ -1,12 +1,21 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
 
 export class CustomCounter extends Base {
@@ -45,19 +54,19 @@ export class CustomCounter extends Base {
         return ContextType.CustomCounter;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
             case CustomCounter.VnSelfId    : return new Num(war, this._customCounterId);
             case CustomCounter.VnId        : return new Num(war, this._customCounterId);
             case CustomCounter.VnSelfValue : return new Num(war, war.getWarEventManager().getCustomCounter(this._customCounterId));
             case CustomCounter.VnValue     : return new Num(war, war.getWarEventManager().getCustomCounter(this._customCounterId));
-            case CustomCounter.VnWar       : return new ExpressionParsersResultsWar(war);
+            case CustomCounter.VnWar       : return new ResultsWar(war);
             default                                 : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
     }
 }

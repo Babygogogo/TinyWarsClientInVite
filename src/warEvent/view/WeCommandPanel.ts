@@ -1,14 +1,31 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
 import { reqCmSetCampaignMapWarEventAction } from "../../campaigns/managements/Gateway.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList, moveElementInList2, deleteElementFromList2, moveElementInList } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    deleteElementFromList,
+    moveElementInList2,
+    deleteElementFromList2,
+    moveElementInList,
+} from "../../helpers/Collection.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText, getTextForYesOrNo, getWarEventConditionNodeDesc } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+    getTextForYesOrNo,
+    getWarEventConditionNodeDesc,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -34,7 +51,11 @@ import {
     getDetailDescForAction,
     getInterchangeableTypeId,
 } from "../../warEvents/actions/utils/Common.ts";
-import { createAndAddRootNodeInEvent, cloneNode, getErrorTipForConditionNode } from "../../warEvents/conditionNodes/Utils.ts";
+import {
+    createAndAddRootNodeInEvent,
+    cloneNode,
+    getErrorTipForConditionNode,
+} from "../../warEvents/conditionNodes/Utils.ts";
 import {
     addDefaultCondition,
     openConditionModifyPanel,
@@ -42,14 +63,22 @@ import {
     getErrorTipForCondition,
     getDetailedDescForCondition,
 } from "../../warEvents/conditions/utils/Common.ts";
-import { DescType, Event } from "../../warEvents/Constants.ts";
+import {
+    DescType,
+    Event,
+} from "../../warEvents/Constants.ts";
 import {
     cloneEvent,
     getErrorTipForEvent,
     getErrorTipForEventCallCountInPlayerTurn,
     getErrorTipForEventCallCountTotal,
 } from "../../warEvents/events/Utils.ts";
-import { getNode, getEvent, getCondition, getAction } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    getNode,
+    getEvent,
+    getCondition,
+    getAction,
+} from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
     war                 : IMeWar;

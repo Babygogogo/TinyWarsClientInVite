@@ -6,26 +6,33 @@ import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidPlayerIndex } from "../../../players/utils/Common.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import {
+    getDescForEmbed as getPlayersDescForEmbed,
+    checkIsValid as checkIsValidPlayerFilter,
+    checkIsMeet as checkIsMeetPlayerFilter,
+} from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
 import type { WeaSetUnitOwnershipSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipSimple.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
-    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    getDescForEmbed as getTilesDescForEmbed,
+    checkIsValid as checkIsValidTileFilter,
+    checkIsMeet as checkIsMeetTileFilter,
 } from "../../../tiles/utils/Filter.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import {
-    getDescForEmbed as UnitsUtilsFilterGetDescForEmbed,
-    checkIsValid as UnitsUtilsFilterCheckIsValid,
-    checkIsMeet as UnitsUtilsFilterCheckIsMeet,
+    getDescForEmbed as getUnitsDescForEmbed,
+    checkIsValid as checkIsValidUnitFilter,
+    checkIsMeet as checkIsMeetUnitFilter,
 } from "../../../units/utils/Filter.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 
@@ -52,19 +59,19 @@ export function getDetailDesc(data: Undefinable<WeaSetUnitOwnershipSimple>): str
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            conTextArray.push(`- ${UnitsUtilsFilterGetDescForEmbed(filter)}`);
+            conTextArray.push(`- ${getUnitsDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1422)}) ${getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1422)}) ${getPlayersDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1423)}) ${TilesUtilsFilterGetDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1423)}) ${getTilesDescForEmbed(filter)}`);
         }
     }
 
@@ -83,7 +90,7 @@ export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: MapSize, p
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&
-            (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
         }
@@ -92,7 +99,7 @@ export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: MapSize, p
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
@@ -101,7 +108,7 @@ export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: MapSize, p
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
@@ -140,7 +147,7 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
                 continue;
             }
 
-            if ((conUnitFilter != null) && (!UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
+            if ((conUnitFilter != null) && (!checkIsMeetUnitFilter(conUnitFilter, unit))) {
                 continue;
             }
 
@@ -201,13 +208,13 @@ export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isF
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
     }
     return !!resultDict.get(player);
 }
 function checkIsMeetConTileFilter(resultDict: Map<ITile, boolean>, filter: TileFilter, tile: ITile): boolean {
     if (!resultDict.has(tile)) {
-        resultDict.set(tile, TilesUtilsFilterCheckIsMeet(filter, tile));
+        resultDict.set(tile, checkIsMeetTileFilter(filter, tile));
     }
     return !!resultDict.get(tile);
 }

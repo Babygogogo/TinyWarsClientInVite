@@ -1,10 +1,16 @@
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
+import type { S as UserGetUsersByNicknameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -19,7 +25,10 @@ import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getFollowingUserIdArray, getUserNickname } from "../../users/Model.ts";
+import {
+    getFollowingUserIdArray,
+    getUserNickname,
+} from "../../users/Model.ts";
 import { reqUserGetUsersByNickname } from "../../users/Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -147,7 +156,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserGetUsersByNickname(e: Event): void {
-        const data                  = e.data as S;
+        const data                  = e.data as UserGetUsersByNicknameResponse;
         this._candidateUserIdArray  = data.getUserIdArray();
         this._selectedUserId        = null;
         this._updateListNickname();

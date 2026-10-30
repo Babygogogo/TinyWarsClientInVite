@@ -19,12 +19,22 @@ import { UnitStatisticArray } from "./contexts/UnitStatisticArray.ts";
 import { War } from "./contexts/War.ts";
 import { WarOperation } from "./contexts/WarOperation.ts";
 import { Weather } from "./contexts/Weather.ts";
-import { ContextType, ResultType } from "./Enums.ts";
+import {
+    ContextType,
+    ResultType,
+} from "./Enums.ts";
 import { FunctionInfo } from "./FunctionInfo.ts";
-import type { EpFunctionInfoDict, EpVariableInfoDict, EpVariableInfo } from "./Types.ts";
+import type {
+    EpFunctionInfoDict,
+    EpVariableInfoDict,
+    EpVariableInfo,
+} from "./Types.ts";
 import { newError } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
-import { getFormattedText, getExpressionParserResultTypeName } from "../lang/Utils.ts";
+import {
+    getFormattedText,
+    getExpressionParserResultTypeName,
+} from "../lang/Utils.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export function getFunctionInfoDict(contextType: ContextType): EpFunctionInfoDict {

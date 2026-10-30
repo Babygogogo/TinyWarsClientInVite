@@ -1,8 +1,6 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { SelfTileEnabledForUnitProduction } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 
 export function checkIsEffective({
     cfg,

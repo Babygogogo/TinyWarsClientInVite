@@ -1,12 +1,18 @@
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
 import { format } from "../../helpers/Text.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { setStageScale } from "../../localData/Storage.ts";
+import { setStageScale as setStorageStageScale } from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Scale } from "../../stages/Constants.ts";
-import { getStageScale, setStageScale as StagesStageManagerSetStageScale } from "../../stages/StageManager.ts";
+import {
+    getStageScale,
+    setStageScale as setStageManagerStageScale,
+} from "../../stages/StageManager.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -79,28 +85,28 @@ export class Panel extends UiPanel<OpenData> {
         const point         = group.globalToLocal(data.stageX, data.stageY);
         const scale         = Math.floor(Math.max(0, Math.min(point.x, width)) / width * (Scale.MaxScale - Scale.MinScale) + Scale.MinScale);
         this._selectedScale = scale;
-        StagesStageManagerSetStageScale(scale);
+        setStageManagerStageScale(scale);
         this._updateGroupScale();
     }
 
     private _onTouchedBtnClose(): void {
-        StagesStageManagerSetStageScale(this._prevScale || Scale.MinScale);
+        setStageManagerStageScale(this._prevScale || Scale.MinScale);
 
         this.closePanel();
     }
     private _onTouchedBtnDefault(): void {
         this._selectedScale = Scale.MinScale;
-        StagesStageManagerSetStageScale(Scale.MinScale);
+        setStageManagerStageScale(Scale.MinScale);
 
         this._updateView();
     }
     private _onTouchedBtnConfirm(): void {
-        setStageScale(this._selectedScale || Scale.MinScale);
+        setStorageStageScale(this._selectedScale || Scale.MinScale);
 
         this.closePanel();
     }
     private _onTouchedPanelMask(): void {
-        StagesStageManagerSetStageScale(this._prevScale || Scale.MinScale);
+        setStageManagerStageScale(this._prevScale || Scale.MinScale);
         playShortSfx(ShortSfxCode.ButtonCancel01);
 
         this.closePanel();

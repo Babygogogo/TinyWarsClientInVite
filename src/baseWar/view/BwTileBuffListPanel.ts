@@ -1,9 +1,20 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileBuffName, getTileBuffDesc, getTileBuffExtraParamDesc } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileBuffName,
+    getTileBuffDesc,
+    getTileBuffExtraParamDesc,
+} from "../../lang/Utils.ts";
 import type { BwTileBuffChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -11,7 +22,11 @@ import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { AllBuffTypeIdArray } from "../../tileBuffs/Constants.ts";
-import { checkIsValidTypeId, create, checkIsExtraParamSupported } from "../../tileBuffs/utils/Common.ts";
+import {
+    checkIsValidTypeId,
+    create,
+    checkIsExtraParamSupported,
+} from "../../tileBuffs/utils/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

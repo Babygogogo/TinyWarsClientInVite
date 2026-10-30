@@ -6,9 +6,15 @@ import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
 import { Player } from "../../../expressionParsers/contexts/Player.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
+import {
+    getValueInRange,
+    getValueInInt32,
+} from "../../../numbers/Utils.ts";
 import { Fund } from "../../../players/Constants.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";

@@ -2,18 +2,23 @@ import { AttackableArea } from "../../auxiliaryTypes/AttackableArea.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { AutoRecoveryTimingId } from "../../coSkills/Constants.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import type { WoPlayerEndTurn } from "../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import type { WoSystemBeginTurn } from "../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 import { TypeId } from "../../tiles/constants/MapWeapon.ts";
 import type { ITile } from "../../tiles/ITile.ts";
-import { getServerTimestamp, wait } from "../../timer/TimerModel.ts";
+import {
+    getServerTimestamp,
+    wait,
+} from "../../timer/TimerModel.ts";
 import { PhaseCode } from "../Constants.ts";
 import type { ITurnManager } from "../ITurnManager.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "../../warOperations/executors/utils/Common.ts";
 
-type IBwTile                = ITile;
 export async function endPhaseStandby(turnManager: ITurnManager, action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== PhaseCode.WaitBeginTurn) {
@@ -248,7 +253,7 @@ function runPhaseWaitBeginTurn(turnManager: ITurnManager, data: WoPlayerEndTurn,
     }
 }
 
-async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -278,7 +283,7 @@ async function handleMapWeaponTileCrystal(data: WoSystemBeginTurn, war: IBwWar, 
         await wait(400);
     }
 }
-async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -287,7 +292,7 @@ async function handleMapWeaponTileCannon(data: WoSystemBeginTurn, war: IBwWar, t
         await wait(400);
     }
 }
-async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(data: WoSystemBeginTurn, war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {

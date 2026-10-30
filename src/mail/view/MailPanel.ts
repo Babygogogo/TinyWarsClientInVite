@@ -1,12 +1,24 @@
 import type { PlayerInfo2 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getCampaignInfo, getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
+import {
+    getCampaignInfo,
+    getCampaignMapRawData,
+} from "../../campaigns/mains/Provider.ts";
 import { reqCcrJoinRoom } from "../../coopCustomRoom/model/CcrProxy.ts";
 import { CoId } from "../../cos/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import { getGameConfig, getLatestGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getGameConfig,
+    getLatestGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import {
     gotoReplayWar,
     gotoMultiPlayerWar,
@@ -15,20 +27,41 @@ import {
     gotoMfrRoomInfoPanel,
 } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { getNormalMapId, getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getWarTypeName, getLanguageText, getTimestampShortText } from "../../lang/Utils.ts";
-import { getMail, getAllMailDataArray } from "../model/MailModel.ts";
-import { reqMailSetIsNew, reqMailDeleteMail } from "../model/MailProxy.ts";
+import {
+    getNormalMapId,
+    getWarTypeId,
+} from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getWarTypeName,
+    getLanguageText,
+    getTimestampShortText,
+} from "../../lang/Utils.ts";
+import {
+    getMail,
+    getAllMailDataArray,
+} from "../model/MailModel.ts";
+import {
+    reqMailSetIsNew,
+    reqMailDeleteMail,
+} from "../model/MailProxy.ts";
 import { reqMcrJoinRoom } from "../../multiCustomRoom/model/McrProxy.ts";
 import { reqMfrJoinRoom } from "../../multiFreeRoom/model/MfrProxy.ts";
-import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getRawData,
+    getMapNameInCurrentLanguage,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { PlayerInfo } from "../../proto/schema/CommonProto/Mail/MailEndWarNotification/PlayerInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
+import type { S as CcrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
+import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
+import type { S as McrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
+import type { S as MfrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
 import { getReplayData } from "../../replayWar/model/RwModel.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -298,19 +331,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCcrJoinRoom(e: Event): void {
-        const data      = e.data as S;
+        const data      = e.data as CcrJoinRoomResponse;
         const roomId    = getExisted(data.getRoomId());
         gotoCcrRoomInfoPanel(roomId);
         show(getFormattedText(TextType.F0069, roomId));
     }
     private _onNotifyMsgMcrJoinRoom(e: Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS;
+        const data      = e.data as McrJoinRoomResponse;
         const roomId    = getExisted(data.getRoomId());
         gotoMcrRoomInfoPanel(roomId);
         show(getFormattedText(TextType.F0069, roomId));
     }
     private _onNotifyMsgMfrJoinRoom(e: Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS;
+        const data      = e.data as MfrJoinRoomResponse;
         const roomId    = getExisted(data.getRoomId());
         gotoMfrRoomInfoPanel(roomId);
         show(getFormattedText(TextType.F0069, roomId));
@@ -655,7 +688,7 @@ class MailRenderer
     }
 
     private _onNotifyMsgMailSetIsNew(e: Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS;
+        const data = e.data as MailSetIsNewResponse;
         if (data.getMailId() === this.getOpenData()?.mailId) {
             this._updateImgRed();
         }

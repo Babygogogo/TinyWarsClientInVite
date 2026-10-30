@@ -3,18 +3,31 @@ import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqCommonGetCoStatistics } from "./CommonProxy.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { TextureVersionId } from "../../graphics/Constants.ts";
-import { getUnit, getUnitFlash, getTileBase, getTileDecoration, getTileObject, getTileBuff } from "../../helpers/ImageSource.ts";
+import {
+    getUnit,
+    getUnitFlash,
+    getTileBase,
+    getTileDecoration,
+    getTileObject,
+    getTileBuff,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getNumText } from "../../helpers/Text.ts";
-import { getShowTileAnimation, getShowUnitAnimation } from "../../localData/Storage.ts";
+import {
+    getShowTileAnimation,
+    getShowUnitAnimation,
+} from "../../localData/Storage.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
+import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
 import type { DataForMrwPlayerRank } from "../../proto/schema/CommonProto/Structure/DataForMrwPlayerRank.ts";
 import type { AnimationTypeId } from "../../units/Constants.ts";
-import { setInterval, clearInterval, startTick, stopTick } from "../../vendor/egret/Egret.ts";
-
-type CoStatistics           = S;
+import {
+    setInterval,
+    clearInterval,
+    startTick,
+    stopTick,
+} from "../../vendor/egret/Egret.ts";
 
 type FrameCfg       = {
     source  : string | null;
@@ -46,7 +59,7 @@ const _tileObjectImageSourceDict        = new Map<TextureVersionId, Map<number, 
 const _tileBuffImageSourceDict          = new Map<TextureVersionId, Map<number, Map<boolean, string>>>();
 
 let _mrwRankArray           : DataForMrwPlayerRank[] | null = null;
-const _coStatisticsAccessor = new CachedDataAccessor<null, CoStatistics>({
+const _coStatisticsAccessor = new CachedDataAccessor<null, CommonGetCoStatisticsResponse>({
     reqData : () => reqCommonGetCoStatistics(),
 });
 
@@ -428,10 +441,10 @@ export function getMrwRankList(): DataForMrwPlayerRank[] | null {
     return _mrwRankArray;
 }
 
-export function getCoStatistics(): Promise<Undefinable<CoStatistics>> {
+export function getCoStatistics(): Promise<Undefinable<CommonGetCoStatisticsResponse>> {
     return _coStatisticsAccessor.getData(null);
 }
-export function setCoStatistics(data: CoStatistics): void {
+export function setCoStatistics(data: CommonGetCoStatisticsResponse): void {
     _coStatisticsAccessor.setData(null, data);
 }
 

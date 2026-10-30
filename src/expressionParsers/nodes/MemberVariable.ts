@@ -1,4 +1,4 @@
-import type { Base } from "../contexts/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
 import { Fog } from "../contexts/Fog.ts";
 import { Num } from "../contexts/Num.ts";
 import { NumArray } from "../contexts/NumArray.ts";
@@ -16,91 +16,100 @@ import { Unit } from "../contexts/Unit.ts";
 import { UnitArray } from "../contexts/UnitArray.ts";
 import { UnitStatistic } from "../contexts/UnitStatistic.ts";
 import { UnitStatisticArray } from "../contexts/UnitStatisticArray.ts";
-import { War } from "../contexts/War.ts";
+import { War as ContextsWar } from "../contexts/War.ts";
 import { WarOperation } from "../contexts/WarOperation.ts";
 import { Weather } from "../contexts/Weather.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { FogMap } from "../results/FogMap.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { NullableUnitArray } from "../results/NullableUnitArray.ts";
-import { Num as ExpressionParsersResultsNum } from "../results/Num.ts";
-import { NumArray as ExpressionParsersResultsNumArray } from "../results/NumArray.ts";
-import { Player as ExpressionParsersResultsPlayer } from "../results/Player.ts";
-import { PlayerArray as ExpressionParsersResultsPlayerArray } from "../results/PlayerArray.ts";
-import { Position as ExpressionParsersResultsPosition } from "../results/Position.ts";
-import { PositionArray as ExpressionParsersResultsPositionArray } from "../results/PositionArray.ts";
-import { TaskObjective as ExpressionParsersResultsTaskObjective } from "../results/TaskObjective.ts";
-import { Tile as ExpressionParsersResultsTile } from "../results/Tile.ts";
-import { TileArray as ExpressionParsersResultsTileArray } from "../results/TileArray.ts";
-import { TileBuff as ExpressionParsersResultsTileBuff } from "../results/TileBuff.ts";
-import { TileBuffArray as ExpressionParsersResultsTileBuffArray } from "../results/TileBuffArray.ts";
+import { Num as ResultsNum } from "../results/Num.ts";
+import { NumArray as ResultsNumArray } from "../results/NumArray.ts";
+import { Player as ResultsPlayer } from "../results/Player.ts";
+import { PlayerArray as ResultsPlayerArray } from "../results/PlayerArray.ts";
+import { Position as ResultsPosition } from "../results/Position.ts";
+import { PositionArray as ResultsPositionArray } from "../results/PositionArray.ts";
+import { TaskObjective as ResultsTaskObjective } from "../results/TaskObjective.ts";
+import { Tile as ResultsTile } from "../results/Tile.ts";
+import { TileArray as ResultsTileArray } from "../results/TileArray.ts";
+import { TileBuff as ResultsTileBuff } from "../results/TileBuff.ts";
+import { TileBuffArray as ResultsTileBuffArray } from "../results/TileBuffArray.ts";
 import { TurnManager } from "../results/TurnManager.ts";
-import { UnitStatistic as ExpressionParsersResultsUnitStatistic } from "../results/UnitStatistic.ts";
-import { UnitStatisticArray as ExpressionParsersResultsUnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import { WarOperation as ExpressionParsersResultsWarOperation } from "../results/WarOperation.ts";
+import { UnitStatistic as ResultsUnitStatistic } from "../results/UnitStatistic.ts";
+import { UnitStatisticArray as ResultsUnitStatisticArray } from "../results/UnitStatisticArray.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import { WarOperation as ResultsWarOperation } from "../results/WarOperation.ts";
 import { WeatherManager } from "../results/WeatherManager.ts";
-import { getContextType, getVariableInfoDict } from "../Utils.ts";
+import {
+    getContextType,
+    getVariableInfoDict,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getExpressionParserContextName } from "../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getExpressionParserContextName,
+} from "../../lang/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class MemberVariable extends ExpressionParsersNodesBase {
-    private _lhs            : ExpressionParsersNodesBase;
+export class MemberVariable extends Base {
+    private _lhs            : Base;
     private _identifierName : string;
 
-    public constructor(lhs: ExpressionParsersNodesBase, identifierName: string) {
+    public constructor(lhs: Base, identifierName: string) {
         super();
 
         this._lhs               = lhs;
         this._identifierName    = identifierName;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const lhsResult = this._lhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         // TODO: add more context
-        if (lhsResult instanceof ExpressionParsersResultsWar) {
-            return new War(lhsResult.war).resolveVariable(this._identifierName);
+        if (lhsResult instanceof ResultsWar) {
+            return new ContextsWar(lhsResult.war).resolveVariable(this._identifierName);
         } else if (lhsResult instanceof TurnManager) {
             return new Turn(lhsResult.turnManager).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsPlayer) {
+        } else if (lhsResult instanceof ResultsPlayer) {
             return new Player(lhsResult.player).resolveVariable(this._identifierName, isRestricted);
-        } else if (lhsResult instanceof ExpressionParsersResultsPosition) {
+        } else if (lhsResult instanceof ResultsPosition) {
             return new Position(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsPositionArray) {
+        } else if (lhsResult instanceof ResultsPositionArray) {
             return new PositionArray(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsTile) {
+        } else if (lhsResult instanceof ResultsTile) {
             return new Tile(lhsResult.tile).resolveVariable(this._identifierName);
         } else if (lhsResult instanceof NullableUnit) {
             return new Unit(lhsResult).resolveVariable(this._identifierName, isRestricted);
         } else if (lhsResult instanceof NullableUnitArray) {
             return new UnitArray(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsTileArray) {
+        } else if (lhsResult instanceof ResultsTileArray) {
             return new TileArray(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsPlayerArray) {
+        } else if (lhsResult instanceof ResultsPlayerArray) {
             return new PlayerArray(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsNum) {
+        } else if (lhsResult instanceof ResultsNum) {
             return new Num(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsNumArray) {
+        } else if (lhsResult instanceof ResultsNumArray) {
             return new NumArray(lhsResult).resolveVariable(this._identifierName);
         } else if (lhsResult instanceof WeatherManager) {
             return new Weather(lhsResult.weatherManager).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsTaskObjective) {
+        } else if (lhsResult instanceof ResultsTaskObjective) {
             return new TaskObjective(lhsResult.war, lhsResult.objectiveId).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsTileBuff) {
+        } else if (lhsResult instanceof ResultsTileBuff) {
             return new TileBuff(lhsResult.buff, lhsResult.tile).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsTileBuffArray) {
+        } else if (lhsResult instanceof ResultsTileBuffArray) {
             return new TileBuffArray(lhsResult).resolveVariable(this._identifierName);
         } else if (lhsResult instanceof FogMap) {
             return new Fog(lhsResult.fogMap).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsWarOperation) {
+        } else if (lhsResult instanceof ResultsWarOperation) {
             return new WarOperation(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsUnitStatistic) {
+        } else if (lhsResult instanceof ResultsUnitStatistic) {
             return new UnitStatistic(lhsResult).resolveVariable(this._identifierName);
-        } else if (lhsResult instanceof ExpressionParsersResultsUnitStatisticArray) {
+        } else if (lhsResult instanceof ResultsUnitStatisticArray) {
             return new UnitStatisticArray(lhsResult).resolveVariable(this._identifierName);
         } else {
             throw newError(`Unexpected lhsType: ${typeof lhsResult}`, ClientErrorCode.EpNodeMemberVariable_Eval_00);

@@ -1,6 +1,9 @@
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getMoveTypeName,
     getPlayerAliveStateName,
@@ -12,7 +15,7 @@ import {
     getUnitName,
     getWeatherName,
 } from "../../lang/Utils.ts";
-import { TypeId as NotificationTypeId } from "../../notifications/TypeId.ts";
+import { TypeId as NotificationsTypeId } from "../../notifications/TypeId.ts";
 import { AllAliveStateIdArray } from "../../players/Constants.ts";
 import { getAllEnabledTileBaseCfgArray } from "../../tileBases/Utils.ts";
 import { getAllTileDecorationCfgArray } from "../../tileDecorations/Utils.ts";
@@ -81,7 +84,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type : NotificationTypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
+            { type : NotificationsTypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui : this._btnSort,                    callback : this._onTouchedBtnSort },

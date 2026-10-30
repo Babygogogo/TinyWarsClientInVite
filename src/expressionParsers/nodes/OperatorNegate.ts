@@ -1,22 +1,25 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { getErrorTextForOperandType } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class OperatorNegate extends ExpressionParsersNodesBase {
-    private _rhs: ExpressionParsersNodesBase;              // Left hand side of the operation
+export class OperatorNegate extends Base {
+    private _rhs: Base;              // Left hand side of the operation
 
-    public constructor(rhs: ExpressionParsersNodesBase) {
+    public constructor(rhs: Base) {
         super();
 
         this._rhs = rhs;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const rhs = this._rhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         if (!(rhs instanceof Num)) {
             throw newError(`Unexpected rhs type.`);

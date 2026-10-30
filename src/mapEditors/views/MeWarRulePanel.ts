@@ -1,10 +1,16 @@
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getWeatherFullDesc,
@@ -33,7 +39,10 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getIsSelfMapCommittee } from "../../users/Model.ts";
 import { Constants } from "../../warRules/Constants.ts";
-import { tickDefaultWeatherType, getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
+import {
+    tickDefaultWeatherType,
+    getDefaultWeatherType,
+} from "../../warRules/utils/CommonData.ts";
 
 export interface OpenData {
     war     : IMeWar;

@@ -1,5 +1,10 @@
 
-import type { WebHttpRequest, XML as webXML, RunEgretOptions, HTML5WebSocket } from "./WebCore";
+import type {
+    WebHttpRequest,
+    XML as webXML,
+    RunEgretOptions,
+    HTML5WebSocket,
+} from "./WebCore";
 import type {
     RenderBuffer,
     SystemTicker,

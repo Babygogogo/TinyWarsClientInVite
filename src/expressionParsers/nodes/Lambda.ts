@@ -1,31 +1,34 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Lambda as ResultsLambda } from "../results/Lambda.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class Lambda extends ExpressionParsersNodesBase {
+export class Lambda extends Base {
     private _argumentNameArray  : string[];
-    private _expression         : ExpressionParsersNodesBase;
+    private _expression         : Base;
 
-    public constructor(argumentNameArray: string[], expression: ExpressionParsersNodesBase) {
+    public constructor(argumentNameArray: string[], expression: Base) {
         super();
 
         this._argumentNameArray = argumentNameArray;
         this._expression        = expression;
     }
 
-    public evalLambda(rootCtx: Base, directLambdaArgumentArray: ExpressionParsersResultsBase[], indirectLambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public evalLambda(rootCtx: ContextsBase, directLambdaArgumentArray: ResultsBase[], indirectLambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const argumentNameArray = this._argumentNameArray;
         if (directLambdaArgumentArray.length !== argumentNameArray.length) {
             throw newError(`Unexpected arguments count: ${directLambdaArgumentArray.length}, ${argumentNameArray.length} expected.`);
         }
 
-        const mergedLambdaArgumentDict = new Map<string, ExpressionParsersResultsBase>();
+        const mergedLambdaArgumentDict = new Map<string, ResultsBase>();
         for (const [name, value] of indirectLambdaArgumentDict?.entries() ?? []) {
             mergedLambdaArgumentDict.set(name, value);
         }
@@ -80,7 +83,7 @@ export class Lambda extends ExpressionParsersNodesBase {
         contextType                     : ContextType;
         directLambdaArgumentInfoArray   : ResultType[] | null;
         indirectLambdaArgumentInfoDict  : Map<string, ResultType> | null;
-        localVariableDict               : Map<string, ExpressionParsersResultsBase> | null;
+        localVariableDict               : Map<string, ResultsBase> | null;
         customCounterNameSet            : Set<string>;
     }): ResultType {
         if (localVariableDict == null) {
@@ -107,8 +110,8 @@ export class Lambda extends ExpressionParsersNodesBase {
         });
     }
 
-    public override eval(ctx: Base): ExpressionParsersResultsBase {
-        return new ExpressionParsersResultsLambda(ctx.getWar(), this);
+    public override eval(ctx: ContextsBase): ResultsBase {
+        return new ResultsLambda(ctx.getWar(), this);
     }
     public override getResultType(): ResultType {
         return ResultType.Lambda;

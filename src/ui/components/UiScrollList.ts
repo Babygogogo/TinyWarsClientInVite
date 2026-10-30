@@ -1,6 +1,9 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { UiScrollerBase } from "./UiScrollerBase.ts";
 import type { IUiList } from "../interfaces/IUiList.ts";
 import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";

@@ -1,11 +1,24 @@
 import { AttackableArea } from "../../auxiliaryTypes/AttackableArea.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { TimerTypeId, Incremental } from "../../bootTimers/Constants.ts";
-import { AutoRecoveryTimingId, SkillTypeId } from "../../coSkills/Constants.ts";
-import { destroyUnitLoaded, destroyUnitOnMap } from "../../destructions/Utils.ts";
+import {
+    TimerTypeId,
+    Incremental,
+} from "../../bootTimers/Constants.ts";
+import {
+    AutoRecoveryTimingId,
+    SkillTypeId,
+} from "../../coSkills/Constants.ts";
+import {
+    destroyUnitLoaded,
+    destroyUnitOnMap,
+} from "../../destructions/Utils.ts";
 import { getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
-import { newError, createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../helpers/Team.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { AliveStateId } from "../../players/Constants.ts";
@@ -13,17 +26,27 @@ import { getValidFund } from "../../players/utils/Common.ts";
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { TypeId } from "../../tiles/constants/MapWeapon.ts";
 import type { ITile } from "../../tiles/ITile.ts";
-import { getServerTimestamp, wait } from "../../timer/TimerModel.ts";
-import { PhaseCode, TurnIndex } from "../Constants.ts";
+import {
+    getServerTimestamp,
+    wait,
+} from "../../timer/TimerModel.ts";
+import {
+    PhaseCode,
+    TurnIndex,
+} from "../Constants.ts";
 import type { ITurnManager } from "../ITurnManager.ts";
 import { BuffTypeId } from "../../unitBuffs/Constants.ts";
-import { Hp, ActionStateId } from "../../units/Constants.ts";
+import {
+    Hp,
+    ActionStateId,
+} from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getAllUnitsOnMapVisibleToTeams, getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
+import {
+    getAllUnitsOnMapVisibleToTeams,
+    getObserverTeamIndexListForUnitOnMap,
+} from "../../visibilities/Utils.ts";
 
-type IBwTile                = ITile;
-type IBwUnit                = IUnit;
 export async function endPhaseStandby(turnManager: ITurnManager, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== PhaseCode.WaitBeginTurn) {
@@ -163,7 +186,7 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
                     const unitActionStateId = recoverCfg.getUnitActionStateId();
                     const tileCategoryId    = recoverCfg.getTileCategoryId();
                     const conNeedOwnTile    = recoverCfg.getConNeedOwnTile();
-                    const targetUnits       : IBwUnit[] = [];
+                    const targetUnits       : IUnit[] = [];
                     for (const unit of unitMap.getAllUnits()) {
                         const unitType      = unit.getUnitType();
                         const unitGridIndex = unit.getGridIndex();
@@ -310,7 +333,7 @@ function runPhaseRepairUnitByTile(turnManager: ITurnManager, isFastExecute: bool
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
-    const allUnitsOnMap : IBwUnit[] = [];
+    const allUnitsOnMap : IUnit[] = [];
     for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
         (unit.getPlayerIndex() === playerIndex) && (allUnitsOnMap.push(unit));
     }
@@ -402,7 +425,7 @@ function runPhaseRepairUnitByUnit(turnManager: ITurnManager, isFastExecute: bool
     const visibleUnits      = ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
         ? null
         : getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
-    const allUnitsLoaded    : IBwUnit[] = [];
+    const allUnitsLoaded    : IUnit[] = [];
     for (const unit of unitMap.getAllUnitsLoaded()) {
         (unit.getPlayerIndex() === playerIndex) && (allUnitsLoaded.push(unit));
     }
@@ -747,7 +770,7 @@ function runPhaseWaitBeginTurn(turnManager: ITurnManager, isFastExecute: boolean
     }
 }
 
-async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCrystal(war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -760,7 +783,7 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
     const playerIndexInTurn = tile.getPlayerIndex();
     const teamIndexInTurn   = tile.getTeamIndex();
     const data              = getExisted(tile.getFinalCrystalData(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_00);
-    const affectedUnits     = new Set<IBwUnit>();
+    const affectedUnits     = new Set<IUnit>();
     const canAffectAlly     = data.getCanAffectAlly();
     const canAffectEnemy    = data.getCanAffectEnemy();
     const canAffectSelf     = data.getCanAffectSelf();
@@ -908,7 +931,7 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
     }
 }
 
-async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileCannon(war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -925,7 +948,7 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
     const deltaFuelPercentage           = data.getOffsetFuelPercentage();
     const deltaPrimaryAmmoPercentage    = data.getOffsetPrimaryAmmoPercentage();
     const canBeFatal                    = data.getCanBeFatal();
-    const affectedUnits                 = new Set<IBwUnit>();
+    const affectedUnits                 = new Set<IUnit>();
     for (let i = 0; i < maxTargetCount; ++i) {
         const unit = getCandidateUnitArray()[i];
         if (unit == null) {
@@ -1020,7 +1043,7 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
         }
     }
 }
-function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUnit[] {
+function generateCandidateUnitArrayForCannon(war: IBwWar, tile: ITile): IUnit[] {
     const data              = getExisted(tile.getFinalCannonData(), ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForCannon_00);
     const playerIndexInTurn = tile.getPlayerIndex();
     const teamIndexInTurn   = tile.getTeamIndex();
@@ -1034,7 +1057,7 @@ function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUni
     const rangeForLeft      = data.getRangeForLeft();
     const rangeForRight     = data.getRangeForRight();
 
-    const unitAndFinalCostArray: { unit: IBwUnit, cost: number }[] = [];
+    const unitAndFinalCostArray: { unit: IUnit, cost: number }[] = [];
     for (const unit of [...getAllUnitsOnMapVisibleToTeams(war, new Set([teamIndexInTurn]))].filter(u => {
         const unitTeamIndex = u.getTeamIndex();
         if (((canAffectSelf) && (u.getPlayerIndex() === playerIndexInTurn))     ||
@@ -1066,7 +1089,7 @@ function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUni
         }
     });
 
-    const candidateUnitArray: IBwUnit[] = [];
+    const candidateUnitArray: IUnit[] = [];
     for (const info of unitAndFinalCostArray) {
         candidateUnitArray.push(info.unit);
     }
@@ -1074,7 +1097,7 @@ function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUni
     return candidateUnitArray;
 }
 
-async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFastExecute: boolean): Promise<void> {
+async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: ITile, isFastExecute: boolean): Promise<void> {
     const gridVisualEffect  = war.getGridVisualEffect();
     const tileGridIndex     = tile.getGridIndex();
     if (!isFastExecute) {
@@ -1085,7 +1108,7 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
 
     const data                  = getExisted(tile.getFinalLaserTurretData(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileLaserTurret_00);
     const candidateUnitArray    = generateCandidateUnitArrayForLaserTurret(war, tile);
-    const affectedUnits         = new Set<IBwUnit>();
+    const affectedUnits         = new Set<IUnit>();
     {
         const deltaHp                       = data.getOffsetHp();
         const deltaFuelPercentage           = data.getOffsetFuelPercentage();
@@ -1192,7 +1215,7 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
         await wait(400);
     }
 }
-function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): IBwUnit[] {
+function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: ITile): IUnit[] {
     const data                  = getExisted(tile.getFinalLaserTurretData(), ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForLaserTurret_00);
     const playerIndexInTurn     = tile.getPlayerIndex();
     const teamIndexInTurn       = tile.getTeamIndex();
@@ -1207,7 +1230,7 @@ function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): I
     const canAffectAlly         = data.getCanAffectAlly();
     const canAffectEnemy        = data.getCanAffectEnemy();
     const canAffectSelf         = data.getCanAffectSelf();
-    const candidateUnitArray    : IBwUnit[] = [];
+    const candidateUnitArray    : IUnit[] = [];
     const checkAndAddUnit       = (gridIndex: GridIndex) => {
         const unit = unitMap.getUnitOnMap(gridIndex);
         if (unit == null) {
@@ -1255,7 +1278,7 @@ function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): I
     return candidateUnitArray;
 }
 
-function sorterForRepairUnits(unit1: IBwUnit, unit2: IBwUnit): number {
+function sorterForRepairUnits(unit1: IUnit, unit2: IUnit): number {
     const cost1 = unit1.getProductionFinalCost();
     if (cost1 == null) {
         throw newError(`Empty cost1.`, ClientErrorCode.BwTurnManager_SorterForRepairUnits_00);

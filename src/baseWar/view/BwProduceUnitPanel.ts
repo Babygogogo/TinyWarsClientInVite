@@ -5,21 +5,35 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { show } from "../../FloatText.ts";
-import { getUnitClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getUnitClass,
+    getUnitViewClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, getRunningPanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    getRunningPanel,
+} from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { PointerEventType } from "../../helpers/PointerInput.ts";
 import { checkHasDirectionKeys } from "../../keyboard/KbManager.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getUnitName } from "../../lang/Utils.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getUnitName,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

@@ -1,6 +1,9 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { checkIsValidId, checkIsValidName } from "../../customCounters/Utils.ts";
+import {
+    checkIsValidId,
+    checkIsValidName,
+} from "../../customCounters/Utils.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -11,11 +14,17 @@ import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEv
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
-import { checkIsValidWarEventActionId, checkIsValidWarEventAction } from "../actions/utils/Common.ts";
+import {
+    checkIsValidWarEventActionId,
+    checkIsValidWarEventAction,
+} from "../actions/utils/Common.ts";
 import { checkIsValidWarEventConditionNode } from "../conditionNodes/Utils.ts";
 import { MaxCountPerMap } from "../conditions/Constants.ts";
 import { checkIsValidWarEventCondition } from "../conditions/utils/Common.ts";
-import { ConditionNode, Event } from "../Constants.ts";
+import {
+    ConditionNode,
+    Event,
+} from "../Constants.ts";
 import { checkIsValidWarEvent } from "../events/Utils.ts";
 
 export function getEvent(fullData: WarEventFullData, eventId: number): Undefinable<WarEvent> {

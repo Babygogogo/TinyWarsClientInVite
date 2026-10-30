@@ -1,14 +1,36 @@
-import { UserWarHistoryType, type Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    UserWarHistoryType,
+    type Undefinable,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getMedal, getUserAvatar, getUserOnlineState } from "../../helpers/ImageSource.ts";
-import { format, getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getMedalDesc, getText, getTimeDurationText2, getTimestampShortText } from "../../lang/Utils.ts";
-import { getMrwRankIndex, getSpmOverallRankInfo } from "../../leaderboard/model/LeaderboardModel.ts";
-import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
+import {
+    getMedal,
+    getUserAvatar,
+    getUserOnlineState as getImageSourceUserOnlineState,
+} from "../../helpers/ImageSource.ts";
+import {
+    format,
+    getSuffixForRankIndex,
+} from "../../helpers/Text.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getMedalDesc,
+    getText,
+    getTimeDurationText2,
+    getTimestampShortText,
+} from "../../lang/Utils.ts";
+import {
+    getMrwRankIndex,
+    getSpmOverallRankInfo,
+} from "../../leaderboard/model/LeaderboardModel.ts";
+import { Common as MultiRankedWarsCommon } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -26,7 +48,7 @@ import {
     getUserMrwRankScoreInfo,
     getUserNickname,
     getUserPublicInfo,
-    getUserOnlineState as UsersModelGetUserOnlineState,
+    getUserOnlineState as getModelUserOnlineState,
 } from "../Model.ts";
 import { reqUserGetPublicInfo } from "../Proxy.ts";
 
@@ -296,7 +318,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const userOnlineState = await UsersModelGetUserOnlineState(userId);
+        const userOnlineState = await getModelUserOnlineState(userId);
         if (userOnlineState) {
             updateLabelsForTime(userOnlineState.lastActivityTimestamp, this._labelLastActivityTime1, this._labelLastActivityTime2);
         }
@@ -337,7 +359,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        return this._imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(userId)));
+        return this._imgOnlineState.loadSource(getImageSourceUserOnlineState(await getModelUserOnlineState(userId)));
     }
 
     private async _updateBtnMedal(): Promise<void> {
@@ -403,7 +425,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWarConstants.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWarsCommon.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await getMrwRankIndex(WarTypeId.MrwStd, userId);
         const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;
@@ -418,7 +440,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWarConstants.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWarsCommon.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await getMrwRankIndex(WarTypeId.MrwFog, userId);
         const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;

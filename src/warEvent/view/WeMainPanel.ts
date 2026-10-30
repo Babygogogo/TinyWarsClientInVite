@@ -1,11 +1,23 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText, getTextForYesOrNo, getWarEventConditionNodeDesc } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+    getTextForYesOrNo,
+    getWarEventConditionNodeDesc,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -24,7 +36,10 @@ import {
     getDetailDescForAction,
     getBriefDescForAction,
 } from "../../warEvents/actions/utils/Common.ts";
-import { createAndAddRootNodeInEvent, getErrorTipForConditionNode } from "../../warEvents/conditionNodes/Utils.ts";
+import {
+    createAndAddRootNodeInEvent,
+    getErrorTipForConditionNode,
+} from "../../warEvents/conditionNodes/Utils.ts";
 import {
     addDefaultCondition,
     getErrorTipForCondition,

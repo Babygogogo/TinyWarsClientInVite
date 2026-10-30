@@ -1,13 +1,25 @@
-import type { PlayerInfo2, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    PlayerInfo2,
+    Undefinable,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { Common } from "../../chat/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -22,14 +34,15 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
-
-type PlayerInfo     = PlayerInfo2;
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../../users/Model.ts";
 
 export interface OpenData {
     gameConfig      : GameConfig;
     warId           : Undefinable<number>;
-    playerInfoArray : PlayerInfo[];
+    playerInfoArray : PlayerInfo2[];
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!      : IUiImage;
@@ -116,7 +129,7 @@ export class Panel extends UiPanel<OpenData> {
 interface DataForPlayerRenderer extends UiListItemData {
     gameConfig  : GameConfig;
     warId       : Undefinable<number>;
-    playerInfo  : PlayerInfo;
+    playerInfo  : PlayerInfo2;
 }
 class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     private readonly _groupCo!          : IUiContainer;

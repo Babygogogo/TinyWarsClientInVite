@@ -2,14 +2,24 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { PositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
-import { checkIsEmpty, getErrorTip, getDesc } from "../../deprecatedPositionFilter/Utils.ts";
+import {
+    checkIsEmpty,
+    getErrorTip,
+    getDesc,
+} from "../../deprecatedPositionFilter/Utils.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getComparatorName,
+} from "../../lang/Utils.ts";
 import { AllLocationIdArray } from "../../locations/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";

@@ -4,11 +4,17 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoReplayWar } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { getRankData, getReplayData } from "../model/SpmModel.ts";
+import {
+    getRankData,
+    getReplayData,
+} from "../model/SpmModel.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -23,7 +29,10 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfInfo, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    getSelfInfo,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
 
 export type OpenData = {
     normalMapId   : number | null;

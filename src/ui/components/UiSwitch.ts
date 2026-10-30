@@ -1,5 +1,8 @@
 import { getExisted } from "../../helpers/Misc.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";

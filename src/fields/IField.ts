@@ -10,12 +10,10 @@ import type { SerialField } from "../proto/schema/CommonProto/WarSerialization/S
 import type { ITileMap } from "../tiles/ITileMap.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
 
-type IBwTileMap             = ITileMap;
-type IBwUnitMap             = IUnitMap;
 export interface IField {
     getFogMap(): IFogMap;
-    getTileMap(): IBwTileMap;
-    getUnitMap(): IBwUnitMap;
+    getTileMap(): ITileMap;
+    getUnitMap(): IUnitMap;
     getActionPlanner(): IActionPlanner;
 
     init({ data, gameConfig, playersCountUnneutral }: {

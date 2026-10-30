@@ -9,21 +9,38 @@ import { checkIsEffective } from "../coSkills/utils/persistent/SelfTileEnabledFo
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfTileIncome.ts";
 import { getRawOverridingSkinId } from "../forceSkins/Utils.ts";
 import { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getRwWarClass, getTileViewClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getRwWarClass,
+    getTileViewClass,
+} from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";
-import { createLazyFunc, getExisted, newError } from "../helpers/Misc.ts";
-import { getCurrentLanguageType, getLanguageText } from "../lang/Utils.ts";
-import { GroupCount, GroupSize, MaxId, MinId } from "../locations/Constants.ts";
+import {
+    createLazyFunc,
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
+import {
+    getCurrentLanguageType,
+    getLanguageText,
+} from "../lang/Utils.ts";
+import {
+    GroupCount,
+    GroupSize,
+    MaxId,
+    MinId,
+} from "../locations/Constants.ts";
 import { checkHasAnyOverlap } from "../locations/Utils.ts";
 import { Common } from "../maps/Constants.ts";
-import type { BwTileBuffChanged, BwTileHasLocationIdSet, BwTileIsHighlightChanged } from "../notifications/DataTypes.ts";
+import type {
+    BwTileBuffChanged,
+    BwTileHasLocationIdSet,
+    BwTileIsHighlightChanged,
+} from "../notifications/DataTypes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { PlayerIndex } from "../players/Constants.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { SelfTileEnabledForUnitProduction } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import type { MoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
 import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -34,10 +51,20 @@ import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSeria
 import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 import { checkIsValidTileBaseShapeId } from "../tileBases/Utils.ts";
 import { BuffTypeId } from "../tileBuffs/Constants.ts";
-import { checkIsExpired, checkIsValid } from "../tileBuffs/utils/Common.ts";
+import {
+    checkIsExpired,
+    checkIsValid,
+} from "../tileBuffs/utils/Common.ts";
 import { checkIsValidTileDecorationShapeId } from "../tileDecorations/Utils.ts";
-import { checkIsValidPlayerIndexForTileObject, checkIsValidTileObjectShapeId, getTileObjectCfg } from "../tileObjects/Utils.ts";
-import { CategoryId, Hp } from "../units/Constants.ts";
+import {
+    checkIsValidPlayerIndexForTileObject,
+    checkIsValidTileObjectShapeId,
+    getTileObjectCfg,
+} from "../tileObjects/Utils.ts";
+import {
+    CategoryId,
+    Hp,
+} from "../units/Constants.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import { getNormalizedHp } from "../units/utils/Common.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
@@ -48,11 +75,14 @@ import {
     CannonLeft,
     CannonRight,
     CannonUp,
-    Crystal,
+    Crystal as DefaultCustomTileDataCrystal,
     CustomCannon,
     CustomLaserTurret,
 } from "./constants/DefaultCustomTileData.ts";
-import { AllCustomizableTypeIdArray, TypeId as TilesConstantsMapWeaponTypeId } from "./constants/MapWeapon.ts";
+import {
+    AllCustomizableTypeIdArray,
+    TypeId as MapWeaponTypeId,
+} from "./constants/MapWeapon.ts";
 import type { ITile } from "./ITile.ts";
 import type { ITileView } from "./ITileView.ts";
 import {
@@ -77,7 +107,12 @@ import {
     getRepairUnitTypeArray,
     getVisionRange,
 } from "./utils/Common.ts";
-import { Building, Cannon, LaserTurret, Crystal as TilesUtilsCustomTileDataCrystal } from "./utils/CustomTileData.ts";
+import {
+    Building,
+    Cannon,
+    LaserTurret,
+    Crystal as CustomTileDataCrystal,
+} from "./utils/CustomTileData.ts";
 import { create } from "./utils/Serialization.ts";
 
 export class Tile implements ITile {
@@ -178,15 +213,15 @@ export class Tile implements ITile {
         const templateCfg       = getExisted(gameConfig.getTileTemplateCfg(getExisted(gameConfig.getTileType(baseType, objectType))));
         const mapWeaponType     = templateCfg.getMapWeaponTypeId();
         const customCrystalData = data.getCustomCrystalData();
-        if ((customCrystalData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((customCrystalData != null) && (mapWeaponType !== MapWeaponTypeId.CustomCrystal)) {
             throw newError(`CustomCrystalData is present while the tile is not CustomCrystal.`, ClientErrorCode.BwTile_Deserialize_15);
         }
-        if ((customCrystalData != null) && (!TilesUtilsCustomTileDataCrystal.checkIsValid(customCrystalData))) {
+        if ((customCrystalData != null) && (!CustomTileDataCrystal.checkIsValid(customCrystalData))) {
             throw newError(`Invalid customCrystalData.`, ClientErrorCode.BwTile_Deserialize_16);
         }
 
         const customCannonData = data.getCustomCannonData();
-        if ((customCannonData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((customCannonData != null) && (mapWeaponType !== MapWeaponTypeId.CustomCannon)) {
             throw newError(`CustomCannonData is present while the tile is not CustomCannon.`, ClientErrorCode.BwTile_Deserialize_17);
         }
         if ((customCannonData != null) && (!Cannon.checkIsValid(customCannonData))) {
@@ -194,7 +229,7 @@ export class Tile implements ITile {
         }
 
         const customLaserTurretData = data.getCustomLaserTurretData();
-        if ((customLaserTurretData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((customLaserTurretData != null) && (mapWeaponType !== MapWeaponTypeId.CustomLaserTurret)) {
             throw newError(`CustomLaserTurretData is present while the tile is not CustomLaserTurret.`, ClientErrorCode.BwTile_Deserialize_19);
         }
         if ((customLaserTurretData != null) && (!LaserTurret.checkIsValid(customLaserTurretData))) {
@@ -1194,10 +1229,10 @@ export class Tile implements ITile {
     ////////////////////////////////////////////////////////////////////////////////
     public getFinalCrystalData(): Undefinable<TileCustomCrystalData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeaponTypeId.Crystal) {
-            return Crystal;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomCrystal) {
-            return this.getCustomCrystalData() ?? Crystal;
+        if (mapWeaponType === MapWeaponTypeId.Crystal) {
+            return DefaultCustomTileDataCrystal;
+        } else if (mapWeaponType === MapWeaponTypeId.CustomCrystal) {
+            return this.getCustomCrystalData() ?? DefaultCustomTileDataCrystal;
         } else {
             return null;
         }
@@ -1211,10 +1246,10 @@ export class Tile implements ITile {
 
     public checkIsNormalCrystal(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeaponTypeId.Crystal);
+        return (mapWeaponType === MapWeaponTypeId.Crystal);
     }
     private _initCustomCrystalData(): TileCustomCrystalData {
-        return this._customCrystalData ??= Crystal.clone();
+        return this._customCrystalData ??= DefaultCustomTileDataCrystal.clone();
     }
     public setCustomCrystalRadius(radius: number): void {
         this._initCustomCrystalData().setRadius(radius);
@@ -1255,15 +1290,15 @@ export class Tile implements ITile {
     ////////////////////////////////////////////////////////////////////////////////
     public getFinalCannonData(): Undefinable<TileCustomCannonData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonDown) {
+        if (mapWeaponType === MapWeaponTypeId.CannonDown) {
             return CannonDown;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonLeft) {
+        } else if (mapWeaponType === MapWeaponTypeId.CannonLeft) {
             return CannonLeft;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonUp) {
+        } else if (mapWeaponType === MapWeaponTypeId.CannonUp) {
             return CannonUp;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonRight) {
+        } else if (mapWeaponType === MapWeaponTypeId.CannonRight) {
             return CannonRight;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomCannon) {
+        } else if (mapWeaponType === MapWeaponTypeId.CustomCannon) {
             return this.getCustomCannonData() ?? CustomCannon;
         } else {
             return null;
@@ -1278,10 +1313,10 @@ export class Tile implements ITile {
 
     public checkIsNormalCannon(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonRight)
-            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonUp)
-            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonLeft)
-            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonDown);
+        return (mapWeaponType === MapWeaponTypeId.CannonRight)
+            || (mapWeaponType === MapWeaponTypeId.CannonUp)
+            || (mapWeaponType === MapWeaponTypeId.CannonLeft)
+            || (mapWeaponType === MapWeaponTypeId.CannonDown);
     }
     private _initCustomCannonData(): TileCustomCannonData {
         return this._customCannonData ??= CustomCannon.clone();
@@ -1335,9 +1370,9 @@ export class Tile implements ITile {
     ////////////////////////////////////////////////////////////////////////////////
     public getFinalLaserTurretData(): Undefinable<TileCustomLaserTurretData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeaponTypeId.LaserTurret) {
+        if (mapWeaponType === MapWeaponTypeId.LaserTurret) {
             return CustomLaserTurret;
-        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomLaserTurret) {
+        } else if (mapWeaponType === MapWeaponTypeId.CustomLaserTurret) {
             return this.getCustomLaserTurretData() ?? CustomLaserTurret;
         } else {
             return null;
@@ -1352,7 +1387,7 @@ export class Tile implements ITile {
 
     public checkIsNormalLaserTurret(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeaponTypeId.LaserTurret);
+        return (mapWeaponType === MapWeaponTypeId.LaserTurret);
     }
     private _initCustomLaserTurretData(): TileCustomLaserTurretData {
         return this._customLaserTurretData ??= CustomLaserTurret.clone();

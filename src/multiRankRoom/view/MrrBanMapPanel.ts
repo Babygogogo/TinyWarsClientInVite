@@ -2,11 +2,17 @@ import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getBannedNormalMapIdArray } from "../model/MrrModel.ts";
 import { reqMrrSetBannedNormalMapIdArray } from "../model/MrrProxy.ts";
-import { getNormalMapIdArrayForRankedMatch, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getNormalMapIdArrayForRankedMatch,
+    getMapNameInCurrentLanguage,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

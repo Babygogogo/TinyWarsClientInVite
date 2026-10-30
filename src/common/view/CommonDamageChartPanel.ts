@@ -1,4 +1,8 @@
-import { getUnitAnimationTickCount, getCachedTileObjectImageSource, getTileAnimationTickCount } from "../model/CommonModel.ts";
+import {
+    getUnitAnimationTickCount,
+    getCachedTileObjectImageSource,
+    getTileAnimationTickCount,
+} from "../model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
@@ -6,9 +10,20 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TypeName } from "../../gameVersions/Constants.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getUnitName, getSecondaryLanguageType, getMoveTypeName, getUnitCategoryName } from "../../lang/Utils.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getUnitName,
+    getSecondaryLanguageType,
+    getMoveTypeName,
+    getUnitCategoryName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
@@ -25,7 +40,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiUnitViewClass, getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiUnitViewClass,
+    getUiTileViewClass,
+} from "../../ui/utils/UiFactory.ts";
 import { WeaponTypeId } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";

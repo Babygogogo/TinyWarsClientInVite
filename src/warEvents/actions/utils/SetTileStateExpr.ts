@@ -4,9 +4,15 @@ import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import { MaxId, MinId } from "../../../locations/Constants.ts";
+import {
+    MaxId,
+    MinId,
+} from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { WeaSetTileStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateExpr.ts";

@@ -1,5 +1,14 @@
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText, getCurrentLanguageType, getSecondaryLanguageType, getLanguageTypeName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+    getCurrentLanguageType,
+    getSecondaryLanguageType,
+    getLanguageTypeName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";

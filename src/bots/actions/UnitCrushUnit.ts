@@ -7,15 +7,12 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
 export async function getScoreAndActionUnitCrushUnit(
     commonParams    : CommonParams,
-    focusUnit       : IBwUnit,
+    focusUnit       : IUnit,
     destination     : GridIndex,
     pathNodes       : MovePathNode[]
-): Promise<GrScoreAndAction | null> {
+): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
     if ((pathNodes.length !== 1)                                        ||
         (!focusUnit.getTemplateCfg().getCanCrushAdjacentTargetUnit())
@@ -28,7 +25,7 @@ export async function getScoreAndActionUnitCrushUnit(
     const unitMap       = war.getUnitMap();
     const moveType      = focusUnit.getMoveTypeId();
     const teamIndex     = focusUnit.getTeamIndex();
-    const candidates    : GrScoreAndAction[] = [];
+    const candidates    : ScoreAndAction[] = [];
     for (const targetGridIndex of destination.getAdjacentGrids(commonParams.getMapSize())) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
         if ((tileMap.getTile(targetGridIndex).getMoveCostByMoveType(moveType) == null)  ||

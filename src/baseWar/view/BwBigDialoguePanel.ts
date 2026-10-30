@@ -3,14 +3,29 @@ import { BigDialogueSideId } from "../../dialogues/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorId } from "../../graphics/Constants.ts";
-import { getBigDialogueBackgroundImage, getCoBust } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getBigDialogueBackgroundImage,
+    getCoBust,
+} from "../../helpers/ImageSource.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { WeaBigDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playShortSfx, playBgm } from "../../sounds/SoundPlayer.ts";
+import {
+    playShortSfx,
+    playBgm,
+} from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

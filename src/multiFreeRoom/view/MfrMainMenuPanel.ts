@@ -1,11 +1,17 @@
 import { show } from "../../FloatText.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { checkIsAnyPromiseTrue } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getSecondaryLanguageType } from "../../lang/Utils.ts";
+import {
+    getText,
+    getSecondaryLanguageType,
+} from "../../lang/Utils.ts";
 import {
     openMultiPlayerModePanel,
     checkIsRedForMultiCustomMode,
@@ -14,10 +20,13 @@ import {
     checkIsRedForAutoTourneyMode,
     checkIsRedForMultiPlayer,
 } from "../../lobby/model/LobbyModel.ts";
-import { checkIsRed } from "../model/MfrModel.ts";
+import { checkIsRed as checkMfrModelIsRed } from "../model/MfrModel.ts";
 import { MultiPlayerRoomType } from "../../multiPlayerRooms/Constants.ts";
-import { checkIsRedForMyMfwWars, checkIsRedForMyMrwWars } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import {
+    checkIsRedForMyMfwWars,
+    checkIsRedForMyMrwWars,
+} from "../../multiPlayerWar/model/MpwModel.ts";
+import { checkIsRed as checkMrrModelIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -291,12 +300,12 @@ export class Panel extends UiPanel<OpenData> {
         ]));
     }
     private async _updateBtnRanking(): Promise<void> {
-        this._btnRanking.setRedVisible((await checkIsRedForMyMrwWars()) || (await MultiRankRoomModelMrrModelCheckIsRed()));
+        this._btnRanking.setRedVisible((await checkIsRedForMyMrwWars()) || (await checkMrrModelIsRed()));
     }
     private async _updateBtnMultiPlayer(): Promise<void> {
         this._btnMultiPlayer.setRedVisible(await checkIsRedForMultiPlayer());
     }
     private async _updateBtnMyRoom(): Promise<void> {
-        this._btnMyRoom.setRedVisible(await checkIsRed());
+        this._btnMyRoom.setRedVisible(await checkMfrModelIsRed());
     }
 }

@@ -12,7 +12,10 @@ import {
     getMpwWarClass,
     getSpwWarClass,
 } from "../../gameHelpers/GhFactory.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 

@@ -3,8 +3,14 @@ import type { IBwWar } from "../interface/IBwWar.ts";
 import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { encodeTeamIndex, decodeTeamIndex } from "../../helpers/Team.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    encodeTeamIndex,
+    decodeTeamIndex,
+} from "../../helpers/Team.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { checkIsValidPlayerIndex } from "../../players/utils/Common.ts";
 import { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
@@ -16,7 +22,10 @@ import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
-import { checkCanMerge, checkAndMergeTo } from "../../warStatistics/Utils.ts";
+import {
+    checkCanMerge,
+    checkAndMergeTo,
+} from "../../warStatistics/Utils.ts";
 
 export class BwWarStatisticsManager implements IBwWarStatisticsManager {
     private _playerStatisticsArray?     : WsPlayerStatistics[];

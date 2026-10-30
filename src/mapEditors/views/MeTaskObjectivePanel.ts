@@ -6,13 +6,19 @@ import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { MaxInt32, MinInt32 } from "../../numbers/Constants.ts";
+import {
+    MaxInt32,
+    MinInt32,
+} from "../../numbers/Constants.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import {ExpressionInfoDict, Common} from "../../taskObjectives/Constants.ts";
+import {
+    ExpressionInfoDict,
+    Common,
+} from "../../taskObjectives/Constants.ts";
 import { getErrorText } from "../../taskObjectives/Utils.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

@@ -5,8 +5,14 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,
@@ -27,7 +33,11 @@ import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
 import { AllBuffTypeIdArray } from "../../tileBuffs/Constants.ts";
 import { CustomName } from "../../tiles/constants/Common.ts";
-import { checkIsEmpty, getErrorTip, getDesc } from "../../tiles/utils/Filter.ts";
+import {
+    checkIsEmpty,
+    getErrorTip,
+    getDesc,
+} from "../../tiles/utils/Filter.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";

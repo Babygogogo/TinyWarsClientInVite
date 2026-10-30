@@ -4,8 +4,15 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { createRange } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getComparatorName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getComparatorName,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -22,7 +29,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { ComparatorId } from "../../valueAndComparators/Constants.ts";
 import { tickComparator } from "../../valueAndComparators/Utils.ts";
-import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    getErrorTipForCondition,
+    getDetailedDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 import { Common } from "../../warOperations/Constants.ts";
 
 export interface OpenData {

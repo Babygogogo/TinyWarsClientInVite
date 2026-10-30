@@ -2,17 +2,28 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getPlayerTeamName } from "../../lang/Utils.ts";
-import { getWarSettings, getWarProgressInfo } from "../../multiPlayerWar/model/MpwModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
+import {
+    getWarSettings,
+    getWarProgressInfo,
+} from "../../multiPlayerWar/model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
-import type { PlayerInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo/PlayerInfo.ts";
-import type {
-    PlayerInfo as ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettingsPlayerInfo,
-} from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings/PlayerInfo.ts";
+import type { PlayerInfo as ProtoPlayerInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo/PlayerInfo.ts";
+import type { PlayerInfo as MpwWarSettingsPlayerInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings/PlayerInfo.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Dimension } from "../../stages/Constants.ts";
@@ -25,7 +36,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../../users/Model.ts";
 import { getWatchOutgoingInfo } from "../model/WwModel.ts";
 import { reqWatchMakeRequest } from "../model/WwProxy.ts";
 
@@ -195,8 +209,8 @@ export class Panel extends UiPanel<OpenData> {
 interface DataForPlayerRenderer extends UiListItemData {
     panel               : Panel;
     gameConfig          : GameConfig;
-    playerStaticInfo    : ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettingsPlayerInfo;
-    playerProgressInfo  : PlayerInfo;
+    playerStaticInfo    : MpwWarSettingsPlayerInfo;
+    playerProgressInfo  : ProtoPlayerInfo;
     isRequested         : boolean;
     isWatching          : boolean;
     isRequesting        : boolean;

@@ -6,7 +6,10 @@ import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { RwWarBase } from "../../replayWar/model/RwWarBase.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
-import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
+import {
+    getAllUnitsOnMapVisibleToTeams,
+    getAllTilesVisibleToTeams,
+} from "../../visibilities/Utils.ts";
 
 export class HrwWar extends RwWarBase implements IHrwWar {
     public init(warData: SerialWar, gameConfig: GameConfig): void {

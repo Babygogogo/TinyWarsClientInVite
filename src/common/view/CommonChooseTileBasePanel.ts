@@ -1,11 +1,17 @@
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getTileBaseName } from "../../lang/Utils.ts";
 import type { DataForDrawTileBase } from "../../mapEditor/model/MeTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import { getAllEnabledTileBaseCfgArray, getTileBaseCfg } from "../../tileBases/Utils.ts";
+import {
+    getAllEnabledTileBaseCfgArray,
+    getTileBaseCfg,
+} from "../../tileBases/Utils.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

@@ -3,8 +3,15 @@ import { Constants } from "./Constants.ts";
 import { getDict } from "../gamePanels/Dict.ts";
 import { openPanel } from "../gamePanels/Manager.ts";
 import { getNumText } from "../helpers/Text.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
-import { getLanguageText, getText, getTimestampShortText } from "../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../lang/Constants.ts";
+import {
+    getLanguageText,
+    getText,
+    getTimestampShortText,
+} from "../lang/Utils.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { ChangeLogMessage } from "../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
 import { UiListItemRenderer } from "../ui/components/UiListItemRenderer.ts";
@@ -16,7 +23,11 @@ import type { IUiLabel } from "../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../ui/types/UiListItemData.ts";
 import { checkCanSelfEditChangeLog } from "../users/Model.ts";
-import { reqChangeLogAddMessage, reqChangeLogGetMessageList, reqChangeLogModifyMessage } from "./Gateway.ts";
+import {
+    reqChangeLogAddMessage,
+    reqChangeLogGetMessageList,
+    reqChangeLogModifyMessage,
+} from "./Gateway.ts";
 import { getAllMessageList } from "./Provider.ts";
 
 export type OpenData = void;

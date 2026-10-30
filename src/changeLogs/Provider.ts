@@ -1,7 +1,5 @@
 
-import type {
-    ChangeLogMessage
-} from "../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
+import type { ChangeLogMessage } from "../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
 
 let _messageList: ChangeLogMessage[] | null = null;
 

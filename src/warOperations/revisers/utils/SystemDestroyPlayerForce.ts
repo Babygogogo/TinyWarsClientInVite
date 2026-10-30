@@ -1,7 +1,10 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { newError } from "../../../helpers/Misc.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";

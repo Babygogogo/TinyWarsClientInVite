@@ -1,5 +1,8 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { CategoryId, CoId } from "../cos/Constants.ts";
+import {
+    CategoryId,
+    CoId,
+} from "../cos/Constants.ts";
 import { checkIsValidSkinId } from "../forceSkins/Utils.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";

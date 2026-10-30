@@ -1,10 +1,19 @@
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import type { IMpwWar } from "../interface/IMpwWar.ts";
 import { getWarSettings } from "../model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -13,9 +22,18 @@ import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
-import { getWatchOutgoingInfo, getWatchIncomingInfo } from "../../watchWar/model/WwModel.ts";
-import { reqWatchHandleRequest, reqWatchDeleteWatcher } from "../../watchWar/model/WwProxy.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../../users/Model.ts";
+import {
+    getWatchOutgoingInfo,
+    getWatchIncomingInfo,
+} from "../../watchWar/model/WwModel.ts";
+import {
+    reqWatchHandleRequest,
+    reqWatchDeleteWatcher,
+} from "../../watchWar/model/WwProxy.ts";
 
 export interface OpenData {
     war: IMpwWar;

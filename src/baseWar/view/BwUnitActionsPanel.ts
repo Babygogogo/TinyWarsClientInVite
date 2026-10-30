@@ -1,12 +1,24 @@
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import type { DataForUnitAction } from "../model/BwTypes.ts";
-import { getUnitClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getUnitClass,
+    getUnitViewClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import { createLazyFunc } from "../../helpers/Misc.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getUnitActionName, getText } from "../../lang/Utils.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    getUnitActionName,
+    getText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";

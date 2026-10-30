@@ -4,7 +4,7 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
+import type { S as UserSetRelationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -12,7 +12,10 @@ import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { checkIsFollowingUser, checkIsBlockingUser } from "../Model.ts";
+import {
+    checkIsFollowingUser,
+    checkIsBlockingUser,
+} from "../Model.ts";
 import { reqUserSetRelation } from "../Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -66,7 +69,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgUserSetRelation(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as UserSetRelationResponse;
         if (data.getTargetUserId() === this.getOpenData()?.userId) {
             show(getText(TextType.A0377));
             this.closePanel();

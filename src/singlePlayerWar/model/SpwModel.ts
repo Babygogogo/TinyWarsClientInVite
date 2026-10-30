@@ -1,13 +1,31 @@
 import { reqCampaignValidateWar } from "../../campaigns/mains/Gateway.ts";
 import { showLang } from "../../FloatText.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
-import { getCawWarClass, getScwWarClass, getSfwWarClass, getSrwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getCawWarClass,
+    getScwWarClass,
+    getSfwWarClass,
+    getSrwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
-import { gotoCampaignCreateMapsPanel, gotoLobby, gotoMultiPlayerWar } from "../../helpers/GameFlow.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    gotoCampaignCreateMapsPanel,
+    gotoLobby,
+    gotoMultiPlayerWar,
+} from "../../helpers/GameFlow.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import { warn } from "../../Logger.ts";
 import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
 import { AliveStateId } from "../../players/Constants.ts";
@@ -16,7 +34,10 @@ import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/Wo
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { reqSpmValidateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
-import { getSelfCawHighScoreInfo, getSelfUserId } from "../../users/Model.ts";
+import {
+    getSelfCawHighScoreInfo,
+    getSelfUserId,
+} from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import { revise } from "../../warOperations/revisers/Reviser.ts";

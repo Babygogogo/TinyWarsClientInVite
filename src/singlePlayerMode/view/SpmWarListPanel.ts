@@ -1,16 +1,19 @@
 import type { PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import {
-    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
-    Page as CommonViewCommonWarPlayerInfoPage,
+    type OpenData as CommonWarPlayerInfoPageOpenData,
+    Page as CommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getGameModeIdByWarData } from "../../gameModes/Utils.ts";
@@ -18,12 +21,22 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { getNormalMapId, getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTimestampShortText, getWarTypeName } from "../../lang/Utils.ts";
+import {
+    getNormalMapId,
+    getWarTypeId,
+} from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTimestampShortText,
+    getWarTypeName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { AliveStateId } from "../../players/Constants.ts";
-import { Common as SinglePlayerWarConstants } from "../../singlePlayerWars/Constants.ts";
+import { Common as SinglePlayerWarsCommon } from "../../singlePlayerWars/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
@@ -39,19 +52,21 @@ import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRendere
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import {
+    getPlayerRule,
+    getPlayersCountUnneutral,
+} from "../../warRules/utils/CommonData.ts";
 import { BasicSettingsTypeId } from "../../wars/Constants.ts";
-import { getEmptySlotIndexArray, getSlotFullData, getSlotName } from "../model/SpmModel.ts";
-
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
-type OpenDataForCommonWarPlayerInfoPage         = CommonViewCommonWarPlayerInfoPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
+import {
+    getEmptySlotIndexArray,
+    getSlotFullData,
+    getSlotName,
+} from "../model/SpmModel.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarPlayerInfoPage | OpenDataForCommonWarAdvancedSettingsPage | OpenDataForCommonWarBasicSettingsPage>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarPlayerInfoPageOpenData | CommonWarAdvancedSettingsPageOpenData | CommonWarBasicSettingsPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _labelSinglePlayer!    : IUiLabel;
@@ -159,22 +174,22 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name : getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage,
+                pageClass   : CommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
         ]);
@@ -258,7 +273,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _createDataForListWar(): Promise<DataForWarRenderer[]> {
         const emptySlotIndexArray   = await getEmptySlotIndexArray();
         const dataArray             : DataForWarRenderer[] = [];
-        for (let slotIndex = 0; slotIndex < SinglePlayerWarConstants.MaxSaveSlotCount; ++slotIndex) {
+        for (let slotIndex = 0; slotIndex < SinglePlayerWarsCommon.MaxSaveSlotCount; ++slotIndex) {
             if (emptySlotIndexArray.indexOf(slotIndex) < 0) {
                 dataArray.push({
                     slotIndex : slotIndex,
@@ -270,7 +285,7 @@ export class Panel extends UiPanel<OpenData> {
         return dataArray;
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<OpenDataForCommonWarMapInfoPage> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const slotIndex = this._getSelectedSlotIndex();
         const warData   = slotIndex == null ? null : (await getSlotFullData(slotIndex))?.warData;
         return warData == null
@@ -284,7 +299,7 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<OpenDataForCommonWarPlayerInfoPage> {
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonWarPlayerInfoPageOpenData> {
         const slotIndex = this._getSelectedSlotIndex();
         const slotData  = slotIndex == null ? null : await getSlotFullData(slotIndex);
         const warData   = slotData?.warData;
@@ -327,7 +342,7 @@ export class Panel extends UiPanel<OpenData> {
         };
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<OpenDataForCommonWarBasicSettingsPage> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         const slotIndex = this._getSelectedSlotIndex();
         const slotData  = slotIndex == null ? null : await getSlotFullData(slotIndex);
         const warData   = slotData?.warData;
@@ -410,7 +425,7 @@ export class Panel extends UiPanel<OpenData> {
         };
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
         const slotIndex = this._getSelectedSlotIndex();
         const slotData  = slotIndex == null ? null : await getSlotFullData(slotIndex);
         const warData   = slotData?.warData;

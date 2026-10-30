@@ -8,17 +8,30 @@ import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import { MinId, MaxId } from "../../../locations/Constants.ts";
+import {
+    MinId,
+    MaxId,
+} from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
-import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
+import {
+    getValueInRange,
+    getValueInInt32,
+} from "../../../numbers/Utils.ts";
 import type { WeaSetUnitStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { TagId } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
-import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
+import {
+    checkIsValidActionStateId,
+    checkIsValidAiModeId,
+    getEncodedTagId,
+} from "../../../units/utils/Common.ts";
 import { checkIsValidCustomNameId } from "../../../units/utils/CustomName.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";

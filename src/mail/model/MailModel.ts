@@ -1,7 +1,7 @@
 import { getExisted } from "../../helpers/Misc.ts";
 import { MailData } from "./MailData.ts";
 import type { MailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
+import type { S as MailSetIsNewResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
 
 const _mailArray: MailData[] = [];
 
@@ -42,6 +42,6 @@ export function updateOnMsgMailDeleteMail(mailId: number): void {
         _mailArray.splice(index, 1);
     }
 }
-export function updateOnMsgMailSetIsNew(msg: S): void {
+export function updateOnMsgMailSetIsNew(msg: MailSetIsNewResponse): void {
     getMail(getExisted(msg.getMailId()))?.setIsNew(!!msg.getIsNew());
 }

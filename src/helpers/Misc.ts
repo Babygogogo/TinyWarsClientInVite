@@ -1,4 +1,7 @@
-import type { Undefinable, CustomError } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    CustomError,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export function createLazyFunc<T>(func: () => T): () => T {

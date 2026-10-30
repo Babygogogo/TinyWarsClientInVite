@@ -1,13 +1,14 @@
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
-import { getBestScoreAndActionForCandidateUnit, getBetterScoreAndAction, candidateUnitSorter } from "../Utils.ts";
+import {
+    getBestScoreAndActionForCandidateUnit,
+    getBetterScoreAndAction,
+    candidateUnitSorter,
+} from "../Utils.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
-
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
 
 const _CANDIDATE_UNITS_PER_ROUND    = 10;
 
@@ -46,7 +47,7 @@ export async function getActionForPhase08(commonParams: CommonParams): Promise<W
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     const candidateUnits = await getCandidateUnitsForPhase8(commonParams);
     for (let i = 0; ; ++i) {
-        let bestScoreAndAction: GrScoreAndAction | null = null;
+        let bestScoreAndAction: ScoreAndAction | null = null;
         for (let j = 0; j < _CANDIDATE_UNITS_PER_ROUND; ++j) {
             const index = i * _CANDIDATE_UNITS_PER_ROUND + j;
             if (index >= candidateUnits.length) {
@@ -65,12 +66,12 @@ export async function getActionForPhase08(commonParams: CommonParams): Promise<W
     }
 }
 
-async function getCandidateUnitsForPhase8(commonParams: CommonParams): Promise<IBwUnit[]> {
+async function getCandidateUnitsForPhase8(commonParams: CommonParams): Promise<IUnit[]> {
     await checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : IBwUnit[] = [];
+    const units             : IUnit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)       &&
             (unit.getActionState() === ActionStateId.Idle)    &&

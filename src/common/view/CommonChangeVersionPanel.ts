@@ -3,8 +3,15 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { TypeName } from "../../gameVersions/Constants.ts";
 import { getGameEssentialConfig } from "../../gameVersions/Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameVersionName, getGameVersionDesc } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getGameVersionName,
+    getGameVersionDesc,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

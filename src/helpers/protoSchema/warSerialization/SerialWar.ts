@@ -1,9 +1,7 @@
 import type { SerialWar } from "../../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { WarTypeId } from "../../../warTypes/Constants.ts";
 
-type SerialWarSchema    = SerialWar;
-
-export function getNormalMapId(warData: SerialWarSchema): number | null {
+export function getNormalMapId(warData: SerialWar): number | null {
     const settings = warData.getSettingsForMcw()
         ?? warData.getSettingsForMrw()
         ?? warData.getSettingsForMmw()
@@ -14,7 +12,7 @@ export function getNormalMapId(warData: SerialWarSchema): number | null {
     return settings ? settings.getNormalMapId() : null;
 }
 
-export function getWarTypeId(warData: SerialWarSchema): WarTypeId {
+export function getWarTypeId(warData: SerialWar): WarTypeId {
     const instanceWarRule = warData.getSettingsForCommon()?.getInstanceWarRule();
     if (instanceWarRule == null) {
         return WarTypeId.Undefined;

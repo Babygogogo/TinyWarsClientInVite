@@ -1,12 +1,22 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Num as ExpressionParsersResultsNum } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount } from "../Utils.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Num as ResultsNum } from "../results/Num.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -88,7 +98,7 @@ export class Num extends Base {
     private readonly _num   : number;
     private _contextWar     : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsNum) {
+    public constructor(data: ResultsNum) {
         super(data.war);
 
         this._num = data.num;
@@ -98,16 +108,16 @@ export class Num extends Base {
         return ContextType.Number;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
-            case Num.VnSelf     : return new ExpressionParsersResultsNum(war, this._num);
-            case Num.VnWar      : return new ExpressionParsersResultsWar(war);
+            case Num.VnSelf     : return new ResultsNum(war, this._num);
+            case Num.VnWar      : return new ResultsWar(war);
             default                         : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Num.FnAbs      : return this.callAbs();
             case Num.FnFloor    : return this.callFloor();
@@ -116,15 +126,15 @@ export class Num extends Base {
         }
     }
 
-    private callAbs(): ExpressionParsersResultsNum {
-        return new ExpressionParsersResultsNum(this.getWar(), Math.abs(this._num));
+    private callAbs(): ResultsNum {
+        return new ResultsNum(this.getWar(), Math.abs(this._num));
     }
 
-    private callFloor(): ExpressionParsersResultsNum {
-        return new ExpressionParsersResultsNum(this.getWar(), Math.floor(this._num));
+    private callFloor(): ResultsNum {
+        return new ResultsNum(this.getWar(), Math.floor(this._num));
     }
 
-    private callCeil(): ExpressionParsersResultsNum {
-        return new ExpressionParsersResultsNum(this.getWar(), Math.ceil(this._num));
+    private callCeil(): ResultsNum {
+        return new ResultsNum(this.getWar(), Math.ceil(this._num));
     }
 }

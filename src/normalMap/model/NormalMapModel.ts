@@ -1,10 +1,16 @@
-import type { Undefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    MapSorter,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
 import { SortType } from "../../maps/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
-import { StoreNormalMapBriefData, StoreNormalMapRawData } from "../../localData/Storage.ts";
+import {
+    StoreNormalMapBriefData,
+    StoreNormalMapRawData,
+} from "../../localData/Storage.ts";
 import {
     reqMapGetMapTag,
     reqMmGetReviewingMaps,
@@ -18,37 +24,22 @@ import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditor
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MapTag } from "../../proto/schema/CommonProto/Map/MapTag.ts";
 import { NormalMapBriefData } from "../../proto/schema/CommonProto/Map/NormalMapBriefData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
-import { getMapRating, getIsSelfMapCommittee } from "../../users/Model.ts";
+import type { S as MapGetRawDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
+import type { S as MmAddWarRuleResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
+import type { S as MmDeleteWarRuleResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
+import type { S as MmSetMapNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
+import type { S as MmSetMapTagIdFlagsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
+import type { S as MmSetWarRuleAvailabilityResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
+import type { S as MmSetWarRuleFixedTileThemeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
+import type { S as MmSetWarRuleNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
+import type { S as NormalMapGetAllEnabledBriefDataVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
+import type { S as NormalMapGetBriefDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
+import type { S as NormalMapGetBriefDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
+import type { S as NormalMapGetBriefDataVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
+import {
+    getMapRating,
+    getIsSelfMapCommittee,
+} from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 const _mapTagAccessor   = new CachedDataAccessor<null, MapTag>({
@@ -159,7 +150,7 @@ function setRawData(normalMapId: number, mapRawData: MapRawData | null): Promise
     return StoreNormalMapRawData.setData(normalMapId, mapRawData);
 }
 
-export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS): Promise<void> {
+export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: NormalMapGetAllEnabledBriefDataVersionsResponse): Promise<void> {
     const existingDataDict      = await StoreNormalMapBriefData.getAllDataDict();
     const neededNormalMapIdSet  = new Set<number>();
     const infoArray             = data.getInfoArray();
@@ -181,7 +172,7 @@ export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: P
     _enabledNormalMapIdSetAccessor.setData(null, new Set(infoArray.map(v => v.getNormalMapId() ?? 0)));
 }
 
-export async function updateOnMsgNormalMapGetBriefDataArray(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS): Promise<void> {
+export async function updateOnMsgNormalMapGetBriefDataArray(data: NormalMapGetBriefDataArrayResponse): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const encodedData of data.getEncodedBriefDataArray()) {
         const briefData = NormalMapBriefData.decode(encodedData);
@@ -192,7 +183,7 @@ export async function updateOnMsgNormalMapGetBriefDataArray(data: ProtoSchemaCom
     _briefDataArrayAccessor.setData(null, true);
 }
 
-export async function updateOnMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS): Promise<void> {
+export async function updateOnMsgNormalMapGetBriefDataVersion(data: NormalMapGetBriefDataVersionResponse): Promise<void> {
     const normalMapId = data.getNormalMapId() ?? 0;
     setBriefDataVersion(normalMapId, data.getDataVersion() ?? 0);
 
@@ -202,14 +193,14 @@ export async function updateOnMsgNormalMapGetBriefDataVersion(data: ProtoSchemaC
         (await getEnabledNormalMapIdSet()).delete(normalMapId);
     }
 }
-export function updateOnFailedMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS): void {
+export function updateOnFailedMsgNormalMapGetBriefDataVersion(data: NormalMapGetBriefDataVersionResponse): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _briefDataVersionAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export function updateOnMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS): Promise<void> {
+export function updateOnMsgNormalMapGetBriefData(data: NormalMapGetBriefDataResponse): Promise<void> {
     const normalMapId           = data.getNormalMapId() ?? 0;
     const normalMapBriefData    = data.getNormalMapBriefData() ?? null;
     // if (normalMapBriefData?.normalMapExtraData?.isEnabled) {
@@ -220,24 +211,24 @@ export function updateOnMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNet
 
     return setBriefData(normalMapId, normalMapBriefData);
 }
-export function updateOnFailedMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS): void {
+export function updateOnFailedMsgNormalMapGetBriefData(data: NormalMapGetBriefDataResponse): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _briefDataAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export function updateOnMsgMapGetRawData(data: S): Promise<void> {
+export function updateOnMsgMapGetRawData(data: MapGetRawDataResponse): Promise<void> {
     return setRawData(data.getNormalMapId() ?? 0, data.getMapRawData() ?? null);
 }
-export function updateOnFailedMsgMapGetRawData(data: S): void {
+export function updateOnFailedMsgMapGetRawData(data: MapGetRawDataResponse): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _rawDataAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export async function updateOnMsgMmSetMapName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS): Promise<void> {
+export async function updateOnMsgMmSetMapName(data: MmSetMapNameResponse): Promise<void> {
     const normalMapId   = getExisted(data.getNormalMapId(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
     const mapNameArray  = data.getMapNameArray();
     const mapBriefData  = await getBriefData(normalMapId);
@@ -246,33 +237,33 @@ export async function updateOnMsgMmSetMapName(data: ProtoSchemaCommonProtoNetMes
     const mapRawData = await getRawData(normalMapId);
     (mapRawData) && (mapRawData.setMapNameArray(mapNameArray));
 }
-export async function updateOnMsgMmAddWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS): Promise<void> {
+export async function updateOnMsgMmAddWarRule(data: MmAddWarRuleResponse): Promise<void> {
     const normalMapId       = getExisted(data.getNormalMapId());
     const templateWarRule   = getExisted(data.getTemplateWarRule());
     getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray()).push(templateWarRule);
 }
-export async function updateOnMsgMmDeleteWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS): Promise<void> {
+export async function updateOnMsgMmDeleteWarRule(data: MmDeleteWarRuleResponse): Promise<void> {
     const normalMapId           = getExisted(data.getNormalMapId());
     const ruleId                = getExisted(data.getRuleId());
     const templateWarRuleArray  = getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray());
     const index                 = templateWarRuleArray.findIndex(v => v.getRuleId() === ruleId);
     (index >= 0) && (templateWarRuleArray.splice(index, 1));
 }
-export async function updateOnMsgMmSetWarRuleName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS): Promise<void> {
+export async function updateOnMsgMmSetWarRuleName(data: MmSetWarRuleNameResponse): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
     const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray()?.find(v => (v.getRuleId()) === ruleId);
     (templateWarRule) && (templateWarRule.setRuleNameArray(data.getRuleNameArray()));
 }
-export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS): Promise<void> {
+export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: MmSetWarRuleFixedTileThemeResponse): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
     const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
     (templateWarRule) && (templateWarRule.createIfNotExistsWarRuleCommonData().setFixedTileTheme(data.getTileTheme()));
 }
-export async function updateOnMsgMmSetWarRuleAvailability(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS): Promise<void> {
+export async function updateOnMsgMmSetWarRuleAvailability(data: MmSetWarRuleAvailabilityResponse): Promise<void> {
     const templateWarRule = getExisted((await getRawData(getExisted(data.getNormalMapId())))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === data.getRuleId()));
     templateWarRule.setRuleAvailability(data.getAvailability());
 }
-export async function updateOnMsgMmSetMapTagIdFlags(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS): Promise<void> {
+export async function updateOnMsgMmSetMapTagIdFlags(data: MmSetMapTagIdFlagsResponse): Promise<void> {
     getExisted(await getRawData(getExisted(data.getNormalMapId()))).setMapTagIdFlags(data.getMapTagIdFlags());
 }
 

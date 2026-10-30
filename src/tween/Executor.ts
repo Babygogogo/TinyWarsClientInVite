@@ -1,7 +1,10 @@
 import { Tween } from "../graphics/Constants.ts";
 import { addTickCallback } from "../timer/TimerModel.ts";
 import { sineOut } from "./Ease.ts";
-import { EventDispatcher, getTimer } from "../vendor/egret/Egret.ts";
+import {
+    EventDispatcher,
+    getTimer,
+} from "../vendor/egret/Egret.ts";
 
 const NONE      = 0;
 // const LOOP      = 1;

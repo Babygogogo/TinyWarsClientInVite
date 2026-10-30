@@ -1,7 +1,10 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { getVariableInfoDict } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
@@ -9,7 +12,7 @@ import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class Variable extends ExpressionParsersNodesBase {
+export class Variable extends Base {
     private _identifierName: string;
 
     public constructor(identifierName: string) {
@@ -18,7 +21,7 @@ export class Variable extends ExpressionParsersNodesBase {
         this._identifierName = identifierName;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const name              = this._identifierName;
         const lambdaArgument    = lambdaArgumentDict?.get(name);
         if (lambdaArgument != null) {

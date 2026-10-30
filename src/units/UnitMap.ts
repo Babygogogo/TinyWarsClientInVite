@@ -3,9 +3,15 @@ import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getUnitMapViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getUnitMapViewClass,
+    getUnitClass,
+} from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
@@ -14,7 +20,10 @@ import type { IUnitMap } from "./IUnitMap.ts";
 import type { IUnitMapView } from "./IUnitMapView.ts";
 import { getErrorCodeForUnitCustomNameArray } from "./utils/CustomName.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { getAllUnitsOnMapVisibleToTeams, checkIsUnitOnMapVisibleToTeam } from "../visibilities/Utils.ts";
+import {
+    getAllUnitsOnMapVisibleToTeams,
+    checkIsUnitOnMapVisibleToTeam,
+} from "../visibilities/Utils.ts";
 
 export class UnitMap implements IUnitMap {
     private _war?                   : IBwWar;

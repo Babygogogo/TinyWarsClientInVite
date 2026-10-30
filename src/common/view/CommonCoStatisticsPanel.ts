@@ -1,16 +1,25 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { CoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
 import { getCoStatistics } from "../model/CommonModel.ts";
-import { DisplayCategoryArray, ForceArray } from "../../cos/Constants.ts";
+import {
+    DisplayCategoryArray,
+    ForceArray,
+} from "../../cos/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getEnum } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHeadBackgroundByCoId, getCoHead } from "../../helpers/ImageSource.ts";
+import {
+    getCoHeadBackgroundByCoId,
+    getCoHead,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { GameData } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/GameData.ts";
@@ -25,7 +34,10 @@ import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRendere
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-import { checkIsMrw, checkHasFog } from "../../warTypes/Utils.ts";
+import {
+    checkIsMrw,
+    checkHasFog,
+} from "../../warTypes/Utils.ts";
 
 interface CoData {
     rankedBan           : number;

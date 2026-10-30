@@ -1,5 +1,8 @@
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
 import { getDecodedMapTagIdList } from "../../mapTags/Utils.ts";
 import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";

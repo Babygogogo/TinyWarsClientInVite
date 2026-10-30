@@ -6,8 +6,14 @@ import { Unit } from "../../../expressionParsers/contexts/Unit.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import {
     getAutoBridgeShapeId,
@@ -21,10 +27,23 @@ import { PlayerIndex } from "../../../players/Constants.ts";
 import type { TileTemplateCfg } from "../../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { WeaSetTileTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
 import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import { checkIsUsableTileBaseType, checkIsValidTileBaseShapeId } from "../../../tileBases/Utils.ts";
-import { checkIsValidTileDecorationShapeId, checkIsValidTileDecorationType } from "../../../tileDecorations/Utils.ts";
-import { checkIsValidTileObjectShapeId, checkIsValidTileObjectType, getTileObjectCfg } from "../../../tileObjects/Utils.ts";
-import { ObjectTypeId, TileTypeId } from "../../../tiles/constants/Common.ts";
+import {
+    checkIsUsableTileBaseType,
+    checkIsValidTileBaseShapeId,
+} from "../../../tileBases/Utils.ts";
+import {
+    checkIsValidTileDecorationShapeId,
+    checkIsValidTileDecorationType,
+} from "../../../tileDecorations/Utils.ts";
+import {
+    checkIsValidTileObjectShapeId,
+    checkIsValidTileObjectType,
+    getTileObjectCfg,
+} from "../../../tileObjects/Utils.ts";
+import {
+    ObjectTypeId,
+    TileTypeId,
+} from "../../../tiles/constants/Common.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import type { ITileMap } from "../../../tiles/ITileMap.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";

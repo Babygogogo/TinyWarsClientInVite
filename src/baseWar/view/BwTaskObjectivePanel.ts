@@ -1,6 +1,9 @@
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
@@ -11,7 +14,11 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getUiLabelClass, getUiContainerClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiLabelClass,
+    getUiContainerClass,
+    getUiImageClass,
+} from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {

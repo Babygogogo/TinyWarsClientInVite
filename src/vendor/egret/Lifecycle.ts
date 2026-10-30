@@ -1,5 +1,9 @@
 
-import { type Stage, __reflect, Event } from "./EgretCore";
+import {
+    type Stage,
+    __reflect,
+    Event,
+} from "./EgretCore";
 
 export function addLifecycleListener(plugin: (context: LifecycleContext) => void): void {
     const context: LifecycleContext = new LifecycleContext();

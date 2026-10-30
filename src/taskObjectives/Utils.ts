@@ -1,11 +1,19 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { Parser } from "../expressionParsers/Parser.ts";
 import { TextType } from "../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getFormattedText, getText, getTextForYesOrNo } from "../lang/Utils.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getFormattedText,
+    getText,
+    getTextForYesOrNo,
+} from "../lang/Utils.ts";
 import type { TaskObjective } from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import {ExpressionInfoDict, Common} from "./Constants.ts";
+import {
+    ExpressionInfoDict,
+    Common,
+} from "./Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export function checkIsValid(data: TaskObjective, customCounterNameSet: Set<string>): boolean {

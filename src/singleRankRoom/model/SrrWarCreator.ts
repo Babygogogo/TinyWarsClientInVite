@@ -9,7 +9,7 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalSrwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
+import { C as SpmCreateSrwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
@@ -27,11 +27,11 @@ export class SrrWarCreator extends WarCreatorBase {
         this.resetDataByTemplateWarRuleId(getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleAvailability()?.getCanSrw())?.getRuleId()));
     }
 
-    public generateData(): C {
+    public generateData(): SpmCreateSrwRequest {
         const slotExtraData = new SpmWarSaveSlotExtraData();
         slotExtraData.setSlotComment(this.getSlotComment());
 
-        return C.fromJson({
+        return SpmCreateSrwRequest.fromJson({
             settingsForCommon   : this.getSettingsForCommon().toJson(),
             normalMapId         : this.getSettingsForSrw().getNormalMapId(),
 

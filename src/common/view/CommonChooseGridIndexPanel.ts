@@ -5,7 +5,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";

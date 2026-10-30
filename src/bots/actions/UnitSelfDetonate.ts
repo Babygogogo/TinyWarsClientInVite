@@ -6,15 +6,12 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
 export async function getScoreAndActionUnitSelfDetonate(
     commonParams    : CommonParams,
-    focusUnit       : IBwUnit,
+    focusUnit       : IUnit,
     destination     : GridIndex,
     pathNodes       : MovePathNode[]
-): Promise<GrScoreAndAction | null> {
+): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const selfDetonateCfg = focusUnit.getTemplateCfg().getSelfDetonateCfg();

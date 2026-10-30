@@ -29,7 +29,6 @@ import type { IUnitMap } from "../../units/IUnitMap.ts";
 import type { WarTypeId } from "../../warTypes/Constants.ts";
 import type { IManager } from "../../weathers/IManager.ts";
 
-type WarType            = WarTypeId;
 export interface IBwWar {
     init(data: SerialWar, gcData: GameConfig): void;
     getNormalMapId(): number | null;
@@ -79,7 +78,7 @@ export interface IBwWar {
 
     getWarId(): number | null;
 
-    getWarType(): WarType;
+    getWarType(): WarTypeId;
 
     getGcData(): GameConfig;
 

@@ -1,18 +1,27 @@
 import type { CustomError } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { TimerTypeId, DefaultParams } from "../../bootTimers/Constants.ts";
+import {
+    TimerTypeId,
+    DefaultParams,
+} from "../../bootTimers/Constants.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { Generator } from "../../helpers/SeedRandom.ts";
 import { getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../players/Constants.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
@@ -25,7 +34,10 @@ import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSeriali
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 import type { ITwWar } from "../interface/ITwWar.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
+import {
+    TurnIndex,
+    PhaseCode,
+} from "../../turns/Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";

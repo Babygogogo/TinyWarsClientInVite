@@ -7,8 +7,14 @@ import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import {
     getRawData,
     getEnabledNormalMapIdSet,
@@ -32,7 +38,10 @@ import type { IUiMapInfo } from "../../ui/interfaces/IUiMapInfo.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { callLater, Event } from "../../vendor/egret/Egret.ts";
+import {
+    callLater,
+    Event,
+} from "../../vendor/egret/Egret.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;

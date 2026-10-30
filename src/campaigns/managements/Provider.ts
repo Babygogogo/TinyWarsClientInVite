@@ -1,13 +1,12 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { reqCmGetAllCampaignIdArray, reqCmGetDesigningCampaignIdArray } from "./Gateway.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCmGetAllCampaignIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
+import {
+    reqCmGetAllCampaignIdArray,
+    reqCmGetDesigningCampaignIdArray,
+} from "./Gateway.ts";
+import type { S as CmCreateCampaignResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
+import type { S as CmGetAllCampaignIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmGetAllCampaignIdArray/S.ts";
+import type { S as CmGetDesigningCampaignIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
 
 const _allCampaignIdArrayAccessor = new CachedDataAccessor<null, number[]>({
     reqData : () => reqCmGetAllCampaignIdArray(),
@@ -30,7 +29,7 @@ function setDesigningCampaignIdArray(campaignIdArray: number[]): void {
     _designingCampaignIdArrayAccessor.setData(null, campaignIdArray.concat());
 }
 
-export async function updateOnMsgCmCreateCampaign(data: S): Promise<void> {
+export async function updateOnMsgCmCreateCampaign(data: CmCreateCampaignResponse): Promise<void> {
     const campaignId        = data.getCampaignId() ?? 0;
     const campaignIdArray   = await getAllCampaignIdArray();
     if ((campaignIdArray) && (campaignIdArray.indexOf(campaignId) < 0)) {
@@ -38,18 +37,18 @@ export async function updateOnMsgCmCreateCampaign(data: S): Promise<void> {
     }
 }
 
-export function updateOnMsgCmGetAllCampaignIdArray(data: ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS): void {
+export function updateOnMsgCmGetAllCampaignIdArray(data: CmGetAllCampaignIdArrayResponse): void {
     setAllCampaignIdArray(data.getCampaignIdArray());
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateOnFailedMsgCmGetAllCampaignIdArray(data: ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS): void {
+export function updateOnFailedMsgCmGetAllCampaignIdArray(data: CmGetAllCampaignIdArrayResponse): void {
     _allCampaignIdArrayAccessor.updateOnRequestFailed(null);
 }
 
-export function updateOnMsgCmGetDesigningCampaignIdArray(data: ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS): void {
+export function updateOnMsgCmGetDesigningCampaignIdArray(data: CmGetDesigningCampaignIdArrayResponse): void {
     setDesigningCampaignIdArray(data.getCampaignIdArray());
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateOnFailedMsgCmGetDesigningCampaignIdArray(data: ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS): void {
+export function updateOnFailedMsgCmGetDesigningCampaignIdArray(data: CmGetDesigningCampaignIdArrayResponse): void {
     _designingCampaignIdArrayAccessor.updateOnRequestFailed(null);
 }

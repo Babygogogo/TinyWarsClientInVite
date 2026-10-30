@@ -1,13 +1,27 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+} from "../Utils.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getValueInInt32 } from "../../numbers/Utils.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
@@ -95,7 +109,7 @@ export class Player extends Base {
         return ContextType.Player;
     }
 
-    public override resolveVariable(identifierName: string, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string, isRestricted: boolean): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
             case Player.VnPlayerIndex   : return new Num(war, this._player.getPlayerIndex());
@@ -111,7 +125,7 @@ export class Player extends Base {
             case Player.VnCoZoneRadius  : return this.resolveCoZoneRadius(isRestricted);
             case Player.VnCoZoneRadius0 : return this.resolveCoZoneRadius0();
             case Player.VnCoZoneRadius1 : return this.resolveCoZoneRadius1();
-            case Player.VnWar           : return new ExpressionParsersResultsWar(war);
+            case Player.VnWar           : return new ResultsWar(war);
             default                     : return (this._contextWar ??= new War(this._player.getWar())).resolveVariable(identifierName);
         }
     }
@@ -136,13 +150,13 @@ export class Player extends Base {
         );
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Player.FnCoEnergy     : return this.callCoEnergy(argumentArray[0]);
             default                             : return (this._contextWar ??= new War(this._player.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    private callCoEnergy(rawArg: ExpressionParsersResultsBase): Num {
+    private callCoEnergy(rawArg: ResultsBase): Num {
         if (!(rawArg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }

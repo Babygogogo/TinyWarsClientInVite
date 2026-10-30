@@ -1,17 +1,36 @@
 import { StateId } from "../../actionPlanners/Constants.ts";
 import { reqCampaignSaveWar } from "../../campaigns/mains/Gateway.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { gotoSinglePlayerWar, gotoMultiPlayerWar, gotoMyWarListPanel, gotoLobby } from "../../helpers/GameFlow.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    gotoSinglePlayerWar,
+    gotoMultiPlayerWar,
+    gotoMyWarListPanel,
+    gotoLobby,
+} from "../../helpers/GameFlow.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import { getAvailableSlotIndex, getSlotFullData } from "../../singlePlayerMode/model/SpmModel.ts";
-import { reqSpmCreateSfw, reqSpmSaveScw, reqSpmSaveSfw, reqSpmSaveSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
+import {
+    getAvailableSlotIndex,
+    getSlotFullData,
+} from "../../singlePlayerMode/model/SpmModel.ts";
+import {
+    reqSpmCreateSfw,
+    reqSpmSaveScw,
+    reqSpmSaveSfw,
+    reqSpmSaveSrw,
+} from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

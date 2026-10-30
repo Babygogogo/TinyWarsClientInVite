@@ -4,16 +4,23 @@ import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { WeaSetCustomBuildingStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateExpr.ts";
 import { TileCustomBuildingData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import { Building } from "../../../tiles/constants/CustomLimits.ts";
-import { Building as TilesConstantsDefaultCustomTileDataBuilding } from "../../../tiles/constants/DefaultCustomTileData.ts";
+import { Building as CustomLimitsBuilding } from "../../../tiles/constants/CustomLimits.ts";
+import { Building as DefaultCustomTileDataBuilding } from "../../../tiles/constants/DefaultCustomTileData.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
-import { getMaxBuildPoint, getMaxCapturePoint, getMaxHp } from "../../../tiles/utils/Common.ts";
+import {
+    getMaxBuildPoint,
+    getMaxCapturePoint,
+    getMaxHp,
+} from "../../../tiles/utils/Common.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomBuildingStateExpr.ts";
 
@@ -432,8 +439,8 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: ITile
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             return getValueInRange({
-                minValue    : Building.DefenseAmount.MinValue,
-                maxValue    : Building.DefenseAmount.MaxValue,
+                minValue    : CustomLimitsBuilding.DefenseAmount.MinValue,
+                maxValue    : CustomLimitsBuilding.DefenseAmount.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -488,8 +495,8 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: ITi
                 return null;
             } else {
                 return getValueInRange({
-                    minValue    : Building.MaxCapturePoint.MinValue,
-                    maxValue    : Building.MaxCapturePoint.MaxValue,
+                    minValue    : CustomLimitsBuilding.MaxCapturePoint.MinValue,
+                    maxValue    : CustomLimitsBuilding.MaxCapturePoint.MaxValue,
                     rawValue    : Math.floor(rawValue),
                 });
             }
@@ -533,8 +540,8 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateExpr, tile: 
                 return null;
             } else {
                 return getValueInRange({
-                    minValue    : Building.RepairNormalizedHp.MinValue,
-                    maxValue    : Building.RepairNormalizedHp.MaxValue,
+                    minValue    : CustomLimitsBuilding.RepairNormalizedHp.MinValue,
+                    maxValue    : CustomLimitsBuilding.RepairNormalizedHp.MaxValue,
                     rawValue    : Math.floor(rawValue),
                 });
             }
@@ -586,8 +593,8 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: ITile
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             return getValueInRange({
-                minValue    : Building.IncomePerTurn.MinValue,
-                maxValue    : Building.IncomePerTurn.MaxValue,
+                minValue    : CustomLimitsBuilding.IncomePerTurn.MinValue,
+                maxValue    : CustomLimitsBuilding.IncomePerTurn.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -608,8 +615,8 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: ITile, 
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             return getValueInRange({
-                minValue    : Building.VisionRange.MinValue,
-                maxValue    : Building.VisionRange.MaxValue,
+                minValue    : CustomLimitsBuilding.VisionRange.MinValue,
+                maxValue    : CustomLimitsBuilding.VisionRange.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -708,8 +715,8 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: I
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             return getValueInRange({
-                minValue    : Building.GlobalAttackBonus.MinValue,
-                maxValue    : Building.GlobalAttackBonus.MaxValue,
+                minValue    : CustomLimitsBuilding.GlobalAttackBonus.MinValue,
+                maxValue    : CustomLimitsBuilding.GlobalAttackBonus.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -730,8 +737,8 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: 
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             return getValueInRange({
-                minValue    : Building.GlobalDefenseBonus.MinValue,
-                maxValue    : Building.GlobalDefenseBonus.MaxValue,
+                minValue    : CustomLimitsBuilding.GlobalDefenseBonus.MinValue,
+                maxValue    : CustomLimitsBuilding.GlobalDefenseBonus.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -813,7 +820,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateExp
             continue;
         }
 
-        newTileDataDict.set(tile, createNewTileCustomBuildingData(action, tile, tile.getCustomBuildingData() ?? TilesConstantsDefaultCustomTileDataBuilding));
+        newTileDataDict.set(tile, createNewTileCustomBuildingData(action, tile, tile.getCustomBuildingData() ?? DefaultCustomTileDataBuilding));
     }
 
     applyNewTileDataDict(newTileDataDict, war, isFast);

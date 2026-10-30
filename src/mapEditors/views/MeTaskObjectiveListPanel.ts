@@ -4,7 +4,11 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getJoinedShortLanguageText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    getText,
+    getJoinedShortLanguageText,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -19,7 +23,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import {Common} from "../../taskObjectives/Constants.ts";
+import { Common } from "../../taskObjectives/Constants.ts";
 
 export interface OpenData {
     war: IMeWar;

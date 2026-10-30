@@ -1,8 +1,11 @@
-import type { Point, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Point as AuxiliaryTypesPoint,
+    TouchPoints,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MouseStyleType } from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { Point as VendorEgretEgretPoint } from "../../vendor/egret/Egret.ts";
+import type { Point as EgretPoint } from "../../vendor/egret/Egret.ts";
 
 export interface IUiZoomableComponent extends IUiContainerBase {
     setMouseWheelListenerEnabled(enabled: boolean): void;
@@ -13,8 +16,8 @@ export interface IUiZoomableComponent extends IUiContainerBase {
     addContent(content: IUiComponent): void;
     removeContent<T extends IUiComponent>(content: T): T | undefined;
     removeAllContents(): IUiComponent[];
-    getContentsContainerLocalToGlobal(point: Point): VendorEgretEgretPoint;
-    getContentsContainerGlobalToLocal(point: Point): VendorEgretEgretPoint;
+    getContentsContainerLocalToGlobal(point: AuxiliaryTypesPoint): EgretPoint;
+    getContentsContainerGlobalToLocal(point: AuxiliaryTypesPoint): EgretPoint;
 
     getContentWidth(): number;
     getContentHeight(): number;
@@ -39,7 +42,7 @@ export interface IUiZoomableComponent extends IUiContainerBase {
 
     setZoomByTouches(currGlobalPoints: TouchPoints, prevGlobalPoints: TouchPoints): void;
 
-    setDragByTouches(currGlobalPoint: Point, prevGlobalPoint: Point): void;
+    setDragByTouches(currGlobalPoint: AuxiliaryTypesPoint, prevGlobalPoint: AuxiliaryTypesPoint): void;
 
     getRevisedContentX(contentX: number): number;
     getRevisedContentY(contentY: number): number;

@@ -2,10 +2,19 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getText,
+    getBgmSfxName,
+} from "../../../lang/Utils.ts";
 import type { WeaPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
-import { playCoBgmWithWar, playBgm } from "../../../sounds/SoundPlayer.ts";
+import {
+    playCoBgmWithWar,
+    playBgm,
+} from "../../../sounds/SoundPlayer.ts";
 import { checkIsBgm } from "../../../sounds/Utils.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../../users/Model.ts";
 

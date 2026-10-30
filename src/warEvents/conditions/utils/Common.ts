@@ -2,10 +2,19 @@ import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../../gamePanels/Manager.ts";
+import {
+    newError,
+    getExisted,
+} from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getText } from "../../../lang/Utils.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getText,
+} from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import { ConditionIdAndFlags } from "../../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { WarEventCondition } from "../../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
@@ -22,61 +31,69 @@ import { WecUnitPresence } from "../../../proto/schema/CommonProto/WarEvent/WecU
 import { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { ComparatorId } from "../../../valueAndComparators/Constants.ts";
-import { ConditionTypeId, MaxCountPerMap } from "../Constants.ts";
-import { checkIsValid, getBriefDesc, getDetailedDesc, getErrorTip } from "./CustomCounter.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsEventCalledCountCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsEventCalledCountGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsEventCalledCountGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsEventCalledCountGetErrorTip,
+    ConditionTypeId,
+    MaxCountPerMap,
+} from "../Constants.ts";
+import {
+    checkIsValid as checkCustomCounterIsValid,
+    getBriefDesc as getCustomCounterBriefDesc,
+    getDetailedDesc as getCustomCounterDetailedDesc,
+    getErrorTip as getCustomCounterErrorTip,
+} from "./CustomCounter.ts";
+import {
+    checkIsValid as checkEventCalledCountIsValid,
+    getBriefDesc as getEventCalledCountBriefDesc,
+    getDetailedDesc as getEventCalledCountDetailedDesc,
+    getErrorTip as getEventCalledCountErrorTip,
 } from "./EventCalledCount.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsExpressionCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsExpressionGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsExpressionGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsExpressionGetErrorTip,
+    checkIsValid as checkExpressionIsValid,
+    getBriefDesc as getExpressionBriefDesc,
+    getDetailedDesc as getExpressionDetailedDesc,
+    getErrorTip as getExpressionErrorTip,
 } from "./Expression.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsManualActionStatisticsCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsManualActionStatisticsGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsManualActionStatisticsGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsManualActionStatisticsGetErrorTip,
+    checkIsValid as checkManualActionStatisticsIsValid,
+    getBriefDesc as getManualActionStatisticsBriefDesc,
+    getDetailedDesc as getManualActionStatisticsDetailedDesc,
+    getErrorTip as getManualActionStatisticsErrorTip,
 } from "./ManualActionStatistics.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsOngoingPersistentActionPresenceCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsOngoingPersistentActionPresenceGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsOngoingPersistentActionPresenceGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsOngoingPersistentActionPresenceGetErrorTip,
+    checkIsValid as checkOngoingPersistentActionPresenceIsValid,
+    getBriefDesc as getOngoingPersistentActionPresenceBriefDesc,
+    getDetailedDesc as getOngoingPersistentActionPresenceDetailedDesc,
+    getErrorTip as getOngoingPersistentActionPresenceErrorTip,
 } from "./OngoingPersistentActionPresence.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsPlayerPresenceCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsPlayerPresenceGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsPlayerPresenceGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsPlayerPresenceGetErrorTip,
+    checkIsValid as checkPlayerPresenceIsValid,
+    getBriefDesc as getPlayerPresenceBriefDesc,
+    getDetailedDesc as getPlayerPresenceDetailedDesc,
+    getErrorTip as getPlayerPresenceErrorTip,
 } from "./PlayerPresence.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsTilePresenceCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsTilePresenceGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsTilePresenceGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsTilePresenceGetErrorTip,
+    checkIsValid as checkTilePresenceIsValid,
+    getBriefDesc as getTilePresenceBriefDesc,
+    getDetailedDesc as getTilePresenceDetailedDesc,
+    getErrorTip as getTilePresenceErrorTip,
 } from "./TilePresence.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsTurnAndPlayerCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsTurnAndPlayerGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsTurnAndPlayerGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsTurnAndPlayerGetErrorTip,
+    checkIsValid as checkTurnAndPlayerIsValid,
+    getBriefDesc as getTurnAndPlayerBriefDesc,
+    getDetailedDesc as getTurnAndPlayerDetailedDesc,
+    getErrorTip as getTurnAndPlayerErrorTip,
 } from "./TurnAndPlayer.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsUnitPresenceCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsUnitPresenceGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsUnitPresenceGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsUnitPresenceGetErrorTip,
+    checkIsValid as checkUnitPresenceIsValid,
+    getBriefDesc as getUnitPresenceBriefDesc,
+    getDetailedDesc as getUnitPresenceDetailedDesc,
+    getErrorTip as getUnitPresenceErrorTip,
 } from "./UnitPresence.ts";
 import {
-    checkIsValid as WarEventsConditionsUtilsWeatherAndFogCheckIsValid,
-    getBriefDesc as WarEventsConditionsUtilsWeatherAndFogGetBriefDesc,
-    getDetailedDesc as WarEventsConditionsUtilsWeatherAndFogGetDetailedDesc,
-    getErrorTip as WarEventsConditionsUtilsWeatherAndFogGetErrorTip,
+    checkIsValid as checkWeatherAndFogIsValid,
+    getBriefDesc as getWeatherAndFogBriefDesc,
+    getDetailedDesc as getWeatherAndFogDetailedDesc,
+    getErrorTip as getWeatherAndFogErrorTip,
 } from "./WeatherAndFog.ts";
 import { Event } from "../../Constants.ts";
 import { getNode } from "../../fullDatas/Utils.ts";
@@ -106,16 +123,16 @@ export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, 
     }
 
     // TODO add more checkers when the condition types grow.
-    return (WarEventsConditionsUtilsEventCalledCountCheckIsValid(condition.getWecEventCalledCount()))
-        || (WarEventsConditionsUtilsPlayerPresenceCheckIsValid(condition.getWecPlayerPresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (WarEventsConditionsUtilsTurnAndPlayerCheckIsValid(condition.getWecTurnAndPlayer(), playersCountUnneutral))
-        || (WarEventsConditionsUtilsWeatherAndFogCheckIsValid(condition.getWecWeatherAndFog(), gameConfig))
-        || (WarEventsConditionsUtilsTilePresenceCheckIsValid(condition.getWecTilePresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (WarEventsConditionsUtilsUnitPresenceCheckIsValid(condition.getWecUnitPresence(), playersCountUnneutral, mapSize, gameConfig))
-        || (WarEventsConditionsUtilsExpressionCheckIsValid(condition.getWecExpression(), customCounterNameSet))
-        || (checkIsValid(condition.getWecCustomCounter()))
-        || (WarEventsConditionsUtilsOngoingPersistentActionPresenceCheckIsValid(condition.getWecOngoingPersistentActionPresence()))
-        || (WarEventsConditionsUtilsManualActionStatisticsCheckIsValid(condition.getWecManualActionStatistics(), playersCountUnneutral));
+    return (checkEventCalledCountIsValid(condition.getWecEventCalledCount()))
+        || (checkPlayerPresenceIsValid(condition.getWecPlayerPresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (checkTurnAndPlayerIsValid(condition.getWecTurnAndPlayer(), playersCountUnneutral))
+        || (checkWeatherAndFogIsValid(condition.getWecWeatherAndFog(), gameConfig))
+        || (checkTilePresenceIsValid(condition.getWecTilePresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (checkUnitPresenceIsValid(condition.getWecUnitPresence(), playersCountUnneutral, mapSize, gameConfig))
+        || (checkExpressionIsValid(condition.getWecExpression(), customCounterNameSet))
+        || (checkCustomCounterIsValid(condition.getWecCustomCounter()))
+        || (checkOngoingPersistentActionPresenceIsValid(condition.getWecOngoingPersistentActionPresence()))
+        || (checkManualActionStatisticsIsValid(condition.getWecManualActionStatistics(), playersCountUnneutral));
 }
 
 export function resetCondition(condition: WarEventCondition, conditionType: ConditionTypeId): void {
@@ -224,28 +241,28 @@ export function openConditionModifyPanel({ fullData, condition, war }: {
 }
 
 export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
-    return (WarEventsConditionsUtilsEventCalledCountGetBriefDesc(con.getWecEventCalledCount()))
-        || (WarEventsConditionsUtilsPlayerPresenceGetBriefDesc(con.getWecPlayerPresence()))
-        || (WarEventsConditionsUtilsTurnAndPlayerGetBriefDesc(con.getWecTurnAndPlayer()))
-        || (WarEventsConditionsUtilsWeatherAndFogGetBriefDesc(con.getWecWeatherAndFog()))
-        || (WarEventsConditionsUtilsTilePresenceGetBriefDesc(con.getWecTilePresence()))
-        || (WarEventsConditionsUtilsUnitPresenceGetBriefDesc(con.getWecUnitPresence()))
-        || (WarEventsConditionsUtilsExpressionGetBriefDesc(con.getWecExpression()))
-        || (getBriefDesc(con.getWecCustomCounter()))
-        || (WarEventsConditionsUtilsOngoingPersistentActionPresenceGetBriefDesc(con.getWecOngoingPersistentActionPresence()))
-        || (WarEventsConditionsUtilsManualActionStatisticsGetBriefDesc(con.getWecManualActionStatistics()));
+    return (getEventCalledCountBriefDesc(con.getWecEventCalledCount()))
+        || (getPlayerPresenceBriefDesc(con.getWecPlayerPresence()))
+        || (getTurnAndPlayerBriefDesc(con.getWecTurnAndPlayer()))
+        || (getWeatherAndFogBriefDesc(con.getWecWeatherAndFog()))
+        || (getTilePresenceBriefDesc(con.getWecTilePresence()))
+        || (getUnitPresenceBriefDesc(con.getWecUnitPresence()))
+        || (getExpressionBriefDesc(con.getWecExpression()))
+        || (getCustomCounterBriefDesc(con.getWecCustomCounter()))
+        || (getOngoingPersistentActionPresenceBriefDesc(con.getWecOngoingPersistentActionPresence()))
+        || (getManualActionStatisticsBriefDesc(con.getWecManualActionStatistics()));
 }
 export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
-    return (WarEventsConditionsUtilsEventCalledCountGetDetailedDesc(con.getWecEventCalledCount()))
-        || (WarEventsConditionsUtilsPlayerPresenceGetDetailedDesc(con.getWecPlayerPresence()))
-        || (WarEventsConditionsUtilsTurnAndPlayerGetDetailedDesc(con.getWecTurnAndPlayer()))
-        || (WarEventsConditionsUtilsWeatherAndFogGetDetailedDesc(con.getWecWeatherAndFog(), gameConfig))
-        || (WarEventsConditionsUtilsTilePresenceGetDetailedDesc(con.getWecTilePresence()))
-        || (WarEventsConditionsUtilsUnitPresenceGetDetailedDesc(con.getWecUnitPresence()))
-        || (WarEventsConditionsUtilsExpressionGetDetailedDesc(con.getWecExpression()))
-        || (getDetailedDesc(con.getWecCustomCounter()))
-        || (WarEventsConditionsUtilsOngoingPersistentActionPresenceGetDetailedDesc(con.getWecOngoingPersistentActionPresence()))
-        || (WarEventsConditionsUtilsManualActionStatisticsGetDetailedDesc(con.getWecManualActionStatistics()));
+    return (getEventCalledCountDetailedDesc(con.getWecEventCalledCount()))
+        || (getPlayerPresenceDetailedDesc(con.getWecPlayerPresence()))
+        || (getTurnAndPlayerDetailedDesc(con.getWecTurnAndPlayer()))
+        || (getWeatherAndFogDetailedDesc(con.getWecWeatherAndFog(), gameConfig))
+        || (getTilePresenceDetailedDesc(con.getWecTilePresence()))
+        || (getUnitPresenceDetailedDesc(con.getWecUnitPresence()))
+        || (getExpressionDetailedDesc(con.getWecExpression()))
+        || (getCustomCounterDetailedDesc(con.getWecCustomCounter()))
+        || (getOngoingPersistentActionPresenceDetailedDesc(con.getWecOngoingPersistentActionPresence()))
+        || (getManualActionStatisticsDetailedDesc(con.getWecManualActionStatistics()));
 }
 export function getErrorTipForCondition(fullData: WarEventFullData, condition: WarEventCondition, war: IBwWar): string | null {
     const conditionsCount = fullData.getConditionArray().length;
@@ -265,52 +282,52 @@ export function getErrorTipForCondition(fullData: WarEventFullData, condition: W
     // todo add more tips for the future conditions.
     const wecEventCalledCount = condition.getWecEventCalledCount();
     if (wecEventCalledCount) {
-        return WarEventsConditionsUtilsEventCalledCountGetErrorTip(wecEventCalledCount, fullData);
+        return getEventCalledCountErrorTip(wecEventCalledCount, fullData);
     }
 
     const wecPlayerPresence = condition.getWecPlayerPresence();
     if (wecPlayerPresence) {
-        return WarEventsConditionsUtilsPlayerPresenceGetErrorTip(wecPlayerPresence, playersCountUnneutral, mapSize, gameConfig);
+        return getPlayerPresenceErrorTip(wecPlayerPresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecTurnAndPlayer = condition.getWecTurnAndPlayer();
     if (wecTurnAndPlayer) {
-        return WarEventsConditionsUtilsTurnAndPlayerGetErrorTip(wecTurnAndPlayer, war);
+        return getTurnAndPlayerErrorTip(wecTurnAndPlayer, war);
     }
 
     const wecWeatherAndFog = condition.getWecWeatherAndFog();
     if (wecWeatherAndFog) {
-        return WarEventsConditionsUtilsWeatherAndFogGetErrorTip(wecWeatherAndFog, war);
+        return getWeatherAndFogErrorTip(wecWeatherAndFog, war);
     }
 
     const wecTilePresence = condition.getWecTilePresence();
     if (wecTilePresence) {
-        return WarEventsConditionsUtilsTilePresenceGetErrorTip(wecTilePresence, playersCountUnneutral, mapSize, gameConfig);
+        return getTilePresenceErrorTip(wecTilePresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecUnitPresence = condition.getWecUnitPresence();
     if (wecUnitPresence) {
-        return WarEventsConditionsUtilsUnitPresenceGetErrorTip(wecUnitPresence, playersCountUnneutral, mapSize, gameConfig);
+        return getUnitPresenceErrorTip(wecUnitPresence, playersCountUnneutral, mapSize, gameConfig);
     }
 
     const wecExpression = condition.getWecExpression();
     if (wecExpression) {
-        return WarEventsConditionsUtilsExpressionGetErrorTip(wecExpression, customCounterNameSet);
+        return getExpressionErrorTip(wecExpression, customCounterNameSet);
     }
 
     const wecCustomCounter = condition.getWecCustomCounter();
     if (wecCustomCounter) {
-        return getErrorTip(wecCustomCounter);
+        return getCustomCounterErrorTip(wecCustomCounter);
     }
 
     const wecOngoingPersistentActionPresence = condition.getWecOngoingPersistentActionPresence();
     if (wecOngoingPersistentActionPresence) {
-        return WarEventsConditionsUtilsOngoingPersistentActionPresenceGetErrorTip(wecOngoingPersistentActionPresence);
+        return getOngoingPersistentActionPresenceErrorTip(wecOngoingPersistentActionPresence);
     }
 
     const wecManualActionStatistics = condition.getWecManualActionStatistics();
     if (wecManualActionStatistics) {
-        return WarEventsConditionsUtilsManualActionStatisticsGetErrorTip(wecManualActionStatistics, war);
+        return getManualActionStatisticsErrorTip(wecManualActionStatistics, war);
     }
 
     return getText(TextType.A0187);

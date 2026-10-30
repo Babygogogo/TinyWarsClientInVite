@@ -9,13 +9,9 @@ import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.t
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 
-type PlayerAliveState       = AliveStateId;
-type CoSkillType            = SkillTypeId;
-type CoEnergyType           = EnergyTypeId;
-type GameConfiguration      = GameConfig;
 export interface IPlayer {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    init(data: SerialPlayer, gameConfig: GameConfiguration): void;
+    init(data: SerialPlayer, gameConfig: GameConfig): void;
 
     startRunning(war: IBwWar): void;
 
@@ -31,8 +27,8 @@ export interface IPlayer {
     setHasVotedForDraw(voted: boolean): void;
     getHasVotedForDraw(): boolean;
 
-    setAliveState(alive: PlayerAliveState): void;
-    getAliveState(): PlayerAliveState;
+    setAliveState(alive: AliveStateId): void;
+    getAliveState(): AliveStateId;
 
     getPlayerIndex(): number;
     checkIsNeutral(): boolean;
@@ -91,7 +87,7 @@ export interface IPlayer {
     getCoPowerEnergy(): number | null;
     getCoSuperPowerEnergy(): number | null;
 
-    getCoEnergyType(): CoEnergyType;
+    getCoEnergyType(): EnergyTypeId;
     getCoPowerActivatedCount(): number;
 
     getCoZoneRadius(): number;
@@ -100,16 +96,16 @@ export interface IPlayer {
 
     checkIsInCoZone(targetGridIndex: GridIndex, coGridIndexOnMap: GridIndex[]): boolean;
 
-    getCoUsingSkillType(): CoSkillType;
-    setCoUsingSkillType(skillType: CoSkillType): void;
+    getCoUsingSkillType(): SkillTypeId;
+    setCoUsingSkillType(skillType: SkillTypeId): void;
     getCoCurrentSkills(): number[];
-    getCoSkills(skillType: CoSkillType): number[];
+    getCoSkills(skillType: SkillTypeId): number[];
     checkCoIsUsingActiveSkill(): boolean;
     checkHasZoneSkillForCurrentSkills(): boolean;
-    checkCanUseCoSkill(skillType: CoSkillType): boolean;
+    checkCanUseCoSkill(skillType: SkillTypeId): boolean;
     checkCanGetEnergyWithBattle(): boolean;
 
-    updateOnUseCoSkill(skillType: CoSkillType): void;
+    updateOnUseCoSkill(skillType: SkillTypeId): void;
 
     getCoIsDestroyedInTurn(): boolean;
     setCoIsDestroyedInTurn(isDestroyed: boolean): void;

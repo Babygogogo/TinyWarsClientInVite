@@ -12,14 +12,21 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { checkIsAnyPromiseTrue } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import type { IMpwWar } from "../interface/IMpwWar.ts";
 import { checkIsRedForAllMyWars } from "../model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    playCoBgmWithWar,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
 import { UiContainer } from "../../ui/components/UiContainer.ts";
@@ -32,7 +39,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { getUiLabelClass } from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { ActionStateId, DisplayLayerId } from "../../units/Constants.ts";
+import {
+    ActionStateId,
+    DisplayLayerId,
+} from "../../units/Constants.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 import { getWatchIncomingInfo } from "../../watchWar/model/WwModel.ts";
 

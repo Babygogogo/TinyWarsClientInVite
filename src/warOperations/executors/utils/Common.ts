@@ -4,7 +4,11 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getTotalOffset } from "../../../coSkills/utils/instantMisc/SelfUnitHpAfterWait.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted, newError, createLazyFunc } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+    createLazyFunc,
+} from "../../../helpers/Misc.ts";
 import { getValidFund } from "../../../players/utils/Common.ts";
 import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
@@ -16,7 +20,6 @@ import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
 /**
  * @return the war view is vibrated or not
  */
@@ -374,7 +377,7 @@ function checkIsUnitDamaged(oldUnitData: SerialUnit, newUnitData: SerialUnit): b
     return (newUnitData.getCurrentHp()) < (oldUnitData.getCurrentHp());
 }
 
-export function handleViewForBattle(battleInfo: BattleInfo, war: IBwWar, allVisibleUnits: Set<IBwUnit>): void {
+export function handleViewForBattle(battleInfo: BattleInfo, war: IBwWar, allVisibleUnits: Set<IUnit>): void {
     const gridVisualEffect      = war.getGridVisualEffect();
     let isVisibleUnitDestroyed  = false;
     let isVisibleUnitDamaged    = false;
@@ -443,7 +446,7 @@ export function handleViewForBattle(battleInfo: BattleInfo, war: IBwWar, allVisi
     }
 }
 
-export function handleSelfUnitHpAfterWait(focusUnit: IBwUnit, isFastExecute: boolean): void {
+export function handleSelfUnitHpAfterWait(focusUnit: IUnit, isFastExecute: boolean): void {
     const war       = focusUnit.getWar();
     const gridIndex = focusUnit.getGridIndex();
     if (war.getUnitMap().getUnitOnMap(gridIndex) != focusUnit) {
@@ -489,7 +492,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: IBwUnit, isFastExecute: boo
     }
 }
 
-export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: boolean): void {
+export function handlePostOperationPlunder(focusUnit: IUnit, isFastExecute: boolean): void {
     const gridIndex = focusUnit.getGridIndex();
     const war       = focusUnit.getWar();
     if (war.getUnitMap().getUnitOnMap(gridIndex) !== focusUnit) {

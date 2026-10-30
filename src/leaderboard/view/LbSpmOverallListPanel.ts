@@ -1,12 +1,23 @@
 import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getLatestConfigVersion, getPreviousConfigVersion, getNextConfigVersion, getGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getLatestConfigVersion,
+    getPreviousConfigVersion,
+    getNextConfigVersion,
+    getGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
+import {
+    getUserAvatar,
+    getMedal,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getSpmOverallTopDataArray } from "../model/LeaderboardModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

@@ -1,5 +1,8 @@
 import { getValueInRange } from "../../numbers/Utils.ts";
-import { type ConstrainEase, UiSlidingNumber } from "./UiSlidingNumber.ts";
+import {
+    type ConstrainEase,
+    UiSlidingNumber,
+} from "./UiSlidingNumber.ts";
 import { Point } from "../../vendor/egret/Egret.ts";
 
 interface TrackPadOptions {

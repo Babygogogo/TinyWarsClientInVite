@@ -10,13 +10,30 @@ import {
 import { showLang } from "../../../FloatText.ts";
 import { getLatestGameConfig } from "../../../gameConfigs/Provider.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../../gamePanels/Manager.ts";
-import { gotoReplayWar, gotoMultiPlayerWar } from "../../../helpers/GameFlow.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../../gamePanels/Manager.ts";
+import {
+    gotoReplayWar,
+    gotoMultiPlayerWar,
+} from "../../../helpers/GameFlow.ts";
 import { getMedal } from "../../../helpers/ImageSource.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getLanguageText, getAutoTourneyPhaseName, getTimeDurationText2, getText } from "../../../lang/Utils.ts";
-import { getRawData, getMapNameInCurrentLanguage } from "../../../normalMap/model/NormalMapModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getLanguageText,
+    getAutoTourneyPhaseName,
+    getTimeDurationText2,
+    getText,
+} from "../../../lang/Utils.ts";
+import {
+    getRawData,
+    getMapNameInCurrentLanguage,
+} from "../../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import type { SingleBracketInfo } from "../../../proto/schema/CommonProto/AutoTourney/SingleBracketInfo.ts";
 import { getReplayData } from "../../../replayWar/model/RwModel.ts";
@@ -32,8 +49,14 @@ import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
-import { getIsSelfAutoTourneyCommittee, getUserNickname } from "../../../users/Model.ts";
-import { getWatchOutgoingInfo, getWatchWarData } from "../../../watchWar/model/WwModel.ts";
+import {
+    getIsSelfAutoTourneyCommittee,
+    getUserNickname,
+} from "../../../users/Model.ts";
+import {
+    getWatchOutgoingInfo,
+    getWatchWarData,
+} from "../../../watchWar/model/WwModel.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

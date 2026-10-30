@@ -1,12 +1,18 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { destroyUnitOnMap, destroyUnitLoaded } from "../../../destructions/Utils.ts";
+import {
+    destroyUnitOnMap,
+    destroyUnitLoaded,
+} from "../../../destructions/Utils.ts";
 import { Player } from "../../../expressionParsers/contexts/Player.ts";
 import { Unit } from "../../../expressionParsers/contexts/Unit.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";

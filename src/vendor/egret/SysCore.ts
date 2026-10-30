@@ -37,11 +37,20 @@ import {
     Event,
     TouchEvent,
     log,
-    DisplayObjectContainer
+    DisplayObjectContainer,
 } from "./EgretCore";
-import type { DrawLabel, WebGLRenderTarget, WebGLRenderContext, PremultipliedTexture, TextureDrawData } from "./WebCore";
+import type {
+    DrawLabel,
+    WebGLRenderTarget,
+    WebGLRenderContext,
+    PremultipliedTexture,
+    TextureDrawData,
+} from "./WebCore";
 import { runtime } from "./Runtime";
-import { LifecycleContext, LifecycleHelper } from "./Lifecycle";
+import {
+    LifecycleContext,
+    LifecycleHelper,
+} from "./Lifecycle";
 
 export type RenderContext = CanvasRenderingContext2D | WebGLRenderingContext;
 export type PathCommand = 1 | 2 | 3 | 4;

@@ -1,17 +1,25 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getTileBuffName, getComparatorName, getFormattedText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getTileBuffName,
+    getComparatorName,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { TileBuffFilter } from "../../proto/schema/CommonProto/Structure/TileBuffFilter.ts";
-import { checkIsEverlasting, checkIsValidTypeIdSubset } from "./Common.ts";
 import {
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+    checkIsEverlasting,
+    checkIsValidTypeIdSubset,
+} from "./Common.ts";
+import {
+    checkIsMeet as checkIsMeetValueAndComparator,
+    checkIsValid as checkIsValidValueAndComparator,
 } from "../../valueAndComparators/Utils.ts";
 import {
-    checkIsMeet as ValueArrayAndPredicatesUtilsCheckIsMeet,
-    getDesc as ValueArrayAndPredicatesUtilsGetDesc,
-    checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
+    checkIsMeet as checkIsMeetValueArrayAndPredicate,
+    getDesc as getValueArrayAndPredicatesDesc,
+    checkIsValid as checkIsValidValueArrayAndPredicate,
 } from "../../valueArrayAndPredicates/Utils.ts";
 
 export function tickConIsEverlasting(data: TileBuffFilter): boolean | null {
@@ -31,7 +39,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&
-            (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, buff.getBuffTypeId()))
+            (!checkIsMeetValueArrayAndPredicate(con, buff.getBuffTypeId()))
         ) {
             return false;
         }
@@ -57,7 +65,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
                 const turnIndex = data.getConIsRelativeEndTurnIndex()
                     ? expiringTurnIndex - turnManager.getTurnIndex()
                     : expiringTurnIndex;
-                if (!ValueAndComparatorsUtilsCheckIsMeet(con, turnIndex)) {
+                if (!checkIsMeetValueAndComparator(con, turnIndex)) {
                     return false;
                 }
             }
@@ -74,7 +82,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
                 const playerIndex = data.getConIsRelativeEndPlayerIndex()
                     ? expiringPlayerIndex - turnManager.getPlayerIndexInTurn()
                     : expiringPlayerIndex;
-                if (!ValueAndComparatorsUtilsCheckIsMeet(con, playerIndex)) {
+                if (!checkIsMeetValueAndComparator(con, playerIndex)) {
                     return false;
                 }
             }
@@ -98,7 +106,7 @@ export function getDesc(data: TileBuffFilter): string {
     {
         const conBuffTypeId = data.getConBuffTypeId();
         if (conBuffTypeId != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(
                 conBuffTypeId,
                 getText(TextType.AbnormalStateTypeId),
                 v => getTileBuffName(v)
@@ -176,7 +184,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                     ||
+            if ((!checkIsValidValueArrayAndPredicate(con))                     ||
                 (!checkIsValidTypeIdSubset(con.getValueArray()))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
@@ -188,7 +196,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConEndTurnIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+            if ((conIsEverlasting) || (!checkIsValidValueAndComparator(con))) {
                 return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
             }
         }
@@ -197,7 +205,7 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConEndPlayerIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+            if ((conIsEverlasting) || (!checkIsValidValueAndComparator(con))) {
                 return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
             }
         }

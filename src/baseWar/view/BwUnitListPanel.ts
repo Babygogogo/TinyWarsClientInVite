@@ -4,10 +4,19 @@ import type { DataForTileView } from "../model/BwTypes.ts";
 import { getUnitAndTileTexturePrefix } from "../../common/model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
 import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import { getRwWarClass, getRwWarBaseClass, getMpwWarClass, getUnitViewClass, getTileViewClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getRwWarClass,
+    getRwWarBaseClass,
+    getMpwWarClass,
+    getUnitViewClass,
+    getTileViewClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getUnitName } from "../../lang/Utils.ts";
 import { getUnitStatistics } from "../../multiPlayerWar/model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

@@ -12,10 +12,16 @@ import {
     getTwWarClass,
 } from "../../../gameHelpers/GhFactory.ts";
 import type { IHrwWar } from "../../../halfwayReplayWar/interface/IHrwWar.ts";
-import { getExisted, createLazyFunc } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    createLazyFunc,
+} from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getUnitName } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getUnitName,
+} from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
@@ -28,7 +34,10 @@ import { ShortSfxCode } from "../../../sounds/Constants.ts";
 import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
-import { Hp, ActionStateId } from "../../../units/Constants.ts";
+import {
+    Hp,
+    ActionStateId,
+} from "../../../units/Constants.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";

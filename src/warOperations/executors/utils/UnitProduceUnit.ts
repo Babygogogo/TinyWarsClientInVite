@@ -8,7 +8,10 @@ import {
     getSpwWarClass,
     getTwWarClass,
 } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted, createLazyFunc } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    createLazyFunc,
+} from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
@@ -26,9 +29,11 @@ import type { IUnit } from "../../../units/IUnit.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
-type IBwUnit                = IUnit;
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;
@@ -259,7 +264,7 @@ async function normalExeUnitProduceUnit(war: IBwWar, action: WoUnitProduceUnit):
     war.updateTilesAndUnitsOnVisibilityChanged(false);
 }
 
-function getPromotionForUnitProduceUnit(war: IBwWar, producerUnit: IBwUnit, targetUnitType: number): number {
+function getPromotionForUnitProduceUnit(war: IBwWar, producerUnit: IUnit, targetUnitType: number): number {
     const player                    = producerUnit.getPlayer();
     const coZoneRadius              = player.getCoZoneRadius();
     const gridIndex                 = producerUnit.getGridIndex();

@@ -2,7 +2,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { getReplayPauseTime, setReplayPauseTime } from "../../localData/Storage.ts";
+import {
+    getReplayPauseTime,
+    setReplayPauseTime,
+} from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { IRwWarBase } from "../interface/IRwWarBase.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

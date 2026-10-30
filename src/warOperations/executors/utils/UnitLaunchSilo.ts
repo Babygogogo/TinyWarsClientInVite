@@ -1,7 +1,13 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
@@ -20,9 +26,11 @@ import { ActionStateId } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
-type IBwUnit                = IUnit;
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;
@@ -70,7 +78,7 @@ function fastExeUnitLaunchSilo(war: IBwWar, action: WoUnitLaunchSilo): void {
             });
 
             const targetGrids   = targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: launchSiloParams[2], mapSize: unitMap.getMapSize() });
-            const targetUnits   : IBwUnit[] = [];
+            const targetUnits   : IUnit[] = [];
             for (const grid of targetGrids) {
                 const unit = unitMap.getUnitOnMap(grid);
                 if (unit) {
@@ -167,7 +175,7 @@ async function normalExeUnitLaunchSilo(war: IBwWar, action: WoUnitLaunchSilo): P
             const warStatisticsManager  = war.getWarStatisticsManager();
             const targetGridIndex       = getExisted(GridIndex.convertGridIndex(action.getTargetGridIndex()));
             const targetGrids           = targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: launchSiloParams[2], mapSize });
-            const targetUnits           : IBwUnit[] = [];
+            const targetUnits           : IUnit[] = [];
             for (const grid of targetGrids) {
                 const unit = unitMap.getUnitOnMap(grid);
                 if (unit) {

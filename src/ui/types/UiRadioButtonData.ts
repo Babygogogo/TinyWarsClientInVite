@@ -1,4 +1,7 @@
-import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import type {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
 
 export interface UiRadioButtonData {
     titleTextType           : TextType;

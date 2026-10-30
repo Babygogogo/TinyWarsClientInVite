@@ -4,10 +4,7 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitWait(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction> {
+export async function getScoreAndActionUnitWait(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction> {
     await checkAndCallLater();
 
     const score = await getScoreForActionUnitWait();

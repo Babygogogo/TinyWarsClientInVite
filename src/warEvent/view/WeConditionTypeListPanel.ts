@@ -1,6 +1,9 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getWarEventConditionTypeName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
@@ -15,8 +18,14 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { AvailableConditionTypeIdArray, ConditionTypeId } from "../../warEvents/conditions/Constants.ts";
-import { resetCondition, openConditionModifyPanel } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    AvailableConditionTypeIdArray,
+    ConditionTypeId,
+} from "../../warEvents/conditions/Constants.ts";
+import {
+    resetCondition,
+    openConditionModifyPanel,
+} from "../../warEvents/conditions/utils/Common.ts";
 
 export interface OpenData {
     war         : IMeWar;

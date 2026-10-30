@@ -1,12 +1,15 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
-import { TileBuff as ExpressionParsersContextsTileBuff } from "../../../expressionParsers/contexts/TileBuff.ts";
+import { TileBuff } from "../../../expressionParsers/contexts/TileBuff.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { TileBuff as ProtoTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { WeaDeleteTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteTileBuffExpr.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/DeleteTileBuffExpr.ts";
@@ -93,9 +96,9 @@ function evalConTileFilter(action: WeaDeleteTileBuffExpr, tile: ITile): boolean 
         return false;
     }
 }
-function evalConTileBuffFilter(action: WeaDeleteTileBuffExpr, tile: ITile, buff: TileBuff): boolean {
+function evalConTileBuffFilter(action: WeaDeleteTileBuffExpr, tile: ITile, buff: ProtoTileBuff): boolean {
     try {
-        const result = Parser.getParseResult(action.getConTileBuffFilter() ?? ``).eval(new ExpressionParsersContextsTileBuff(buff, tile), false);
+        const result = Parser.getParseResult(action.getConTileBuffFilter() ?? ``).eval(new TileBuff(buff, tile), false);
         return (result instanceof Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
@@ -108,7 +111,7 @@ export async function applyWithExtraData(action: WeaDeleteTileBuffExpr, war: IBw
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function applyWithoutExtraData(action: WeaDeleteTileBuffExpr, war: IBwWar, isFast: boolean): Promise<void> {
-    const newTileDataDict = new Map<ITile, TileBuff[]>();
+    const newTileDataDict = new Map<ITile, ProtoTileBuff[]>();
     for (const tile of war.getTileMap().getAllTiles()) {
         if (!evalConTileFilter(action, tile)) {
             continue;

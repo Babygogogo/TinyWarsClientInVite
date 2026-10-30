@@ -1,23 +1,44 @@
 import { getCampaignInfo } from "../../campaigns/mains/Provider.ts";
-import { reqCmSetCampaignMapName, reqCmSetCampaignMapExtraText } from "../../campaigns/managements/Gateway.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    reqCmSetCampaignMapName,
+    reqCmSetCampaignMapExtraText,
+} from "../../campaigns/managements/Gateway.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { checkAndCreateSimulation, checkAndCreateMultiFreeWar } from "../../helpers/GameFlow.ts";
+import {
+    checkAndCreateSimulation,
+    checkAndCreateMultiFreeWar,
+} from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText, getErrorText, getJoinedShortLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+    getErrorText,
+    getJoinedShortLanguageText,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
 import { reqMeDeleteSlot } from "../../mapEditor/model/MeProxy.ts";
 import { getErrorCode } from "../../maps/utils/MapRawData.ts";
-import { getDecodedMapTagIdList, getEncodedMapTagId } from "../../mapTags/Utils.ts";
+import {
+    getDecodedMapTagIdList,
+    getEncodedMapTagId,
+} from "../../mapTags/Utils.ts";
 import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
+import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -145,7 +166,7 @@ export class Panel extends UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
         show(getText(data.getTime() == null ? TextType.A0248 : TextType.A0247));
     }
     private _onNotifyMsgCmSetCampaignMapName(): void {

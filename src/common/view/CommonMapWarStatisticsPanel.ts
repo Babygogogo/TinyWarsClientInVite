@@ -1,8 +1,19 @@
 import { show } from "../../FloatText.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText, getWarTypeName } from "../../lang/Utils.ts";
-import { getRawData, getMapNameInCurrentLanguage, getBriefData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+    getWarTypeName,
+} from "../../lang/Utils.ts";
+import {
+    getRawData,
+    getMapNameInCurrentLanguage,
+    getBriefData,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

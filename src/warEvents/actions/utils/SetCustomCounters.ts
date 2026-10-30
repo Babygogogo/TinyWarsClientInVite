@@ -1,6 +1,9 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { checkIsValidId, checkIsValidValue } from "../../../customCounters/Utils.ts";
+import {
+    checkIsValidId,
+    checkIsValidValue,
+} from "../../../customCounters/Utils.ts";
 import { CustomCounter } from "../../../expressionParsers/contexts/CustomCounter.ts";
 import { War } from "../../../expressionParsers/contexts/War.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";

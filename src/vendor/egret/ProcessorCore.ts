@@ -19,7 +19,17 @@ import {
     getHttpRequest,
     HttpResponseType,
 } from "./EgretCore";
-import { type ResourceInfo, type ProcessHost, ResourceManagerError, getVirtualUrl, nameSelector, type MovieClipConfig, getConfig, type ConfigData, type FileSystem } from "./ResCore";
+import {
+    type ResourceInfo,
+    type ProcessHost,
+    ResourceManagerError,
+    getVirtualUrl,
+    nameSelector,
+    type MovieClipConfig,
+    getConfig,
+    type ConfigData,
+    type FileSystem,
+} from "./ResCore";
 import { parseXML } from "./WebCore";
 
 export type ResourceSpriteSheet = SpriteSheet & { $resourceInfo: ResourceInfo };

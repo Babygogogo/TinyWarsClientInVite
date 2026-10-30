@@ -4,20 +4,44 @@ import { RequestingPlayerDeleteUnit } from "../../actionPlanners/states/Requesti
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { getUnitAnimationTickCount, getCachedTileObjectImageSource, getTileAnimationTickCount } from "../../common/model/CommonModel.ts";
-import { Panel as CommonViewCommonDamageCalculatorPanel } from "../../common/view/CommonDamageCalculatorPanel.ts";
+import {
+    getUnitAnimationTickCount,
+    getCachedTileObjectImageSource,
+    getTileAnimationTickCount,
+} from "../../common/model/CommonModel.ts";
+import { Panel as ViewCommonDamageCalculatorPanel } from "../../common/view/CommonDamageCalculatorPanel.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getMpwWarClass, getSpwWarClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getMpwWarClass,
+    getSpwWarClass,
+    getUnitClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { TypeName } from "../../gameVersions/Constants.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { createLazyFunc, newError, getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
+import {
+    createLazyFunc,
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getLanguageText,
@@ -30,8 +54,14 @@ import {
     getUnitCategoryName,
     getUnitAiModeName,
 } from "../../lang/Utils.ts";
-import { decode, encode } from "../../locations/Utils.ts";
-import type { BwUnitBuffChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
+import {
+    decode,
+    encode,
+} from "../../locations/Utils.ts";
+import type {
+    BwUnitBuffChanged,
+    BwUnitChanged,
+} from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -39,7 +69,10 @@ import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { TileTypeId, ThemeTypeId } from "../../tiles/constants/Common.ts";
+import {
+    TileTypeId,
+    ThemeTypeId,
+} from "../../tiles/constants/Common.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -51,12 +84,23 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiUnitViewClass, getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
-import { CustomName, ActionStateId, AiModeId, WeaponTypeId } from "../../units/Constants.ts";
+import {
+    getUiUnitViewClass,
+    getUiTileViewClass,
+} from "../../ui/utils/UiFactory.ts";
+import {
+    CustomName,
+    ActionStateId,
+    AiModeId,
+    WeaponTypeId,
+} from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { getEncodedTagId } from "../../units/utils/Common.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-import { getSelfUserId, getSelfSettingsTextureVersion } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getSelfSettingsTextureVersion,
+} from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
@@ -266,7 +310,7 @@ export class Panel extends UiPanel<OpenData> {
         const allTiles              = tileMap.getAllTiles();
         const allCities             = allTiles.filter(v => v.getTileTypeId() === TileTypeId.City);
         const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === TileTypeId.CommandTower);
-        const defenderData          = CommonViewCommonDamageCalculatorPanel.createDefaultPlayerData(gameConfig);
+        const defenderData          = ViewCommonDamageCalculatorPanel.createDefaultPlayerData(gameConfig);
         const watcherTeamIndexes    = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const canSeeHiddenInfo1     = (!hasFog) || (watcherTeamIndexes.has(attackerPlayer.getTeamIndex()));
         const playerRule            = commonSettingsManager.getPlayerRule(attackerPlayerIndex);

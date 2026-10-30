@@ -1,5 +1,11 @@
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

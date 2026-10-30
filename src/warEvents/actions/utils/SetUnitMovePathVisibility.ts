@@ -5,8 +5,11 @@ import { Position } from "../../../expressionParsers/contexts/Position.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { Position as ExpressionParsersResultsPosition } from "../../../expressionParsers/results/Position.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { Position as ResultsPosition } from "../../../expressionParsers/results/Position.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { WeaSetUnitMovePathVisibility } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
@@ -90,7 +93,7 @@ export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNam
 function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, war: IBwWar, x: number, y: number): boolean {
     try {
         const result = Parser.getParseResult(action.getConPositionFilter() ?? ``)
-            .eval(new Position(new ExpressionParsersResultsPosition(war, x, y)), false);
+            .eval(new Position(new ResultsPosition(war, x, y)), false);
         return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
@@ -106,7 +109,7 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: IBwWa
 
     try {
         const epResult = Parser.getParseResult(act)
-            .eval(new Position(new ExpressionParsersResultsPosition(war, gridIndex.getX(), gridIndex.getY())), false);
+            .eval(new Position(new ResultsPosition(war, gridIndex.getX(), gridIndex.getY())), false);
         if (epResult instanceof NumArray) {
             return epResult.numberArray.map(v => getValueInInt32(v));
         } else {

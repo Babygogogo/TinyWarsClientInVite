@@ -1,14 +1,26 @@
-import type { Undefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    MapSorter,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { type OpenData as CommonViewCommonWarMapInfoPageOpenData, Page } from "../../common/view/CommonWarMapInfoPage.ts";
+import {
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
 import { showLang } from "../../FloatText.ts";
 import { SortType } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import {
     getRawData,
     getEnabledNormalMapIdSet,
@@ -20,8 +32,8 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { getAvailableSlotIndex } from "../../singlePlayerMode/model/SpmModel.ts";
 import {
-    type OpenData as SinglePlayerModeViewSpmRankPageOpenData,
-    Page as SinglePlayerModeViewSpmRankPage,
+    type OpenData as SpmRankPageOpenData,
+    Page as SpmRankPage,
 } from "../../singlePlayerMode/view/SpmRankPage.ts";
 import { SrrWarCreator } from "../model/SrrWarCreator.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -38,7 +50,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { callLater, Event } from "../../vendor/egret/Egret.ts";
+import {
+    callLater,
+    Event,
+} from "../../vendor/egret/Egret.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;
@@ -57,7 +72,7 @@ export interface OpenData {
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!                 : IUiContainer;
-    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | SinglePlayerModeViewSpmRankPageOpenData>;
+    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | SpmRankPageOpenData>;
 
     private readonly _groupNavigator!           : IUiLayout;
     private readonly _layoutNavName!            : IUiLayout;
@@ -326,12 +341,12 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : Page,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : SinglePlayerModeViewSpmRankPage,
+                pageClass   : SpmRankPage,
                 pageData    : null,
             },
         ]);
@@ -385,7 +400,7 @@ export class Panel extends UiPanel<OpenData> {
         this._btnNextStep.setIsVisible(this._getSelectedNormalMapId() != null);
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const normalMapId = this._listMap.getFirstSelectedData()?.normalMapId;
         return normalMapId == null
             ? null
@@ -399,7 +414,7 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private _createDataForCommonWarPlayerInfoPage(): SinglePlayerModeViewSpmRankPageOpenData {
+    private _createDataForCommonWarPlayerInfoPage(): SpmRankPageOpenData {
         return { normalMapId: this._listMap.getFirstSelectedData()?.normalMapId ?? null };
     }
 

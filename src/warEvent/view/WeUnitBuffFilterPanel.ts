@@ -2,8 +2,17 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitBuffName, getUnitBuffDesc, getComparatorName, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getUnitBuffName,
+    getUnitBuffDesc,
+    getComparatorName,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UnitBuffFilter } from "../../proto/schema/CommonProto/Structure/UnitBuffFilter.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
@@ -17,9 +26,20 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { AllBuffTypeIdArray, EndTimeModification } from "../../unitBuffs/Constants.ts";
-import { checkIsEmpty, tickConIsEverlasting, getErrorTip, getDesc } from "../../unitBuffs/utils/Filter.ts";
-import { AllComparatorIdArray, ComparatorId } from "../../valueAndComparators/Constants.ts";
+import {
+    AllBuffTypeIdArray,
+    EndTimeModification,
+} from "../../unitBuffs/Constants.ts";
+import {
+    checkIsEmpty,
+    tickConIsEverlasting,
+    getErrorTip,
+    getDesc,
+} from "../../unitBuffs/utils/Filter.ts";
+import {
+    AllComparatorIdArray,
+    ComparatorId,
+} from "../../valueAndComparators/Constants.ts";
 import { tickIsOneOf } from "../../valueArrayAndPredicates/Utils.ts";
 
 export interface OpenData {

@@ -1,12 +1,22 @@
 import type { Point } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getSquaredPointDistance } from "../geometries/Utils.ts";
-import { type WebPlayer, type WebTouchHandler, getWebPlayer, isPc } from "./Compatibility.ts";
+import {
+    type WebPlayer,
+    type WebTouchHandler,
+    getWebPlayer,
+    isPc,
+} from "./Compatibility.ts";
 import { getExisted } from "./Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { getStage } from "../stages/StageManager.ts";
 import { hitTestTarget } from "../ui/utils/UiHelpers.ts";
-import { DisplayObject, Stage, startTick, DisplayObjectContainer } from "../vendor/egret/Egret.ts";
+import {
+    DisplayObject,
+    Stage,
+    startTick,
+    DisplayObjectContainer,
+} from "../vendor/egret/Egret.ts";
 
 /**
  * 已知的egret事件相关信息：

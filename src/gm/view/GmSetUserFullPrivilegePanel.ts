@@ -3,7 +3,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { reqGmSetUserPrivilege } from "../model/GmProxy.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UserPrivilege } from "../../proto/schema/CommonProto/User/UserPrivilege.ts";
@@ -15,7 +18,11 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getUserNickname, getSelfUserPrivilege, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    getUserNickname,
+    getSelfUserPrivilege,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
 
 export interface OpenData {
     userId  : number;

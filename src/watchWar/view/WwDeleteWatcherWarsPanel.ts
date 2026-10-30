@@ -1,22 +1,34 @@
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import {
-    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
-    Page as CommonViewCommonWarPlayerInfoPage,
+    type OpenData as CommonWarPlayerInfoPageOpenData,
+    Page as CommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getWarTypeName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getWarTypeName,
+} from "../../lang/Utils.ts";
 import { getWarSettings } from "../../multiPlayerWar/model/MpwModel.ts";
 import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -45,12 +57,15 @@ import {
     createDataForCommonWarBasicSettingsPage,
     createDataForCommonWarAdvancedSettingsPage,
 } from "../model/WwModel.ts";
-import { reqMpwWatchWatchedWarIdArray, reqWatchDeleteWatcher } from "../model/WwProxy.ts";
+import {
+    reqMpwWatchWatchedWarIdArray,
+    reqWatchDeleteWatcher,
+} from "../model/WwProxy.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarPlayerInfoPageOpenData | CommonWarAdvancedSettingsPageOpenData | CommonWarBasicSettingsPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _labelWatchWar!        : IUiLabel;
@@ -207,19 +222,19 @@ export class Panel extends UiPanel<OpenData> {
         return dataArray;
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         return createDataForCommonWarMapInfoPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonWarPlayerInfoPageOpenData> {
         return createDataForCommonWarPlayerInfoPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         return await createDataForCommonWarBasicSettingsPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
         return createDataForCommonWarAdvancedSettingsPage(this._getSelectedWarId());
     }
 
@@ -228,22 +243,22 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage,
+                pageClass   : CommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
         ]);

@@ -1,5 +1,11 @@
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
 import { getSkin } from "../../ResManager.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiLayoutBase } from "./UiLayoutBase.ts";
@@ -13,8 +19,15 @@ import { UiSkinState } from "../types/UiSkinState.ts";
 import { getUiListItemRendererClass } from "../utils/UiFactory.ts";
 import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
-import { getRevisedAttrValue, loadSkin, loadSkinStateRecursively } from "../utils/UiSkinHelpers.ts";
-import type { DisplayObject, Event } from "../../vendor/egret/Egret.ts";
+import {
+    getRevisedAttrValue,
+    loadSkin,
+    loadSkinStateRecursively,
+} from "../utils/UiSkinHelpers.ts";
+import type {
+    DisplayObject,
+    Event,
+} from "../../vendor/egret/Egret.ts";
 
 export class UiList<DataForRenderer extends UiListItemData>
     extends UiLayoutBase

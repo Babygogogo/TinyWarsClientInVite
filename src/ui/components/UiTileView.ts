@@ -8,7 +8,10 @@ import {
 import { SkinId } from "../../forceSkins/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { ThemeTypeId } from "../../tiles/constants/Common.ts";
 import type { IUiImage } from "../interfaces/IUiImage.ts";
 import type { IUiTileView } from "../interfaces/IUiTileView.ts";

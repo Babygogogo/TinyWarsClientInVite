@@ -10,11 +10,17 @@ import { checkIsRed } from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
 import { ModeId } from "../../../gameModes/Constants.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../../gamePanels/Manager.ts";
 import { Tween } from "../../../graphics/Constants.ts";
 import { checkIsAnyPromiseTrue } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getSecondaryLanguageType, getText } from "../../../lang/Utils.ts";
+import {
+    getSecondaryLanguageType,
+    getText,
+} from "../../../lang/Utils.ts";
 import {
     openMultiPlayerModePanel,
     checkIsRedForMultiPlayer,

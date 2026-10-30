@@ -9,56 +9,33 @@ import {
     setAtFullBracketInfo,
     setAtUserArray,
 } from "./Provider.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtCreateTourney/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtDeleteLastTourneyS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteLastTourney/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtDeleteUserS } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteUser/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetFullBracketInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullBracketInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetFullMapInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullMapInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetGlobalSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetTourneyInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetTourneyInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetUserArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetUserArray/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtRegisterS } from "../../proto/schema/CommonProto/NetMessage/MsgAtRegister/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetAdjustmentDurationS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetAdjustmentDuration/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetGlobalSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetGlobalSettings/S.ts";
+import type { S as AtCreateTourneyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtCreateTourney/S.ts";
+import type { S as AtDeleteLastTourneyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteLastTourney/S.ts";
+import type { S as AtDeleteUserResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtDeleteUser/S.ts";
+import type { S as AtGetFullBracketInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullBracketInfo/S.ts";
+import type { S as AtGetFullMapInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetFullMapInfo/S.ts";
+import type { S as AtGetGlobalSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
+import type { S as AtGetPhaseInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
+import type { S as AtGetRegistrationInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
+import type { S as AtGetTourneyInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetTourneyInfo/S.ts";
+import type { S as AtGetUserArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetUserArray/S.ts";
+import type { S as AtRegisterResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtRegister/S.ts";
+import type { S as AtSetAdjustmentDurationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetAdjustmentDuration/S.ts";
+import type { S as AtSetBootTimerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
+import type { S as AtSetGlobalSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetGlobalSettings/S.ts";
 import type { InitialBracket } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/S.ts";
+import type { S as AtSetInitialBracketsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/S.ts";
+import type { S as AtSetMapPoolResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/S.ts";
 import type { SimpleMapInfo } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/SimpleMapInfo.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetRegistrationDurationS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetRegistrationDuration/S.ts";
+import type { S as AtSetNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
+import type { S as AtSetRegistrationDurationResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetRegistrationDuration/S.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -92,7 +69,7 @@ export function reqAtGetGlobalSettings(): void {
     });
 }
 function _onMsgAtGetGlobalSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetGlobalSettingsS;
+    const data = e.data as AtGetGlobalSettingsResponse;
     if (!data.getErrorCode()) {
         updateOnMsgAtGetGlobalSettings(data);
         dispatch(TypeId.MsgAtGetGlobalSettings, data);
@@ -110,7 +87,7 @@ export function reqAtSetGlobalSettings(isEnabled: boolean, interval: number): vo
     });
 }
 function _onMsgAtSetGlobalSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetGlobalSettingsS;
+    const data = e.data as AtSetGlobalSettingsResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtSetGlobalSettings, data);
     }
@@ -123,7 +100,7 @@ export function reqAtCreateTourney(): void {
     });
 }
 function _onMsgAtCreateTourney(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as AtCreateTourneyResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtCreateTourney, data);
     }
@@ -136,7 +113,7 @@ export function reqAtDeleteLastTourney(): void {
     });
 }
 function _onMsgAtDeleteLastTourney(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtDeleteLastTourneyS;
+    const data = e.data as AtDeleteLastTourneyResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtDeleteLastTourney, data);
     }
@@ -151,7 +128,7 @@ export function reqAtSetRegistrationDuration(tourneyId: number, duration: number
     });
 }
 function _onMsgAtSetRegistrationDuration(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetRegistrationDurationS;
+    const data = e.data as AtSetRegistrationDurationResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtSetRegistrationDuration, data);
     }
@@ -166,7 +143,7 @@ export function reqAtSetAdjustmentDuration(tourneyId: number, duration: number):
     });
 }
 function _onMsgAtSetAdjustmentDuration(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetAdjustmentDurationS;
+    const data = e.data as AtSetAdjustmentDurationResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtSetAdjustmentDuration, data);
     }
@@ -181,7 +158,7 @@ export function reqAtSetInitialBrackets(tourneyId: number, bracketArray: Initial
     });
 }
 function _onMsgAtSetInitialBrackets(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsS;
+    const data = e.data as AtSetInitialBracketsResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtSetInitialBrackets, data);
     }
@@ -196,7 +173,7 @@ export function reqAtDeleteUser(tourneyId: number, userIdArray: number[]): void 
     });
 }
 function _onMsgAtDeleteUser(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtDeleteUserS;
+    const data = e.data as AtDeleteUserResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtDeleteUser, data);
     }
@@ -211,7 +188,7 @@ export function reqAtSetMapPool(tourneyId: number, mapInfoArray: SimpleMapInfo[]
     });
 }
 function _onMsgAtSetMapPool(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolS;
+    const data = e.data as AtSetMapPoolResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtSetMapPool, data);
     }
@@ -224,7 +201,7 @@ export function reqAtSetName(tourneyId: number, nameArray: LanguageText[]): void
     } } });
 }
 async function _onMsgAtSetName(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS;
+    const data = e.data as AtSetNameResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgAtSetName(data);
         dispatch(TypeId.MsgAtSetName, data);
@@ -238,7 +215,7 @@ export function reqAtSetBootTimer(tourneyId: number, bootTimerParams: number[]):
     } } });
 }
 async function _onMsgAtSetBootTimer(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS;
+    const data = e.data as AtSetBootTimerResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgAtSetBootTimer(data);
         dispatch(TypeId.MsgAtSetBootTimer, data);
@@ -252,7 +229,7 @@ export function reqAtGetPhaseInfo(): void {
     });
 }
 function _onMsgAtGetPhaseInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS;
+    const data = e.data as AtGetPhaseInfoResponse;
     if (!data.getErrorCode()) {
         updateOnMsgAtGetPhaseInfo(data);
         dispatch(TypeId.MsgAtGetPhaseInfo, data);
@@ -267,7 +244,7 @@ export function reqAtGetRegistrationInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetRegistrationInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS;
+    const data = e.data as AtGetRegistrationInfoResponse;
     if (!data.getErrorCode()) {
         updateOnMsgAtGetRegistrationInfo(data);
         dispatch(TypeId.MsgAtGetRegistrationInfo, data);
@@ -282,7 +259,7 @@ export function reqAtGetTourneyInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetTourneyInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetTourneyInfoS;
+    const data = e.data as AtGetTourneyInfoResponse;
     if (!data.getErrorCode()) {
         setAtTourneyInfo(data.getTourneyId() ?? 0, data.getTourneyInfo() ?? null);
         dispatch(TypeId.MsgAtGetTourneyInfo, data);
@@ -297,7 +274,7 @@ export function reqAtGetFullMapInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetFullMapInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetFullMapInfoS;
+    const data = e.data as AtGetFullMapInfoResponse;
     if (!data.getErrorCode()) {
         setAtFullMapInfo(data.getTourneyId() ?? 0, data.getFullMapInfo() ?? null);
         dispatch(TypeId.MsgAtGetFullMapInfo, data);
@@ -312,7 +289,7 @@ export function reqAtGetFullBracketInfo(tourneyId: number): void {
     });
 }
 function _onMsgAtGetFullBracketInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetFullBracketInfoS;
+    const data = e.data as AtGetFullBracketInfoResponse;
     if (!data.getErrorCode()) {
         setAtFullBracketInfo(data.getTourneyId() ?? 0, data.getFullBracketInfo() ?? null);
         dispatch(TypeId.MsgAtGetFullBracketInfo, data);
@@ -327,7 +304,7 @@ export function reqAtGetUserArray(tourneyId: number): void {
     });
 }
 function _onMsgAtGetUserArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetUserArrayS;
+    const data = e.data as AtGetUserArrayResponse;
     if (!data.getErrorCode()) {
         setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray());
         dispatch(TypeId.MsgAtGetUserArray, data);
@@ -343,7 +320,7 @@ export function reqAtRegister(tourneyId: number, isRegister: boolean): void {
     });
 }
 function _onMsgAtRegister(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtRegisterS;
+    const data = e.data as AtRegisterResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgAtRegister, data);
     }

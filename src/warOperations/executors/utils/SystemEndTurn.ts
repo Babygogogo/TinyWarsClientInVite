@@ -1,5 +1,11 @@
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";

@@ -1,4 +1,7 @@
-import type { Rectangle, Size } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Rectangle,
+    Size,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getRotatedPoint } from "../../geometries/Utils.ts";
 import { ColorId } from "../../graphics/Constants.ts";
 import { checkIsWebGl } from "../../graphics/Utils.ts";
@@ -6,8 +9,17 @@ import { DegToRad } from "../../numbers/Constants.ts";
 import { getStage } from "../../stages/StageManager.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { UiAabbParams } from "../types/UiAabbParams.ts";
-import { getUiContainerBaseClass, getUiImageClass, getUiLabelClass } from "./UiFactory.ts";
-import { ColorMatrixFilter, DisplayObject, DisplayObjectContainer, Shape } from "../../vendor/egret/Egret.ts";
+import {
+    getUiContainerBaseClass,
+    getUiImageClass,
+    getUiLabelClass,
+} from "./UiFactory.ts";
+import {
+    ColorMatrixFilter,
+    DisplayObject,
+    DisplayObjectContainer,
+    Shape,
+} from "../../vendor/egret/Egret.ts";
 
 const COLOR_MATRIX_FILTERS = {
     [ColorId.Gray]: new ColorMatrixFilter([

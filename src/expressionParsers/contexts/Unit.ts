@@ -1,21 +1,38 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
 import { Player } from "../results/Player.ts";
 import { Position } from "../results/Position.ts";
 import { Tile } from "../results/Tile.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { MaxId, MinId } from "../../locations/Constants.ts";
-import { encode, checkHasAnyOverlap } from "../../locations/Utils.ts";
+import {
+    MaxId,
+    MinId,
+} from "../../locations/Constants.ts";
+import {
+    encode,
+    checkHasAnyOverlap,
+} from "../../locations/Utils.ts";
 import { TagId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -494,7 +511,7 @@ export class Unit extends Base {
         return ContextType.Unit;
     }
 
-    public override resolveVariable(identifierName: string, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string, isRestricted: boolean): ResultsBase {
         const unit      = this._unit;
         const war       = this.getWar();
         switch (identifierName) {
@@ -516,7 +533,7 @@ export class Unit extends Base {
             case Unit.VnExist          : return new Num(war, unit ? 1 : 0);
             case Unit.VnVisionRange    : return this.resolveVisionRange(isRestricted);
             case Unit.VnVisionRange0   : return this.resolveVisionRange0();
-            case Unit.VnWar            : return new ExpressionParsersResultsWar(war);
+            case Unit.VnWar            : return new ResultsWar(war);
             case Unit.VnTags           :
                 if (unit == null) {
                     return new NumArray(war, [-2]);
@@ -586,7 +603,7 @@ export class Unit extends Base {
             : new Num(war, -2);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Unit.FnHp                     : return this.callHp(argumentArray[0]);
             case Unit.FnFuel                   : return this.callFuel(argumentArray[0]);
@@ -607,7 +624,7 @@ export class Unit extends Base {
             default                                     : return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    public callHp(arg: ExpressionParsersResultsBase): Num {
+    public callHp(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -631,7 +648,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callFuel(arg: ExpressionParsersResultsBase): Num {
+    public callFuel(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -652,7 +669,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    private callMovement(arg: ExpressionParsersResultsBase, isRestricted: boolean): Num {
+    private callMovement(arg: ResultsBase, isRestricted: boolean): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -673,7 +690,7 @@ export class Unit extends Base {
             return new Num(war, unit.getCfgMoveRange());
         }
     }
-    public callPromotion(arg: ExpressionParsersResultsBase): Num {
+    public callPromotion(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -694,7 +711,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callCost(arg: ExpressionParsersResultsBase): Num {
+    public callCost(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -718,7 +735,7 @@ export class Unit extends Base {
             default : return new Num(war, cost);
         }
     }
-    public callPrimaryAmmo(arg: ExpressionParsersResultsBase): Num {
+    public callPrimaryAmmo(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -743,7 +760,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callFlareAmmo(arg: ExpressionParsersResultsBase): Num {
+    public callFlareAmmo(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -768,7 +785,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callBuildMaterial(arg: ExpressionParsersResultsBase): Num {
+    public callBuildMaterial(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -793,7 +810,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callProduceMaterial(arg: ExpressionParsersResultsBase): Num {
+    public callProduceMaterial(arg: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -818,7 +835,7 @@ export class Unit extends Base {
             default : return new Num(war, currentValue);
         }
     }
-    public callLoadedUnitsCount(isRecursive: ExpressionParsersResultsBase): Num {
+    public callLoadedUnitsCount(isRecursive: ResultsBase): Num {
         const unit  = this._unit;
         const war   = this.getWar();
         if (unit == null) {
@@ -831,7 +848,7 @@ export class Unit extends Base {
 
         return new Num(war, war.getUnitMap().getUnitsLoadedByLoader(unit, isRecursive.num !== 0).length);
     }
-    public callHasTag(arg: ExpressionParsersResultsBase): Num {
+    public callHasTag(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -853,7 +870,7 @@ export class Unit extends Base {
 
         return new Num(war, unit.getHasTagId(tagId) ? 1 : 0);
     }
-    public callHasProhibitedLocation(arg: ExpressionParsersResultsBase): Num {
+    public callHasProhibitedLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -879,7 +896,7 @@ export class Unit extends Base {
             (checkHasAnyOverlap(groupedLocationIdArray, unit.getForbiddenGroupedLocationIdArray())) ? 1 : 0
         );
     }
-    public callInLocation(arg: ExpressionParsersResultsBase): Num {
+    public callInLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -905,7 +922,7 @@ export class Unit extends Base {
             war.getTileMap().getTile(unit.getGridIndex()).checkHasAnyLocationIdByGroupedLocationIdArray(groupedLocationIdArray) ? 1 : 0
         );
     }
-    public callDistanceToGrid(argX: ExpressionParsersResultsBase, argY: ExpressionParsersResultsBase): Num {
+    public callDistanceToGrid(argX: ResultsBase, argY: ResultsBase): Num {
         if (!(argX instanceof Num)) {
             throw newError(`Unexpected argX.`);
         }
@@ -928,7 +945,7 @@ export class Unit extends Base {
         const gridIndex = unit.getGridIndex();
         return new Num(war, Math.abs(gridIndex.getX() - x) + Math.abs(gridIndex.getY() - y));
     }
-    public callDistanceToLocation(arg: ExpressionParsersResultsBase): Num {
+    public callDistanceToLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }

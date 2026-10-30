@@ -1,15 +1,30 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { EnergyTypeId, CoId } from "../cos/Constants.ts";
-import { checkIsValidEnergy, getValidEnergy, getCoMaxEnergy } from "../cos/Utils.ts";
+import {
+    EnergyTypeId,
+    CoId,
+} from "../cos/Constants.ts";
+import {
+    checkIsValidEnergy,
+    getValidEnergy,
+    getCoMaxEnergy,
+} from "../cos/Utils.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfUnitCost.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { addGridMark, deleteGridMark, updateGridMarkList } from "../gridMarks/Utils.ts";
+import {
+    addGridMark,
+    deleteGridMark,
+    updateGridMarkList,
+} from "../gridMarks/Utils.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
-import { newError, getExisted, getDefined } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+    getDefined,
+} from "../helpers/Misc.ts";
 import type {
     GridMarkAdded,
     GridMarkDeleted,
@@ -19,13 +34,22 @@ import type {
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { MaxInt32 } from "../numbers/Constants.ts";
-import { getValueInRange, getValueInInt32 } from "../numbers/Utils.ts";
-import { AliveStateId, PlayerIndex } from "./Constants.ts";
+import {
+    getValueInRange,
+    getValueInInt32,
+} from "../numbers/Utils.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "./Constants.ts";
 import type { IPlayer } from "./IPlayer.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-import { getSelfUserId, getUserNickname } from "../users/Model.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../users/Model.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export class Player implements IPlayer {

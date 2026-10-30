@@ -4,12 +4,21 @@ import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { WeaAddTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffExpr.ts";
-import { create, checkIsValid as TileBuffsUtilsCommonCheckIsValid } from "../../../tileBuffs/utils/Common.ts";
+import {
+    create,
+    checkIsValid as checkIsValidTileBuff,
+} from "../../../tileBuffs/utils/Common.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/AddTileBuffExpr.ts";
 
@@ -263,5 +272,5 @@ function createTileBuff(action: WeaAddTileBuffExpr, tile: ITile): TileBuff | nul
         newBuff.setExpiringPlayerIndex(expiringPlayerIndex);
     }
 
-    return TileBuffsUtilsCommonCheckIsValid(newBuff) ? newBuff : null;
+    return checkIsValidTileBuff(newBuff) ? newBuff : null;
 }

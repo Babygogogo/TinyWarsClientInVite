@@ -1,27 +1,30 @@
-import type { Base } from "../contexts/Base.ts";
-import type { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import type {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { getFunctionInfoDict } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class FunctionCall extends ExpressionParsersNodesBase {
+export class FunctionCall extends Base {
     private _identifierName : string;
-    private _argumentArray  : ExpressionParsersNodesBase[];
+    private _argumentArray  : Base[];
 
-    public constructor(identifierName: string, argumentArray: ExpressionParsersNodesBase[]) {
+    public constructor(identifierName: string, argumentArray: Base[]) {
         super();
 
         this._identifierName    = identifierName;
         this._argumentArray     = argumentArray;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         // Evaluate all arguments
-        const argValues = new Array<ExpressionParsersResultsBase>(this._argumentArray.length);
+        const argValues = new Array<ResultsBase>(this._argumentArray.length);
         for (let i = 0; i < this._argumentArray.length; i++) {
             argValues[i] = this._argumentArray[i].eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         }

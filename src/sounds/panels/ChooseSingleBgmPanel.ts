@@ -2,11 +2,21 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getBgmSfxName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../Constants.ts";
-import { playShortSfx, getPlayingBgmCode, playBgm } from "../SoundPlayer.ts";
+import {
+    playShortSfx,
+    getPlayingBgmCode,
+    playBgm,
+} from "../SoundPlayer.ts";
 import { getAllBgmCodeArray } from "../Utils.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

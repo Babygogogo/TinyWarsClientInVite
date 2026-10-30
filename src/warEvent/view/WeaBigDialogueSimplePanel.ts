@@ -1,14 +1,26 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { Common, BigDialogueSideId } from "../../dialogues/Constants.ts";
+import {
+    Common,
+    BigDialogueSideId,
+} from "../../dialogues/Constants.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList, createRange } from "../../helpers/Collection.ts";
+import {
+    deleteElementFromList,
+    createRange,
+} from "../../helpers/Collection.ts";
 import { getBigDialogueBackgroundImage } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,
@@ -34,7 +46,10 @@ import { DataForPlayBgm } from "../../proto/schema/CommonProto/WarEvent/WeaBigDi
 import { DataForPlaySfx } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForMisc/DataForPlaySfx.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getAllBgmCodeArray, getAllSfxCodeArray } from "../../sounds/Utils.ts";
+import {
+    getAllBgmCodeArray,
+    getAllSfxCodeArray,
+} from "../../sounds/Utils.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

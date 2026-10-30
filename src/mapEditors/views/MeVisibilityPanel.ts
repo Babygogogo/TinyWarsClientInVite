@@ -3,7 +3,10 @@ import { DrawerMode } from "../Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { MinId, MaxId } from "../../locations/Constants.ts";
+import {
+    MinId,
+    MaxId,
+} from "../../locations/Constants.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getWar } from "../../mapEditor/model/MeModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

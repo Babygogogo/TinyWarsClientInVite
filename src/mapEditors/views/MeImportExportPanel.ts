@@ -1,7 +1,13 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
+import {
+    getIsTransparentTouchLayerTouched,
+    setIsTransparentTouchLayerTouched,
+} from "../../common/model/CommonModel.ts";
 import { CoId } from "../../cos/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -11,7 +17,10 @@ import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
 import { convertAwbwMap } from "../../maps/utils/Common.ts";
-import { getEnabledNormalMapIdSet, getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getEnabledNormalMapIdSet,
+    getRawData,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

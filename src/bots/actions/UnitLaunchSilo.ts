@@ -9,10 +9,7 @@ import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitLaunchSilo(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitLaunchSilo(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const war       = commonParams.getWar();

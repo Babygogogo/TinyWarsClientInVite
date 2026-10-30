@@ -8,7 +8,10 @@ import { PlayerIndex } from "../../players/Constants.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
+import {
+    getAllUnitsOnMapVisibleToTeams,
+    getAllTilesVisibleToTeams,
+} from "../../visibilities/Utils.ts";
 
 export abstract class MpwWar extends BwWar implements IMpwWar {
     private readonly _warEventManager       = new (getBwWarEventManagerClass())();

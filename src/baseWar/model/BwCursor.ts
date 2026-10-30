@@ -3,10 +3,20 @@ import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { IBwCursor } from "../interface/IBwCursor.ts";
 import type { IBwCursorView } from "../interface/IBwCursorView.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { getBwCursorViewClass, getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getBwCursorViewClass,
+    getRwWarBaseClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import type { BwCursorTapped, BwCursorDragged } from "../../notifications/DataTypes.ts";
-import { addEventListeners, removeEventListeners, dispatch } from "../../notifications/Dispatcher.ts";
+import type {
+    BwCursorTapped,
+    BwCursorDragged,
+} from "../../notifications/DataTypes.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+    dispatch,
+} from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

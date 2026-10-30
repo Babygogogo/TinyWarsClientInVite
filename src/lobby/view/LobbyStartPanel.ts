@@ -6,22 +6,34 @@ import {
     getLastTourneyId,
     getAtPhaseInfo,
 } from "../../autoTourneys/mains/Provider.ts";
-import { checkIsRed } from "../../autoTourneys/rooms/Provider.ts";
+import { checkIsRed as checkAutoTourneysIsRed } from "../../autoTourneys/rooms/Provider.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { checkHasUnreadMessage } from "../../chat/Model.ts";
-import { checkIsRed as CoopCustomRoomModelCcrModelCheckIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
+import { checkIsRed as checkCcrModelIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
 import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { unloadAllWarsAndOpenCommonPanels, gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
-import { checkIsAnyPromiseTrue, getExisted } from "../../helpers/Misc.ts";
+import {
+    unloadAllWarsAndOpenCommonPanels,
+    gotoMyWarListPanel,
+} from "../../helpers/GameFlow.ts";
+import {
+    checkIsAnyPromiseTrue,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { checkIsRedForMultiPlayer, checkIsRedForGameSettings } from "../model/LobbyModel.ts";
-import { checkIsRed as MultiCustomRoomModelMcrModelCheckIsRed } from "../../multiCustomRoom/model/McrModel.ts";
-import { checkIsRed as MultiFreeRoomModelMfrModelCheckIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
-import { checkIsRed as MultiMatchRoomModelMmrModelCheckIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
+import {
+    checkIsRedForMultiPlayer,
+    checkIsRedForGameSettings,
+} from "../model/LobbyModel.ts";
+import { checkIsRed as checkMcrModelIsRed } from "../../multiCustomRoom/model/McrModel.ts";
+import { checkIsRed as checkMfrModelIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
+import { checkIsRed as checkMmrModelIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
 import { MultiPlayerRoomType } from "../../multiPlayerRooms/Constants.ts";
 import {
     checkIsRedForMyMrwWars,
@@ -31,7 +43,7 @@ import {
     checkIsRedForMyMmwWars,
     checkIsRedForMyAtwWars,
 } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import { checkIsRed as checkMrrModelIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -48,7 +60,10 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-import { getRequestedWarIdArray, checkIsRed as WatchWarModelWwModelCheckIsRed } from "../../watchWar/model/WwModel.ts";
+import {
+    getRequestedWarIdArray,
+    checkIsRed as checkWwModelIsRed,
+} from "../../watchWar/model/WwModel.ts";
 
 // eslint-disable-next-line no-shadow
 const enum CommandType {
@@ -450,12 +465,12 @@ export class Panel extends UiPanel<OpenData> {
                                 openPanel(getDict().MpwMyRoomListPanel, void 0);
                             },
                             checkIsRed      : () => checkIsAnyPromiseTrue([
-                                MultiRankRoomModelMrrModelCheckIsRed(),
-                                MultiCustomRoomModelMcrModelCheckIsRed(),
-                                MultiFreeRoomModelMfrModelCheckIsRed(),
-                                CoopCustomRoomModelCcrModelCheckIsRed(),
-                                MultiMatchRoomModelMmrModelCheckIsRed(),
-                                checkIsRed(),
+                                checkMrrModelIsRed(),
+                                checkMcrModelIsRed(),
+                                checkMfrModelIsRed(),
+                                checkCcrModelIsRed(),
+                                checkMmrModelIsRed(),
+                                checkAutoTourneysIsRed(),
                             ]),
                         },
                         {
@@ -518,7 +533,7 @@ export class Panel extends UiPanel<OpenData> {
 
                                 this._showGroup2();
                             },
-                            checkIsRed      : () => WatchWarModelWwModelCheckIsRed(),
+                            checkIsRed      : () => checkWwModelIsRed(),
                         },
                         {
                             commandType     : CommandType.C1_Mp_Replay,

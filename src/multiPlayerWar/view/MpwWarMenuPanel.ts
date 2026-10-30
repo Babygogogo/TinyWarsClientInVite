@@ -1,12 +1,27 @@
 import { StateId } from "../../actionPlanners/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { gotoHalfwayReplayWar, gotoSinglePlayerWar, gotoMyWarListPanel, gotoWatchWarListPanel, gotoLobby } from "../../helpers/GameFlow.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    gotoHalfwayReplayWar,
+    gotoSinglePlayerWar,
+    gotoMyWarListPanel,
+    gotoWatchWarListPanel,
+    gotoLobby,
+} from "../../helpers/GameFlow.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMpwWar } from "../interface/IMpwWar.ts";
-import { getHalfwayReplayData, checkIsRedForAllMyWars } from "../model/MpwModel.ts";
+import {
+    getHalfwayReplayData,
+    checkIsRedForAllMyWars,
+} from "../model/MpwModel.ts";
 import { reqMpwCommonSyncWar } from "../model/MpwProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
@@ -19,7 +34,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { getWatchIncomingInfo } from "../../watchWar/model/WwModel.ts";
-import {SyncRequestTypeId} from "../../wars/Constants.ts";
+import { SyncRequestTypeId } from "../../wars/Constants.ts";
 
 export interface OpenData {
     war     : IMpwWar;

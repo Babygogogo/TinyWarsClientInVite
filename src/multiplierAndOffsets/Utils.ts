@@ -4,22 +4,20 @@ import { getValueInInt32 } from "../numbers/Utils.ts";
 import type { MultiplierAndOffset } from "../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
 import { Event } from "../warEvents/Constants.ts";
 
-type MultiplierAndOffsetSchema  = MultiplierAndOffset;
-
-export function checkIsValid(data: MultiplierAndOffsetSchema): boolean {
+export function checkIsValid(data: MultiplierAndOffset): boolean {
     return getErrorTip(data) == null;
 }
 
-export function checkIsDefault(data: MultiplierAndOffsetSchema): boolean {
+export function checkIsDefault(data: MultiplierAndOffset): boolean {
     return ((data.getMultiplierPct()) === 100)
         && ((data.getOffset()) === 0);
 }
 
-export function getResultValue(data: MultiplierAndOffsetSchema, rawValue: number): number {
+export function getResultValue(data: MultiplierAndOffset, rawValue: number): number {
     return getValueInInt32(rawValue * (data.getMultiplierPct()) / 100 + (data.getOffset()));
 }
 
-export function getBriefDesc(data: MultiplierAndOffsetSchema): string {
+export function getBriefDesc(data: MultiplierAndOffset): string {
     const multiplierPct         = data.getMultiplierPct();
     const textForMultiplierPct  = multiplierPct >= 0 ? `* ${multiplierPct}%` : `* (${multiplierPct})%`;
     const offset                = data.getOffset();
@@ -27,7 +25,7 @@ export function getBriefDesc(data: MultiplierAndOffsetSchema): string {
 
     return `${textForMultiplierPct} ${textForOffset}`;
 }
-export function getDesc(data: MultiplierAndOffsetSchema, name: string): string {
+export function getDesc(data: MultiplierAndOffset, name: string): string {
     const multiplierPct         = data.getMultiplierPct();
     const textForMultiplierPct  = multiplierPct >= 0 ? `* ${multiplierPct}%` : `* (${multiplierPct})%`;
     const offset                = data.getOffset();
@@ -36,7 +34,7 @@ export function getDesc(data: MultiplierAndOffsetSchema, name: string): string {
     return `${getText(TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
 }
 
-export function getErrorTip(data: MultiplierAndOffsetSchema): string | null {
+export function getErrorTip(data: MultiplierAndOffset): string | null {
     const multiplierPct = data.getMultiplierPct();
     if (Math.abs(multiplierPct) > Event.MaxMultiplier) {
         return getText(TextType.Multiplier);

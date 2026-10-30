@@ -6,24 +6,29 @@ import type { ScoreAndAction } from "../Types.ts";
 import { getBestScoreAndAction } from "../Utils.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted, createLazyFunc } from "../../helpers/Misc.ts";
-import { MinValue, MaxValue } from "../../numbers/Constants.ts";
+import {
+    getExisted,
+    createLazyFunc,
+} from "../../helpers/Misc.ts";
+import {
+    MinValue,
+    MaxValue,
+} from "../../numbers/Constants.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { SelfTileEnabledForUnitProduction } from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { BuffTypeId } from "../../tileBuffs/Constants.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
-import { CategoryId, Hp } from "../../units/Constants.ts";
+import {
+    CategoryId,
+    Hp,
+} from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { create } from "../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
 interface ProduceUnitInfo {
     gridIndex           : GridIndex;
     unitTypeArray       : number[];
@@ -89,10 +94,10 @@ async function getBestActionPlayerProduceUnit(commonParams: CommonParams): Promi
     }
 
     const mapSize                       = commonParams.getMapSize();
-    const maxAttackRangeDict            = new Map<IBwUnit, number | null>();
-    const moveRangeDict                 = new Map<IBwUnit, number>();
-    const movableAreaDict               = new Map<IBwUnit, MovableArea>();
-    const rawGetMinTurnsCountForAttack  = async (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => {
+    const maxAttackRangeDict            = new Map<IUnit, number | null>();
+    const moveRangeDict                 = new Map<IUnit, number>();
+    const movableAreaDict               = new Map<IUnit, MovableArea>();
+    const rawGetMinTurnsCountForAttack  = async (attackerUnit: IUnit, targetGridIndex: GridIndex) => {
         if (!maxAttackRangeDict.has(attackerUnit)) {
             maxAttackRangeDict.set(attackerUnit, attackerUnit.getCfgMaxAttackRange());
         }
@@ -135,8 +140,8 @@ async function getBestActionPlayerProduceUnit(commonParams: CommonParams): Promi
                 );
         }
     };
-    const minTurnsCountDict         = new Map<IBwUnit, Map<number, number | null>>();
-    const getMinTurnsCountForAttack = async (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => {
+    const minTurnsCountDict         = new Map<IUnit, Map<number, number | null>>();
+    const getMinTurnsCountForAttack = async (attackerUnit: IUnit, targetGridIndex: GridIndex) => {
         const gridId = targetGridIndex.getGridId(mapSize);
         if (!minTurnsCountDict.has(attackerUnit)) {
             minTurnsCountDict.set(attackerUnit, new Map([[gridId, await rawGetMinTurnsCountForAttack(attackerUnit, targetGridIndex)]]));
@@ -150,7 +155,7 @@ async function getBestActionPlayerProduceUnit(commonParams: CommonParams): Promi
         return minTurnsCountDict.get(attackerUnit)?.get(gridId) ?? null;
     };
 
-    const promiseArray: Promise<GrScoreAndAction | null>[] = [];
+    const promiseArray: Promise<ScoreAndAction | null>[] = [];
     for (const produceUnitInfo of produceUnitInfoArray) {
         promiseArray.push(getBestScoreAndActionPlayerProduceUnitWithGridIndex({
             commonParams                : commonParams,
@@ -165,8 +170,8 @@ async function getBestActionPlayerProduceUnit(commonParams: CommonParams): Promi
 async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParams, produceUnitInfo, getMinTurnsCountForAttack }: {
     commonParams                : CommonParams;
     produceUnitInfo             : ProduceUnitInfo;
-    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => Promise<number | null>;
-}): Promise<GrScoreAndAction | null> {
+    getMinTurnsCountForAttack   : (attackerUnit: IUnit, targetGridIndex: GridIndex) => Promise<number | null>;
+}): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const gridIndex             = produceUnitInfo.gridIndex;
@@ -214,7 +219,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     producingGridIndex          : GridIndex;
     producingUnitType           : number;
     effectiveCoSkill            : Undefinable<SelfTileEnabledForUnitProduction>;
-    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => Promise<number | null>;
+    getMinTurnsCountForAttack   : (attackerUnit: IUnit, targetGridIndex: GridIndex) => Promise<number | null>;
 }): Promise<number | null> {
     await checkAndCallLater();
 

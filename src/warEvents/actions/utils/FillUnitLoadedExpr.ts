@@ -10,17 +10,37 @@ import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../../lang/Utils.ts";
-import { MinId, MaxId } from "../../../locations/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
+import {
+    MinId,
+    MaxId,
+} from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
-import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
+import {
+    getValueInRange,
+    getValueInInt32,
+} from "../../../numbers/Utils.ts";
 import type { WeaFillUnitLoadedExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitLoadedExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import { ActionStateId, AiModeId, TagId } from "../../../units/Constants.ts";
+import {
+    ActionStateId,
+    AiModeId,
+    TagId,
+} from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
-import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
+import {
+    checkIsValidActionStateId,
+    checkIsValidAiModeId,
+    getEncodedTagId,
+} from "../../../units/utils/Common.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/FillUnitLoadedExpr.ts";

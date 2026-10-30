@@ -1,1684 +1,1744 @@
-import { type OpenData, Panel } from "../actionPlanners/ActionPlannerPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtGlobalSettingsPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtGlobalSettingsPanel,
+    type OpenData as ActionPlannerPanelOpenData,
+    Panel as ActionPlannersActionPlannerPanel,
+} from "../actionPlanners/ActionPlannerPanel.ts";
+import {
+    type OpenData as AtGlobalSettingsPanelOpenData,
+    Panel as ViewsAtGlobalSettingsPanel,
 } from "../autoTourneys/mains/views/AtGlobalSettingsPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtRegisterPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtRegisterPanel,
+    type OpenData as AtRegisterPanelOpenData,
+    Panel as ViewsAtRegisterPanel,
 } from "../autoTourneys/mains/views/AtRegisterPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtSetInitialBracketsPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtSetInitialBracketsPanel,
+    type OpenData as AtSetInitialBracketsPanelOpenData,
+    Panel as ViewsAtSetInitialBracketsPanel,
 } from "../autoTourneys/mains/views/AtSetInitialBracketsPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtSetMapPoolPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtSetMapPoolPanel,
+    type OpenData as AtSetMapPoolPanelOpenData,
+    Panel as ViewsAtSetMapPoolPanel,
 } from "../autoTourneys/mains/views/AtSetMapPoolPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtTourneyInfoPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtTourneyInfoPanel,
+    type OpenData as AtTourneyInfoPanelOpenData,
+    Panel as ViewsAtTourneyInfoPanel,
 } from "../autoTourneys/mains/views/AtTourneyInfoPanel.ts";
 import {
-    type OpenData as AutoTourneysMainsViewsAtTourneySettingsPanelOpenData,
-    Panel as AutoTourneysMainsViewsAtTourneySettingsPanel,
+    type OpenData as AtTourneySettingsPanelOpenData,
+    Panel as ViewsAtTourneySettingsPanel,
 } from "../autoTourneys/mains/views/AtTourneySettingsPanel.ts";
 import {
-    type OpenData as AutoTourneysRoomsViewsAtrMainMenuPanelOpenData,
-    Panel as AutoTourneysRoomsViewsAtrMainMenuPanel,
+    type OpenData as AtrMainMenuPanelOpenData,
+    Panel as ViewsAtrMainMenuPanel,
 } from "../autoTourneys/rooms/views/AtrMainMenuPanel.ts";
 import {
-    type OpenData as AutoTourneysRoomsViewsAtrPreviewMapListPanelOpenData,
-    Panel as AutoTourneysRoomsViewsAtrPreviewMapListPanel,
+    type OpenData as AtrPreviewMapListPanelOpenData,
+    Panel as ViewsAtrPreviewMapListPanel,
 } from "../autoTourneys/rooms/views/AtrPreviewMapListPanel.ts";
 import {
-    type OpenData as AutoTourneysRoomsViewsAtrRoomInfoPanelOpenData,
-    Panel as AutoTourneysRoomsViewsAtrRoomInfoPanel,
+    type OpenData as AtrRoomInfoPanelOpenData,
+    Panel as ViewsAtrRoomInfoPanel,
 } from "../autoTourneys/rooms/views/AtrRoomInfoPanel.ts";
 import {
-    type OpenData as BaseWarViewBwBackgroundPanelOpenData,
-    Panel as BaseWarViewBwBackgroundPanel,
+    type OpenData as BwBackgroundPanelOpenData,
+    Panel as ViewBwBackgroundPanel,
 } from "../baseWar/view/BwBackgroundPanel.ts";
 import {
-    type OpenData as BaseWarViewBwBeginTurnPanelOpenData,
-    Panel as BaseWarViewBwBeginTurnPanel,
+    type OpenData as BwBeginTurnPanelOpenData,
+    Panel as ViewBwBeginTurnPanel,
 } from "../baseWar/view/BwBeginTurnPanel.ts";
 import {
-    type OpenData as BaseWarViewBwBigDialoguePanelOpenData,
-    Panel as BaseWarViewBwBigDialoguePanel,
+    type OpenData as BwBigDialoguePanelOpenData,
+    Panel as ViewBwBigDialoguePanel,
 } from "../baseWar/view/BwBigDialoguePanel.ts";
 import {
-    type OpenData as BaseWarViewBwCaptureProgressPanelOpenData,
-    Panel as BaseWarViewBwCaptureProgressPanel,
+    type OpenData as BwCaptureProgressPanelOpenData,
+    Panel as ViewBwCaptureProgressPanel,
 } from "../baseWar/view/BwCaptureProgressPanel.ts";
 import {
-    type OpenData as BaseWarViewBwCustomCounterListPanelOpenData,
-    Panel as BaseWarViewBwCustomCounterListPanel,
+    type OpenData as BwCustomCounterListPanelOpenData,
+    Panel as ViewBwCustomCounterListPanel,
 } from "../baseWar/view/BwCustomCounterListPanel.ts";
 import {
-    type OpenData as BaseWarViewBwDamagePreviewPanelOpenData,
-    Panel as BaseWarViewBwDamagePreviewPanel,
+    type OpenData as BwDamagePreviewPanelOpenData,
+    Panel as ViewBwDamagePreviewPanel,
 } from "../baseWar/view/BwDamagePreviewPanel.ts";
 import {
-    type OpenData as BaseWarViewBwMapSimpleDialogueListPanelOpenData,
-    Panel as BaseWarViewBwMapSimpleDialogueListPanel,
+    type OpenData as BwMapSimpleDialogueListPanelOpenData,
+    Panel as ViewBwMapSimpleDialogueListPanel,
 } from "../baseWar/view/BwMapSimpleDialogueListPanel.ts";
 import {
-    type OpenData as BaseWarViewBwMapSimpleDialoguePanelOpenData,
-    Panel as BaseWarViewBwMapSimpleDialoguePanel,
+    type OpenData as BwMapSimpleDialoguePanelOpenData,
+    Panel as ViewBwMapSimpleDialoguePanel,
 } from "../baseWar/view/BwMapSimpleDialoguePanel.ts";
 import {
-    type OpenData as BaseWarViewBwMarkGridPanelOpenData,
-    Panel as BaseWarViewBwMarkGridPanel,
+    type OpenData as BwMarkGridPanelOpenData,
+    Panel as ViewBwMarkGridPanel,
 } from "../baseWar/view/BwMarkGridPanel.ts";
 import {
-    type OpenData as BaseWarViewBwProduceUnitPanelOpenData,
-    Panel as BaseWarViewBwProduceUnitPanel,
+    type OpenData as BwProduceUnitPanelOpenData,
+    Panel as ViewBwProduceUnitPanel,
 } from "../baseWar/view/BwProduceUnitPanel.ts";
 import {
-    type OpenData as BaseWarViewBwSmallDialoguePanelOpenData,
-    Panel as BaseWarViewBwSmallDialoguePanel,
+    type OpenData as BwSmallDialoguePanelOpenData,
+    Panel as ViewBwSmallDialoguePanel,
 } from "../baseWar/view/BwSmallDialoguePanel.ts";
 import {
-    type OpenData as BaseWarViewBwTaskObjectivePanelOpenData,
-    Panel as BaseWarViewBwTaskObjectivePanel,
+    type OpenData as BwTaskObjectivePanelOpenData,
+    Panel as ViewBwTaskObjectivePanel,
 } from "../baseWar/view/BwTaskObjectivePanel.ts";
 import {
-    type OpenData as BaseWarViewBwTileBriefPanelOpenData,
-    Panel as BaseWarViewBwTileBriefPanel,
+    type OpenData as BwTileBriefPanelOpenData,
+    Panel as ViewBwTileBriefPanel,
 } from "../baseWar/view/BwTileBriefPanel.ts";
 import {
-    type OpenData as BaseWarViewBwTileBuffListPanelOpenData,
-    Panel as BaseWarViewBwTileBuffListPanel,
+    type OpenData as BwTileBuffListPanelOpenData,
+    Panel as ViewBwTileBuffListPanel,
 } from "../baseWar/view/BwTileBuffListPanel.ts";
 import {
-    type OpenData as BaseWarViewBwTileDetailPanelOpenData,
-    Panel as BaseWarViewBwTileDetailPanel,
+    type OpenData as BwTileDetailPanelOpenData,
+    Panel as ViewBwTileDetailPanel,
 } from "../baseWar/view/BwTileDetailPanel.ts";
 import {
-    type OpenData as BaseWarViewBwTileStatisticsPanelOpenData,
-    Panel as BaseWarViewBwTileStatisticsPanel,
+    type OpenData as BwTileStatisticsPanelOpenData,
+    Panel as ViewBwTileStatisticsPanel,
 } from "../baseWar/view/BwTileStatisticsPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitActionsPanelOpenData,
-    Panel as BaseWarViewBwUnitActionsPanel,
+    type OpenData as BwUnitActionsPanelOpenData,
+    Panel as ViewBwUnitActionsPanel,
 } from "../baseWar/view/BwUnitActionsPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitBriefPanelOpenData,
-    Panel as BaseWarViewBwUnitBriefPanel,
+    type OpenData as BwUnitBriefPanelOpenData,
+    Panel as ViewBwUnitBriefPanel,
 } from "../baseWar/view/BwUnitBriefPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitBuffListPanelOpenData,
-    Panel as BaseWarViewBwUnitBuffListPanel,
+    type OpenData as BwUnitBuffListPanelOpenData,
+    Panel as ViewBwUnitBuffListPanel,
 } from "../baseWar/view/BwUnitBuffListPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitDetailPanelOpenData,
-    Panel as BaseWarViewBwUnitDetailPanel,
+    type OpenData as BwUnitDetailPanelOpenData,
+    Panel as ViewBwUnitDetailPanel,
 } from "../baseWar/view/BwUnitDetailPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitListPanelOpenData,
-    Panel as BaseWarViewBwUnitListPanel,
+    type OpenData as BwUnitListPanelOpenData,
+    Panel as ViewBwUnitListPanel,
 } from "../baseWar/view/BwUnitListPanel.ts";
 import {
-    type OpenData as BaseWarViewBwUnitStatisticsPanelOpenData,
-    Panel as BaseWarViewBwUnitStatisticsPanel,
+    type OpenData as BwUnitStatisticsPanelOpenData,
+    Panel as ViewBwUnitStatisticsPanel,
 } from "../baseWar/view/BwUnitStatisticsPanel.ts";
 import {
-    type OpenData as BaseWarViewBwWarExtraInfoPanelOpenData,
-    Panel as BaseWarViewBwWarExtraInfoPanel,
+    type OpenData as BwWarExtraInfoPanelOpenData,
+    Panel as ViewBwWarExtraInfoPanel,
 } from "../baseWar/view/BwWarExtraInfoPanel.ts";
-import { type OpenData as BaseWarViewBwWarInfoPanelOpenData, Panel as BaseWarViewBwWarInfoPanel } from "../baseWar/view/BwWarInfoPanel.ts";
-import { type OpenData as BaseWarViewBwWarPanelOpenData, Panel as BaseWarViewBwWarPanel } from "../baseWar/view/BwWarPanel.ts";
 import {
-    type OpenData as BroadcastsViewsBroadcastAddMessagePanelOpenData,
-    Panel as BroadcastsViewsBroadcastAddMessagePanel,
+    type OpenData as BwWarInfoPanelOpenData,
+    Panel as ViewBwWarInfoPanel,
+} from "../baseWar/view/BwWarInfoPanel.ts";
+import {
+    type OpenData as BwWarPanelOpenData,
+    Panel as ViewBwWarPanel,
+} from "../baseWar/view/BwWarPanel.ts";
+import {
+    type OpenData as BroadcastAddMessagePanelOpenData,
+    Panel as ViewsBroadcastAddMessagePanel,
 } from "../broadcasts/views/BroadcastAddMessagePanel.ts";
 import {
-    type OpenData as BroadcastsViewsBroadcastMessageListPanelOpenData,
-    Panel as BroadcastsViewsBroadcastMessageListPanel,
+    type OpenData as BroadcastMessageListPanelOpenData,
+    Panel as ViewsBroadcastMessageListPanel,
 } from "../broadcasts/views/BroadcastMessageListPanel.ts";
 import {
-    type OpenData as BroadcastsViewsBroadcastPanelOpenData,
-    Panel as BroadcastsViewsBroadcastPanel,
+    type OpenData as BroadcastPanelOpenData,
+    Panel as ViewsBroadcastPanel,
 } from "../broadcasts/views/BroadcastPanel.ts";
 import {
-    type OpenData as CampaignsManagementsViewsCmCampaignCommandsPanelOpenData,
-    Panel as CampaignsManagementsViewsCmCampaignCommandsPanel,
+    type OpenData as CmCampaignCommandsPanelOpenData,
+    Panel as ViewsCmCampaignCommandsPanel,
 } from "../campaigns/managements/views/CmCampaignCommandsPanel.ts";
 import {
-    type OpenData as CampaignsManagementsViewsCmCampaignDesignersPanelOpenData,
-    Panel as CampaignsManagementsViewsCmCampaignDesignersPanel,
+    type OpenData as CmCampaignDesignersPanelOpenData,
+    Panel as ViewsCmCampaignDesignersPanel,
 } from "../campaigns/managements/views/CmCampaignDesignersPanel.ts";
 import {
-    type OpenData as CampaignsManagementsViewsCmCampaignListPanelOpenData,
-    Panel as CampaignsManagementsViewsCmCampaignListPanel,
+    type OpenData as CmCampaignListPanelOpenData,
+    Panel as ViewsCmCampaignListPanel,
 } from "../campaigns/managements/views/CmCampaignListPanel.ts";
 import {
-    type OpenData as CampaignsManagementsViewsCmCampaignMapsPanelOpenData,
-    Panel as CampaignsManagementsViewsCmCampaignMapsPanel,
+    type OpenData as CmCampaignMapsPanelOpenData,
+    Panel as ViewsCmCampaignMapsPanel,
 } from "../campaigns/managements/views/CmCampaignMapsPanel.ts";
 import {
-    type OpenData as CampaignsViewsCampaignCreateCampaignsPanelOpenData,
-    Panel as CampaignsViewsCampaignCreateCampaignsPanel,
+    type OpenData as CampaignCreateCampaignsPanelOpenData,
+    Panel as ViewsCampaignCreateCampaignsPanel,
 } from "../campaigns/views/CampaignCreateCampaignsPanel.ts";
 import {
-    type OpenData as CampaignsViewsCampaignCreateMapsPanelOpenData,
-    Panel as CampaignsViewsCampaignCreateMapsPanel,
+    type OpenData as CampaignCreateMapsPanelOpenData,
+    Panel as ViewsCampaignCreateMapsPanel,
 } from "../campaigns/views/CampaignCreateMapsPanel.ts";
 import {
-    type OpenData as CampaignsViewsCampaignCreateQuickSettingsPanelOpenData,
-    Panel as CampaignsViewsCampaignCreateQuickSettingsPanel,
+    type OpenData as CampaignCreateQuickSettingsPanelOpenData,
+    Panel as ViewsCampaignCreateQuickSettingsPanel,
 } from "../campaigns/views/CampaignCreateQuickSettingsPanel.ts";
 import {
-    type OpenData as ChangeLogViewChangeLogPanelOpenData,
-    Panel as ChangeLogViewChangeLogPanel,
+    type OpenData as ChangeLogPanelOpenData,
+    Panel as ChangeLogsChangeLogPanel,
 } from "../changeLogs/ChangeLogPanel.ts";
-import { type OpenData as ChatViewChatCommandPanelOpenData, Panel as ChatViewChatCommandPanel } from "../chat/view/ChatCommandPanel.ts";
-import { type OpenData as ChatViewChatPanelOpenData, Panel as ChatViewChatPanel } from "../chat/view/ChatPanel.ts";
 import {
-    type OpenData as CommonViewCommonAlertPanelOpenData,
-    Panel as CommonViewCommonAlertPanel,
+    type OpenData as ChatCommandPanelOpenData,
+    Panel as ViewChatCommandPanel,
+} from "../chat/view/ChatCommandPanel.ts";
+import {
+    type OpenData as ChatPanelOpenData,
+    Panel as ViewChatPanel,
+} from "../chat/view/ChatPanel.ts";
+import {
+    type OpenData as CommonAlertPanelOpenData,
+    Panel as ViewCommonAlertPanel,
 } from "../common/view/CommonAlertPanel.ts";
-import { type OpenData as CommonViewCommonApiPanelOpenData, Panel as CommonViewCommonApiPanel } from "../common/view/CommonApiPanel.ts";
 import {
-    type OpenData as CommonViewCommonBlockPanelOpenData,
-    Panel as CommonViewCommonBlockPanel,
+    type OpenData as CommonApiPanelOpenData,
+    Panel as ViewCommonApiPanel,
+} from "../common/view/CommonApiPanel.ts";
+import {
+    type OpenData as CommonBlockPanelOpenData,
+    Panel as ViewCommonBlockPanel,
 } from "../common/view/CommonBlockPanel.ts";
 import {
-    type OpenData as CommonViewCommonChangeVersionPanelOpenData,
-    Panel as CommonViewCommonChangeVersionPanel,
+    type OpenData as CommonChangeVersionPanelOpenData,
+    Panel as ViewCommonChangeVersionPanel,
 } from "../common/view/CommonChangeVersionPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseCoAndColorPanelOpenData,
-    Panel as CommonViewCommonChooseCoAndColorPanel,
+    type OpenData as CommonChooseCoAndColorPanelOpenData,
+    Panel as ViewCommonChooseCoAndColorPanel,
 } from "../common/view/CommonChooseCoAndColorPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseGridIndexPanelOpenData,
-    Panel as CommonViewCommonChooseGridIndexPanel,
+    type OpenData as CommonChooseGridIndexPanelOpenData,
+    Panel as ViewCommonChooseGridIndexPanel,
 } from "../common/view/CommonChooseGridIndexPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMapSorterPanelOpenData,
-    Panel as CommonViewCommonChooseMapSorterPanel,
+    type OpenData as CommonChooseMapSorterPanelOpenData,
+    Panel as ViewCommonChooseMapSorterPanel,
 } from "../common/view/CommonChooseMapSorterPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiCoCategoryIdPanelOpenData,
-    Panel as CommonViewCommonChooseMultiCoCategoryIdPanel,
+    type OpenData as CommonChooseMultiCoCategoryIdPanelOpenData,
+    Panel as ViewCommonChooseMultiCoCategoryIdPanel,
 } from "../common/view/CommonChooseMultiCoCategoryIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiCoIdPanelOpenData,
-    Panel as CommonViewCommonChooseMultiCoIdPanel,
+    type OpenData as CommonChooseMultiCoIdPanelOpenData,
+    Panel as ViewCommonChooseMultiCoIdPanel,
 } from "../common/view/CommonChooseMultiCoIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiIntegerPanelOpenData,
-    Panel as CommonViewCommonChooseMultiIntegerPanel,
+    type OpenData as CommonChooseMultiIntegerPanelOpenData,
+    Panel as ViewCommonChooseMultiIntegerPanel,
 } from "../common/view/CommonChooseMultiIntegerPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiNumberPanelOpenData,
-    Panel as CommonViewCommonChooseMultiNumberPanel,
+    type OpenData as CommonChooseMultiNumberPanelOpenData,
+    Panel as ViewCommonChooseMultiNumberPanel,
 } from "../common/view/CommonChooseMultiNumberPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiTileTypePanelOpenData,
-    Panel as CommonViewCommonChooseMultiTileTypePanel,
+    type OpenData as CommonChooseMultiTileTypePanelOpenData,
+    Panel as ViewCommonChooseMultiTileTypePanel,
 } from "../common/view/CommonChooseMultiTileTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseMultiUnitTypePanelOpenData,
-    Panel as CommonViewCommonChooseMultiUnitTypePanel,
+    type OpenData as CommonChooseMultiUnitTypePanelOpenData,
+    Panel as ViewCommonChooseMultiUnitTypePanel,
 } from "../common/view/CommonChooseMultiUnitTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseOverridingSkinIdPanelOpenData,
-    Panel as CommonViewCommonChooseOverridingSkinIdPanel,
+    type OpenData as CommonChooseOverridingSkinIdPanelOpenData,
+    Panel as ViewCommonChooseOverridingSkinIdPanel,
 } from "../common/view/CommonChooseOverridingSkinIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSfxPanelOpenData,
-    Panel as CommonViewCommonChooseSfxPanel,
+    type OpenData as CommonChooseSfxPanelOpenData,
+    Panel as ViewCommonChooseSfxPanel,
 } from "../common/view/CommonChooseSfxPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleCoCategoryIdPanelOpenData,
-    Panel as CommonViewCommonChooseSingleCoCategoryIdPanel,
+    type OpenData as CommonChooseSingleCoCategoryIdPanelOpenData,
+    Panel as ViewCommonChooseSingleCoCategoryIdPanel,
 } from "../common/view/CommonChooseSingleCoCategoryIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleCoIdPanelOpenData,
-    Panel as CommonViewCommonChooseSingleCoIdPanel,
+    type OpenData as CommonChooseSingleCoIdPanelOpenData,
+    Panel as ViewCommonChooseSingleCoIdPanel,
 } from "../common/view/CommonChooseSingleCoIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleGridMarkPanelOpenData,
-    Panel as CommonViewCommonChooseSingleGridMarkPanel,
+    type OpenData as CommonChooseSingleGridMarkPanelOpenData,
+    Panel as ViewCommonChooseSingleGridMarkPanel,
 } from "../common/view/CommonChooseSingleGridMarkPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleMapEditorSlotPanelOpenData,
-    Panel as CommonViewCommonChooseSingleMapEditorSlotPanel,
+    type OpenData as CommonChooseSingleMapEditorSlotPanelOpenData,
+    Panel as ViewCommonChooseSingleMapEditorSlotPanel,
 } from "../common/view/CommonChooseSingleMapEditorSlotPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleNormalMapIdPanelOpenData,
-    Panel as CommonViewCommonChooseSingleNormalMapIdPanel,
+    type OpenData as CommonChooseSingleNormalMapIdPanelOpenData,
+    Panel as ViewCommonChooseSingleNormalMapIdPanel,
 } from "../common/view/CommonChooseSingleNormalMapIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleNumberPanelOpenData,
-    Panel as CommonViewCommonChooseSingleNumberPanel,
+    type OpenData as CommonChooseSingleNumberPanelOpenData,
+    Panel as ViewCommonChooseSingleNumberPanel,
 } from "../common/view/CommonChooseSingleNumberPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleSkinIdPanelOpenData,
-    Panel as CommonViewCommonChooseSingleSkinIdPanel,
+    type OpenData as CommonChooseSingleSkinIdPanelOpenData,
+    Panel as ViewCommonChooseSingleSkinIdPanel,
 } from "../common/view/CommonChooseSingleSkinIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleSpmSaveSlotPanelOpenData,
-    Panel as CommonViewCommonChooseSingleSpmSaveSlotPanel,
+    type OpenData as CommonChooseSingleSpmSaveSlotPanelOpenData,
+    Panel as ViewCommonChooseSingleSpmSaveSlotPanel,
 } from "../common/view/CommonChooseSingleSpmSaveSlotPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleTileTypePanelOpenData,
-    Panel as CommonViewCommonChooseSingleTileTypePanel,
+    type OpenData as CommonChooseSingleTileTypePanelOpenData,
+    Panel as ViewCommonChooseSingleTileTypePanel,
 } from "../common/view/CommonChooseSingleTileTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseSingleUnitTypePanelOpenData,
-    Panel as CommonViewCommonChooseSingleUnitTypePanel,
+    type OpenData as CommonChooseSingleUnitTypePanelOpenData,
+    Panel as ViewCommonChooseSingleUnitTypePanel,
 } from "../common/view/CommonChooseSingleUnitTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseTileBasePanelOpenData,
-    Panel as CommonViewCommonChooseTileBasePanel,
+    type OpenData as CommonChooseTileBasePanelOpenData,
+    Panel as ViewCommonChooseTileBasePanel,
 } from "../common/view/CommonChooseTileBasePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseTileDecorationPanelOpenData,
-    Panel as CommonViewCommonChooseTileDecorationPanel,
+    type OpenData as CommonChooseTileDecorationPanelOpenData,
+    Panel as ViewCommonChooseTileDecorationPanel,
 } from "../common/view/CommonChooseTileDecorationPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseTileInfoPanelOpenData,
-    Panel as CommonViewCommonChooseTileInfoPanel,
+    type OpenData as CommonChooseTileInfoPanelOpenData,
+    Panel as ViewCommonChooseTileInfoPanel,
 } from "../common/view/CommonChooseTileInfoPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseTileObjectPanelOpenData,
-    Panel as CommonViewCommonChooseTileObjectPanel,
+    type OpenData as CommonChooseTileObjectPanelOpenData,
+    Panel as ViewCommonChooseTileObjectPanel,
 } from "../common/view/CommonChooseTileObjectPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseTileTypePanelOpenData,
-    Panel as CommonViewCommonChooseTileTypePanel,
+    type OpenData as CommonChooseTileTypePanelOpenData,
+    Panel as ViewCommonChooseTileTypePanel,
 } from "../common/view/CommonChooseTileTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseUnitAndPlayerIndexPanelOpenData,
-    Panel as CommonViewCommonChooseUnitAndPlayerIndexPanel,
+    type OpenData as CommonChooseUnitAndPlayerIndexPanelOpenData,
+    Panel as ViewCommonChooseUnitAndPlayerIndexPanel,
 } from "../common/view/CommonChooseUnitAndPlayerIndexPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseUnitAttrPanelOpenData,
-    Panel as CommonViewCommonChooseUnitAttrPanel,
+    type OpenData as CommonChooseUnitAttrPanelOpenData,
+    Panel as ViewCommonChooseUnitAttrPanel,
 } from "../common/view/CommonChooseUnitAttrPanel.ts";
 import {
-    type OpenData as CommonViewCommonChooseUnitTagPanelOpenData,
-    Panel as CommonViewCommonChooseUnitTagPanel,
+    type OpenData as CommonChooseUnitTagPanelOpenData,
+    Panel as ViewCommonChooseUnitTagPanel,
 } from "../common/view/CommonChooseUnitTagPanel.ts";
 import {
-    type OpenData as CommonViewCommonCoInfoPanelOpenData,
-    Panel as CommonViewCommonCoInfoPanel,
+    type OpenData as CommonCoInfoPanelOpenData,
+    Panel as ViewCommonCoInfoPanel,
 } from "../common/view/CommonCoInfoPanel.ts";
 import {
-    type OpenData as CommonViewCommonCoListPanelOpenData,
-    Panel as CommonViewCommonCoListPanel,
+    type OpenData as CommonCoListPanelOpenData,
+    Panel as ViewCommonCoListPanel,
 } from "../common/view/CommonCoListPanel.ts";
 import {
-    type OpenData as CommonViewCommonConfirmPanelOpenData,
-    Panel as CommonViewCommonConfirmPanel,
+    type OpenData as CommonConfirmPanelOpenData,
+    Panel as ViewCommonConfirmPanel,
 } from "../common/view/CommonConfirmPanel.ts";
 import {
-    type OpenData as CommonViewCommonCoStatisticsFilterPanelOpenData,
-    Panel as CommonViewCommonCoStatisticsFilterPanel,
+    type OpenData as CommonCoStatisticsFilterPanelOpenData,
+    Panel as ViewCommonCoStatisticsFilterPanel,
 } from "../common/view/CommonCoStatisticsFilterPanel.ts";
 import {
-    type OpenData as CommonViewCommonCoStatisticsPanelOpenData,
-    Panel as CommonViewCommonCoStatisticsPanel,
+    type OpenData as CommonCoStatisticsPanelOpenData,
+    Panel as ViewCommonCoStatisticsPanel,
 } from "../common/view/CommonCoStatisticsPanel.ts";
 import {
-    type OpenData as CommonViewCommonDamageCalculatorPanelOpenData,
-    Panel as CommonViewCommonDamageCalculatorPanel,
+    type OpenData as CommonDamageCalculatorPanelOpenData,
+    Panel as ViewCommonDamageCalculatorPanel,
 } from "../common/view/CommonDamageCalculatorPanel.ts";
 import {
-    type OpenData as CommonViewCommonDamageChartPanelOpenData,
-    Panel as CommonViewCommonDamageChartPanel,
+    type OpenData as CommonDamageChartPanelOpenData,
+    Panel as ViewCommonDamageChartPanel,
 } from "../common/view/CommonDamageChartPanel.ts";
 import {
-    type OpenData as CommonViewCommonDeletePlayerPanelOpenData,
-    Panel as CommonViewCommonDeletePlayerPanel,
+    type OpenData as CommonDeletePlayerPanelOpenData,
+    Panel as ViewCommonDeletePlayerPanel,
 } from "../common/view/CommonDeletePlayerPanel.ts";
 import {
-    type OpenData as CommonViewCommonDoubleSliderPanelOpenData,
-    Panel as CommonViewCommonDoubleSliderPanel,
+    type OpenData as CommonDoubleSliderPanelOpenData,
+    Panel as ViewCommonDoubleSliderPanel,
 } from "../common/view/CommonDoubleSliderPanel.ts";
 import {
-    type OpenData as CommonViewCommonErrorPanelOpenData,
-    Panel as CommonViewCommonErrorPanel,
+    type OpenData as CommonErrorPanelOpenData,
+    Panel as ViewCommonErrorPanel,
 } from "../common/view/CommonErrorPanel.ts";
 import {
-    type OpenData as CommonViewCommonExpressionTypeIdPanelOpenData,
-    Panel as CommonViewCommonExpressionTypeIdPanel,
+    type OpenData as CommonExpressionTypeIdPanelOpenData,
+    Panel as ViewCommonExpressionTypeIdPanel,
 } from "../common/view/CommonExpressionTypeIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonGameChartPanelOpenData,
-    Panel as CommonViewCommonGameChartPanel,
+    type OpenData as CommonGameChartPanelOpenData,
+    Panel as ViewCommonGameChartPanel,
 } from "../common/view/CommonGameChartPanel.ts";
-import { type OpenData as CommonViewCommonHelpPanelOpenData, Panel as CommonViewCommonHelpPanel } from "../common/view/CommonHelpPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputDurationPanelOpenData,
-    Panel as CommonViewCommonInputDurationPanel,
+    type OpenData as CommonHelpPanelOpenData,
+    Panel as ViewCommonHelpPanel,
+} from "../common/view/CommonHelpPanel.ts";
+import {
+    type OpenData as CommonInputDurationPanelOpenData,
+    Panel as ViewCommonInputDurationPanel,
 } from "../common/view/CommonInputDurationPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputExpressionPanelOpenData,
-    Panel as CommonViewCommonInputExpressionPanel,
+    type OpenData as CommonInputExpressionPanelOpenData,
+    Panel as ViewCommonInputExpressionPanel,
 } from "../common/view/CommonInputExpressionPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputIntegerPanelOpenData,
-    Panel as CommonViewCommonInputIntegerPanel,
+    type OpenData as CommonInputIntegerPanelOpenData,
+    Panel as ViewCommonInputIntegerPanel,
 } from "../common/view/CommonInputIntegerPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputLanguageTextPanelOpenData,
-    Panel as CommonViewCommonInputLanguageTextPanel,
+    type OpenData as CommonInputLanguageTextPanelOpenData,
+    Panel as ViewCommonInputLanguageTextPanel,
 } from "../common/view/CommonInputLanguageTextPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputNullableIntegerPanelOpenData,
-    Panel as CommonViewCommonInputNullableIntegerPanel,
+    type OpenData as CommonInputNullableIntegerPanelOpenData,
+    Panel as ViewCommonInputNullableIntegerPanel,
 } from "../common/view/CommonInputNullableIntegerPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputPanelOpenData,
-    Panel as CommonViewCommonInputPanel,
+    type OpenData as CommonInputPanelOpenData,
+    Panel as ViewCommonInputPanel,
 } from "../common/view/CommonInputPanel.ts";
 import {
-    type OpenData as CommonViewCommonInputShortLangTextPanelOpenData,
-    Panel as CommonViewCommonInputShortLangTextPanel,
+    type OpenData as CommonInputShortLangTextPanelOpenData,
+    Panel as ViewCommonInputShortLangTextPanel,
 } from "../common/view/CommonInputShortLangTextPanel.ts";
 import {
-    type OpenData as CommonViewCommonMapFilterPanelOpenData,
-    Panel as CommonViewCommonMapFilterPanel,
+    type OpenData as CommonMapFilterPanelOpenData,
+    Panel as ViewCommonMapFilterPanel,
 } from "../common/view/CommonMapFilterPanel.ts";
 import {
-    type OpenData as CommonViewCommonMapWarStatisticsPanelOpenData,
-    Panel as CommonViewCommonMapWarStatisticsPanel,
+    type OpenData as CommonMapWarStatisticsPanelOpenData,
+    Panel as ViewCommonMapWarStatisticsPanel,
 } from "../common/view/CommonMapWarStatisticsPanel.ts";
 import {
-    type OpenData as CommonViewCommonRoomFilterPanelOpenData,
-    Panel as CommonViewCommonRoomFilterPanel,
+    type OpenData as CommonRoomFilterPanelOpenData,
+    Panel as ViewCommonRoomFilterPanel,
 } from "../common/view/CommonRoomFilterPanel.ts";
 import {
-    type OpenData as CommonViewCommonSearchMultiUserPanelOpenData,
-    Panel as CommonViewCommonSearchMultiUserPanel,
+    type OpenData as CommonSearchMultiUserPanelOpenData,
+    Panel as ViewCommonSearchMultiUserPanel,
 } from "../common/view/CommonSearchMultiUserPanel.ts";
 import {
-    type OpenData as CommonViewCommonSearchSingleUserPanelOpenData,
-    Panel as CommonViewCommonSearchSingleUserPanel,
+    type OpenData as CommonSearchSingleUserPanelOpenData,
+    Panel as ViewCommonSearchSingleUserPanel,
 } from "../common/view/CommonSearchSingleUserPanel.ts";
 import {
-    type OpenData as CommonViewCommonServerStatusPanelOpenData,
-    Panel as CommonViewCommonServerStatusPanel,
+    type OpenData as CommonServerStatusPanelOpenData,
+    Panel as ViewCommonServerStatusPanel,
 } from "../common/view/CommonServerStatusPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowCoCategoryIdPanelOpenData,
-    Panel as CommonViewCommonShowCoCategoryIdPanel,
+    type OpenData as CommonShowCoCategoryIdPanelOpenData,
+    Panel as ViewCommonShowCoCategoryIdPanel,
 } from "../common/view/CommonShowCoCategoryIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowCoIdPanelOpenData,
-    Panel as CommonViewCommonShowCoIdPanel,
+    type OpenData as CommonShowCoIdPanelOpenData,
+    Panel as ViewCommonShowCoIdPanel,
 } from "../common/view/CommonShowCoIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowGameModePanelOpenData,
-    Panel as CommonViewCommonShowGameModePanel,
+    type OpenData as CommonShowGameModePanelOpenData,
+    Panel as ViewCommonShowGameModePanel,
 } from "../common/view/CommonShowGameModePanel.ts";
 import {
-    type OpenData as CommonViewCommonShowLangTextPanelOpenData,
-    Panel as CommonViewCommonShowLangTextPanel,
+    type OpenData as CommonShowLangTextPanelOpenData,
+    Panel as ViewCommonShowLangTextPanel,
 } from "../common/view/CommonShowLangTextPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowMapPanelOpenData,
-    Panel as CommonViewCommonShowMapPanel,
+    type OpenData as CommonShowMapPanelOpenData,
+    Panel as ViewCommonShowMapPanel,
 } from "../common/view/CommonShowMapPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowMapTagIdPanelOpenData,
-    Panel as CommonViewCommonShowMapTagIdPanel,
+    type OpenData as CommonShowMapTagIdPanelOpenData,
+    Panel as ViewCommonShowMapTagIdPanel,
 } from "../common/view/CommonShowMapTagIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowPlayerListPanelOpenData,
-    Panel as CommonViewCommonShowPlayerListPanel,
+    type OpenData as CommonShowPlayerListPanelOpenData,
+    Panel as ViewCommonShowPlayerListPanel,
 } from "../common/view/CommonShowPlayerListPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowSelectedCoCategoryIdPanelOpenData,
-    Panel as CommonViewCommonShowSelectedCoCategoryIdPanel,
+    type OpenData as CommonShowSelectedCoCategoryIdPanelOpenData,
+    Panel as ViewCommonShowSelectedCoCategoryIdPanel,
 } from "../common/view/CommonShowSelectedCoCategoryIdPanel.ts";
 import {
-    type OpenData as CommonViewCommonShowUnitTypePanelOpenData,
-    Panel as CommonViewCommonShowUnitTypePanel,
+    type OpenData as CommonShowUnitTypePanelOpenData,
+    Panel as ViewCommonShowUnitTypePanel,
 } from "../common/view/CommonShowUnitTypePanel.ts";
 import {
-    type OpenData as CommonViewCommonTileChartPanelOpenData,
-    Panel as CommonViewCommonTileChartPanel,
+    type OpenData as CommonTileChartPanelOpenData,
+    Panel as ViewCommonTileChartPanel,
 } from "../common/view/CommonTileChartPanel.ts";
 import {
-    type OpenData as CommonViewCommonTutorialPanelOpenData,
-    Panel as CommonViewCommonTutorialPanel,
+    type OpenData as CommonTutorialPanelOpenData,
+    Panel as ViewCommonTutorialPanel,
 } from "../common/view/CommonTutorialPanel.ts";
 import {
-    type OpenData as CommonViewCommonWarEventListPanelOpenData,
-    Panel as CommonViewCommonWarEventListPanel,
+    type OpenData as CommonWarEventListPanelOpenData,
+    Panel as ViewCommonWarEventListPanel,
 } from "../common/view/CommonWarEventListPanel.ts";
 import {
-    type OpenData as CoopCustomRoomViewCcrCreateMapListPanelOpenData,
-    Panel as CoopCustomRoomViewCcrCreateMapListPanel,
+    type OpenData as CcrCreateMapListPanelOpenData,
+    Panel as ViewCcrCreateMapListPanel,
 } from "../coopCustomRoom/view/CcrCreateMapListPanel.ts";
 import {
-    type OpenData as CoopCustomRoomViewCcrCreateSettingsPanelOpenData,
-    Panel as CoopCustomRoomViewCcrCreateSettingsPanel,
+    type OpenData as CcrCreateSettingsPanelOpenData,
+    Panel as ViewCcrCreateSettingsPanel,
 } from "../coopCustomRoom/view/CcrCreateSettingsPanel.ts";
 import {
-    type OpenData as CoopCustomRoomViewCcrMainMenuPanelOpenData,
-    Panel as CoopCustomRoomViewCcrMainMenuPanel,
+    type OpenData as CcrMainMenuPanelOpenData,
+    Panel as ViewCcrMainMenuPanel,
 } from "../coopCustomRoom/view/CcrMainMenuPanel.ts";
 import {
-    type OpenData as CoopCustomRoomViewCcrRoomInfoPanelOpenData,
-    Panel as CoopCustomRoomViewCcrRoomInfoPanel,
+    type OpenData as CcrRoomInfoPanelOpenData,
+    Panel as ViewCcrRoomInfoPanel,
 } from "../coopCustomRoom/view/CcrRoomInfoPanel.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import {
-    type OpenData as GmViewGmSetUserFullPrivilegePanelOpenData,
-    Panel as GmViewGmSetUserFullPrivilegePanel,
+    type OpenData as GmSetUserFullPrivilegePanelOpenData,
+    Panel as ViewGmSetUserFullPrivilegePanel,
 } from "../gm/view/GmSetUserFullPrivilegePanel.ts";
-import { DisplayLayerId, TextureResolutionId } from "../graphics/Constants.ts";
 import {
-    type OpenData as HalfwayReplayWarViewHrwTopPanelOpenData,
-    Panel as HalfwayReplayWarViewHrwTopPanel,
+    DisplayLayerId,
+    TextureResolutionId,
+} from "../graphics/Constants.ts";
+import {
+    type OpenData as HrwTopPanelOpenData,
+    Panel as ViewHrwTopPanel,
 } from "../halfwayReplayWar/view/HrwTopPanel.ts";
 import {
-    type OpenData as HalfwayReplayWarViewHrwWarMenuPanelOpenData,
-    Panel as HalfwayReplayWarViewHrwWarMenuPanel,
+    type OpenData as HrwWarMenuPanelOpenData,
+    Panel as ViewHrwWarMenuPanel,
 } from "../halfwayReplayWar/view/HrwWarMenuPanel.ts";
 import { getNumText } from "../helpers/Text.ts";
 import {
-    type OpenData as LeaderboardViewLbMrwListPanelOpenData,
-    Panel as LeaderboardViewLbMrwListPanel,
+    type OpenData as LbMrwListPanelOpenData,
+    Panel as ViewLbMrwListPanel,
 } from "../leaderboard/view/LbMrwListPanel.ts";
 import {
-    type OpenData as LeaderboardViewLbSpmOverallListPanelOpenData,
-    Panel as LeaderboardViewLbSpmOverallListPanel,
+    type OpenData as LbSpmOverallListPanelOpenData,
+    Panel as ViewLbSpmOverallListPanel,
 } from "../leaderboard/view/LbSpmOverallListPanel.ts";
 import {
-    type OpenData as LobbyViewLobbyBackgroundPanelOpenData,
-    Panel as LobbyViewLobbyBackgroundPanel,
+    type OpenData as LobbyBackgroundPanelOpenData,
+    Panel as ViewLobbyBackgroundPanel,
 } from "../lobby/view/LobbyBackgroundPanel.ts";
-import { type OpenData as LobbyViewLobbyBottomPanelOpenData, Panel as LobbyViewLobbyBottomPanel } from "../lobby/view/LobbyBottomPanel.ts";
-import { type OpenData as LobbyViewLobbyPanelOpenData, Panel as LobbyViewLobbyPanel } from "../lobby/view/LobbyPanel.ts";
-import { type OpenData as LobbyViewLobbyStartPanelOpenData, Panel as LobbyViewLobbyStartPanel } from "../lobby/view/LobbyStartPanel.ts";
-import { type OpenData as LobbyViewLobbyTopPanelOpenData, Panel as LobbyViewLobbyTopPanel } from "../lobby/view/LobbyTopPanel.ts";
 import {
-    type OpenData as LobbyViewLobbyTopRightPanelOpenData,
-    Panel as LobbyViewLobbyTopRightPanel,
+    type OpenData as LobbyBottomPanelOpenData,
+    Panel as ViewLobbyBottomPanel,
+} from "../lobby/view/LobbyBottomPanel.ts";
+import {
+    type OpenData as LobbyPanelOpenData,
+    Panel as ViewLobbyPanel,
+} from "../lobby/view/LobbyPanel.ts";
+import {
+    type OpenData as LobbyStartPanelOpenData,
+    Panel as ViewLobbyStartPanel,
+} from "../lobby/view/LobbyStartPanel.ts";
+import {
+    type OpenData as LobbyTopPanelOpenData,
+    Panel as ViewLobbyTopPanel,
+} from "../lobby/view/LobbyTopPanel.ts";
+import {
+    type OpenData as LobbyTopRightPanelOpenData,
+    Panel as ViewLobbyTopRightPanel,
 } from "../lobby/view/LobbyTopRightPanel.ts";
-import { type OpenData as MailViewMailPanelOpenData, Panel as MailViewMailPanel } from "../mail/view/MailPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeAutoAdjustPanelOpenData,
-    Panel as MapEditorsViewsMeAutoAdjustPanel,
+    type OpenData as MailPanelOpenData,
+    Panel as ViewMailPanel,
+} from "../mail/view/MailPanel.ts";
+import {
+    type OpenData as MeAutoAdjustPanelOpenData,
+    Panel as ViewsMeAutoAdjustPanel,
 } from "../mapEditors/views/MeAutoAdjustPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeChooseLocationPanelOpenData,
-    Panel as MapEditorsViewsMeChooseLocationPanel,
+    type OpenData as MeChooseLocationPanelOpenData,
+    Panel as ViewsMeChooseLocationPanel,
 } from "../mapEditors/views/MeChooseLocationPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeChooseTileBasePanelOpenData,
-    Panel as MapEditorsViewsMeChooseTileBasePanel,
+    type OpenData as MeChooseTileBasePanelOpenData,
+    Panel as ViewsMeChooseTileBasePanel,
 } from "../mapEditors/views/MeChooseTileBasePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeChooseTileDecorationPanelOpenData,
-    Panel as MapEditorsViewsMeChooseTileDecorationPanel,
+    type OpenData as MeChooseTileDecorationPanelOpenData,
+    Panel as ViewsMeChooseTileDecorationPanel,
 } from "../mapEditors/views/MeChooseTileDecorationPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeChooseTileObjectPanelOpenData,
-    Panel as MapEditorsViewsMeChooseTileObjectPanel,
+    type OpenData as MeChooseTileObjectPanelOpenData,
+    Panel as ViewsMeChooseTileObjectPanel,
 } from "../mapEditors/views/MeChooseTileObjectPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeChooseUnitPanelOpenData,
-    Panel as MapEditorsViewsMeChooseUnitPanel,
+    type OpenData as MeChooseUnitPanelOpenData,
+    Panel as ViewsMeChooseUnitPanel,
 } from "../mapEditors/views/MeChooseUnitPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeClearPanelOpenData,
-    Panel as MapEditorsViewsMeClearPanel,
+    type OpenData as MeClearPanelOpenData,
+    Panel as ViewsMeClearPanel,
 } from "../mapEditors/views/MeClearPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeImportContentPanelOpenData,
-    Panel as MapEditorsViewsMeImportContentPanel,
+    type OpenData as MeImportContentPanelOpenData,
+    Panel as ViewsMeImportContentPanel,
 } from "../mapEditors/views/MeImportContentPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeImportExportPanelOpenData,
-    Panel as MapEditorsViewsMeImportExportPanel,
+    type OpenData as MeImportExportPanelOpenData,
+    Panel as ViewsMeImportExportPanel,
 } from "../mapEditors/views/MeImportExportPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeMapInfoPanelOpenData,
-    Panel as MapEditorsViewsMeMapInfoPanel,
+    type OpenData as MeMapInfoPanelOpenData,
+    Panel as ViewsMeMapInfoPanel,
 } from "../mapEditors/views/MeMapInfoPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeMapSimpleDialogueMainPanelOpenData,
-    Panel as MapEditorsViewsMeMapSimpleDialogueMainPanel,
+    type OpenData as MeMapSimpleDialogueMainPanelOpenData,
+    Panel as ViewsMeMapSimpleDialogueMainPanel,
 } from "../mapEditors/views/MeMapSimpleDialogueMainPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeMapSimpleDialogueUtilPanelOpenData,
-    Panel as MapEditorsViewsMeMapSimpleDialogueUtilPanel,
+    type OpenData as MeMapSimpleDialogueUtilPanelOpenData,
+    Panel as ViewsMeMapSimpleDialogueUtilPanel,
 } from "../mapEditors/views/MeMapSimpleDialogueUtilPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeResizePanelOpenData,
-    Panel as MapEditorsViewsMeResizePanel,
+    type OpenData as MeResizePanelOpenData,
+    Panel as ViewsMeResizePanel,
 } from "../mapEditors/views/MeResizePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSaveCampaignMapPanelOpenData,
-    Panel as MapEditorsViewsMeSaveCampaignMapPanel,
+    type OpenData as MeSaveCampaignMapPanelOpenData,
+    Panel as ViewsMeSaveCampaignMapPanel,
 } from "../mapEditors/views/MeSaveCampaignMapPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSaveNormalMapPanelOpenData,
-    Panel as MapEditorsViewsMeSaveNormalMapPanel,
+    type OpenData as MeSaveNormalMapPanelOpenData,
+    Panel as ViewsMeSaveNormalMapPanel,
 } from "../mapEditors/views/MeSaveNormalMapPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSetTileCustomNamePanelOpenData,
-    Panel as MapEditorsViewsMeSetTileCustomNamePanel,
+    type OpenData as MeSetTileCustomNamePanelOpenData,
+    Panel as ViewsMeSetTileCustomNamePanel,
 } from "../mapEditors/views/MeSetTileCustomNamePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSetUnitCustomNamePanelOpenData,
-    Panel as MapEditorsViewsMeSetUnitCustomNamePanel,
+    type OpenData as MeSetUnitCustomNamePanelOpenData,
+    Panel as ViewsMeSetUnitCustomNamePanel,
 } from "../mapEditors/views/MeSetUnitCustomNamePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSymmetricalPlayerIndexPanelOpenData,
-    Panel as MapEditorsViewsMeSymmetricalPlayerIndexPanel,
+    type OpenData as MeSymmetricalPlayerIndexPanelOpenData,
+    Panel as ViewsMeSymmetricalPlayerIndexPanel,
 } from "../mapEditors/views/MeSymmetricalPlayerIndexPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSymmetryFillTilePanelOpenData,
-    Panel as MapEditorsViewsMeSymmetryFillTilePanel,
+    type OpenData as MeSymmetryFillTilePanelOpenData,
+    Panel as ViewsMeSymmetryFillTilePanel,
 } from "../mapEditors/views/MeSymmetryFillTilePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeSymmetryPanelOpenData,
-    Panel as MapEditorsViewsMeSymmetryPanel,
+    type OpenData as MeSymmetryPanelOpenData,
+    Panel as ViewsMeSymmetryPanel,
 } from "../mapEditors/views/MeSymmetryPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeTaskObjectiveListPanelOpenData,
-    Panel as MapEditorsViewsMeTaskObjectiveListPanel,
+    type OpenData as MeTaskObjectiveListPanelOpenData,
+    Panel as ViewsMeTaskObjectiveListPanel,
 } from "../mapEditors/views/MeTaskObjectiveListPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeTaskObjectivePanelOpenData,
-    Panel as MapEditorsViewsMeTaskObjectivePanel,
+    type OpenData as MeTaskObjectivePanelOpenData,
+    Panel as ViewsMeTaskObjectivePanel,
 } from "../mapEditors/views/MeTaskObjectivePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeTileCustomNameListPanelOpenData,
-    Panel as MapEditorsViewsMeTileCustomNameListPanel,
+    type OpenData as MeTileCustomNameListPanelOpenData,
+    Panel as ViewsMeTileCustomNameListPanel,
 } from "../mapEditors/views/MeTileCustomNameListPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeTileUnitInfoPanelOpenData,
-    Panel as MapEditorsViewsMeTileUnitInfoPanel,
+    type OpenData as MeTileUnitInfoPanelOpenData,
+    Panel as ViewsMeTileUnitInfoPanel,
 } from "../mapEditors/views/MeTileUnitInfoPanel.ts";
-import { type OpenData as MapEditorsViewsMeTopPanelOpenData, Panel as MapEditorsViewsMeTopPanel } from "../mapEditors/views/MeTopPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeUnitCustomNameListPanelOpenData,
-    Panel as MapEditorsViewsMeUnitCustomNameListPanel,
+    type OpenData as MeTopPanelOpenData,
+    Panel as ViewsMeTopPanel,
+} from "../mapEditors/views/MeTopPanel.ts";
+import {
+    type OpenData as MeUnitCustomNameListPanelOpenData,
+    Panel as ViewsMeUnitCustomNameListPanel,
 } from "../mapEditors/views/MeUnitCustomNameListPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeVisibilityPanelOpenData,
-    Panel as MapEditorsViewsMeVisibilityPanel,
+    type OpenData as MeVisibilityPanelOpenData,
+    Panel as ViewsMeVisibilityPanel,
 } from "../mapEditors/views/MeVisibilityPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarMenuPanelOpenData,
-    Panel as MapEditorsViewsMeWarMenuPanel,
+    type OpenData as MeWarMenuPanelOpenData,
+    Panel as ViewsMeWarMenuPanel,
 } from "../mapEditors/views/MeWarMenuPanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarRuleMapSimpleDialoguePanelOpenData,
-    Panel as MapEditorsViewsMeWarRuleMapSimpleDialoguePanel,
+    type OpenData as MeWarRuleMapSimpleDialoguePanelOpenData,
+    Panel as ViewsMeWarRuleMapSimpleDialoguePanel,
 } from "../mapEditors/views/MeWarRuleMapSimpleDialoguePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarRulePanelOpenData,
-    Panel as MapEditorsViewsMeWarRulePanel,
+    type OpenData as MeWarRulePanelOpenData,
+    Panel as ViewsMeWarRulePanel,
 } from "../mapEditors/views/MeWarRulePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarRulePlayerRulePanelOpenData,
-    Panel as MapEditorsViewsMeWarRulePlayerRulePanel,
+    type OpenData as MeWarRulePlayerRulePanelOpenData,
+    Panel as ViewsMeWarRulePlayerRulePanel,
 } from "../mapEditors/views/MeWarRulePlayerRulePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarRuleTaskObjectivePanelOpenData,
-    Panel as MapEditorsViewsMeWarRuleTaskObjectivePanel,
+    type OpenData as MeWarRuleTaskObjectivePanelOpenData,
+    Panel as ViewsMeWarRuleTaskObjectivePanel,
 } from "../mapEditors/views/MeWarRuleTaskObjectivePanel.ts";
 import {
-    type OpenData as MapEditorsViewsMeWarRuleWarEventPanelOpenData,
-    Panel as MapEditorsViewsMeWarRuleWarEventPanel,
+    type OpenData as MeWarRuleWarEventPanelOpenData,
+    Panel as ViewsMeWarRuleWarEventPanel,
 } from "../mapEditors/views/MeWarRuleWarEventPanel.ts";
 import {
-    type OpenData as MapManagementViewMmCommandPanelOpenData,
-    Panel as MapManagementViewMmCommandPanel,
+    type OpenData as MmCommandPanelOpenData,
+    Panel as ViewMmCommandPanel,
 } from "../mapManagement/view/MmCommandPanel.ts";
 import {
-    type OpenData as MapManagementViewMmMainMenuPanelOpenData,
-    Panel as MapManagementViewMmMainMenuPanel,
+    type OpenData as MmMainMenuPanelOpenData,
+    Panel as ViewMmMainMenuPanel,
 } from "../mapManagement/view/MmMainMenuPanel.ts";
 import {
-    type OpenData as MapManagementViewMmMapTagListPanelOpenData,
-    Panel as MapManagementViewMmMapTagListPanel,
+    type OpenData as MmMapTagListPanelOpenData,
+    Panel as ViewMmMapTagListPanel,
 } from "../mapManagement/view/MmMapTagListPanel.ts";
 import {
-    type OpenData as MapManagementViewMmModifyWarRulePanelOpenData,
-    Panel as MapManagementViewMmModifyWarRulePanel,
+    type OpenData as MmModifyWarRulePanelOpenData,
+    Panel as ViewMmModifyWarRulePanel,
 } from "../mapManagement/view/MmModifyWarRulePanel.ts";
 import {
-    type OpenData as MapManagementViewMmReviewListPanelOpenData,
-    Panel as MapManagementViewMmReviewListPanel,
+    type OpenData as MmReviewListPanelOpenData,
+    Panel as ViewMmReviewListPanel,
 } from "../mapManagement/view/MmReviewListPanel.ts";
 import {
-    type OpenData as MapManagementViewMmWarRuleMapSimpleDialoguePanelOpenData,
-    Panel as MapManagementViewMmWarRuleMapSimpleDialoguePanel,
+    type OpenData as MmWarRuleMapSimpleDialoguePanelOpenData,
+    Panel as ViewMmWarRuleMapSimpleDialoguePanel,
 } from "../mapManagement/view/MmWarRuleMapSimpleDialoguePanel.ts";
 import {
-    type OpenData as MapManagementViewMmWarRulePanelOpenData,
-    Panel as MapManagementViewMmWarRulePanel,
+    type OpenData as MmWarRulePanelOpenData,
+    Panel as ViewMmWarRulePanel,
 } from "../mapManagement/view/MmWarRulePanel.ts";
 import {
-    type OpenData as MapManagementViewMmWarRulePlayerRulePanelOpenData,
-    Panel as MapManagementViewMmWarRulePlayerRulePanel,
+    type OpenData as MmWarRulePlayerRulePanelOpenData,
+    Panel as ViewMmWarRulePlayerRulePanel,
 } from "../mapManagement/view/MmWarRulePlayerRulePanel.ts";
 import {
-    type OpenData as MapManagementViewMmWarRuleTaskObjectivePanelOpenData,
-    Panel as MapManagementViewMmWarRuleTaskObjectivePanel,
+    type OpenData as MmWarRuleTaskObjectivePanelOpenData,
+    Panel as ViewMmWarRuleTaskObjectivePanel,
 } from "../mapManagement/view/MmWarRuleTaskObjectivePanel.ts";
 import {
-    type OpenData as MapManagementViewMmWarRuleWarEventPanelOpenData,
-    Panel as MapManagementViewMmWarRuleWarEventPanel,
+    type OpenData as MmWarRuleWarEventPanelOpenData,
+    Panel as ViewMmWarRuleWarEventPanel,
 } from "../mapManagement/view/MmWarRuleWarEventPanel.ts";
 import {
-    type OpenData as MultiCustomRoomViewMcrCreateMapListPanelOpenData,
-    Panel as MultiCustomRoomViewMcrCreateMapListPanel,
+    type OpenData as McrCreateMapListPanelOpenData,
+    Panel as ViewMcrCreateMapListPanel,
 } from "../multiCustomRoom/view/McrCreateMapListPanel.ts";
 import {
-    type OpenData as MultiCustomRoomViewMcrCreateSettingsPanelOpenData,
-    Panel as MultiCustomRoomViewMcrCreateSettingsPanel,
+    type OpenData as McrCreateSettingsPanelOpenData,
+    Panel as ViewMcrCreateSettingsPanel,
 } from "../multiCustomRoom/view/McrCreateSettingsPanel.ts";
 import {
-    type OpenData as MultiCustomRoomViewMcrMainMenuPanelOpenData,
-    Panel as MultiCustomRoomViewMcrMainMenuPanel,
+    type OpenData as McrMainMenuPanelOpenData,
+    Panel as ViewMcrMainMenuPanel,
 } from "../multiCustomRoom/view/McrMainMenuPanel.ts";
 import {
-    type OpenData as MultiCustomRoomViewMcrRoomInfoPanelOpenData,
-    Panel as MultiCustomRoomViewMcrRoomInfoPanel,
+    type OpenData as McrRoomInfoPanelOpenData,
+    Panel as ViewMcrRoomInfoPanel,
 } from "../multiCustomRoom/view/McrRoomInfoPanel.ts";
 import {
-    type OpenData as MultiFreeRoomViewMfrCreateSettingsPanelOpenData,
-    Panel as MultiFreeRoomViewMfrCreateSettingsPanel,
+    type OpenData as MfrCreateSettingsPanelOpenData,
+    Panel as ViewMfrCreateSettingsPanel,
 } from "../multiFreeRoom/view/MfrCreateSettingsPanel.ts";
 import {
-    type OpenData as MultiFreeRoomViewMfrMainMenuPanelOpenData,
-    Panel as MultiFreeRoomViewMfrMainMenuPanel,
+    type OpenData as MfrMainMenuPanelOpenData,
+    Panel as ViewMfrMainMenuPanel,
 } from "../multiFreeRoom/view/MfrMainMenuPanel.ts";
 import {
-    type OpenData as MultiFreeRoomViewMfrRoomInfoPanelOpenData,
-    Panel as MultiFreeRoomViewMfrRoomInfoPanel,
+    type OpenData as MfrRoomInfoPanelOpenData,
+    Panel as ViewMfrRoomInfoPanel,
 } from "../multiFreeRoom/view/MfrRoomInfoPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrBanMapPanelOpenData,
-    Panel as MultiMatchRoomViewMmrBanMapPanel,
+    type OpenData as MmrBanMapPanelOpenData,
+    Panel as ViewMmrBanMapPanel,
 } from "../multiMatchRoom/view/MmrBanMapPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrMainMenuPanelOpenData,
-    Panel as MultiMatchRoomViewMmrMainMenuPanel,
+    type OpenData as MmrMainMenuPanelOpenData,
+    Panel as ViewMmrMainMenuPanel,
 } from "../multiMatchRoom/view/MmrMainMenuPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrPreviewMapListPanelOpenData,
-    Panel as MultiMatchRoomViewMmrPreviewMapListPanel,
+    type OpenData as MmrPreviewMapListPanelOpenData,
+    Panel as ViewMmrPreviewMapListPanel,
 } from "../multiMatchRoom/view/MmrPreviewMapListPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrRoomInfoPanelOpenData,
-    Panel as MultiMatchRoomViewMmrRoomInfoPanel,
+    type OpenData as MmrRoomInfoPanelOpenData,
+    Panel as ViewMmrRoomInfoPanel,
 } from "../multiMatchRoom/view/MmrRoomInfoPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrSetMaxConcurrentCountPanelOpenData,
-    Panel as MultiMatchRoomViewMmrSetMaxConcurrentCountPanel,
+    type OpenData as MmrSetMaxConcurrentCountPanelOpenData,
+    Panel as ViewMmrSetMaxConcurrentCountPanel,
 } from "../multiMatchRoom/view/MmrSetMaxConcurrentCountPanel.ts";
 import {
-    type OpenData as MultiMatchRoomViewMmrSetTimerPanelOpenData,
-    Panel as MultiMatchRoomViewMmrSetTimerPanel,
+    type OpenData as MmrSetTimerPanelOpenData,
+    Panel as ViewMmrSetTimerPanel,
 } from "../multiMatchRoom/view/MmrSetTimerPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwJoinRoomListPanelOpenData,
-    Panel as MultiPlayerWarViewMpwJoinRoomListPanel,
+    type OpenData as MpwJoinRoomListPanelOpenData,
+    Panel as ViewMpwJoinRoomListPanel,
 } from "../multiPlayerWar/view/MpwJoinRoomListPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwMyRoomListPanelOpenData,
-    Panel as MultiPlayerWarViewMpwMyRoomListPanel,
+    type OpenData as MpwMyRoomListPanelOpenData,
+    Panel as ViewMpwMyRoomListPanel,
 } from "../multiPlayerWar/view/MpwMyRoomListPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwMyWarListPanelOpenData,
-    Panel as MultiPlayerWarViewMpwMyWarListPanel,
+    type OpenData as MpwMyWarListPanelOpenData,
+    Panel as ViewMpwMyWarListPanel,
 } from "../multiPlayerWar/view/MpwMyWarListPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwSidePanelOpenData,
-    Panel as MultiPlayerWarViewMpwSidePanel,
+    type OpenData as MpwSidePanelOpenData,
+    Panel as ViewMpwSidePanel,
 } from "../multiPlayerWar/view/MpwSidePanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwSpectatePanelOpenData,
-    Panel as MultiPlayerWarViewMpwSpectatePanel,
+    type OpenData as MpwSpectatePanelOpenData,
+    Panel as ViewMpwSpectatePanel,
 } from "../multiPlayerWar/view/MpwSpectatePanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwTopPanelOpenData,
-    Panel as MultiPlayerWarViewMpwTopPanel,
+    type OpenData as MpwTopPanelOpenData,
+    Panel as ViewMpwTopPanel,
 } from "../multiPlayerWar/view/MpwTopPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwWarAdvancedMenuPanelOpenData,
-    Panel as MultiPlayerWarViewMpwWarAdvancedMenuPanel,
+    type OpenData as MpwWarAdvancedMenuPanelOpenData,
+    Panel as ViewMpwWarAdvancedMenuPanel,
 } from "../multiPlayerWar/view/MpwWarAdvancedMenuPanel.ts";
 import {
-    type OpenData as MultiPlayerWarViewMpwWarMenuPanelOpenData,
-    Panel as MultiPlayerWarViewMpwWarMenuPanel,
+    type OpenData as MpwWarMenuPanelOpenData,
+    Panel as ViewMpwWarMenuPanel,
 } from "../multiPlayerWar/view/MpwWarMenuPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrBanMapPanelOpenData,
-    Panel as MultiRankRoomViewMrrBanMapPanel,
+    type OpenData as MrrBanMapPanelOpenData,
+    Panel as ViewMrrBanMapPanel,
 } from "../multiRankRoom/view/MrrBanMapPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrMainMenuPanelOpenData,
-    Panel as MultiRankRoomViewMrrMainMenuPanel,
+    type OpenData as MrrMainMenuPanelOpenData,
+    Panel as ViewMrrMainMenuPanel,
 } from "../multiRankRoom/view/MrrMainMenuPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrPreviewMapListPanelOpenData,
-    Panel as MultiRankRoomViewMrrPreviewMapListPanel,
+    type OpenData as MrrPreviewMapListPanelOpenData,
+    Panel as ViewMrrPreviewMapListPanel,
 } from "../multiRankRoom/view/MrrPreviewMapListPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrRoomInfoPanelOpenData,
-    Panel as MultiRankRoomViewMrrRoomInfoPanel,
+    type OpenData as MrrRoomInfoPanelOpenData,
+    Panel as ViewMrrRoomInfoPanel,
 } from "../multiRankRoom/view/MrrRoomInfoPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrSetMaxConcurrentCountPanelOpenData,
-    Panel as MultiRankRoomViewMrrSetMaxConcurrentCountPanel,
+    type OpenData as MrrSetMaxConcurrentCountPanelOpenData,
+    Panel as ViewMrrSetMaxConcurrentCountPanel,
 } from "../multiRankRoom/view/MrrSetMaxConcurrentCountPanel.ts";
 import {
-    type OpenData as MultiRankRoomViewMrrSetTimerPanelOpenData,
-    Panel as MultiRankRoomViewMrrSetTimerPanel,
+    type OpenData as MrrSetTimerPanelOpenData,
+    Panel as ViewMrrSetTimerPanel,
 } from "../multiRankRoom/view/MrrSetTimerPanel.ts";
 import {
-    type OpenData as ReplayWarViewRwPauseTimePanelOpenData,
-    Panel as ReplayWarViewRwPauseTimePanel,
+    type OpenData as RwPauseTimePanelOpenData,
+    Panel as ViewRwPauseTimePanel,
 } from "../replayWar/view/RwPauseTimePanel.ts";
 import {
-    type OpenData as ReplayWarViewRwReplayListPanelOpenData,
-    Panel as ReplayWarViewRwReplayListPanel,
+    type OpenData as RwReplayListPanelOpenData,
+    Panel as ViewRwReplayListPanel,
 } from "../replayWar/view/RwReplayListPanel.ts";
 import {
-    type OpenData as ReplayWarViewRwReplayProgressPanelOpenData,
-    Panel as ReplayWarViewRwReplayProgressPanel,
+    type OpenData as RwReplayProgressPanelOpenData,
+    Panel as ViewRwReplayProgressPanel,
 } from "../replayWar/view/RwReplayProgressPanel.ts";
 import {
-    type OpenData as ReplayWarViewRwSearchReplayPanelOpenData,
-    Panel as ReplayWarViewRwSearchReplayPanel,
+    type OpenData as RwSearchReplayPanelOpenData,
+    Panel as ViewRwSearchReplayPanel,
 } from "../replayWar/view/RwSearchReplayPanel.ts";
-import { type OpenData as ReplayWarViewRwTopPanelOpenData, Panel as ReplayWarViewRwTopPanel } from "../replayWar/view/RwTopPanel.ts";
 import {
-    type OpenData as ReplayWarViewRwWarMenuPanelOpenData,
-    Panel as ReplayWarViewRwWarMenuPanel,
+    type OpenData as RwTopPanelOpenData,
+    Panel as ViewRwTopPanel,
+} from "../replayWar/view/RwTopPanel.ts";
+import {
+    type OpenData as RwWarMenuPanelOpenData,
+    Panel as ViewRwWarMenuPanel,
 } from "../replayWar/view/RwWarMenuPanel.ts";
 import { getSkin } from "../ResManager.ts";
 import {
-    type OpenData as SingleCustomRoomViewScrCreateMapListPanelOpenData,
-    Panel as SingleCustomRoomViewScrCreateMapListPanel,
+    type OpenData as ScrCreateMapListPanelOpenData,
+    Panel as ViewScrCreateMapListPanel,
 } from "../singleCustomRoom/view/ScrCreateMapListPanel.ts";
 import {
-    type OpenData as SingleCustomRoomViewScrCreateSettingsPanelOpenData,
-    Panel as SingleCustomRoomViewScrCreateSettingsPanel,
+    type OpenData as ScrCreateSettingsPanelOpenData,
+    Panel as ViewScrCreateSettingsPanel,
 } from "../singleCustomRoom/view/ScrCreateSettingsPanel.ts";
 import {
-    type OpenData as SinglePlayerModeViewSpmMainMenuPanelOpenData,
-    Panel as SinglePlayerModeViewSpmMainMenuPanel,
+    type OpenData as SpmMainMenuPanelOpenData,
+    Panel as ViewSpmMainMenuPanel,
 } from "../singlePlayerMode/view/SpmMainMenuPanel.ts";
 import {
-    type OpenData as SinglePlayerModeViewSpmMyWarRoomRecordPanelOpenData,
-    Panel as SinglePlayerModeViewSpmMyWarRoomRecordPanel,
+    type OpenData as SpmMyWarRoomRecordPanelOpenData,
+    Panel as ViewSpmMyWarRoomRecordPanel,
 } from "../singlePlayerMode/view/SpmMyWarRoomRecordPanel.ts";
 import {
-    type OpenData as SinglePlayerModeViewSpmWarListPanelOpenData,
-    Panel as SinglePlayerModeViewSpmWarListPanel,
+    type OpenData as SpmWarListPanelOpenData,
+    Panel as ViewSpmWarListPanel,
 } from "../singlePlayerMode/view/SpmWarListPanel.ts";
 import {
-    type OpenData as SinglePlayerWarViewSpwSidePanelOpenData,
-    Panel as SinglePlayerWarViewSpwSidePanel,
+    type OpenData as SpwSidePanelOpenData,
+    Panel as ViewSpwSidePanel,
 } from "../singlePlayerWar/view/SpwSidePanel.ts";
 import {
-    type OpenData as SinglePlayerWarViewSpwTopPanelOpenData,
-    Panel as SinglePlayerWarViewSpwTopPanel,
+    type OpenData as SpwTopPanelOpenData,
+    Panel as ViewSpwTopPanel,
 } from "../singlePlayerWar/view/SpwTopPanel.ts";
 import {
-    type OpenData as SinglePlayerWarViewSpwWarAdvancedMenuPanelOpenData,
-    Panel as SinglePlayerWarViewSpwWarAdvancedMenuPanel,
+    type OpenData as SpwWarAdvancedMenuPanelOpenData,
+    Panel as ViewSpwWarAdvancedMenuPanel,
 } from "../singlePlayerWar/view/SpwWarAdvancedMenuPanel.ts";
 import {
-    type OpenData as SinglePlayerWarViewSpwWarMenuPanelOpenData,
-    Panel as SinglePlayerWarViewSpwWarMenuPanel,
+    type OpenData as SpwWarMenuPanelOpenData,
+    Panel as ViewSpwWarMenuPanel,
 } from "../singlePlayerWar/view/SpwWarMenuPanel.ts";
 import {
-    type OpenData as SingleRankRoomViewSrrCreateMapListPanelOpenData,
-    Panel as SingleRankRoomViewSrrCreateMapListPanel,
+    type OpenData as SrrCreateMapListPanelOpenData,
+    Panel as ViewSrrCreateMapListPanel,
 } from "../singleRankRoom/view/SrrCreateMapListPanel.ts";
 import {
-    type OpenData as SingleRankRoomViewSrrCreateQuickSettingsPanelOpenData,
-    Panel as SingleRankRoomViewSrrCreateQuickSettingsPanel,
+    type OpenData as SrrCreateQuickSettingsPanelOpenData,
+    Panel as ViewSrrCreateQuickSettingsPanel,
 } from "../singleRankRoom/view/SrrCreateQuickSettingsPanel.ts";
 import {
-    type OpenData as SingleRankRoomViewSrrCreateSettingsPanelOpenData,
-    Panel as SingleRankRoomViewSrrCreateSettingsPanel,
+    type OpenData as SrrCreateSettingsPanelOpenData,
+    Panel as ViewSrrCreateSettingsPanel,
 } from "../singleRankRoom/view/SrrCreateSettingsPanel.ts";
 import {
-    type OpenData as SoundsPanelsChooseSingleBgmPanelOpenData,
-    Panel as SoundsPanelsChooseSingleBgmPanel,
+    type OpenData as ChooseSingleBgmPanelOpenData,
+    Panel as ChooseSingleBgmPanel,
 } from "../sounds/panels/ChooseSingleBgmPanel.ts";
-import { type OpenData as SoundsPanelsSettingsPanelOpenData, Panel as SoundsPanelsSettingsPanel } from "../sounds/panels/SettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserGameManagementPanelOpenData,
-    Panel as UsersViewsUserGameManagementPanel,
+    type OpenData as SettingsPanelOpenData,
+    Panel as SettingsPanel,
+} from "../sounds/panels/SettingsPanel.ts";
+import {
+    type OpenData as UserGameManagementPanelOpenData,
+    Panel as ViewsUserGameManagementPanel,
 } from "../users/views/UserGameManagementPanel.ts";
 import {
-    type OpenData as UsersViewsUserGraphicSettingsPanelOpenData,
-    Panel as UsersViewsUserGraphicSettingsPanel,
+    type OpenData as UserGraphicSettingsPanelOpenData,
+    Panel as ViewsUserGraphicSettingsPanel,
 } from "../users/views/UserGraphicSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserLoginBackgroundPanelOpenData,
-    Panel as UsersViewsUserLoginBackgroundPanel,
+    type OpenData as UserLoginBackgroundPanelOpenData,
+    Panel as ViewsUserLoginBackgroundPanel,
 } from "../users/views/UserLoginBackgroundPanel.ts";
-import { type OpenData as UsersViewsUserLoginPanelOpenData, Panel as UsersViewsUserLoginPanel } from "../users/views/UserLoginPanel.ts";
-import { type OpenData as UsersViewsUserMedalPanelOpenData, Panel as UsersViewsUserMedalPanel } from "../users/views/UserMedalPanel.ts";
 import {
-    type OpenData as UsersViewsUserMiscSettingsPanelOpenData,
-    Panel as UsersViewsUserMiscSettingsPanel,
+    type OpenData as UserLoginPanelOpenData,
+    Panel as ViewsUserLoginPanel,
+} from "../users/views/UserLoginPanel.ts";
+import {
+    type OpenData as UserMedalPanelOpenData,
+    Panel as ViewsUserMedalPanel,
+} from "../users/views/UserMedalPanel.ts";
+import {
+    type OpenData as UserMiscSettingsPanelOpenData,
+    Panel as ViewsUserMiscSettingsPanel,
 } from "../users/views/UserMiscSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserMpwStatisticsPanelOpenData,
-    Panel as UsersViewsUserMpwStatisticsPanel,
+    type OpenData as UserMpwStatisticsPanelOpenData,
+    Panel as ViewsUserMpwStatisticsPanel,
 } from "../users/views/UserMpwStatisticsPanel.ts";
 import {
-    type OpenData as UsersViewsUserOnlineUsersPanelOpenData,
-    Panel as UsersViewsUserOnlineUsersPanel,
+    type OpenData as UserOnlineUsersPanelOpenData,
+    Panel as ViewsUserOnlineUsersPanel,
 } from "../users/views/UserOnlineUsersPanel.ts";
-import { type OpenData as UsersViewsUserPanelOpenData, Panel as UsersViewsUserPanel } from "../users/views/UserPanel.ts";
 import {
-    type OpenData as UsersViewsUserProfileSettingsPanelOpenData,
-    Panel as UsersViewsUserProfileSettingsPanel,
+    type OpenData as UserPanelOpenData,
+    Panel as ViewsUserPanel,
+} from "../users/views/UserPanel.ts";
+import {
+    type OpenData as UserProfileSettingsPanelOpenData,
+    Panel as ViewsUserProfileSettingsPanel,
 } from "../users/views/UserProfileSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserRegisterPanelOpenData,
-    Panel as UsersViewsUserRegisterPanel,
+    type OpenData as UserRegisterPanelOpenData,
+    Panel as ViewsUserRegisterPanel,
 } from "../users/views/UserRegisterPanel.ts";
 import {
-    type OpenData as UsersViewsUserSceneBgmSettingsPanelOpenData,
-    Panel as UsersViewsUserSceneBgmSettingsPanel,
+    type OpenData as UserSceneBgmSettingsPanelOpenData,
+    Panel as ViewsUserSceneBgmSettingsPanel,
 } from "../users/views/UserSceneBgmSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetAvatarPanelOpenData,
-    Panel as UsersViewsUserSetAvatarPanel,
+    type OpenData as UserSetAvatarPanelOpenData,
+    Panel as ViewsUserSetAvatarPanel,
 } from "../users/views/UserSetAvatarPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetCoBgmSettingsPanelOpenData,
-    Panel as UsersViewsUserSetCoBgmSettingsPanel,
+    type OpenData as UserSetCoBgmSettingsPanelOpenData,
+    Panel as ViewsUserSetCoBgmSettingsPanel,
 } from "../users/views/UserSetCoBgmSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetDiscordInfoPanelOpenData,
-    Panel as UsersViewsUserSetDiscordInfoPanel,
+    type OpenData as UserSetDiscordInfoPanelOpenData,
+    Panel as ViewsUserSetDiscordInfoPanel,
 } from "../users/views/UserSetDiscordInfoPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetEmailPanelOpenData,
-    Panel as UsersViewsUserSetEmailPanel,
+    type OpenData as UserSetEmailPanelOpenData,
+    Panel as ViewsUserSetEmailPanel,
 } from "../users/views/UserSetEmailPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetOpacityPanelOpenData,
-    Panel as UsersViewsUserSetOpacityPanel,
+    type OpenData as UserSetOpacityPanelOpenData,
+    Panel as ViewsUserSetOpacityPanel,
 } from "../users/views/UserSetOpacityPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetPasswordPanelOpenData,
-    Panel as UsersViewsUserSetPasswordPanel,
+    type OpenData as UserSetPasswordPanelOpenData,
+    Panel as ViewsUserSetPasswordPanel,
 } from "../users/views/UserSetPasswordPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetPasswordWithEmailPanelOpenData,
-    Panel as UsersViewsUserSetPasswordWithEmailPanel,
+    type OpenData as UserSetPasswordWithEmailPanelOpenData,
+    Panel as ViewsUserSetPasswordWithEmailPanel,
 } from "../users/views/UserSetPasswordWithEmailPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetRelationPanelOpenData,
-    Panel as UsersViewsUserSetRelationPanel,
+    type OpenData as UserSetRelationPanelOpenData,
+    Panel as ViewsUserSetRelationPanel,
 } from "../users/views/UserSetRelationPanel.ts";
 import {
-    type OpenData as UsersViewsUserSetStageScalePanelOpenData,
-    Panel as UsersViewsUserSetStageScalePanel,
+    type OpenData as UserSetStageScalePanelOpenData,
+    Panel as ViewsUserSetStageScalePanel,
 } from "../users/views/UserSetStageScalePanel.ts";
 import {
-    type OpenData as UsersViewsUserSettingsPanelOpenData,
-    Panel as UsersViewsUserSettingsPanel,
+    type OpenData as UserSettingsPanelOpenData,
+    Panel as ViewsUserSettingsPanel,
 } from "../users/views/UserSettingsPanel.ts";
 import {
-    type OpenData as UsersViewsUserWarHistoryPanelOpenData,
-    Panel as UsersViewsUserWarHistoryPanel,
+    type OpenData as UserWarHistoryPanelOpenData,
+    Panel as ViewsUserWarHistoryPanel,
 } from "../users/views/UserWarHistoryPanel.ts";
 import {
-    type OpenData as WarEventViewWeaAddTileBuffExprPanelOpenData,
-    Panel as WarEventViewWeaAddTileBuffExprPanel,
+    type OpenData as WeaAddTileBuffExprPanelOpenData,
+    Panel as ViewWeaAddTileBuffExprPanel,
 } from "../warEvent/view/WeaAddTileBuffExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaAddTileBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaAddTileBuffSimplePanel,
+    type OpenData as WeaAddTileBuffSimplePanelOpenData,
+    Panel as ViewWeaAddTileBuffSimplePanel,
 } from "../warEvent/view/WeaAddTileBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaAddUnitBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaAddUnitBuffSimplePanel,
+    type OpenData as WeaAddUnitBuffSimplePanelOpenData,
+    Panel as ViewWeaAddUnitBuffSimplePanel,
 } from "../warEvent/view/WeaAddUnitBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaAddUnitOnMapSimplePanelOpenData,
-    Panel as WarEventViewWeaAddUnitOnMapSimplePanel,
+    type OpenData as WeaAddUnitOnMapSimplePanelOpenData,
+    Panel as ViewWeaAddUnitOnMapSimplePanel,
 } from "../warEvent/view/WeaAddUnitOnMapSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaBigDialogueSimplePanelOpenData,
-    Panel as WarEventViewWeaBigDialogueSimplePanel,
+    type OpenData as WeaBigDialogueSimplePanelOpenData,
+    Panel as ViewWeaBigDialogueSimplePanel,
 } from "../warEvent/view/WeaBigDialogueSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeActionReplacePanelOpenData,
-    Panel as WarEventViewWeActionReplacePanel,
+    type OpenData as WeActionReplacePanelOpenData,
+    Panel as ViewWeActionReplacePanel,
 } from "../warEvent/view/WeActionReplacePanel.ts";
 import {
-    type OpenData as WarEventViewWeActionTypeListPanelOpenData,
-    Panel as WarEventViewWeActionTypeListPanel,
+    type OpenData as WeActionTypeListPanelOpenData,
+    Panel as ViewWeActionTypeListPanel,
 } from "../warEvent/view/WeActionTypeListPanel.ts";
 import {
-    type OpenData as WarEventViewWeaDeleteTileBuffExprPanelOpenData,
-    Panel as WarEventViewWeaDeleteTileBuffExprPanel,
+    type OpenData as WeaDeleteTileBuffExprPanelOpenData,
+    Panel as ViewWeaDeleteTileBuffExprPanel,
 } from "../warEvent/view/WeaDeleteTileBuffExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaDeleteTileBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaDeleteTileBuffSimplePanel,
+    type OpenData as WeaDeleteTileBuffSimplePanelOpenData,
+    Panel as ViewWeaDeleteTileBuffSimplePanel,
 } from "../warEvent/view/WeaDeleteTileBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaDeleteUnitBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaDeleteUnitBuffSimplePanel,
+    type OpenData as WeaDeleteUnitBuffSimplePanelOpenData,
+    Panel as ViewWeaDeleteUnitBuffSimplePanel,
 } from "../warEvent/view/WeaDeleteUnitBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaDestroyUnitExprPanelOpenData,
-    Panel as WarEventViewWeaDestroyUnitExprPanel,
+    type OpenData as WeaDestroyUnitExprPanelOpenData,
+    Panel as ViewWeaDestroyUnitExprPanel,
 } from "../warEvent/view/WeaDestroyUnitExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaDestroyUnitSimplePanelOpenData,
-    Panel as WarEventViewWeaDestroyUnitSimplePanel,
+    type OpenData as WeaDestroyUnitSimplePanelOpenData,
+    Panel as ViewWeaDestroyUnitSimplePanel,
 } from "../warEvent/view/WeaDestroyUnitSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaFillUnitLoadedExprPanelOpenData,
-    Panel as WarEventViewWeaFillUnitLoadedExprPanel,
+    type OpenData as WeaFillUnitLoadedExprPanelOpenData,
+    Panel as ViewWeaFillUnitLoadedExprPanel,
 } from "../warEvent/view/WeaFillUnitLoadedExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaFillUnitLoadedSimplePanelOpenData,
-    Panel as WarEventViewWeaFillUnitLoadedSimplePanel,
+    type OpenData as WeaFillUnitLoadedSimplePanelOpenData,
+    Panel as ViewWeaFillUnitLoadedSimplePanel,
 } from "../warEvent/view/WeaFillUnitLoadedSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaFillUnitOnMapExprPanelOpenData,
-    Panel as WarEventViewWeaFillUnitOnMapExprPanel,
+    type OpenData as WeaFillUnitOnMapExprPanelOpenData,
+    Panel as ViewWeaFillUnitOnMapExprPanel,
 } from "../warEvent/view/WeaFillUnitOnMapExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaFillUnitOnMapSimplePanelOpenData,
-    Panel as WarEventViewWeaFillUnitOnMapSimplePanel,
+    type OpenData as WeaFillUnitOnMapSimplePanelOpenData,
+    Panel as ViewWeaFillUnitOnMapSimplePanel,
 } from "../warEvent/view/WeaFillUnitOnMapSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaModifyTileBuffExprPanelOpenData,
-    Panel as WarEventViewWeaModifyTileBuffExprPanel,
+    type OpenData as WeaModifyTileBuffExprPanelOpenData,
+    Panel as ViewWeaModifyTileBuffExprPanel,
 } from "../warEvent/view/WeaModifyTileBuffExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaModifyTileBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaModifyTileBuffSimplePanel,
+    type OpenData as WeaModifyTileBuffSimplePanelOpenData,
+    Panel as ViewWeaModifyTileBuffSimplePanel,
 } from "../warEvent/view/WeaModifyTileBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaModifyUnitBuffSimplePanelOpenData,
-    Panel as WarEventViewWeaModifyUnitBuffSimplePanel,
+    type OpenData as WeaModifyUnitBuffSimplePanelOpenData,
+    Panel as ViewWeaModifyUnitBuffSimplePanel,
 } from "../warEvent/view/WeaModifyUnitBuffSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaPersistentModifyPlayerAttributePanelOpenData,
-    Panel as WarEventViewWeaPersistentModifyPlayerAttributePanel,
+    type OpenData as WeaPersistentModifyPlayerAttributePanelOpenData,
+    Panel as ViewWeaPersistentModifyPlayerAttributePanel,
 } from "../warEvent/view/WeaPersistentModifyPlayerAttributePanel.ts";
 import {
-    type OpenData as WarEventViewWeaPersistentModifyUnitAttributePanelOpenData,
-    Panel as WarEventViewWeaPersistentModifyUnitAttributePanel,
+    type OpenData as WeaPersistentModifyUnitAttributePanelOpenData,
+    Panel as ViewWeaPersistentModifyUnitAttributePanel,
 } from "../warEvent/view/WeaPersistentModifyUnitAttributePanel.ts";
 import {
-    type OpenData as WarEventViewWeaPersistentPlayBgmPanelOpenData,
-    Panel as WarEventViewWeaPersistentPlayBgmPanel,
+    type OpenData as WeaPersistentPlayBgmPanelOpenData,
+    Panel as ViewWeaPersistentPlayBgmPanel,
 } from "../warEvent/view/WeaPersistentPlayBgmPanel.ts";
 import {
-    type OpenData as WarEventViewWeaPersistentShowTextPanelOpenData,
-    Panel as WarEventViewWeaPersistentShowTextPanel,
+    type OpenData as WeaPersistentShowTextPanelOpenData,
+    Panel as ViewWeaPersistentShowTextPanel,
 } from "../warEvent/view/WeaPersistentShowTextPanel.ts";
 import {
-    type OpenData as WarEventViewWeaPlayBgmPanelOpenData,
-    Panel as WarEventViewWeaPlayBgmPanel,
+    type OpenData as WeaPlayBgmPanelOpenData,
+    Panel as ViewWeaPlayBgmPanel,
 } from "../warEvent/view/WeaPlayBgmPanel.ts";
 import {
-    type OpenData as WarEventViewWeaPlaySfxPanelOpenData,
-    Panel as WarEventViewWeaPlaySfxPanel,
+    type OpenData as WeaPlaySfxPanelOpenData,
+    Panel as ViewWeaPlaySfxPanel,
 } from "../warEvent/view/WeaPlaySfxPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomBuildingStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetCustomBuildingStateExprPanel,
+    type OpenData as WeaSetCustomBuildingStateExprPanelOpenData,
+    Panel as ViewWeaSetCustomBuildingStateExprPanel,
 } from "../warEvent/view/WeaSetCustomBuildingStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomBuildingStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetCustomBuildingStateSimplePanel,
+    type OpenData as WeaSetCustomBuildingStateSimplePanelOpenData,
+    Panel as ViewWeaSetCustomBuildingStateSimplePanel,
 } from "../warEvent/view/WeaSetCustomBuildingStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomCannonStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetCustomCannonStateExprPanel,
+    type OpenData as WeaSetCustomCannonStateExprPanelOpenData,
+    Panel as ViewWeaSetCustomCannonStateExprPanel,
 } from "../warEvent/view/WeaSetCustomCannonStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomCannonStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetCustomCannonStateSimplePanel,
+    type OpenData as WeaSetCustomCannonStateSimplePanelOpenData,
+    Panel as ViewWeaSetCustomCannonStateSimplePanel,
 } from "../warEvent/view/WeaSetCustomCannonStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomCountersPanelOpenData,
-    Panel as WarEventViewWeaSetCustomCountersPanel,
+    type OpenData as WeaSetCustomCountersPanelOpenData,
+    Panel as ViewWeaSetCustomCountersPanel,
 } from "../warEvent/view/WeaSetCustomCountersPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomCrystalStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetCustomCrystalStateExprPanel,
+    type OpenData as WeaSetCustomCrystalStateExprPanelOpenData,
+    Panel as ViewWeaSetCustomCrystalStateExprPanel,
 } from "../warEvent/view/WeaSetCustomCrystalStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomCrystalStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetCustomCrystalStateSimplePanel,
+    type OpenData as WeaSetCustomCrystalStateSimplePanelOpenData,
+    Panel as ViewWeaSetCustomCrystalStateSimplePanel,
 } from "../warEvent/view/WeaSetCustomCrystalStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomLaserTurretStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetCustomLaserTurretStateExprPanel,
+    type OpenData as WeaSetCustomLaserTurretStateExprPanelOpenData,
+    Panel as ViewWeaSetCustomLaserTurretStateExprPanel,
 } from "../warEvent/view/WeaSetCustomLaserTurretStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetCustomLaserTurretStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetCustomLaserTurretStateSimplePanel,
+    type OpenData as WeaSetCustomLaserTurretStateSimplePanelOpenData,
+    Panel as ViewWeaSetCustomLaserTurretStateSimplePanel,
 } from "../warEvent/view/WeaSetCustomLaserTurretStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetForceFogCodeExprPanelOpenData,
-    Panel as WarEventViewWeaSetForceFogCodeExprPanel,
+    type OpenData as WeaSetForceFogCodeExprPanelOpenData,
+    Panel as ViewWeaSetForceFogCodeExprPanel,
 } from "../warEvent/view/WeaSetForceFogCodeExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetForceFogCodeSimplePanelOpenData,
-    Panel as WarEventViewWeaSetForceFogCodeSimplePanel,
+    type OpenData as WeaSetForceFogCodeSimplePanelOpenData,
+    Panel as ViewWeaSetForceFogCodeSimplePanel,
 } from "../warEvent/view/WeaSetForceFogCodeSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetPlayerStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetPlayerStateExprPanel,
+    type OpenData as WeaSetPlayerStateExprPanelOpenData,
+    Panel as ViewWeaSetPlayerStateExprPanel,
 } from "../warEvent/view/WeaSetPlayerStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetPlayerStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetPlayerStateSimplePanel,
+    type OpenData as WeaSetPlayerStateSimplePanelOpenData,
+    Panel as ViewWeaSetPlayerStateSimplePanel,
 } from "../warEvent/view/WeaSetPlayerStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetTaskObjectiveStatePanelOpenData,
-    Panel as WarEventViewWeaSetTaskObjectiveStatePanel,
+    type OpenData as WeaSetTaskObjectiveStatePanelOpenData,
+    Panel as ViewWeaSetTaskObjectiveStatePanel,
 } from "../warEvent/view/WeaSetTaskObjectiveStatePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetTileStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetTileStateExprPanel,
+    type OpenData as WeaSetTileStateExprPanelOpenData,
+    Panel as ViewWeaSetTileStateExprPanel,
 } from "../warEvent/view/WeaSetTileStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetTileStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetTileStateSimplePanel,
+    type OpenData as WeaSetTileStateSimplePanelOpenData,
+    Panel as ViewWeaSetTileStateSimplePanel,
 } from "../warEvent/view/WeaSetTileStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetTileTypeExprPanelOpenData,
-    Panel as WarEventViewWeaSetTileTypeExprPanel,
+    type OpenData as WeaSetTileTypeExprPanelOpenData,
+    Panel as ViewWeaSetTileTypeExprPanel,
 } from "../warEvent/view/WeaSetTileTypeExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetTileTypeSimplePanelOpenData,
-    Panel as WarEventViewWeaSetTileTypeSimplePanel,
+    type OpenData as WeaSetTileTypeSimplePanelOpenData,
+    Panel as ViewWeaSetTileTypeSimplePanel,
 } from "../warEvent/view/WeaSetTileTypeSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitMovePathVisibilityPanelOpenData,
-    Panel as WarEventViewWeaSetUnitMovePathVisibilityPanel,
+    type OpenData as WeaSetUnitMovePathVisibilityPanelOpenData,
+    Panel as ViewWeaSetUnitMovePathVisibilityPanel,
 } from "../warEvent/view/WeaSetUnitMovePathVisibilityPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitOwnershipExprPanelOpenData,
-    Panel as WarEventViewWeaSetUnitOwnershipExprPanel,
+    type OpenData as WeaSetUnitOwnershipExprPanelOpenData,
+    Panel as ViewWeaSetUnitOwnershipExprPanel,
 } from "../warEvent/view/WeaSetUnitOwnershipExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitOwnershipSimplePanelOpenData,
-    Panel as WarEventViewWeaSetUnitOwnershipSimplePanel,
+    type OpenData as WeaSetUnitOwnershipSimplePanelOpenData,
+    Panel as ViewWeaSetUnitOwnershipSimplePanel,
 } from "../warEvent/view/WeaSetUnitOwnershipSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitPositionExprPanelOpenData,
-    Panel as WarEventViewWeaSetUnitPositionExprPanel,
+    type OpenData as WeaSetUnitPositionExprPanelOpenData,
+    Panel as ViewWeaSetUnitPositionExprPanel,
 } from "../warEvent/view/WeaSetUnitPositionExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitPositionSimplePanelOpenData,
-    Panel as WarEventViewWeaSetUnitPositionSimplePanel,
+    type OpenData as WeaSetUnitPositionSimplePanelOpenData,
+    Panel as ViewWeaSetUnitPositionSimplePanel,
 } from "../warEvent/view/WeaSetUnitPositionSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitStateExprPanelOpenData,
-    Panel as WarEventViewWeaSetUnitStateExprPanel,
+    type OpenData as WeaSetUnitStateExprPanelOpenData,
+    Panel as ViewWeaSetUnitStateExprPanel,
 } from "../warEvent/view/WeaSetUnitStateExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitStateSimplePanelOpenData,
-    Panel as WarEventViewWeaSetUnitStateSimplePanel,
+    type OpenData as WeaSetUnitStateSimplePanelOpenData,
+    Panel as ViewWeaSetUnitStateSimplePanel,
 } from "../warEvent/view/WeaSetUnitStateSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitTypeExprPanelOpenData,
-    Panel as WarEventViewWeaSetUnitTypeExprPanel,
+    type OpenData as WeaSetUnitTypeExprPanelOpenData,
+    Panel as ViewWeaSetUnitTypeExprPanel,
 } from "../warEvent/view/WeaSetUnitTypeExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetUnitTypeSimplePanelOpenData,
-    Panel as WarEventViewWeaSetUnitTypeSimplePanel,
+    type OpenData as WeaSetUnitTypeSimplePanelOpenData,
+    Panel as ViewWeaSetUnitTypeSimplePanel,
 } from "../warEvent/view/WeaSetUnitTypeSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetViewpointExprPanelOpenData,
-    Panel as WarEventViewWeaSetViewpointExprPanel,
+    type OpenData as WeaSetViewpointExprPanelOpenData,
+    Panel as ViewWeaSetViewpointExprPanel,
 } from "../warEvent/view/WeaSetViewpointExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetViewpointSimplePanelOpenData,
-    Panel as WarEventViewWeaSetViewpointSimplePanel,
+    type OpenData as WeaSetViewpointSimplePanelOpenData,
+    Panel as ViewWeaSetViewpointSimplePanel,
 } from "../warEvent/view/WeaSetViewpointSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetWeatherExprPanelOpenData,
-    Panel as WarEventViewWeaSetWeatherExprPanel,
+    type OpenData as WeaSetWeatherExprPanelOpenData,
+    Panel as ViewWeaSetWeatherExprPanel,
 } from "../warEvent/view/WeaSetWeatherExprPanel.ts";
 import {
-    type OpenData as WarEventViewWeaSetWeatherSimplePanelOpenData,
-    Panel as WarEventViewWeaSetWeatherSimplePanel,
+    type OpenData as WeaSetWeatherSimplePanelOpenData,
+    Panel as ViewWeaSetWeatherSimplePanel,
 } from "../warEvent/view/WeaSetWeatherSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaSmallDialogueSimplePanelOpenData,
-    Panel as WarEventViewWeaSmallDialogueSimplePanel,
+    type OpenData as WeaSmallDialogueSimplePanelOpenData,
+    Panel as ViewWeaSmallDialogueSimplePanel,
 } from "../warEvent/view/WeaSmallDialogueSimplePanel.ts";
 import {
-    type OpenData as WarEventViewWeaStopPersistentActionPanelOpenData,
-    Panel as WarEventViewWeaStopPersistentActionPanel,
+    type OpenData as WeaStopPersistentActionPanelOpenData,
+    Panel as ViewWeaStopPersistentActionPanel,
 } from "../warEvent/view/WeaStopPersistentActionPanel.ts";
 import {
-    type OpenData as WarEventViewWeBigDialogueBackgroundPanelOpenData,
-    Panel as WarEventViewWeBigDialogueBackgroundPanel,
+    type OpenData as WeBigDialogueBackgroundPanelOpenData,
+    Panel as ViewWeBigDialogueBackgroundPanel,
 } from "../warEvent/view/WeBigDialogueBackgroundPanel.ts";
 import {
-    type OpenData as WarEventViewWecEventCalledCountPanelOpenData,
-    Panel as WarEventViewWecEventCalledCountPanel,
+    type OpenData as WecEventCalledCountPanelOpenData,
+    Panel as ViewWecEventCalledCountPanel,
 } from "../warEvent/view/WecEventCalledCountPanel.ts";
 import {
-    type OpenData as WarEventViewWecExpressionPanelOpenData,
-    Panel as WarEventViewWecExpressionPanel,
+    type OpenData as WecExpressionPanelOpenData,
+    Panel as ViewWecExpressionPanel,
 } from "../warEvent/view/WecExpressionPanel.ts";
 import {
-    type OpenData as WarEventViewWecManualActionStatisticsPanelOpenData,
-    Panel as WarEventViewWecManualActionStatisticsPanel,
+    type OpenData as WecManualActionStatisticsPanelOpenData,
+    Panel as ViewWecManualActionStatisticsPanel,
 } from "../warEvent/view/WecManualActionStatisticsPanel.ts";
 import {
-    type OpenData as WarEventViewWeCommandPanelOpenData,
-    Panel as WarEventViewWeCommandPanel,
+    type OpenData as WeCommandPanelOpenData,
+    Panel as ViewWeCommandPanel,
 } from "../warEvent/view/WeCommandPanel.ts";
 import {
-    type OpenData as WarEventViewWeConditionModifyPanel60OpenData,
-    Panel as WarEventViewWeConditionModifyPanel60Panel,
+    type OpenData as WeConditionModifyPanel60OpenData,
+    Panel as WeConditionModifyPanel60Panel,
 } from "../warEvent/view/WeConditionModifyPanel60.ts";
 import {
-    type OpenData as WarEventViewWeConditionReplacePanelOpenData,
-    Panel as WarEventViewWeConditionReplacePanel,
+    type OpenData as WeConditionReplacePanelOpenData,
+    Panel as ViewWeConditionReplacePanel,
 } from "../warEvent/view/WeConditionReplacePanel.ts";
 import {
-    type OpenData as WarEventViewWeConditionTypeListPanelOpenData,
-    Panel as WarEventViewWeConditionTypeListPanel,
+    type OpenData as WeConditionTypeListPanelOpenData,
+    Panel as ViewWeConditionTypeListPanel,
 } from "../warEvent/view/WeConditionTypeListPanel.ts";
 import {
-    type OpenData as WarEventViewWecOngoingPersistentActionPanelOpenData,
-    Panel as WarEventViewWecOngoingPersistentActionPanel,
+    type OpenData as WecOngoingPersistentActionPanelOpenData,
+    Panel as ViewWecOngoingPersistentActionPanel,
 } from "../warEvent/view/WecOngoingPersistentActionPanel.ts";
 import {
-    type OpenData as WarEventViewWecPlayerPresencePanelOpenData,
-    Panel as WarEventViewWecPlayerPresencePanel,
+    type OpenData as WecPlayerPresencePanelOpenData,
+    Panel as ViewWecPlayerPresencePanel,
 } from "../warEvent/view/WecPlayerPresencePanel.ts";
 import {
-    type OpenData as WarEventViewWecTilePresencePanelOpenData,
-    Panel as WarEventViewWecTilePresencePanel,
+    type OpenData as WecTilePresencePanelOpenData,
+    Panel as ViewWecTilePresencePanel,
 } from "../warEvent/view/WecTilePresencePanel.ts";
 import {
-    type OpenData as WarEventViewWecTurnAndPlayerPanelOpenData,
-    Panel as WarEventViewWecTurnAndPlayerPanel,
+    type OpenData as WecTurnAndPlayerPanelOpenData,
+    Panel as ViewWecTurnAndPlayerPanel,
 } from "../warEvent/view/WecTurnAndPlayerPanel.ts";
 import {
-    type OpenData as WarEventViewWecUnitPresencePanelOpenData,
-    Panel as WarEventViewWecUnitPresencePanel,
+    type OpenData as WecUnitPresencePanelOpenData,
+    Panel as ViewWecUnitPresencePanel,
 } from "../warEvent/view/WecUnitPresencePanel.ts";
 import {
-    type OpenData as WarEventViewWeCustomCounterNameListPanelOpenData,
-    Panel as WarEventViewWeCustomCounterNameListPanel,
+    type OpenData as WeCustomCounterNameListPanelOpenData,
+    Panel as ViewWeCustomCounterNameListPanel,
 } from "../warEvent/view/WeCustomCounterNameListPanel.ts";
 import {
-    type OpenData as WarEventViewWecWeatherAndFogPanelOpenData,
-    Panel as WarEventViewWecWeatherAndFogPanel,
+    type OpenData as WecWeatherAndFogPanelOpenData,
+    Panel as ViewWecWeatherAndFogPanel,
 } from "../warEvent/view/WecWeatherAndFogPanel.ts";
 import {
-    type OpenData as WarEventViewWeEventNameListPanelOpenData,
-    Panel as WarEventViewWeEventNameListPanel,
+    type OpenData as WeEventNameListPanelOpenData,
+    Panel as ViewWeEventNameListPanel,
 } from "../warEvent/view/WeEventNameListPanel.ts";
-import { type OpenData as WarEventViewWeMainPanelOpenData, Panel as WarEventViewWeMainPanel } from "../warEvent/view/WeMainPanel.ts";
 import {
-    type OpenData as WarEventViewWeNodeReplacePanelOpenData,
-    Panel as WarEventViewWeNodeReplacePanel,
+    type OpenData as WeMainPanelOpenData,
+    Panel as ViewWeMainPanel,
+} from "../warEvent/view/WeMainPanel.ts";
+import {
+    type OpenData as WeNodeReplacePanelOpenData,
+    Panel as ViewWeNodeReplacePanel,
 } from "../warEvent/view/WeNodeReplacePanel.ts";
 import {
-    type OpenData as WarEventViewWePlayerFilterPanelOpenData,
-    Panel as WarEventViewWePlayerFilterPanel,
+    type OpenData as WePlayerFilterPanelOpenData,
+    Panel as ViewWePlayerFilterPanel,
 } from "../warEvent/view/WePlayerFilterPanel.ts";
 import {
-    type OpenData as WarEventViewWePositionFilterPanelOpenData,
-    Panel as WarEventViewWePositionFilterPanel,
+    type OpenData as WePositionFilterPanelOpenData,
+    Panel as ViewWePositionFilterPanel,
 } from "../warEvent/view/WePositionFilterPanel.ts";
 import {
-    type OpenData as WarEventViewWeTileBuffFilterPanelOpenData,
-    Panel as WarEventViewWeTileBuffFilterPanel,
+    type OpenData as WeTileBuffFilterPanelOpenData,
+    Panel as ViewWeTileBuffFilterPanel,
 } from "../warEvent/view/WeTileBuffFilterPanel.ts";
 import {
-    type OpenData as WarEventViewWeTileCustomCannonPanelOpenData,
-    Panel as WarEventViewWeTileCustomCannonPanel,
+    type OpenData as WeTileCustomCannonPanelOpenData,
+    Panel as ViewWeTileCustomCannonPanel,
 } from "../warEvent/view/WeTileCustomCannonPanel.ts";
 import {
-    type OpenData as WarEventViewWeTileCustomCrystalPanelOpenData,
-    Panel as WarEventViewWeTileCustomCrystalPanel,
+    type OpenData as WeTileCustomCrystalPanelOpenData,
+    Panel as ViewWeTileCustomCrystalPanel,
 } from "../warEvent/view/WeTileCustomCrystalPanel.ts";
 import {
-    type OpenData as WarEventViewWeTileCustomLaserTurretPanelOpenData,
-    Panel as WarEventViewWeTileCustomLaserTurretPanel,
+    type OpenData as WeTileCustomLaserTurretPanelOpenData,
+    Panel as ViewWeTileCustomLaserTurretPanel,
 } from "../warEvent/view/WeTileCustomLaserTurretPanel.ts";
 import {
-    type OpenData as WarEventViewWeTileFilterPanelOpenData,
-    Panel as WarEventViewWeTileFilterPanel,
+    type OpenData as WeTileFilterPanelOpenData,
+    Panel as ViewWeTileFilterPanel,
 } from "../warEvent/view/WeTileFilterPanel.ts";
 import {
-    type OpenData as WarEventViewWeUnitBuffFilterPanelOpenData,
-    Panel as WarEventViewWeUnitBuffFilterPanel,
+    type OpenData as WeUnitBuffFilterPanelOpenData,
+    Panel as ViewWeUnitBuffFilterPanel,
 } from "../warEvent/view/WeUnitBuffFilterPanel.ts";
 import {
-    type OpenData as WarEventViewWeUnitFilterPanelOpenData,
-    Panel as WarEventViewWeUnitFilterPanel,
+    type OpenData as WeUnitFilterPanelOpenData,
+    Panel as ViewWeUnitFilterPanel,
 } from "../warEvent/view/WeUnitFilterPanel.ts";
 import {
-    type OpenData as WatchWarViewWwDeleteWatcherWarsPanelOpenData,
-    Panel as WatchWarViewWwDeleteWatcherWarsPanel,
+    type OpenData as WwDeleteWatcherWarsPanelOpenData,
+    Panel as ViewWwDeleteWatcherWarsPanel,
 } from "../watchWar/view/WwDeleteWatcherWarsPanel.ts";
 import {
-    type OpenData as WatchWarViewWwHandleRequestWarsPanelOpenData,
-    Panel as WatchWarViewWwHandleRequestWarsPanel,
+    type OpenData as WwHandleRequestWarsPanelOpenData,
+    Panel as ViewWwHandleRequestWarsPanel,
 } from "../watchWar/view/WwHandleRequestWarsPanel.ts";
 import {
-    type OpenData as WatchWarViewWwMainMenuPanelOpenData,
-    Panel as WatchWarViewWwMainMenuPanel,
+    type OpenData as WwMainMenuPanelOpenData,
+    Panel as ViewWwMainMenuPanel,
 } from "../watchWar/view/WwMainMenuPanel.ts";
 import {
-    type OpenData as WatchWarViewWwMakeRequestDetailPanelOpenData,
-    Panel as WatchWarViewWwMakeRequestDetailPanel,
+    type OpenData as WwMakeRequestDetailPanelOpenData,
+    Panel as ViewWwMakeRequestDetailPanel,
 } from "../watchWar/view/WwMakeRequestDetailPanel.ts";
 import {
-    type OpenData as WatchWarViewWwMakeRequestWarsPanelOpenData,
-    Panel as WatchWarViewWwMakeRequestWarsPanel,
+    type OpenData as WwMakeRequestWarsPanelOpenData,
+    Panel as ViewWwMakeRequestWarsPanel,
 } from "../watchWar/view/WwMakeRequestWarsPanel.ts";
 import {
-    type OpenData as WatchWarViewWwOngoingWarsPanelOpenData,
-    Panel as WatchWarViewWwOngoingWarsPanel,
+    type OpenData as WwOngoingWarsPanelOpenData,
+    Panel as ViewWwOngoingWarsPanel,
 } from "../watchWar/view/WwOngoingWarsPanel.ts";
 import {
-    type OpenData as WatchWarViewWwSearchWarPanelOpenData,
-    Panel as WatchWarViewWwSearchWarPanel,
+    type OpenData as WwSearchWarPanelOpenData,
+    Panel as ViewWwSearchWarPanel,
 } from "../watchWar/view/WwSearchWarPanel.ts";
 import type { PanelConfig } from "./Types.ts";
 
 type DictType = {
-    ActionPlannerPanel                                      : PanelConfig<OpenData>;
+    ActionPlannerPanel                                      : PanelConfig<ActionPlannerPanelOpenData>;
 
-    AtGlobalSettingsPanel                                   : PanelConfig<AutoTourneysMainsViewsAtGlobalSettingsPanelOpenData>;
-    AtRegisterPanel                                         : PanelConfig<AutoTourneysMainsViewsAtRegisterPanelOpenData>;
-    AtSetInitialBracketsPanel                               : PanelConfig<AutoTourneysMainsViewsAtSetInitialBracketsPanelOpenData>;
-    AtSetMapPoolPanel                                       : PanelConfig<AutoTourneysMainsViewsAtSetMapPoolPanelOpenData>;
-    AtTourneyInfoPanel                                      : PanelConfig<AutoTourneysMainsViewsAtTourneyInfoPanelOpenData>;
-    AtTourneySettingsPanel                                  : PanelConfig<AutoTourneysMainsViewsAtTourneySettingsPanelOpenData>;
+    AtGlobalSettingsPanel                                   : PanelConfig<AtGlobalSettingsPanelOpenData>;
+    AtRegisterPanel                                         : PanelConfig<AtRegisterPanelOpenData>;
+    AtSetInitialBracketsPanel                               : PanelConfig<AtSetInitialBracketsPanelOpenData>;
+    AtSetMapPoolPanel                                       : PanelConfig<AtSetMapPoolPanelOpenData>;
+    AtTourneyInfoPanel                                      : PanelConfig<AtTourneyInfoPanelOpenData>;
+    AtTourneySettingsPanel                                  : PanelConfig<AtTourneySettingsPanelOpenData>;
 
-    AtrMainMenuPanel                                        : PanelConfig<AutoTourneysRoomsViewsAtrMainMenuPanelOpenData>;
-    AtrPreviewMapListPanel                                  : PanelConfig<AutoTourneysRoomsViewsAtrPreviewMapListPanelOpenData>;
-    AtrRoomInfoPanel                                        : PanelConfig<AutoTourneysRoomsViewsAtrRoomInfoPanelOpenData>;
+    AtrMainMenuPanel                                        : PanelConfig<AtrMainMenuPanelOpenData>;
+    AtrPreviewMapListPanel                                  : PanelConfig<AtrPreviewMapListPanelOpenData>;
+    AtrRoomInfoPanel                                        : PanelConfig<AtrRoomInfoPanelOpenData>;
 
-    BwBackgroundPanel                                       : PanelConfig<BaseWarViewBwBackgroundPanelOpenData>;
-    BwBeginTurnPanel                                        : PanelConfig<BaseWarViewBwBeginTurnPanelOpenData>;
-    BwCaptureProgressPanel                                  : PanelConfig<BaseWarViewBwCaptureProgressPanelOpenData>;
-    BwCustomCounterListPanel                                : PanelConfig<BaseWarViewBwCustomCounterListPanelOpenData>;
-    BwDamagePreviewPanel                                    : PanelConfig<BaseWarViewBwDamagePreviewPanelOpenData>;
-    BwBigDialoguePanel                                      : PanelConfig<BaseWarViewBwBigDialoguePanelOpenData>;
-    BwMapSimpleDialogueListPanel                            : PanelConfig<BaseWarViewBwMapSimpleDialogueListPanelOpenData>;
-    BwMapSimpleDialoguePanel                                : PanelConfig<BaseWarViewBwMapSimpleDialoguePanelOpenData>;
-    BwMarkGridPanel                                         : PanelConfig<BaseWarViewBwMarkGridPanelOpenData>;
-    BwProduceUnitPanel                                      : PanelConfig<BaseWarViewBwProduceUnitPanelOpenData>;
-    BwTaskObjectivePanel                                    : PanelConfig<BaseWarViewBwTaskObjectivePanelOpenData>;
-    BwTileBriefPanel                                        : PanelConfig<BaseWarViewBwTileBriefPanelOpenData>;
-    BwTileBuffListPanel                                     : PanelConfig<BaseWarViewBwTileBuffListPanelOpenData>;
-    BwTileDetailPanel                                       : PanelConfig<BaseWarViewBwTileDetailPanelOpenData>;
-    BwTileStatisticsPanel                                   : PanelConfig<BaseWarViewBwTileStatisticsPanelOpenData>;
-    BwUnitActionsPanel                                      : PanelConfig<BaseWarViewBwUnitActionsPanelOpenData>;
-    BwUnitBriefPanel                                        : PanelConfig<BaseWarViewBwUnitBriefPanelOpenData>;
-    BwUnitBuffListPanel                                     : PanelConfig<BaseWarViewBwUnitBuffListPanelOpenData>;
-    BwUnitDetailPanel                                       : PanelConfig<BaseWarViewBwUnitDetailPanelOpenData>;
-    BwUnitListPanel                                         : PanelConfig<BaseWarViewBwUnitListPanelOpenData>;
-    BwUnitStatisticsPanel                                   : PanelConfig<BaseWarViewBwUnitStatisticsPanelOpenData>;
-    BwWarExtraInfoPanel                                     : PanelConfig<BaseWarViewBwWarExtraInfoPanelOpenData>;
-    BwWarInfoPanel                                          : PanelConfig<BaseWarViewBwWarInfoPanelOpenData>;
-    BwWarPanel                                              : PanelConfig<BaseWarViewBwWarPanelOpenData>;
-    BwSmallDialoguePanel                                    : PanelConfig<BaseWarViewBwSmallDialoguePanelOpenData>;
+    BwBackgroundPanel                                       : PanelConfig<BwBackgroundPanelOpenData>;
+    BwBeginTurnPanel                                        : PanelConfig<BwBeginTurnPanelOpenData>;
+    BwCaptureProgressPanel                                  : PanelConfig<BwCaptureProgressPanelOpenData>;
+    BwCustomCounterListPanel                                : PanelConfig<BwCustomCounterListPanelOpenData>;
+    BwDamagePreviewPanel                                    : PanelConfig<BwDamagePreviewPanelOpenData>;
+    BwBigDialoguePanel                                      : PanelConfig<BwBigDialoguePanelOpenData>;
+    BwMapSimpleDialogueListPanel                            : PanelConfig<BwMapSimpleDialogueListPanelOpenData>;
+    BwMapSimpleDialoguePanel                                : PanelConfig<BwMapSimpleDialoguePanelOpenData>;
+    BwMarkGridPanel                                         : PanelConfig<BwMarkGridPanelOpenData>;
+    BwProduceUnitPanel                                      : PanelConfig<BwProduceUnitPanelOpenData>;
+    BwTaskObjectivePanel                                    : PanelConfig<BwTaskObjectivePanelOpenData>;
+    BwTileBriefPanel                                        : PanelConfig<BwTileBriefPanelOpenData>;
+    BwTileBuffListPanel                                     : PanelConfig<BwTileBuffListPanelOpenData>;
+    BwTileDetailPanel                                       : PanelConfig<BwTileDetailPanelOpenData>;
+    BwTileStatisticsPanel                                   : PanelConfig<BwTileStatisticsPanelOpenData>;
+    BwUnitActionsPanel                                      : PanelConfig<BwUnitActionsPanelOpenData>;
+    BwUnitBriefPanel                                        : PanelConfig<BwUnitBriefPanelOpenData>;
+    BwUnitBuffListPanel                                     : PanelConfig<BwUnitBuffListPanelOpenData>;
+    BwUnitDetailPanel                                       : PanelConfig<BwUnitDetailPanelOpenData>;
+    BwUnitListPanel                                         : PanelConfig<BwUnitListPanelOpenData>;
+    BwUnitStatisticsPanel                                   : PanelConfig<BwUnitStatisticsPanelOpenData>;
+    BwWarExtraInfoPanel                                     : PanelConfig<BwWarExtraInfoPanelOpenData>;
+    BwWarInfoPanel                                          : PanelConfig<BwWarInfoPanelOpenData>;
+    BwWarPanel                                              : PanelConfig<BwWarPanelOpenData>;
+    BwSmallDialoguePanel                                    : PanelConfig<BwSmallDialoguePanelOpenData>;
 
-    BroadcastAddMessagePanel                                : PanelConfig<BroadcastsViewsBroadcastAddMessagePanelOpenData>;
-    BroadcastMessageListPanel                               : PanelConfig<BroadcastsViewsBroadcastMessageListPanelOpenData>;
-    BroadcastPanel                                          : PanelConfig<BroadcastsViewsBroadcastPanelOpenData>;
+    BroadcastAddMessagePanel                                : PanelConfig<BroadcastAddMessagePanelOpenData>;
+    BroadcastMessageListPanel                               : PanelConfig<BroadcastMessageListPanelOpenData>;
+    BroadcastPanel                                          : PanelConfig<BroadcastPanelOpenData>;
 
-    CampaignCreateCampaignsPanel                            : PanelConfig<CampaignsViewsCampaignCreateCampaignsPanelOpenData>;
-    CampaignCreateMapsPanel                                 : PanelConfig<CampaignsViewsCampaignCreateMapsPanelOpenData>;
-    CampaignCreateQuickSettingsPanel                        : PanelConfig<CampaignsViewsCampaignCreateQuickSettingsPanelOpenData>;
+    CampaignCreateCampaignsPanel                            : PanelConfig<CampaignCreateCampaignsPanelOpenData>;
+    CampaignCreateMapsPanel                                 : PanelConfig<CampaignCreateMapsPanelOpenData>;
+    CampaignCreateQuickSettingsPanel                        : PanelConfig<CampaignCreateQuickSettingsPanelOpenData>;
 
-    ChangeLogPanel                                          : PanelConfig<ChangeLogViewChangeLogPanelOpenData>;
+    ChangeLogPanel                                          : PanelConfig<ChangeLogPanelOpenData>;
 
-    CcrCreateMapListPanel                                   : PanelConfig<CoopCustomRoomViewCcrCreateMapListPanelOpenData>;
-    CcrCreateSettingsPanel                                  : PanelConfig<CoopCustomRoomViewCcrCreateSettingsPanelOpenData>;
-    CcrMainMenuPanel                                        : PanelConfig<CoopCustomRoomViewCcrMainMenuPanelOpenData>;
-    CcrRoomInfoPanel                                        : PanelConfig<CoopCustomRoomViewCcrRoomInfoPanelOpenData>;
+    CcrCreateMapListPanel                                   : PanelConfig<CcrCreateMapListPanelOpenData>;
+    CcrCreateSettingsPanel                                  : PanelConfig<CcrCreateSettingsPanelOpenData>;
+    CcrMainMenuPanel                                        : PanelConfig<CcrMainMenuPanelOpenData>;
+    CcrRoomInfoPanel                                        : PanelConfig<CcrRoomInfoPanelOpenData>;
 
-    ChatCommandPanel                                        : PanelConfig<ChatViewChatCommandPanelOpenData>;
-    ChatPanel                                               : PanelConfig<ChatViewChatPanelOpenData>;
+    ChatCommandPanel                                        : PanelConfig<ChatCommandPanelOpenData>;
+    ChatPanel                                               : PanelConfig<ChatPanelOpenData>;
 
-    CmCampaignCommandsPanel                                 : PanelConfig<CampaignsManagementsViewsCmCampaignCommandsPanelOpenData>;
-    CmCampaignDesignersPanel                                : PanelConfig<CampaignsManagementsViewsCmCampaignDesignersPanelOpenData>;
-    CmCampaignListPanel                                     : PanelConfig<CampaignsManagementsViewsCmCampaignListPanelOpenData>;
-    CmCampaignMapsPanel                                     : PanelConfig<CampaignsManagementsViewsCmCampaignMapsPanelOpenData>;
+    CmCampaignCommandsPanel                                 : PanelConfig<CmCampaignCommandsPanelOpenData>;
+    CmCampaignDesignersPanel                                : PanelConfig<CmCampaignDesignersPanelOpenData>;
+    CmCampaignListPanel                                     : PanelConfig<CmCampaignListPanelOpenData>;
+    CmCampaignMapsPanel                                     : PanelConfig<CmCampaignMapsPanelOpenData>;
 
-    CommonAlertPanel                                        : PanelConfig<CommonViewCommonAlertPanelOpenData>;
-    CommonApiPanel                                          : PanelConfig<CommonViewCommonApiPanelOpenData>;
-    CommonBlockPanel                                        : PanelConfig<CommonViewCommonBlockPanelOpenData>;
-    CommonChangeVersionPanel                                : PanelConfig<CommonViewCommonChangeVersionPanelOpenData>;
-    CommonChooseCoAndColorPanel                             : PanelConfig<CommonViewCommonChooseCoAndColorPanelOpenData>;
-    CommonChooseGridIndexPanel                              : PanelConfig<CommonViewCommonChooseGridIndexPanelOpenData>;
-    CommonChooseMapSorterPanel                              : PanelConfig<CommonViewCommonChooseMapSorterPanelOpenData>;
-    CommonChooseMultiCoCategoryIdPanel                      : PanelConfig<CommonViewCommonChooseMultiCoCategoryIdPanelOpenData>;
-    CommonChooseMultiCoIdPanel                              : PanelConfig<CommonViewCommonChooseMultiCoIdPanelOpenData>;
-    CommonChooseMultiIntegerPanel                           : PanelConfig<CommonViewCommonChooseMultiIntegerPanelOpenData>;
-    CommonChooseMultiNumberPanel                            : PanelConfig<CommonViewCommonChooseMultiNumberPanelOpenData>;
-    CommonChooseMultiTileTypePanel                          : PanelConfig<CommonViewCommonChooseMultiTileTypePanelOpenData>;
-    CommonChooseMultiUnitTypePanel                          : PanelConfig<CommonViewCommonChooseMultiUnitTypePanelOpenData>;
-    CommonChooseOverridingSkinIdPanel                       : PanelConfig<CommonViewCommonChooseOverridingSkinIdPanelOpenData>;
-    CommonChooseSfxPanel                                    : PanelConfig<CommonViewCommonChooseSfxPanelOpenData>;
-    CommonChooseSingleCoCategoryIdPanel                     : PanelConfig<CommonViewCommonChooseSingleCoCategoryIdPanelOpenData>;
-    CommonChooseSingleCoIdPanel                             : PanelConfig<CommonViewCommonChooseSingleCoIdPanelOpenData>;
-    CommonChooseSingleGridMarkPanel                         : PanelConfig<CommonViewCommonChooseSingleGridMarkPanelOpenData>;
-    CommonChooseSingleMapEditorSlotPanel                    : PanelConfig<CommonViewCommonChooseSingleMapEditorSlotPanelOpenData>;
-    CommonChooseSingleNormalMapIdPanel                      : PanelConfig<CommonViewCommonChooseSingleNormalMapIdPanelOpenData>;
-    CommonChooseSingleNumberPanel                           : PanelConfig<CommonViewCommonChooseSingleNumberPanelOpenData>;
-    CommonChooseSingleSkinIdPanel                           : PanelConfig<CommonViewCommonChooseSingleSkinIdPanelOpenData>;
-    CommonChooseSingleSpmSaveSlotPanel                      : PanelConfig<CommonViewCommonChooseSingleSpmSaveSlotPanelOpenData>;
-    CommonChooseSingleTileTypePanel                         : PanelConfig<CommonViewCommonChooseSingleTileTypePanelOpenData>;
-    CommonChooseSingleUnitTypePanel                         : PanelConfig<CommonViewCommonChooseSingleUnitTypePanelOpenData>;
-    CommonChooseTileBasePanel                               : PanelConfig<CommonViewCommonChooseTileBasePanelOpenData>;
-    CommonChooseTileDecorationPanel                         : PanelConfig<CommonViewCommonChooseTileDecorationPanelOpenData>;
-    CommonChooseTileInfoPanel                               : PanelConfig<CommonViewCommonChooseTileInfoPanelOpenData>;
-    CommonChooseTileObjectPanel                             : PanelConfig<CommonViewCommonChooseTileObjectPanelOpenData>;
-    CommonChooseTileTypePanel                               : PanelConfig<CommonViewCommonChooseTileTypePanelOpenData>;
-    CommonChooseUnitAndPlayerIndexPanel                     : PanelConfig<CommonViewCommonChooseUnitAndPlayerIndexPanelOpenData>;
-    CommonChooseUnitAttrPanel                               : PanelConfig<CommonViewCommonChooseUnitAttrPanelOpenData>;
-    CommonChooseUnitTagPanel                                : PanelConfig<CommonViewCommonChooseUnitTagPanelOpenData>;
-    CommonCoInfoPanel                                       : PanelConfig<CommonViewCommonCoInfoPanelOpenData>;
-    CommonCoListPanel                                       : PanelConfig<CommonViewCommonCoListPanelOpenData>;
-    CommonCoStatisticsFilterPanel                           : PanelConfig<CommonViewCommonCoStatisticsFilterPanelOpenData>;
-    CommonCoStatisticsPanel                                 : PanelConfig<CommonViewCommonCoStatisticsPanelOpenData>;
-    CommonConfirmPanel                                      : PanelConfig<CommonViewCommonConfirmPanelOpenData>;
-    CommonDamageCalculatorPanel                             : PanelConfig<CommonViewCommonDamageCalculatorPanelOpenData>;
-    CommonDamageChartPanel                                  : PanelConfig<CommonViewCommonDamageChartPanelOpenData>;
-    CommonDeletePlayerPanel                                 : PanelConfig<CommonViewCommonDeletePlayerPanelOpenData>;
-    CommonDoubleSliderPanel                                 : PanelConfig<CommonViewCommonDoubleSliderPanelOpenData>;
-    CommonErrorPanel                                        : PanelConfig<CommonViewCommonErrorPanelOpenData>;
-    CommonExpressionTypeIdPanel                             : PanelConfig<CommonViewCommonExpressionTypeIdPanelOpenData>;
-    CommonGameChartPanel                                    : PanelConfig<CommonViewCommonGameChartPanelOpenData>;
-    CommonHelpPanel                                         : PanelConfig<CommonViewCommonHelpPanelOpenData>;
-    CommonInputDurationPanel                                : PanelConfig<CommonViewCommonInputDurationPanelOpenData>;
-    CommonInputExpressionPanel                              : PanelConfig<CommonViewCommonInputExpressionPanelOpenData>;
-    CommonInputIntegerPanel                                 : PanelConfig<CommonViewCommonInputIntegerPanelOpenData>;
-    CommonInputLanguageTextPanel                            : PanelConfig<CommonViewCommonInputLanguageTextPanelOpenData>;
-    CommonInputNullableIntegerPanel                         : PanelConfig<CommonViewCommonInputNullableIntegerPanelOpenData>;
-    CommonInputPanel                                        : PanelConfig<CommonViewCommonInputPanelOpenData>;
-    CommonInputShortLangTextPanel                           : PanelConfig<CommonViewCommonInputShortLangTextPanelOpenData>;
-    CommonMapFilterPanel                                    : PanelConfig<CommonViewCommonMapFilterPanelOpenData>;
-    CommonMapWarStatisticsPanel                             : PanelConfig<CommonViewCommonMapWarStatisticsPanelOpenData>;
-    CommonRoomFilterPanel                                   : PanelConfig<CommonViewCommonRoomFilterPanelOpenData>;
-    CommonSearchMultiUserPanel                              : PanelConfig<CommonViewCommonSearchMultiUserPanelOpenData>;
-    CommonSearchSingleUserPanel                             : PanelConfig<CommonViewCommonSearchSingleUserPanelOpenData>;
-    CommonServerStatusPanel                                 : PanelConfig<CommonViewCommonServerStatusPanelOpenData>;
-    CommonShowCoCategoryIdPanel                             : PanelConfig<CommonViewCommonShowCoCategoryIdPanelOpenData>;
-    CommonShowCoIdPanel                                     : PanelConfig<CommonViewCommonShowCoIdPanelOpenData>;
-    CommonShowGameModePanel                                 : PanelConfig<CommonViewCommonShowGameModePanelOpenData>;
-    CommonShowLangTextPanel                                 : PanelConfig<CommonViewCommonShowLangTextPanelOpenData>;
-    CommonShowMapPanel                                      : PanelConfig<CommonViewCommonShowMapPanelOpenData>;
-    CommonShowMapTagIdPanel                                 : PanelConfig<CommonViewCommonShowMapTagIdPanelOpenData>;
-    CommonShowPlayerListPanel                               : PanelConfig<CommonViewCommonShowPlayerListPanelOpenData>;
-    CommonShowSelectedCoCategoryIdPanel                     : PanelConfig<CommonViewCommonShowSelectedCoCategoryIdPanelOpenData>;
-    CommonShowUnitTypePanel                                 : PanelConfig<CommonViewCommonShowUnitTypePanelOpenData>;
-    CommonTileChartPanel                                    : PanelConfig<CommonViewCommonTileChartPanelOpenData>;
-    CommonTutorialPanel                                     : PanelConfig<CommonViewCommonTutorialPanelOpenData>;
-    CommonWarEventListPanel                                 : PanelConfig<CommonViewCommonWarEventListPanelOpenData>;
+    CommonAlertPanel                                        : PanelConfig<CommonAlertPanelOpenData>;
+    CommonApiPanel                                          : PanelConfig<CommonApiPanelOpenData>;
+    CommonBlockPanel                                        : PanelConfig<CommonBlockPanelOpenData>;
+    CommonChangeVersionPanel                                : PanelConfig<CommonChangeVersionPanelOpenData>;
+    CommonChooseCoAndColorPanel                             : PanelConfig<CommonChooseCoAndColorPanelOpenData>;
+    CommonChooseGridIndexPanel                              : PanelConfig<CommonChooseGridIndexPanelOpenData>;
+    CommonChooseMapSorterPanel                              : PanelConfig<CommonChooseMapSorterPanelOpenData>;
+    CommonChooseMultiCoCategoryIdPanel                      : PanelConfig<CommonChooseMultiCoCategoryIdPanelOpenData>;
+    CommonChooseMultiCoIdPanel                              : PanelConfig<CommonChooseMultiCoIdPanelOpenData>;
+    CommonChooseMultiIntegerPanel                           : PanelConfig<CommonChooseMultiIntegerPanelOpenData>;
+    CommonChooseMultiNumberPanel                            : PanelConfig<CommonChooseMultiNumberPanelOpenData>;
+    CommonChooseMultiTileTypePanel                          : PanelConfig<CommonChooseMultiTileTypePanelOpenData>;
+    CommonChooseMultiUnitTypePanel                          : PanelConfig<CommonChooseMultiUnitTypePanelOpenData>;
+    CommonChooseOverridingSkinIdPanel                       : PanelConfig<CommonChooseOverridingSkinIdPanelOpenData>;
+    CommonChooseSfxPanel                                    : PanelConfig<CommonChooseSfxPanelOpenData>;
+    CommonChooseSingleCoCategoryIdPanel                     : PanelConfig<CommonChooseSingleCoCategoryIdPanelOpenData>;
+    CommonChooseSingleCoIdPanel                             : PanelConfig<CommonChooseSingleCoIdPanelOpenData>;
+    CommonChooseSingleGridMarkPanel                         : PanelConfig<CommonChooseSingleGridMarkPanelOpenData>;
+    CommonChooseSingleMapEditorSlotPanel                    : PanelConfig<CommonChooseSingleMapEditorSlotPanelOpenData>;
+    CommonChooseSingleNormalMapIdPanel                      : PanelConfig<CommonChooseSingleNormalMapIdPanelOpenData>;
+    CommonChooseSingleNumberPanel                           : PanelConfig<CommonChooseSingleNumberPanelOpenData>;
+    CommonChooseSingleSkinIdPanel                           : PanelConfig<CommonChooseSingleSkinIdPanelOpenData>;
+    CommonChooseSingleSpmSaveSlotPanel                      : PanelConfig<CommonChooseSingleSpmSaveSlotPanelOpenData>;
+    CommonChooseSingleTileTypePanel                         : PanelConfig<CommonChooseSingleTileTypePanelOpenData>;
+    CommonChooseSingleUnitTypePanel                         : PanelConfig<CommonChooseSingleUnitTypePanelOpenData>;
+    CommonChooseTileBasePanel                               : PanelConfig<CommonChooseTileBasePanelOpenData>;
+    CommonChooseTileDecorationPanel                         : PanelConfig<CommonChooseTileDecorationPanelOpenData>;
+    CommonChooseTileInfoPanel                               : PanelConfig<CommonChooseTileInfoPanelOpenData>;
+    CommonChooseTileObjectPanel                             : PanelConfig<CommonChooseTileObjectPanelOpenData>;
+    CommonChooseTileTypePanel                               : PanelConfig<CommonChooseTileTypePanelOpenData>;
+    CommonChooseUnitAndPlayerIndexPanel                     : PanelConfig<CommonChooseUnitAndPlayerIndexPanelOpenData>;
+    CommonChooseUnitAttrPanel                               : PanelConfig<CommonChooseUnitAttrPanelOpenData>;
+    CommonChooseUnitTagPanel                                : PanelConfig<CommonChooseUnitTagPanelOpenData>;
+    CommonCoInfoPanel                                       : PanelConfig<CommonCoInfoPanelOpenData>;
+    CommonCoListPanel                                       : PanelConfig<CommonCoListPanelOpenData>;
+    CommonCoStatisticsFilterPanel                           : PanelConfig<CommonCoStatisticsFilterPanelOpenData>;
+    CommonCoStatisticsPanel                                 : PanelConfig<CommonCoStatisticsPanelOpenData>;
+    CommonConfirmPanel                                      : PanelConfig<CommonConfirmPanelOpenData>;
+    CommonDamageCalculatorPanel                             : PanelConfig<CommonDamageCalculatorPanelOpenData>;
+    CommonDamageChartPanel                                  : PanelConfig<CommonDamageChartPanelOpenData>;
+    CommonDeletePlayerPanel                                 : PanelConfig<CommonDeletePlayerPanelOpenData>;
+    CommonDoubleSliderPanel                                 : PanelConfig<CommonDoubleSliderPanelOpenData>;
+    CommonErrorPanel                                        : PanelConfig<CommonErrorPanelOpenData>;
+    CommonExpressionTypeIdPanel                             : PanelConfig<CommonExpressionTypeIdPanelOpenData>;
+    CommonGameChartPanel                                    : PanelConfig<CommonGameChartPanelOpenData>;
+    CommonHelpPanel                                         : PanelConfig<CommonHelpPanelOpenData>;
+    CommonInputDurationPanel                                : PanelConfig<CommonInputDurationPanelOpenData>;
+    CommonInputExpressionPanel                              : PanelConfig<CommonInputExpressionPanelOpenData>;
+    CommonInputIntegerPanel                                 : PanelConfig<CommonInputIntegerPanelOpenData>;
+    CommonInputLanguageTextPanel                            : PanelConfig<CommonInputLanguageTextPanelOpenData>;
+    CommonInputNullableIntegerPanel                         : PanelConfig<CommonInputNullableIntegerPanelOpenData>;
+    CommonInputPanel                                        : PanelConfig<CommonInputPanelOpenData>;
+    CommonInputShortLangTextPanel                           : PanelConfig<CommonInputShortLangTextPanelOpenData>;
+    CommonMapFilterPanel                                    : PanelConfig<CommonMapFilterPanelOpenData>;
+    CommonMapWarStatisticsPanel                             : PanelConfig<CommonMapWarStatisticsPanelOpenData>;
+    CommonRoomFilterPanel                                   : PanelConfig<CommonRoomFilterPanelOpenData>;
+    CommonSearchMultiUserPanel                              : PanelConfig<CommonSearchMultiUserPanelOpenData>;
+    CommonSearchSingleUserPanel                             : PanelConfig<CommonSearchSingleUserPanelOpenData>;
+    CommonServerStatusPanel                                 : PanelConfig<CommonServerStatusPanelOpenData>;
+    CommonShowCoCategoryIdPanel                             : PanelConfig<CommonShowCoCategoryIdPanelOpenData>;
+    CommonShowCoIdPanel                                     : PanelConfig<CommonShowCoIdPanelOpenData>;
+    CommonShowGameModePanel                                 : PanelConfig<CommonShowGameModePanelOpenData>;
+    CommonShowLangTextPanel                                 : PanelConfig<CommonShowLangTextPanelOpenData>;
+    CommonShowMapPanel                                      : PanelConfig<CommonShowMapPanelOpenData>;
+    CommonShowMapTagIdPanel                                 : PanelConfig<CommonShowMapTagIdPanelOpenData>;
+    CommonShowPlayerListPanel                               : PanelConfig<CommonShowPlayerListPanelOpenData>;
+    CommonShowSelectedCoCategoryIdPanel                     : PanelConfig<CommonShowSelectedCoCategoryIdPanelOpenData>;
+    CommonShowUnitTypePanel                                 : PanelConfig<CommonShowUnitTypePanelOpenData>;
+    CommonTileChartPanel                                    : PanelConfig<CommonTileChartPanelOpenData>;
+    CommonTutorialPanel                                     : PanelConfig<CommonTutorialPanelOpenData>;
+    CommonWarEventListPanel                                 : PanelConfig<CommonWarEventListPanelOpenData>;
 
-    GmSetUserFullPrivilegePanel                             : PanelConfig<GmViewGmSetUserFullPrivilegePanelOpenData>;
+    GmSetUserFullPrivilegePanel                             : PanelConfig<GmSetUserFullPrivilegePanelOpenData>;
 
-    HrwTopPanel                                             : PanelConfig<HalfwayReplayWarViewHrwTopPanelOpenData>;
-    HrwWarMenuPanel                                         : PanelConfig<HalfwayReplayWarViewHrwWarMenuPanelOpenData>;
+    HrwTopPanel                                             : PanelConfig<HrwTopPanelOpenData>;
+    HrwWarMenuPanel                                         : PanelConfig<HrwWarMenuPanelOpenData>;
 
-    LbMrwListPanel                                          : PanelConfig<LeaderboardViewLbMrwListPanelOpenData>;
-    LbSpmOverallListPanel                                   : PanelConfig<LeaderboardViewLbSpmOverallListPanelOpenData>;
+    LbMrwListPanel                                          : PanelConfig<LbMrwListPanelOpenData>;
+    LbSpmOverallListPanel                                   : PanelConfig<LbSpmOverallListPanelOpenData>;
 
-    LobbyBackgroundPanel                                    : PanelConfig<LobbyViewLobbyBackgroundPanelOpenData>;
-    LobbyBottomPanel                                        : PanelConfig<LobbyViewLobbyBottomPanelOpenData>;
-    LobbyPanel                                              : PanelConfig<LobbyViewLobbyPanelOpenData>;
-    LobbyStartPanel                                         : PanelConfig<LobbyViewLobbyStartPanelOpenData>;
-    LobbyTopPanel                                           : PanelConfig<LobbyViewLobbyTopPanelOpenData>;
-    LobbyTopRightPanel                                      : PanelConfig<LobbyViewLobbyTopRightPanelOpenData>;
+    LobbyBackgroundPanel                                    : PanelConfig<LobbyBackgroundPanelOpenData>;
+    LobbyBottomPanel                                        : PanelConfig<LobbyBottomPanelOpenData>;
+    LobbyPanel                                              : PanelConfig<LobbyPanelOpenData>;
+    LobbyStartPanel                                         : PanelConfig<LobbyStartPanelOpenData>;
+    LobbyTopPanel                                           : PanelConfig<LobbyTopPanelOpenData>;
+    LobbyTopRightPanel                                      : PanelConfig<LobbyTopRightPanelOpenData>;
 
-    MailPanel                                               : PanelConfig<MailViewMailPanelOpenData>;
+    MailPanel                                               : PanelConfig<MailPanelOpenData>;
 
-    McrCreateMapListPanel                                   : PanelConfig<MultiCustomRoomViewMcrCreateMapListPanelOpenData>;
-    McrCreateSettingsPanel                                  : PanelConfig<MultiCustomRoomViewMcrCreateSettingsPanelOpenData>;
-    McrMainMenuPanel                                        : PanelConfig<MultiCustomRoomViewMcrMainMenuPanelOpenData>;
-    McrRoomInfoPanel                                        : PanelConfig<MultiCustomRoomViewMcrRoomInfoPanelOpenData>;
+    McrCreateMapListPanel                                   : PanelConfig<McrCreateMapListPanelOpenData>;
+    McrCreateSettingsPanel                                  : PanelConfig<McrCreateSettingsPanelOpenData>;
+    McrMainMenuPanel                                        : PanelConfig<McrMainMenuPanelOpenData>;
+    McrRoomInfoPanel                                        : PanelConfig<McrRoomInfoPanelOpenData>;
 
-    MeAutoAdjustPanel                                       : PanelConfig<MapEditorsViewsMeAutoAdjustPanelOpenData>;
-    MeChooseLocationPanel                                   : PanelConfig<MapEditorsViewsMeChooseLocationPanelOpenData>;
-    MeChooseTileBasePanel                                   : PanelConfig<MapEditorsViewsMeChooseTileBasePanelOpenData>;
-    MeChooseTileDecorationPanel                             : PanelConfig<MapEditorsViewsMeChooseTileDecorationPanelOpenData>;
-    MeChooseTileObjectPanel                                 : PanelConfig<MapEditorsViewsMeChooseTileObjectPanelOpenData>;
-    MeChooseUnitPanel                                       : PanelConfig<MapEditorsViewsMeChooseUnitPanelOpenData>;
-    MeClearPanel                                            : PanelConfig<MapEditorsViewsMeClearPanelOpenData>;
-    MeImportContentPanel                                    : PanelConfig<MapEditorsViewsMeImportContentPanelOpenData>;
-    MeImportExportPanel                                     : PanelConfig<MapEditorsViewsMeImportExportPanelOpenData>;
-    MeMapInfoPanel                                          : PanelConfig<MapEditorsViewsMeMapInfoPanelOpenData>;
-    MeMapSimpleDialogueMainPanel                            : PanelConfig<MapEditorsViewsMeMapSimpleDialogueMainPanelOpenData>;
-    MeMapSimpleDialogueUtilPanel                            : PanelConfig<MapEditorsViewsMeMapSimpleDialogueUtilPanelOpenData>;
-    MeResizePanel                                           : PanelConfig<MapEditorsViewsMeResizePanelOpenData>;
-    MeSaveCampaignMapPanel                                  : PanelConfig<MapEditorsViewsMeSaveCampaignMapPanelOpenData>;
-    MeSaveNormalMapPanel                                    : PanelConfig<MapEditorsViewsMeSaveNormalMapPanelOpenData>;
-    MeSetTileCustomNamePanel                                : PanelConfig<MapEditorsViewsMeSetTileCustomNamePanelOpenData>;
-    MeSetUnitCustomNamePanel                                : PanelConfig<MapEditorsViewsMeSetUnitCustomNamePanelOpenData>;
-    MeSymmetricalPlayerIndexPanel                           : PanelConfig<MapEditorsViewsMeSymmetricalPlayerIndexPanelOpenData>;
-    MeSymmetryPanel                                         : PanelConfig<MapEditorsViewsMeSymmetryPanelOpenData>;
-    MeSymmetryFillTilePanel                                 : PanelConfig<MapEditorsViewsMeSymmetryFillTilePanelOpenData>;
-    MeTaskObjectivePanel                                    : PanelConfig<MapEditorsViewsMeTaskObjectivePanelOpenData>;
-    MeTaskObjectiveListPanel                                : PanelConfig<MapEditorsViewsMeTaskObjectiveListPanelOpenData>;
-    MeTileCustomNameListPanel                               : PanelConfig<MapEditorsViewsMeTileCustomNameListPanelOpenData>;
-    MeTileUnitInfoPanel                                     : PanelConfig<MapEditorsViewsMeTileUnitInfoPanelOpenData>;
-    MeTopPanel                                              : PanelConfig<MapEditorsViewsMeTopPanelOpenData>;
-    MeUnitCustomNameListPanel                               : PanelConfig<MapEditorsViewsMeUnitCustomNameListPanelOpenData>;
-    MeVisibilityPanel                                       : PanelConfig<MapEditorsViewsMeVisibilityPanelOpenData>;
-    MeWarMenuPanel                                          : PanelConfig<MapEditorsViewsMeWarMenuPanelOpenData>;
-    MeWarRulePanel                                          : PanelConfig<MapEditorsViewsMeWarRulePanelOpenData>;
-    MeWarRuleMapSimpleDialoguePanel                         : PanelConfig<MapEditorsViewsMeWarRuleMapSimpleDialoguePanelOpenData>;
-    MeWarRulePlayerRulePanel                                : PanelConfig<MapEditorsViewsMeWarRulePlayerRulePanelOpenData>;
-    MeWarRuleTaskObjectivePanel                             : PanelConfig<MapEditorsViewsMeWarRuleTaskObjectivePanelOpenData>;
-    MeWarRuleWarEventPanel                                  : PanelConfig<MapEditorsViewsMeWarRuleWarEventPanelOpenData>;
+    MeAutoAdjustPanel                                       : PanelConfig<MeAutoAdjustPanelOpenData>;
+    MeChooseLocationPanel                                   : PanelConfig<MeChooseLocationPanelOpenData>;
+    MeChooseTileBasePanel                                   : PanelConfig<MeChooseTileBasePanelOpenData>;
+    MeChooseTileDecorationPanel                             : PanelConfig<MeChooseTileDecorationPanelOpenData>;
+    MeChooseTileObjectPanel                                 : PanelConfig<MeChooseTileObjectPanelOpenData>;
+    MeChooseUnitPanel                                       : PanelConfig<MeChooseUnitPanelOpenData>;
+    MeClearPanel                                            : PanelConfig<MeClearPanelOpenData>;
+    MeImportContentPanel                                    : PanelConfig<MeImportContentPanelOpenData>;
+    MeImportExportPanel                                     : PanelConfig<MeImportExportPanelOpenData>;
+    MeMapInfoPanel                                          : PanelConfig<MeMapInfoPanelOpenData>;
+    MeMapSimpleDialogueMainPanel                            : PanelConfig<MeMapSimpleDialogueMainPanelOpenData>;
+    MeMapSimpleDialogueUtilPanel                            : PanelConfig<MeMapSimpleDialogueUtilPanelOpenData>;
+    MeResizePanel                                           : PanelConfig<MeResizePanelOpenData>;
+    MeSaveCampaignMapPanel                                  : PanelConfig<MeSaveCampaignMapPanelOpenData>;
+    MeSaveNormalMapPanel                                    : PanelConfig<MeSaveNormalMapPanelOpenData>;
+    MeSetTileCustomNamePanel                                : PanelConfig<MeSetTileCustomNamePanelOpenData>;
+    MeSetUnitCustomNamePanel                                : PanelConfig<MeSetUnitCustomNamePanelOpenData>;
+    MeSymmetricalPlayerIndexPanel                           : PanelConfig<MeSymmetricalPlayerIndexPanelOpenData>;
+    MeSymmetryPanel                                         : PanelConfig<MeSymmetryPanelOpenData>;
+    MeSymmetryFillTilePanel                                 : PanelConfig<MeSymmetryFillTilePanelOpenData>;
+    MeTaskObjectivePanel                                    : PanelConfig<MeTaskObjectivePanelOpenData>;
+    MeTaskObjectiveListPanel                                : PanelConfig<MeTaskObjectiveListPanelOpenData>;
+    MeTileCustomNameListPanel                               : PanelConfig<MeTileCustomNameListPanelOpenData>;
+    MeTileUnitInfoPanel                                     : PanelConfig<MeTileUnitInfoPanelOpenData>;
+    MeTopPanel                                              : PanelConfig<MeTopPanelOpenData>;
+    MeUnitCustomNameListPanel                               : PanelConfig<MeUnitCustomNameListPanelOpenData>;
+    MeVisibilityPanel                                       : PanelConfig<MeVisibilityPanelOpenData>;
+    MeWarMenuPanel                                          : PanelConfig<MeWarMenuPanelOpenData>;
+    MeWarRulePanel                                          : PanelConfig<MeWarRulePanelOpenData>;
+    MeWarRuleMapSimpleDialoguePanel                         : PanelConfig<MeWarRuleMapSimpleDialoguePanelOpenData>;
+    MeWarRulePlayerRulePanel                                : PanelConfig<MeWarRulePlayerRulePanelOpenData>;
+    MeWarRuleTaskObjectivePanel                             : PanelConfig<MeWarRuleTaskObjectivePanelOpenData>;
+    MeWarRuleWarEventPanel                                  : PanelConfig<MeWarRuleWarEventPanelOpenData>;
 
-    MfrCreateSettingsPanel                                  : PanelConfig<MultiFreeRoomViewMfrCreateSettingsPanelOpenData>;
-    MfrMainMenuPanel                                        : PanelConfig<MultiFreeRoomViewMfrMainMenuPanelOpenData>;
-    MfrRoomInfoPanel                                        : PanelConfig<MultiFreeRoomViewMfrRoomInfoPanelOpenData>;
+    MfrCreateSettingsPanel                                  : PanelConfig<MfrCreateSettingsPanelOpenData>;
+    MfrMainMenuPanel                                        : PanelConfig<MfrMainMenuPanelOpenData>;
+    MfrRoomInfoPanel                                        : PanelConfig<MfrRoomInfoPanelOpenData>;
 
-    MmCommandPanel                                          : PanelConfig<MapManagementViewMmCommandPanelOpenData>;
-    MmMainMenuPanel                                         : PanelConfig<MapManagementViewMmMainMenuPanelOpenData>;
-    MmMapTagListPanel                                       : PanelConfig<MapManagementViewMmMapTagListPanelOpenData>;
-    MmModifyWarRulePanel                                    : PanelConfig<MapManagementViewMmModifyWarRulePanelOpenData>;
-    MmReviewListPanel                                       : PanelConfig<MapManagementViewMmReviewListPanelOpenData>;
-    MmWarRuleMapSimpleDialoguePanel                         : PanelConfig<MapManagementViewMmWarRuleMapSimpleDialoguePanelOpenData>;
-    MmWarRulePanel                                          : PanelConfig<MapManagementViewMmWarRulePanelOpenData>;
-    MmWarRulePlayerRulePanel                                : PanelConfig<MapManagementViewMmWarRulePlayerRulePanelOpenData>;
-    MmWarRuleTaskObjectivePanel                             : PanelConfig<MapManagementViewMmWarRuleTaskObjectivePanelOpenData>;
-    MmWarRuleWarEventPanel                                  : PanelConfig<MapManagementViewMmWarRuleWarEventPanelOpenData>;
+    MmCommandPanel                                          : PanelConfig<MmCommandPanelOpenData>;
+    MmMainMenuPanel                                         : PanelConfig<MmMainMenuPanelOpenData>;
+    MmMapTagListPanel                                       : PanelConfig<MmMapTagListPanelOpenData>;
+    MmModifyWarRulePanel                                    : PanelConfig<MmModifyWarRulePanelOpenData>;
+    MmReviewListPanel                                       : PanelConfig<MmReviewListPanelOpenData>;
+    MmWarRuleMapSimpleDialoguePanel                         : PanelConfig<MmWarRuleMapSimpleDialoguePanelOpenData>;
+    MmWarRulePanel                                          : PanelConfig<MmWarRulePanelOpenData>;
+    MmWarRulePlayerRulePanel                                : PanelConfig<MmWarRulePlayerRulePanelOpenData>;
+    MmWarRuleTaskObjectivePanel                             : PanelConfig<MmWarRuleTaskObjectivePanelOpenData>;
+    MmWarRuleWarEventPanel                                  : PanelConfig<MmWarRuleWarEventPanelOpenData>;
 
-    MmrBanMapPanel                                          : PanelConfig<MultiMatchRoomViewMmrBanMapPanelOpenData>;
-    MmrMainMenuPanel                                        : PanelConfig<MultiMatchRoomViewMmrMainMenuPanelOpenData>;
-    MmrPreviewMapListPanel                                  : PanelConfig<MultiMatchRoomViewMmrPreviewMapListPanelOpenData>;
-    MmrRoomInfoPanel                                        : PanelConfig<MultiMatchRoomViewMmrRoomInfoPanelOpenData>;
-    MmrSetMaxConcurrentCountPanel                           : PanelConfig<MultiMatchRoomViewMmrSetMaxConcurrentCountPanelOpenData>;
-    MmrSetTimerPanel                                        : PanelConfig<MultiMatchRoomViewMmrSetTimerPanelOpenData>;
+    MmrBanMapPanel                                          : PanelConfig<MmrBanMapPanelOpenData>;
+    MmrMainMenuPanel                                        : PanelConfig<MmrMainMenuPanelOpenData>;
+    MmrPreviewMapListPanel                                  : PanelConfig<MmrPreviewMapListPanelOpenData>;
+    MmrRoomInfoPanel                                        : PanelConfig<MmrRoomInfoPanelOpenData>;
+    MmrSetMaxConcurrentCountPanel                           : PanelConfig<MmrSetMaxConcurrentCountPanelOpenData>;
+    MmrSetTimerPanel                                        : PanelConfig<MmrSetTimerPanelOpenData>;
 
-    MpwJoinRoomListPanel                                    : PanelConfig<MultiPlayerWarViewMpwJoinRoomListPanelOpenData>;
-    MpwMyRoomListPanel                                      : PanelConfig<MultiPlayerWarViewMpwMyRoomListPanelOpenData>;
-    MpwMyWarListPanel                                       : PanelConfig<MultiPlayerWarViewMpwMyWarListPanelOpenData>;
-    MpwSpectatePanel                                        : PanelConfig<MultiPlayerWarViewMpwSpectatePanelOpenData>;
-    MpwSidePanel                                            : PanelConfig<MultiPlayerWarViewMpwSidePanelOpenData>;
-    MpwTopPanel                                             : PanelConfig<MultiPlayerWarViewMpwTopPanelOpenData>;
-    MpwWarAdvancedMenuPanel                                 : PanelConfig<MultiPlayerWarViewMpwWarAdvancedMenuPanelOpenData>;
-    MpwWarMenuPanel                                         : PanelConfig<MultiPlayerWarViewMpwWarMenuPanelOpenData>;
+    MpwJoinRoomListPanel                                    : PanelConfig<MpwJoinRoomListPanelOpenData>;
+    MpwMyRoomListPanel                                      : PanelConfig<MpwMyRoomListPanelOpenData>;
+    MpwMyWarListPanel                                       : PanelConfig<MpwMyWarListPanelOpenData>;
+    MpwSpectatePanel                                        : PanelConfig<MpwSpectatePanelOpenData>;
+    MpwSidePanel                                            : PanelConfig<MpwSidePanelOpenData>;
+    MpwTopPanel                                             : PanelConfig<MpwTopPanelOpenData>;
+    MpwWarAdvancedMenuPanel                                 : PanelConfig<MpwWarAdvancedMenuPanelOpenData>;
+    MpwWarMenuPanel                                         : PanelConfig<MpwWarMenuPanelOpenData>;
 
-    MrrBanMapPanel                                          : PanelConfig<MultiRankRoomViewMrrBanMapPanelOpenData>;
-    MrrMainMenuPanel                                        : PanelConfig<MultiRankRoomViewMrrMainMenuPanelOpenData>;
-    MrrPreviewMapListPanel                                  : PanelConfig<MultiRankRoomViewMrrPreviewMapListPanelOpenData>;
-    MrrRoomInfoPanel                                        : PanelConfig<MultiRankRoomViewMrrRoomInfoPanelOpenData>;
-    MrrSetMaxConcurrentCountPanel                           : PanelConfig<MultiRankRoomViewMrrSetMaxConcurrentCountPanelOpenData>;
-    MrrSetTimerPanel                                        : PanelConfig<MultiRankRoomViewMrrSetTimerPanelOpenData>;
+    MrrBanMapPanel                                          : PanelConfig<MrrBanMapPanelOpenData>;
+    MrrMainMenuPanel                                        : PanelConfig<MrrMainMenuPanelOpenData>;
+    MrrPreviewMapListPanel                                  : PanelConfig<MrrPreviewMapListPanelOpenData>;
+    MrrRoomInfoPanel                                        : PanelConfig<MrrRoomInfoPanelOpenData>;
+    MrrSetMaxConcurrentCountPanel                           : PanelConfig<MrrSetMaxConcurrentCountPanelOpenData>;
+    MrrSetTimerPanel                                        : PanelConfig<MrrSetTimerPanelOpenData>;
 
-    RwPauseTimePanel                                        : PanelConfig<ReplayWarViewRwPauseTimePanelOpenData>;
-    RwReplayListPanel                                       : PanelConfig<ReplayWarViewRwReplayListPanelOpenData>;
-    RwReplayProgressPanel                                   : PanelConfig<ReplayWarViewRwReplayProgressPanelOpenData>;
-    RwSearchReplayPanel                                     : PanelConfig<ReplayWarViewRwSearchReplayPanelOpenData>;
-    RwTopPanel                                              : PanelConfig<ReplayWarViewRwTopPanelOpenData>;
-    RwWarMenuPanel                                          : PanelConfig<ReplayWarViewRwWarMenuPanelOpenData>;
+    RwPauseTimePanel                                        : PanelConfig<RwPauseTimePanelOpenData>;
+    RwReplayListPanel                                       : PanelConfig<RwReplayListPanelOpenData>;
+    RwReplayProgressPanel                                   : PanelConfig<RwReplayProgressPanelOpenData>;
+    RwSearchReplayPanel                                     : PanelConfig<RwSearchReplayPanelOpenData>;
+    RwTopPanel                                              : PanelConfig<RwTopPanelOpenData>;
+    RwWarMenuPanel                                          : PanelConfig<RwWarMenuPanelOpenData>;
 
-    ScrCreateMapListPanel                                   : PanelConfig<SingleCustomRoomViewScrCreateMapListPanelOpenData>;
-    ScrCreateSettingsPanel                                  : PanelConfig<SingleCustomRoomViewScrCreateSettingsPanelOpenData>;
+    ScrCreateMapListPanel                                   : PanelConfig<ScrCreateMapListPanelOpenData>;
+    ScrCreateSettingsPanel                                  : PanelConfig<ScrCreateSettingsPanelOpenData>;
 
-    SoundsChooseSingleBgmPanel                              : PanelConfig<SoundsPanelsChooseSingleBgmPanelOpenData>;
-    SoundsSettingsPanel                                     : PanelConfig<SoundsPanelsSettingsPanelOpenData>;
+    SoundsChooseSingleBgmPanel                              : PanelConfig<ChooseSingleBgmPanelOpenData>;
+    SoundsSettingsPanel                                     : PanelConfig<SettingsPanelOpenData>;
 
-    SpmMainMenuPanel                                        : PanelConfig<SinglePlayerModeViewSpmMainMenuPanelOpenData>;
-    SpmWarListPanel                                         : PanelConfig<SinglePlayerModeViewSpmWarListPanelOpenData>;
-    SpmMyWarRoomRecordPanel                                 : PanelConfig<SinglePlayerModeViewSpmMyWarRoomRecordPanelOpenData>;
+    SpmMainMenuPanel                                        : PanelConfig<SpmMainMenuPanelOpenData>;
+    SpmWarListPanel                                         : PanelConfig<SpmWarListPanelOpenData>;
+    SpmMyWarRoomRecordPanel                                 : PanelConfig<SpmMyWarRoomRecordPanelOpenData>;
 
-    SpwSidePanel                                            : PanelConfig<SinglePlayerWarViewSpwSidePanelOpenData>;
-    SpwTopPanel                                             : PanelConfig<SinglePlayerWarViewSpwTopPanelOpenData>;
-    SpwWarAdvancedMenuPanel                                 : PanelConfig<SinglePlayerWarViewSpwWarAdvancedMenuPanelOpenData>;
-    SpwWarMenuPanel                                         : PanelConfig<SinglePlayerWarViewSpwWarMenuPanelOpenData>;
+    SpwSidePanel                                            : PanelConfig<SpwSidePanelOpenData>;
+    SpwTopPanel                                             : PanelConfig<SpwTopPanelOpenData>;
+    SpwWarAdvancedMenuPanel                                 : PanelConfig<SpwWarAdvancedMenuPanelOpenData>;
+    SpwWarMenuPanel                                         : PanelConfig<SpwWarMenuPanelOpenData>;
 
-    SrrCreateMapListPanel                                   : PanelConfig<SingleRankRoomViewSrrCreateMapListPanelOpenData>;
-    SrrCreateQuickSettingsPanel                             : PanelConfig<SingleRankRoomViewSrrCreateQuickSettingsPanelOpenData>;
-    SrrCreateSettingsPanel                                  : PanelConfig<SingleRankRoomViewSrrCreateSettingsPanelOpenData>;
+    SrrCreateMapListPanel                                   : PanelConfig<SrrCreateMapListPanelOpenData>;
+    SrrCreateQuickSettingsPanel                             : PanelConfig<SrrCreateQuickSettingsPanelOpenData>;
+    SrrCreateSettingsPanel                                  : PanelConfig<SrrCreateSettingsPanelOpenData>;
 
-    UserGameManagementPanel                                 : PanelConfig<UsersViewsUserGameManagementPanelOpenData>;
-    UserGraphicSettingsPanel                                : PanelConfig<UsersViewsUserGraphicSettingsPanelOpenData>;
-    UserLoginBackgroundPanel                                : PanelConfig<UsersViewsUserLoginBackgroundPanelOpenData>;
-    UserLoginPanel                                          : PanelConfig<UsersViewsUserLoginPanelOpenData>;
-    UserMedalPanel                                          : PanelConfig<UsersViewsUserMedalPanelOpenData>;
-    UserMiscSettingsPanel                                   : PanelConfig<UsersViewsUserMiscSettingsPanelOpenData>;
-    UserMpwStatisticsPanel                                  : PanelConfig<UsersViewsUserMpwStatisticsPanelOpenData>;
-    UserOnlineUsersPanel                                    : PanelConfig<UsersViewsUserOnlineUsersPanelOpenData>;
-    UserPanel                                               : PanelConfig<UsersViewsUserPanelOpenData>;
-    UserProfileSettingsPanel                                : PanelConfig<UsersViewsUserProfileSettingsPanelOpenData>;
-    UserRegisterPanel                                       : PanelConfig<UsersViewsUserRegisterPanelOpenData>;
-    UserSceneBgmSettingsPanel                               : PanelConfig<UsersViewsUserSceneBgmSettingsPanelOpenData>;
-    UserSetAvatarPanel                                      : PanelConfig<UsersViewsUserSetAvatarPanelOpenData>;
-    UserSetCoBgmSettingsPanel                               : PanelConfig<UsersViewsUserSetCoBgmSettingsPanelOpenData>;
-    UserSetDiscordInfoPanel                                 : PanelConfig<UsersViewsUserSetDiscordInfoPanelOpenData>;
-    UserSetEmailPanel                                       : PanelConfig<UsersViewsUserSetEmailPanelOpenData>;
-    UserSetOpacityPanel                                     : PanelConfig<UsersViewsUserSetOpacityPanelOpenData>;
-    UserSetPasswordPanel                                    : PanelConfig<UsersViewsUserSetPasswordPanelOpenData>;
-    UserSetPasswordWithEmailPanel                           : PanelConfig<UsersViewsUserSetPasswordWithEmailPanelOpenData>;
-    UserSetRelationPanel                                    : PanelConfig<UsersViewsUserSetRelationPanelOpenData>;
-    UserSetStageScalePanel                                  : PanelConfig<UsersViewsUserSetStageScalePanelOpenData>;
-    UserSettingsPanel                                       : PanelConfig<UsersViewsUserSettingsPanelOpenData>;
-    UserWarHistoryPanel                                     : PanelConfig<UsersViewsUserWarHistoryPanelOpenData>;
+    UserGameManagementPanel                                 : PanelConfig<UserGameManagementPanelOpenData>;
+    UserGraphicSettingsPanel                                : PanelConfig<UserGraphicSettingsPanelOpenData>;
+    UserLoginBackgroundPanel                                : PanelConfig<UserLoginBackgroundPanelOpenData>;
+    UserLoginPanel                                          : PanelConfig<UserLoginPanelOpenData>;
+    UserMedalPanel                                          : PanelConfig<UserMedalPanelOpenData>;
+    UserMiscSettingsPanel                                   : PanelConfig<UserMiscSettingsPanelOpenData>;
+    UserMpwStatisticsPanel                                  : PanelConfig<UserMpwStatisticsPanelOpenData>;
+    UserOnlineUsersPanel                                    : PanelConfig<UserOnlineUsersPanelOpenData>;
+    UserPanel                                               : PanelConfig<UserPanelOpenData>;
+    UserProfileSettingsPanel                                : PanelConfig<UserProfileSettingsPanelOpenData>;
+    UserRegisterPanel                                       : PanelConfig<UserRegisterPanelOpenData>;
+    UserSceneBgmSettingsPanel                               : PanelConfig<UserSceneBgmSettingsPanelOpenData>;
+    UserSetAvatarPanel                                      : PanelConfig<UserSetAvatarPanelOpenData>;
+    UserSetCoBgmSettingsPanel                               : PanelConfig<UserSetCoBgmSettingsPanelOpenData>;
+    UserSetDiscordInfoPanel                                 : PanelConfig<UserSetDiscordInfoPanelOpenData>;
+    UserSetEmailPanel                                       : PanelConfig<UserSetEmailPanelOpenData>;
+    UserSetOpacityPanel                                     : PanelConfig<UserSetOpacityPanelOpenData>;
+    UserSetPasswordPanel                                    : PanelConfig<UserSetPasswordPanelOpenData>;
+    UserSetPasswordWithEmailPanel                           : PanelConfig<UserSetPasswordWithEmailPanelOpenData>;
+    UserSetRelationPanel                                    : PanelConfig<UserSetRelationPanelOpenData>;
+    UserSetStageScalePanel                                  : PanelConfig<UserSetStageScalePanelOpenData>;
+    UserSettingsPanel                                       : PanelConfig<UserSettingsPanelOpenData>;
+    UserWarHistoryPanel                                     : PanelConfig<UserWarHistoryPanelOpenData>;
 
-    WeaAddTileBuffExprPanel                                 : PanelConfig<WarEventViewWeaAddTileBuffExprPanelOpenData>;
-    WeaAddTileBuffSimplePanel                               : PanelConfig<WarEventViewWeaAddTileBuffSimplePanelOpenData>;
-    WeaAddUnitBuffSimplePanel                               : PanelConfig<WarEventViewWeaAddUnitBuffSimplePanelOpenData>;
-    WeaAddUnitOnMapSimplePanel                              : PanelConfig<WarEventViewWeaAddUnitOnMapSimplePanelOpenData>;
-    WeaDeleteTileBuffExprPanel                              : PanelConfig<WarEventViewWeaDeleteTileBuffExprPanelOpenData>;
-    WeaDeleteTileBuffSimplePanel                            : PanelConfig<WarEventViewWeaDeleteTileBuffSimplePanelOpenData>;
-    WeaDeleteUnitBuffSimplePanel                            : PanelConfig<WarEventViewWeaDeleteUnitBuffSimplePanelOpenData>;
-    WeaDestroyUnitExprPanel                                 : PanelConfig<WarEventViewWeaDestroyUnitExprPanelOpenData>;
-    WeaDestroyUnitSimplePanel                               : PanelConfig<WarEventViewWeaDestroyUnitSimplePanelOpenData>;
-    WeaBigDialogueSimplePanel                               : PanelConfig<WarEventViewWeaBigDialogueSimplePanelOpenData>;
-    WeaFillUnitLoadedExprPanel                              : PanelConfig<WarEventViewWeaFillUnitLoadedExprPanelOpenData>;
-    WeaFillUnitLoadedSimplePanel                            : PanelConfig<WarEventViewWeaFillUnitLoadedSimplePanelOpenData>;
-    WeaFillUnitOnMapExprPanel                               : PanelConfig<WarEventViewWeaFillUnitOnMapExprPanelOpenData>;
-    WeaFillUnitOnMapSimplePanel                             : PanelConfig<WarEventViewWeaFillUnitOnMapSimplePanelOpenData>;
-    WeaModifyTileBuffExprPanel                              : PanelConfig<WarEventViewWeaModifyTileBuffExprPanelOpenData>;
-    WeaModifyTileBuffSimplePanel                            : PanelConfig<WarEventViewWeaModifyTileBuffSimplePanelOpenData>;
-    WeaModifyUnitBuffSimplePanel                            : PanelConfig<WarEventViewWeaModifyUnitBuffSimplePanelOpenData>;
-    WeaPersistentModifyPlayerAttributePanel                 : PanelConfig<WarEventViewWeaPersistentModifyPlayerAttributePanelOpenData>;
-    WeaPersistentModifyUnitAttributePanel                   : PanelConfig<WarEventViewWeaPersistentModifyUnitAttributePanelOpenData>;
-    WeaPersistentPlayBgmPanel                               : PanelConfig<WarEventViewWeaPersistentPlayBgmPanelOpenData>;
-    WeaPersistentShowTextPanel                              : PanelConfig<WarEventViewWeaPersistentShowTextPanelOpenData>;
-    WeaPlayBgmPanel                                         : PanelConfig<WarEventViewWeaPlayBgmPanelOpenData>;
-    WeaPlaySfxPanel                                         : PanelConfig<WarEventViewWeaPlaySfxPanelOpenData>;
-    WeaSetCustomCannonStateExprPanel                        : PanelConfig<WarEventViewWeaSetCustomCannonStateExprPanelOpenData>;
-    WeaSetCustomCannonStateSimplePanel                      : PanelConfig<WarEventViewWeaSetCustomCannonStateSimplePanelOpenData>;
-    WeaSetCustomCountersPanel                               : PanelConfig<WarEventViewWeaSetCustomCountersPanelOpenData>;
-    WeaSetCustomBuildingStateExprPanel                      : PanelConfig<WarEventViewWeaSetCustomBuildingStateExprPanelOpenData>;
-    WeaSetCustomBuildingStateSimplePanel                    : PanelConfig<WarEventViewWeaSetCustomBuildingStateSimplePanelOpenData>;
-    WeaSetCustomCrystalStateExprPanel                       : PanelConfig<WarEventViewWeaSetCustomCrystalStateExprPanelOpenData>;
-    WeaSetCustomCrystalStateSimplePanel                     : PanelConfig<WarEventViewWeaSetCustomCrystalStateSimplePanelOpenData>;
-    WeaSetCustomLaserTurretStateExprPanel                   : PanelConfig<WarEventViewWeaSetCustomLaserTurretStateExprPanelOpenData>;
-    WeaSetCustomLaserTurretStateSimplePanel                 : PanelConfig<WarEventViewWeaSetCustomLaserTurretStateSimplePanelOpenData>;
-    WeaSetForceFogCodeExprPanel                             : PanelConfig<WarEventViewWeaSetForceFogCodeExprPanelOpenData>;
-    WeaSetForceFogCodeSimplePanel                           : PanelConfig<WarEventViewWeaSetForceFogCodeSimplePanelOpenData>;
-    WeaSetPlayerStateExprPanel                              : PanelConfig<WarEventViewWeaSetPlayerStateExprPanelOpenData>;
-    WeaSetPlayerStateSimplePanel                            : PanelConfig<WarEventViewWeaSetPlayerStateSimplePanelOpenData>;
-    WeaSetTaskObjectiveStatePanel                           : PanelConfig<WarEventViewWeaSetTaskObjectiveStatePanelOpenData>;
-    WeaSetTileStateExprPanel                                : PanelConfig<WarEventViewWeaSetTileStateExprPanelOpenData>;
-    WeaSetTileStateSimplePanel                              : PanelConfig<WarEventViewWeaSetTileStateSimplePanelOpenData>;
-    WeaSetTileTypeExprPanel                                 : PanelConfig<WarEventViewWeaSetTileTypeExprPanelOpenData>;
-    WeaSetTileTypeSimplePanel                               : PanelConfig<WarEventViewWeaSetTileTypeSimplePanelOpenData>;
-    WeaSetUnitMovePathVisibilityPanel                       : PanelConfig<WarEventViewWeaSetUnitMovePathVisibilityPanelOpenData>;
-    WeaSetUnitOwnershipExprPanel                            : PanelConfig<WarEventViewWeaSetUnitOwnershipExprPanelOpenData>;
-    WeaSetUnitOwnershipSimplePanel                          : PanelConfig<WarEventViewWeaSetUnitOwnershipSimplePanelOpenData>;
-    WeaSetUnitPositionExprPanel                             : PanelConfig<WarEventViewWeaSetUnitPositionExprPanelOpenData>;
-    WeaSetUnitPositionSimplePanel                           : PanelConfig<WarEventViewWeaSetUnitPositionSimplePanelOpenData>;
-    WeaSetUnitStateExprPanel                                : PanelConfig<WarEventViewWeaSetUnitStateExprPanelOpenData>;
-    WeaSetUnitStateSimplePanel                              : PanelConfig<WarEventViewWeaSetUnitStateSimplePanelOpenData>;
-    WeaSetUnitTypeExprPanel                                 : PanelConfig<WarEventViewWeaSetUnitTypeExprPanelOpenData>;
-    WeaSetUnitTypeSimplePanel                               : PanelConfig<WarEventViewWeaSetUnitTypeSimplePanelOpenData>;
-    WeaSetViewpointExprPanel                                : PanelConfig<WarEventViewWeaSetViewpointExprPanelOpenData>;
-    WeaSetViewpointSimplePanel                              : PanelConfig<WarEventViewWeaSetViewpointSimplePanelOpenData>;
-    WeaSetWeatherExprPanel                                  : PanelConfig<WarEventViewWeaSetWeatherExprPanelOpenData>;
-    WeaSetWeatherSimplePanel                                : PanelConfig<WarEventViewWeaSetWeatherSimplePanelOpenData>;
-    WeaSmallDialogueSimplePanel                             : PanelConfig<WarEventViewWeaSmallDialogueSimplePanelOpenData>;
-    WeaStopPersistentActionPanel                            : PanelConfig<WarEventViewWeaStopPersistentActionPanelOpenData>;
-    WeActionReplacePanel                                    : PanelConfig<WarEventViewWeActionReplacePanelOpenData>;
-    WeActionTypeListPanel                                   : PanelConfig<WarEventViewWeActionTypeListPanelOpenData>;
-    WeCommandPanel                                          : PanelConfig<WarEventViewWeCommandPanelOpenData>;
-    WecPlayerPresencePanel                                  : PanelConfig<WarEventViewWecPlayerPresencePanelOpenData>;
-    WecTurnAndPlayerPanel                                   : PanelConfig<WarEventViewWecTurnAndPlayerPanelOpenData>;
-    WecEventCalledCountPanel                                : PanelConfig<WarEventViewWecEventCalledCountPanelOpenData>;
-    WecExpressionPanel                                      : PanelConfig<WarEventViewWecExpressionPanelOpenData>;
-    WecTilePresencePanel                                    : PanelConfig<WarEventViewWecTilePresencePanelOpenData>;
-    WecUnitPresencePanel                                    : PanelConfig<WarEventViewWecUnitPresencePanelOpenData>;
-    WecWeatherAndFogPanel                                   : PanelConfig<WarEventViewWecWeatherAndFogPanelOpenData>;
-    WeConditionModifyPanel60                                : PanelConfig<WarEventViewWeConditionModifyPanel60OpenData>;
-    WecOngoingPersistentActionPanel                         : PanelConfig<WarEventViewWecOngoingPersistentActionPanelOpenData>;
-    WecManualActionStatisticsPanel                          : PanelConfig<WarEventViewWecManualActionStatisticsPanelOpenData>;
-    WeConditionReplacePanel                                 : PanelConfig<WarEventViewWeConditionReplacePanelOpenData>;
-    WeConditionTypeListPanel                                : PanelConfig<WarEventViewWeConditionTypeListPanelOpenData>;
-    WeCustomCounterNameListPanel                            : PanelConfig<WarEventViewWeCustomCounterNameListPanelOpenData>;
-    WeBigDialogueBackgroundPanel                            : PanelConfig<WarEventViewWeBigDialogueBackgroundPanelOpenData>;
-    WeEventNameListPanel                                    : PanelConfig<WarEventViewWeEventNameListPanelOpenData>;
-    WeMainPanel                                             : PanelConfig<WarEventViewWeMainPanelOpenData>;
-    WeNodeReplacePanel                                      : PanelConfig<WarEventViewWeNodeReplacePanelOpenData>;
-    WePlayerFilterPanel                                     : PanelConfig<WarEventViewWePlayerFilterPanelOpenData>;
-    WePositionFilterPanel                                   : PanelConfig<WarEventViewWePositionFilterPanelOpenData>;
-    WeTileBuffFilterPanel                                   : PanelConfig<WarEventViewWeTileBuffFilterPanelOpenData>;
-    WeTileCustomCannonPanel                                 : PanelConfig<WarEventViewWeTileCustomCannonPanelOpenData>;
-    WeTileCustomCrystalPanel                                : PanelConfig<WarEventViewWeTileCustomCrystalPanelOpenData>;
-    WeTileCustomLaserTurretPanel                            : PanelConfig<WarEventViewWeTileCustomLaserTurretPanelOpenData>;
-    WeTileFilterPanel                                       : PanelConfig<WarEventViewWeTileFilterPanelOpenData>;
-    WeUnitBuffFilterPanel                                   : PanelConfig<WarEventViewWeUnitBuffFilterPanelOpenData>;
-    WeUnitFilterPanel                                       : PanelConfig<WarEventViewWeUnitFilterPanelOpenData>;
+    WeaAddTileBuffExprPanel                                 : PanelConfig<WeaAddTileBuffExprPanelOpenData>;
+    WeaAddTileBuffSimplePanel                               : PanelConfig<WeaAddTileBuffSimplePanelOpenData>;
+    WeaAddUnitBuffSimplePanel                               : PanelConfig<WeaAddUnitBuffSimplePanelOpenData>;
+    WeaAddUnitOnMapSimplePanel                              : PanelConfig<WeaAddUnitOnMapSimplePanelOpenData>;
+    WeaDeleteTileBuffExprPanel                              : PanelConfig<WeaDeleteTileBuffExprPanelOpenData>;
+    WeaDeleteTileBuffSimplePanel                            : PanelConfig<WeaDeleteTileBuffSimplePanelOpenData>;
+    WeaDeleteUnitBuffSimplePanel                            : PanelConfig<WeaDeleteUnitBuffSimplePanelOpenData>;
+    WeaDestroyUnitExprPanel                                 : PanelConfig<WeaDestroyUnitExprPanelOpenData>;
+    WeaDestroyUnitSimplePanel                               : PanelConfig<WeaDestroyUnitSimplePanelOpenData>;
+    WeaBigDialogueSimplePanel                               : PanelConfig<WeaBigDialogueSimplePanelOpenData>;
+    WeaFillUnitLoadedExprPanel                              : PanelConfig<WeaFillUnitLoadedExprPanelOpenData>;
+    WeaFillUnitLoadedSimplePanel                            : PanelConfig<WeaFillUnitLoadedSimplePanelOpenData>;
+    WeaFillUnitOnMapExprPanel                               : PanelConfig<WeaFillUnitOnMapExprPanelOpenData>;
+    WeaFillUnitOnMapSimplePanel                             : PanelConfig<WeaFillUnitOnMapSimplePanelOpenData>;
+    WeaModifyTileBuffExprPanel                              : PanelConfig<WeaModifyTileBuffExprPanelOpenData>;
+    WeaModifyTileBuffSimplePanel                            : PanelConfig<WeaModifyTileBuffSimplePanelOpenData>;
+    WeaModifyUnitBuffSimplePanel                            : PanelConfig<WeaModifyUnitBuffSimplePanelOpenData>;
+    WeaPersistentModifyPlayerAttributePanel                 : PanelConfig<WeaPersistentModifyPlayerAttributePanelOpenData>;
+    WeaPersistentModifyUnitAttributePanel                   : PanelConfig<WeaPersistentModifyUnitAttributePanelOpenData>;
+    WeaPersistentPlayBgmPanel                               : PanelConfig<WeaPersistentPlayBgmPanelOpenData>;
+    WeaPersistentShowTextPanel                              : PanelConfig<WeaPersistentShowTextPanelOpenData>;
+    WeaPlayBgmPanel                                         : PanelConfig<WeaPlayBgmPanelOpenData>;
+    WeaPlaySfxPanel                                         : PanelConfig<WeaPlaySfxPanelOpenData>;
+    WeaSetCustomCannonStateExprPanel                        : PanelConfig<WeaSetCustomCannonStateExprPanelOpenData>;
+    WeaSetCustomCannonStateSimplePanel                      : PanelConfig<WeaSetCustomCannonStateSimplePanelOpenData>;
+    WeaSetCustomCountersPanel                               : PanelConfig<WeaSetCustomCountersPanelOpenData>;
+    WeaSetCustomBuildingStateExprPanel                      : PanelConfig<WeaSetCustomBuildingStateExprPanelOpenData>;
+    WeaSetCustomBuildingStateSimplePanel                    : PanelConfig<WeaSetCustomBuildingStateSimplePanelOpenData>;
+    WeaSetCustomCrystalStateExprPanel                       : PanelConfig<WeaSetCustomCrystalStateExprPanelOpenData>;
+    WeaSetCustomCrystalStateSimplePanel                     : PanelConfig<WeaSetCustomCrystalStateSimplePanelOpenData>;
+    WeaSetCustomLaserTurretStateExprPanel                   : PanelConfig<WeaSetCustomLaserTurretStateExprPanelOpenData>;
+    WeaSetCustomLaserTurretStateSimplePanel                 : PanelConfig<WeaSetCustomLaserTurretStateSimplePanelOpenData>;
+    WeaSetForceFogCodeExprPanel                             : PanelConfig<WeaSetForceFogCodeExprPanelOpenData>;
+    WeaSetForceFogCodeSimplePanel                           : PanelConfig<WeaSetForceFogCodeSimplePanelOpenData>;
+    WeaSetPlayerStateExprPanel                              : PanelConfig<WeaSetPlayerStateExprPanelOpenData>;
+    WeaSetPlayerStateSimplePanel                            : PanelConfig<WeaSetPlayerStateSimplePanelOpenData>;
+    WeaSetTaskObjectiveStatePanel                           : PanelConfig<WeaSetTaskObjectiveStatePanelOpenData>;
+    WeaSetTileStateExprPanel                                : PanelConfig<WeaSetTileStateExprPanelOpenData>;
+    WeaSetTileStateSimplePanel                              : PanelConfig<WeaSetTileStateSimplePanelOpenData>;
+    WeaSetTileTypeExprPanel                                 : PanelConfig<WeaSetTileTypeExprPanelOpenData>;
+    WeaSetTileTypeSimplePanel                               : PanelConfig<WeaSetTileTypeSimplePanelOpenData>;
+    WeaSetUnitMovePathVisibilityPanel                       : PanelConfig<WeaSetUnitMovePathVisibilityPanelOpenData>;
+    WeaSetUnitOwnershipExprPanel                            : PanelConfig<WeaSetUnitOwnershipExprPanelOpenData>;
+    WeaSetUnitOwnershipSimplePanel                          : PanelConfig<WeaSetUnitOwnershipSimplePanelOpenData>;
+    WeaSetUnitPositionExprPanel                             : PanelConfig<WeaSetUnitPositionExprPanelOpenData>;
+    WeaSetUnitPositionSimplePanel                           : PanelConfig<WeaSetUnitPositionSimplePanelOpenData>;
+    WeaSetUnitStateExprPanel                                : PanelConfig<WeaSetUnitStateExprPanelOpenData>;
+    WeaSetUnitStateSimplePanel                              : PanelConfig<WeaSetUnitStateSimplePanelOpenData>;
+    WeaSetUnitTypeExprPanel                                 : PanelConfig<WeaSetUnitTypeExprPanelOpenData>;
+    WeaSetUnitTypeSimplePanel                               : PanelConfig<WeaSetUnitTypeSimplePanelOpenData>;
+    WeaSetViewpointExprPanel                                : PanelConfig<WeaSetViewpointExprPanelOpenData>;
+    WeaSetViewpointSimplePanel                              : PanelConfig<WeaSetViewpointSimplePanelOpenData>;
+    WeaSetWeatherExprPanel                                  : PanelConfig<WeaSetWeatherExprPanelOpenData>;
+    WeaSetWeatherSimplePanel                                : PanelConfig<WeaSetWeatherSimplePanelOpenData>;
+    WeaSmallDialogueSimplePanel                             : PanelConfig<WeaSmallDialogueSimplePanelOpenData>;
+    WeaStopPersistentActionPanel                            : PanelConfig<WeaStopPersistentActionPanelOpenData>;
+    WeActionReplacePanel                                    : PanelConfig<WeActionReplacePanelOpenData>;
+    WeActionTypeListPanel                                   : PanelConfig<WeActionTypeListPanelOpenData>;
+    WeCommandPanel                                          : PanelConfig<WeCommandPanelOpenData>;
+    WecPlayerPresencePanel                                  : PanelConfig<WecPlayerPresencePanelOpenData>;
+    WecTurnAndPlayerPanel                                   : PanelConfig<WecTurnAndPlayerPanelOpenData>;
+    WecEventCalledCountPanel                                : PanelConfig<WecEventCalledCountPanelOpenData>;
+    WecExpressionPanel                                      : PanelConfig<WecExpressionPanelOpenData>;
+    WecTilePresencePanel                                    : PanelConfig<WecTilePresencePanelOpenData>;
+    WecUnitPresencePanel                                    : PanelConfig<WecUnitPresencePanelOpenData>;
+    WecWeatherAndFogPanel                                   : PanelConfig<WecWeatherAndFogPanelOpenData>;
+    WeConditionModifyPanel60                                : PanelConfig<WeConditionModifyPanel60OpenData>;
+    WecOngoingPersistentActionPanel                         : PanelConfig<WecOngoingPersistentActionPanelOpenData>;
+    WecManualActionStatisticsPanel                          : PanelConfig<WecManualActionStatisticsPanelOpenData>;
+    WeConditionReplacePanel                                 : PanelConfig<WeConditionReplacePanelOpenData>;
+    WeConditionTypeListPanel                                : PanelConfig<WeConditionTypeListPanelOpenData>;
+    WeCustomCounterNameListPanel                            : PanelConfig<WeCustomCounterNameListPanelOpenData>;
+    WeBigDialogueBackgroundPanel                            : PanelConfig<WeBigDialogueBackgroundPanelOpenData>;
+    WeEventNameListPanel                                    : PanelConfig<WeEventNameListPanelOpenData>;
+    WeMainPanel                                             : PanelConfig<WeMainPanelOpenData>;
+    WeNodeReplacePanel                                      : PanelConfig<WeNodeReplacePanelOpenData>;
+    WePlayerFilterPanel                                     : PanelConfig<WePlayerFilterPanelOpenData>;
+    WePositionFilterPanel                                   : PanelConfig<WePositionFilterPanelOpenData>;
+    WeTileBuffFilterPanel                                   : PanelConfig<WeTileBuffFilterPanelOpenData>;
+    WeTileCustomCannonPanel                                 : PanelConfig<WeTileCustomCannonPanelOpenData>;
+    WeTileCustomCrystalPanel                                : PanelConfig<WeTileCustomCrystalPanelOpenData>;
+    WeTileCustomLaserTurretPanel                            : PanelConfig<WeTileCustomLaserTurretPanelOpenData>;
+    WeTileFilterPanel                                       : PanelConfig<WeTileFilterPanelOpenData>;
+    WeUnitBuffFilterPanel                                   : PanelConfig<WeUnitBuffFilterPanelOpenData>;
+    WeUnitFilterPanel                                       : PanelConfig<WeUnitFilterPanelOpenData>;
 
-    WwDeleteWatcherWarsPanel                                : PanelConfig<WatchWarViewWwDeleteWatcherWarsPanelOpenData>;
-    WwHandleRequestWarsPanel                                : PanelConfig<WatchWarViewWwHandleRequestWarsPanelOpenData>;
-    WwMainMenuPanel                                         : PanelConfig<WatchWarViewWwMainMenuPanelOpenData>;
-    WwMakeRequestDetailPanel                                : PanelConfig<WatchWarViewWwMakeRequestDetailPanelOpenData>;
-    WwMakeRequestWarsPanel                                  : PanelConfig<WatchWarViewWwMakeRequestWarsPanelOpenData>;
-    WwOngoingWarsPanel                                      : PanelConfig<WatchWarViewWwOngoingWarsPanelOpenData>;
-    WwSearchWarPanel                                        : PanelConfig<WatchWarViewWwSearchWarPanelOpenData>;
+    WwDeleteWatcherWarsPanel                                : PanelConfig<WwDeleteWatcherWarsPanelOpenData>;
+    WwHandleRequestWarsPanel                                : PanelConfig<WwHandleRequestWarsPanelOpenData>;
+    WwMainMenuPanel                                         : PanelConfig<WwMainMenuPanelOpenData>;
+    WwMakeRequestDetailPanel                                : PanelConfig<WwMakeRequestDetailPanelOpenData>;
+    WwMakeRequestWarsPanel                                  : PanelConfig<WwMakeRequestWarsPanelOpenData>;
+    WwOngoingWarsPanel                                      : PanelConfig<WwOngoingWarsPanelOpenData>;
+    WwSearchWarPanel                                        : PanelConfig<WwSearchWarPanelOpenData>;
 };
 let _dict: DictType;
 
@@ -1687,65 +1747,65 @@ export function getDict(): DictType {
         _dict = {
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ActionPlannerPanel : {
-                cls      : Panel,
+                cls      : ActionPlannersActionPlannerPanel,
                 skinName : `actionPlanners/ActionPlannerPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             AtGlobalSettingsPanel : {
-                cls      : AutoTourneysMainsViewsAtGlobalSettingsPanel,
+                cls      : ViewsAtGlobalSettingsPanel,
                 skinName : `autoTourneys/mains/views/AtGlobalSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             AtRegisterPanel : {
-                cls      : AutoTourneysMainsViewsAtRegisterPanel,
+                cls      : ViewsAtRegisterPanel,
                 skinName : `autoTourneys/mains/views/AtRegisterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             AtSetInitialBracketsPanel : {
-                cls      : AutoTourneysMainsViewsAtSetInitialBracketsPanel,
+                cls      : ViewsAtSetInitialBracketsPanel,
                 skinName : `autoTourneys/mains/views/AtSetInitialBracketsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             AtSetMapPoolPanel : {
-                cls      : AutoTourneysMainsViewsAtSetMapPoolPanel,
+                cls      : ViewsAtSetMapPoolPanel,
                 skinName : `autoTourneys/mains/views/AtSetMapPoolPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             AtTourneyInfoPanel : {
-                cls      : AutoTourneysMainsViewsAtTourneyInfoPanel,
+                cls      : ViewsAtTourneyInfoPanel,
                 skinName : `autoTourneys/mains/views/AtTourneyInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             AtTourneySettingsPanel : {
-                cls      : AutoTourneysMainsViewsAtTourneySettingsPanel,
+                cls      : ViewsAtTourneySettingsPanel,
                 skinName : `autoTourneys/mains/views/AtTourneySettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             AtrMainMenuPanel : {
-                cls         : AutoTourneysRoomsViewsAtrMainMenuPanel,
+                cls         : ViewsAtrMainMenuPanel,
                 skinName    : `autoTourneys/rooms/views/AtrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             AtrPreviewMapListPanel : {
-                cls         : AutoTourneysRoomsViewsAtrPreviewMapListPanel,
+                cls         : ViewsAtrPreviewMapListPanel,
                 skinName    : `autoTourneys/rooms/views/AtrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             AtrRoomInfoPanel : {
-                cls         : AutoTourneysRoomsViewsAtrRoomInfoPanel,
+                cls         : ViewsAtrRoomInfoPanel,
                 skinName    : `autoTourneys/rooms/views/AtrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -1753,7 +1813,7 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             BwBackgroundPanel : {
-                cls         : BaseWarViewBwBackgroundPanel,
+                cls         : ViewBwBackgroundPanel,
                 skinName    : `baseWar/BwBackgroundPanel.exml`,
                 layer       : DisplayLayerId.Bottom,
                 isExclusive : true,
@@ -1761,151 +1821,151 @@ export function getDict(): DictType {
             },
 
             BwBeginTurnPanel : {
-                cls       : BaseWarViewBwBeginTurnPanel,
+                cls       : ViewBwBeginTurnPanel,
                 skinName  : `baseWar/BwBeginTurnPanel.exml`,
                 layer     : DisplayLayerId.Notify0,
                 needCache : true,
             },
 
             BwCaptureProgressPanel : {
-                cls       : BaseWarViewBwCaptureProgressPanel,
+                cls       : ViewBwCaptureProgressPanel,
                 skinName  : `baseWar/BwCaptureProgressPanel.exml`,
                 layer     : DisplayLayerId.Notify0,
                 needCache : true,
             },
 
             BwCustomCounterListPanel : {
-                cls      : BaseWarViewBwCustomCounterListPanel,
+                cls      : ViewBwCustomCounterListPanel,
                 skinName : `baseWar/BwCustomCounterListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwDamagePreviewPanel : {
-                cls       : BaseWarViewBwDamagePreviewPanel,
+                cls       : ViewBwDamagePreviewPanel,
                 skinName  : `baseWar/BwDamagePreviewPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwBigDialoguePanel : {
-                cls      : BaseWarViewBwBigDialoguePanel,
+                cls      : ViewBwBigDialoguePanel,
                 skinName : `baseWar/BwBigDialoguePanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             BwMapSimpleDialogueListPanel : {
-                cls      : BaseWarViewBwMapSimpleDialogueListPanel,
+                cls      : ViewBwMapSimpleDialogueListPanel,
                 skinName : `baseWar/BwMapSimpleDialogueListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwMapSimpleDialoguePanel : {
-                cls      : BaseWarViewBwMapSimpleDialoguePanel,
+                cls      : ViewBwMapSimpleDialoguePanel,
                 skinName : `baseWar/BwMapSimpleDialoguePanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             BwMarkGridPanel : {
-                cls      : BaseWarViewBwMarkGridPanel,
+                cls      : ViewBwMarkGridPanel,
                 skinName : `baseWar/BwMarkGridPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwProduceUnitPanel : {
-                cls       : BaseWarViewBwProduceUnitPanel,
+                cls       : ViewBwProduceUnitPanel,
                 skinName  : `baseWar/BwProduceUnitPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTaskObjectivePanel : {
-                cls      : BaseWarViewBwTaskObjectivePanel,
+                cls      : ViewBwTaskObjectivePanel,
                 skinName : `baseWar/BwTaskObjectivePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwTileBriefPanel : {
-                cls       : BaseWarViewBwTileBriefPanel,
+                cls       : ViewBwTileBriefPanel,
                 skinName  : `baseWar/BwTileBriefPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTileBuffListPanel : {
-                cls      : BaseWarViewBwTileBuffListPanel,
+                cls      : ViewBwTileBuffListPanel,
                 skinName : `baseWar/BwTileBuffListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwTileDetailPanel : {
-                cls       : BaseWarViewBwTileDetailPanel,
+                cls       : ViewBwTileDetailPanel,
                 skinName  : `baseWar/BwTileDetailPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwTileStatisticsPanel : {
-                cls      : BaseWarViewBwTileStatisticsPanel,
+                cls      : ViewBwTileStatisticsPanel,
                 skinName : `baseWar/BwTileStatisticsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwUnitActionsPanel : {
-                cls       : BaseWarViewBwUnitActionsPanel,
+                cls       : ViewBwUnitActionsPanel,
                 skinName  : `baseWar/BwUnitActionsPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitBriefPanel : {
-                cls       : BaseWarViewBwUnitBriefPanel,
+                cls       : ViewBwUnitBriefPanel,
                 skinName  : `baseWar/BwUnitBriefPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitBuffListPanel : {
-                cls      : BaseWarViewBwUnitBuffListPanel,
+                cls      : ViewBwUnitBuffListPanel,
                 skinName : `baseWar/BwUnitBuffListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwUnitDetailPanel : {
-                cls       : BaseWarViewBwUnitDetailPanel,
+                cls       : ViewBwUnitDetailPanel,
                 skinName  : `baseWar/BwUnitDetailPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitListPanel : {
-                cls       : BaseWarViewBwUnitListPanel,
+                cls       : ViewBwUnitListPanel,
                 skinName  : `baseWar/BwUnitListPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwUnitStatisticsPanel : {
-                cls       : BaseWarViewBwUnitStatisticsPanel,
+                cls       : ViewBwUnitStatisticsPanel,
                 skinName  : `baseWar/BwUnitStatisticsPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwWarExtraInfoPanel : {
-                cls      : BaseWarViewBwWarExtraInfoPanel,
+                cls      : ViewBwWarExtraInfoPanel,
                 skinName : `baseWar/BwWarExtraInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BwWarInfoPanel : {
-                cls       : BaseWarViewBwWarInfoPanel,
+                cls       : ViewBwWarInfoPanel,
                 skinName  : `baseWar/BwWarInfoPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             BwWarPanel : {
-                cls         : BaseWarViewBwWarPanel,
+                cls         : ViewBwWarPanel,
                 skinName    : `baseWar/BwWarPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -1913,26 +1973,26 @@ export function getDict(): DictType {
             },
 
             BwSmallDialoguePanel : {
-                cls      : BaseWarViewBwSmallDialoguePanel,
+                cls      : ViewBwSmallDialoguePanel,
                 skinName : `baseWar/BwSmallDialoguePanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             BroadcastAddMessagePanel : {
-                cls      : BroadcastsViewsBroadcastAddMessagePanel,
+                cls      : ViewsBroadcastAddMessagePanel,
                 skinName : `broadcasts/views/BroadcastAddMessagePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BroadcastMessageListPanel : {
-                cls      : BroadcastsViewsBroadcastMessageListPanel,
+                cls      : ViewsBroadcastMessageListPanel,
                 skinName : `broadcasts/views/BroadcastMessageListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             BroadcastPanel : {
-                cls       : BroadcastsViewsBroadcastPanel,
+                cls       : ViewsBroadcastPanel,
                 skinName  : `broadcasts/views/BroadcastPanel.exml`,
                 layer     : DisplayLayerId.Notify0,
                 needCache : true,
@@ -1940,54 +2000,54 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CampaignCreateCampaignsPanel : {
-                cls      : CampaignsViewsCampaignCreateCampaignsPanel,
+                cls      : ViewsCampaignCreateCampaignsPanel,
                 skinName : `campaigns/views/CampaignCreateCampaignsPanel.exml`,
                 layer    : DisplayLayerId.Scene,
             },
 
             CampaignCreateMapsPanel : {
-                cls      : CampaignsViewsCampaignCreateMapsPanel,
+                cls      : ViewsCampaignCreateMapsPanel,
                 skinName : `campaigns/views/CampaignCreateMapsPanel.exml`,
                 layer    : DisplayLayerId.Scene,
             },
 
             CampaignCreateQuickSettingsPanel : {
-                cls      : CampaignsViewsCampaignCreateQuickSettingsPanel,
+                cls      : ViewsCampaignCreateQuickSettingsPanel,
                 skinName : `campaigns/views/CampaignCreateQuickSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ChangeLogPanel : {
-                cls      : ChangeLogViewChangeLogPanel,
+                cls      : ChangeLogsChangeLogPanel,
                 skinName : `changeLogs/ChangeLogPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CcrCreateMapListPanel : {
-                cls         : CoopCustomRoomViewCcrCreateMapListPanel,
+                cls         : ViewCcrCreateMapListPanel,
                 skinName    : `coopCustomRoom/CcrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrCreateSettingsPanel : {
-                cls         : CoopCustomRoomViewCcrCreateSettingsPanel,
+                cls         : ViewCcrCreateSettingsPanel,
                 skinName    : `coopCustomRoom/CcrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrMainMenuPanel : {
-                cls         : CoopCustomRoomViewCcrMainMenuPanel,
+                cls         : ViewCcrMainMenuPanel,
                 skinName    : `coopCustomRoom/CcrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             CcrRoomInfoPanel : {
-                cls         : CoopCustomRoomViewCcrRoomInfoPanel,
+                cls         : ViewCcrRoomInfoPanel,
                 skinName    : `coopCustomRoom/CcrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -1995,13 +2055,13 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ChatCommandPanel : {
-                cls       : ChatViewChatCommandPanel,
+                cls       : ViewChatCommandPanel,
                 skinName  : `chats/ChatCommandPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : false,
             },
             ChatPanel : {
-                cls       : ChatViewChatPanel,
+                cls       : ViewChatPanel,
                 skinName  : `chats/ChatPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
@@ -2009,510 +2069,510 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CmCampaignCommandsPanel : {
-                cls      : CampaignsManagementsViewsCmCampaignCommandsPanel,
+                cls      : ViewsCmCampaignCommandsPanel,
                 skinName : `campaigns/managements/views/CmCampaignCommandsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CmCampaignDesignersPanel : {
-                cls      : CampaignsManagementsViewsCmCampaignDesignersPanel,
+                cls      : ViewsCmCampaignDesignersPanel,
                 skinName : `campaigns/managements/views/CmCampaignDesignersPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CmCampaignListPanel : {
-                cls      : CampaignsManagementsViewsCmCampaignListPanel,
+                cls      : ViewsCmCampaignListPanel,
                 skinName : `campaigns/managements/views/CmCampaignListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CmCampaignMapsPanel : {
-                cls      : CampaignsManagementsViewsCmCampaignMapsPanel,
+                cls      : ViewsCmCampaignMapsPanel,
                 skinName : `campaigns/managements/views/CmCampaignMapsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             CommonAlertPanel : {
-                cls      : CommonViewCommonAlertPanel,
+                cls      : ViewCommonAlertPanel,
                 skinName : `common/CommonAlertPanel.exml`,
                 layer    : DisplayLayerId.Notify0,
             },
 
             CommonApiPanel : {
-                cls      : CommonViewCommonApiPanel,
+                cls      : ViewCommonApiPanel,
                 skinName : `common/CommonApiPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonBlockPanel : {
-                cls      : CommonViewCommonBlockPanel,
+                cls      : ViewCommonBlockPanel,
                 skinName : `common/CommonBlockPanel.exml`,
                 layer    : DisplayLayerId.Notify0,
             },
 
             CommonChangeVersionPanel : {
-                cls      : CommonViewCommonChangeVersionPanel,
+                cls      : ViewCommonChangeVersionPanel,
                 skinName : `common/CommonChangeVersionPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseCoAndColorPanel : {
-                cls      : CommonViewCommonChooseCoAndColorPanel,
+                cls      : ViewCommonChooseCoAndColorPanel,
                 skinName : `common/CommonChooseCoAndColorPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseGridIndexPanel : {
-                cls      : CommonViewCommonChooseGridIndexPanel,
+                cls      : ViewCommonChooseGridIndexPanel,
                 skinName : `common/CommonChooseGridIndexPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMapSorterPanel : {
-                cls      : CommonViewCommonChooseMapSorterPanel,
+                cls      : ViewCommonChooseMapSorterPanel,
                 skinName : `common/CommonChooseMapSorterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiCoCategoryIdPanel : {
-                cls      : CommonViewCommonChooseMultiCoCategoryIdPanel,
+                cls      : ViewCommonChooseMultiCoCategoryIdPanel,
                 skinName : `common/CommonChooseMultiCoCategoryIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiCoIdPanel : {
-                cls      : CommonViewCommonChooseMultiCoIdPanel,
+                cls      : ViewCommonChooseMultiCoIdPanel,
                 skinName : `common/CommonChooseMultiCoIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiIntegerPanel : {
-                cls      : CommonViewCommonChooseMultiIntegerPanel,
+                cls      : ViewCommonChooseMultiIntegerPanel,
                 skinName : `common/CommonChooseMultiIntegerPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiNumberPanel : {
-                cls      : CommonViewCommonChooseMultiNumberPanel,
+                cls      : ViewCommonChooseMultiNumberPanel,
                 skinName : `common/CommonChooseMultiNumberPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiTileTypePanel : {
-                cls      : CommonViewCommonChooseMultiTileTypePanel,
+                cls      : ViewCommonChooseMultiTileTypePanel,
                 skinName : `common/CommonChooseMultiTileTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseMultiUnitTypePanel : {
-                cls      : CommonViewCommonChooseMultiUnitTypePanel,
+                cls      : ViewCommonChooseMultiUnitTypePanel,
                 skinName : `common/CommonChooseMultiUnitTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseOverridingSkinIdPanel : {
-                cls      : CommonViewCommonChooseOverridingSkinIdPanel,
+                cls      : ViewCommonChooseOverridingSkinIdPanel,
                 skinName : `common/CommonChooseOverridingSkinIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSfxPanel : {
-                cls      : CommonViewCommonChooseSfxPanel,
+                cls      : ViewCommonChooseSfxPanel,
                 skinName : `common/CommonChooseSfxPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleCoCategoryIdPanel : {
-                cls      : CommonViewCommonChooseSingleCoCategoryIdPanel,
+                cls      : ViewCommonChooseSingleCoCategoryIdPanel,
                 skinName : `common/CommonChooseSingleCoCategoryIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleCoIdPanel : {
-                cls      : CommonViewCommonChooseSingleCoIdPanel,
+                cls      : ViewCommonChooseSingleCoIdPanel,
                 skinName : `common/CommonChooseSingleCoIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleGridMarkPanel : {
-                cls      : CommonViewCommonChooseSingleGridMarkPanel,
+                cls      : ViewCommonChooseSingleGridMarkPanel,
                 skinName : `common/CommonChooseSingleGridMarkPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleMapEditorSlotPanel : {
-                cls      : CommonViewCommonChooseSingleMapEditorSlotPanel,
+                cls      : ViewCommonChooseSingleMapEditorSlotPanel,
                 skinName : `common/CommonChooseSingleMapEditorSlotPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleNormalMapIdPanel : {
-                cls      : CommonViewCommonChooseSingleNormalMapIdPanel,
+                cls      : ViewCommonChooseSingleNormalMapIdPanel,
                 skinName : `common/CommonChooseSingleNormalMapIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleNumberPanel : {
-                cls      : CommonViewCommonChooseSingleNumberPanel,
+                cls      : ViewCommonChooseSingleNumberPanel,
                 skinName : `common/CommonChooseSingleNumberPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleSkinIdPanel : {
-                cls      : CommonViewCommonChooseSingleSkinIdPanel,
+                cls      : ViewCommonChooseSingleSkinIdPanel,
                 skinName : `common/CommonChooseSingleSkinIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleSpmSaveSlotPanel : {
-                cls      : CommonViewCommonChooseSingleSpmSaveSlotPanel,
+                cls      : ViewCommonChooseSingleSpmSaveSlotPanel,
                 skinName : `common/CommonChooseSingleSpmSaveSlotPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleTileTypePanel : {
-                cls      : CommonViewCommonChooseSingleTileTypePanel,
+                cls      : ViewCommonChooseSingleTileTypePanel,
                 skinName : `common/CommonChooseSingleTileTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseSingleUnitTypePanel : {
-                cls      : CommonViewCommonChooseSingleUnitTypePanel,
+                cls      : ViewCommonChooseSingleUnitTypePanel,
                 skinName : `common/CommonChooseSingleUnitTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseTileBasePanel : {
-                cls      : CommonViewCommonChooseTileBasePanel,
+                cls      : ViewCommonChooseTileBasePanel,
                 skinName : `common/CommonChooseTileBasePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseTileDecorationPanel : {
-                cls      : CommonViewCommonChooseTileDecorationPanel,
+                cls      : ViewCommonChooseTileDecorationPanel,
                 skinName : `common/CommonChooseTileDecorationPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseTileInfoPanel : {
-                cls      : CommonViewCommonChooseTileInfoPanel,
+                cls      : ViewCommonChooseTileInfoPanel,
                 skinName : `common/CommonChooseTileInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseTileObjectPanel : {
-                cls      : CommonViewCommonChooseTileObjectPanel,
+                cls      : ViewCommonChooseTileObjectPanel,
                 skinName : `common/CommonChooseTileObjectPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseTileTypePanel : {
-                cls      : CommonViewCommonChooseTileTypePanel,
+                cls      : ViewCommonChooseTileTypePanel,
                 skinName : `common/CommonChooseTileTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitAndPlayerIndexPanel : {
-                cls      : CommonViewCommonChooseUnitAndPlayerIndexPanel,
+                cls      : ViewCommonChooseUnitAndPlayerIndexPanel,
                 skinName : `common/CommonChooseUnitAndPlayerIndexPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitAttrPanel : {
-                cls      : CommonViewCommonChooseUnitAttrPanel,
+                cls      : ViewCommonChooseUnitAttrPanel,
                 skinName : `common/CommonChooseUnitAttrPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonChooseUnitTagPanel : {
-                cls      : CommonViewCommonChooseUnitTagPanel,
+                cls      : ViewCommonChooseUnitTagPanel,
                 skinName : `common/CommonChooseUnitTagPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonCoInfoPanel : {
-                cls      : CommonViewCommonCoInfoPanel,
+                cls      : ViewCommonCoInfoPanel,
                 skinName : `common/CommonCoInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonCoListPanel : {
-                cls      : CommonViewCommonCoListPanel,
+                cls      : ViewCommonCoListPanel,
                 skinName : `common/CommonCoListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonCoStatisticsFilterPanel : {
-                cls      : CommonViewCommonCoStatisticsFilterPanel,
+                cls      : ViewCommonCoStatisticsFilterPanel,
                 skinName : `common/CommonCoStatisticsFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonCoStatisticsPanel : {
-                cls      : CommonViewCommonCoStatisticsPanel,
+                cls      : ViewCommonCoStatisticsPanel,
                 skinName : `common/CommonCoStatisticsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonConfirmPanel : {
-                cls      : CommonViewCommonConfirmPanel,
+                cls      : ViewCommonConfirmPanel,
                 skinName : `common/CommonConfirmPanel.exml`,
                 layer    : DisplayLayerId.Notify0,
             },
 
             CommonDamageCalculatorPanel : {
-                cls       : CommonViewCommonDamageCalculatorPanel,
+                cls       : ViewCommonDamageCalculatorPanel,
                 skinName  : `common/CommonDamageCalculatorPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonDamageChartPanel : {
-                cls       : CommonViewCommonDamageChartPanel,
+                cls       : ViewCommonDamageChartPanel,
                 skinName  : `common/CommonDamageChartPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonDeletePlayerPanel : {
-                cls      : CommonViewCommonDeletePlayerPanel,
+                cls      : ViewCommonDeletePlayerPanel,
                 skinName : `common/CommonDeletePlayerPanel.exml`,
                 layer    : DisplayLayerId.Notify0,
             },
 
             CommonDoubleSliderPanel : {
-                cls      : CommonViewCommonDoubleSliderPanel,
+                cls      : ViewCommonDoubleSliderPanel,
                 skinName : `common/CommonDoubleSliderPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonErrorPanel : {
-                cls      : CommonViewCommonErrorPanel,
+                cls      : ViewCommonErrorPanel,
                 skinName : `common/CommonErrorPanel.exml`,
                 layer    : DisplayLayerId.Top,
             },
 
             CommonExpressionTypeIdPanel : {
-                cls      : CommonViewCommonExpressionTypeIdPanel,
+                cls      : ViewCommonExpressionTypeIdPanel,
                 skinName : `common/CommonExpressionTypeIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonGameChartPanel : {
-                cls      : CommonViewCommonGameChartPanel,
+                cls      : ViewCommonGameChartPanel,
                 skinName : `common/CommonGameChartPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonHelpPanel : {
-                cls      : CommonViewCommonHelpPanel,
+                cls      : ViewCommonHelpPanel,
                 skinName : `common/CommonHelpPanel.exml`,
                 layer    : DisplayLayerId.Notify0,
             },
 
             CommonInputDurationPanel : {
-                cls      : CommonViewCommonInputDurationPanel,
+                cls      : ViewCommonInputDurationPanel,
                 skinName : `common/CommonInputDurationPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             CommonInputExpressionPanel : {
-                cls      : CommonViewCommonInputExpressionPanel,
+                cls      : ViewCommonInputExpressionPanel,
                 skinName : `common/CommonInputExpressionPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonInputIntegerPanel : {
-                cls      : CommonViewCommonInputIntegerPanel,
+                cls      : ViewCommonInputIntegerPanel,
                 skinName : `common/CommonInputIntegerPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             CommonInputLanguageTextPanel : {
-                cls      : CommonViewCommonInputLanguageTextPanel,
+                cls      : ViewCommonInputLanguageTextPanel,
                 skinName : `common/CommonInputLanguageTextPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             CommonInputNullableIntegerPanel : {
-                cls      : CommonViewCommonInputNullableIntegerPanel,
+                cls      : ViewCommonInputNullableIntegerPanel,
                 skinName : `common/CommonInputNullableIntegerPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             CommonInputPanel : {
-                cls      : CommonViewCommonInputPanel,
+                cls      : ViewCommonInputPanel,
                 skinName : `common/CommonInputPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             CommonInputShortLangTextPanel : {
-                cls      : CommonViewCommonInputShortLangTextPanel,
+                cls      : ViewCommonInputShortLangTextPanel,
                 skinName : `common/CommonInputShortLangTextPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonMapFilterPanel : {
-                cls      : CommonViewCommonMapFilterPanel,
+                cls      : ViewCommonMapFilterPanel,
                 skinName : `common/CommonMapFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonMapWarStatisticsPanel : {
-                cls      : CommonViewCommonMapWarStatisticsPanel,
+                cls      : ViewCommonMapWarStatisticsPanel,
                 skinName : `common/CommonMapWarStatisticsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonRoomFilterPanel : {
-                cls      : CommonViewCommonRoomFilterPanel,
+                cls      : ViewCommonRoomFilterPanel,
                 skinName : `common/CommonRoomFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonSearchMultiUserPanel : {
-                cls      : CommonViewCommonSearchMultiUserPanel,
+                cls      : ViewCommonSearchMultiUserPanel,
                 skinName : `common/CommonSearchMultiUserPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonSearchSingleUserPanel : {
-                cls      : CommonViewCommonSearchSingleUserPanel,
+                cls      : ViewCommonSearchSingleUserPanel,
                 skinName : `common/CommonSearchSingleUserPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonServerStatusPanel : {
-                cls      : CommonViewCommonServerStatusPanel,
+                cls      : ViewCommonServerStatusPanel,
                 skinName : `common/CommonServerStatusPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowCoCategoryIdPanel : {
-                cls      : CommonViewCommonShowCoCategoryIdPanel,
+                cls      : ViewCommonShowCoCategoryIdPanel,
                 skinName : `common/CommonShowCoCategoryIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowCoIdPanel : {
-                cls      : CommonViewCommonShowCoIdPanel,
+                cls      : ViewCommonShowCoIdPanel,
                 skinName : `common/CommonShowCoIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowGameModePanel : {
-                cls      : CommonViewCommonShowGameModePanel,
+                cls      : ViewCommonShowGameModePanel,
                 skinName : `common/CommonShowGameModePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowLangTextPanel : {
-                cls      : CommonViewCommonShowLangTextPanel,
+                cls      : ViewCommonShowLangTextPanel,
                 skinName : `common/CommonShowLangTextPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowMapPanel : {
-                cls      : CommonViewCommonShowMapPanel,
+                cls      : ViewCommonShowMapPanel,
                 skinName : `common/CommonShowMapPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowMapTagIdPanel : {
-                cls      : CommonViewCommonShowMapTagIdPanel,
+                cls      : ViewCommonShowMapTagIdPanel,
                 skinName : `common/CommonShowMapTagIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowPlayerListPanel : {
-                cls      : CommonViewCommonShowPlayerListPanel,
+                cls      : ViewCommonShowPlayerListPanel,
                 skinName : `common/CommonShowPlayerListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowSelectedCoCategoryIdPanel : {
-                cls      : CommonViewCommonShowSelectedCoCategoryIdPanel,
+                cls      : ViewCommonShowSelectedCoCategoryIdPanel,
                 skinName : `common/CommonShowSelectedCoCategoryIdPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonShowUnitTypePanel : {
-                cls      : CommonViewCommonShowUnitTypePanel,
+                cls      : ViewCommonShowUnitTypePanel,
                 skinName : `common/CommonShowUnitTypePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             CommonTileChartPanel : {
-                cls       : CommonViewCommonTileChartPanel,
+                cls       : ViewCommonTileChartPanel,
                 skinName  : `common/CommonTileChartPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonTutorialPanel : {
-                cls       : CommonViewCommonTutorialPanel,
+                cls       : ViewCommonTutorialPanel,
                 skinName  : `common/CommonTutorialPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             CommonWarEventListPanel : {
-                cls      : CommonViewCommonWarEventListPanel,
+                cls      : ViewCommonWarEventListPanel,
                 skinName : `common/CommonWarEventListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             GmSetUserFullPrivilegePanel : {
-                cls      : GmViewGmSetUserFullPrivilegePanel,
+                cls      : ViewGmSetUserFullPrivilegePanel,
                 skinName : `gm/GmSetUserFullPrivilegePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             HrwTopPanel : {
-                cls      : HalfwayReplayWarViewHrwTopPanel,
+                cls      : ViewHrwTopPanel,
                 skinName : `halfwayReplayWar/HrwTopPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             HrwWarMenuPanel : {
-                cls      : HalfwayReplayWarViewHrwWarMenuPanel,
+                cls      : ViewHrwWarMenuPanel,
                 skinName : `halfwayReplayWar/HrwWarMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             LbMrwListPanel : {
-                cls      : LeaderboardViewLbMrwListPanel,
+                cls      : ViewLbMrwListPanel,
                 skinName : `leaderboard/LbMrwListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             LbSpmOverallListPanel : {
-                cls      : LeaderboardViewLbSpmOverallListPanel,
+                cls      : ViewLbSpmOverallListPanel,
                 skinName : `leaderboard/LbSpmOverallListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             LobbyBackgroundPanel : {
-                cls       : LobbyViewLobbyBackgroundPanel,
+                cls       : ViewLobbyBackgroundPanel,
                 skinName  : `lobby/LobbyBackgroundPanel.exml`,
                 layer     : DisplayLayerId.Bottom,
                 needCache : true,
             },
 
             LobbyBottomPanel : {
-                cls       : LobbyViewLobbyBottomPanel,
+                cls       : ViewLobbyBottomPanel,
                 skinName  : `lobby/LobbyBottomPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             LobbyPanel : {
-                cls         : LobbyViewLobbyPanel,
+                cls         : ViewLobbyPanel,
                 skinName    : `lobby/LobbyPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -2520,20 +2580,20 @@ export function getDict(): DictType {
             },
 
             LobbyStartPanel : {
-                cls      : LobbyViewLobbyStartPanel,
+                cls      : ViewLobbyStartPanel,
                 skinName : `lobby/LobbyStartPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             LobbyTopPanel : {
-                cls       : LobbyViewLobbyTopPanel,
+                cls       : ViewLobbyTopPanel,
                 skinName  : `lobby/LobbyTopPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             LobbyTopRightPanel : {
-                cls       : LobbyViewLobbyTopRightPanel,
+                cls       : ViewLobbyTopRightPanel,
                 skinName  : `lobby/LobbyTopRightPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
@@ -2541,35 +2601,35 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MailPanel : {
-                cls      : MailViewMailPanel,
+                cls      : ViewMailPanel,
                 skinName : `mail/MailPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             McrCreateMapListPanel : {
-                cls         : MultiCustomRoomViewMcrCreateMapListPanel,
+                cls         : ViewMcrCreateMapListPanel,
                 skinName    : `multiCustomRoom/McrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrCreateSettingsPanel : {
-                cls         : MultiCustomRoomViewMcrCreateSettingsPanel,
+                cls         : ViewMcrCreateSettingsPanel,
                 skinName    : `multiCustomRoom/McrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrMainMenuPanel : {
-                cls         : MultiCustomRoomViewMcrMainMenuPanel,
+                cls         : ViewMcrMainMenuPanel,
                 skinName    : `multiCustomRoom/McrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             McrRoomInfoPanel : {
-                cls         : MultiCustomRoomViewMcrRoomInfoPanel,
+                cls         : ViewMcrRoomInfoPanel,
                 skinName    : `multiCustomRoom/McrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -2577,225 +2637,225 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MeAutoAdjustPanel : {
-                cls      : MapEditorsViewsMeAutoAdjustPanel,
+                cls      : ViewsMeAutoAdjustPanel,
                 skinName : `mapEditors/views/MeAutoAdjustPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeChooseLocationPanel : {
-                cls      : MapEditorsViewsMeChooseLocationPanel,
+                cls      : ViewsMeChooseLocationPanel,
                 skinName : `mapEditors/views/MeChooseLocationPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeChooseTileBasePanel : {
-                cls       : MapEditorsViewsMeChooseTileBasePanel,
+                cls       : ViewsMeChooseTileBasePanel,
                 skinName  : `mapEditors/views/MeChooseTileBasePanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseTileDecorationPanel : {
-                cls       : MapEditorsViewsMeChooseTileDecorationPanel,
+                cls       : ViewsMeChooseTileDecorationPanel,
                 skinName  : `mapEditors/views/MeChooseTileDecorationPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseTileObjectPanel : {
-                cls       : MapEditorsViewsMeChooseTileObjectPanel,
+                cls       : ViewsMeChooseTileObjectPanel,
                 skinName  : `mapEditors/views/MeChooseTileObjectPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeChooseUnitPanel : {
-                cls       : MapEditorsViewsMeChooseUnitPanel,
+                cls       : ViewsMeChooseUnitPanel,
                 skinName  : `mapEditors/views/MeChooseUnitPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeClearPanel : {
-                cls      : MapEditorsViewsMeClearPanel,
+                cls      : ViewsMeClearPanel,
                 skinName : `mapEditors/views/MeClearPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeImportContentPanel : {
-                cls      : MapEditorsViewsMeImportContentPanel,
+                cls      : ViewsMeImportContentPanel,
                 skinName : `mapEditors/views/MeImportContentPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeImportExportPanel : {
-                cls      : MapEditorsViewsMeImportExportPanel,
+                cls      : ViewsMeImportExportPanel,
                 skinName : `mapEditors/views/MeImportExportPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeMapInfoPanel : {
-                cls      : MapEditorsViewsMeMapInfoPanel,
+                cls      : ViewsMeMapInfoPanel,
                 skinName : `mapEditors/views/MeMapInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeMapSimpleDialogueMainPanel : {
-                cls      : MapEditorsViewsMeMapSimpleDialogueMainPanel,
+                cls      : ViewsMeMapSimpleDialogueMainPanel,
                 skinName : `mapEditors/views/MeMapSimpleDialogueMainPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeMapSimpleDialogueUtilPanel : {
-                cls      : MapEditorsViewsMeMapSimpleDialogueUtilPanel,
+                cls      : ViewsMeMapSimpleDialogueUtilPanel,
                 skinName : `mapEditors/views/MeMapSimpleDialogueUtilPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeResizePanel : {
-                cls      : MapEditorsViewsMeResizePanel,
+                cls      : ViewsMeResizePanel,
                 skinName : `mapEditors/views/MeResizePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSaveCampaignMapPanel : {
-                cls      : MapEditorsViewsMeSaveCampaignMapPanel,
+                cls      : ViewsMeSaveCampaignMapPanel,
                 skinName : `mapEditors/views/MeSaveCampaignMapPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSaveNormalMapPanel : {
-                cls      : MapEditorsViewsMeSaveNormalMapPanel,
+                cls      : ViewsMeSaveNormalMapPanel,
                 skinName : `mapEditors/views/MeSaveNormalMapPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSetTileCustomNamePanel : {
-                cls      : MapEditorsViewsMeSetTileCustomNamePanel,
+                cls      : ViewsMeSetTileCustomNamePanel,
                 skinName : `mapEditors/views/MeSetTileCustomNamePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSetUnitCustomNamePanel : {
-                cls      : MapEditorsViewsMeSetUnitCustomNamePanel,
+                cls      : ViewsMeSetUnitCustomNamePanel,
                 skinName : `mapEditors/views/MeSetUnitCustomNamePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSymmetricalPlayerIndexPanel : {
-                cls      : MapEditorsViewsMeSymmetricalPlayerIndexPanel,
+                cls      : ViewsMeSymmetricalPlayerIndexPanel,
                 skinName : `mapEditors/views/MeSymmetricalPlayerIndexPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSymmetryPanel : {
-                cls      : MapEditorsViewsMeSymmetryPanel,
+                cls      : ViewsMeSymmetryPanel,
                 skinName : `mapEditors/views/MeSymmetryPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeSymmetryFillTilePanel : {
-                cls      : MapEditorsViewsMeSymmetryFillTilePanel,
+                cls      : ViewsMeSymmetryFillTilePanel,
                 skinName : `mapEditors/views/MeSymmetryFillTilePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeTaskObjectivePanel : {
-                cls      : MapEditorsViewsMeTaskObjectivePanel,
+                cls      : ViewsMeTaskObjectivePanel,
                 skinName : `mapEditors/views/MeTaskObjectivePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeTaskObjectiveListPanel : {
-                cls      : MapEditorsViewsMeTaskObjectiveListPanel,
+                cls      : ViewsMeTaskObjectiveListPanel,
                 skinName : `mapEditors/views/MeTaskObjectiveListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeTileCustomNameListPanel : {
-                cls      : MapEditorsViewsMeTileCustomNameListPanel,
+                cls      : ViewsMeTileCustomNameListPanel,
                 skinName : `mapEditors/views/MeTileCustomNameListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeTileUnitInfoPanel : {
-                cls      : MapEditorsViewsMeTileUnitInfoPanel,
+                cls      : ViewsMeTileUnitInfoPanel,
                 skinName : `mapEditors/views/MeTileUnitInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeTopPanel : {
-                cls      : MapEditorsViewsMeTopPanel,
+                cls      : ViewsMeTopPanel,
                 skinName : `mapEditors/views/MeTopPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeUnitCustomNameListPanel : {
-                cls      : MapEditorsViewsMeUnitCustomNameListPanel,
+                cls      : ViewsMeUnitCustomNameListPanel,
                 skinName : `mapEditors/views/MeUnitCustomNameListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeVisibilityPanel : {
-                cls      : MapEditorsViewsMeVisibilityPanel,
+                cls      : ViewsMeVisibilityPanel,
                 skinName : `mapEditors/views/MeVisibilityPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeWarMenuPanel : {
-                cls      : MapEditorsViewsMeWarMenuPanel,
+                cls      : ViewsMeWarMenuPanel,
                 skinName : `mapEditors/views/MeWarMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeWarRulePanel : {
-                cls       : MapEditorsViewsMeWarRulePanel,
+                cls       : ViewsMeWarRulePanel,
                 skinName  : `mapEditors/views/MeWarRulePanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             MeWarRuleMapSimpleDialoguePanel : {
-                cls      : MapEditorsViewsMeWarRuleMapSimpleDialoguePanel,
+                cls      : ViewsMeWarRuleMapSimpleDialoguePanel,
                 skinName : `mapEditors/views/MeWarRuleMapSimpleDialoguePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeWarRulePlayerRulePanel : {
-                cls      : MapEditorsViewsMeWarRulePlayerRulePanel,
+                cls      : ViewsMeWarRulePlayerRulePanel,
                 skinName : `mapEditors/views/MeWarRulePlayerRulePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeWarRuleTaskObjectivePanel : {
-                cls      : MapEditorsViewsMeWarRuleTaskObjectivePanel,
+                cls      : ViewsMeWarRuleTaskObjectivePanel,
                 skinName : `mapEditors/views/MeWarRuleTaskObjectivePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MeWarRuleWarEventPanel : {
-                cls      : MapEditorsViewsMeWarRuleWarEventPanel,
+                cls      : ViewsMeWarRuleWarEventPanel,
                 skinName : `mapEditors/views/MeWarRuleWarEventPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MfrCreateSettingsPanel : {
-                cls         : MultiFreeRoomViewMfrCreateSettingsPanel,
+                cls         : ViewMfrCreateSettingsPanel,
                 skinName    : `multiFreeRoom/MfrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MfrMainMenuPanel : {
-                cls         : MultiFreeRoomViewMfrMainMenuPanel,
+                cls         : ViewMfrMainMenuPanel,
                 skinName    : `multiFreeRoom/MfrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MfrRoomInfoPanel : {
-                cls         : MultiFreeRoomViewMfrRoomInfoPanel,
+                cls         : ViewMfrRoomInfoPanel,
                 skinName    : `multiFreeRoom/MfrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -2803,152 +2863,152 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MmCommandPanel : {
-                cls      : MapManagementViewMmCommandPanel,
+                cls      : ViewMmCommandPanel,
                 skinName : `mapManagement/MmCommandPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmMainMenuPanel : {
-                cls      : MapManagementViewMmMainMenuPanel,
+                cls      : ViewMmMainMenuPanel,
                 skinName : `mapManagement/MmMainMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmMapTagListPanel : {
-                cls      : MapManagementViewMmMapTagListPanel,
+                cls      : ViewMmMapTagListPanel,
                 skinName : `mapManagement/MmMapTagListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmModifyWarRulePanel : {
-                cls      : MapManagementViewMmModifyWarRulePanel,
+                cls      : ViewMmModifyWarRulePanel,
                 skinName : `mapManagement/MmModifyWarRulePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmReviewListPanel : {
-                cls      : MapManagementViewMmReviewListPanel,
+                cls      : ViewMmReviewListPanel,
                 skinName : `mapManagement/MmReviewListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmWarRuleMapSimpleDialoguePanel : {
-                cls      : MapManagementViewMmWarRuleMapSimpleDialoguePanel,
+                cls      : ViewMmWarRuleMapSimpleDialoguePanel,
                 skinName : `mapManagement/MmWarRuleMapSimpleDialoguePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmWarRulePanel : {
-                cls      : MapManagementViewMmWarRulePanel,
+                cls      : ViewMmWarRulePanel,
                 skinName : `mapManagement/MmWarRulePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmWarRulePlayerRulePanel : {
-                cls      : MapManagementViewMmWarRulePlayerRulePanel,
+                cls      : ViewMmWarRulePlayerRulePanel,
                 skinName : `mapManagement/MmWarRulePlayerRulePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmWarRuleTaskObjectivePanel : {
-                cls      : MapManagementViewMmWarRuleTaskObjectivePanel,
+                cls      : ViewMmWarRuleTaskObjectivePanel,
                 skinName : `mapManagement/MmWarRuleTaskObjectivePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmWarRuleWarEventPanel : {
-                cls      : MapManagementViewMmWarRuleWarEventPanel,
+                cls      : ViewMmWarRuleWarEventPanel,
                 skinName : `mapManagement/MmWarRuleWarEventPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MmrBanMapPanel : {
-                cls      : MultiMatchRoomViewMmrBanMapPanel,
+                cls      : ViewMmrBanMapPanel,
                 skinName : `multiMatchRoom/MmrBanMapPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmrMainMenuPanel : {
-                cls         : MultiMatchRoomViewMmrMainMenuPanel,
+                cls         : ViewMmrMainMenuPanel,
                 skinName    : `multiMatchRoom/MmrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrPreviewMapListPanel : {
-                cls         : MultiMatchRoomViewMmrPreviewMapListPanel,
+                cls         : ViewMmrPreviewMapListPanel,
                 skinName    : `multiMatchRoom/MmrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrRoomInfoPanel : {
-                cls         : MultiMatchRoomViewMmrRoomInfoPanel,
+                cls         : ViewMmrRoomInfoPanel,
                 skinName    : `multiMatchRoom/MmrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MmrSetMaxConcurrentCountPanel : {
-                cls      : MultiMatchRoomViewMmrSetMaxConcurrentCountPanel,
+                cls      : ViewMmrSetMaxConcurrentCountPanel,
                 skinName : `multiMatchRoom/MmrSetMaxConcurrentCountPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MmrSetTimerPanel : {
-                cls      : MultiMatchRoomViewMmrSetTimerPanel,
+                cls      : ViewMmrSetTimerPanel,
                 skinName : `multiMatchRoom/MmrSetTimerPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MpwMyWarListPanel : {
-                cls         : MultiPlayerWarViewMpwMyWarListPanel,
+                cls         : ViewMpwMyWarListPanel,
                 skinName    : `multiPlayerWar/MpwMyWarListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MpwSpectatePanel : {
-                cls      : MultiPlayerWarViewMpwSpectatePanel,
+                cls      : ViewMpwSpectatePanel,
                 skinName : `multiPlayerWar/MpwSpectatePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MpwSidePanel : {
-                cls      : MultiPlayerWarViewMpwSidePanel,
+                cls      : ViewMpwSidePanel,
                 skinName : `multiPlayerWar/MpwSidePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MpwTopPanel : {
-                cls      : MultiPlayerWarViewMpwTopPanel,
+                cls      : ViewMpwTopPanel,
                 skinName : `multiPlayerWar/MpwTopPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MpwWarAdvancedMenuPanel : {
-                cls      : MultiPlayerWarViewMpwWarAdvancedMenuPanel,
+                cls      : ViewMpwWarAdvancedMenuPanel,
                 skinName : `multiPlayerWar/MpwWarAdvancedMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MpwWarMenuPanel : {
-                cls      : MultiPlayerWarViewMpwWarMenuPanel,
+                cls      : ViewMpwWarMenuPanel,
                 skinName : `multiPlayerWar/MpwWarMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MrrBanMapPanel : {
-                cls      : MultiRankRoomViewMrrBanMapPanel,
+                cls      : ViewMrrBanMapPanel,
                 skinName : `multiRankRoom/MrrBanMapPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MrrMainMenuPanel : {
-                cls         : MultiRankRoomViewMrrMainMenuPanel,
+                cls         : ViewMrrMainMenuPanel,
                 skinName    : `multiRankRoom/MrrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -2956,93 +3016,93 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             MpwJoinRoomListPanel : {
-                cls         : MultiPlayerWarViewMpwJoinRoomListPanel,
+                cls         : ViewMpwJoinRoomListPanel,
                 skinName    : `multiPlayerWar/MpwJoinRoomListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MpwMyRoomListPanel : {
-                cls         : MultiPlayerWarViewMpwMyRoomListPanel,
+                cls         : ViewMpwMyRoomListPanel,
                 skinName    : `multiPlayerWar/MpwMyRoomListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrPreviewMapListPanel : {
-                cls         : MultiRankRoomViewMrrPreviewMapListPanel,
+                cls         : ViewMrrPreviewMapListPanel,
                 skinName    : `multiRankRoom/MrrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrRoomInfoPanel : {
-                cls         : MultiRankRoomViewMrrRoomInfoPanel,
+                cls         : ViewMrrRoomInfoPanel,
                 skinName    : `multiRankRoom/MrrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             MrrSetMaxConcurrentCountPanel : {
-                cls      : MultiRankRoomViewMrrSetMaxConcurrentCountPanel,
+                cls      : ViewMrrSetMaxConcurrentCountPanel,
                 skinName : `multiRankRoom/MrrSetMaxConcurrentCountPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             MrrSetTimerPanel : {
-                cls      : MultiRankRoomViewMrrSetTimerPanel,
+                cls      : ViewMrrSetTimerPanel,
                 skinName : `multiRankRoom/MrrSetTimerPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             RwPauseTimePanel : {
-                cls      : ReplayWarViewRwPauseTimePanel,
+                cls      : ViewRwPauseTimePanel,
                 skinName : `replayWar/RwPauseTimePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             RwReplayListPanel : {
-                cls         : ReplayWarViewRwReplayListPanel,
+                cls         : ViewRwReplayListPanel,
                 skinName    : `replayWar/RwReplayListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             RwReplayProgressPanel : {
-                cls      : ReplayWarViewRwReplayProgressPanel,
+                cls      : ViewRwReplayProgressPanel,
                 skinName : `replayWar/RwReplayProgressPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             RwSearchReplayPanel : {
-                cls      : ReplayWarViewRwSearchReplayPanel,
+                cls      : ViewRwSearchReplayPanel,
                 skinName : `replayWar/RwSearchReplayPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             RwTopPanel : {
-                cls      : ReplayWarViewRwTopPanel,
+                cls      : ViewRwTopPanel,
                 skinName : `replayWar/RwTopPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             RwWarMenuPanel : {
-                cls      : ReplayWarViewRwWarMenuPanel,
+                cls      : ViewRwWarMenuPanel,
                 skinName : `replayWar/RwWarMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             ScrCreateMapListPanel : {
-                cls         : SingleCustomRoomViewScrCreateMapListPanel,
+                cls         : ViewScrCreateMapListPanel,
                 skinName    : `singleCustomRoom/ScrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             ScrCreateSettingsPanel : {
-                cls         : SingleCustomRoomViewScrCreateSettingsPanel,
+                cls         : ViewScrCreateSettingsPanel,
                 skinName    : `singleCustomRoom/ScrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -3050,79 +3110,79 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SoundsChooseSingleBgmPanel : {
-                cls      : SoundsPanelsChooseSingleBgmPanel,
+                cls      : ChooseSingleBgmPanel,
                 skinName : `sounds/panels/ChooseSingleBgmPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             SoundsSettingsPanel : {
-                cls      : SoundsPanelsSettingsPanel,
+                cls      : SettingsPanel,
                 skinName : `sounds/panels/SettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SpmMainMenuPanel : {
-                cls         : SinglePlayerModeViewSpmMainMenuPanel,
+                cls         : ViewSpmMainMenuPanel,
                 skinName    : `singlePlayerMode/SpmMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SpmWarListPanel : {
-                cls         : SinglePlayerModeViewSpmWarListPanel,
+                cls         : ViewSpmWarListPanel,
                 skinName    : `singlePlayerMode/SpmWarListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SpmMyWarRoomRecordPanel : {
-                cls      : SinglePlayerModeViewSpmMyWarRoomRecordPanel,
+                cls      : ViewSpmMyWarRoomRecordPanel,
                 skinName : `singlePlayerMode/SpmMyWarRoomRecordPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SpwSidePanel : {
-                cls      : SinglePlayerWarViewSpwSidePanel,
+                cls      : ViewSpwSidePanel,
                 skinName : `singlePlayerWar/SpwSidePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             SpwTopPanel : {
-                cls      : SinglePlayerWarViewSpwTopPanel,
+                cls      : ViewSpwTopPanel,
                 skinName : `singlePlayerWar/SpwTopPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             SpwWarAdvancedMenuPanel : {
-                cls      : SinglePlayerWarViewSpwWarAdvancedMenuPanel,
+                cls      : ViewSpwWarAdvancedMenuPanel,
                 skinName : `singlePlayerWar/SpwWarAdvancedMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             SpwWarMenuPanel : {
-                cls      : SinglePlayerWarViewSpwWarMenuPanel,
+                cls      : ViewSpwWarMenuPanel,
                 skinName : `singlePlayerWar/SpwWarMenuPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             SrrCreateMapListPanel : {
-                cls         : SingleRankRoomViewSrrCreateMapListPanel,
+                cls         : ViewSrrCreateMapListPanel,
                 skinName    : `singleRankRoom/SrrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             SrrCreateQuickSettingsPanel : {
-                cls      : SingleRankRoomViewSrrCreateQuickSettingsPanel,
+                cls      : ViewSrrCreateQuickSettingsPanel,
                 skinName : `singleRankRoom/SrrCreateQuickSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             SrrCreateSettingsPanel : {
-                cls         : SingleRankRoomViewSrrCreateSettingsPanel,
+                cls         : ViewSrrCreateSettingsPanel,
                 skinName    : `singleRankRoom/SrrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
@@ -3130,702 +3190,702 @@ export function getDict(): DictType {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             UserGameManagementPanel : {
-                cls      : UsersViewsUserGameManagementPanel,
+                cls      : ViewsUserGameManagementPanel,
                 skinName : `users/UserGameManagementPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserGraphicSettingsPanel : {
-                cls      : UsersViewsUserGraphicSettingsPanel,
+                cls      : ViewsUserGraphicSettingsPanel,
                 skinName : `users/UserGraphicSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserLoginBackgroundPanel : {
-                cls         : UsersViewsUserLoginBackgroundPanel,
+                cls         : ViewsUserLoginBackgroundPanel,
                 skinName    : `users/UserLoginBackgroundPanel.exml`,
                 layer       : DisplayLayerId.Bottom,
                 isExclusive : true,
             },
 
             UserLoginPanel : {
-                cls      : UsersViewsUserLoginPanel,
+                cls      : ViewsUserLoginPanel,
                 skinName : `users/UserLoginPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserMedalPanel : {
-                cls      : UsersViewsUserMedalPanel,
+                cls      : ViewsUserMedalPanel,
                 skinName : `users/UserMedalPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             UserMiscSettingsPanel : {
-                cls      : UsersViewsUserMiscSettingsPanel,
+                cls      : ViewsUserMiscSettingsPanel,
                 skinName : `users/UserMiscSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserMpwStatisticsPanel : {
-                cls      : UsersViewsUserMpwStatisticsPanel,
+                cls      : ViewsUserMpwStatisticsPanel,
                 skinName : `users/UserMpwStatisticsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserOnlineUsersPanel : {
-                cls       : UsersViewsUserOnlineUsersPanel,
+                cls       : ViewsUserOnlineUsersPanel,
                 skinName  : `users/UserOnlineUsersPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserPanel : {
-                cls       : UsersViewsUserPanel,
+                cls       : ViewsUserPanel,
                 skinName  : `users/UserPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserProfileSettingsPanel : {
-                cls      : UsersViewsUserProfileSettingsPanel,
+                cls      : ViewsUserProfileSettingsPanel,
                 skinName : `users/UserProfileSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserRegisterPanel : {
-                cls      : UsersViewsUserRegisterPanel,
+                cls      : ViewsUserRegisterPanel,
                 skinName : `users/UserRegisterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSceneBgmSettingsPanel : {
-                cls      : UsersViewsUserSceneBgmSettingsPanel,
+                cls      : ViewsUserSceneBgmSettingsPanel,
                 skinName : `users/UserSceneBgmSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetAvatarPanel : {
-                cls      : UsersViewsUserSetAvatarPanel,
+                cls      : ViewsUserSetAvatarPanel,
                 skinName : `users/UserSetAvatarPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetCoBgmSettingsPanel : {
-                cls      : UsersViewsUserSetCoBgmSettingsPanel,
+                cls      : ViewsUserSetCoBgmSettingsPanel,
                 skinName : `users/UserSetCoBgmSettingsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetDiscordInfoPanel : {
-                cls      : UsersViewsUserSetDiscordInfoPanel,
+                cls      : ViewsUserSetDiscordInfoPanel,
                 skinName : `users/UserSetDiscordInfoPanel.exml`,
                 layer    : DisplayLayerId.Hud1,
             },
 
             UserSetEmailPanel : {
-                cls      : UsersViewsUserSetEmailPanel,
+                cls      : ViewsUserSetEmailPanel,
                 skinName : `users/UserSetEmailPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetPasswordPanel : {
-                cls      : UsersViewsUserSetPasswordPanel,
+                cls      : ViewsUserSetPasswordPanel,
                 skinName : `users/UserSetPasswordPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetPasswordWithEmailPanel : {
-                cls      : UsersViewsUserSetPasswordWithEmailPanel,
+                cls      : ViewsUserSetPasswordWithEmailPanel,
                 skinName : `users/UserSetPasswordWithEmailPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetRelationPanel : {
-                cls      : UsersViewsUserSetRelationPanel,
+                cls      : ViewsUserSetRelationPanel,
                 skinName : `users/UserSetRelationPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetOpacityPanel : {
-                cls      : UsersViewsUserSetOpacityPanel,
+                cls      : ViewsUserSetOpacityPanel,
                 skinName : `users/UserSetOpacityPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSetStageScalePanel : {
-                cls      : UsersViewsUserSetStageScalePanel,
+                cls      : ViewsUserSetStageScalePanel,
                 skinName : `users/UserSetStageScalePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             UserSettingsPanel : {
-                cls       : UsersViewsUserSettingsPanel,
+                cls       : ViewsUserSettingsPanel,
                 skinName  : `users/UserSettingsPanel.exml`,
                 layer     : DisplayLayerId.Hud0,
                 needCache : true,
             },
 
             UserWarHistoryPanel : {
-                cls      : UsersViewsUserWarHistoryPanel,
+                cls      : ViewsUserWarHistoryPanel,
                 skinName : `users/UserWarHistoryPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             WeaAddTileBuffExprPanel : {
-                cls      : WarEventViewWeaAddTileBuffExprPanel,
+                cls      : ViewWeaAddTileBuffExprPanel,
                 skinName : `warEvent/WeaAddTileBuffExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaAddTileBuffSimplePanel : {
-                cls      : WarEventViewWeaAddTileBuffSimplePanel,
+                cls      : ViewWeaAddTileBuffSimplePanel,
                 skinName : `warEvent/WeaAddTileBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaAddUnitBuffSimplePanel : {
-                cls      : WarEventViewWeaAddUnitBuffSimplePanel,
+                cls      : ViewWeaAddUnitBuffSimplePanel,
                 skinName : `warEvent/WeaAddUnitBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaAddUnitOnMapSimplePanel : {
-                cls      : WarEventViewWeaAddUnitOnMapSimplePanel,
+                cls      : ViewWeaAddUnitOnMapSimplePanel,
                 skinName : `warEvent/WeaAddUnitOnMapSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaDeleteTileBuffExprPanel : {
-                cls      : WarEventViewWeaDeleteTileBuffExprPanel,
+                cls      : ViewWeaDeleteTileBuffExprPanel,
                 skinName : `warEvent/WeaDeleteTileBuffExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaDeleteTileBuffSimplePanel : {
-                cls      : WarEventViewWeaDeleteTileBuffSimplePanel,
+                cls      : ViewWeaDeleteTileBuffSimplePanel,
                 skinName : `warEvent/WeaDeleteTileBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaDeleteUnitBuffSimplePanel : {
-                cls      : WarEventViewWeaDeleteUnitBuffSimplePanel,
+                cls      : ViewWeaDeleteUnitBuffSimplePanel,
                 skinName : `warEvent/WeaDeleteUnitBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaDestroyUnitExprPanel : {
-                cls      : WarEventViewWeaDestroyUnitExprPanel,
+                cls      : ViewWeaDestroyUnitExprPanel,
                 skinName : `warEvent/WeaDestroyUnitExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaDestroyUnitSimplePanel : {
-                cls      : WarEventViewWeaDestroyUnitSimplePanel,
+                cls      : ViewWeaDestroyUnitSimplePanel,
                 skinName : `warEvent/WeaDestroyUnitSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaBigDialogueSimplePanel : {
-                cls      : WarEventViewWeaBigDialogueSimplePanel,
+                cls      : ViewWeaBigDialogueSimplePanel,
                 skinName : `warEvent/WeaBigDialogueSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaFillUnitOnMapExprPanel : {
-                cls      : WarEventViewWeaFillUnitOnMapExprPanel,
+                cls      : ViewWeaFillUnitOnMapExprPanel,
                 skinName : `warEvent/WeaFillUnitOnMapExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaFillUnitOnMapSimplePanel : {
-                cls      : WarEventViewWeaFillUnitOnMapSimplePanel,
+                cls      : ViewWeaFillUnitOnMapSimplePanel,
                 skinName : `warEvent/WeaFillUnitOnMapSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaFillUnitLoadedExprPanel : {
-                cls      : WarEventViewWeaFillUnitLoadedExprPanel,
+                cls      : ViewWeaFillUnitLoadedExprPanel,
                 skinName : `warEvent/WeaFillUnitLoadedExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaFillUnitLoadedSimplePanel : {
-                cls      : WarEventViewWeaFillUnitLoadedSimplePanel,
+                cls      : ViewWeaFillUnitLoadedSimplePanel,
                 skinName : `warEvent/WeaFillUnitLoadedSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaModifyTileBuffExprPanel : {
-                cls      : WarEventViewWeaModifyTileBuffExprPanel,
+                cls      : ViewWeaModifyTileBuffExprPanel,
                 skinName : `warEvent/WeaModifyTileBuffExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaModifyTileBuffSimplePanel : {
-                cls      : WarEventViewWeaModifyTileBuffSimplePanel,
+                cls      : ViewWeaModifyTileBuffSimplePanel,
                 skinName : `warEvent/WeaModifyTileBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaModifyUnitBuffSimplePanel : {
-                cls      : WarEventViewWeaModifyUnitBuffSimplePanel,
+                cls      : ViewWeaModifyUnitBuffSimplePanel,
                 skinName : `warEvent/WeaModifyUnitBuffSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPersistentPlayBgmPanel : {
-                cls      : WarEventViewWeaPersistentPlayBgmPanel,
+                cls      : ViewWeaPersistentPlayBgmPanel,
                 skinName : `warEvent/WeaPersistentPlayBgmPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPlayBgmPanel : {
-                cls      : WarEventViewWeaPlayBgmPanel,
+                cls      : ViewWeaPlayBgmPanel,
                 skinName : `warEvent/WeaPlayBgmPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPlaySfxPanel : {
-                cls      : WarEventViewWeaPlaySfxPanel,
+                cls      : ViewWeaPlaySfxPanel,
                 skinName : `warEvent/WeaPlaySfxPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPersistentModifyPlayerAttributePanel : {
-                cls      : WarEventViewWeaPersistentModifyPlayerAttributePanel,
+                cls      : ViewWeaPersistentModifyPlayerAttributePanel,
                 skinName : `warEvent/WeaPersistentModifyPlayerAttributePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPersistentModifyUnitAttributePanel : {
-                cls      : WarEventViewWeaPersistentModifyUnitAttributePanel,
+                cls      : ViewWeaPersistentModifyUnitAttributePanel,
                 skinName : `warEvent/WeaPersistentModifyUnitAttributePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaPersistentShowTextPanel : {
-                cls      : WarEventViewWeaPersistentShowTextPanel,
+                cls      : ViewWeaPersistentShowTextPanel,
                 skinName : `warEvent/WeaPersistentShowTextPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCannonStateExprPanel : {
-                cls      : WarEventViewWeaSetCustomCannonStateExprPanel,
+                cls      : ViewWeaSetCustomCannonStateExprPanel,
                 skinName : `warEvent/WeaSetCustomCannonStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCannonStateSimplePanel : {
-                cls      : WarEventViewWeaSetCustomCannonStateSimplePanel,
+                cls      : ViewWeaSetCustomCannonStateSimplePanel,
                 skinName : `warEvent/WeaSetCustomCannonStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCountersPanel : {
-                cls      : WarEventViewWeaSetCustomCountersPanel,
+                cls      : ViewWeaSetCustomCountersPanel,
                 skinName : `warEvent/WeaSetCustomCountersPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomBuildingStateExprPanel : {
-                cls      : WarEventViewWeaSetCustomBuildingStateExprPanel,
+                cls      : ViewWeaSetCustomBuildingStateExprPanel,
                 skinName : `warEvent/WeaSetCustomBuildingStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomBuildingStateSimplePanel : {
-                cls      : WarEventViewWeaSetCustomBuildingStateSimplePanel,
+                cls      : ViewWeaSetCustomBuildingStateSimplePanel,
                 skinName : `warEvent/WeaSetCustomBuildingStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCrystalStateExprPanel : {
-                cls      : WarEventViewWeaSetCustomCrystalStateExprPanel,
+                cls      : ViewWeaSetCustomCrystalStateExprPanel,
                 skinName : `warEvent/WeaSetCustomCrystalStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomCrystalStateSimplePanel : {
-                cls      : WarEventViewWeaSetCustomCrystalStateSimplePanel,
+                cls      : ViewWeaSetCustomCrystalStateSimplePanel,
                 skinName : `warEvent/WeaSetCustomCrystalStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomLaserTurretStateExprPanel : {
-                cls      : WarEventViewWeaSetCustomLaserTurretStateExprPanel,
+                cls      : ViewWeaSetCustomLaserTurretStateExprPanel,
                 skinName : `warEvent/WeaSetCustomLaserTurretStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetCustomLaserTurretStateSimplePanel : {
-                cls      : WarEventViewWeaSetCustomLaserTurretStateSimplePanel,
+                cls      : ViewWeaSetCustomLaserTurretStateSimplePanel,
                 skinName : `warEvent/WeaSetCustomLaserTurretStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetForceFogCodeExprPanel : {
-                cls      : WarEventViewWeaSetForceFogCodeExprPanel,
+                cls      : ViewWeaSetForceFogCodeExprPanel,
                 skinName : `warEvent/WeaSetForceFogCodeExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetForceFogCodeSimplePanel : {
-                cls      : WarEventViewWeaSetForceFogCodeSimplePanel,
+                cls      : ViewWeaSetForceFogCodeSimplePanel,
                 skinName : `warEvent/WeaSetForceFogCodeSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetPlayerStateExprPanel : {
-                cls      : WarEventViewWeaSetPlayerStateExprPanel,
+                cls      : ViewWeaSetPlayerStateExprPanel,
                 skinName : `warEvent/WeaSetPlayerStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetPlayerStateSimplePanel : {
-                cls      : WarEventViewWeaSetPlayerStateSimplePanel,
+                cls      : ViewWeaSetPlayerStateSimplePanel,
                 skinName : `warEvent/WeaSetPlayerStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetTaskObjectiveStatePanel : {
-                cls      : WarEventViewWeaSetTaskObjectiveStatePanel,
+                cls      : ViewWeaSetTaskObjectiveStatePanel,
                 skinName : `warEvent/WeaSetTaskObjectiveStatePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetTileStateExprPanel : {
-                cls      : WarEventViewWeaSetTileStateExprPanel,
+                cls      : ViewWeaSetTileStateExprPanel,
                 skinName : `warEvent/WeaSetTileStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetTileStateSimplePanel : {
-                cls      : WarEventViewWeaSetTileStateSimplePanel,
+                cls      : ViewWeaSetTileStateSimplePanel,
                 skinName : `warEvent/WeaSetTileStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetTileTypeExprPanel : {
-                cls      : WarEventViewWeaSetTileTypeExprPanel,
+                cls      : ViewWeaSetTileTypeExprPanel,
                 skinName : `warEvent/WeaSetTileTypeExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetTileTypeSimplePanel : {
-                cls      : WarEventViewWeaSetTileTypeSimplePanel,
+                cls      : ViewWeaSetTileTypeSimplePanel,
                 skinName : `warEvent/WeaSetTileTypeSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitMovePathVisibilityPanel : {
-                cls      : WarEventViewWeaSetUnitMovePathVisibilityPanel,
+                cls      : ViewWeaSetUnitMovePathVisibilityPanel,
                 skinName : `warEvent/WeaSetUnitMovePathVisibilityPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitOwnershipExprPanel : {
-                cls      : WarEventViewWeaSetUnitOwnershipExprPanel,
+                cls      : ViewWeaSetUnitOwnershipExprPanel,
                 skinName : `warEvent/WeaSetUnitOwnershipExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitOwnershipSimplePanel : {
-                cls      : WarEventViewWeaSetUnitOwnershipSimplePanel,
+                cls      : ViewWeaSetUnitOwnershipSimplePanel,
                 skinName : `warEvent/WeaSetUnitOwnershipSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitPositionExprPanel : {
-                cls      : WarEventViewWeaSetUnitPositionExprPanel,
+                cls      : ViewWeaSetUnitPositionExprPanel,
                 skinName : `warEvent/WeaSetUnitPositionExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitPositionSimplePanel : {
-                cls      : WarEventViewWeaSetUnitPositionSimplePanel,
+                cls      : ViewWeaSetUnitPositionSimplePanel,
                 skinName : `warEvent/WeaSetUnitPositionSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitStateExprPanel : {
-                cls      : WarEventViewWeaSetUnitStateExprPanel,
+                cls      : ViewWeaSetUnitStateExprPanel,
                 skinName : `warEvent/WeaSetUnitStateExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitStateSimplePanel : {
-                cls      : WarEventViewWeaSetUnitStateSimplePanel,
+                cls      : ViewWeaSetUnitStateSimplePanel,
                 skinName : `warEvent/WeaSetUnitStateSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitTypeExprPanel : {
-                cls      : WarEventViewWeaSetUnitTypeExprPanel,
+                cls      : ViewWeaSetUnitTypeExprPanel,
                 skinName : `warEvent/WeaSetUnitTypeExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetUnitTypeSimplePanel : {
-                cls      : WarEventViewWeaSetUnitTypeSimplePanel,
+                cls      : ViewWeaSetUnitTypeSimplePanel,
                 skinName : `warEvent/WeaSetUnitTypeSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetViewpointExprPanel : {
-                cls      : WarEventViewWeaSetViewpointExprPanel,
+                cls      : ViewWeaSetViewpointExprPanel,
                 skinName : `warEvent/WeaSetViewpointExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetViewpointSimplePanel : {
-                cls      : WarEventViewWeaSetViewpointSimplePanel,
+                cls      : ViewWeaSetViewpointSimplePanel,
                 skinName : `warEvent/WeaSetViewpointSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetWeatherExprPanel : {
-                cls      : WarEventViewWeaSetWeatherExprPanel,
+                cls      : ViewWeaSetWeatherExprPanel,
                 skinName : `warEvent/WeaSetWeatherExprPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSetWeatherSimplePanel : {
-                cls      : WarEventViewWeaSetWeatherSimplePanel,
+                cls      : ViewWeaSetWeatherSimplePanel,
                 skinName : `warEvent/WeaSetWeatherSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaSmallDialogueSimplePanel : {
-                cls      : WarEventViewWeaSmallDialogueSimplePanel,
+                cls      : ViewWeaSmallDialogueSimplePanel,
                 skinName : `warEvent/WeaSmallDialogueSimplePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeaStopPersistentActionPanel : {
-                cls      : WarEventViewWeaStopPersistentActionPanel,
+                cls      : ViewWeaStopPersistentActionPanel,
                 skinName : `warEvent/WeaStopPersistentActionPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeActionReplacePanel : {
-                cls      : WarEventViewWeActionReplacePanel,
+                cls      : ViewWeActionReplacePanel,
                 skinName : `warEvent/WeActionReplacePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeActionTypeListPanel : {
-                cls      : WarEventViewWeActionTypeListPanel,
+                cls      : ViewWeActionTypeListPanel,
                 skinName : `warEvent/WeActionTypeListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeCommandPanel : {
-                cls      : WarEventViewWeCommandPanel,
+                cls      : ViewWeCommandPanel,
                 skinName : `warEvent/WeCommandPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecPlayerPresencePanel : {
-                cls      : WarEventViewWecPlayerPresencePanel,
+                cls      : ViewWecPlayerPresencePanel,
                 skinName : `warEvent/WecPlayerPresencePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecTurnAndPlayerPanel : {
-                cls      : WarEventViewWecTurnAndPlayerPanel,
+                cls      : ViewWecTurnAndPlayerPanel,
                 skinName : `warEvent/WecTurnAndPlayerPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecEventCalledCountPanel : {
-                cls      : WarEventViewWecEventCalledCountPanel,
+                cls      : ViewWecEventCalledCountPanel,
                 skinName : `warEvent/WecEventCalledCountPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecExpressionPanel : {
-                cls      : WarEventViewWecExpressionPanel,
+                cls      : ViewWecExpressionPanel,
                 skinName : `warEvent/WecExpressionPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecTilePresencePanel : {
-                cls      : WarEventViewWecTilePresencePanel,
+                cls      : ViewWecTilePresencePanel,
                 skinName : `warEvent/WecTilePresencePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecUnitPresencePanel : {
-                cls      : WarEventViewWecUnitPresencePanel,
+                cls      : ViewWecUnitPresencePanel,
                 skinName : `warEvent/WecUnitPresencePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecWeatherAndFogPanel : {
-                cls      : WarEventViewWecWeatherAndFogPanel,
+                cls      : ViewWecWeatherAndFogPanel,
                 skinName : `warEvent/WecWeatherAndFogPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeConditionModifyPanel60 : {
-                cls      : WarEventViewWeConditionModifyPanel60Panel,
+                cls      : WeConditionModifyPanel60Panel,
                 skinName : `warEvent/WeConditionModifyPanel60.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecOngoingPersistentActionPanel : {
-                cls      : WarEventViewWecOngoingPersistentActionPanel,
+                cls      : ViewWecOngoingPersistentActionPanel,
                 skinName : `warEvent/WecOngoingPersistentActionPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WecManualActionStatisticsPanel : {
-                cls      : WarEventViewWecManualActionStatisticsPanel,
+                cls      : ViewWecManualActionStatisticsPanel,
                 skinName : `warEvent/WecManualActionStatisticsPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeConditionReplacePanel : {
-                cls      : WarEventViewWeConditionReplacePanel,
+                cls      : ViewWeConditionReplacePanel,
                 skinName : `warEvent/WeConditionReplacePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeConditionTypeListPanel : {
-                cls      : WarEventViewWeConditionTypeListPanel,
+                cls      : ViewWeConditionTypeListPanel,
                 skinName : `warEvent/WeConditionTypeListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeCustomCounterNameListPanel : {
-                cls      : WarEventViewWeCustomCounterNameListPanel,
+                cls      : ViewWeCustomCounterNameListPanel,
                 skinName : `warEvent/WeCustomCounterNameListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeBigDialogueBackgroundPanel : {
-                cls      : WarEventViewWeBigDialogueBackgroundPanel,
+                cls      : ViewWeBigDialogueBackgroundPanel,
                 skinName : `warEvent/WeBigDialogueBackgroundPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeEventNameListPanel : {
-                cls      : WarEventViewWeEventNameListPanel,
+                cls      : ViewWeEventNameListPanel,
                 skinName : `warEvent/WeEventNameListPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeMainPanel : {
-                cls      : WarEventViewWeMainPanel,
+                cls      : ViewWeMainPanel,
                 skinName : `warEvent/WeMainPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeNodeReplacePanel : {
-                cls      : WarEventViewWeNodeReplacePanel,
+                cls      : ViewWeNodeReplacePanel,
                 skinName : `warEvent/WeNodeReplacePanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WePlayerFilterPanel : {
-                cls      : WarEventViewWePlayerFilterPanel,
+                cls      : ViewWePlayerFilterPanel,
                 skinName : `warEvent/WePlayerFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WePositionFilterPanel : {
-                cls      : WarEventViewWePositionFilterPanel,
+                cls      : ViewWePositionFilterPanel,
                 skinName : `warEvent/WePositionFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeTileBuffFilterPanel : {
-                cls      : WarEventViewWeTileBuffFilterPanel,
+                cls      : ViewWeTileBuffFilterPanel,
                 skinName : `warEvent/WeTileBuffFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeTileCustomCannonPanel : {
-                cls      : WarEventViewWeTileCustomCannonPanel,
+                cls      : ViewWeTileCustomCannonPanel,
                 skinName : `warEvent/WeTileCustomCannonPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeTileCustomCrystalPanel : {
-                cls      : WarEventViewWeTileCustomCrystalPanel,
+                cls      : ViewWeTileCustomCrystalPanel,
                 skinName : `warEvent/WeTileCustomCrystalPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeTileCustomLaserTurretPanel : {
-                cls      : WarEventViewWeTileCustomLaserTurretPanel,
+                cls      : ViewWeTileCustomLaserTurretPanel,
                 skinName : `warEvent/WeTileCustomLaserTurretPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeTileFilterPanel : {
-                cls      : WarEventViewWeTileFilterPanel,
+                cls      : ViewWeTileFilterPanel,
                 skinName : `warEvent/WeTileFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeUnitBuffFilterPanel : {
-                cls      : WarEventViewWeUnitBuffFilterPanel,
+                cls      : ViewWeUnitBuffFilterPanel,
                 skinName : `warEvent/WeUnitBuffFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WeUnitFilterPanel : {
-                cls      : WarEventViewWeUnitFilterPanel,
+                cls      : ViewWeUnitFilterPanel,
                 skinName : `warEvent/WeUnitFilterPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             WwDeleteWatcherWarsPanel : {
-                cls         : WatchWarViewWwDeleteWatcherWarsPanel,
+                cls         : ViewWwDeleteWatcherWarsPanel,
                 skinName    : `watchWar/WwDeleteWatcherWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwHandleRequestWarsPanel : {
-                cls         : WatchWarViewWwHandleRequestWarsPanel,
+                cls         : ViewWwHandleRequestWarsPanel,
                 skinName    : `watchWar/WwHandleRequestWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwMainMenuPanel : {
-                cls         : WatchWarViewWwMainMenuPanel,
+                cls         : ViewWwMainMenuPanel,
                 skinName    : `watchWar/WwMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwMakeRequestDetailPanel : {
-                cls      : WatchWarViewWwMakeRequestDetailPanel,
+                cls      : ViewWwMakeRequestDetailPanel,
                 skinName : `watchWar/WwMakeRequestDetailPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },
 
             WwMakeRequestWarsPanel : {
-                cls         : WatchWarViewWwMakeRequestWarsPanel,
+                cls         : ViewWwMakeRequestWarsPanel,
                 skinName    : `watchWar/WwMakeRequestWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwOngoingWarsPanel : {
-                cls         : WatchWarViewWwOngoingWarsPanel,
+                cls         : ViewWwOngoingWarsPanel,
                 skinName    : `watchWar/WwOngoingWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
             WwSearchWarPanel : {
-                cls      : WatchWarViewWwSearchWarPanel,
+                cls      : ViewWwSearchWarPanel,
                 skinName : `watchWar/WwSearchWarPanel.exml`,
                 layer    : DisplayLayerId.Hud0,
             },

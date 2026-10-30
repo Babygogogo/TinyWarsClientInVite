@@ -2,7 +2,10 @@ import type {
     DecodedMapEditorData,
     Undefinable,
 } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { compress, decompress } from "../helpers/Gzip.ts";
+import {
+    compress,
+    decompress,
+} from "../helpers/Gzip.ts";
 import { OldDatabaseName } from "./Constants.ts";
 import { warn } from "../Logger.ts";
 import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";

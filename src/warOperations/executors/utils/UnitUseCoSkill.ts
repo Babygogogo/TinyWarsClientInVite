@@ -4,21 +4,33 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { SkillTypeId } from "../../../coSkills/Constants.ts";
 import { generate } from "../../../coSkills/utils/DataGeneratorForUseCoSkill.ts";
 import { executeInstantSkill } from "../../../coSkills/utils/Executor.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { createRange } from "../../../helpers/Collection.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

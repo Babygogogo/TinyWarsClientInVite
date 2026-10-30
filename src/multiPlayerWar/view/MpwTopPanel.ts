@@ -4,20 +4,40 @@ import { checkHasUnreadMessage } from "../../chat/Model.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { getFinalSkinId } from "../../forceSkins/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getCoEyeBackground, getCoEye, getUserOnlineState } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+    getUserOnlineState as getImageSourceUserOnlineState,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName, getTimeDurationText2 } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerTeamName,
+    getTimeDurationText2,
+} from "../../lang/Utils.ts";
 import type { IMpwWar } from "../interface/IMpwWar.ts";
 import { reqMpwCommonHandleBoot } from "../model/MpwProxy.ts";
 import type { BwPlayerFundChanged } from "../../notifications/DataTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../players/Constants.ts";
+import type { S as UserGetOnlineStateResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    playCoBgmWithWar,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -30,7 +50,11 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiSkinState } from "../../ui/types/UiSkinState.ts";
 import { loadSkinStateRecursively } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfUserId, getUserOnlineState as UsersModelGetUserOnlineState, getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getUserOnlineState as getModelUserOnlineState,
+    getSelfSettingsCoBgmCodeArray,
+} from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 // eslint-disable-next-line no-shadow
@@ -147,7 +171,7 @@ export class Panel extends UiPanel<OpenData> {
             (userId !== getSelfUserId()) &&
             (getServerTimestamp() % 10 == 0)
         ) {
-            UsersModelGetUserOnlineState(userId);
+            getModelUserOnlineState(userId);
         }
     }
     private _onNotifyBwPlayerFundChanged(): void {
@@ -171,7 +195,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const userId = war.getPlayerInTurn().getUserId();
         if ((userId != null) && (userId !== getSelfUserId())) {
-            UsersModelGetUserOnlineState(userId);
+            getModelUserOnlineState(userId);
         }
     }
     private _onNotifyBwCoEnergyChanged(): void {
@@ -212,7 +236,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnChat();
     }
     private _onNotifyMsgUserGetOnlineState(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as UserGetOnlineStateResponse;
         if (data.getUserId() === this.getOpenData()?.war.getPlayerInTurn().getUserId()) {
             this._updateLabelPlayerState();
         }
@@ -283,7 +307,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const userId = war.getPlayerInTurn().getUserId();
         if ((userId != null) && (userId !== getSelfUserId())) {
-            UsersModelGetUserOnlineState(userId);
+            getModelUserOnlineState(userId);
         }
     }
 
@@ -366,7 +390,7 @@ export class Panel extends UiPanel<OpenData> {
             label.setLangText(TextType.B0676);
             label.setTextColor(ColorValue.Green);
         } else {
-            const userOnlineState = await UsersModelGetUserOnlineState(userId);
+            const userOnlineState = await getModelUserOnlineState(userId);
             if ((userOnlineState == null) || (!userOnlineState.isOnline)) {
                 label.setLangText(TextType.B0677);
                 label.setTextColor(ColorValue.Red);
@@ -592,7 +616,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
             (userId !== getSelfUserId())  &&
             (getServerTimestamp() % 60 == 0)
         ) {
-            UsersModelGetUserOnlineState(userId);
+            getModelUserOnlineState(userId);
         }
     }
 
@@ -667,7 +691,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForListPlayer> {
         if ((userId == null) || (userId === getSelfUserId())) {
             img.loadSource(`uncompressedColorGreen0000`);
         } else {
-            img.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(userId)));
+            img.loadSource(getImageSourceUserOnlineState(await getModelUserOnlineState(userId)));
         }
     }
 

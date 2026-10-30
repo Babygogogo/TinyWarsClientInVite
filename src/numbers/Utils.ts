@@ -1,5 +1,8 @@
 import { newError } from "../helpers/Misc.ts";
-import { MinInt32, MaxInt32 } from "./Constants.ts";
+import {
+    MinInt32,
+    MaxInt32,
+} from "./Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export function getValueInRange({ minValue, maxValue, rawValue }: {

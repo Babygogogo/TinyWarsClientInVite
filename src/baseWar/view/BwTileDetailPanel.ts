@@ -2,7 +2,11 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
-import { getFinalSkinIdArray, getRawOverridingSkinId, getDefaultSkinId } from "../../forceSkins/Utils.ts";
+import {
+    getFinalSkinIdArray,
+    getRawOverridingSkinId,
+    getDefaultSkinId,
+} from "../../forceSkins/Utils.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
     getTileViewClass,
@@ -13,14 +17,29 @@ import {
     getRwWarClass,
 } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { TypeId } from "../../gridMarks/Constants.ts";
-import { addGridMark, deleteGridMark } from "../../gridMarks/Utils.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import { TypeId as GridMarksTypeId } from "../../gridMarks/Constants.ts";
+import {
+    addGridMark,
+    deleteGridMark,
+} from "../../gridMarks/Utils.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
 import { getGridMark } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { getSignedNumText } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getLanguageText,
@@ -30,18 +49,32 @@ import {
     getUnitCategoryName,
 } from "../../lang/Utils.ts";
 import { reqMpwCommonMarkGrid } from "../../multiPlayerWar/model/MpwProxy.ts";
-import type { BwTileBuffChanged, BwTileChanged, GridMarkAdded, GridMarkDeleted } from "../../notifications/DataTypes.ts";
+import type {
+    BwTileBuffChanged,
+    BwTileChanged,
+    GridMarkAdded,
+    GridMarkDeleted,
+} from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId as NotificationsTypeId } from "../../notifications/TypeId.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
+import type { S as MpwCommonMarkGridResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
 import { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { CustomName, InfoTypeId } from "../../tiles/constants/Common.ts";
-import { Building, Common, Crystal, Cannon, LaserTurret } from "../../tiles/constants/CustomLimits.ts";
-import { TypeId as TilesConstantsMapWeaponTypeId } from "../../tiles/constants/MapWeapon.ts";
+import {
+    CustomName,
+    InfoTypeId,
+} from "../../tiles/constants/Common.ts";
+import {
+    Building,
+    Common,
+    Crystal,
+    Cannon,
+    LaserTurret,
+} from "../../tiles/constants/CustomLimits.ts";
+import { TypeId as MapWeaponTypeId } from "../../tiles/constants/MapWeapon.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -55,12 +88,15 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { WeaponTypeId, CategoryId } from "../../units/Constants.ts";
+import {
+    WeaponTypeId,
+    CategoryId,
+} from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
 
-let _selectedMarkTypeId         = TypeId.MinMarkTypeId;
+let _selectedMarkTypeId         = GridMarksTypeId.MinMarkTypeId;
 
 export interface OpenData {
     tile                    : ITile;
@@ -113,14 +149,14 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.ActionPlannerStateChanged,     callback: this._onNotifyBwPlannerStateChanged },
-            { type: NotificationsTypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
-            { type: NotificationsTypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
-            { type: NotificationsTypeId.BwTileIsHighlightedChanged,      callback: this._onNotifyTileIsHighlightedChanged },
-            { type: NotificationsTypeId.BwTileBuffChanged,               callback: this._onNotifyTileBuffChanged },
-            { type: NotificationsTypeId.BwTileCustomNameIdChanged,       callback: this._onNotifyTileCustomNameIdChanged },
-            { type: NotificationsTypeId.MsgMpwCommonMarkTile,            callback: this._onNotifyMsgMpwCommonMarkGrid },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.ActionPlannerStateChanged,     callback: this._onNotifyBwPlannerStateChanged },
+            { type: TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
+            { type: TypeId.BwTileIsHighlightedChanged,      callback: this._onNotifyTileIsHighlightedChanged },
+            { type: TypeId.BwTileBuffChanged,               callback: this._onNotifyTileBuffChanged },
+            { type: TypeId.BwTileCustomNameIdChanged,       callback: this._onNotifyTileCustomNameIdChanged },
+            { type: TypeId.MsgMpwCommonMarkTile,            callback: this._onNotifyMsgMpwCommonMarkGrid },
         ]);
         this._setUiListenerArray([
             { ui: this._btnModifyType,                          callback: this._onTouchedBtnModifyType },
@@ -197,7 +233,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const tileId = tile.getGridIndex().getGridId(tile.getWar().getTileMap().getMapSize());
-        if ((e.data as S).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
+        if ((e.data as MpwCommonMarkGridResponse).getGridIdArrayForAddMark().indexOf(tileId) >= 0) {
             showLang(TextType.A0848);
         }
 
@@ -262,7 +298,7 @@ export class Panel extends UiPanel<OpenData> {
                 tile.flushDataToView();
 
                 war.updateTilesAndUnitsOnVisibilityChanged(false);
-                dispatch(NotificationsTypeId.BwTileChanged, { gridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
                 this._updateView();
             },
@@ -329,7 +365,7 @@ export class Panel extends UiPanel<OpenData> {
 
         } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
             if (addGridMark(war.getGridMarkData().getGridIdAndMarkTypeIdList(), gridId, _selectedMarkTypeId)) {
-                dispatch(NotificationsTypeId.GridMarkAdded, {
+                dispatch(TypeId.GridMarkAdded, {
                     war     : war,
                     gridId  : gridId,
                 } as GridMarkAdded);
@@ -343,7 +379,7 @@ export class Panel extends UiPanel<OpenData> {
 
         } else if (war instanceof getSpwWarClass()) {
             if (addGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId, _selectedMarkTypeId)) {
-                dispatch(NotificationsTypeId.GridMarkAdded, {
+                dispatch(TypeId.GridMarkAdded, {
                     war     : war,
                     gridId  : gridId,
                 } as GridMarkAdded);
@@ -385,7 +421,7 @@ export class Panel extends UiPanel<OpenData> {
 
         } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
             if (deleteGridMark(war.getGridMarkData().getGridIdAndMarkTypeIdList(), gridId)) {
-                dispatch(NotificationsTypeId.GridMarkDeleted, {
+                dispatch(TypeId.GridMarkDeleted, {
                     war     : war,
                     gridId  : gridId,
                 } as GridMarkDeleted);
@@ -399,7 +435,7 @@ export class Panel extends UiPanel<OpenData> {
 
         } else if (war instanceof getSpwWarClass()) {
             if (deleteGridMark(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), gridId)) {
-                dispatch(NotificationsTypeId.GridMarkDeleted, {
+                dispatch(TypeId.GridMarkDeleted, {
                     war     : war,
                     gridId  : gridId,
                 } as GridMarkDeleted);
@@ -764,7 +800,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             { ui: this._groupTouchModify,           callback: this._onTouchedGroupModify },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -1292,7 +1328,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.EffectiveRadius);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalPriority(): void {
         const openData = this.getOpenData();
@@ -1305,7 +1341,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.Priority);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalCanAffectSelf(): void {
         const openData = this.getOpenData();
@@ -1318,7 +1354,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.AffectOwner);
         this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalCanAffectAlly(): void {
         const openData = this.getOpenData();
@@ -1331,7 +1367,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.AffectAlly);
         this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalCanAffectEnemy(): void {
         const openData = this.getOpenData();
@@ -1344,7 +1380,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.AffectEnemy);
         this._labelValue.setLangText(currentValue ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaFund(): void {
         const openData = this.getOpenData();
@@ -1357,7 +1393,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.FundOffset);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaEnergyPercentage(): void {
         const openData = this.getOpenData();
@@ -1370,7 +1406,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.CoEnergyOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaHp(): void {
         const openData = this.getOpenData();
@@ -1386,7 +1422,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelValue.setText(`${offsetHp}`);
         this._groupExtra.setIsVisible(canBeFatal);
         this._labelExtraInfo.setLangText(TextType.CanBeFatal);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaFuelPercentage(): void {
         const openData = this.getOpenData();
@@ -1399,7 +1435,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.UnitsFuelOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCrystalDeltaPrimaryAmmoPercentage(): void {
         const openData = this.getOpenData();
@@ -1412,7 +1448,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.UnitsPriAmmoOffset$);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
-        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeaponTypeId.CustomCrystal));
+        this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getTemplateCfg().getMapWeaponTypeId() === MapWeaponTypeId.CustomCrystal));
     }
     private _updateViewAsCannonRangeForUp(): void {
         const openData = this.getOpenData();
@@ -2546,7 +2582,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2573,7 +2609,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2600,7 +2636,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2617,7 +2653,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2634,7 +2670,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2651,7 +2687,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2676,7 +2712,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2702,7 +2738,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const { tile, war } = openData;
         if ((!checkCanCheatInWar(war.getWarType()))            ||
-            (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+            (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ) {
             return;
         }
@@ -2739,7 +2775,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2764,7 +2800,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)) {
             return;
         }
 
@@ -2789,7 +2825,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2814,7 +2850,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2839,7 +2875,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2864,7 +2900,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2889,7 +2925,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2914,7 +2950,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2939,7 +2975,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2956,7 +2992,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2973,7 +3009,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -2991,7 +3027,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const { tile, war } = openData;
         if ((!checkCanCheatInWar(war.getWarType()))            ||
-            (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+            (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ) {
             return;
         }
@@ -3028,7 +3064,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -3053,7 +3089,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)) {
             return;
         }
 
@@ -3078,7 +3114,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3103,7 +3139,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3128,7 +3164,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3153,7 +3189,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3178,7 +3214,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3203,7 +3239,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3220,7 +3256,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3237,7 +3273,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3255,7 +3291,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const { tile, war } = openData;
         if ((!checkCanCheatInWar(war.getWarType()))                ||
-            (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+            (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ) {
             return;
         }
@@ -3292,7 +3328,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3317,7 +3353,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         const { tile, war } = openData;
-        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+        if ((!checkCanCheatInWar(war.getWarType())) || (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)) {
             return;
         }
 
@@ -3356,8 +3392,8 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type: TypeId.UnitAnimationTick,   callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conView.addUiChild(this._unitView);
@@ -3425,8 +3461,8 @@ class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
+            { type: TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
         ]);
 
         this._conView.addUiChild(this._unitView);
@@ -3638,7 +3674,7 @@ function createInfoCrystalRadius(war: IBwWar, tile: ITile): DataForInfoRenderer 
         };
 }
 function createInfoCrystalPriority(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3648,7 +3684,7 @@ function createInfoCrystalPriority(war: IBwWar, tile: ITile): DataForInfoRendere
         };
 }
 function createInfoCrystalCanAffectSelf(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3658,7 +3694,7 @@ function createInfoCrystalCanAffectSelf(war: IBwWar, tile: ITile): DataForInfoRe
         };
 }
 function createInfoCrystalCanAffectAlly(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3668,7 +3704,7 @@ function createInfoCrystalCanAffectAlly(war: IBwWar, tile: ITile): DataForInfoRe
         };
 }
 function createInfoCrystalCanAffectEnemy(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3678,7 +3714,7 @@ function createInfoCrystalCanAffectEnemy(war: IBwWar, tile: ITile): DataForInfoR
         };
 }
 function createInfoCrystalDeltaFund(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3688,7 +3724,7 @@ function createInfoCrystalDeltaFund(war: IBwWar, tile: ITile): DataForInfoRender
         };
 }
 function createInfoCrystalDeltaEnergyPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3708,7 +3744,7 @@ function createInfoCrystalDeltaHp(war: IBwWar, tile: ITile): DataForInfoRenderer
         };
 }
 function createInfoCrystalDeltaFuelPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3718,7 +3754,7 @@ function createInfoCrystalDeltaFuelPercentage(war: IBwWar, tile: ITile): DataFor
         };
 }
 function createInfoCrystalDeltaPrimaryAmmoPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCrystal)
         ? null
         : {
             index       : 0,
@@ -3729,7 +3765,7 @@ function createInfoCrystalDeltaPrimaryAmmoPercentage(war: IBwWar, tile: ITile): 
 }
 function createInfoCannonRangeForUp(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonUp))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomCannon) && (mapWeaponType !== MapWeaponTypeId.CannonUp))
         ? null
         : {
             index       : 0,
@@ -3740,7 +3776,7 @@ function createInfoCannonRangeForUp(war: IBwWar, tile: ITile): DataForInfoRender
 }
 function createInfoCannonRangeForDown(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonDown))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomCannon) && (mapWeaponType !== MapWeaponTypeId.CannonDown))
         ? null
         : {
             index       : 0,
@@ -3751,7 +3787,7 @@ function createInfoCannonRangeForDown(war: IBwWar, tile: ITile): DataForInfoRend
 }
 function createInfoCannonRangeForLeft(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonLeft))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomCannon) && (mapWeaponType !== MapWeaponTypeId.CannonLeft))
         ? null
         : {
             index       : 0,
@@ -3762,7 +3798,7 @@ function createInfoCannonRangeForLeft(war: IBwWar, tile: ITile): DataForInfoRend
 }
 function createInfoCannonRangeForRight(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonRight))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomCannon) && (mapWeaponType !== MapWeaponTypeId.CannonRight))
         ? null
         : {
             index       : 0,
@@ -3772,7 +3808,7 @@ function createInfoCannonRangeForRight(war: IBwWar, tile: ITile): DataForInfoRen
         };
 }
 function createInfoCannonPriority(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3782,7 +3818,7 @@ function createInfoCannonPriority(war: IBwWar, tile: ITile): DataForInfoRenderer
         };
 }
 function createInfoCannonMaxTargetCount(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3792,7 +3828,7 @@ function createInfoCannonMaxTargetCount(war: IBwWar, tile: ITile): DataForInfoRe
         };
 }
 function createInfoCannonCanAffectSelf(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3802,7 +3838,7 @@ function createInfoCannonCanAffectSelf(war: IBwWar, tile: ITile): DataForInfoRen
         };
 }
 function createInfoCannonCanAffectAlly(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3812,7 +3848,7 @@ function createInfoCannonCanAffectAlly(war: IBwWar, tile: ITile): DataForInfoRen
         };
 }
 function createInfoCannonCanAffectEnemy(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3832,7 +3868,7 @@ function createInfoCannonDeltaHp(war: IBwWar, tile: ITile): DataForInfoRenderer 
         };
 }
 function createInfoCannonDeltaFuelPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3842,7 +3878,7 @@ function createInfoCannonDeltaFuelPercentage(war: IBwWar, tile: ITile): DataForI
         };
 }
 function createInfoCannonDeltaPrimaryAmmoPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomCannon)
         ? null
         : {
             index       : 0,
@@ -3853,7 +3889,7 @@ function createInfoCannonDeltaPrimaryAmmoPercentage(war: IBwWar, tile: ITile): D
 }
 function createInfoLaserTurretRangeForUp(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
         ? null
         : {
             index       : 0,
@@ -3864,7 +3900,7 @@ function createInfoLaserTurretRangeForUp(war: IBwWar, tile: ITile): DataForInfoR
 }
 function createInfoLaserTurretRangeForDown(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
         ? null
         : {
             index       : 0,
@@ -3875,7 +3911,7 @@ function createInfoLaserTurretRangeForDown(war: IBwWar, tile: ITile): DataForInf
 }
 function createInfoLaserTurretRangeForLeft(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
         ? null
         : {
             index       : 0,
@@ -3886,7 +3922,7 @@ function createInfoLaserTurretRangeForLeft(war: IBwWar, tile: ITile): DataForInf
 }
 function createInfoLaserTurretRangeForRight(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
     const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
-    return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
+    return ((mapWeaponType !== MapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== MapWeaponTypeId.LaserTurret))
         ? null
         : {
             index       : 0,
@@ -3896,7 +3932,7 @@ function createInfoLaserTurretRangeForRight(war: IBwWar, tile: ITile): DataForIn
         };
 }
 function createInfoLaserTurretPriority(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
@@ -3906,7 +3942,7 @@ function createInfoLaserTurretPriority(war: IBwWar, tile: ITile): DataForInfoRen
         };
 }
 function createInfoLaserTurretCanAffectSelf(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
@@ -3916,7 +3952,7 @@ function createInfoLaserTurretCanAffectSelf(war: IBwWar, tile: ITile): DataForIn
         };
 }
 function createInfoLaserTurretCanAffectAlly(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
@@ -3926,7 +3962,7 @@ function createInfoLaserTurretCanAffectAlly(war: IBwWar, tile: ITile): DataForIn
         };
 }
 function createInfoLaserTurretCanAffectEnemy(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
@@ -3946,7 +3982,7 @@ function createInfoLaserTurretDeltaHp(war: IBwWar, tile: ITile): DataForInfoRend
         };
 }
 function createInfoLaserTurretDeltaFuelPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,
@@ -3956,7 +3992,7 @@ function createInfoLaserTurretDeltaFuelPercentage(war: IBwWar, tile: ITile): Dat
         };
 }
 function createInfoLaserTurretDeltaPrimaryAmmoPercentage(war: IBwWar, tile: ITile): DataForInfoRenderer | null {
-    return (tile.getTemplateCfg().getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
+    return (tile.getTemplateCfg().getMapWeaponTypeId() !== MapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
             index       : 0,

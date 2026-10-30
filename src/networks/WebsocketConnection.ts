@@ -1,6 +1,12 @@
 import { log } from "../Logger.ts";
 import { MessageContainer } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
-import { WebSocket, Event, IOErrorEvent, ProgressEvent, ByteArray } from "../vendor/egret/Egret.ts";
+import {
+    WebSocket,
+    Event,
+    IOErrorEvent,
+    ProgressEvent,
+    ByteArray,
+} from "../vendor/egret/Egret.ts";
 
 export class WebsocketConnection extends WebSocket {
     private _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;

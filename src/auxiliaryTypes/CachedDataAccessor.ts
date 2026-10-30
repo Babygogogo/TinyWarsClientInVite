@@ -1,7 +1,10 @@
 import type { Undefinable } from "./AuxiliaryTypes.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
-import { setTimeout, clearTimeout } from "../vendor/egret/Egret.ts";
+import {
+    setTimeout,
+    clearTimeout,
+} from "../vendor/egret/Egret.ts";
 
 export class CachedDataAccessor<KeyType, DataType> {
     private _dataDict                   = new Map<KeyType, Undefinable<DataType>>();

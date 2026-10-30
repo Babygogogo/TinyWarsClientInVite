@@ -1,8 +1,20 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { AllSkinIdArrayIncludeNeutral, AllSkinIdArrayExcludeNeutral, SkinId } from "./Constants.ts";
-import { getMpwWarClass, getHrwWarClass, getRwWarClass, getSpwWarClass } from "../gameHelpers/GhFactory.ts";
-import { getMpwOverridingSkinIdArray, getRwOverridingSkinIdArray } from "../localData/Storage.ts";
+import {
+    AllSkinIdArrayIncludeNeutral,
+    AllSkinIdArrayExcludeNeutral,
+    SkinId,
+} from "./Constants.ts";
+import {
+    getMpwWarClass,
+    getHrwWarClass,
+    getRwWarClass,
+    getSpwWarClass,
+} from "../gameHelpers/GhFactory.ts";
+import {
+    getMpwOverridingSkinIdArray,
+    getRwOverridingSkinIdArray,
+} from "../localData/Storage.ts";
 import { PlayerIndex } from "../players/Constants.ts";
 
 export function getAllSkinIdArray(includeNeutral: boolean): number[] {

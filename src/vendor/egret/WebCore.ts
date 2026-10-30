@@ -52,7 +52,7 @@ import {
     log,
     warn,
     type StageText,
-    DisplayObjectContainer
+    DisplayObjectContainer,
 } from "./EgretCore";
 import {
     type CanvasContext,
@@ -88,7 +88,11 @@ import {
     NormalBitmapNode,
     measureText,
 } from "./SysCore";
-import { LifecycleContext, LifecycleHelper, addLifecycleListener } from "./Lifecycle";
+import {
+    LifecycleContext,
+    LifecycleHelper,
+    addLifecycleListener,
+} from "./Lifecycle";
 
 export type InputElement = HTMLInputElement | (HTMLTextAreaElement & { type: string });
 export type DrawCommandType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;

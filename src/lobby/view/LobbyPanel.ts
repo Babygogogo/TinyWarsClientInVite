@@ -2,13 +2,20 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getGameVersionName } from "../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getText,
+    getGameVersionName,
+} from "../../lang/Utils.ts";
 import { checkIsRedForMultiPlayer } from "../model/LobbyModel.ts";
 import { checkIsRedForMyMrwWars } from "../../multiPlayerWar/model/MpwModel.ts";
 import { checkIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playBgm, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    playBgm,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

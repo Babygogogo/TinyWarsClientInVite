@@ -4,7 +4,10 @@ import type { IState } from "./IState.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { ActionStateId } from "../../units/Constants.ts";

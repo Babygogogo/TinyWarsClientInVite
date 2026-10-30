@@ -1,6 +1,9 @@
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
 import { getBriefData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

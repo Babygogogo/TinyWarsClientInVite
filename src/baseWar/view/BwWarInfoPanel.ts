@@ -15,22 +15,49 @@ import {
 } from "../../gameHelpers/GhFactory.ts";
 import { getEnum } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getPlayerTeamName, getTimeDurationText2, getPlayerRuleName } from "../../lang/Utils.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getPlayerTeamName,
+    getTimeDurationText2,
+    getPlayerRuleName,
+} from "../../lang/Utils.ts";
 import type { BwCursorTapped } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { RuleTypeId, InitialFund } from "../../playerRules/Constants.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
+import {
+    RuleTypeId,
+    InitialFund,
+} from "../../playerRules/Constants.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../players/Constants.ts";
 import { checkAndHandleAutoActionsAndRobotRecursively } from "../../singlePlayerWar/model/SpwModel.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
-import { type DataForUiPlayerRuleRenderer, UiPlayerRuleRenderer } from "../../ui/components/UiPlayerRuleRenderer.ts";
+import {
+    type DataForUiPlayerRuleRenderer,
+    UiPlayerRuleRenderer,
+} from "../../ui/components/UiPlayerRuleRenderer.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
@@ -39,7 +66,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiList } from "../../ui/interfaces/IUiList.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";

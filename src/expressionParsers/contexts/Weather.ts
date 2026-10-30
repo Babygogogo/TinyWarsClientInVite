@@ -1,12 +1,23 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -72,23 +83,23 @@ export class Weather extends Base {
         return ContextType.Weather;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const weatherManager = this._weatherManager;
         switch (identifierName) {
             case Weather.VnExpiringPlayerIndex : return new Num(weatherManager.getWar(), weatherManager.getExpirePlayerIndex() ?? -1);
             case Weather.VnExpiringTurnIndex   : return new Num(weatherManager.getWar(), weatherManager.getExpireTurnIndex() ?? -1);
-            case Weather.VnWar                 : return new ExpressionParsersResultsWar(weatherManager.getWar());
+            case Weather.VnWar                 : return new ResultsWar(weatherManager.getWar());
             default                                     : return (this._contextWar ??= new War(weatherManager.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Weather.FnType    : return this.callType(argumentArray[0]);
             default                         : return (this._contextWar ??= new War(this._weatherManager.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    public callType(arg: ExpressionParsersResultsBase): ExpressionParsersResultsBase {
+    public callType(arg: ResultsBase): ResultsBase {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }

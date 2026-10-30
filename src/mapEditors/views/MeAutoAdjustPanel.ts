@@ -1,14 +1,27 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileName, getTileObjectName } from "../../lang/Utils.ts";
-import { setShowMapEditorAutoAdjustToggle, getShowMapEditorAutoAdjustToggle } from "../../localData/Storage.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileName,
+    getTileObjectName,
+} from "../../lang/Utils.ts";
+import {
+    setShowMapEditorAutoAdjustToggle,
+    getShowMapEditorAutoAdjustToggle,
+} from "../../localData/Storage.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { TileTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import {
+    TileTypeId,
+    ObjectTypeId,
+} from "../../tiles/constants/Common.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";

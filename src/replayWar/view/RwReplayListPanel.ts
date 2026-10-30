@@ -1,26 +1,48 @@
-import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    PlayerInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
-import { type OpenData as CommonViewCommonWarMapInfoPageOpenData, Page } from "../../common/view/CommonWarMapInfoPage.ts";
 import {
-    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
-    Page as CommonViewCommonWarPlayerInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import {
+    type OpenData as CommonWarPlayerInfoPageOpenData,
+    Page as CommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getEnum } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { gotoReplayWar } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getWarTypeName } from "../../lang/Utils.ts";
-import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getWarTypeName,
+} from "../../lang/Utils.ts";
+import {
+    getRawData,
+    getMapNameInCurrentLanguage,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import type { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import { getReplayData, getReplayInfo, getReplayIdSet } from "../model/RwModel.ts";
 import {
-    type OpenData as ReplayWarViewRwReplayWarInfoPageOpenData,
-    Page as ReplayWarViewRwReplayWarInfoPage,
+    getReplayData,
+    getReplayInfo,
+    getReplayIdSet,
+} from "../model/RwModel.ts";
+import {
+    type OpenData as RwReplayWarInfoPageOpenData,
+    Page as RwReplayWarInfoPage,
 } from "./RwReplayWarInfoPage.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -51,7 +73,7 @@ export interface OpenData {
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | ReplayWarViewRwReplayWarInfoPageOpenData>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarPlayerInfoPageOpenData | RwReplayWarInfoPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _labelReplay!          : IUiLabel;
@@ -227,17 +249,17 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : Page,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage,
+                pageClass   : CommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0223) },
-                pageClass   : ReplayWarViewRwReplayWarInfoPage,
+                pageClass   : RwReplayWarInfoPage,
                 pageData    : null,
             },
         ]);
@@ -292,7 +314,7 @@ export class Panel extends UiPanel<OpenData> {
             const replayId = this._getSelectedReplayId();
             this._tabSettings.updatePageData(0, await this._createDataForCommonWarMapInfoPage());
             this._tabSettings.updatePageData(1, await this._createDataForCommonWarPlayerInfoPage());
-            this._tabSettings.updatePageData(2, (replayId == null ? null : { replayId }) as ReplayWarViewRwReplayWarInfoPageOpenData);
+            this._tabSettings.updatePageData(2, (replayId == null ? null : { replayId }) as RwReplayWarInfoPageOpenData);
         }
     }
     private _updateBtnNextStep(): void {
@@ -339,7 +361,7 @@ export class Panel extends UiPanel<OpenData> {
         return this._cachedListDataArray.slice(_pageIndex * MapsPerPage, (_pageIndex + 1) * MapsPerPage);
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const replayId = this._getSelectedReplayId();
         if (replayId == null) {
             return null;
@@ -370,7 +392,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonWarPlayerInfoPageOpenData> {
         const replayId = this._getSelectedReplayId();
         if (replayId == null) {
             return null;

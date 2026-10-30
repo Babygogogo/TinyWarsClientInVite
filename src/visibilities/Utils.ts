@@ -6,7 +6,7 @@ import { createEmptyMap } from "../helpers/Collection.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
-import {VisibilityTypeId} from "./Constants.ts";
+import { VisibilityTypeId } from "./Constants.ts";
 
 export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDiving, isInvisible, unitPlayerIndex, observerTeamIndex }: {
     war                 : IBwWar;

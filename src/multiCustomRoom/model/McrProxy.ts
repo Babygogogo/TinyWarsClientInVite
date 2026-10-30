@@ -6,47 +6,30 @@ import {
     setJoinableRoomIdArray,
     setJoinedRoomIdArray,
 } from "./McrModel.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMcrAddDummy/S.ts";
-import type { C } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrCreateRoomS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrDeletePlayerS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeletePlayer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrDeleteRoomS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeleteRoom/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrExitRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrExitRoom/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetJoinableRoomIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinableRoomIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetJoinedRoomIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinedRoomIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrInviteS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrInvite/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrSetDummySettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetDummySettings/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrSetReadyS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetReady/S.ts";
-import type {
-    C as ProtoSchemaCommonProtoNetMessageMsgMcrSetSelfSettingsC,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/C.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrSetSelfSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrStartWarS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrStartWar/S.ts";
+import type { S as McrAddDummyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrAddDummy/S.ts";
+import type { C as McrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
+import type { S as McrCreateRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/S.ts";
+import type { S as McrDeletePlayerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeletePlayer/S.ts";
+import type { S as McrDeleteRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrDeleteRoom/S.ts";
+import type { S as McrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrExitRoom/S.ts";
+import type { S as McrGetJoinableRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinableRoomIdArray/S.ts";
+import type { S as McrGetJoinedRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetJoinedRoomIdArray/S.ts";
+import type { S as McrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
+import type { S as McrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
+import type { S as McrInviteResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrInvite/S.ts";
+import type { S as McrJoinRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
+import type { S as McrSetDummySettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetDummySettings/S.ts";
+import type { S as McrSetReadyResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetReady/S.ts";
+import type { C as McrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/C.ts";
+import type { S as McrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/S.ts";
+import type { S as McrStartWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrStartWar/S.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
@@ -69,13 +52,13 @@ export function init(): void {
     ], null);
 }
 
-export function reqCreateRoom(param: C): void {
+export function reqCreateRoom(param: McrCreateRoomRequest): void {
     send({
         MsgMcrCreateRoom: { c: param.toJson() },
     });
 }
 function _onMsgMcrCreateRoom(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrCreateRoomS;
+    const data = e.data as McrCreateRoomResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrCreateRoom, data);
     } else {
@@ -91,7 +74,7 @@ export function reqMcrJoinRoom(roomId: number): void {
     });
 }
 async function _onMsgMcrJoinRoom(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS;
+    const data = e.data as McrJoinRoomResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrJoinRoom, data);
     }
@@ -105,7 +88,7 @@ export function reqMcrDeleteRoom(roomId: number): void {
     });
 }
 function _onMsgMcrDeleteRoom(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrDeleteRoomS;
+    const data = e.data as McrDeleteRoomResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrDeleteRoom, data);
     }
@@ -119,7 +102,7 @@ export function reqMcrExitRoom(roomId: number): void {
     });
 }
 async function _onMsgMcrExitRoom(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrExitRoomS;
+    const data = e.data as McrExitRoomResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrExitRoom, data);
     }
@@ -135,7 +118,7 @@ export function reqMcrDeletePlayer(roomId: number, playerIndex: number, forbidRe
     });
 }
 async function _onMsgMcrDeletePlayer(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrDeletePlayerS;
+    const data = e.data as McrDeletePlayerResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrDeletePlayer, data);
     }
@@ -152,7 +135,7 @@ export function reqMcrAddDummy(roomId: number, playerIndex: number, coId: number
     });
 }
 function _onMsgMcrAddDummy(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as McrAddDummyResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrAddDummy, data);
     }
@@ -169,7 +152,7 @@ export function reqMcrSetDummySettings(roomId: number, playerIndex: number, coId
     });
 }
 function _onMsgMcrSetDummySettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrSetDummySettingsS;
+    const data = e.data as McrSetDummySettingsResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrSetDummySettings, data);
     }
@@ -184,7 +167,7 @@ export function reqMcrInvite(roomId: number, userIdArray: number[]): void {
     });
 }
 function _onMsgMcrInvite(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrInviteS;
+    const data = e.data as McrInviteResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrInvite, data);
     }
@@ -199,19 +182,19 @@ export function reqMcrSetReady(roomId: number, isReady: boolean): void {
     });
 }
 async function _onMsgMcrSetReady(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrSetReadyS;
+    const data = e.data as McrSetReadyResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrSetReady, data);
     }
 }
 
-export function reqMcrSetSelfSettings(data: ProtoSchemaCommonProtoNetMessageMsgMcrSetSelfSettingsC): void {
+export function reqMcrSetSelfSettings(data: McrSetSelfSettingsRequest): void {
     send({
         MsgMcrSetSelfSettings: { c: data.toJson() },
     });
 }
 async function _onMsgMcrSetSelfSettings(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrSetSelfSettingsS;
+    const data = e.data as McrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrSetSelfSettings, data);
     }
@@ -225,7 +208,7 @@ export function reqMcrGetRoomStaticInfo(roomId: number): void {
     });
 }
 async function _onMsgMcrGetRoomStaticInfo(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS;
+    const data = e.data as McrGetRoomStaticInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgMcrGetRoomStaticInfo(data);
         dispatch(TypeId.MsgMcrGetRoomStaticInfoFailed, data);
@@ -243,7 +226,7 @@ export function reqMcrGetRoomPlayerInfo(roomId: number): void {
     });
 }
 function _onMsgMcrGetRoomPlayerInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS;
+    const data = e.data as McrGetRoomPlayerInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgMcrGetRoomPlayerInfo(data);
         dispatch(TypeId.MsgMcrGetRoomPlayerInfoFailed, data);
@@ -260,7 +243,7 @@ export function reqMcrGetJoinableRoomIdArray(): void {
     });
 }
 function _onMsgMcrGetJoinableRoomIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetJoinableRoomIdArrayS;
+    const data = e.data as McrGetJoinableRoomIdArrayResponse;
     if (!data.getErrorCode()) {
         setJoinableRoomIdArray(data.getRoomIdArray());
         dispatch(TypeId.MsgMcrGetJoinableRoomIdArray, data);
@@ -274,7 +257,7 @@ export function reqMcrGetJoinedRoomIdArray(): void {
     });
 }
 function _onMsgMcrGetJoinedRoomIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetJoinedRoomIdArrayS;
+    const data = e.data as McrGetJoinedRoomIdArrayResponse;
     if (!data.getErrorCode()) {
         setJoinedRoomIdArray(data.getRoomIdArray());
         dispatch(TypeId.MsgMcrGetJoinedRoomIdArray, data);
@@ -289,7 +272,7 @@ export function reqMcrStartWar(roomId: number): void {
     });
 }
 function _onMsgMcrStartWar(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrStartWarS;
+    const data = e.data as McrStartWarResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMcrStartWar, data);
     }

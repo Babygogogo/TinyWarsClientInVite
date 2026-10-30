@@ -23,8 +23,6 @@ import type { ITileMap } from "../tiles/ITileMap.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwTileMap             = ITileMap;
-type IBwUnitMap             = IUnitMap;
 export class Field implements IField {
     private readonly _cursor            = new (getBwCursorClass())();
     private readonly _gridVisualEffect  = new (getBwGridVisualEffectClass())();
@@ -186,11 +184,11 @@ export class Field implements IField {
         return this._fogMap;
     }
 
-    public getTileMap(): IBwTileMap {
+    public getTileMap(): ITileMap {
         return this._tileMap;
     }
 
-    public getUnitMap(): IBwUnitMap {
+    public getUnitMap(): IUnitMap {
         return this._unitMap;
     }
 

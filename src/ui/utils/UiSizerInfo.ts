@@ -2,7 +2,10 @@ import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
-import { checkAndAddAutoSizerInfo, addAutoSizerInfo } from "./UiSizerHelpers.ts";
+import {
+    checkAndAddAutoSizerInfo,
+    addAutoSizerInfo,
+} from "./UiSizerHelpers.ts";
 
 export class UiSizerInfo implements IUiSizerInfo {
     private _target             : IUiComponent;

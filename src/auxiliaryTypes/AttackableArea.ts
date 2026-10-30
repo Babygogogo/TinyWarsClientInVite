@@ -1,7 +1,10 @@
 import { GridIndex } from "./GridIndex.ts";
 import type { MapSize } from "./MapSize.ts";
 import type { MovableArea } from "./MovableArea.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { TypeId } from "../tiles/constants/MapWeapon.ts";
 import type { ITile } from "../tiles/ITile.ts";
 

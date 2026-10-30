@@ -1,25 +1,48 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
 import { Common } from "../../maps/Constants.ts";
 import { DrawerMode } from "../Constants.ts";
-import { getUnitViewClass, getUnitClass, getTileViewClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getUnitViewClass,
+    getUnitClass,
+    getTileViewClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { isPc } from "../../helpers/Compatibility.ts";
-import { gotoLobby, gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
+import {
+    gotoLobby,
+    gotoMyWarListPanel,
+} from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { getMouseX, getMouseY } from "../../helpers/PointerInput.ts";
+import {
+    getMouseX,
+    getMouseY,
+} from "../../helpers/PointerInput.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getErrorText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getErrorText,
+} from "../../lang/Utils.ts";
 import { getShowMapEditorAutoAdjustToggle } from "../../localData/Storage.ts";
 import type { IMeDrawer } from "../../mapEditor/interface/IMeDrawer.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getCriticalErrorCodeForMapRawData, createDefaultMapRawData } from "../../mapEditor/model/MeHelpers.ts";
-import { getWar, getReviewingMapSlotIndex, getMapEditorData } from "../../mapEditor/model/MeModel.ts";
+import {
+    getCriticalErrorCodeForMapRawData,
+    createDefaultMapRawData,
+} from "../../mapEditor/model/MeHelpers.ts";
+import {
+    getWar,
+    getReviewingMapSlotIndex,
+    getMapEditorData,
+} from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import type {
     DataForDrawUnit,
@@ -30,11 +53,14 @@ import type {
 import { reqMmReviewMap } from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MmReviewMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { create, fillNonTrivialDefaultValues } from "../../tiles/utils/Serialization.ts";
+import {
+    create,
+    fillNonTrivialDefaultValues,
+} from "../../tiles/utils/Serialization.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -46,7 +72,10 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-import { getSelfMapEditorAutoSaveTime, getSelfUserId } from "../../users/Model.ts";
+import {
+    getSelfMapEditorAutoSaveTime,
+    getSelfUserId,
+} from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
@@ -349,7 +378,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelLocation();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as MeSubmitNormalMapResponse;
         if (!data.getNeedReview()) {
             show(getText(TextType.A0085));
         } else {
@@ -365,7 +394,7 @@ export class Panel extends UiPanel<OpenData> {
         this._getWar().setIsMapModified(false);
     }
     private _onNotifyMsgMmReviewMap(e: Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS;
+        const data = e.data as MmReviewMapResponse;
         if (data.getIsAccept()) {
             show(getText(TextType.A0092));
         } else {

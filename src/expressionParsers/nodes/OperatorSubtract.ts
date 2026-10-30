@@ -1,24 +1,27 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { getErrorTextForOperandType } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class OperatorSubtract extends ExpressionParsersNodesBase {
-    private _lhs: ExpressionParsersNodesBase;              // Left hand side of the operation
-    private _rhs: ExpressionParsersNodesBase;              // Right hand side of the operation
+export class OperatorSubtract extends Base {
+    private _lhs: Base;              // Left hand side of the operation
+    private _rhs: Base;              // Right hand side of the operation
 
-    public constructor(lhs: ExpressionParsersNodesBase, rhs: ExpressionParsersNodesBase) {
+    public constructor(lhs: Base, rhs: Base) {
         super();
 
         this._lhs = lhs;
         this._rhs = rhs;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const lhs = this._lhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         if (!(lhs instanceof Num)) {
             throw newError(`Unexpected lhs type.`);

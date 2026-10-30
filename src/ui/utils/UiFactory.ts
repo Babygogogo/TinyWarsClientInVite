@@ -31,7 +31,6 @@ import type { UiScrollerOptions } from "../types/UiScrollerOptions.ts";
 import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
 import type { UiUnitViewData } from "../types/UiUnitViewData.ts";
 
-type IUiUintView                                                            = IUiUnitView;
 let _uiButton                   : new () => IUiButton;
 let _uiCoInfo                   : new () => IUiCoInfo;
 let _uiContainer                : new () => IUiContainer;
@@ -62,7 +61,7 @@ let _uiSwitch                   : new () => IUiSwitch;
 let _uiTab                      : new () => IUiTab<any, any>;
 let _uiTextInput                : new () => IUiTextInput;
 let _uiTileView                 : new () => IUiTileView;
-let _uiUnitView                 : new (data?: UiUnitViewData, tickCount?: number) => IUiUintView;
+let _uiUnitView                 : new (data?: UiUnitViewData, tickCount?: number) => IUiUnitView;
 let _uiZoomableComponent        : new () => IUiZoomableComponent;
 let _uiZoomableMap              : new (sizerOptions?: UiSizerOptions) => IUiZoomableMap;
 
@@ -125,7 +124,7 @@ export function init({
     uiTab                       : new () => IUiTab<any, any>;
     uiTextInput                 : new () => IUiTextInput;
     uiTileView                  : new () => IUiTileView;
-    uiUnitView                  : new () => IUiUintView;
+    uiUnitView                  : new () => IUiUnitView;
     uiZoomableComponent         : new () => IUiZoomableComponent;
     uiZoomableMap               : new () => IUiZoomableMap;
 }): void {
@@ -236,7 +235,7 @@ export function getUiTextInputClass(): new () => IUiTextInput {
 export function getUiTileViewClass(): new () => IUiTileView {
     return _uiTileView;
 }
-export function getUiUnitViewClass(): new (data?: UiUnitViewData, tickCount?: number) => IUiUintView {
+export function getUiUnitViewClass(): new (data?: UiUnitViewData, tickCount?: number) => IUiUnitView {
     return _uiUnitView;
 }
 export function getUiZoomableComponentClass(): new () => IUiZoomableComponent {

@@ -1,18 +1,28 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getErrorText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+    getErrorText,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
 import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import { getErrorCode } from "../../maps/utils/MapRawData.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { reqMmAddWarEvent, reqMmSubmitMapSimpleDialogue } from "../../normalMap/model/NormalMapProxy.ts";
+import {
+    reqMmAddWarEvent,
+    reqMmSubmitMapSimpleDialogue,
+} from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";

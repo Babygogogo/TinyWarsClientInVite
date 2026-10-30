@@ -4,8 +4,6 @@ import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObje
 import type { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import type { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
 
-type IBwWar                     = BwWar;
-
 export interface ITaskObjectiveManager {
     init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void;
     fastInit(data: Undefinable<SerialTaskObjectiveManager>): void;
@@ -14,9 +12,9 @@ export interface ITaskObjectiveManager {
     serializeForCreateMfr(): SerialTaskObjectiveManager;
     serializeForCreateSfw(): SerialTaskObjectiveManager;
 
-    startRunning(war: IBwWar): void;
+    startRunning(war: BwWar): void;
 
-    getWar(): IBwWar;
+    getWar(): BwWar;
 
     getStateArray(): TaskObjectiveState[];
     updateState(state: TaskObjectiveState): boolean;

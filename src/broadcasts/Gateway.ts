@@ -1,21 +1,20 @@
-import { setAllMessageIdArray, updateOnFailedMsgBroadcastGetMessageData, updateOnMsgBroadcastGetMessageData } from "./Provider.ts";
-import { addListeners, send } from "../networks/Manager.ts";
+import {
+    setAllMessageIdArray,
+    updateOnFailedMsgBroadcastGetMessageData,
+    updateOnMsgBroadcastGetMessageData,
+} from "./Provider.ts";
+import {
+    addListeners,
+    send,
+} from "../networks/Manager.ts";
 import { MessageCodes } from "../networks/MessageCodes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDeleteMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDoBroadcast/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS,
-} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
+import type { S as BroadcastAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
+import type { S as BroadcastDeleteMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDeleteMessage/S.ts";
+import type { S as BroadcastDoBroadcastResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDoBroadcast/S.ts";
+import type { S as BroadcastGetAllMessageIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
+import type { S as BroadcastGetMessageDataResponse } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
 
@@ -39,7 +38,7 @@ export function reqBroadcastAddMessage(textList: LanguageText[], startTime: numb
     });
 }
 function _onMsgBroadcastAddMessage(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as BroadcastAddMessageResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgBroadcastAddMessage, data);
     }
@@ -53,7 +52,7 @@ export function reqBroadcastDeleteMessage(messageId: number): void {
     });
 }
 function _onMsgBroadcastDeleteMessage(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS;
+    const data = e.data as BroadcastDeleteMessageResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgBroadcastDeleteMessage, data);
     }
@@ -66,7 +65,7 @@ export function reqBroadcastDoBroadcast(): void {
     });
 }
 function _onMsgBroadcastDoBroadcast(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS;
+    const data = e.data as BroadcastDoBroadcastResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgBroadcastDoBroadcast, data);
     }
@@ -77,7 +76,7 @@ export function reqBroadcastGetAllMessageIdArray(): void {
     } }, });
 }
 function _onMsgBroadcastGetAllMessageIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS;
+    const data = e.data as BroadcastGetAllMessageIdArrayResponse;
     if (!data.getErrorCode()) {
         setAllMessageIdArray(data.getMessageIdArray());
         dispatch(TypeId.MsgBroadcastGetAllMessageIdArray, data);
@@ -90,7 +89,7 @@ export function reqBroadcastGetMessageData(messageId: number): void {
     } } });
 }
 function _onMsgBroadcastGetMessageData(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS;
+    const data = e.data as BroadcastGetMessageDataResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgBroadcastGetMessageData(data);
     } else {

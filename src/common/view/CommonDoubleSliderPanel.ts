@@ -1,7 +1,13 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

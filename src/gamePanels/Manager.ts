@@ -1,6 +1,9 @@
 import type { PanelConfig } from "./Types.ts";
 import type { DisplayLayerId } from "../graphics/Constants.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { warn } from "../Logger.ts";
 import { getSkin } from "../ResManager.ts";
 import { getLayer } from "../stages/StageManager.ts";

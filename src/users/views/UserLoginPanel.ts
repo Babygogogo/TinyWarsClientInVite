@@ -6,10 +6,20 @@ import { enable } from "../../helpers/NoSleep.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { getIsRememberPassword, getAccount, getPassword, setAccount, setPassword, setIsRememberPassword } from "../../localData/Storage.ts";
+import {
+    getIsRememberPassword,
+    getAccount,
+    getPassword,
+    setAccount,
+    setPassword,
+    setIsRememberPassword,
+} from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { init, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    init,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -18,9 +28,15 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import { setSelfAccount, setSelfPassword } from "../Model.ts";
+import {
+    setSelfAccount,
+    setSelfPassword,
+} from "../Model.ts";
 import { reqLogin } from "../Proxy.ts";
-import { checkIsAccountValid, checkIsPasswordValid } from "../Utils.ts";
+import {
+    checkIsAccountValid,
+    checkIsPasswordValid,
+} from "../Utils.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

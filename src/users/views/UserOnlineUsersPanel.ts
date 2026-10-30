@@ -3,11 +3,17 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getMedal, getUserAvatar } from "../../helpers/ImageSource.ts";
+import {
+    getMedal,
+    getUserAvatar,
+} from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
+import { S as UserGetOnlineUserIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -37,7 +43,7 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _listUser!             : IUiScrollList<DataForUserRenderer>;
     private readonly _labelLoading!         : IUiLabel;
 
-    private _msg        : S | null = null;
+    private _msg        : UserGetOnlineUserIdArrayResponse | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
@@ -75,7 +81,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifySUserGetOnlineUsers(e: Event): void {
-        if (!(e.data instanceof S)) {
+        if (!(e.data instanceof UserGetOnlineUserIdArrayResponse)) {
             throw newError("Invalid online user list notification.");
         }
         this._msg = e.data;

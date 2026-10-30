@@ -3,7 +3,10 @@ import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getPowerSkillTargetsCount } from "../../../coSkills/utils/Common.ts";
 import { newError } from "../../../helpers/Misc.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";

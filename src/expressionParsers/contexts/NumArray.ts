@@ -1,14 +1,17 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import { Lambda } from "../nodes/Lambda.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import { Lambda as NodesLambda } from "../nodes/Lambda.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Lambda as ResultsLambda } from "../results/Lambda.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { NullableUnitArray } from "../results/NullableUnitArray.ts";
 import { Num } from "../results/Num.ts";
-import { NumArray as ExpressionParsersResultsNumArray } from "../results/NumArray.ts";
+import { NumArray as ResultsNumArray } from "../results/NumArray.ts";
 import { Player } from "../results/Player.ts";
 import { PlayerArray } from "../results/PlayerArray.ts";
 import { Position } from "../results/Position.ts";
@@ -19,7 +22,10 @@ import { TileBuff } from "../results/TileBuff.ts";
 import { TileBuffArray } from "../results/TileBuffArray.ts";
 import { UnitStatistic } from "../results/UnitStatistic.ts";
 import { UnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
 import {
     extendVariableInfoDict,
     extendFunctionInfoDict,
@@ -98,7 +104,7 @@ export class NumArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(NumArray.FnWhere, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextNumberArray_GenerateFunctions_03
@@ -136,7 +142,7 @@ export class NumArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(NumArray.FnSelect, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextNumberArray_GenerateFunctions_06
@@ -300,7 +306,7 @@ export class NumArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(NumArray.FnAll, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextNumberArray_GenerateFunctions_17
@@ -338,7 +344,7 @@ export class NumArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(NumArray.FnAny, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextNumberArray_GenerateFunctions_20
@@ -446,7 +452,7 @@ export class NumArray extends Base {
     private _numberArray    : number[];
     private _contextWar     : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsNumArray) {
+    public constructor(data: ResultsNumArray) {
         super(data.war);
 
         this._numberArray   = data.numberArray;
@@ -456,14 +462,14 @@ export class NumArray extends Base {
         return ContextType.NumberArray;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         switch (identifierName) {
             case NumArray.VnLength  : return new Num(this.getWar(), this._numberArray.length);
             default                             : return (this._contextWar ??= new War(this.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case NumArray.FnGet     : return this.callGet(argumentArray[0]);
             case NumArray.FnWhere   : return this.callWhere(argumentArray[0], rootCtx, localVariableDict, isRestricted);
@@ -481,7 +487,7 @@ export class NumArray extends Base {
         }
     }
 
-    private callGet(arg: ExpressionParsersResultsBase): Num {
+    private callGet(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`, ClientErrorCode.EpContextNumberArray_CallGet_00);
         }
@@ -502,13 +508,13 @@ export class NumArray extends Base {
         return new Num(this.getWar(), result);
     }
 
-    public callWhere(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsNumArray {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callWhere(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsNumArray {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -525,16 +531,16 @@ export class NumArray extends Base {
             }
         }
 
-        return new ExpressionParsersResultsNumArray(war, resultArray);
+        return new ResultsNumArray(war, resultArray);
     }
 
-    public callSelect(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callSelect(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -610,7 +616,7 @@ export class NumArray extends Base {
                 resultArray.push(result.num);
             }
 
-            return new ExpressionParsersResultsNumArray(war, resultArray);
+            return new ResultsNumArray(war, resultArray);
 
         } else if (resultType === ResultType.Position) {
             const resultArray: Position[] = [];
@@ -643,7 +649,7 @@ export class NumArray extends Base {
         }
     }
 
-    public callMax(arg: ExpressionParsersResultsBase | null): Num {
+    public callMax(arg: ResultsBase | null): Num {
         const numberArray   = this._numberArray;
         const war           = this.getWar();
         if (!numberArray.length) {
@@ -656,7 +662,7 @@ export class NumArray extends Base {
         return new Num(war, Math.max(...numberArray));
     }
 
-    public callMin(arg: ExpressionParsersResultsBase | null): Num {
+    public callMin(arg: ResultsBase | null): Num {
         const numberArray   = this._numberArray;
         const war           = this.getWar();
         if (!numberArray.length) {
@@ -669,7 +675,7 @@ export class NumArray extends Base {
         return new Num(war, Math.min(...numberArray));
     }
 
-    public callMean(arg: ExpressionParsersResultsBase | null): Num {
+    public callMean(arg: ResultsBase | null): Num {
         const numberArray   = this._numberArray;
         const war           = this.getWar();
         if (!numberArray.length) {
@@ -688,7 +694,7 @@ export class NumArray extends Base {
         return new Num(war, result);
     }
 
-    public callSum(arg: ExpressionParsersResultsBase | null): Num {
+    public callSum(arg: ResultsBase | null): Num {
         const numberArray   = this._numberArray;
         const war           = this.getWar();
         if (!numberArray.length) {
@@ -706,13 +712,13 @@ export class NumArray extends Base {
         return new Num(war, result);
     }
 
-    public callAll(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAll(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -731,13 +737,13 @@ export class NumArray extends Base {
         return new Num(war, 1);
     }
 
-    public callAny(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAny(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -756,7 +762,7 @@ export class NumArray extends Base {
         return new Num(war, 0);
     }
 
-    private callAdd(argArray: ExpressionParsersResultsBase[]): ExpressionParsersResultsNumArray {
+    private callAdd(argArray: ResultsBase[]): ResultsNumArray {
         const numberList = this._numberArray.concat();
         for (const arg of argArray) {
             if (arg instanceof Num) {
@@ -766,10 +772,10 @@ export class NumArray extends Base {
             }
         }
 
-        return new ExpressionParsersResultsNumArray(this.getWar(), numberList);
+        return new ResultsNumArray(this.getWar(), numberList);
     }
 
-    private callHas(arg: ExpressionParsersResultsBase): Num {
+    private callHas(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -777,7 +783,7 @@ export class NumArray extends Base {
         return new Num(this.getWar(), this._numberArray.indexOf(arg.num) >= 0 ? 1 : 0);
     }
 
-    private callSet(argArray: ExpressionParsersResultsBase[]): ExpressionParsersResultsNumArray {
+    private callSet(argArray: ResultsBase[]): ResultsNumArray {
         const array     = this._numberArray;
         const length    = array.length;
         if (!length) {
@@ -802,6 +808,6 @@ export class NumArray extends Base {
 
         const numberList    = array.concat();
         numberList[index]   = argValue.num;
-        return new ExpressionParsersResultsNumArray(this.getWar(), numberList);
+        return new ResultsNumArray(this.getWar(), numberList);
     }
 }

@@ -1,13 +1,29 @@
-import { DisplayCategoryArray, ForceArray, CategoryId } from "../../cos/Constants.ts";
+import {
+    DisplayCategoryArray,
+    ForceArray,
+    CategoryId,
+} from "../../cos/Constants.ts";
 import { show } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackgroundByCoId,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -20,7 +36,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiLayoutClass,
+    getUiImageClass,
+} from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 // eslint-disable-next-line no-shadow

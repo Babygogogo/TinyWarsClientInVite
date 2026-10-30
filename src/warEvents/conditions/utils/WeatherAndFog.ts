@@ -2,7 +2,11 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText, getWeatherName } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+    getWeatherName,
+} from "../../../lang/Utils.ts";
 import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
 
 export function getBriefDesc(data: Undefinable<WecWeatherAndFog>): string | null {

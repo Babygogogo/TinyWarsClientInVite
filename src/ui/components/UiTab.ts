@@ -1,4 +1,7 @@
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { warn } from "../../Logger.ts";
 import { UiContainer } from "./UiContainer.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";

@@ -5,13 +5,25 @@ import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHead, getCoHeadFrame } from "../../helpers/ImageSource.ts";
+import {
+    getCoHead,
+    getCoHeadFrame,
+} from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getPlayerForceName, getPlayerTeamName, getText, getTimeDurationText2 } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getPlayerForceName,
+    getPlayerTeamName,
+    getText,
+    getTimeDurationText2,
+} from "../../lang/Utils.ts";
 import { getMrwRankIndex } from "../../leaderboard/model/LeaderboardModel.ts";
-import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
+import { Common as MultiRankedWarsCommon } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -29,7 +41,12 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfSettingsIsReplayResultVisible, getSelfUserId, getUserNickname, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    getSelfSettingsIsReplayResultVisible,
+    getSelfUserId,
+    getUserNickname,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
 import { checkIsDummy } from "../../users/Utils.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
@@ -424,12 +441,12 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const stdRankIndex      = await getMrwRankIndex(WarTypeId.MrwStd, userId);
         const fogRankIndex      = await getMrwRankIndex(WarTypeId.MrwFog, userId);
         labelRankStd.setText(stdRankInfo
-            ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${getSuffixForRankIndex(stdRankIndex)}`})`
-            : `${MultiRankedWarConstants.InitialScore} (--)`
+            ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${getSuffixForRankIndex(stdRankIndex)}`})`
+            : `${MultiRankedWarsCommon.InitialScore} (--)`
         );
         labelRankFog.setText(fogRankInfo
-            ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${getSuffixForRankIndex(fogRankIndex)}`})`
-            : `${MultiRankedWarConstants.InitialScore} (--)`
+            ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${getSuffixForRankIndex(fogRankIndex)}`})`
+            : `${MultiRankedWarsCommon.InitialScore} (--)`
         );
 
         this._layoutStd.arrangeItems();

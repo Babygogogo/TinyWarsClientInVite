@@ -1,15 +1,26 @@
-import { checkIsSelfDesigner, getCampaignInfo, getCampaignMapRawData } from "../../mains/Provider.ts";
-import { reqCmCreateCampaignMap, reqCmSetCampaignMapEnabled } from "../Gateway.ts";
+import {
+    checkIsSelfDesigner,
+    getCampaignInfo,
+    getCampaignMapRawData,
+} from "../../mains/Provider.ts";
+import {
+    reqCmCreateCampaignMap,
+    reqCmSetCampaignMapEnabled,
+} from "../Gateway.ts";
 import { showLang } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { gotoMapEditorWar } from "../../../helpers/GameFlow.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getLanguageText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+    getTextForYesOrNo,
+} from "../../../lang/Utils.ts";
 import { getMapEditorData } from "../../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../../mapEditor/model/MeProxy.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
-import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
@@ -90,7 +101,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForListMap();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
-        const data      = e.data as S;
+        const data      = e.data as MeSubmitNormalMapResponse;
         const slotIndex = data.getSlotIndex() ?? 0;
         openPanel(getDict().CommonConfirmPanel, {
             getContent  : () => getText(TextType.A0440),

@@ -5,22 +5,36 @@ import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
-import { checkAndCreateSimulation, checkAndCreateMultiFreeWar, gotoRwReplayListPanel, gotoMapEditorWar } from "../../helpers/GameFlow.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    checkAndCreateSimulation,
+    checkAndCreateMultiFreeWar,
+    gotoRwReplayListPanel,
+    gotoMapEditorWar,
+} from "../../helpers/GameFlow.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import { getErrorCode } from "../../maps/utils/MapRawData.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { wait, getServerTimestamp } from "../../timer/TimerModel.ts";
+import {
+    wait,
+    getServerTimestamp,
+} from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -213,7 +227,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
-        const slotIndex = (e.data as S).getSlotIndex() ?? 0;
+        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
         openPanel(getDict().CommonConfirmPanel, {
             getContent     : () => getText(TextType.A0872),
             callback    : async () => {

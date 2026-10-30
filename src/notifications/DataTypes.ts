@@ -1,4 +1,7 @@
-import type { TouchPoints, Point } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    TouchPoints,
+    Point,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwCursor } from "../baseWar/interface/IBwCursor.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";

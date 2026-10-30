@@ -2,11 +2,10 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-    type SerialTileJson as ProtoSchemaCommonProtoWarSerializationSerialTileSerialTileJson,
+    type SerialTileJson as ProtoSerialTileJson,
     SerialTile,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 
-type SerialTileJson     = ProtoSchemaCommonProtoWarSerializationSerialTileSerialTileJson;
 export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GameConfig): void {
     const cfg = gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileData.getBaseType(), tileData.getObjectType());
     if (!cfg) {
@@ -16,7 +15,7 @@ export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GameCo
     tileData.setCurrentHp(cfg.getMaxHp());
 }
 
-export function create(json: Required<SerialTileJson>): SerialTile {
+export function create(json: Required<ProtoSerialTileJson>): SerialTile {
     return SerialTile.fromJson(json);
 }
 

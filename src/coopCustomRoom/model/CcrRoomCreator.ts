@@ -9,7 +9,7 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalCcwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { AiSkinInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCcrCreateRoom/AiSkinInfo.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgCcrCreateRoom/C.ts";
+import { C as CcrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgCcrCreateRoom/C.ts";
 import { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
@@ -40,14 +40,14 @@ export class CcrRoomCreator extends RoomCreatorBase {
         );
     }
 
-    public generateData(): C {
+    public generateData(): CcrCreateRoomRequest {
         const settingsForCcw = this.getSettingsForCcw().clone();
         settingsForCcw.setWarName(this.getWarName());
         settingsForCcw.setWarPassword(this.getWarPassword());
         settingsForCcw.setWarComment(this.getWarComment());
         settingsForCcw.setBootTimerParams(this.getBootTimerParams());
 
-        return C.fromJson({
+        return CcrCreateRoomRequest.fromJson({
             settingsForCommon       : this.getSettingsForCommon().toJson(),
             settingsForCcw          : settingsForCcw.toJson(),
 

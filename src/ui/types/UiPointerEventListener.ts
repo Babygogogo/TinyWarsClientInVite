@@ -1,4 +1,7 @@
-import type { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import type {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 

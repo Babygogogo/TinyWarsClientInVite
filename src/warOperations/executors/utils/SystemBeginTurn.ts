@@ -1,13 +1,25 @@
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { show } from "../../../FloatText.ts";
-import { getRwWarBaseClass, getMeWarClass, getMpwWarClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getRwWarBaseClass,
+    getMeWarClass,
+    getMpwWarClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import type { WoSystemBeginTurn } from "../../../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";

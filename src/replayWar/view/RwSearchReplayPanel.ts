@@ -1,12 +1,23 @@
 import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
-import { Common } from "../../maps/Constants.ts";
+import { Common as MapsCommon } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getGameModeHelpText, getGameModeName, getText, getTextForYesOrNo } from "../../lang/Utils.ts";
-import { getEnabledNormalMapIdSet, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getGameModeHelpText,
+    getGameModeName,
+    getText,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
+import {
+    getEnabledNormalMapIdSet,
+    getMapNameInCurrentLanguage,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
@@ -15,8 +26,11 @@ import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
-import { Common as WarOperationConstants } from "../../warOperations/Constants.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+} from "../../users/Model.ts";
+import { Common as WarOperationsCommon } from "../../warOperations/Constants.ts";
 
 export interface OpenData {
     replayFilter    : ReplayFilter | null;
@@ -352,7 +366,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapWidth    = filter.maxMapWidth;
         const minValue          = 1;
-        const maxValue          = Common.MaxGridsCount;
+        const maxValue          = MapsCommon.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle     : () => getText(TextType.B1389),
             currentValue : filter.minMapWidth,
@@ -394,7 +408,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapHeight   = filter.maxMapHeight;
         const minValue          = 1;
-        const maxValue          = Common.MaxGridsCount;
+        const maxValue          = MapsCommon.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle     : () => getText(TextType.B1391),
             currentValue : filter.minMapHeight,
@@ -542,7 +556,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter                = this._replayFilter;
         const oldMaxActionsCount    = filter.maxWarOperationsCount;
         const minValue              = 1;
-        const maxValue              = WarOperationConstants.MaxLimit;
+        const maxValue              = WarOperationsCommon.MaxLimit;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle     : () => getText(TextType.B1395),
             currentValue : filter.minWarOperationsCount,

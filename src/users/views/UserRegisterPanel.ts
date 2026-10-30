@@ -4,9 +4,12 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { setAccount, setPassword } from "../../localData/Storage.ts";
+import {
+    setAccount,
+    setPassword,
+} from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
+import type { S as UserRegisterResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -14,9 +17,19 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
-import { setSelfAccount, setSelfPassword } from "../Model.ts";
-import { reqLogin, reqUserRegister } from "../Proxy.ts";
-import { checkIsAccountValid, checkIsPasswordValid, checkIsNicknameValid } from "../Utils.ts";
+import {
+    setSelfAccount,
+    setSelfPassword,
+} from "../Model.ts";
+import {
+    reqLogin,
+    reqUserRegister,
+} from "../Proxy.ts";
+import {
+    checkIsAccountValid,
+    checkIsPasswordValid,
+    checkIsNicknameValid,
+} from "../Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -57,7 +70,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onMsgUserRegister(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as UserRegisterResponse;
         show(getText(TextType.A0004));
 
         const account   = getExisted(data.getAccount(), ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);

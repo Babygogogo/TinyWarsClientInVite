@@ -5,7 +5,11 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { createRange } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getLanguageText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

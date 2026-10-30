@@ -2,7 +2,10 @@ import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { Constants } from "../../mapTags/Constants.ts";
 import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";
 import { reqMmSetMapTagSingleData } from "../../normalMap/model/NormalMapProxy.ts";

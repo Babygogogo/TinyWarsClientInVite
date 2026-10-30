@@ -4,9 +4,7 @@ import { TextType } from "../lang/Constants.ts";
 import { getFormattedText } from "../lang/Utils.ts";
 import type { GridIndexArrayAndPredicate } from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
 
-type GridIndexArrayAndPredicateSchema = GridIndexArrayAndPredicate;
-
-export function getDesc(data: GridIndexArrayAndPredicateSchema, valueName: string): string {
+export function getDesc(data: GridIndexArrayAndPredicate, valueName: string): string {
     return getFormattedText(
         data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
         valueName,
@@ -14,7 +12,7 @@ export function getDesc(data: GridIndexArrayAndPredicateSchema, valueName: strin
     );
 }
 
-export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: MapSize): boolean {
+export function checkIsValid(data: GridIndexArrayAndPredicate, mapSize: MapSize): boolean {
     const rawArray = data.getGridIndexArray();
     if ((rawArray == null) || (!rawArray.length)) {
         return false;
@@ -36,7 +34,7 @@ export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: Ma
     return true;
 }
 
-export function checkIsMeet(data: GridIndexArrayAndPredicateSchema, value: GridIndex): boolean {
+export function checkIsMeet(data: GridIndexArrayAndPredicate, value: GridIndex): boolean {
     const gridIndexArray = data.getGridIndexArray();
     return data.getIsOneOf()
         ? !!gridIndexArray?.some(v => value.checkIsEqual2(v))

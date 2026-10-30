@@ -1,14 +1,33 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
-import { getEnumArray, getRuleAvailability } from "../../gameModes/Utils.ts";
+import {
+    getEnumArray,
+    getRuleAvailability,
+} from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeName, getGameModeHelpText, getErrorText, getTileThemeName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getGameModeName,
+    getGameModeHelpText,
+    getErrorText,
+    getTileThemeName,
+} from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { reqMmSetWarRuleAvailability, reqMmSetWarRuleName, reqMmSetWarRuleFixedTileTheme } from "../../normalMap/model/NormalMapProxy.ts";
+import {
+    reqMmSetWarRuleAvailability,
+    reqMmSetWarRuleName,
+    reqMmSetWarRuleFixedTileTheme,
+} from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { AllThemeTypeIdArray } from "../../tiles/constants/Common.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

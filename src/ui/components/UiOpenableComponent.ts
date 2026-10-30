@@ -1,15 +1,27 @@
 import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
-import { addListener, deleteListener } from "../../keyboard/KbManager.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
+import {
+    addListener,
+    deleteListener,
+} from "../../keyboard/KbManager.ts";
 import type { KeyCallback } from "../../keyboard/KbTypes.ts";
-import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../../notifications/Dispatcher.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { UiContainer } from "./UiContainer.ts";
 import type { IUiOpenableComponent } from "../interfaces/IUiOpenableComponent.ts";
 import type { UiInputEventListener } from "../types/UiInputEventListener.ts";
 import type { UiPointerEventListener } from "../types/UiPointerEventListener.ts";
-import { getUiTextInputClass, getUiPromptedInputClass } from "../utils/UiFactory.ts";
+import {
+    getUiTextInputClass,
+    getUiPromptedInputClass,
+} from "../utils/UiFactory.ts";
 
 interface KeyboardListener {
     callback    : KeyCallback;

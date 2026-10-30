@@ -1,7 +1,16 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    getCoHeadFrame,
+    getCoHead,
+} from "../../helpers/ImageSource.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getPlayerForceName,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
@@ -12,7 +21,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiPanel } from "../../ui/interfaces/IUiPanel.ts";
-import { setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
+import {
+    setTimeout,
+    clearTimeout,
+} from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     gameConfig          : GameConfig;

@@ -1,10 +1,16 @@
-import { ContextType, ResultType } from "../../expressionParsers/Enums.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../../expressionParsers/Enums.ts";
 import type { EpExpressionInfo } from "../../expressionParsers/Types.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
@@ -21,7 +27,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { getErrorTipForCondition, getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    getErrorTipForCondition,
+    getBriefDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 
 const ExpressionInfo: EpExpressionInfo = {
     contextType     : ContextType.War,

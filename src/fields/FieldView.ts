@@ -8,14 +8,12 @@ import type { ITileMapView } from "../tiles/ITileMapView.ts";
 import { UiContainer } from "../ui/components/UiContainer.ts";
 import type { IUnitMapView } from "../units/IUnitMapView.ts";
 
-type IBwTileMapView             = ITileMapView;
-type IBwUnitMapView             = IUnitMapView;
 export class FieldView extends UiContainer implements IFieldView {
     private _field?                 : IField;
 
-    private _tileMapView?           : IBwTileMapView;
+    private _tileMapView?           : ITileMapView;
     private _actionPlannerView?     : IActionPlannerView;
-    private _unitMapView?           : IBwUnitMapView;
+    private _unitMapView?           : IUnitMapView;
     private _cursorView?            : IBwCursorView;
     private _gridVisualEffectView?  : IBwGridVisualEffectView;
 
@@ -47,10 +45,10 @@ export class FieldView extends UiContainer implements IFieldView {
         // nothing to do
     }
 
-    private _getUnitMapView(): IBwUnitMapView {
+    private _getUnitMapView(): IUnitMapView {
         return getExisted(this._unitMapView);
     }
-    private _getTileMapView(): IBwTileMapView {
+    private _getTileMapView(): ITileMapView {
         return getExisted(this._tileMapView);
     }
 

@@ -1,9 +1,12 @@
 import { ActionPlanner } from "../actionPlanners/ActionPlanner.ts";
 import { ActionPlannerView } from "../actionPlanners/ActionPlannerView.ts";
-import { init } from "../autoTourneys/mains/Gateway.ts";
-import { init as AutoTourneysRoomsGatewayInit } from "../autoTourneys/rooms/Gateway.ts";
-import { War } from "../autoTourneys/wars/War.ts";
-import type { Undefinable, CustomError } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { init as initAutoTourneys } from "../autoTourneys/mains/Gateway.ts";
+import { init as initRoomsAutoTourneys } from "../autoTourneys/rooms/Gateway.ts";
+import { War as AutoTourneysWar } from "../autoTourneys/wars/War.ts";
+import type {
+    Undefinable,
+    CustomError,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { BwCommonSettingManager } from "../baseWar/model/BwCommonSettingManager.ts";
 import { BwCursor } from "../baseWar/model/BwCursor.ts";
@@ -16,78 +19,126 @@ import { BwWarStatisticsManager } from "../baseWar/model/BwWarStatisticsManager.
 import { BwCursorView } from "../baseWar/view/BwCursorView.ts";
 import { BwGridVisualEffectView } from "../baseWar/view/BwGridVisualEffectView.ts";
 import { BwWarView } from "../baseWar/view/BwWarView.ts";
-import { init as BroadcastsGatewayInit } from "../broadcasts/Gateway.ts";
-import { init as CampaignsMainsGatewayInit } from "../campaigns/mains/Gateway.ts";
-import { init as CampaignsManagementsGatewayInit } from "../campaigns/managements/Gateway.ts";
-import { War as CampaignsWarsWar } from "../campaigns/wars/War.ts";
-import { init as ChangeLogModelChangeLogProxyInit } from "../changeLogs/Gateway.ts";
-import { Common, ToCategoryId } from "../chat/Constants.ts";
-import { init as ChatProxyInit, reqChatAddMessage } from "../chat/Proxy.ts";
-import { init as CommonModelCommonModelInit } from "../common/model/CommonModel.ts";
-import { init as CommonModelCommonProxyInit } from "../common/model/CommonProxy.ts";
-import { init as CoopCustomRoomModelCcrProxyInit } from "../coopCustomRoom/model/CcrProxy.ts";
+import { init as initBroadcasts } from "../broadcasts/Gateway.ts";
+import { init as initCampaigns } from "../campaigns/mains/Gateway.ts";
+import { init as initManagements } from "../campaigns/managements/Gateway.ts";
+import { War as CampaignsWar } from "../campaigns/wars/War.ts";
+import { init as initChangeLogs } from "../changeLogs/Gateway.ts";
+import {
+    Common as ChatCommon,
+    ToCategoryId,
+} from "../chat/Constants.ts";
+import {
+    init as initProxy,
+    reqChatAddMessage,
+} from "../chat/Proxy.ts";
+import { init as initCommonModel } from "../common/model/CommonModel.ts";
+import { init as initCommonProxy } from "../common/model/CommonProxy.ts";
+import { init as initCcrProxy } from "../coopCustomRoom/model/CcrProxy.ts";
 import { CcwWar } from "../coopCustomWar/model/CcwWar.ts";
 import { Field } from "../fields/Field.ts";
 import { FieldView } from "../fields/FieldView.ts";
 import { show } from "../FloatText.ts";
 import { FogMap } from "../fogMaps/FogMap.ts";
 import { ReviewStatus } from "../maps/Constants.ts";
-import { init as GameConfigGcModelInit, getGameConfig, getLatestGameConfig } from "../gameConfigs/Provider.ts";
-import { init as GameConfigGcProxyInit } from "../gameConfigs/Gateway.ts";
-import { init as GameHelpersGhFactoryInit, getTwWarClass, getMeWarClass } from "../gameHelpers/GhFactory.ts";
+import {
+    init as initGameConfigProvider,
+    getGameConfig,
+    getLatestGameConfig,
+} from "../gameConfigs/Provider.ts";
+import { init as initGameConfigGateway } from "../gameConfigs/Gateway.ts";
+import {
+    init as initGhFactory,
+    getTwWarClass,
+    getMeWarClass,
+} from "../gameHelpers/GhFactory.ts";
 import { getDict } from "../gamePanels/Dict.ts";
-import { closeAllPanelsExcept, openPanel } from "../gamePanels/Manager.ts";
-import { init as GmModelGmProxyInit } from "../gm/model/GmProxy.ts";
-import { init as HalfwayReplayWarModelHrwModelInit, unloadWar, loadWar, getWar } from "../halfwayReplayWar/model/HrwModel.ts";
+import {
+    closeAllPanelsExcept,
+    openPanel,
+} from "../gamePanels/Manager.ts";
+import { init as initGmProxy } from "../gm/model/GmProxy.ts";
+import {
+    init as initHrwModel,
+    unloadWar as unloadHrwModelWar,
+    loadWar as loadHrwModelWar,
+    getWar as getHrwModelWar,
+} from "../halfwayReplayWar/model/HrwModel.ts";
 import { HrwWar } from "../halfwayReplayWar/model/HrwWar.ts";
-import { init as HelpersCompatibilityInit } from "./Compatibility.ts";
+import { init as initCompatibility } from "./Compatibility.ts";
 import * as HelpersGameFlow from "./GameFlow.ts";
-import { getExisted, newError } from "./Misc.ts";
-import { init as KeyboardKbManagerInit } from "../keyboard/KbManager.ts";
+import {
+    getExisted,
+    newError,
+} from "./Misc.ts";
+import { init as initKbManager } from "../keyboard/KbManager.ts";
 import { CommonText } from "../lang/CommonText.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
-import { init as LangUtilsInit, getText, getErrorText, getLanguageText } from "../lang/Utils.ts";
-import { init as LeaderboardModelLeaderboardProxyInit } from "../leaderboard/model/LeaderboardProxy.ts";
-import { init as LocalDataDeprecatedStorageInit } from "../localData/DeprecatedStorage.ts";
-import { init as LocalDataStorage2Init, getStageScale, getScreenOrientation } from "../localData/Storage.ts";
-import { init as MailModelMailProxyInit } from "../mail/model/MailProxy.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../lang/Constants.ts";
+import {
+    init as initLang,
+    getText,
+    getErrorText,
+    getLanguageText,
+} from "../lang/Utils.ts";
+import { init as initLeaderboardProxy } from "../leaderboard/model/LeaderboardProxy.ts";
+import { init as initDeprecatedStorage } from "../localData/DeprecatedStorage.ts";
+import {
+    init as initStorage,
+    getStageScale,
+    getScreenOrientation,
+} from "../localData/Storage.ts";
+import { init as initMailProxy } from "../mail/model/MailProxy.ts";
 import { MeDrawer } from "../mapEditor/model/MeDrawer.ts";
-import { reviseInstanceWarRuleForAi, getWarData, resetData } from "../mapEditor/model/MeMfwModel.ts";
 import {
-    init as MapEditorModelMeModelInit,
-    unloadWar as MapEditorModelMeModelUnloadWar,
-    loadWar as MapEditorModelMeModelLoadWar,
+    reviseInstanceWarRuleForAi,
+    getWarData as getMeMfwModelWarData,
+    resetData as resetMeMfwModelData,
+} from "../mapEditor/model/MeMfwModel.ts";
+import {
+    init as initMeModel,
+    unloadWar as unloadMeModelWar,
+    loadWar as loadMeModelWar,
     getMapEditorData,
-    getWar as MapEditorModelMeModelGetWar,
+    getWar as getMeModelWar,
 } from "../mapEditor/model/MeModel.ts";
-import { init as MapEditorModelMeProxyInit } from "../mapEditor/model/MeProxy.ts";
+import { init as initMeProxy } from "../mapEditor/model/MeProxy.ts";
 import {
-    getWarData as MapEditorModelMeSimModelGetWarData,
-    resetData as MapEditorModelMeSimModelResetData,
+    getWarData as getMeSimModelWarData,
+    resetData as resetMeSimModelData,
 } from "../mapEditor/model/MeSimModel.ts";
 import { MeWar } from "../mapEditor/model/MeWar.ts";
-import { init as MultiCustomRoomModelMcrProxyInit } from "../multiCustomRoom/model/McrProxy.ts";
+import { init as initMcrProxy } from "../multiCustomRoom/model/McrProxy.ts";
 import { McwWar } from "../multiCustomWar/model/McwWar.ts";
-import { init as MultiFreeRoomModelMfrProxyInit } from "../multiFreeRoom/model/MfrProxy.ts";
+import { init as initMfrProxy } from "../multiFreeRoom/model/MfrProxy.ts";
 import { MfrRoomCreator } from "../multiFreeRoom/model/MfrRoomCreator.ts";
 import { MfwWar } from "../multiFreeWar/model/MfwWar.ts";
-import { init as MultiMatchRoomModelMmrProxyInit } from "../multiMatchRoom/model/MmrProxy.ts";
+import { init as initMmrProxy } from "../multiMatchRoom/model/MmrProxy.ts";
 import { MmwWar } from "../multiMatchWar/model/MmwWar.ts";
 import type { IMpwWar } from "../multiPlayerWar/interface/IMpwWar.ts";
 import {
-    init as MultiPlayerWarModelMpwModelInit,
-    unloadWar as MultiPlayerWarModelMpwModelUnloadWar,
-    loadWar as MultiPlayerWarModelMpwModelLoadWar,
-    getWar as MultiPlayerWarModelMpwModelGetWar,
+    init as initMpwModel,
+    unloadWar as unloadMpwModelWar,
+    loadWar as loadMpwModelWar,
+    getWar as getMpwModelWar,
 } from "../multiPlayerWar/model/MpwModel.ts";
-import { init as MultiPlayerWarModelMpwProxyInit, reqMpwCommonSyncWar } from "../multiPlayerWar/model/MpwProxy.ts";
+import {
+    init as initMpwProxy,
+    reqMpwCommonSyncWar,
+} from "../multiPlayerWar/model/MpwProxy.ts";
 import { MpwWar } from "../multiPlayerWar/model/MpwWar.ts";
-import { init as MultiRankRoomModelMrrProxyInit } from "../multiRankRoom/model/MrrProxy.ts";
+import { init as initMrrProxy } from "../multiRankRoom/model/MrrProxy.ts";
 import { MrwWar } from "../multiRankWar/model/MrwWar.ts";
-import { checkAndOverrideGameVersion, addListeners, init as NetworksManagerInit } from "../networks/Manager.ts";
+import {
+    checkAndOverrideGameVersion,
+    addListeners,
+    init as initNetworks,
+} from "../networks/Manager.ts";
 import { MessageCodes } from "../networks/MessageCodes.ts";
-import { init as NormalMapModelNormalMapModelInit } from "../normalMap/model/NormalMapModel.ts";
-import { init as NormalMapModelNormalMapProxyInit } from "../normalMap/model/NormalMapProxy.ts";
+import { init as initNormalMapModel } from "../normalMap/model/NormalMapModel.ts";
+import { init as initNormalMapProxy } from "../normalMap/model/NormalMapProxy.ts";
 import { addEventListeners } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { Player } from "../players/Player.ts";
@@ -98,41 +149,51 @@ import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMar
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { IRwWarBase } from "../replayWar/interface/IRwWarBase.ts";
 import {
-    init as ReplayWarModelRwModelInit,
-    unloadWar as ReplayWarModelRwModelUnloadWar,
-    loadWar as ReplayWarModelRwModelLoadWar,
-    getWar as ReplayWarModelRwModelGetWar,
+    init as initRwModel,
+    unloadWar as unloadRwModelWar,
+    loadWar as loadRwModelWar,
+    getWar as getRwModelWar,
 } from "../replayWar/model/RwModel.ts";
-import { init as ReplayWarModelRwProxyInit } from "../replayWar/model/RwProxy.ts";
+import { init as initRwProxy } from "../replayWar/model/RwProxy.ts";
 import { RwWar } from "../replayWar/model/RwWar.ts";
 import { RwWarBase } from "../replayWar/model/RwWarBase.ts";
 import type { OpenData } from "../replayWar/view/RwReplayListPanel.ts";
-import { init as ResManager2Init, loadMainRes, checkIsLoadedMainResource } from "../ResManager.ts";
+import {
+    init as initResManager,
+    loadMainRes,
+    checkIsLoadedMainResource,
+} from "../ResManager.ts";
 import { ScwWar } from "../singleCustomWar/model/ScwWar.ts";
 import { SfwWar } from "../singleFreeWar/model/SfwWar.ts";
-import { init as SinglePlayerModeModelSpmModelInit } from "../singlePlayerMode/model/SpmModel.ts";
-import { init as SinglePlayerModeModelSpmProxyInit } from "../singlePlayerMode/model/SpmProxy.ts";
+import { init as initSpmModel } from "../singlePlayerMode/model/SpmModel.ts";
+import { init as initSpmProxy } from "../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../singlePlayerWar/interface/ISpwWar.ts";
 import {
-    init as SinglePlayerWarModelSpwModelInit,
-    unloadWar as SinglePlayerWarModelSpwModelUnloadWar,
-    loadWar as SinglePlayerWarModelSpwModelLoadWar,
+    init as initSpwModel,
+    unloadWar as unloadSpwModelWar,
+    loadWar as loadSpwModelWar,
     checkAndHandleAutoActionsAndRobotRecursively,
-    getWar as SinglePlayerWarModelSpwModelGetWar,
+    getWar as getSpwModelWar,
 } from "../singlePlayerWar/model/SpwModel.ts";
 import { SpwRetractManager } from "../singlePlayerWar/model/SpwRetractManager.ts";
 import { SpwWar } from "../singlePlayerWar/model/SpwWar.ts";
 import { SrwWar } from "../singleRankWar/model/SrwWar.ts";
-import { playBgm, playCoBgmWithWar } from "../sounds/SoundPlayer.ts";
-import { init as StagesStageManagerInit, setStageScale } from "../stages/StageManager.ts";
+import {
+    playBgm,
+    playCoBgmWithWar,
+} from "../sounds/SoundPlayer.ts";
+import {
+    init as initStageManager,
+    setStageScale,
+} from "../stages/StageManager.ts";
 import { TaskObjectiveManager } from "../taskObjectives/TaskObjectiveManager.ts";
 import { TwWar } from "../testWar/model/TwWar.ts";
 import { Tile } from "../tiles/Tile.ts";
 import { TileMap } from "../tiles/TileMap.ts";
 import { TileMapView } from "../tiles/TileMapView.ts";
 import { TileView } from "../tiles/TileView.ts";
-import { init as TimerTimerModelInit } from "../timer/TimerModel.ts";
-import { init as TimerTimerProxyInit } from "../timer/TimerProxy.ts";
+import { init as initTimerModel } from "../timer/TimerModel.ts";
+import { init as initTimerProxy } from "../timer/TimerProxy.ts";
 import { TurnManager } from "../turns/TurnManager.ts";
 import { UiButton } from "../ui/components/UiButton.ts";
 import { UiCoInfo } from "../ui/components/UiCoInfo.ts";
@@ -161,15 +222,15 @@ import { UiTileView } from "../ui/components/UiTileView.ts";
 import { UiUnitView } from "../ui/components/UiUnitView.ts";
 import { UiZoomableComponent } from "../ui/components/UiZoomableComponent.ts";
 import { UiZoomableMap } from "../ui/components/UiZoomableMap.ts";
-import { init as UiUtilsUiFactoryInit } from "../ui/utils/UiFactory.ts";
-import { init as UiUtilsUiSizerHelpersInit } from "../ui/utils/UiSizerHelpers.ts";
+import { init as initUiFactory } from "../ui/utils/UiFactory.ts";
+import { init as initUiSizerHelpers } from "../ui/utils/UiSizerHelpers.ts";
 import { Unit } from "../units/Unit.ts";
 import { UnitMap } from "../units/UnitMap.ts";
 import { UnitMapView } from "../units/UnitMapView.ts";
 import { UnitView } from "../units/UnitView.ts";
-import { Common as UsersConstantsCommon } from "../users/Constants.ts";
+import { Common as UsersCommon } from "../users/Constants.ts";
 import {
-    init as UsersModelInit,
+    init as initModel,
     getSelfSettingsBgmCodeForLobby,
     getSelfSettingsCoBgmCodeArray,
     getSelfSettingsBgmCodeForMapEditor,
@@ -179,14 +240,18 @@ import {
     getSelfGuestUserId,
     updateOnMsgUserLogout,
 } from "../users/Model.ts";
-import { init as UsersProxyInit, reqLogin, reqUserLoginAsGuest } from "../users/Proxy.ts";
+import {
+    init as initUsersProxy,
+    reqLogin,
+    reqUserLoginAsGuest,
+} from "../users/Proxy.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { Stage } from "../vendor/egret/Egret.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
-import { init as WatchWarModelWwProxyInit } from "../watchWar/model/WwProxy.ts";
+import { init as initWwProxy } from "../watchWar/model/WwProxy.ts";
 import { Manager } from "../weathers/Manager.ts";
 import { View } from "../weathers/View.ts";
-import {SyncRequestTypeId} from "../wars/Constants.ts";
+import { SyncRequestTypeId } from "../wars/Constants.ts";
 
 const _NET_EVENTS = [
     { msgCode: MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },
@@ -258,12 +323,12 @@ function bootUpTest(): void {
 async function doStartGame(stage: Stage): Promise<void> {
     initListenerForWindowOnError();
 
-    KeyboardKbManagerInit();
-    HelpersCompatibilityInit();
+    initKbManager();
+    initCompatibility();
     addListeners(_NET_EVENTS);
     addEventListeners(_NOTIFY_EVENTS, HelpersGameFlow);
-    UiUtilsUiSizerHelpersInit();
-    UiUtilsUiFactoryInit({
+    initUiSizerHelpers();
+    initUiFactory({
         uiButton            : UiButton,
         uiCoInfo            : UiCoInfo,
         uiContainer         : UiContainer,
@@ -292,7 +357,7 @@ async function doStartGame(stage: Stage): Promise<void> {
         uiZoomableComponent : UiZoomableComponent,
         uiZoomableMap       : UiZoomableMap,
     });
-    GameHelpersGhFactoryInit({
+    initGhFactory({
         actionPlanner               : ActionPlanner,
         actionPlannerView           : ActionPlannerView,
         bwCommonSettingManager      : BwCommonSettingManager,
@@ -309,9 +374,9 @@ async function doStartGame(stage: Stage): Promise<void> {
         bwWeatherManager            : Manager,
         bwWeatherManagerView        : View,
 
-        atwWar                      : War,
+        atwWar                      : AutoTourneysWar,
 
-        cawWar                      : CampaignsWarsWar,
+        cawWar                      : CampaignsWar,
 
         ccwWar                      : CcwWar,
 
@@ -366,11 +431,11 @@ async function doStartGame(stage: Stage): Promise<void> {
         unitMapView                 : UnitMapView,
         unitView                    : UnitView,
     });
-    StagesStageManagerInit(stage);
+    initStageManager(stage);
     await Promise.all([
-        LocalDataStorage2Init(),
-        LocalDataDeprecatedStorageInit(),
-        ResManager2Init(),
+        initStorage(),
+        initDeprecatedStorage(),
+        initResManager(),
     ]);
     setStageScale(getStageScale());
     try {
@@ -379,44 +444,44 @@ async function doStartGame(stage: Stage): Promise<void> {
         // nothing to do
     }
 
-    LangUtilsInit();
-    GameConfigGcProxyInit();
-    GameConfigGcModelInit();
-    NetworksManagerInit();
-    MultiPlayerWarModelMpwProxyInit();
-    MultiPlayerWarModelMpwModelInit();
-    TimerTimerProxyInit();
-    TimerTimerModelInit();
-    UsersProxyInit();
-    UsersModelInit();
-    NormalMapModelNormalMapProxyInit();
-    NormalMapModelNormalMapModelInit();
-    MultiCustomRoomModelMcrProxyInit();
-    MultiRankRoomModelMrrProxyInit();
-    MultiMatchRoomModelMmrProxyInit();
-    MultiFreeRoomModelMfrProxyInit();
-    CoopCustomRoomModelCcrProxyInit();
-    WatchWarModelWwProxyInit();
-    ReplayWarModelRwProxyInit();
-    ReplayWarModelRwModelInit();
-    HalfwayReplayWarModelHrwModelInit();
-    SinglePlayerModeModelSpmProxyInit();
-    SinglePlayerModeModelSpmModelInit();
-    SinglePlayerWarModelSpwModelInit();
-    MapEditorModelMeProxyInit();
-    MapEditorModelMeModelInit();
-    ChatProxyInit();
-    CommonModelCommonProxyInit();
-    CommonModelCommonModelInit();
-    BroadcastsGatewayInit();
-    ChangeLogModelChangeLogProxyInit();
-    MailModelMailProxyInit();
-    LeaderboardModelLeaderboardProxyInit();
-    init();
-    AutoTourneysRoomsGatewayInit();
-    CampaignsMainsGatewayInit();
-    CampaignsManagementsGatewayInit();
-    GmModelGmProxyInit();
+    initLang();
+    initGameConfigGateway();
+    initGameConfigProvider();
+    initNetworks();
+    initMpwProxy();
+    initMpwModel();
+    initTimerProxy();
+    initTimerModel();
+    initUsersProxy();
+    initModel();
+    initNormalMapProxy();
+    initNormalMapModel();
+    initMcrProxy();
+    initMrrProxy();
+    initMmrProxy();
+    initMfrProxy();
+    initCcrProxy();
+    initWwProxy();
+    initRwProxy();
+    initRwModel();
+    initHrwModel();
+    initSpmProxy();
+    initSpmModel();
+    initSpwModel();
+    initMeProxy();
+    initMeModel();
+    initProxy();
+    initCommonProxy();
+    initCommonModel();
+    initBroadcasts();
+    initChangeLogs();
+    initMailProxy();
+    initLeaderboardProxy();
+    initAutoTourneys();
+    initRoomsAutoTourneys();
+    initCampaigns();
+    initManagements();
+    initGmProxy();
 
     _removeLoadingDom();
     gotoLogin();
@@ -426,11 +491,11 @@ async function doStartGame(stage: Stage): Promise<void> {
 }
 
 export function gotoLogin(): void {
-    MultiPlayerWarModelMpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    unloadMpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().UserLoginBackgroundPanel,
@@ -446,11 +511,11 @@ export function gotoLogin(): void {
 export function gotoLobby(): void {
     _hasOnceWentToLobby = true;
 
-    MultiPlayerWarModelMpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    unloadMpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
     closeAllPanelsExcept([
         getDict().BroadcastPanel,
         getDict().LobbyBackgroundPanel,
@@ -470,11 +535,11 @@ export function gotoLobby(): void {
 }
 
 export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
-    const war = await MultiPlayerWarModelMpwModelLoadWar(data);
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    const war = await loadMpwModelWar(data);
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BwBackgroundPanel,
@@ -496,11 +561,11 @@ export async function gotoMultiPlayerWar(data: SerialWar): Promise<void> {
     });
 }
 export async function gotoReplayWar(warData: SerialWar, replayId: number): Promise<void> {
-    const war = await ReplayWarModelRwModelLoadWar(warData, replayId);
-    unloadWar();
-    MultiPlayerWarModelMpwModelUnloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    const war = await loadRwModelWar(warData, replayId);
+    unloadHrwModelWar();
+    unloadMpwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BwBackgroundPanel,
@@ -521,11 +586,11 @@ export async function gotoReplayWar(warData: SerialWar, replayId: number): Promi
     });
 }
 export async function gotoHalfwayReplayWar(warData: SerialWar): Promise<void> {
-    const war = await loadWar(warData);
-    ReplayWarModelRwModelUnloadWar();
-    MultiPlayerWarModelMpwModelUnloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    const war = await loadHrwModelWar(warData);
+    unloadRwModelWar();
+    unloadMpwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BwBackgroundPanel,
@@ -551,13 +616,13 @@ export async function gotoSinglePlayerWar({ warData, slotIndex, slotExtraData, o
     warData             : SerialWar;
     overridingBgmCode?  : number | null;
 }): Promise<void> {
-    const war = await SinglePlayerWarModelSpwModelLoadWar({ warData, slotIndex, slotExtraData });
+    const war = await loadSpwModelWar({ warData, slotIndex, slotExtraData });
     war.setOverridingBgmCode(overridingBgmCode ?? null);
 
-    MultiPlayerWarModelMpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    MapEditorModelMeModelUnloadWar();
+    unloadMpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BwBackgroundPanel,
@@ -587,17 +652,17 @@ export async function gotoMapEditorWar({ mapRawData, slotIndex, isReview, srcNor
     srcNormalMapIdForAddEvent   : number | null;
     gridMarkData                : Undefinable<GridMarkData>;
  }): Promise<void> {
-    const war = await MapEditorModelMeModelLoadWar({
+    const war = await loadMeModelWar({
         mapRawData                  : mapRawData,
         slotIndex                   : slotIndex,
         isReview                    : isReview,
         srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
         gridMarkData                : gridMarkData,
     });
-    MultiPlayerWarModelMpwModelUnloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
+    unloadMpwModelWar();
+    unloadSpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
 
     closeAllPanelsExcept([
         getDict().BwBackgroundPanel,
@@ -726,11 +791,11 @@ export function gotoMfrRoomInfoPanel(roomId: number): void {
 }
 
 export async function gotoMfrCreateSettingsPanel(warData: SerialWar): Promise<void> {
-    MultiPlayerWarModelMpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    unloadMpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BroadcastPanel,
@@ -807,7 +872,7 @@ function _onMsgUserLogin(): void {
     if (_checkCanFirstGoToLobby()) {
         gotoLobby();
     } else {
-        const mcwWar = MultiPlayerWarModelMpwModelGetWar();
+        const mcwWar = getMpwModelWar();
         if (mcwWar) {
             reqMpwCommonSyncWar(mcwWar, SyncRequestTypeId.ReconnectionRequest);
         }
@@ -847,11 +912,11 @@ function _removeLoadingDom(): void {
 }
 
 export function unloadAllWarsAndOpenCommonPanels(): void {
-    MultiPlayerWarModelMpwModelUnloadWar();
-    ReplayWarModelRwModelUnloadWar();
-    unloadWar();
-    SinglePlayerWarModelSpwModelUnloadWar();
-    MapEditorModelMeModelUnloadWar();
+    unloadMpwModelWar();
+    unloadRwModelWar();
+    unloadHrwModelWar();
+    unloadSpwModelWar();
+    unloadMeModelWar();
 
     closeAllPanelsExcept([
         getDict().BroadcastPanel,
@@ -875,11 +940,11 @@ function _gotoSpmWarListPanel(): void {
 }
 
 export function getOngoingWar(): Undefinable<IBwWar> {
-    return (MultiPlayerWarModelMpwModelGetWar())
-        ?? (ReplayWarModelRwModelGetWar())
-        ?? (getWar())
-        ?? (SinglePlayerWarModelSpwModelGetWar())
-        ?? (MapEditorModelMeModelGetWar());
+    return (getMpwModelWar())
+        ?? (getRwModelWar())
+        ?? (getHrwModelWar())
+        ?? (getSpwModelWar())
+        ?? (getMeModelWar());
 }
 
 function initListenerForWindowOnError(): void {
@@ -905,15 +970,15 @@ function showErrorText(text: string): void {
         content: text,
     });
     reqChatAddMessage(
-        text.substring(0, Common.MaxErrorLength),
+        text.substring(0, ChatCommon.MaxErrorLength),
         ToCategoryId.Private,
-        UsersConstantsCommon.AdminUserId,
+        UsersCommon.AdminUserId,
     );
 }
 
 export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkData: Undefinable<GridMarkData>): Promise<void> {
     const callbackForChosenWarRule = async () => {
-        const warData   = MapEditorModelMeSimModelGetWarData();
+        const warData   = getMeSimModelWarData();
         const errorCode = new (getTwWarClass())().getErrorCodeForInitForSfw(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
         if (errorCode) {
             show(getErrorText(errorCode));
@@ -948,7 +1013,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
 
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
-        MapEditorModelMeSimModelResetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(templateWarRuleArray[0]));
+        resetMeSimModelData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(templateWarRuleArray[0]));
         war.stopRunning();
         callbackForChosenWarRule();
     } else {
@@ -961,7 +1026,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
             callbackOnConfirm       : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
-                    MapEditorModelMeSimModelResetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
+                    resetMeSimModelData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
                     war.stopRunning();
                     callbackForChosenWarRule();
                 }
@@ -972,7 +1037,7 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
 export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promise<void> {
     const callbackForChosenWarRule = async () => {
         reviseInstanceWarRuleForAi();
-        const warData   = getWarData();
+        const warData   = getMeMfwModelWarData();
         const errorCode = new (getTwWarClass())().getErrorCodeForInitForMfw(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
         if (errorCode) {
             show(getErrorText(errorCode));
@@ -996,7 +1061,7 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
 
     const templateWarRuleArray = mapRawData.getTemplateWarRuleArray();
     if (templateWarRuleArray.length <= 1) {
-        resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(templateWarRuleArray[0]));
+        resetMeMfwModelData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(templateWarRuleArray[0]));
         war.stopRunning();
         callbackForChosenWarRule();
     } else {
@@ -1009,7 +1074,7 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
             callbackOnConfirm       : ruleId => {
                 const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
-                    resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
+                    resetMeMfwModelData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
                     war.stopRunning();
                     callbackForChosenWarRule();
                 }

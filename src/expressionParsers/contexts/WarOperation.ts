@@ -1,15 +1,24 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
 import { Position } from "../results/Position.ts";
 import { PositionArray } from "../results/PositionArray.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { WarOperation as ExpressionParsersResultsWarOperation } from "../results/WarOperation.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type { WarOperation as ResultsWarOperation } from "../results/WarOperation.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -89,7 +98,7 @@ export class WarOperation extends Base {
     private _woContainer    : WoContainer | null;
     private _contextWar     : War | null = null;
 
-    public constructor(result: ExpressionParsersResultsWarOperation) {
+    public constructor(result: ResultsWarOperation) {
         super(result.war);
 
         this._woContainer = result.woContainer;
@@ -99,13 +108,13 @@ export class WarOperation extends Base {
         return ContextType.WarOperation;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const woContainer   = this._woContainer;
         const war           = this.getWar();
         switch (identifierName) {
             case WarOperation.VnId                     : return new Num(war, woContainer ? woContainer.getOperationId() ?? 0 : -2);
             case WarOperation.VnType                   : return new Num(war, woContainer ? getExisted(getWarOperationType(woContainer)) : -2);
-            case WarOperation.VnWar                    : return new ExpressionParsersResultsWar(war);
+            case WarOperation.VnWar                    : return new ResultsWar(war);
             case WarOperation.VnTargetWarEventId       : return this._resolveTargetWarEventId();
             case WarOperation.VnTargetPlayerIndex      : return this._resolveTargetPlayerIndex();
             case WarOperation.VnAgreeToDraw            : return this._resolveAgreeToDraw();
@@ -715,7 +724,7 @@ export class WarOperation extends Base {
         return new NumArray(war, []);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
             default                         : return (this._contextWar ??= new War(war)).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);

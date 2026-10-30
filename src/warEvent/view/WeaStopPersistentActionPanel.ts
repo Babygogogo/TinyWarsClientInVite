@@ -3,8 +3,14 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -18,7 +24,11 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { checkIsPersistentAction, getBriefDescForAction, getErrorTipForAction } from "../../warEvents/actions/utils/Common.ts";
+import {
+    checkIsPersistentAction,
+    getBriefDescForAction,
+    getErrorTipForAction,
+} from "../../warEvents/actions/utils/Common.ts";
 import { getAction } from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {

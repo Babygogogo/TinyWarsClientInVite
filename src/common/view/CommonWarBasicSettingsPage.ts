@@ -1,12 +1,21 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { Incremental, TimerTypeId } from "../../bootTimers/Constants.ts";
+import {
+    Incremental,
+    TimerTypeId,
+} from "../../bootTimers/Constants.ts";
 import { show } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getBootTimerTypeName,
     getFormattedText,
@@ -18,11 +27,14 @@ import {
     getWeatherFullDesc,
     getWeatherName,
 } from "../../lang/Utils.ts";
-import { getMapNameInCurrentLanguage, getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getMapNameInCurrentLanguage,
+    getRawData,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import { Common as SinglePlayerWarConstants } from "../../singlePlayerWars/Constants.ts";
+import { Common as SinglePlayerWarsCommon } from "../../singlePlayerWars/Constants.ts";
 import { AllThemeTypeIdArray } from "../../tiles/constants/Common.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -34,9 +46,12 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { Common } from "../../warOperations/Constants.ts";
+import { Common as WarOperationsCommon } from "../../warOperations/Constants.ts";
 import { getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-import { BasicSettingsTypeId, Misc } from "../../wars/Constants.ts";
+import {
+    BasicSettingsTypeId,
+    Misc,
+} from "../../wars/Constants.ts";
 
 export type OpenData = {
     dataArrayForListSettings    : DataForSettingsRenderer[];
@@ -543,8 +558,8 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
             minValue     : minValueForTurnsLimit,
             maxValue     : maxValueForTurnsLimit,
             callback     : newTurnsLimit => {
-                const minValueForWarOperationsLimit = Common.MinLimit;
-                const maxValueForWarOperationsLimit = Common.MaxLimit;
+                const minValueForWarOperationsLimit = WarOperationsCommon.MinLimit;
+                const maxValueForWarOperationsLimit = WarOperationsCommon.MaxLimit;
                 openPanel(getDict().CommonInputIntegerPanel, {
                     getTitle     : () => getText(TextType.B0986),
                     currentValue : parseInt(textArray[1]),
@@ -645,7 +660,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         openPanel(getDict().CommonInputPanel, {
             title        : getText(TextType.B0605),
             currentValue : `${currentValue || ``}`,
-            maxChars     : SinglePlayerWarConstants.MaxSaveSlotCommentLength,
+            maxChars     : SinglePlayerWarsCommon.MaxSaveSlotCommentLength,
             charRestrict : null,
             tips         : null,
             callback     : panel => {

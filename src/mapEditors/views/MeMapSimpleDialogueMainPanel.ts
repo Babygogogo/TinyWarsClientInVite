@@ -1,14 +1,37 @@
-import { Common, SmallDialogueSideId } from "../../dialogues/Constants.ts";
-import { getErrorTip, getErrorTipForDataForDialogue } from "../../dialogues/utils/MapSmallDialogue.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    Common,
+    SmallDialogueSideId,
+} from "../../dialogues/Constants.ts";
+import {
+    getErrorTip,
+    getErrorTipForDataForDialogue,
+} from "../../dialogues/utils/MapSmallDialogue.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList, createRange } from "../../helpers/Collection.ts";
+import {
+    deleteElementFromList,
+    createRange,
+} from "../../helpers/Collection.ts";
 import { getCoEye } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getJoinedShortLanguageText, getMapSimpleDialogueSideName } from "../../lang/Utils.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getJoinedShortLanguageText,
+    getMapSimpleDialogueSideName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

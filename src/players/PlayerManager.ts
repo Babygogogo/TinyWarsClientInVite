@@ -10,9 +10,15 @@ import {
     getSpwWarClass,
     getTwWarClass,
 } from "../gameHelpers/GhFactory.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { createDefaultISerialPlayer } from "../mapEditor/model/MeHelpers.ts";
-import { PlayerIndex, AliveStateId } from "./Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "./Constants.ts";
 import type { IPlayer } from "./IPlayer.ts";
 import type { IPlayerManager } from "./IPlayerManager.ts";
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";

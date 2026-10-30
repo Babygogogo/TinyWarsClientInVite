@@ -2,12 +2,27 @@ import { StateId } from "../../actionPlanners/Constants.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
 import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import { getTileViewClass, getUnitClass, getRwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getTileViewClass,
+    getUnitClass,
+    getRwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileName } from "../../lang/Utils.ts";
-import type { BwCursorGridIndexChanged, BwTileChanged, BwTileBuffChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileName,
+} from "../../lang/Utils.ts";
+import type {
+    BwCursorGridIndexChanged,
+    BwTileChanged,
+    BwTileBuffChanged,
+    BwUnitChanged,
+} from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

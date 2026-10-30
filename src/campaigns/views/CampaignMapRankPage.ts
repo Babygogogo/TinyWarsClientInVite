@@ -3,7 +3,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -17,7 +20,10 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfCawHighScoreInfo, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    getSelfCawHighScoreInfo,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
 
 export type OpenData = {
     campaignId      : number;

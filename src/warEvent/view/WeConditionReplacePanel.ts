@@ -4,7 +4,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList2 } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -19,7 +22,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
-import { getNode, getCondition } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    getNode,
+    getCondition,
+} from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
     gameConfig      : GameConfig;

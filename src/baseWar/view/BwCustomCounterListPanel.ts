@@ -1,7 +1,10 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { Constants } from "../../customCounters/Constants.ts";
-import { getScwWarClass, getSfwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getScwWarClass,
+    getSfwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";

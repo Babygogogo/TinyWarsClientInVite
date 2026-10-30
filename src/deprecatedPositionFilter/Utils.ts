@@ -5,14 +5,18 @@ import type { PositionFilter } from "../auxiliaryTypes/PositionFilter.ts";
 import { getNonNullElements } from "../helpers/Collection.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
-import { getFormattedText, getComparatorName, getText } from "../lang/Utils.ts";
+import {
+    getFormattedText,
+    getComparatorName,
+    getText,
+} from "../lang/Utils.ts";
 import { checkIsValidLocationIdSubset } from "../locations/Utils.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { ITileMap } from "../tiles/ITileMap.ts";
 import { Equal0 } from "../valueAndComparators/Constants.ts";
 import {
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as checkIsValidValueAndComparator,
+    checkIsMeet as checkIsMeetValueAndComparator,
 } from "../valueAndComparators/Utils.ts";
 
 export function checkIsValid(data: PositionFilter, mapSize: MapSize): boolean {
@@ -34,14 +38,14 @@ export function checkIsValid(data: PositionFilter, mapSize: MapSize): boolean {
 
     {
         const v = data.getConLocationMinDistance();
-        if ((v != null) && (!ValueAndComparatorsUtilsCheckIsValid(v))) {
+        if ((v != null) && (!checkIsValidValueAndComparator(v))) {
             return false;
         }
     }
 
     {
         const v = data.getConGridIndexMinDistance();
-        if ((v != null) && (!ValueAndComparatorsUtilsCheckIsValid(v))) {
+        if ((v != null) && (!checkIsValidValueAndComparator(v))) {
             return false;
         }
     }
@@ -68,7 +72,7 @@ export function checkIsMeet(data: PositionFilter, tile: ITile): boolean {
     {
         const conGridIndexArray = data.getConGridIndexArray().map(v => getExisted(GridIndex.convertGridIndex(v)));
         if ((conGridIndexArray?.length)                                                                                                                     &&
-            (!ValueAndComparatorsUtilsCheckIsMeet(data.getConGridIndexMinDistance() ?? Equal0, gridIndex.getMinDistance(conGridIndexArray)))
+            (!checkIsMeetValueAndComparator(data.getConGridIndexMinDistance() ?? Equal0, gridIndex.getMinDistance(conGridIndexArray)))
         ) {
             return false;
         }
@@ -79,7 +83,7 @@ export function checkIsMeet(data: PositionFilter, tile: ITile): boolean {
         const conGridIndexListForLocations    = conLocationIdArray?.length ? tile.getWar().getTileMap().getGridIndexListWithAnyLocationId(conLocationIdArray) : null;
         if (conGridIndexListForLocations != null) {
             if ((conGridIndexListForLocations.length <= 0)                                                                                                              ||
-                (!ValueAndComparatorsUtilsCheckIsMeet(data.getConLocationMinDistance() ?? Equal0, gridIndex.getMinDistance(conGridIndexListForLocations)))
+                (!checkIsMeetValueAndComparator(data.getConLocationMinDistance() ?? Equal0, gridIndex.getMinDistance(conGridIndexListForLocations)))
             ) {
                 return false;
             }
@@ -205,14 +209,14 @@ export function getErrorTip(data: PositionFilter, mapSize: MapSize): string | nu
 
     {
         const conLocationMinDistance = data.getConLocationMinDistance();
-        if ((conLocationMinDistance != null) && (!ValueAndComparatorsUtilsCheckIsValid(conLocationMinDistance))) {
+        if ((conLocationMinDistance != null) && (!checkIsValidValueAndComparator(conLocationMinDistance))) {
             return getFormattedText(TextType.F0091, getText(TextType.B1062));
         }
     }
 
     {
         const conGridIndexMinDistance = data.getConGridIndexMinDistance();
-        if ((conGridIndexMinDistance != null) && (!ValueAndComparatorsUtilsCheckIsValid(conGridIndexMinDistance))) {
+        if ((conGridIndexMinDistance != null) && (!checkIsValidValueAndComparator(conGridIndexMinDistance))) {
             return getFormattedText(TextType.F0091, getText(TextType.B1063));
         }
     }
@@ -253,14 +257,14 @@ export function getMetGridIndexList(data: Undefinable<PositionFilter>, tileMap: 
             }
 
             if ((conGridIndexArray?.length)                                                                                 &&
-                (!ValueAndComparatorsUtilsCheckIsMeet(conGridIndexMinDistance, gridIndex.getMinDistance(conGridIndexArray)))
+                (!checkIsMeetValueAndComparator(conGridIndexMinDistance, gridIndex.getMinDistance(conGridIndexArray)))
             ) {
                 continue;
             }
 
             if (conGridIndexListForLocations != null) {
                 if ((conGridIndexListForLocations.length <= 0)                                                                          ||
-                    (!ValueAndComparatorsUtilsCheckIsMeet(conLocationMinDistance, gridIndex.getMinDistance(conGridIndexListForLocations)))
+                    (!checkIsMeetValueAndComparator(conLocationMinDistance, gridIndex.getMinDistance(conGridIndexListForLocations)))
                 ) {
                     continue;
                 }

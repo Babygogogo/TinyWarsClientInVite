@@ -2,9 +2,15 @@ import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
-import { IsNeedVisibility, getBestScoreAndAction } from "../Utils.ts";
+import {
+    IsNeedVisibility,
+    getBestScoreAndAction,
+} from "../Utils.ts";
 import { getEstimatedBattleInfo } from "../../damageCalculators/Utils.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import type { BattleDamageInfo } from "../../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { ITile } from "../../tiles/ITile.ts";
@@ -13,11 +19,7 @@ import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { checkIsUnitOnMapVisibleToTeam } from "../../visibilities/Utils.ts";
 
-type IBwUnit            = IUnit;
-type IBwTile            = ITile;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitAttack(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitAttack(commonParams: CommonParams, unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const minRange = unit.getMinAttackRange();
@@ -64,7 +66,7 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
     }
 
     const totalMoveCost = destinationNode.getTotalMoveCost();
-    const promiseArray  : Promise<GrScoreAndAction>[] = [];
+    const promiseArray  : Promise<ScoreAndAction>[] = [];
     for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: minRange, maxDistance: maxRange, mapSize: commonParams.getMapSize() })) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
         if ((IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
@@ -146,7 +148,7 @@ export async function getScoreAndActionUnitAttack(commonParams: CommonParams, un
 
 async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitGridIndex, battleDamageInfoArray }: {
     commonParams            : CommonParams;
-    focusUnit               : IBwUnit;
+    focusUnit               : IUnit;
     focusUnitGridIndex      : GridIndex;
     battleDamageInfoArray   : BattleDamageInfo[];
 }): Promise<number> {
@@ -157,8 +159,8 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
     const war                       = commonParams.getWar();
     const unitMap                   = war.getUnitMap();
     const tileMap                   = war.getTileMap();
-    const unitHpDict                = new Map<IBwUnit, number>();
-    const tileHpDict                = new Map<IBwTile, number>();
+    const unitHpDict                = new Map<IUnit, number>();
+    const tileHpDict                = new Map<ITile, number>();
     // const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 9999;
     // const scalerForEnemyDamage      = Math.pow(Math.max(1, unitValueRatio), 1) * 9999;
     const scalerForSelfDamage       = Math.pow(1 / Math.max(1, unitValueRatio), 1) * 5;

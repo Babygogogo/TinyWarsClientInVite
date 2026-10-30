@@ -3,13 +3,19 @@ import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { SkillTypeId } from "../../../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../../../coSkills/utils/Common.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoUnitUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoUnitUseCoSkill.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { getRevisedPath, checkIsPathDestinationOccupiedByOtherVisibleUnit } from "./Common.ts";
+import {
+    getRevisedPath,
+    checkIsPathDestinationOccupiedByOtherVisibleUnit,
+} from "./Common.ts";
 
 export function revise(war: IBwWar, rawAction: WoUnitUseCoSkill, requesterUserId: Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== PhaseCode.Main) {

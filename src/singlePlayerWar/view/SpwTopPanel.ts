@@ -4,28 +4,65 @@ import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { reqCampaignSaveWar } from "../../campaigns/mains/Gateway.ts";
 import { checkHasUnreadMessage } from "../../chat/Model.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getFinalSkinId } from "../../forceSkins/Utils.ts";
-import { getSfwWarClass, getScwWarClass, getSrwWarClass, getCawWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getSfwWarClass,
+    getScwWarClass,
+    getSrwWarClass,
+    getCawWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
-import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import type { BwCoIdChanged, BwPlayerFundChanged } from "../../notifications/DataTypes.ts";
+import type {
+    BwCoIdChanged,
+    BwPlayerFundChanged,
+} from "../../notifications/DataTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../players/Constants.ts";
+import type { S as SpmCreateSfwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import { getAvailableSlotIndex, getSlotFullData } from "../../singlePlayerMode/model/SpmModel.ts";
-import { reqSpmCreateSfw, reqSpmSaveScw, reqSpmSaveSfw, reqSpmSaveSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
+import {
+    getAvailableSlotIndex,
+    getSlotFullData,
+} from "../../singlePlayerMode/model/SpmModel.ts";
+import {
+    reqSpmCreateSfw,
+    reqSpmSaveScw,
+    reqSpmSaveSfw,
+    reqSpmSaveSrw,
+} from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
 import { checkAndHandleAutoActionsAndRobotRecursively } from "../model/SpwModel.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    playCoBgmWithWar,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -218,7 +255,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const data = e.data as S;
+        const data = e.data as SpmCreateSfwResponse;
         if (war.getSaveSlotIndex() == null) {
             war.setSaveSlotIndex(getExisted(data.getSlotIndex()));
 

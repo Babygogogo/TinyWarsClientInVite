@@ -3,15 +3,26 @@ import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTextForYesOrNo, getPlayerRuleHelpText, getPlayerRuleName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTextForYesOrNo,
+    getPlayerRuleHelpText,
+    getPlayerRuleName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { RuleTypeId } from "../../playerRules/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
-import { type DataForUiPlayerRuleRenderer, UiPlayerRuleRenderer } from "../../ui/components/UiPlayerRuleRenderer.ts";
+import {
+    type DataForUiPlayerRuleRenderer,
+    UiPlayerRuleRenderer,
+} from "../../ui/components/UiPlayerRuleRenderer.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";

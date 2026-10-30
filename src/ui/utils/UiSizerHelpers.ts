@@ -1,5 +1,11 @@
-import type { Size, Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { MaxValue, DegToRad } from "../../numbers/Constants.ts";
+import type {
+    Size,
+    Rectangle,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    MaxValue,
+    DegToRad,
+} from "../../numbers/Constants.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { getStage } from "../../stages/StageManager.ts";
 import { addTickCallback } from "../../timer/TimerModel.ts";
@@ -15,12 +21,11 @@ import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { getUiContainerClass } from "./UiFactory.ts";
 import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
-type IUiSizer                       = IUiComponent;
 export function init(): void {
     addTickCallback(applyAutoSizerInfoDict, -1);
 }
 
-export function loadSizerOptions(sizer: IUiSizer, skinAttrs: UiSkinAttrs): void {
+export function loadSizerOptions(sizer: IUiComponent, skinAttrs: UiSkinAttrs): void {
     const options = createSizerOptions({
         left                : skinAttrs?.left,
         right               : skinAttrs?.right,
@@ -145,7 +150,7 @@ export function addAutoSizerInfo(sizerInfo: IUiSizerInfo, isSizeChangedManually:
         AutoSizerInfoDict.set(sizerInfo, isSizeChangedManually);
     }
 }
-export function checkAndAddAutoSizerInfo(sizer: IUiSizer, isSizeChangedManually: boolean): void {
+export function checkAndAddAutoSizerInfo(sizer: IUiComponent, isSizeChangedManually: boolean): void {
     const sizerInfo = sizer.getSizerInfo();
     if (sizerInfo != null) {
         addAutoSizerInfo(sizerInfo, isSizeChangedManually);
@@ -262,7 +267,7 @@ function getParentSize(parent: DisplayObjectContainer | null | undefined): Parti
     // return { width: parent?.width, height: parent?.height };
 }
 function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOptions }: {
-    sizer           : IUiSizer;
+    sizer           : IUiComponent;
     parentWidth     : number | undefined;
     widthOptions    : UiSizerDimensionOptions | undefined;
     parentHeight    : number | undefined;
@@ -323,7 +328,7 @@ function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOpti
     }
 }
 function updatePosition({ sizer, parentWidth, widthOptions, parentHeight, heightOptions }: {
-    sizer           : IUiSizer;
+    sizer           : IUiComponent;
     parentWidth     : number | undefined;
     widthOptions    : UiSizerHorizontalAlignOptions | undefined;
     parentHeight    : number | undefined;

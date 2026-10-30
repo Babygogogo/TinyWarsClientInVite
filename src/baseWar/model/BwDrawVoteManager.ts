@@ -1,7 +1,10 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwDrawVoteManager } from "../interface/IBwDrawVoteManager.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";

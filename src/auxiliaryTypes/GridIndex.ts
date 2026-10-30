@@ -1,12 +1,19 @@
-import type { Undefinable, Point } from "./AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    Point,
+} from "./AuxiliaryTypes.ts";
 import type { MapSize } from "./MapSize.ts";
 import { AreaTypeId } from "../coSkills/Constants.ts";
 import { DirectionId } from "../geometries/Constants.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { createLazyFunc, newError, getExisted } from "../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { MaxValue } from "../numbers/Constants.ts";
 import { getValueInRange } from "../numbers/Utils.ts";
-import { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
+import { GridIndex as ProtoGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
@@ -23,7 +30,7 @@ export class GridIndex {
     private _x: number;
     private _y: number;
 
-    public static convertGridIndex(raw: Undefinable<ProtoSchemaCommonProtoStructureGridIndex>): GridIndex | null {
+    public static convertGridIndex(raw: Undefinable<ProtoGridIndex>): GridIndex | null {
         const x = raw?.getX();
         const y = raw?.getY();
         return ((x == null) || (y == null)) ? null : new GridIndex(x, y);
@@ -71,8 +78,8 @@ export class GridIndex {
         this._y = y;
     }
 
-    public toProto(): ProtoSchemaCommonProtoStructureGridIndex {
-        return ProtoSchemaCommonProtoStructureGridIndex.fromJson({ x: this.getX(), y: this.getY() });
+    public toProto(): ProtoGridIndex {
+        return ProtoGridIndex.fromJson({ x: this.getX(), y: this.getY() });
     }
     public getXY(): { x: number, y: number } {
         return { x: this.getX(), y: this.getY() };
@@ -124,7 +131,7 @@ export class GridIndex {
     public checkIsEqual(g2: GridIndex): boolean {
         return (this.getX() === g2.getX()) && (this.getY() === g2.getY());
     }
-    public checkIsEqual2(raw: Undefinable<ProtoSchemaCommonProtoStructureGridIndex>): boolean {
+    public checkIsEqual2(raw: Undefinable<ProtoGridIndex>): boolean {
         return (raw != null)
             && (this.getX() === raw.getX())
             && (this.getY() === raw.getY());

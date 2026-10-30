@@ -1,6 +1,9 @@
 import { getExisted } from "../helpers/Misc.ts";
 import { getShowWeatherAnimation } from "../localData/Storage.ts";
-import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import { sineInOut } from "../tween/Ease.ts";
@@ -10,7 +13,10 @@ import type { IUiComponent } from "../ui/interfaces/IUiComponent.ts";
 import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
 import { UiHorizontalAlign } from "../ui/types/UiHorizontalAlign.ts";
 import { UiVerticalAlign } from "../ui/types/UiVerticalAlign.ts";
-import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+} from "../ui/utils/UiFactory.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { DisplayObject } from "../vendor/egret/Egret.ts";
 import { AnimationType } from "./Constants.ts";

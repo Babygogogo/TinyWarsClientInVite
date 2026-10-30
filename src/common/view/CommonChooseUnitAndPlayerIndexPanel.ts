@@ -2,7 +2,10 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getSkinCircle } from "../../helpers/ImageSource.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getUnitName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

@@ -7,10 +7,7 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitRepairUnit(commonParams: CommonParams, focusUnit: IBwUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitRepairUnit(commonParams: CommonParams, focusUnit: IUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if (!focusUnit.getTemplateCfg().getCanRepairAdjacentTargetUnit()) {
@@ -20,7 +17,7 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: CommonParams
     const war         = commonParams.getWar();
     const unitMap     = war.getUnitMap();
     const playerIndex = focusUnit.getPlayerIndex();
-    const candidates  : GrScoreAndAction[] = [];
+    const candidates  : ScoreAndAction[] = [];
     for (const targetGridIndex of destination.getAdjacentGrids(commonParams.getMapSize())) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
         if ((targetUnit == null)                                                                        ||

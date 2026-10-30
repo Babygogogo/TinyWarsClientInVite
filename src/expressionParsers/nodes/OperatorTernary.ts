@@ -1,7 +1,10 @@
-import type { Base } from "../contexts/Base.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { getErrorTextForOperandType } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
@@ -22,12 +25,12 @@ const ValidOperandTypes = [
     ResultType.NumberArray,
 ];
 
-export class OperatorTernary extends ExpressionParsersNodesBase {
-    private _condition  : ExpressionParsersNodesBase;
-    private _lhs        : ExpressionParsersNodesBase;              // Left hand side of the operation
-    private _rhs        : ExpressionParsersNodesBase;              // Right hand side of the operation
+export class OperatorTernary extends Base {
+    private _condition  : Base;
+    private _lhs        : Base;              // Left hand side of the operation
+    private _rhs        : Base;              // Right hand side of the operation
 
-    public constructor(condition: ExpressionParsersNodesBase, lhs: ExpressionParsersNodesBase, rhs: ExpressionParsersNodesBase) {
+    public constructor(condition: Base, lhs: Base, rhs: Base) {
         super();
 
         this._condition = condition;
@@ -35,7 +38,7 @@ export class OperatorTernary extends ExpressionParsersNodesBase {
         this._rhs       = rhs;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const condition = this._condition.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         if (!(condition instanceof Num)) {
             throw newError(`Condition is not finite: ${condition}`);

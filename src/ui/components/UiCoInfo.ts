@@ -7,7 +7,10 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoRwReplayListPanel } from "../../helpers/GameFlow.ts";
 import { getCoBust } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,

@@ -10,20 +10,40 @@ import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getFinalSkinId } from "../forceSkins/Utils.ts";
 import { getRwWarBaseClass } from "../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
-import { getUnitHp, getUnitCornerStateIcon, getUnitPromotion, getUnitBuff } from "../helpers/ImageSource.ts";
-import { createLazyFunc, getExisted, newError } from "../helpers/Misc.ts";
-import { removeEventListeners, addEventListeners } from "../notifications/Dispatcher.ts";
+import {
+    getUnitHp,
+    getUnitCornerStateIcon,
+    getUnitPromotion,
+    getUnitBuff,
+} from "../helpers/ImageSource.ts";
+import {
+    createLazyFunc,
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
+import {
+    removeEventListeners,
+    addEventListeners,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import { MaxValue } from "../numbers/Constants.ts";
 import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
 import { ShortSfxCode } from "../sounds/Constants.ts";
-import { playLongSfxForMoveUnit, playShortSfx, fadeoutLongSfxForMoveUnit } from "../sounds/SoundPlayer.ts";
+import {
+    playLongSfxForMoveUnit,
+    playShortSfx,
+    fadeoutLongSfxForMoveUnit,
+} from "../sounds/SoundPlayer.ts";
 import { getBgmSfxCfg } from "../sounds/Utils.ts";
 import { Executor } from "../tween/Executor.ts";
 import { UiContainer } from "../ui/components/UiContainer.ts";
 import { getUiImageClass } from "../ui/utils/UiFactory.ts";
-import { AnimationTypeId, ActionStateId, CornerStateIconTypeId } from "./Constants.ts";
+import {
+    AnimationTypeId,
+    ActionStateId,
+    CornerStateIconTypeId,
+} from "./Constants.ts";
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitView } from "./IUnitView.ts";
 import {

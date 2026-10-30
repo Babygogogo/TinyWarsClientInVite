@@ -3,8 +3,14 @@ import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
 import { DropDestination } from "../../auxiliaryTypes/DropDestination.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getMpwWarClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getMpwWarClass,
+    getSpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { reqUnitDrop } from "../../singlePlayerWar/model/SpwLocalProxy.ts";

@@ -1,13 +1,23 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, getRunningPanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    getRunningPanel,
+} from "../../gamePanels/Manager.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getTruncatedText } from "../../helpers/Text.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

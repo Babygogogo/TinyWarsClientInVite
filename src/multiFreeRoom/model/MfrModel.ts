@@ -1,10 +1,13 @@
-import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    PlayerInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import type { RoomFilter } from "../../auxiliaryTypes/RoomFilter.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
+import type { OpenData as CommonWarAdvancedSettingsPageOpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import type { OpenData as CommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
+import type { OpenData as CommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
@@ -13,7 +16,10 @@ import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { StoreMfrRoomStaticInfo } from "../../localData/Storage.ts";
 import {
     reqMfrGetRoomStaticInfo,
@@ -29,14 +35,15 @@ import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { MfrRoomPlayerInfo } from "../../proto/schema/CommonProto/MultiFreeRoom/MfrRoomPlayerInfo.ts";
 import type { MfrRoomStaticInfo } from "../../proto/schema/CommonProto/MultiFreeRoom/MfrRoomStaticInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
+import type { S as MfrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
+import type { S as MfrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import { checkIsDummy } from "../../users/Utils.ts";
-import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
+import {
+    getPlayersCountUnneutral,
+    getPlayerRule,
+} from "../../warRules/utils/CommonData.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 const _roomStaticInfoAccessor = new CachedDataAccessor<number, MfrRoomStaticInfo>({
     reqData : (roomId: number) => reqMfrGetRoomStaticInfo(roomId),
@@ -181,20 +188,20 @@ export async function checkCanStartGame(roomId: number): Promise<boolean> {
         && (playerDataList.every(v => v.getIsReady()));
 }
 
-export function updateOnMsgMfrGetRoomStaticInfo(data: ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS): Promise<void> {
+export function updateOnMsgMfrGetRoomStaticInfo(data: MfrGetRoomStaticInfoResponse): Promise<void> {
     return setRoomStaticInfo(data.getRoomId() ?? 0, data.getRoomStaticInfo() ?? null);
 }
-export function updateOnFailedMsgMfrGetRoomStaticInfo(data: ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS): void {
+export function updateOnFailedMsgMfrGetRoomStaticInfo(data: MfrGetRoomStaticInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomStaticInfoAccessor.updateOnRequestFailed(roomId);
     }
 }
 
-export function updateOnMsgMfrGetRoomPlayerInfo(data: S): void {
+export function updateOnMsgMfrGetRoomPlayerInfo(data: MfrGetRoomPlayerInfoResponse): void {
     setRoomPlayerInfo(data.getRoomId() ?? 0, data.getRoomPlayerInfo() ?? null);
 }
-export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: S): void {
+export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: MfrGetRoomPlayerInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomPlayerInfoAccessor.updateOnRequestFailed(roomId);
@@ -202,7 +209,7 @@ export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: S): void {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonWarPlayerInfoPageOpenData> {
     if (roomId == null) {
         return null;
     }
@@ -298,7 +305,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>, showPassword: boolean): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>, showPassword: boolean): Promise<CommonWarBasicSettingsPageOpenData> {
     if (roomId == null) {
         return null;
     }
@@ -316,7 +323,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const warPassword       = settingsForMfw.getWarPassword();
     const timerType         = bootTimerParams[0] as TimerTypeId;
     const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
-    const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
+    const openData          : CommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType    : BasicSettingsTypeId.WarName,
@@ -427,7 +434,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<OpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<CommonWarAdvancedSettingsPageOpenData> {
     if (roomId == null) {
         return null;
     }

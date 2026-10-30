@@ -4,8 +4,16 @@ import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { LanguageType, TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getTimestampShortText, getTimeDurationText2 } from "../../lang/Utils.ts";
+import {
+    LanguageType,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getTimestampShortText,
+    getTimeDurationText2,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";

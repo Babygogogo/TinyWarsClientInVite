@@ -10,22 +10,19 @@ import {
 } from "./Gateway.ts";
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { getIsAutoTourneyNotified, setIsAutoTourneyNotified } from "../../localData/Storage.ts";
+import {
+    getIsAutoTourneyNotified,
+    setIsAutoTourneyNotified,
+} from "../../localData/Storage.ts";
 import type { FullBracketInfo } from "../../proto/schema/CommonProto/AutoTourney/FullBracketInfo.ts";
 import type { FullMapInfo } from "../../proto/schema/CommonProto/AutoTourney/FullMapInfo.ts";
 import type { SinglePhaseInfo } from "../../proto/schema/CommonProto/AutoTourney/SinglePhaseInfo.ts";
 import type { TourneyInfo } from "../../proto/schema/CommonProto/AutoTourney/TourneyInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
+import type { S as AtGetGlobalSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetGlobalSettings/S.ts";
+import type { S as AtGetPhaseInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetPhaseInfo/S.ts";
+import type { S as AtGetRegistrationInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
+import type { S as AtSetBootTimerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
+import type { S as AtSetNameResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
 
 type GlobalSettings = {
     isEnabled               : boolean;
@@ -125,7 +122,7 @@ export function setIsNotifiedForRegistration(tourneyId: number, isNotified: bool
     setIsAutoTourneyNotified(tourneyId, isNotified);
 }
 
-export function updateOnMsgAtGetGlobalSettings(msg: S): void {
+export function updateOnMsgAtGetGlobalSettings(msg: AtGetGlobalSettingsResponse): void {
     const globalSettings = msg.getGlobalSettings();
     _globalSettingsAccessor.setData(null, {
         isEnabled               : !!globalSettings?.getIsEnabled(),
@@ -133,24 +130,24 @@ export function updateOnMsgAtGetGlobalSettings(msg: S): void {
         lastCreateTimestamp     : msg.getLastCreateTimestamp() ?? 0,
     });
 }
-export async function updateOnMsgAtSetName(msg: ProtoSchemaCommonProtoNetMessageMsgAtSetNameS): Promise<void> {
+export async function updateOnMsgAtSetName(msg: AtSetNameResponse): Promise<void> {
     const tourneyInfo = await getAtTourneyInfo(msg.getTourneyId() ?? 0);
     if (tourneyInfo) {
         tourneyInfo.setNameArray(msg.getNameArray());
     }
 }
-export async function updateOnMsgAtSetBootTimer(msg: ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS): Promise<void> {
+export async function updateOnMsgAtSetBootTimer(msg: AtSetBootTimerResponse): Promise<void> {
     const tourneyInfo = await getAtTourneyInfo(msg.getTourneyId() ?? 0);
     if (tourneyInfo) {
         tourneyInfo.setBootTimerParams(msg.getBootTimerParams());
     }
 }
-export function updateOnMsgAtGetPhaseInfo(msg: ProtoSchemaCommonProtoNetMessageMsgAtGetPhaseInfoS): void {
+export function updateOnMsgAtGetPhaseInfo(msg: AtGetPhaseInfoResponse): void {
     _phaseInfoAccessor.setData(null, {
         infoArray   : msg.getSinglePhaseInfoArray(),
     });
 }
-export function updateOnMsgAtGetRegistrationInfo(msg: ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS): void {
+export function updateOnMsgAtGetRegistrationInfo(msg: AtGetRegistrationInfoResponse): void {
     const tourneyId = msg.getTourneyId() ?? 0;
     _registrationInfoAccessor.setData(tourneyId, {
         isRegistered    : !!msg.getIsRegistered(),

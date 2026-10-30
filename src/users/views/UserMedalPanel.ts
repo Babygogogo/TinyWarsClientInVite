@@ -3,8 +3,15 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getMedal } from "../../helpers/ImageSource.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getMedalDesc, getTimestampShortText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getMedalDesc,
+    getTimestampShortText,
+} from "../../lang/Utils.ts";
 import { Common } from "../../medals/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
@@ -18,7 +25,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfShowMedalIdArray, getSelfInfo } from "../Model.ts";
+import {
+    getSelfShowMedalIdArray,
+    getSelfInfo,
+} from "../Model.ts";
 import { reqUserSetShowMedalIdArray } from "../Proxy.ts";
 
 export type OpenData = void;

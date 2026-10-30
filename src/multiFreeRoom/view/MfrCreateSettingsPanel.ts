@@ -1,34 +1,55 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoLobby } from "../../helpers/GameFlow.ts";
-import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    getCoEye,
+    getSkinCircle,
+} from "../../helpers/ImageSource.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { reqCreateRoom } from "../model/MfrProxy.ts";
 import type { MfrRoomCreator } from "../model/MfrRoomCreator.ts";
 import {
-    type OpenData as MultiFreeRoomViewMfrCreatePlayerInfoPageOpenData,
-    Page as MultiFreeRoomViewMfrCreatePlayerInfoPage,
+    type OpenData as MfrCreatePlayerInfoPageOpenData,
+    Page as MfrCreatePlayerInfoPage,
 } from "./MfrCreatePlayerInfoPage.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
@@ -42,14 +63,16 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
-import { getPlayerRule, getPlayersCountUnneutral, tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
-
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
-type OpenDataForMfrCreatePlayerInfoPage         = MultiFreeRoomViewMfrCreatePlayerInfoPageOpenData;
+import {
+    setTimeout,
+    clearTimeout,
+} from "../../vendor/egret/Egret.ts";
+import {
+    getPlayerRule,
+    getPlayersCountUnneutral,
+    tickDefaultWeatherType,
+} from "../../warRules/utils/CommonData.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 const CONFIRM_INTERVAL_MS = 5000;
 
@@ -76,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _imgSkinId!                : IUiImage;
 
     private readonly _groupTab!                 : IUiContainer;
-    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | OpenDataForMfrCreatePlayerInfoPage>;
+    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, void | CommonWarMapInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData | MfrCreatePlayerInfoPageOpenData>;
 
     private readonly _btnBack!                  : IUiButton;
     private readonly _btnConfirm!               : IUiButton;
@@ -315,22 +338,22 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0224) },
-                pageClass   : MultiFreeRoomViewMfrCreatePlayerInfoPage,
+                pageClass   : MfrCreatePlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
         ]);
@@ -365,7 +388,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private _createDataForCommonWarBasicSettingsPage(): OpenDataForCommonWarBasicSettingsPage {
+    private _createDataForCommonWarBasicSettingsPage(): CommonWarBasicSettingsPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -379,7 +402,7 @@ export class Panel extends UiPanel<OpenData> {
         const timerType         = bootTimerParams[0] as TimerTypeId;
         const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
         const warRuleCommonData = getExisted(instanceWarRule.getWarRuleCommonData());
-        const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
+        const openDataForPage   : CommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings: [
                 {
                     settingsType    : BasicSettingsTypeId.WarName,
@@ -546,7 +569,7 @@ export class Panel extends UiPanel<OpenData> {
 
         return openDataForPage;
     }
-    private _createDataForCommonWarAdvancedSettingsPage(): OpenDataForCommonWarAdvancedSettingsPage {
+    private _createDataForCommonWarAdvancedSettingsPage(): CommonWarAdvancedSettingsPageOpenData {
         const roomCreator = this.getOpenData()?.roomCreator;
         if (roomCreator == null) {
             return null;
@@ -559,7 +582,7 @@ export class Panel extends UiPanel<OpenData> {
             gcData          : roomCreator.getGcData(),
         };
     }
-    private _createDataForMfrCreatePlayerInfoPage(): OpenDataForMfrCreatePlayerInfoPage {
+    private _createDataForMfrCreatePlayerInfoPage(): MfrCreatePlayerInfoPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -569,7 +592,7 @@ export class Panel extends UiPanel<OpenData> {
             roomCreator   : openData.roomCreator,
         };
     }
-    private _createDataForCommonWarMapInfoPage(): OpenDataForCommonWarMapInfoPage {
+    private _createDataForCommonWarMapInfoPage(): CommonWarMapInfoPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;

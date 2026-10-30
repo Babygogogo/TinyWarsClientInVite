@@ -1,6 +1,11 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { MainCategoryId, Common, ToCategoryId, PublicChannelId } from "../Constants.ts";
+import {
+    MainCategoryId,
+    Common,
+    ToCategoryId,
+    PublicChannelId,
+} from "../Constants.ts";
 import {
     checkHasUnreadMessageForTarget,
     getLatestMessageTimestamp,
@@ -9,17 +14,38 @@ import {
     getMessagesForCategory,
     checkHasUnreadMessageForMainCategory,
 } from "../Model.ts";
-import { reqUpdateReadProgress, reqGetAllMessages, reqChatAddMessage } from "../Proxy.ts";
-import { getRoomStaticInfo, getJoinedRoomIdArray } from "../../coopCustomRoom/model/CcrModel.ts";
+import {
+    reqUpdateReadProgress,
+    reqGetAllMessages,
+    reqChatAddMessage,
+} from "../Proxy.ts";
+import {
+    getRoomStaticInfo as getCcrModelRoomStaticInfo,
+    getJoinedRoomIdArray as getCcrModelJoinedRoomIdArray,
+} from "../../coopCustomRoom/model/CcrModel.ts";
 import { show } from "../../FloatText.ts";
 import { getMpwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getOngoingWar } from "../../helpers/GameFlow.ts";
-import { getUserOnlineState, getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
-import { LanguageType, TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getUserOnlineState as getImageSourceUserOnlineState,
+    getUserAvatar,
+    getMedal,
+} from "../../helpers/ImageSource.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
+import {
+    LanguageType,
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getCurrentLanguageType,
     getFormattedText,
@@ -31,24 +57,25 @@ import {
     getTimestampShortText,
 } from "../../lang/Utils.ts";
 import {
-    getRoomStaticInfo as MultiCustomRoomModelMcrModelGetRoomStaticInfo,
-    getJoinedRoomIdArray as MultiCustomRoomModelMcrModelGetJoinedRoomIdArray,
+    getRoomStaticInfo as getMcrModelRoomStaticInfo,
+    getJoinedRoomIdArray as getMcrModelJoinedRoomIdArray,
 } from "../../multiCustomRoom/model/McrModel.ts";
 import {
-    getRoomStaticInfo as MultiFreeRoomModelMfrModelGetRoomStaticInfo,
-    getJoinedRoomIdArray as MultiFreeRoomModelMfrModelGetJoinedRoomIdArray,
+    getRoomStaticInfo as getMfrModelRoomStaticInfo,
+    getJoinedRoomIdArray as getMfrModelJoinedRoomIdArray,
 } from "../../multiFreeRoom/model/MfrModel.ts";
-import { getWarProgressInfo, getWarSettings, getJoinedMpwIdArray, getWarType } from "../../multiPlayerWar/model/MpwModel.ts";
+import {
+    getWarProgressInfo,
+    getWarSettings,
+    getJoinedMpwIdArray,
+    getWarType,
+} from "../../multiPlayerWar/model/MpwModel.ts";
 import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { ChatMessage } from "../../proto/schema/CommonProto/Chat/ChatMessage.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
+import type { S as ChatAddMessageResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
+import type { S as ChatDeleteMessageResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
+import type { S as ChatUpdateReadProgressResponse } from "../../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
@@ -68,7 +95,7 @@ import {
     checkIsFollowingUser,
     checkIsBlockingUser,
     getSelfInfo,
-    getUserOnlineState as UsersModelGetUserOnlineState,
+    getUserOnlineState as getModelUserOnlineState,
     getUserNickname,
     getUserBriefInfo,
     getUserPublicInfo,
@@ -214,7 +241,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgChatAddMessage(e: Event): Promise<void> {
-        const message       = getExisted((e.data as S).getMessage());
+        const message       = getExisted((e.data as ChatAddMessageResponse).getMessage());
         const msgFromUserId = message.getFromUserId();
         const selfUserId    = getExisted(getSelfUserId());
         if (msgFromUserId === selfUserId) {
@@ -244,7 +271,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgChatDeleteMessage(e: Event): Promise<void> {
-        const messageId = (e.data as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS).getMessageId();
+        const messageId = (e.data as ChatDeleteMessageResponse).getMessageId();
         if (this._listMessage.getBoundDataArray()?.some(v => v?.message.getMessageId() === messageId)) {
             this._updateComponentsForMessage(false);
         }
@@ -509,7 +536,7 @@ export class Panel extends UiPanel<OpenData> {
 
         } else if (mainCategory === MainCategoryId.Room) {
             for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.McrRoom)) {
-                if (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toRoomId)) {
+                if (await getMcrModelRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
@@ -521,7 +548,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
             }
             for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.CcrRoom)) {
-                if (await getRoomStaticInfo(toRoomId)) {
+                if (await getCcrModelRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
@@ -533,7 +560,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
             }
             for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.MfrRoom)) {
-                if (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toRoomId)) {
+                if (await getMfrModelRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
@@ -546,7 +573,7 @@ export class Panel extends UiPanel<OpenData> {
             }
 
             {
-                for (const roomId of await MultiCustomRoomModelMcrModelGetJoinedRoomIdArray(false) ?? []) {
+                for (const roomId of await getMcrModelJoinedRoomIdArray(false) ?? []) {
                     if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.McrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
@@ -560,7 +587,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
             }
             {
-                for (const roomId of await getJoinedRoomIdArray(false) ?? []) {
+                for (const roomId of await getCcrModelJoinedRoomIdArray(false) ?? []) {
                     if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.CcrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
@@ -574,7 +601,7 @@ export class Panel extends UiPanel<OpenData> {
                 }
             }
             {
-                for (const roomId of await MultiFreeRoomModelMfrModelGetJoinedRoomIdArray(false) ?? []) {
+                for (const roomId of await getMfrModelJoinedRoomIdArray(false) ?? []) {
                     if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.MfrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
@@ -772,7 +799,7 @@ class MainCategoryRenderer
             return;
         }
 
-        const data          = e.data as S;
+        const data          = e.data as ChatAddMessageResponse;
         const message       = getExisted(data.getMessage());
         const toCategory    = message.getToCategory() as ToCategoryId;
         if (mainCategory === MainCategoryId.PublicChannel) {
@@ -816,7 +843,7 @@ class MainCategoryRenderer
             return;
         }
 
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS;
+        const data      = e.data as ChatUpdateReadProgressResponse;
         const progress  = getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
             mainCategory    : mainCategory,
@@ -995,16 +1022,16 @@ class TargetRenderer
             labelType.setLangText(TextType.B0378);
             labelName.setText(``);
             imgOnlineState.setIsVisible(true);
-            imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(toTarget)));
+            imgOnlineState.loadSource(getImageSourceUserOnlineState(await getModelUserOnlineState(toTarget)));
             labelName.setText((await getUserNickname(toTarget)) ?? UndefinedError);
 
         } else if (toCategory === ToCategoryId.McrRoom) {
-            const hasFog = (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            const hasFog = (await getMcrModelRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
             labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.McwFog : WarTypeId.McwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toTarget);
+            const roomInfo = await getMcrModelRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
@@ -1018,12 +1045,12 @@ class TargetRenderer
             }
 
         } else if (toCategory === ToCategoryId.CcrRoom) {
-            const hasFog = (await getRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            const hasFog = (await getCcrModelRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
             labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.CcwFog : WarTypeId.CcwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await getRoomStaticInfo(toTarget);
+            const roomInfo = await getCcrModelRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
@@ -1037,12 +1064,12 @@ class TargetRenderer
             }
 
         } else if (toCategory === ToCategoryId.MfrRoom) {
-            const hasFog = (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toTarget))?.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            const hasFog = (await getMfrModelRoomStaticInfo(toTarget))?.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
             labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.MfwFog : WarTypeId.MfwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toTarget);
+            const roomInfo = await getMfrModelRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
@@ -1141,7 +1168,7 @@ class MessageRenderer
         }
         this._layoutName.arrangeItems();
 
-        this._imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(fromUserId)));
+        this._imgOnlineState.loadSource(getImageSourceUserOnlineState(await getModelUserOnlineState(fromUserId)));
     }
 
     public async onItemTapEvent(): Promise<void> {

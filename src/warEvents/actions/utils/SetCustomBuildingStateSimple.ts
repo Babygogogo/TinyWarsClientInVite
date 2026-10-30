@@ -1,34 +1,51 @@
-import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from "../../../arrayModifiers/Utils.ts";
+import {
+    checkIsValid as checkIsValidArrayModifier,
+    getResultValue as getArrayModifiersResultValue,
+} from "../../../arrayModifiers/Utils.ts";
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
 import {
-    checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid,
-    getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
+    getText,
+    getFormattedText,
+} from "../../../lang/Utils.ts";
+import {
+    checkIsValid as checkIsValidMultiplierAndOffset,
+    getResultValue as getMultiplierAndOffsetsResultValue,
 } from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import {
+    getDescForEmbed as getPlayersDescForEmbed,
+    checkIsValid as checkIsValidPlayerFilter,
+    checkIsMeet as checkIsMeetPlayerFilter,
+} from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetCustomBuildingStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateSimple.ts";
 import { TileCustomBuildingData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { Building } from "../../../tiles/constants/CustomLimits.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
-import { getMaxBuildPoint, getMaxCapturePoint, getMaxHp } from "../../../tiles/utils/Common.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
-    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    getMaxBuildPoint,
+    getMaxCapturePoint,
+    getMaxHp,
+} from "../../../tiles/utils/Common.ts";
+import {
+    getDescForEmbed as getTilesDescForEmbed,
+    checkIsValid as checkIsValidTileFilter,
+    checkIsMeet as checkIsMeetTileFilter,
 } from "../../../tiles/utils/Filter.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import {
+    checkIsValid as checkIsValidUnitFilter,
+    checkIsMeet as checkIsMeetUnitFilter,
+} from "../../../units/utils/Filter.ts";
 import {
     getDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as checkIsValidValueAndComparator,
+    checkIsMeet as checkIsMeetValueAndComparator,
 } from "../../../valueAndComparators/Utils.ts";
 
 export function checkIsValid(data: Undefinable<WeaSetCustomBuildingStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
@@ -153,13 +170,13 @@ export function getDetailDesc(data: Undefinable<WeaSetCustomBuildingStateSimple>
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${TilesUtilsFilterGetDescForEmbed(filter)}`);
+            conTextArray.push(`- ${getTilesDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1421)}) ${getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1421)}) ${getPlayersDescForEmbed(filter)}`);
         }
     }
     {
@@ -287,7 +304,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
                 return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
@@ -298,7 +315,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
@@ -306,7 +323,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
@@ -314,7 +331,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!ValueAndComparatorsUtilsCheckIsValid(comparator))
+            (!checkIsValidValueAndComparator(comparator))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
@@ -323,7 +340,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActDefenseAmount();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.DefBonus$));
         }
@@ -331,7 +348,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActDefenseUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.DefensibleUnits));
         }
@@ -339,7 +356,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActMaxCapturePoint();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.MaxCapturePoint));
         }
@@ -355,7 +372,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActRepairNormalizedHp();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RepairHpAmount));
         }
@@ -367,7 +384,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActRepairUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RepairableUnits));
         }
@@ -375,7 +392,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActIncomePerTurn();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.Income));
         }
@@ -383,7 +400,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActVisionRange();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.VisionRange));
         }
@@ -395,7 +412,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActHideUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.HidableUnits));
         }
@@ -403,7 +420,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActProduceUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.ProducibleUnits));
         }
@@ -411,7 +428,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActGlobalAttackBonus();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.GlobalAtkBonus));
         }
@@ -419,7 +436,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActGlobalDefenseBonus();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.GlobalDefBonus));
         }
@@ -427,7 +444,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.CoBoardableUnit));
         }
@@ -435,7 +452,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapS
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!checkIsValidArrayModifier(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.BlockableEnemyUnits));
         }
@@ -484,7 +501,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
                 continue;
             }
 
-            if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsMeet(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!checkIsMeetTileFilter(conTileFilter, tile))) {
                 continue;
             }
 
@@ -495,11 +512,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (checkIsMeetUnitFilter(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
+                if (!checkIsMeetValueAndComparator(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -575,7 +592,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
     }
     return !!resultDict.get(player);
 }
@@ -589,7 +606,7 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: ITi
     return getValueInRange({
         minValue    : Building.DefenseAmount.MinValue,
         maxValue    : Building.DefenseAmount.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue),
     });
 }
 function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -600,7 +617,7 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: ITile): Undefinable<number> {
     if (action.getActDeleteMaxCapturePoint()) {
@@ -616,7 +633,7 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: I
     return getValueInRange({
         minValue    : Building.MaxCapturePoint.MinValue,
         maxValue    : Building.MaxCapturePoint.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue ?? 0),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, tile: ITile): boolean {
@@ -642,7 +659,7 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile
     return getValueInRange({
         minValue    : Building.RepairNormalizedHp.MinValue,
         maxValue    : Building.RepairNormalizedHp.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue ?? 0),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -653,7 +670,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, til
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
     const defaultValue  = tile.getIncomePerTurn();
@@ -665,7 +682,7 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: ITi
     return getValueInRange({
         minValue    : Building.IncomePerTurn.MinValue,
         maxValue    : Building.IncomePerTurn.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue),
     });
 }
 function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
@@ -678,7 +695,7 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: ITile
     return getValueInRange({
         minValue    : Building.VisionRange.MinValue,
         maxValue    : Building.VisionRange.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue),
     });
 }
 function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSimple, tile: ITile): boolean {
@@ -698,7 +715,7 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile:
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
     const defaultValue  = tile.getRegularProducibleUnitTypeArray() ?? [];
@@ -708,7 +725,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
     const defaultValue  = tile.getGlobalAttackBonus();
@@ -720,7 +737,7 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile:
     return getValueInRange({
         minValue    : Building.GlobalAttackBonus.MinValue,
         maxValue    : Building.GlobalAttackBonus.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue),
     });
 }
 function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
@@ -733,7 +750,7 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile
     return getValueInRange({
         minValue    : Building.GlobalDefenseBonus.MinValue,
         maxValue    : Building.GlobalDefenseBonus.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
+        rawValue    : getMultiplierAndOffsetsResultValue(act, defaultValue),
     });
 }
 function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -744,7 +761,7 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple,
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
     const defaultValue  = tile.getBlockEnemyUnitTypeArray() ?? [];
@@ -754,5 +771,5 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple,
     }
 
     const gameConfig = tile.getGameConfig();
-    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getArrayModifiersResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }

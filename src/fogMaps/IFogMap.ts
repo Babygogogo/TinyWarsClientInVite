@@ -6,10 +6,8 @@ import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { ForcedFogCode } from "./Constants.ts";
 import type { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
 import type { IUnit } from "../units/IUnit.ts";
-import {VisibilityTypeId} from "../visibilities/Constants.ts";
+import { VisibilityTypeId } from "../visibilities/Constants.ts";
 
-type VisibilityType = VisibilityTypeId;
-type ForceFogCode   = ForcedFogCode;
 export interface IFogMap {
     startRunning(war: IBwWar): void;
 
@@ -35,8 +33,8 @@ export interface IFogMap {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     getMapSize(): MapSize;
 
-    setForceFogCode(code: ForceFogCode): void;
-    getForceFogCode(): ForceFogCode;
+    setForceFogCode(code: ForcedFogCode): void;
+    getForceFogCode(): ForcedFogCode;
 
     checkHasFogByDefault(): boolean;
     checkHasFogCurrently(): boolean;
@@ -51,7 +49,7 @@ export interface IFogMap {
 
     resetAllMapsForPlayer(playerIndex: number): void;
 
-    resetMapFromPathsForPlayer(playerIndex: number, visibilityList: VisibilityType[] | null): void;
+    resetMapFromPathsForPlayer(playerIndex: number, visibilityList: VisibilityTypeId[] | null): void;
     resetMapFromPathsForPlayerWithEncodedData(playerIndex: number, encodedData?: string): void;
     updateMapFromPathsByUnitAndPath({ unit, unitVisionInfo, path }: {
         unit            : IUnit;
@@ -62,16 +60,16 @@ export interface IFogMap {
     updateMapFromPathsByUnitMovePathVisibilityArrayForWarEvent(array: number[]): void;
     updateMapFromPathsByFlare(playerIndex: number, flareGridIndex: GridIndex, flareRadius: number): void;
 
-    getVisibilityFromPathsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityType;
-    getVisibilityMapFromPathsForTeams(teamIndexes: Set<number>): VisibilityType[][];
-    getRawVisibilityFromPathsForAllPlayers(gridIndex: GridIndex): VisibilityType[];
+    getVisibilityFromPathsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
+    getVisibilityMapFromPathsForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
+    getRawVisibilityFromPathsForAllPlayers(gridIndex: GridIndex): VisibilityTypeId[];
     updateRawVisibilityFromPathsForAllPlayers(gridIndex: GridIndex, visibilityArray: number[]): void;
 
-    getVisibilityFromTilesForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityType;
-    getVisibilityMapFromTilesForTeam(teamIndex: number): VisibilityType[][];
-    getVisibilityMapFromTilesForTeams(teamIndexes: Set<number>): VisibilityType[][];
+    getVisibilityFromTilesForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
+    getVisibilityMapFromTilesForTeam(teamIndex: number): VisibilityTypeId[][];
+    getVisibilityMapFromTilesForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
 
-    getVisibilityFromUnitsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityType;
-    getVisibilityMapFromUnitsForTeam(teamIndex: number): VisibilityType[][];
-    getVisibilityMapFromUnitsForTeams(teamIndexes: Set<number>): VisibilityType[][];
+    getVisibilityFromUnitsForPlayer(gridIndex: GridIndex, playerIndex: number): VisibilityTypeId;
+    getVisibilityMapFromUnitsForTeam(teamIndex: number): VisibilityTypeId[][];
+    getVisibilityMapFromUnitsForTeams(teamIndexes: Set<number>): VisibilityTypeId[][];
 }

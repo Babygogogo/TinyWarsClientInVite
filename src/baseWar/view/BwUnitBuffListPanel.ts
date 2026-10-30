@@ -1,8 +1,19 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitBuffName, getUnitBuffDesc, getUnitBuffExtraParamDesc } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getUnitBuffName,
+    getUnitBuffDesc,
+    getUnitBuffExtraParamDesc,
+} from "../../lang/Utils.ts";
 import type { BwUnitBuffChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -18,7 +29,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { AllBuffTypeIdArray } from "../../unitBuffs/Constants.ts";
-import { create, getIsExtraParamSupported } from "../../unitBuffs/utils/Common.ts";
+import {
+    create,
+    getIsExtraParamSupported,
+} from "../../unitBuffs/utils/Common.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
 export interface OpenData {

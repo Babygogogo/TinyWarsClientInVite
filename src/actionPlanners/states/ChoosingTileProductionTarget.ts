@@ -3,7 +3,10 @@ import type { IActionPlanner } from "../IActionPlanner.ts";
 import { Idle } from "./Idle.ts";
 import type { IState } from "./IState.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getMeWarClass, getTwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getTwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { newError } from "../../helpers/Misc.ts";

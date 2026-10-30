@@ -1,6 +1,9 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { SymmetryTypeId } from "../geometries/Constants.ts";
-import { DecorationCfgDict, DecorationSymmetryCfgDict } from "../tiles/constants/Common.ts";
+import {
+    DecorationCfgDict,
+    DecorationSymmetryCfgDict,
+} from "../tiles/constants/Common.ts";
 import type { TileDecorationCfg } from "../tiles/Types.ts";
 
 export function getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {

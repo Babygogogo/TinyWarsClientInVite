@@ -5,14 +5,20 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getTileObjectName } from "../../lang/Utils.ts";
+import {
+    getText,
+    getTileObjectName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import type { DataForDrawTileObject } from "../../mapEditor/model/MeTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getAllTileObjectCfgArray, getTileObjectCfg } from "../../tileObjects/Utils.ts";
+import {
+    getAllTileObjectCfgArray,
+    getTileObjectCfg,
+} from "../../tileObjects/Utils.ts";
 import { ObjectTypeId } from "../../tiles/constants/Common.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

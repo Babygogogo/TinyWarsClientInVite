@@ -4,10 +4,7 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitBoardedByCo(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitBoardedByCo(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if (!unit.checkCanCoBoardAfterMovePath(pathNodes.map(v => v.getGridIndex()))) {
@@ -27,7 +24,7 @@ export async function getScoreAndActionUnitBoardedByCo(unit: IBwUnit, pathNodes:
     };
 }
 
-async function getScoreForActionUnitBoardedByCo(unit: IBwUnit): Promise<number> {
+async function getScoreForActionUnitBoardedByCo(unit: IUnit): Promise<number> {
     await checkAndCallLater();
 
     let totalScore      = unit.getCurrentHp() * 100;

@@ -3,13 +3,25 @@ import { Tween } from "../graphics/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
 import { getText } from "../lang/Utils.ts";
-import { checkCanAutoReconnect, init as NetworksManagerInit } from "../networks/Manager.ts";
-import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
+import {
+    checkCanAutoReconnect,
+    init as initNetworks,
+} from "../networks/Manager.ts";
+import {
+    addEventListeners,
+    dispatch,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
+import type { S as CommonHeartbeatResponse } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 import * as TimerTimerModel from "./TimerModel.ts";
 import { reqCommonHeartbeat } from "./TimerProxy.ts";
-import { setInterval, callLater, setTimeout, startTick, clearInterval } from "../vendor/egret/Egret.ts";
+import {
+    setInterval,
+    callLater,
+    setTimeout,
+    startTick,
+    clearInterval,
+} from "../vendor/egret/Egret.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10 * 1000;
 
@@ -97,7 +109,7 @@ function _onNotifyNetworkDisconnected(): void {
     (_heartbeatIntervalId != null) && (clearInterval(_heartbeatIntervalId));
 }
 
-export function updateOnMsgCommonHeartbeat(data: S): void {
+export function updateOnMsgCommonHeartbeat(data: CommonHeartbeatResponse): void {
     if (data.getCounter() === _heartbeatCounter) {
         _isHeartbeatAnswered = true;
         ++_heartbeatCounter;
@@ -112,7 +124,7 @@ function heartbeat(): void {
             show(getText(TextType.A0013));
         } else {
             show(getText(TextType.A0008));
-            NetworksManagerInit();
+            initNetworks();
         }
     }
     reqCommonHeartbeat(_heartbeatCounter);

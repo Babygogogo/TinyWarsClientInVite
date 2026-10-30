@@ -2,31 +2,38 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText, getComparatorName } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getComparatorName,
+} from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import {
-    getDescForEmbed,
-    checkIsValid as PlayersUtilsFilterCheckIsValid,
-    checkIsMeet as PlayersUtilsFilterCheckIsMeet,
+    getDescForEmbed as getPlayersDescForEmbed,
+    checkIsValid as checkIsValidPlayerFilter,
+    checkIsMeet as checkIsMeetPlayerFilter,
 } from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
 import type { WecUnitPresence } from "../../../proto/schema/CommonProto/WarEvent/WecUnitPresence.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
-    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    getDescForEmbed as getTilesDescForEmbed,
+    checkIsValid as checkIsValidTileFilter,
+    checkIsMeet as checkIsMeetTileFilter,
 } from "../../../tiles/utils/Filter.ts";
 import {
-    getDescForEmbed as UnitsUtilsFilterGetDescForEmbed,
-    checkIsValid as UnitsUtilsFilterCheckIsValid,
-    checkIsMeet as UnitsUtilsFilterCheckIsMeet,
+    getDescForEmbed as getUnitsDescForEmbed,
+    checkIsValid as checkIsValidUnitFilter,
+    checkIsMeet as checkIsMeetUnitFilter,
 } from "../../../units/utils/Filter.ts";
 import {
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as checkIsValidValueAndComparator,
+    checkIsMeet as checkIsMeetValueAndComparator,
 } from "../../../valueAndComparators/Utils.ts";
 
 export function getBriefDesc(data: Undefinable<WecUnitPresence>): string | null {
@@ -52,19 +59,19 @@ export function getDetailedDesc(data: Undefinable<WecUnitPresence>): string | nu
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            subTextArray.push(`- ${UnitsUtilsFilterGetDescForEmbed(filter)}`);
+            subTextArray.push(`- ${getUnitsDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            subTextArray.push(`- (${getText(TextType.B1422)}) ${getDescForEmbed(filter)}`);
+            subTextArray.push(`- (${getText(TextType.B1422)}) ${getPlayersDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            subTextArray.push(`- (${getText(TextType.B1423)}) ${TilesUtilsFilterGetDescForEmbed(filter)}`);
+            subTextArray.push(`- (${getText(TextType.B1423)}) ${getTilesDescForEmbed(filter)}`);
         }
     }
 
@@ -86,7 +93,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
@@ -95,7 +102,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
@@ -104,7 +111,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&
-            (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
         }
@@ -118,7 +125,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
                 getFormattedText(TextType.FormatComparatorOfNumberOf, getText(TextType.Units)),
             );
         } else {
-            if (!ValueAndComparatorsUtilsCheckIsValid(comparator)) {
+            if (!checkIsValidValueAndComparator(comparator)) {
                 return getFormattedText(
                     TextType.F0091,
                     getFormattedText(TextType.FormatComparatorOfNumberOf, getText(TextType.Units)),
@@ -148,7 +155,7 @@ export function checkIsMeet(data: WecUnitPresence, war: IBwWar): boolean {
     const tileMap           = war.getTileMap();
     let unitsCount          = 0;
     for (const unit of war.getUnitMap().getAllUnits()) {
-        if ((unitFilter != null) && (!UnitsUtilsFilterCheckIsMeet(unitFilter, unit))) {
+        if ((unitFilter != null) && (!checkIsMeetUnitFilter(unitFilter, unit))) {
             continue;
         }
 
@@ -162,17 +169,17 @@ export function checkIsMeet(data: WecUnitPresence, war: IBwWar): boolean {
 
         ++unitsCount;
     }
-    return ValueAndComparatorsUtilsCheckIsMeet(unitComparator, unitsCount);
+    return checkIsMeetValueAndComparator(unitComparator, unitsCount);
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, PlayersUtilsFilterCheckIsMeet(filter, player));
+        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
     }
     return !!resultDict.get(player);
 }
 function checkIsMeetConTileFilter(resultDict: Map<ITile, boolean>, filter: TileFilter, tile: ITile): boolean {
     if (!resultDict.has(tile)) {
-        resultDict.set(tile, TilesUtilsFilterCheckIsMeet(filter, tile));
+        resultDict.set(tile, checkIsMeetTileFilter(filter, tile));
     }
     return !!resultDict.get(tile);
 }

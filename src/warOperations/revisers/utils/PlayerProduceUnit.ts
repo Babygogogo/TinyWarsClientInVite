@@ -1,13 +1,22 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
-import { AliveStateId, PlayerIndex } from "../../../players/Constants.ts";
+import {
+    newError,
+    getExisted,
+} from "../../../helpers/Misc.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
 import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";
-import { Hp, CategoryId } from "../../../units/Constants.ts";
+import {
+    Hp,
+    CategoryId,
+} from "../../../units/Constants.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 

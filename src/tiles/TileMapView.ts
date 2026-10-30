@@ -1,12 +1,24 @@
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { getFinalSkinId } from "../forceSkins/Utils.ts";
-import { getRwWarClass, getRwWarBaseClass, getMpwWarClass, getMeWarClass, getSpwWarClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getRwWarClass,
+    getRwWarBaseClass,
+    getMpwWarClass,
+    getMeWarClass,
+    getSpwWarClass,
+} from "../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
 import { getGridMark } from "../helpers/ImageSource.ts";
-import { createLazyFunc, getExisted } from "../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { getNumText } from "../helpers/Text.ts";
-import { MinId, MaxId } from "../locations/Constants.ts";
+import {
+    MinId,
+    MaxId,
+} from "../locations/Constants.ts";
 import type {
     BwTileHasLocationIdSet,
     GridMarkAdded,
@@ -15,7 +27,10 @@ import type {
     GridMarkListChanged,
     BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,
 } from "../notifications/DataTypes.ts";
-import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import { PlayerIndex } from "../players/Constants.ts";
@@ -26,9 +41,18 @@ import type { ITileView } from "./ITileView.ts";
 import { Executor } from "../tween/Executor.ts";
 import { UiContainer } from "../ui/components/UiContainer.ts";
 import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
-import { getSelfSettingsIsShowGridBorder, getSelfSettingsOpacitySettings } from "../users/Model.ts";
-import type { DisplayObject, Event } from "../vendor/egret/Egret.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+} from "../ui/utils/UiFactory.ts";
+import {
+    getSelfSettingsIsShowGridBorder,
+    getSelfSettingsOpacitySettings,
+} from "../users/Model.ts";
+import type {
+    DisplayObject,
+    Event,
+} from "../vendor/egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);

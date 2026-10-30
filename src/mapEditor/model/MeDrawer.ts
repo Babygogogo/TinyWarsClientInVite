@@ -1,15 +1,30 @@
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { SymmetryTypeId } from "../../geometries/Constants.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
 import { DrawerMode } from "../../mapEditors/Constants.ts";
-import type { BwCursorDragged, BwCursorTapped, BwTileChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
-import { addEventListeners, dispatch, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import type {
+    BwCursorDragged,
+    BwCursorTapped,
+    BwTileChanged,
+    BwUnitChanged,
+} from "../../notifications/DataTypes.ts";
+import {
+    addEventListeners,
+    dispatch,
+    removeEventListeners,
+} from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -17,10 +32,20 @@ import type { SerialField } from "../../proto/schema/CommonProto/WarSerializatio
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { getSymmetricalTileBaseShapeId } from "../../tileBases/Utils.ts";
 import { getSymmetricalTileDecorationShapeId } from "../../tileDecorations/Utils.ts";
-import { getSymmetricalTileObjectShapeId, getSymmetricalTileObjectType } from "../../tileObjects/Utils.ts";
-import { BaseTypeId, ObjectTypeId, TileTypeId } from "../../tiles/constants/Common.ts";
+import {
+    getSymmetricalTileObjectShapeId,
+    getSymmetricalTileObjectType,
+} from "../../tileObjects/Utils.ts";
+import {
+    BaseTypeId,
+    ObjectTypeId,
+    TileTypeId,
+} from "../../tiles/constants/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
-import { create, fillNonTrivialDefaultValues } from "../../tiles/utils/Serialization.ts";
+import {
+    create,
+    fillNonTrivialDefaultValues,
+} from "../../tiles/utils/Serialization.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";

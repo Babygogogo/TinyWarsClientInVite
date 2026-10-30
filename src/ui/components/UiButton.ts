@@ -1,6 +1,12 @@
 import { ColorId } from "../../graphics/Constants.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
-import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
+import type {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -11,7 +17,11 @@ import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiSkinState } from "../types/UiSkinState.ts";
 import { changeColor } from "../utils/UiHelpers.ts";
-import { getRevisedAttrValue, commonLoadSkinAttrsForSizer, loadSkinStateRecursively } from "../utils/UiSkinHelpers.ts";
+import {
+    getRevisedAttrValue,
+    commonLoadSkinAttrsForSizer,
+    loadSkinStateRecursively,
+} from "../utils/UiSkinHelpers.ts";
 
 export class UiButton extends UiContainer implements IUiButton {
     private readonly _labelDisplay? : IUiLabel;

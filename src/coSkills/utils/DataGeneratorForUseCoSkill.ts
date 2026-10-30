@@ -2,8 +2,14 @@ import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { FixedAreaDamageTargetTypeId } from "../Constants.ts";
-import { pickRandomElement, createEmptyMap } from "../../helpers/Collection.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    pickRandomElement,
+    createEmptyMap,
+} from "../../helpers/Collection.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import type { FixedAreaDamage } from "../../proto/schema/CommonProto/Config/CoSkillCfg/InstantManual/FixedAreaDamage.ts";
 import { DataForUseCoSkill } from "../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
@@ -11,8 +17,6 @@ import { Hp } from "../../units/Constants.ts";
 import type { IUnitMap } from "../../units/IUnitMap.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwPlayer                      = IPlayer;
-type IBwUnitMap                     = IUnitMap;
 interface DamageMaps {
     hpMap               : number[][];
     fundMap             : number[][];
@@ -28,7 +32,7 @@ interface ValueMaps {
 
 export function generate({ war, player, skillType, skillIndex }: {
     war         : IBwWar;
-    player      : IBwPlayer;
+    player      : IPlayer;
     skillType   : number;
     skillIndex  : number;
 }): DataForUseCoSkill {
@@ -58,7 +62,7 @@ export function generate({ war, player, skillType, skillIndex }: {
     return dataForUseCoSkill;
 }
 
-function getFixedAreaDamageCenter(war: IBwWar, player: IBwPlayer, cfg: FixedAreaDamage): GridIndex | null {
+function getFixedAreaDamageCenter(war: IBwWar, player: IPlayer, cfg: FixedAreaDamage): GridIndex | null {
     const targetType        = cfg.getTargetTypeId();
     const radius            = cfg.getRadius();
     const hpDamage          = cfg.getDamage();
@@ -167,7 +171,7 @@ function getFixedAreaDamageCenterForType5({ war, valueMaps, radius, hpDamage, is
     }
 }
 
-function getValueMap(unitMap: IBwUnitMap, teamIndex: number): ValueMaps {
+function getValueMap(unitMap: IUnitMap, teamIndex: number): ValueMaps {
     const { width, height } = unitMap.getMapSize().getWH();
     const hpMap             = createEmptyMap(width, height, 0);
     const fundMap           = createEmptyMap(width, height, 0);

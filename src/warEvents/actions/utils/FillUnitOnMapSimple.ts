@@ -5,15 +5,26 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import { getNonNullElements } from "../../../helpers/Collection.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getUnitName, getFormattedText } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getUnitName,
+    getFormattedText,
+} from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import type { WeaFillUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { ITileMap } from "../../../tiles/ITileMap.ts";
-import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsEmpty, checkIsMeet } from "../../../tiles/utils/Filter.ts";
+import {
+    checkIsValid as checkIsValidTileFilter,
+    checkIsEmpty,
+    checkIsMeet,
+} from "../../../tiles/utils/Filter.ts";
 import type { IUnitMap } from "../../../units/IUnitMap.ts";
 import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
@@ -32,7 +43,7 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameCo
 
     {
         const conTileFilter = action.getConTileFilter();
-        if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
+        if ((conTileFilter != null) && (!checkIsValidTileFilter(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
             return false;
         }
     }
@@ -92,7 +103,7 @@ export function getDetailDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameCon
 export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const conTileFilter = data.getConTileFilter();
-        if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
+        if ((conTileFilter != null) && (!checkIsValidTileFilter(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
             return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
     }

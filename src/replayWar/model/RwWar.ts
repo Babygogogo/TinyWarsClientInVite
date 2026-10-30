@@ -5,7 +5,10 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { RwWarBase } from "./RwWarBase.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
-import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeam } from "../../visibilities/Utils.ts";
+import {
+    getAllUnitsOnMapVisibleToTeams,
+    getAllTilesVisibleToTeam,
+} from "../../visibilities/Utils.ts";
 
 export class RwWar extends RwWarBase {
     private _replayId?              : number;

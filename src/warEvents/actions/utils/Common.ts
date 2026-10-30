@@ -4,10 +4,20 @@ import { SmallDialogueSideId } from "../../../dialogues/Constants.ts";
 import { ForcedFogCode } from "../../../fogMaps/Constants.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../../gamePanels/Manager.ts";
+import {
+    newError,
+    getExisted,
+} from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getText, getCurrentLanguageType } from "../../../lang/Utils.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getText,
+    getCurrentLanguageType,
+} from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import { WarEventAction } from "../../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
@@ -70,8 +80,8 @@ import { WeaSmallDialogueSimple } from "../../../proto/schema/CommonProto/WarEve
 import { DataForDialogue } from "../../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForDialogue.ts";
 import { WeaStopPersistentAction } from "../../../proto/schema/CommonProto/WarEvent/WeaStopPersistentAction.ts";
 import { BgmSfxCode } from "../../../sounds/Constants.ts";
-import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
-import { BuffTypeId as UnitBuffsConstantsBuffTypeId } from "../../../unitBuffs/Constants.ts";
+import { BuffTypeId as TileBuffsBuffTypeId } from "../../../tileBuffs/Constants.ts";
+import { BuffTypeId as UnitBuffsBuffTypeId } from "../../../unitBuffs/Constants.ts";
 import { UnitTypeId } from "../../../units/Constants.ts";
 import { createDefault } from "../../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
@@ -83,336 +93,341 @@ import {
     PersistentInterchangeableActionTypeArray,
     InstantInterchangeableActionTypeArray,
 } from "../constants/Common.ts";
-import { checkIsValid, getBriefDesc, getDetailDesc, getErrorTip } from "./AddTileBuffExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsAddTileBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsAddTileBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsAddTileBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsAddTileBuffSimpleGetErrorTip,
+    checkIsValid as checkAddTileBuffExprIsValid,
+    getBriefDesc as getAddTileBuffExprBriefDesc,
+    getDetailDesc as getAddTileBuffExprDetailDesc,
+    getErrorTip as getAddTileBuffExprErrorTip,
+} from "./AddTileBuffExpr.ts";
+import {
+    checkIsValid as checkAddTileBuffSimpleIsValid,
+    getBriefDesc as getAddTileBuffSimpleBriefDesc,
+    getDetailDesc as getAddTileBuffSimpleDetailDesc,
+    getErrorTip as getAddTileBuffSimpleErrorTip,
 } from "./AddTileBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsAddUnitBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsAddUnitBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsAddUnitBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsAddUnitBuffSimpleGetErrorTip,
+    checkIsValid as checkAddUnitBuffSimpleIsValid,
+    getBriefDesc as getAddUnitBuffSimpleBriefDesc,
+    getDetailDesc as getAddUnitBuffSimpleDetailDesc,
+    getErrorTip as getAddUnitBuffSimpleErrorTip,
 } from "./AddUnitBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsAddUnitOnMapSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsAddUnitOnMapSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsAddUnitOnMapSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsAddUnitOnMapSimpleGetErrorTip,
+    checkIsValid as checkAddUnitOnMapSimpleIsValid,
+    getBriefDesc as getAddUnitOnMapSimpleBriefDesc,
+    getDetailDesc as getAddUnitOnMapSimpleDetailDesc,
+    getErrorTip as getAddUnitOnMapSimpleErrorTip,
 } from "./AddUnitOnMapSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsBigDialogueSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsBigDialogueSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsBigDialogueSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsBigDialogueSimpleGetErrorTip,
+    checkIsValid as checkBigDialogueSimpleIsValid,
+    getBriefDesc as getBigDialogueSimpleBriefDesc,
+    getDetailDesc as getBigDialogueSimpleDetailDesc,
+    getErrorTip as getBigDialogueSimpleErrorTip,
 } from "./BigDialogueSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsDeleteTileBuffExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsDeleteTileBuffExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsDeleteTileBuffExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsDeleteTileBuffExprGetErrorTip,
+    checkIsValid as checkDeleteTileBuffExprIsValid,
+    getBriefDesc as getDeleteTileBuffExprBriefDesc,
+    getDetailDesc as getDeleteTileBuffExprDetailDesc,
+    getErrorTip as getDeleteTileBuffExprErrorTip,
 } from "./DeleteTileBuffExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsDeleteTileBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsDeleteTileBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsDeleteTileBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsDeleteTileBuffSimpleGetErrorTip,
+    checkIsValid as checkDeleteTileBuffSimpleIsValid,
+    getBriefDesc as getDeleteTileBuffSimpleBriefDesc,
+    getDetailDesc as getDeleteTileBuffSimpleDetailDesc,
+    getErrorTip as getDeleteTileBuffSimpleErrorTip,
 } from "./DeleteTileBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsDeleteUnitBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsDeleteUnitBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsDeleteUnitBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsDeleteUnitBuffSimpleGetErrorTip,
+    checkIsValid as checkDeleteUnitBuffSimpleIsValid,
+    getBriefDesc as getDeleteUnitBuffSimpleBriefDesc,
+    getDetailDesc as getDeleteUnitBuffSimpleDetailDesc,
+    getErrorTip as getDeleteUnitBuffSimpleErrorTip,
 } from "./DeleteUnitBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsDestroyUnitExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsDestroyUnitExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsDestroyUnitExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsDestroyUnitExprGetErrorTip,
+    checkIsValid as checkDestroyUnitExprIsValid,
+    getBriefDesc as getDestroyUnitExprBriefDesc,
+    getDetailDesc as getDestroyUnitExprDetailDesc,
+    getErrorTip as getDestroyUnitExprErrorTip,
 } from "./DestroyUnitExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsDestroyUnitSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsDestroyUnitSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsDestroyUnitSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsDestroyUnitSimpleGetErrorTip,
+    checkIsValid as checkDestroyUnitSimpleIsValid,
+    getBriefDesc as getDestroyUnitSimpleBriefDesc,
+    getDetailDesc as getDestroyUnitSimpleDetailDesc,
+    getErrorTip as getDestroyUnitSimpleErrorTip,
 } from "./DestroyUnitSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsFillUnitLoadedExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsFillUnitLoadedExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsFillUnitLoadedExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsFillUnitLoadedExprGetErrorTip,
+    checkIsValid as checkFillUnitLoadedExprIsValid,
+    getBriefDesc as getFillUnitLoadedExprBriefDesc,
+    getDetailDesc as getFillUnitLoadedExprDetailDesc,
+    getErrorTip as getFillUnitLoadedExprErrorTip,
 } from "./FillUnitLoadedExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsFillUnitLoadedSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsFillUnitLoadedSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsFillUnitLoadedSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsFillUnitLoadedSimpleGetErrorTip,
+    checkIsValid as checkFillUnitLoadedSimpleIsValid,
+    getBriefDesc as getFillUnitLoadedSimpleBriefDesc,
+    getDetailDesc as getFillUnitLoadedSimpleDetailDesc,
+    getErrorTip as getFillUnitLoadedSimpleErrorTip,
 } from "./FillUnitLoadedSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsFillUnitOnMapExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsFillUnitOnMapExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsFillUnitOnMapExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsFillUnitOnMapExprGetErrorTip,
+    checkIsValid as checkFillUnitOnMapExprIsValid,
+    getBriefDesc as getFillUnitOnMapExprBriefDesc,
+    getDetailDesc as getFillUnitOnMapExprDetailDesc,
+    getErrorTip as getFillUnitOnMapExprErrorTip,
 } from "./FillUnitOnMapExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsFillUnitOnMapSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsFillUnitOnMapSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsFillUnitOnMapSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsFillUnitOnMapSimpleGetErrorTip,
+    checkIsValid as checkFillUnitOnMapSimpleIsValid,
+    getBriefDesc as getFillUnitOnMapSimpleBriefDesc,
+    getDetailDesc as getFillUnitOnMapSimpleDetailDesc,
+    getErrorTip as getFillUnitOnMapSimpleErrorTip,
 } from "./FillUnitOnMapSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsModifyTileBuffExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsModifyTileBuffExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsModifyTileBuffExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsModifyTileBuffExprGetErrorTip,
+    checkIsValid as checkModifyTileBuffExprIsValid,
+    getBriefDesc as getModifyTileBuffExprBriefDesc,
+    getDetailDesc as getModifyTileBuffExprDetailDesc,
+    getErrorTip as getModifyTileBuffExprErrorTip,
 } from "./ModifyTileBuffExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsModifyTileBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsModifyTileBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsModifyTileBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsModifyTileBuffSimpleGetErrorTip,
+    checkIsValid as checkModifyTileBuffSimpleIsValid,
+    getBriefDesc as getModifyTileBuffSimpleBriefDesc,
+    getDetailDesc as getModifyTileBuffSimpleDetailDesc,
+    getErrorTip as getModifyTileBuffSimpleErrorTip,
 } from "./ModifyTileBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsModifyUnitBuffSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsModifyUnitBuffSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsModifyUnitBuffSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsModifyUnitBuffSimpleGetErrorTip,
+    checkIsValid as checkModifyUnitBuffSimpleIsValid,
+    getBriefDesc as getModifyUnitBuffSimpleBriefDesc,
+    getDetailDesc as getModifyUnitBuffSimpleDetailDesc,
+    getErrorTip as getModifyUnitBuffSimpleErrorTip,
 } from "./ModifyUnitBuffSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPersistentModifyPlayerAttributeCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPersistentModifyPlayerAttributeGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPersistentModifyPlayerAttributeGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPersistentModifyPlayerAttributeGetErrorTip,
+    checkIsValid as checkPersistentModifyPlayerAttributeIsValid,
+    getBriefDesc as getPersistentModifyPlayerAttributeBriefDesc,
+    getDetailDesc as getPersistentModifyPlayerAttributeDetailDesc,
+    getErrorTip as getPersistentModifyPlayerAttributeErrorTip,
 } from "./PersistentModifyPlayerAttribute.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPersistentModifyUnitAttributeCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPersistentModifyUnitAttributeGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPersistentModifyUnitAttributeGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPersistentModifyUnitAttributeGetErrorTip,
+    checkIsValid as checkPersistentModifyUnitAttributeIsValid,
+    getBriefDesc as getPersistentModifyUnitAttributeBriefDesc,
+    getDetailDesc as getPersistentModifyUnitAttributeDetailDesc,
+    getErrorTip as getPersistentModifyUnitAttributeErrorTip,
 } from "./PersistentModifyUnitAttribute.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPersistentPlayBgmCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPersistentPlayBgmGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPersistentPlayBgmGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPersistentPlayBgmGetErrorTip,
+    checkIsValid as checkPersistentPlayBgmIsValid,
+    getBriefDesc as getPersistentPlayBgmBriefDesc,
+    getDetailDesc as getPersistentPlayBgmDetailDesc,
+    getErrorTip as getPersistentPlayBgmErrorTip,
 } from "./PersistentPlayBgm.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPersistentShowTextCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPersistentShowTextGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPersistentShowTextGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPersistentShowTextGetErrorTip,
+    checkIsValid as checkPersistentShowTextIsValid,
+    getBriefDesc as getPersistentShowTextBriefDesc,
+    getDetailDesc as getPersistentShowTextDetailDesc,
+    getErrorTip as getPersistentShowTextErrorTip,
 } from "./PersistentShowText.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPlayBgmCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPlayBgmGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPlayBgmGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPlayBgmGetErrorTip,
+    checkIsValid as checkPlayBgmIsValid,
+    getBriefDesc as getPlayBgmBriefDesc,
+    getDetailDesc as getPlayBgmDetailDesc,
+    getErrorTip as getPlayBgmErrorTip,
 } from "./PlayBgm.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsPlaySfxCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsPlaySfxGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsPlaySfxGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsPlaySfxGetErrorTip,
+    checkIsValid as checkPlaySfxIsValid,
+    getBriefDesc as getPlaySfxBriefDesc,
+    getDetailDesc as getPlaySfxDetailDesc,
+    getErrorTip as getPlaySfxErrorTip,
 } from "./PlaySfx.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomBuildingStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomBuildingStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomBuildingStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomBuildingStateExprGetErrorTip,
+    checkIsValid as checkSetCustomBuildingStateExprIsValid,
+    getBriefDesc as getSetCustomBuildingStateExprBriefDesc,
+    getDetailDesc as getSetCustomBuildingStateExprDetailDesc,
+    getErrorTip as getSetCustomBuildingStateExprErrorTip,
 } from "./SetCustomBuildingStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomBuildingStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomBuildingStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomBuildingStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomBuildingStateSimpleGetErrorTip,
+    checkIsValid as checkSetCustomBuildingStateSimpleIsValid,
+    getBriefDesc as getSetCustomBuildingStateSimpleBriefDesc,
+    getDetailDesc as getSetCustomBuildingStateSimpleDetailDesc,
+    getErrorTip as getSetCustomBuildingStateSimpleErrorTip,
 } from "./SetCustomBuildingStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomCannonStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomCannonStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomCannonStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomCannonStateExprGetErrorTip,
+    checkIsValid as checkSetCustomCannonStateExprIsValid,
+    getBriefDesc as getSetCustomCannonStateExprBriefDesc,
+    getDetailDesc as getSetCustomCannonStateExprDetailDesc,
+    getErrorTip as getSetCustomCannonStateExprErrorTip,
 } from "./SetCustomCannonStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomCannonStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomCannonStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomCannonStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomCannonStateSimpleGetErrorTip,
+    checkIsValid as checkSetCustomCannonStateSimpleIsValid,
+    getBriefDesc as getSetCustomCannonStateSimpleBriefDesc,
+    getDetailDesc as getSetCustomCannonStateSimpleDetailDesc,
+    getErrorTip as getSetCustomCannonStateSimpleErrorTip,
 } from "./SetCustomCannonStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomCountersCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomCountersGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomCountersGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomCountersGetErrorTip,
+    checkIsValid as checkSetCustomCountersIsValid,
+    getBriefDesc as getSetCustomCountersBriefDesc,
+    getDetailDesc as getSetCustomCountersDetailDesc,
+    getErrorTip as getSetCustomCountersErrorTip,
 } from "./SetCustomCounters.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomCrystalStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomCrystalStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomCrystalStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomCrystalStateExprGetErrorTip,
+    checkIsValid as checkSetCustomCrystalStateExprIsValid,
+    getBriefDesc as getSetCustomCrystalStateExprBriefDesc,
+    getDetailDesc as getSetCustomCrystalStateExprDetailDesc,
+    getErrorTip as getSetCustomCrystalStateExprErrorTip,
 } from "./SetCustomCrystalStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomCrystalStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomCrystalStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomCrystalStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomCrystalStateSimpleGetErrorTip,
+    checkIsValid as checkSetCustomCrystalStateSimpleIsValid,
+    getBriefDesc as getSetCustomCrystalStateSimpleBriefDesc,
+    getDetailDesc as getSetCustomCrystalStateSimpleDetailDesc,
+    getErrorTip as getSetCustomCrystalStateSimpleErrorTip,
 } from "./SetCustomCrystalStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomLaserTurretStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomLaserTurretStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomLaserTurretStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomLaserTurretStateExprGetErrorTip,
+    checkIsValid as checkSetCustomLaserTurretStateExprIsValid,
+    getBriefDesc as getSetCustomLaserTurretStateExprBriefDesc,
+    getDetailDesc as getSetCustomLaserTurretStateExprDetailDesc,
+    getErrorTip as getSetCustomLaserTurretStateExprErrorTip,
 } from "./SetCustomLaserTurretStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetErrorTip,
+    checkIsValid as checkSetCustomLaserTurretStateSimpleIsValid,
+    getBriefDesc as getSetCustomLaserTurretStateSimpleBriefDesc,
+    getDetailDesc as getSetCustomLaserTurretStateSimpleDetailDesc,
+    getErrorTip as getSetCustomLaserTurretStateSimpleErrorTip,
 } from "./SetCustomLaserTurretStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetForceFogCodeExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetForceFogCodeExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetForceFogCodeExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetForceFogCodeExprGetErrorTip,
+    checkIsValid as checkSetForceFogCodeExprIsValid,
+    getBriefDesc as getSetForceFogCodeExprBriefDesc,
+    getDetailDesc as getSetForceFogCodeExprDetailDesc,
+    getErrorTip as getSetForceFogCodeExprErrorTip,
 } from "./SetForceFogCodeExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetForceFogCodeSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetForceFogCodeSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetForceFogCodeSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetForceFogCodeSimpleGetErrorTip,
+    checkIsValid as checkSetForceFogCodeSimpleIsValid,
+    getBriefDesc as getSetForceFogCodeSimpleBriefDesc,
+    getDetailDesc as getSetForceFogCodeSimpleDetailDesc,
+    getErrorTip as getSetForceFogCodeSimpleErrorTip,
 } from "./SetForceFogCodeSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetPlayerStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetPlayerStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetPlayerStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetPlayerStateExprGetErrorTip,
+    checkIsValid as checkSetPlayerStateExprIsValid,
+    getBriefDesc as getSetPlayerStateExprBriefDesc,
+    getDetailDesc as getSetPlayerStateExprDetailDesc,
+    getErrorTip as getSetPlayerStateExprErrorTip,
 } from "./SetPlayerStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetPlayerStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetPlayerStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetPlayerStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetPlayerStateSimpleGetErrorTip,
+    checkIsValid as checkSetPlayerStateSimpleIsValid,
+    getBriefDesc as getSetPlayerStateSimpleBriefDesc,
+    getDetailDesc as getSetPlayerStateSimpleDetailDesc,
+    getErrorTip as getSetPlayerStateSimpleErrorTip,
 } from "./SetPlayerStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetTaskObjectiveStateCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetTaskObjectiveStateGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetTaskObjectiveStateGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetTaskObjectiveStateGetErrorTip,
+    checkIsValid as checkSetTaskObjectiveStateIsValid,
+    getBriefDesc as getSetTaskObjectiveStateBriefDesc,
+    getDetailDesc as getSetTaskObjectiveStateDetailDesc,
+    getErrorTip as getSetTaskObjectiveStateErrorTip,
 } from "./SetTaskObjectiveState.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetTileStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetTileStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetTileStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetTileStateExprGetErrorTip,
+    checkIsValid as checkSetTileStateExprIsValid,
+    getBriefDesc as getSetTileStateExprBriefDesc,
+    getDetailDesc as getSetTileStateExprDetailDesc,
+    getErrorTip as getSetTileStateExprErrorTip,
 } from "./SetTileStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetTileStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetTileStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetTileStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetTileStateSimpleGetErrorTip,
+    checkIsValid as checkSetTileStateSimpleIsValid,
+    getBriefDesc as getSetTileStateSimpleBriefDesc,
+    getDetailDesc as getSetTileStateSimpleDetailDesc,
+    getErrorTip as getSetTileStateSimpleErrorTip,
 } from "./SetTileStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetTileTypeExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetTileTypeExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetTileTypeExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetTileTypeExprGetErrorTip,
+    checkIsValid as checkSetTileTypeExprIsValid,
+    getBriefDesc as getSetTileTypeExprBriefDesc,
+    getDetailDesc as getSetTileTypeExprDetailDesc,
+    getErrorTip as getSetTileTypeExprErrorTip,
 } from "./SetTileTypeExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetTileTypeSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetTileTypeSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetTileTypeSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetTileTypeSimpleGetErrorTip,
+    checkIsValid as checkSetTileTypeSimpleIsValid,
+    getBriefDesc as getSetTileTypeSimpleBriefDesc,
+    getDetailDesc as getSetTileTypeSimpleDetailDesc,
+    getErrorTip as getSetTileTypeSimpleErrorTip,
 } from "./SetTileTypeSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitMovePathVisibilityCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitMovePathVisibilityGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitMovePathVisibilityGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitMovePathVisibilityGetErrorTip,
+    checkIsValid as checkSetUnitMovePathVisibilityIsValid,
+    getBriefDesc as getSetUnitMovePathVisibilityBriefDesc,
+    getDetailDesc as getSetUnitMovePathVisibilityDetailDesc,
+    getErrorTip as getSetUnitMovePathVisibilityErrorTip,
 } from "./SetUnitMovePathVisibility.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitOwnershipExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitOwnershipExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitOwnershipExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitOwnershipExprGetErrorTip,
+    checkIsValid as checkSetUnitOwnershipExprIsValid,
+    getBriefDesc as getSetUnitOwnershipExprBriefDesc,
+    getDetailDesc as getSetUnitOwnershipExprDetailDesc,
+    getErrorTip as getSetUnitOwnershipExprErrorTip,
 } from "./SetUnitOwnershipExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitOwnershipSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitOwnershipSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitOwnershipSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitOwnershipSimpleGetErrorTip,
+    checkIsValid as checkSetUnitOwnershipSimpleIsValid,
+    getBriefDesc as getSetUnitOwnershipSimpleBriefDesc,
+    getDetailDesc as getSetUnitOwnershipSimpleDetailDesc,
+    getErrorTip as getSetUnitOwnershipSimpleErrorTip,
 } from "./SetUnitOwnershipSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitPositionExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitPositionExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitPositionExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitPositionExprGetErrorTip,
+    checkIsValid as checkSetUnitPositionExprIsValid,
+    getBriefDesc as getSetUnitPositionExprBriefDesc,
+    getDetailDesc as getSetUnitPositionExprDetailDesc,
+    getErrorTip as getSetUnitPositionExprErrorTip,
 } from "./SetUnitPositionExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitPositionSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitPositionSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitPositionSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitPositionSimpleGetErrorTip,
+    checkIsValid as checkSetUnitPositionSimpleIsValid,
+    getBriefDesc as getSetUnitPositionSimpleBriefDesc,
+    getDetailDesc as getSetUnitPositionSimpleDetailDesc,
+    getErrorTip as getSetUnitPositionSimpleErrorTip,
 } from "./SetUnitPositionSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitStateExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitStateExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitStateExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitStateExprGetErrorTip,
+    checkIsValid as checkSetUnitStateExprIsValid,
+    getBriefDesc as getSetUnitStateExprBriefDesc,
+    getDetailDesc as getSetUnitStateExprDetailDesc,
+    getErrorTip as getSetUnitStateExprErrorTip,
 } from "./SetUnitStateExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitStateSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitStateSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitStateSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitStateSimpleGetErrorTip,
+    checkIsValid as checkSetUnitStateSimpleIsValid,
+    getBriefDesc as getSetUnitStateSimpleBriefDesc,
+    getDetailDesc as getSetUnitStateSimpleDetailDesc,
+    getErrorTip as getSetUnitStateSimpleErrorTip,
 } from "./SetUnitStateSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitTypeExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitTypeExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitTypeExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitTypeExprGetErrorTip,
+    checkIsValid as checkSetUnitTypeExprIsValid,
+    getBriefDesc as getSetUnitTypeExprBriefDesc,
+    getDetailDesc as getSetUnitTypeExprDetailDesc,
+    getErrorTip as getSetUnitTypeExprErrorTip,
 } from "./SetUnitTypeExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetUnitTypeSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetUnitTypeSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetUnitTypeSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetUnitTypeSimpleGetErrorTip,
+    checkIsValid as checkSetUnitTypeSimpleIsValid,
+    getBriefDesc as getSetUnitTypeSimpleBriefDesc,
+    getDetailDesc as getSetUnitTypeSimpleDetailDesc,
+    getErrorTip as getSetUnitTypeSimpleErrorTip,
 } from "./SetUnitTypeSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetViewpointExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetViewpointExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetViewpointExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetViewpointExprGetErrorTip,
+    checkIsValid as checkSetViewpointExprIsValid,
+    getBriefDesc as getSetViewpointExprBriefDesc,
+    getDetailDesc as getSetViewpointExprDetailDesc,
+    getErrorTip as getSetViewpointExprErrorTip,
 } from "./SetViewpointExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetViewpointSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetViewpointSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetViewpointSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetViewpointSimpleGetErrorTip,
+    checkIsValid as checkSetViewpointSimpleIsValid,
+    getBriefDesc as getSetViewpointSimpleBriefDesc,
+    getDetailDesc as getSetViewpointSimpleDetailDesc,
+    getErrorTip as getSetViewpointSimpleErrorTip,
 } from "./SetViewpointSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetWeatherExprCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetWeatherExprGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetWeatherExprGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetWeatherExprGetErrorTip,
+    checkIsValid as checkSetWeatherExprIsValid,
+    getBriefDesc as getSetWeatherExprBriefDesc,
+    getDetailDesc as getSetWeatherExprDetailDesc,
+    getErrorTip as getSetWeatherExprErrorTip,
 } from "./SetWeatherExpr.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSetWeatherSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSetWeatherSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSetWeatherSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSetWeatherSimpleGetErrorTip,
+    checkIsValid as checkSetWeatherSimpleIsValid,
+    getBriefDesc as getSetWeatherSimpleBriefDesc,
+    getDetailDesc as getSetWeatherSimpleDetailDesc,
+    getErrorTip as getSetWeatherSimpleErrorTip,
 } from "./SetWeatherSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsSmallDialogueSimpleCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsSmallDialogueSimpleGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsSmallDialogueSimpleGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsSmallDialogueSimpleGetErrorTip,
+    checkIsValid as checkSmallDialogueSimpleIsValid,
+    getBriefDesc as getSmallDialogueSimpleBriefDesc,
+    getDetailDesc as getSmallDialogueSimpleDetailDesc,
+    getErrorTip as getSmallDialogueSimpleErrorTip,
 } from "./SmallDialogueSimple.ts";
 import {
-    checkIsValid as WarEventsActionsUtilsStopPersistentActionCheckIsValid,
-    getBriefDesc as WarEventsActionsUtilsStopPersistentActionGetBriefDesc,
-    getDetailDesc as WarEventsActionsUtilsStopPersistentActionGetDetailDesc,
-    getErrorTip as WarEventsActionsUtilsStopPersistentActionGetErrorTip,
+    checkIsValid as checkStopPersistentActionIsValid,
+    getBriefDesc as getStopPersistentActionBriefDesc,
+    getDetailDesc as getStopPersistentActionDetailDesc,
+    getErrorTip as getStopPersistentActionErrorTip,
 } from "./StopPersistentAction.ts";
 import { Event } from "../../Constants.ts";
 import { getEvent } from "../../fullDatas/Utils.ts";
@@ -456,62 +471,62 @@ export function checkIsValidWarEventAction({ action, mapSize, gameConfig, player
     }
 
     // todo: add more checkers when the action types grow.
-    return (WarEventsActionsUtilsAddUnitOnMapSimpleCheckIsValid({ action: action.getWeaAddUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral }))
-        || (WarEventsActionsUtilsFillUnitOnMapExprCheckIsValid(action.getWeaFillUnitOnMapExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsFillUnitOnMapSimpleCheckIsValid(action.getWeaFillUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsFillUnitLoadedSimpleCheckIsValid(action.getWeaFillUnitLoadedSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsFillUnitLoadedExprCheckIsValid(action.getWeaFillUnitLoadedExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsDestroyUnitSimpleCheckIsValid(action.getWeaDestroyUnitSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsDestroyUnitExprCheckIsValid(action.getWeaDestroyUnitExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetUnitTypeSimpleCheckIsValid(action.getWeaSetUnitTypeSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetUnitTypeExprCheckIsValid(action.getWeaSetUnitTypeExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetUnitOwnershipSimpleCheckIsValid(action.getWeaSetUnitOwnershipSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetUnitOwnershipExprCheckIsValid(action.getWeaSetUnitOwnershipExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetUnitPositionSimpleCheckIsValid(action.getWeaSetUnitPositionSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetUnitPositionExprCheckIsValid(action.getWeaSetUnitPositionExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetUnitStateSimpleCheckIsValid(action.getWeaSetUnitStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetUnitStateExprCheckIsValid(action.getWeaSetUnitStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsAddUnitBuffSimpleCheckIsValid(action.getWeaAddUnitBuffSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsModifyUnitBuffSimpleCheckIsValid(action.getWeaModifyUnitBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
-        || (WarEventsActionsUtilsDeleteUnitBuffSimpleCheckIsValid(action.getWeaDeleteUnitBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
-        || (WarEventsActionsUtilsSetViewpointExprCheckIsValid(action.getWeaSetViewpointExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetViewpointSimpleCheckIsValid(action.getWeaSetViewpointSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetWeatherExprCheckIsValid(action.getWeaSetWeatherExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetWeatherSimpleCheckIsValid(action.getWeaSetWeatherSimple(), gameConfig))
-        || (WarEventsActionsUtilsBigDialogueSimpleCheckIsValid(action.getWeaBigDialogueSimple(), playersCountUnneutral, gameConfig))
-        || (WarEventsActionsUtilsSmallDialogueSimpleCheckIsValid(action.getWeaSmallDialogueSimple(), playersCountUnneutral, gameConfig))
-        || (WarEventsActionsUtilsPlayBgmCheckIsValid(action.getWeaPlayBgm(), gameConfig))
-        || (WarEventsActionsUtilsPlaySfxCheckIsValid(action.getWeaPlaySfx()))
-        || (WarEventsActionsUtilsSetForceFogCodeExprCheckIsValid(action.getWeaSetForceFogCodeExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetForceFogCodeSimpleCheckIsValid(action.getWeaSetForceFogCodeSimple()))
-        || (WarEventsActionsUtilsSetCustomCountersCheckIsValid(action.getWeaSetCustomCounters(), customCounterNameSet))
-        || (WarEventsActionsUtilsStopPersistentActionCheckIsValid(action.getWeaStopPersistentAction()))
-        || (WarEventsActionsUtilsSetPlayerStateExprCheckIsValid(action.getWeaSetPlayerStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetPlayerStateSimpleCheckIsValid(action.getWeaSetPlayerStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetTaskObjectiveStateCheckIsValid(action.getWeaSetTaskObjectiveState(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetUnitMovePathVisibilityCheckIsValid(action.getWeaSetUnitMovePathVisibility(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetTileTypeExprCheckIsValid(action.getWeaSetTileTypeExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetTileTypeSimpleCheckIsValid(action.getWeaSetTileTypeSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetTileStateExprCheckIsValid(action.getWeaSetTileStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetTileStateSimpleCheckIsValid(action.getWeaSetTileStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetCustomBuildingStateExprCheckIsValid(action.getWeaSetCustomBuildingStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetCustomBuildingStateSimpleCheckIsValid(action.getWeaSetCustomBuildingStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetCustomCrystalStateExprCheckIsValid(action.getWeaSetCustomCrystalStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetCustomCrystalStateSimpleCheckIsValid(action.getWeaSetCustomCrystalStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetCustomCannonStateExprCheckIsValid(action.getWeaSetCustomCannonStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetCustomCannonStateSimpleCheckIsValid(action.getWeaSetCustomCannonStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateExprCheckIsValid(action.getWeaSetCustomLaserTurretStateExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateSimpleCheckIsValid(action.getWeaSetCustomLaserTurretStateSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsDeleteTileBuffExprCheckIsValid(action.getWeaDeleteTileBuffExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsDeleteTileBuffSimpleCheckIsValid(action.getWeaDeleteTileBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
-        || (checkIsValid(action.getWeaAddTileBuffExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsAddTileBuffSimpleCheckIsValid(action.getWeaAddTileBuffSimple(), gameConfig, mapSize, playersCountUnneutral))
-        || (WarEventsActionsUtilsModifyTileBuffExprCheckIsValid(action.getWeaModifyTileBuffExpr(), customCounterNameSet))
-        || (WarEventsActionsUtilsModifyTileBuffSimpleCheckIsValid(action.getWeaModifyTileBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
-        || (WarEventsActionsUtilsPersistentShowTextCheckIsValid(action.getWeaPersistentShowText()))
-        || (WarEventsActionsUtilsPersistentPlayBgmCheckIsValid(action.getWeaPersistentPlayBgm()))
-        || (WarEventsActionsUtilsPersistentModifyPlayerAttributeCheckIsValid(action.getWeaPersistentModifyPlayerAttribute(), customCounterNameSet))
-        || (WarEventsActionsUtilsPersistentModifyUnitAttributeCheckIsValid(action.getWeaPersistentModifyUnitAttribute(), customCounterNameSet));
+    return (checkAddUnitOnMapSimpleIsValid({ action: action.getWeaAddUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral }))
+        || (checkFillUnitOnMapExprIsValid(action.getWeaFillUnitOnMapExpr(), customCounterNameSet))
+        || (checkFillUnitOnMapSimpleIsValid(action.getWeaFillUnitOnMapSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkFillUnitLoadedSimpleIsValid(action.getWeaFillUnitLoadedSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkFillUnitLoadedExprIsValid(action.getWeaFillUnitLoadedExpr(), customCounterNameSet))
+        || (checkDestroyUnitSimpleIsValid(action.getWeaDestroyUnitSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkDestroyUnitExprIsValid(action.getWeaDestroyUnitExpr(), customCounterNameSet))
+        || (checkSetUnitTypeSimpleIsValid(action.getWeaSetUnitTypeSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetUnitTypeExprIsValid(action.getWeaSetUnitTypeExpr(), customCounterNameSet))
+        || (checkSetUnitOwnershipSimpleIsValid(action.getWeaSetUnitOwnershipSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetUnitOwnershipExprIsValid(action.getWeaSetUnitOwnershipExpr(), customCounterNameSet))
+        || (checkSetUnitPositionSimpleIsValid(action.getWeaSetUnitPositionSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetUnitPositionExprIsValid(action.getWeaSetUnitPositionExpr(), customCounterNameSet))
+        || (checkSetUnitStateSimpleIsValid(action.getWeaSetUnitStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetUnitStateExprIsValid(action.getWeaSetUnitStateExpr(), customCounterNameSet))
+        || (checkAddUnitBuffSimpleIsValid(action.getWeaAddUnitBuffSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkModifyUnitBuffSimpleIsValid(action.getWeaModifyUnitBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
+        || (checkDeleteUnitBuffSimpleIsValid(action.getWeaDeleteUnitBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
+        || (checkSetViewpointExprIsValid(action.getWeaSetViewpointExpr(), customCounterNameSet))
+        || (checkSetViewpointSimpleIsValid(action.getWeaSetViewpointSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetWeatherExprIsValid(action.getWeaSetWeatherExpr(), customCounterNameSet))
+        || (checkSetWeatherSimpleIsValid(action.getWeaSetWeatherSimple(), gameConfig))
+        || (checkBigDialogueSimpleIsValid(action.getWeaBigDialogueSimple(), playersCountUnneutral, gameConfig))
+        || (checkSmallDialogueSimpleIsValid(action.getWeaSmallDialogueSimple(), playersCountUnneutral, gameConfig))
+        || (checkPlayBgmIsValid(action.getWeaPlayBgm(), gameConfig))
+        || (checkPlaySfxIsValid(action.getWeaPlaySfx()))
+        || (checkSetForceFogCodeExprIsValid(action.getWeaSetForceFogCodeExpr(), customCounterNameSet))
+        || (checkSetForceFogCodeSimpleIsValid(action.getWeaSetForceFogCodeSimple()))
+        || (checkSetCustomCountersIsValid(action.getWeaSetCustomCounters(), customCounterNameSet))
+        || (checkStopPersistentActionIsValid(action.getWeaStopPersistentAction()))
+        || (checkSetPlayerStateExprIsValid(action.getWeaSetPlayerStateExpr(), customCounterNameSet))
+        || (checkSetPlayerStateSimpleIsValid(action.getWeaSetPlayerStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetTaskObjectiveStateIsValid(action.getWeaSetTaskObjectiveState(), customCounterNameSet))
+        || (checkSetUnitMovePathVisibilityIsValid(action.getWeaSetUnitMovePathVisibility(), customCounterNameSet))
+        || (checkSetTileTypeExprIsValid(action.getWeaSetTileTypeExpr(), customCounterNameSet))
+        || (checkSetTileTypeSimpleIsValid(action.getWeaSetTileTypeSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetTileStateExprIsValid(action.getWeaSetTileStateExpr(), customCounterNameSet))
+        || (checkSetTileStateSimpleIsValid(action.getWeaSetTileStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetCustomBuildingStateExprIsValid(action.getWeaSetCustomBuildingStateExpr(), customCounterNameSet))
+        || (checkSetCustomBuildingStateSimpleIsValid(action.getWeaSetCustomBuildingStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetCustomCrystalStateExprIsValid(action.getWeaSetCustomCrystalStateExpr(), customCounterNameSet))
+        || (checkSetCustomCrystalStateSimpleIsValid(action.getWeaSetCustomCrystalStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetCustomCannonStateExprIsValid(action.getWeaSetCustomCannonStateExpr(), customCounterNameSet))
+        || (checkSetCustomCannonStateSimpleIsValid(action.getWeaSetCustomCannonStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkSetCustomLaserTurretStateExprIsValid(action.getWeaSetCustomLaserTurretStateExpr(), customCounterNameSet))
+        || (checkSetCustomLaserTurretStateSimpleIsValid(action.getWeaSetCustomLaserTurretStateSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkDeleteTileBuffExprIsValid(action.getWeaDeleteTileBuffExpr(), customCounterNameSet))
+        || (checkDeleteTileBuffSimpleIsValid(action.getWeaDeleteTileBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
+        || (checkAddTileBuffExprIsValid(action.getWeaAddTileBuffExpr(), customCounterNameSet))
+        || (checkAddTileBuffSimpleIsValid(action.getWeaAddTileBuffSimple(), gameConfig, mapSize, playersCountUnneutral))
+        || (checkModifyTileBuffExprIsValid(action.getWeaModifyTileBuffExpr(), customCounterNameSet))
+        || (checkModifyTileBuffSimpleIsValid(action.getWeaModifyTileBuffSimple(), mapSize, playersCountUnneutral, gameConfig))
+        || (checkPersistentShowTextIsValid(action.getWeaPersistentShowText()))
+        || (checkPersistentPlayBgmIsValid(action.getWeaPersistentPlayBgm()))
+        || (checkPersistentModifyPlayerAttributeIsValid(action.getWeaPersistentModifyPlayerAttribute(), customCounterNameSet))
+        || (checkPersistentModifyUnitAttributeIsValid(action.getWeaPersistentModifyUnitAttribute(), customCounterNameSet));
 }
 
 export function checkIsPersistentAction(action: WarEventAction): boolean {
@@ -652,121 +667,121 @@ export function openActionModifyPanel(war: IMeWar, fullData: WarEventFullData, a
 
 export function getBriefDescForAction(action: WarEventAction, gameConfig: GameConfig): string | null {
     // todo: add functions for other actions
-    return (WarEventsActionsUtilsAddUnitOnMapSimpleGetBriefDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitOnMapExprGetBriefDesc(action.getWeaFillUnitOnMapExpr()))
-        || (WarEventsActionsUtilsFillUnitOnMapSimpleGetBriefDesc(action.getWeaFillUnitOnMapSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitLoadedSimpleGetBriefDesc(action.getWeaFillUnitLoadedSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitLoadedExprGetBriefDesc(action.getWeaFillUnitLoadedExpr()))
-        || (WarEventsActionsUtilsDestroyUnitSimpleGetBriefDesc(action.getWeaDestroyUnitSimple()))
-        || (WarEventsActionsUtilsDestroyUnitExprGetBriefDesc(action.getWeaDestroyUnitExpr()))
-        || (WarEventsActionsUtilsSetUnitTypeSimpleGetBriefDesc(action.getWeaSetUnitTypeSimple(), gameConfig))
-        || (WarEventsActionsUtilsSetUnitTypeExprGetBriefDesc(action.getWeaSetUnitTypeExpr()))
-        || (WarEventsActionsUtilsSetUnitOwnershipSimpleGetBriefDesc(action.getWeaSetUnitOwnershipSimple()))
-        || (WarEventsActionsUtilsSetUnitOwnershipExprGetBriefDesc(action.getWeaSetUnitOwnershipExpr()))
-        || (WarEventsActionsUtilsSetUnitPositionSimpleGetBriefDesc(action.getWeaSetUnitPositionSimple()))
-        || (WarEventsActionsUtilsSetUnitPositionExprGetBriefDesc(action.getWeaSetUnitPositionExpr()))
-        || (WarEventsActionsUtilsSetUnitStateSimpleGetBriefDesc(action.getWeaSetUnitStateSimple()))
-        || (WarEventsActionsUtilsSetUnitStateExprGetBriefDesc(action.getWeaSetUnitStateExpr()))
-        || (WarEventsActionsUtilsAddUnitBuffSimpleGetBriefDesc(action.getWeaAddUnitBuffSimple()))
-        || (WarEventsActionsUtilsModifyUnitBuffSimpleGetBriefDesc(action.getWeaModifyUnitBuffSimple()))
-        || (WarEventsActionsUtilsDeleteUnitBuffSimpleGetBriefDesc(action.getWeaDeleteUnitBuffSimple()))
-        || (WarEventsActionsUtilsSetViewpointExprGetBriefDesc(action.getWeaSetViewpointExpr()))
-        || (WarEventsActionsUtilsSetViewpointSimpleGetBriefDesc(action.getWeaSetViewpointSimple()))
-        || (WarEventsActionsUtilsSetWeatherExprGetBriefDesc(action.getWeaSetWeatherExpr()))
-        || (WarEventsActionsUtilsSetWeatherSimpleGetBriefDesc(action.getWeaSetWeatherSimple(), gameConfig))
-        || (WarEventsActionsUtilsBigDialogueSimpleGetBriefDesc(action.getWeaBigDialogueSimple(), gameConfig))
-        || (WarEventsActionsUtilsSmallDialogueSimpleGetBriefDesc(action.getWeaSmallDialogueSimple(), gameConfig))
-        || (WarEventsActionsUtilsPlayBgmGetBriefDesc(action.getWeaPlayBgm(), gameConfig))
-        || (WarEventsActionsUtilsPlaySfxGetBriefDesc(action.getWeaPlaySfx(), gameConfig))
-        || (WarEventsActionsUtilsSetForceFogCodeExprGetBriefDesc(action.getWeaSetForceFogCodeExpr()))
-        || (WarEventsActionsUtilsSetForceFogCodeSimpleGetBriefDesc(action.getWeaSetForceFogCodeSimple()))
-        || (WarEventsActionsUtilsSetCustomCountersGetBriefDesc(action.getWeaSetCustomCounters()))
-        || (WarEventsActionsUtilsStopPersistentActionGetBriefDesc(action.getWeaStopPersistentAction()))
-        || (WarEventsActionsUtilsSetPlayerStateExprGetBriefDesc(action.getWeaSetPlayerStateExpr()))
-        || (WarEventsActionsUtilsSetPlayerStateSimpleGetBriefDesc(action.getWeaSetPlayerStateSimple()))
-        || (WarEventsActionsUtilsSetTaskObjectiveStateGetBriefDesc(action.getWeaSetTaskObjectiveState()))
-        || (WarEventsActionsUtilsSetUnitMovePathVisibilityGetBriefDesc(action.getWeaSetUnitMovePathVisibility()))
-        || (WarEventsActionsUtilsSetTileTypeExprGetBriefDesc(action.getWeaSetTileTypeExpr()))
-        || (WarEventsActionsUtilsSetTileTypeSimpleGetBriefDesc(action.getWeaSetTileTypeSimple()))
-        || (WarEventsActionsUtilsSetTileStateExprGetBriefDesc(action.getWeaSetTileStateExpr()))
-        || (WarEventsActionsUtilsSetTileStateSimpleGetBriefDesc(action.getWeaSetTileStateSimple()))
-        || (WarEventsActionsUtilsSetCustomBuildingStateExprGetBriefDesc(action.getWeaSetCustomBuildingStateExpr()))
-        || (WarEventsActionsUtilsSetCustomBuildingStateSimpleGetBriefDesc(action.getWeaSetCustomBuildingStateSimple()))
-        || (WarEventsActionsUtilsSetCustomCrystalStateExprGetBriefDesc(action.getWeaSetCustomCrystalStateExpr()))
-        || (WarEventsActionsUtilsSetCustomCrystalStateSimpleGetBriefDesc(action.getWeaSetCustomCrystalStateSimple()))
-        || (WarEventsActionsUtilsSetCustomCannonStateExprGetBriefDesc(action.getWeaSetCustomCannonStateExpr()))
-        || (WarEventsActionsUtilsSetCustomCannonStateSimpleGetBriefDesc(action.getWeaSetCustomCannonStateSimple()))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateExprGetBriefDesc(action.getWeaSetCustomLaserTurretStateExpr()))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetBriefDesc(action.getWeaSetCustomLaserTurretStateSimple()))
-        || (WarEventsActionsUtilsDeleteTileBuffExprGetBriefDesc(action.getWeaDeleteTileBuffExpr()))
-        || (WarEventsActionsUtilsDeleteTileBuffSimpleGetBriefDesc(action.getWeaDeleteTileBuffSimple()))
-        || (getBriefDesc(action.getWeaAddTileBuffExpr()))
-        || (WarEventsActionsUtilsAddTileBuffSimpleGetBriefDesc(action.getWeaAddTileBuffSimple()))
-        || (WarEventsActionsUtilsModifyTileBuffExprGetBriefDesc(action.getWeaModifyTileBuffExpr()))
-        || (WarEventsActionsUtilsModifyTileBuffSimpleGetBriefDesc(action.getWeaModifyTileBuffSimple()))
-        || (WarEventsActionsUtilsPersistentShowTextGetBriefDesc(action.getWeaPersistentShowText()))
-        || (WarEventsActionsUtilsPersistentPlayBgmGetBriefDesc(action.getWeaPersistentPlayBgm(), gameConfig))
-        || (WarEventsActionsUtilsPersistentModifyPlayerAttributeGetBriefDesc(action.getWeaPersistentModifyPlayerAttribute()))
-        || (WarEventsActionsUtilsPersistentModifyUnitAttributeGetBriefDesc(action.getWeaPersistentModifyUnitAttribute()));
+    return (getAddUnitOnMapSimpleBriefDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
+        || (getFillUnitOnMapExprBriefDesc(action.getWeaFillUnitOnMapExpr()))
+        || (getFillUnitOnMapSimpleBriefDesc(action.getWeaFillUnitOnMapSimple(), gameConfig))
+        || (getFillUnitLoadedSimpleBriefDesc(action.getWeaFillUnitLoadedSimple(), gameConfig))
+        || (getFillUnitLoadedExprBriefDesc(action.getWeaFillUnitLoadedExpr()))
+        || (getDestroyUnitSimpleBriefDesc(action.getWeaDestroyUnitSimple()))
+        || (getDestroyUnitExprBriefDesc(action.getWeaDestroyUnitExpr()))
+        || (getSetUnitTypeSimpleBriefDesc(action.getWeaSetUnitTypeSimple(), gameConfig))
+        || (getSetUnitTypeExprBriefDesc(action.getWeaSetUnitTypeExpr()))
+        || (getSetUnitOwnershipSimpleBriefDesc(action.getWeaSetUnitOwnershipSimple()))
+        || (getSetUnitOwnershipExprBriefDesc(action.getWeaSetUnitOwnershipExpr()))
+        || (getSetUnitPositionSimpleBriefDesc(action.getWeaSetUnitPositionSimple()))
+        || (getSetUnitPositionExprBriefDesc(action.getWeaSetUnitPositionExpr()))
+        || (getSetUnitStateSimpleBriefDesc(action.getWeaSetUnitStateSimple()))
+        || (getSetUnitStateExprBriefDesc(action.getWeaSetUnitStateExpr()))
+        || (getAddUnitBuffSimpleBriefDesc(action.getWeaAddUnitBuffSimple()))
+        || (getModifyUnitBuffSimpleBriefDesc(action.getWeaModifyUnitBuffSimple()))
+        || (getDeleteUnitBuffSimpleBriefDesc(action.getWeaDeleteUnitBuffSimple()))
+        || (getSetViewpointExprBriefDesc(action.getWeaSetViewpointExpr()))
+        || (getSetViewpointSimpleBriefDesc(action.getWeaSetViewpointSimple()))
+        || (getSetWeatherExprBriefDesc(action.getWeaSetWeatherExpr()))
+        || (getSetWeatherSimpleBriefDesc(action.getWeaSetWeatherSimple(), gameConfig))
+        || (getBigDialogueSimpleBriefDesc(action.getWeaBigDialogueSimple(), gameConfig))
+        || (getSmallDialogueSimpleBriefDesc(action.getWeaSmallDialogueSimple(), gameConfig))
+        || (getPlayBgmBriefDesc(action.getWeaPlayBgm(), gameConfig))
+        || (getPlaySfxBriefDesc(action.getWeaPlaySfx(), gameConfig))
+        || (getSetForceFogCodeExprBriefDesc(action.getWeaSetForceFogCodeExpr()))
+        || (getSetForceFogCodeSimpleBriefDesc(action.getWeaSetForceFogCodeSimple()))
+        || (getSetCustomCountersBriefDesc(action.getWeaSetCustomCounters()))
+        || (getStopPersistentActionBriefDesc(action.getWeaStopPersistentAction()))
+        || (getSetPlayerStateExprBriefDesc(action.getWeaSetPlayerStateExpr()))
+        || (getSetPlayerStateSimpleBriefDesc(action.getWeaSetPlayerStateSimple()))
+        || (getSetTaskObjectiveStateBriefDesc(action.getWeaSetTaskObjectiveState()))
+        || (getSetUnitMovePathVisibilityBriefDesc(action.getWeaSetUnitMovePathVisibility()))
+        || (getSetTileTypeExprBriefDesc(action.getWeaSetTileTypeExpr()))
+        || (getSetTileTypeSimpleBriefDesc(action.getWeaSetTileTypeSimple()))
+        || (getSetTileStateExprBriefDesc(action.getWeaSetTileStateExpr()))
+        || (getSetTileStateSimpleBriefDesc(action.getWeaSetTileStateSimple()))
+        || (getSetCustomBuildingStateExprBriefDesc(action.getWeaSetCustomBuildingStateExpr()))
+        || (getSetCustomBuildingStateSimpleBriefDesc(action.getWeaSetCustomBuildingStateSimple()))
+        || (getSetCustomCrystalStateExprBriefDesc(action.getWeaSetCustomCrystalStateExpr()))
+        || (getSetCustomCrystalStateSimpleBriefDesc(action.getWeaSetCustomCrystalStateSimple()))
+        || (getSetCustomCannonStateExprBriefDesc(action.getWeaSetCustomCannonStateExpr()))
+        || (getSetCustomCannonStateSimpleBriefDesc(action.getWeaSetCustomCannonStateSimple()))
+        || (getSetCustomLaserTurretStateExprBriefDesc(action.getWeaSetCustomLaserTurretStateExpr()))
+        || (getSetCustomLaserTurretStateSimpleBriefDesc(action.getWeaSetCustomLaserTurretStateSimple()))
+        || (getDeleteTileBuffExprBriefDesc(action.getWeaDeleteTileBuffExpr()))
+        || (getDeleteTileBuffSimpleBriefDesc(action.getWeaDeleteTileBuffSimple()))
+        || (getAddTileBuffExprBriefDesc(action.getWeaAddTileBuffExpr()))
+        || (getAddTileBuffSimpleBriefDesc(action.getWeaAddTileBuffSimple()))
+        || (getModifyTileBuffExprBriefDesc(action.getWeaModifyTileBuffExpr()))
+        || (getModifyTileBuffSimpleBriefDesc(action.getWeaModifyTileBuffSimple()))
+        || (getPersistentShowTextBriefDesc(action.getWeaPersistentShowText()))
+        || (getPersistentPlayBgmBriefDesc(action.getWeaPersistentPlayBgm(), gameConfig))
+        || (getPersistentModifyPlayerAttributeBriefDesc(action.getWeaPersistentModifyPlayerAttribute()))
+        || (getPersistentModifyUnitAttributeBriefDesc(action.getWeaPersistentModifyUnitAttribute()));
 }
 export function getDetailDescForAction(action: WarEventAction, gameConfig: GameConfig): string | null {
     // todo: add functions for other actions
-    return (WarEventsActionsUtilsAddUnitOnMapSimpleGetDetailDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitOnMapExprGetDetailDesc(action.getWeaFillUnitOnMapExpr()))
-        || (WarEventsActionsUtilsFillUnitOnMapSimpleGetDetailDesc(action.getWeaFillUnitOnMapSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitLoadedSimpleGetDetailDesc(action.getWeaFillUnitLoadedSimple(), gameConfig))
-        || (WarEventsActionsUtilsFillUnitLoadedExprGetDetailDesc(action.getWeaFillUnitLoadedExpr()))
-        || (WarEventsActionsUtilsDestroyUnitSimpleGetDetailDesc(action.getWeaDestroyUnitSimple()))
-        || (WarEventsActionsUtilsDestroyUnitExprGetDetailDesc(action.getWeaDestroyUnitExpr()))
-        || (WarEventsActionsUtilsSetUnitTypeSimpleGetDetailDesc(action.getWeaSetUnitTypeSimple(), gameConfig))
-        || (WarEventsActionsUtilsSetUnitTypeExprGetDetailDesc(action.getWeaSetUnitTypeExpr()))
-        || (WarEventsActionsUtilsSetUnitOwnershipSimpleGetDetailDesc(action.getWeaSetUnitOwnershipSimple()))
-        || (WarEventsActionsUtilsSetUnitOwnershipExprGetDetailDesc(action.getWeaSetUnitOwnershipExpr()))
-        || (WarEventsActionsUtilsSetUnitPositionSimpleGetDetailDesc(action.getWeaSetUnitPositionSimple()))
-        || (WarEventsActionsUtilsSetUnitPositionExprGetDetailDesc(action.getWeaSetUnitPositionExpr()))
-        || (WarEventsActionsUtilsSetUnitStateSimpleGetDetailDesc(action.getWeaSetUnitStateSimple()))
-        || (WarEventsActionsUtilsSetUnitStateExprGetDetailDesc(action.getWeaSetUnitStateExpr()))
-        || (WarEventsActionsUtilsAddUnitBuffSimpleGetDetailDesc(action.getWeaAddUnitBuffSimple()))
-        || (WarEventsActionsUtilsModifyUnitBuffSimpleGetDetailDesc(action.getWeaModifyUnitBuffSimple()))
-        || (WarEventsActionsUtilsDeleteUnitBuffSimpleGetDetailDesc(action.getWeaDeleteUnitBuffSimple()))
-        || (WarEventsActionsUtilsSetViewpointExprGetDetailDesc(action.getWeaSetViewpointExpr()))
-        || (WarEventsActionsUtilsSetViewpointSimpleGetDetailDesc(action.getWeaSetViewpointSimple()))
-        || (WarEventsActionsUtilsSetWeatherExprGetDetailDesc(action.getWeaSetWeatherExpr()))
-        || (WarEventsActionsUtilsSetWeatherSimpleGetDetailDesc(action.getWeaSetWeatherSimple(), gameConfig))
-        || (WarEventsActionsUtilsBigDialogueSimpleGetDetailDesc(action.getWeaBigDialogueSimple(), gameConfig))
-        || (WarEventsActionsUtilsSmallDialogueSimpleGetDetailDesc(action.getWeaSmallDialogueSimple(), gameConfig))
-        || (WarEventsActionsUtilsPlayBgmGetDetailDesc(action.getWeaPlayBgm(), gameConfig))
-        || (WarEventsActionsUtilsPlaySfxGetDetailDesc(action.getWeaPlaySfx(), gameConfig))
-        || (WarEventsActionsUtilsSetForceFogCodeExprGetDetailDesc(action.getWeaSetForceFogCodeExpr()))
-        || (WarEventsActionsUtilsSetForceFogCodeSimpleGetDetailDesc(action.getWeaSetForceFogCodeSimple()))
-        || (WarEventsActionsUtilsSetCustomCountersGetDetailDesc(action.getWeaSetCustomCounters()))
-        || (WarEventsActionsUtilsStopPersistentActionGetDetailDesc(action.getWeaStopPersistentAction()))
-        || (WarEventsActionsUtilsSetPlayerStateExprGetDetailDesc(action.getWeaSetPlayerStateExpr()))
-        || (WarEventsActionsUtilsSetPlayerStateSimpleGetDetailDesc(action.getWeaSetPlayerStateSimple()))
-        || (WarEventsActionsUtilsSetTaskObjectiveStateGetDetailDesc(action.getWeaSetTaskObjectiveState()))
-        || (WarEventsActionsUtilsSetUnitMovePathVisibilityGetDetailDesc(action.getWeaSetUnitMovePathVisibility()))
-        || (WarEventsActionsUtilsSetTileTypeExprGetDetailDesc(action.getWeaSetTileTypeExpr()))
-        || (WarEventsActionsUtilsSetTileTypeSimpleGetDetailDesc(action.getWeaSetTileTypeSimple()))
-        || (WarEventsActionsUtilsSetTileStateExprGetDetailDesc(action.getWeaSetTileStateExpr()))
-        || (WarEventsActionsUtilsSetTileStateSimpleGetDetailDesc(action.getWeaSetTileStateSimple()))
-        || (WarEventsActionsUtilsSetCustomBuildingStateExprGetDetailDesc(action.getWeaSetCustomBuildingStateExpr()))
-        || (WarEventsActionsUtilsSetCustomBuildingStateSimpleGetDetailDesc(action.getWeaSetCustomBuildingStateSimple()))
-        || (WarEventsActionsUtilsSetCustomCrystalStateExprGetDetailDesc(action.getWeaSetCustomCrystalStateExpr()))
-        || (WarEventsActionsUtilsSetCustomCrystalStateSimpleGetDetailDesc(action.getWeaSetCustomCrystalStateSimple()))
-        || (WarEventsActionsUtilsSetCustomCannonStateExprGetDetailDesc(action.getWeaSetCustomCannonStateExpr()))
-        || (WarEventsActionsUtilsSetCustomCannonStateSimpleGetDetailDesc(action.getWeaSetCustomCannonStateSimple()))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateExprGetDetailDesc(action.getWeaSetCustomLaserTurretStateExpr()))
-        || (WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetDetailDesc(action.getWeaSetCustomLaserTurretStateSimple()))
-        || (WarEventsActionsUtilsDeleteTileBuffExprGetDetailDesc(action.getWeaDeleteTileBuffExpr()))
-        || (WarEventsActionsUtilsDeleteTileBuffSimpleGetDetailDesc(action.getWeaDeleteTileBuffSimple()))
-        || (getDetailDesc(action.getWeaAddTileBuffExpr()))
-        || (WarEventsActionsUtilsAddTileBuffSimpleGetDetailDesc(action.getWeaAddTileBuffSimple()))
-        || (WarEventsActionsUtilsModifyTileBuffExprGetDetailDesc(action.getWeaModifyTileBuffExpr()))
-        || (WarEventsActionsUtilsModifyTileBuffSimpleGetDetailDesc(action.getWeaModifyTileBuffSimple()))
-        || (WarEventsActionsUtilsPersistentShowTextGetDetailDesc(action.getWeaPersistentShowText()))
-        || (WarEventsActionsUtilsPersistentPlayBgmGetDetailDesc(action.getWeaPersistentPlayBgm(), gameConfig))
-        || (WarEventsActionsUtilsPersistentModifyPlayerAttributeGetDetailDesc(action.getWeaPersistentModifyPlayerAttribute()))
-        || (WarEventsActionsUtilsPersistentModifyUnitAttributeGetDetailDesc(action.getWeaPersistentModifyUnitAttribute()));
+    return (getAddUnitOnMapSimpleDetailDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
+        || (getFillUnitOnMapExprDetailDesc(action.getWeaFillUnitOnMapExpr()))
+        || (getFillUnitOnMapSimpleDetailDesc(action.getWeaFillUnitOnMapSimple(), gameConfig))
+        || (getFillUnitLoadedSimpleDetailDesc(action.getWeaFillUnitLoadedSimple(), gameConfig))
+        || (getFillUnitLoadedExprDetailDesc(action.getWeaFillUnitLoadedExpr()))
+        || (getDestroyUnitSimpleDetailDesc(action.getWeaDestroyUnitSimple()))
+        || (getDestroyUnitExprDetailDesc(action.getWeaDestroyUnitExpr()))
+        || (getSetUnitTypeSimpleDetailDesc(action.getWeaSetUnitTypeSimple(), gameConfig))
+        || (getSetUnitTypeExprDetailDesc(action.getWeaSetUnitTypeExpr()))
+        || (getSetUnitOwnershipSimpleDetailDesc(action.getWeaSetUnitOwnershipSimple()))
+        || (getSetUnitOwnershipExprDetailDesc(action.getWeaSetUnitOwnershipExpr()))
+        || (getSetUnitPositionSimpleDetailDesc(action.getWeaSetUnitPositionSimple()))
+        || (getSetUnitPositionExprDetailDesc(action.getWeaSetUnitPositionExpr()))
+        || (getSetUnitStateSimpleDetailDesc(action.getWeaSetUnitStateSimple()))
+        || (getSetUnitStateExprDetailDesc(action.getWeaSetUnitStateExpr()))
+        || (getAddUnitBuffSimpleDetailDesc(action.getWeaAddUnitBuffSimple()))
+        || (getModifyUnitBuffSimpleDetailDesc(action.getWeaModifyUnitBuffSimple()))
+        || (getDeleteUnitBuffSimpleDetailDesc(action.getWeaDeleteUnitBuffSimple()))
+        || (getSetViewpointExprDetailDesc(action.getWeaSetViewpointExpr()))
+        || (getSetViewpointSimpleDetailDesc(action.getWeaSetViewpointSimple()))
+        || (getSetWeatherExprDetailDesc(action.getWeaSetWeatherExpr()))
+        || (getSetWeatherSimpleDetailDesc(action.getWeaSetWeatherSimple(), gameConfig))
+        || (getBigDialogueSimpleDetailDesc(action.getWeaBigDialogueSimple(), gameConfig))
+        || (getSmallDialogueSimpleDetailDesc(action.getWeaSmallDialogueSimple(), gameConfig))
+        || (getPlayBgmDetailDesc(action.getWeaPlayBgm(), gameConfig))
+        || (getPlaySfxDetailDesc(action.getWeaPlaySfx(), gameConfig))
+        || (getSetForceFogCodeExprDetailDesc(action.getWeaSetForceFogCodeExpr()))
+        || (getSetForceFogCodeSimpleDetailDesc(action.getWeaSetForceFogCodeSimple()))
+        || (getSetCustomCountersDetailDesc(action.getWeaSetCustomCounters()))
+        || (getStopPersistentActionDetailDesc(action.getWeaStopPersistentAction()))
+        || (getSetPlayerStateExprDetailDesc(action.getWeaSetPlayerStateExpr()))
+        || (getSetPlayerStateSimpleDetailDesc(action.getWeaSetPlayerStateSimple()))
+        || (getSetTaskObjectiveStateDetailDesc(action.getWeaSetTaskObjectiveState()))
+        || (getSetUnitMovePathVisibilityDetailDesc(action.getWeaSetUnitMovePathVisibility()))
+        || (getSetTileTypeExprDetailDesc(action.getWeaSetTileTypeExpr()))
+        || (getSetTileTypeSimpleDetailDesc(action.getWeaSetTileTypeSimple()))
+        || (getSetTileStateExprDetailDesc(action.getWeaSetTileStateExpr()))
+        || (getSetTileStateSimpleDetailDesc(action.getWeaSetTileStateSimple()))
+        || (getSetCustomBuildingStateExprDetailDesc(action.getWeaSetCustomBuildingStateExpr()))
+        || (getSetCustomBuildingStateSimpleDetailDesc(action.getWeaSetCustomBuildingStateSimple()))
+        || (getSetCustomCrystalStateExprDetailDesc(action.getWeaSetCustomCrystalStateExpr()))
+        || (getSetCustomCrystalStateSimpleDetailDesc(action.getWeaSetCustomCrystalStateSimple()))
+        || (getSetCustomCannonStateExprDetailDesc(action.getWeaSetCustomCannonStateExpr()))
+        || (getSetCustomCannonStateSimpleDetailDesc(action.getWeaSetCustomCannonStateSimple()))
+        || (getSetCustomLaserTurretStateExprDetailDesc(action.getWeaSetCustomLaserTurretStateExpr()))
+        || (getSetCustomLaserTurretStateSimpleDetailDesc(action.getWeaSetCustomLaserTurretStateSimple()))
+        || (getDeleteTileBuffExprDetailDesc(action.getWeaDeleteTileBuffExpr()))
+        || (getDeleteTileBuffSimpleDetailDesc(action.getWeaDeleteTileBuffSimple()))
+        || (getAddTileBuffExprDetailDesc(action.getWeaAddTileBuffExpr()))
+        || (getAddTileBuffSimpleDetailDesc(action.getWeaAddTileBuffSimple()))
+        || (getModifyTileBuffExprDetailDesc(action.getWeaModifyTileBuffExpr()))
+        || (getModifyTileBuffSimpleDetailDesc(action.getWeaModifyTileBuffSimple()))
+        || (getPersistentShowTextDetailDesc(action.getWeaPersistentShowText()))
+        || (getPersistentPlayBgmDetailDesc(action.getWeaPersistentPlayBgm(), gameConfig))
+        || (getPersistentModifyPlayerAttributeDetailDesc(action.getWeaPersistentModifyPlayerAttribute()))
+        || (getPersistentModifyUnitAttributeDetailDesc(action.getWeaPersistentModifyUnitAttribute()));
 }
 
 export function getErrorTipForAction(fullData: WarEventFullData, action: WarEventAction, war: IBwWar): string | null {
@@ -792,282 +807,282 @@ export function getErrorTipForAction(fullData: WarEventFullData, action: WarEven
     // todo: add more tips for the future actions.
     const weaAddUnitOnMapSimple = action.getWeaAddUnitOnMapSimple();
     if (weaAddUnitOnMapSimple) {
-        return WarEventsActionsUtilsAddUnitOnMapSimpleGetErrorTip(weaAddUnitOnMapSimple, war);
+        return getAddUnitOnMapSimpleErrorTip(weaAddUnitOnMapSimple, war);
     }
 
     const weaFillUnitOnMapExpr = action.getWeaFillUnitOnMapExpr();
     if (weaFillUnitOnMapExpr) {
-        return WarEventsActionsUtilsFillUnitOnMapExprGetErrorTip(weaFillUnitOnMapExpr, customCounterNameSet);
+        return getFillUnitOnMapExprErrorTip(weaFillUnitOnMapExpr, customCounterNameSet);
     }
 
     const weaFillUnitOnMapSimple = action.getWeaFillUnitOnMapSimple();
     if (weaFillUnitOnMapSimple) {
-        return WarEventsActionsUtilsFillUnitOnMapSimpleGetErrorTip(weaFillUnitOnMapSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getFillUnitOnMapSimpleErrorTip(weaFillUnitOnMapSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaFillUnitLoadedSimple = action.getWeaFillUnitLoadedSimple();
     if (weaFillUnitLoadedSimple) {
-        return WarEventsActionsUtilsFillUnitLoadedSimpleGetErrorTip(weaFillUnitLoadedSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getFillUnitLoadedSimpleErrorTip(weaFillUnitLoadedSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaFillUnitLoadedExpr = action.getWeaFillUnitLoadedExpr();
     if (weaFillUnitLoadedExpr) {
-        return WarEventsActionsUtilsFillUnitLoadedExprGetErrorTip(weaFillUnitLoadedExpr, customCounterNameSet);
+        return getFillUnitLoadedExprErrorTip(weaFillUnitLoadedExpr, customCounterNameSet);
     }
 
     const weaDestroyUnitSimple = action.getWeaDestroyUnitSimple();
     if (weaDestroyUnitSimple) {
-        return WarEventsActionsUtilsDestroyUnitSimpleGetErrorTip(weaDestroyUnitSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getDestroyUnitSimpleErrorTip(weaDestroyUnitSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaDestroyUnitExpr = action.getWeaDestroyUnitExpr();
     if (weaDestroyUnitExpr) {
-        return WarEventsActionsUtilsDestroyUnitExprGetErrorTip(weaDestroyUnitExpr, customCounterNameSet);
+        return getDestroyUnitExprErrorTip(weaDestroyUnitExpr, customCounterNameSet);
     }
 
     const weaSetUnitTypeSimple = action.getWeaSetUnitTypeSimple();
     if (weaSetUnitTypeSimple) {
-        return WarEventsActionsUtilsSetUnitTypeSimpleGetErrorTip(weaSetUnitTypeSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetUnitTypeSimpleErrorTip(weaSetUnitTypeSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetUnitTypeExpr = action.getWeaSetUnitTypeExpr();
     if (weaSetUnitTypeExpr) {
-        return WarEventsActionsUtilsSetUnitTypeExprGetErrorTip(weaSetUnitTypeExpr, customCounterNameSet);
+        return getSetUnitTypeExprErrorTip(weaSetUnitTypeExpr, customCounterNameSet);
     }
 
     const weaSetUnitOwnershipSimple = action.getWeaSetUnitOwnershipSimple();
     if (weaSetUnitOwnershipSimple) {
-        return WarEventsActionsUtilsSetUnitOwnershipSimpleGetErrorTip(weaSetUnitOwnershipSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetUnitOwnershipSimpleErrorTip(weaSetUnitOwnershipSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetUnitOwnershipExpr = action.getWeaSetUnitOwnershipExpr();
     if (weaSetUnitOwnershipExpr) {
-        return WarEventsActionsUtilsSetUnitOwnershipExprGetErrorTip(weaSetUnitOwnershipExpr, customCounterNameSet);
+        return getSetUnitOwnershipExprErrorTip(weaSetUnitOwnershipExpr, customCounterNameSet);
     }
 
     const weaSetUnitPositionSimple = action.getWeaSetUnitPositionSimple();
     if (weaSetUnitPositionSimple) {
-        return WarEventsActionsUtilsSetUnitPositionSimpleGetErrorTip(weaSetUnitPositionSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetUnitPositionSimpleErrorTip(weaSetUnitPositionSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetUnitPositionExpr = action.getWeaSetUnitPositionExpr();
     if (weaSetUnitPositionExpr) {
-        return WarEventsActionsUtilsSetUnitPositionExprGetErrorTip(weaSetUnitPositionExpr, customCounterNameSet);
+        return getSetUnitPositionExprErrorTip(weaSetUnitPositionExpr, customCounterNameSet);
     }
 
     const weaSetUnitStateSimple = action.getWeaSetUnitStateSimple();
     if (weaSetUnitStateSimple) {
-        return WarEventsActionsUtilsSetUnitStateSimpleGetErrorTip(weaSetUnitStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetUnitStateSimpleErrorTip(weaSetUnitStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetUnitStateExpr = action.getWeaSetUnitStateExpr();
     if (weaSetUnitStateExpr) {
-        return WarEventsActionsUtilsSetUnitStateExprGetErrorTip(weaSetUnitStateExpr, customCounterNameSet);
+        return getSetUnitStateExprErrorTip(weaSetUnitStateExpr, customCounterNameSet);
     }
 
     const weaAddUnitBuffSimple = action.getWeaAddUnitBuffSimple();
     if (weaAddUnitBuffSimple) {
-        return WarEventsActionsUtilsAddUnitBuffSimpleGetErrorTip(weaAddUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getAddUnitBuffSimpleErrorTip(weaAddUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaModifyUnitBuffSimple = action.getWeaModifyUnitBuffSimple();
     if (weaModifyUnitBuffSimple) {
-        return WarEventsActionsUtilsModifyUnitBuffSimpleGetErrorTip(weaModifyUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getModifyUnitBuffSimpleErrorTip(weaModifyUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaDeleteUnitBuffSimple = action.getWeaDeleteUnitBuffSimple();
     if (weaDeleteUnitBuffSimple) {
-        return WarEventsActionsUtilsDeleteUnitBuffSimpleGetErrorTip(weaDeleteUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getDeleteUnitBuffSimpleErrorTip(weaDeleteUnitBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetViewpointExpr = action.getWeaSetViewpointExpr();
     if (weaSetViewpointExpr) {
-        return WarEventsActionsUtilsSetViewpointExprGetErrorTip(weaSetViewpointExpr, customCounterNameSet);
+        return getSetViewpointExprErrorTip(weaSetViewpointExpr, customCounterNameSet);
     }
 
     const weaSetViewpointSimple = action.getWeaSetViewpointSimple();
     if (weaSetViewpointSimple) {
-        return WarEventsActionsUtilsSetViewpointSimpleGetErrorTip(weaSetViewpointSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetViewpointSimpleErrorTip(weaSetViewpointSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetWeatherExpr = action.getWeaSetWeatherExpr();
     if (weaSetWeatherExpr) {
-        return WarEventsActionsUtilsSetWeatherExprGetErrorTip(weaSetWeatherExpr, customCounterNameSet);
+        return getSetWeatherExprErrorTip(weaSetWeatherExpr, customCounterNameSet);
     }
 
     const weaSetWeatherSimple = action.getWeaSetWeatherSimple();
     if (weaSetWeatherSimple) {
-        return WarEventsActionsUtilsSetWeatherSimpleGetErrorTip(weaSetWeatherSimple, gameConfig);
+        return getSetWeatherSimpleErrorTip(weaSetWeatherSimple, gameConfig);
     }
 
     const weaBigDialogueSimple = action.getWeaBigDialogueSimple();
     if (weaBigDialogueSimple) {
-        return WarEventsActionsUtilsBigDialogueSimpleGetErrorTip(weaBigDialogueSimple, playersCountUnneutral, gameConfig);
+        return getBigDialogueSimpleErrorTip(weaBigDialogueSimple, playersCountUnneutral, gameConfig);
     }
 
     const weaSmallDialogueSimple = action.getWeaSmallDialogueSimple();
     if (weaSmallDialogueSimple) {
-        return WarEventsActionsUtilsSmallDialogueSimpleGetErrorTip(weaSmallDialogueSimple, playersCountUnneutral, gameConfig);
+        return getSmallDialogueSimpleErrorTip(weaSmallDialogueSimple, playersCountUnneutral, gameConfig);
     }
 
     const weaPlayBgm = action.getWeaPlayBgm();
     if (weaPlayBgm) {
-        return WarEventsActionsUtilsPlayBgmGetErrorTip(weaPlayBgm);
+        return getPlayBgmErrorTip(weaPlayBgm);
     }
 
     const weaPlaySfx = action.getWeaPlaySfx();
     if (weaPlaySfx) {
-        return WarEventsActionsUtilsPlaySfxGetErrorTip(weaPlaySfx);
+        return getPlaySfxErrorTip(weaPlaySfx);
     }
 
     const weaSetForceFogCodeExpr = action.getWeaSetForceFogCodeExpr();
     if (weaSetForceFogCodeExpr) {
-        return WarEventsActionsUtilsSetForceFogCodeExprGetErrorTip(weaSetForceFogCodeExpr, customCounterNameSet);
+        return getSetForceFogCodeExprErrorTip(weaSetForceFogCodeExpr, customCounterNameSet);
     }
 
     const weaSetForceFogCodeSimple = action.getWeaSetForceFogCodeSimple();
     if (weaSetForceFogCodeSimple) {
-        return WarEventsActionsUtilsSetForceFogCodeSimpleGetErrorTip(weaSetForceFogCodeSimple);
+        return getSetForceFogCodeSimpleErrorTip(weaSetForceFogCodeSimple);
     }
 
     const weaSetCustomCounters = action.getWeaSetCustomCounters();
     if (weaSetCustomCounters) {
-        return WarEventsActionsUtilsSetCustomCountersGetErrorTip(weaSetCustomCounters, customCounterNameSet);
+        return getSetCustomCountersErrorTip(weaSetCustomCounters, customCounterNameSet);
     }
 
     const weaStopPersistentAction = action.getWeaStopPersistentAction();
     if (weaStopPersistentAction) {
-        return WarEventsActionsUtilsStopPersistentActionGetErrorTip(weaStopPersistentAction, fullData);
+        return getStopPersistentActionErrorTip(weaStopPersistentAction, fullData);
     }
 
     const weaSetPlayerStateExpr = action.getWeaSetPlayerStateExpr();
     if (weaSetPlayerStateExpr) {
-        return WarEventsActionsUtilsSetPlayerStateExprGetErrorTip(weaSetPlayerStateExpr, customCounterNameSet);
+        return getSetPlayerStateExprErrorTip(weaSetPlayerStateExpr, customCounterNameSet);
     }
 
     const weaSetPlayerStateSimple = action.getWeaSetPlayerStateSimple();
     if (weaSetPlayerStateSimple) {
-        return WarEventsActionsUtilsSetPlayerStateSimpleGetErrorTip(weaSetPlayerStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetPlayerStateSimpleErrorTip(weaSetPlayerStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetTaskObjectiveState = action.getWeaSetTaskObjectiveState();
     if (weaSetTaskObjectiveState) {
-        return WarEventsActionsUtilsSetTaskObjectiveStateGetErrorTip(weaSetTaskObjectiveState, customCounterNameSet);
+        return getSetTaskObjectiveStateErrorTip(weaSetTaskObjectiveState, customCounterNameSet);
     }
 
     const weaSetUnitMovePathVisibility = action.getWeaSetUnitMovePathVisibility();
     if (weaSetUnitMovePathVisibility) {
-        return WarEventsActionsUtilsSetUnitMovePathVisibilityGetErrorTip(weaSetUnitMovePathVisibility, customCounterNameSet);
+        return getSetUnitMovePathVisibilityErrorTip(weaSetUnitMovePathVisibility, customCounterNameSet);
     }
 
     const weaSetTileTypeExpr = action.getWeaSetTileTypeExpr();
     if (weaSetTileTypeExpr) {
-        return WarEventsActionsUtilsSetTileTypeExprGetErrorTip(weaSetTileTypeExpr, customCounterNameSet);
+        return getSetTileTypeExprErrorTip(weaSetTileTypeExpr, customCounterNameSet);
     }
 
     const weaSetTileTypeSimple = action.getWeaSetTileTypeSimple();
     if (weaSetTileTypeSimple) {
-        return WarEventsActionsUtilsSetTileTypeSimpleGetErrorTip(weaSetTileTypeSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetTileTypeSimpleErrorTip(weaSetTileTypeSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetTileStateExpr = action.getWeaSetTileStateExpr();
     if (weaSetTileStateExpr) {
-        return WarEventsActionsUtilsSetTileStateExprGetErrorTip(weaSetTileStateExpr, customCounterNameSet);
+        return getSetTileStateExprErrorTip(weaSetTileStateExpr, customCounterNameSet);
     }
 
     const weaSetTileStateSimple = action.getWeaSetTileStateSimple();
     if (weaSetTileStateSimple) {
-        return WarEventsActionsUtilsSetTileStateSimpleGetErrorTip(weaSetTileStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetTileStateSimpleErrorTip(weaSetTileStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetCustomBuildingStateExpr = action.getWeaSetCustomBuildingStateExpr();
     if (weaSetCustomBuildingStateExpr) {
-        return WarEventsActionsUtilsSetCustomBuildingStateExprGetErrorTip(weaSetCustomBuildingStateExpr, customCounterNameSet);
+        return getSetCustomBuildingStateExprErrorTip(weaSetCustomBuildingStateExpr, customCounterNameSet);
     }
 
     const weaSetCustomBuildingStateSimple = action.getWeaSetCustomBuildingStateSimple();
     if (weaSetCustomBuildingStateSimple) {
-        return WarEventsActionsUtilsSetCustomBuildingStateSimpleGetErrorTip(weaSetCustomBuildingStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetCustomBuildingStateSimpleErrorTip(weaSetCustomBuildingStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetCustomCrystalStateExpr = action.getWeaSetCustomCrystalStateExpr();
     if (weaSetCustomCrystalStateExpr) {
-        return WarEventsActionsUtilsSetCustomCrystalStateExprGetErrorTip(weaSetCustomCrystalStateExpr, customCounterNameSet);
+        return getSetCustomCrystalStateExprErrorTip(weaSetCustomCrystalStateExpr, customCounterNameSet);
     }
 
     const weaSetCustomCrystalStateSimple = action.getWeaSetCustomCrystalStateSimple();
     if (weaSetCustomCrystalStateSimple) {
-        return WarEventsActionsUtilsSetCustomCrystalStateSimpleGetErrorTip(weaSetCustomCrystalStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetCustomCrystalStateSimpleErrorTip(weaSetCustomCrystalStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetCustomCannonStateExpr = action.getWeaSetCustomCannonStateExpr();
     if (weaSetCustomCannonStateExpr) {
-        return WarEventsActionsUtilsSetCustomCannonStateExprGetErrorTip(weaSetCustomCannonStateExpr, customCounterNameSet);
+        return getSetCustomCannonStateExprErrorTip(weaSetCustomCannonStateExpr, customCounterNameSet);
     }
 
     const weaSetCustomCannonStateSimple = action.getWeaSetCustomCannonStateSimple();
     if (weaSetCustomCannonStateSimple) {
-        return WarEventsActionsUtilsSetCustomCannonStateSimpleGetErrorTip(weaSetCustomCannonStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetCustomCannonStateSimpleErrorTip(weaSetCustomCannonStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaSetCustomLaserTurretStateExpr = action.getWeaSetCustomLaserTurretStateExpr();
     if (weaSetCustomLaserTurretStateExpr) {
-        return WarEventsActionsUtilsSetCustomLaserTurretStateExprGetErrorTip(weaSetCustomLaserTurretStateExpr, customCounterNameSet);
+        return getSetCustomLaserTurretStateExprErrorTip(weaSetCustomLaserTurretStateExpr, customCounterNameSet);
     }
 
     const weaSetCustomLaserTurretStateSimple = action.getWeaSetCustomLaserTurretStateSimple();
     if (weaSetCustomLaserTurretStateSimple) {
-        return WarEventsActionsUtilsSetCustomLaserTurretStateSimpleGetErrorTip(weaSetCustomLaserTurretStateSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getSetCustomLaserTurretStateSimpleErrorTip(weaSetCustomLaserTurretStateSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaDeleteTileBuffExpr = action.getWeaDeleteTileBuffExpr();
     if (weaDeleteTileBuffExpr) {
-        return WarEventsActionsUtilsDeleteTileBuffExprGetErrorTip(weaDeleteTileBuffExpr, customCounterNameSet);
+        return getDeleteTileBuffExprErrorTip(weaDeleteTileBuffExpr, customCounterNameSet);
     }
 
     const weaDeleteTileBuffSimple = action.getWeaDeleteTileBuffSimple();
     if (weaDeleteTileBuffSimple) {
-        return WarEventsActionsUtilsDeleteTileBuffSimpleGetErrorTip(weaDeleteTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getDeleteTileBuffSimpleErrorTip(weaDeleteTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaAddTileBuffExpr = action.getWeaAddTileBuffExpr();
     if (weaAddTileBuffExpr) {
-        return getErrorTip(weaAddTileBuffExpr, customCounterNameSet);
+        return getAddTileBuffExprErrorTip(weaAddTileBuffExpr, customCounterNameSet);
     }
 
     const weaAddTileBuffSimple = action.getWeaAddTileBuffSimple();
     if (weaAddTileBuffSimple) {
-        return WarEventsActionsUtilsAddTileBuffSimpleGetErrorTip(weaAddTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getAddTileBuffSimpleErrorTip(weaAddTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaModifyTileBuffExpr = action.getWeaModifyTileBuffExpr();
     if (weaModifyTileBuffExpr) {
-        return WarEventsActionsUtilsModifyTileBuffExprGetErrorTip(weaModifyTileBuffExpr, customCounterNameSet);
+        return getModifyTileBuffExprErrorTip(weaModifyTileBuffExpr, customCounterNameSet);
     }
 
     const weaModifyTileBuffSimple = action.getWeaModifyTileBuffSimple();
     if (weaModifyTileBuffSimple) {
-        return WarEventsActionsUtilsModifyTileBuffSimpleGetErrorTip(weaModifyTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
+        return getModifyTileBuffSimpleErrorTip(weaModifyTileBuffSimple, mapSize, playersCountUnneutral, gameConfig);
     }
 
     const weaPersistentShowText = action.getWeaPersistentShowText();
     if (weaPersistentShowText) {
-        return WarEventsActionsUtilsPersistentShowTextGetErrorTip(weaPersistentShowText);
+        return getPersistentShowTextErrorTip(weaPersistentShowText);
     }
 
     const weaPersistentPlayBgm = action.getWeaPersistentPlayBgm();
     if (weaPersistentPlayBgm) {
-        return WarEventsActionsUtilsPersistentPlayBgmGetErrorTip(weaPersistentPlayBgm);
+        return getPersistentPlayBgmErrorTip(weaPersistentPlayBgm);
     }
 
     const weaPersistentModifyPlayerAttribute = action.getWeaPersistentModifyPlayerAttribute();
     if (weaPersistentModifyPlayerAttribute) {
-        return WarEventsActionsUtilsPersistentModifyPlayerAttributeGetErrorTip(weaPersistentModifyPlayerAttribute, customCounterNameSet);
+        return getPersistentModifyPlayerAttributeErrorTip(weaPersistentModifyPlayerAttribute, customCounterNameSet);
     }
 
     const weaPersistentModifyUnitAttribute = action.getWeaPersistentModifyUnitAttribute();
     if (weaPersistentModifyUnitAttribute) {
-        return WarEventsActionsUtilsPersistentModifyUnitAttributeGetErrorTip(weaPersistentModifyUnitAttribute, customCounterNameSet);
+        return getPersistentModifyUnitAttributeErrorTip(weaPersistentModifyUnitAttribute, customCounterNameSet);
     }
 
     return getText(TextType.A0177);
@@ -1224,7 +1239,7 @@ export function resetAction(action: WarEventAction, actionType: ActionTypeId, ga
         }));
     } else if (actionType === ActionTypeId.AddUnitBuffSimple) {
         action.setWeaAddUnitBuffSimple(WeaAddUnitBuffSimple.fromJson({
-            actBuffType     : UnitBuffsConstantsBuffTypeId.Fire,
+            actBuffType     : UnitBuffsBuffTypeId.Fire,
             actExtraParams  : [],
         }));
     } else if (actionType === ActionTypeId.ModifyUnitBuffSimple) {
@@ -1347,7 +1362,7 @@ export function resetAction(action: WarEventAction, actionType: ActionTypeId, ga
         }));
     } else if (actionType === ActionTypeId.AddTileBuffSimple) {
         action.setWeaAddTileBuffSimple(WeaAddTileBuffSimple.fromJson({
-            actBuffType     : BuffTypeId.NoIncome,
+            actBuffType     : TileBuffsBuffTypeId.NoIncome,
             actExtraParams  : [],
         }));
     } else if (actionType === ActionTypeId.ModifyTileBuffExpr) {

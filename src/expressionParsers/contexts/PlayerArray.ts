@@ -1,16 +1,19 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import { Lambda } from "../nodes/Lambda.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import { Lambda as NodesLambda } from "../nodes/Lambda.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Lambda as ResultsLambda } from "../results/Lambda.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { NullableUnitArray } from "../results/NullableUnitArray.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
 import { Player } from "../results/Player.ts";
-import { PlayerArray as ExpressionParsersResultsPlayerArray } from "../results/PlayerArray.ts";
+import { PlayerArray as ResultsPlayerArray } from "../results/PlayerArray.ts";
 import { Position } from "../results/Position.ts";
 import { PositionArray } from "../results/PositionArray.ts";
 import { Tile } from "../results/Tile.ts";
@@ -19,7 +22,10 @@ import { TileBuff } from "../results/TileBuff.ts";
 import { TileBuffArray } from "../results/TileBuffArray.ts";
 import { UnitStatistic } from "../results/UnitStatistic.ts";
 import { UnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
 import {
     extendVariableInfoDict,
     extendFunctionInfoDict,
@@ -90,7 +96,7 @@ export class PlayerArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(PlayerArray.FnWhere, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextPlayerArray_GenerateFunctions_03
@@ -128,7 +134,7 @@ export class PlayerArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(PlayerArray.FnSelect, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextPlayerArray_GenerateFunctions_06
@@ -184,7 +190,7 @@ export class PlayerArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(PlayerArray.FnAll, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextPlayerArray_GenerateFunctions_09
@@ -222,7 +228,7 @@ export class PlayerArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(PlayerArray.FnAny, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextPlayerArray_GenerateFunctions_12
@@ -254,7 +260,7 @@ export class PlayerArray extends Base {
     private _playerArray    : IPlayer[];
     private _contextWar     : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsPlayerArray) {
+    public constructor(data: ResultsPlayerArray) {
         super(data.war);
 
         this._playerArray   = data.array;
@@ -264,14 +270,14 @@ export class PlayerArray extends Base {
         return ContextType.PlayerArray;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         switch (identifierName) {
             case PlayerArray.VnLength  : return new Num(this.getWar(), this._playerArray.length);
             default                             : return (this._contextWar ??= new War(this.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case PlayerArray.FnGet     : return this.callGet(argumentArray[0]);
             case PlayerArray.FnWhere   : return this.callWhere(argumentArray[0], rootCtx, localVariableDict, isRestricted);
@@ -282,7 +288,7 @@ export class PlayerArray extends Base {
         }
     }
 
-    public callGet(arg: ExpressionParsersResultsBase): Player {
+    public callGet(arg: ResultsBase): Player {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -303,13 +309,13 @@ export class PlayerArray extends Base {
         return new Player(result);
     }
 
-    public callWhere(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsPlayerArray {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callWhere(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsPlayerArray {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -326,16 +332,16 @@ export class PlayerArray extends Base {
             }
         }
 
-        return new ExpressionParsersResultsPlayerArray(war, resultArray);
+        return new ResultsPlayerArray(war, resultArray);
     }
 
-    public callSelect(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callSelect(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -398,7 +404,7 @@ export class PlayerArray extends Base {
                 resultArray.push(result.player);
             }
 
-            return new ExpressionParsersResultsPlayerArray(war, resultArray);
+            return new ResultsPlayerArray(war, resultArray);
 
         } else if (resultType === ResultType.Number) {
             const resultArray: number[] = [];
@@ -444,13 +450,13 @@ export class PlayerArray extends Base {
         }
     }
 
-    public callAll(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAll(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -469,13 +475,13 @@ export class PlayerArray extends Base {
         return new Num(war, 1);
     }
 
-    public callAny(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAny(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 

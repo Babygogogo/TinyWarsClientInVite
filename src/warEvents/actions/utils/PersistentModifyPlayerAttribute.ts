@@ -5,10 +5,17 @@ import { NumArray } from "../../../expressionParsers/contexts/NumArray.ts";
 import { Player } from "../../../expressionParsers/contexts/Player.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { NumArray as ExpressionParsersResultsNumArray } from "../../../expressionParsers/results/NumArray.ts";
+import { NumArray as ResultsNumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { getMpwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getTextForYesOrNo,
+} from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import type { WeaPersistentModifyPlayerAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
 import { ExpressionInfoDict } from "../constants/PersistentModifyPlayerAttribute.ts";
@@ -320,7 +327,7 @@ export function getActAiUnitProductionBonusScore({ action, playerIndex, war, uni
     }
 
     try {
-        const temp      = new ExpressionParsersResultsNumArray(war, [unitTypeId, gridIndex.getX(), gridIndex.getY()]);
+        const temp      = new ResultsNumArray(war, [unitTypeId, gridIndex.getX(), gridIndex.getY()]);
         const epResult  = Parser.getParseResult(exp).eval(new NumArray(temp), true);
         if (epResult instanceof Num) {
             return epResult.num;
@@ -341,7 +348,7 @@ function getEpResultNumberArray(str: Undefinable<string>, player: IPlayer): numb
         const epResult = Parser.getParseResult(str).eval(new Player(player), true);
         if (epResult instanceof Num) {
             return [epResult.num];
-        } else if (epResult instanceof ExpressionParsersResultsNumArray) {
+        } else if (epResult instanceof ResultsNumArray) {
             return epResult.numberArray;
         } else {
             return [];

@@ -1,16 +1,29 @@
-import type { Undefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    UserOnlineState,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import { TextureVersionId } from "../graphics/Constants.ts";
-import { newError, getExisted, createLazyFunc } from "./Misc.ts";
+import {
+    newError,
+    getExisted,
+    createLazyFunc,
+} from "./Misc.ts";
 import { getNumText } from "./Text.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import { BaseCfgDict, DecorationCfgDict, ObjectCfgDict } from "../tiles/constants/Common.ts";
+import {
+    BaseCfgDict,
+    DecorationCfgDict,
+    ObjectCfgDict,
+} from "../tiles/constants/Common.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
 import type { BuffTypeId } from "../unitBuffs/Constants.ts";
-import type { CornerStateIconTypeId, AnimationTypeId } from "../units/Constants.ts";
+import type {
+    CornerStateIconTypeId,
+    AnimationTypeId,
+} from "../units/Constants.ts";
 
-type UnitBuffTypeId                 = BuffTypeId;
 export function getCoBust(gcData: GameConfig, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
     return (imgNumber != null) ? `coBust${getNumText(imgNumber, 4)}` : null;
@@ -274,7 +287,7 @@ export function getUnitPromotion({ version, promotion, isDark, skinId }: {
 export function getUnitBuff({ version, buffTypeId, isDark }: {
     version         : TextureVersionId;
     isDark          : boolean;
-    buffTypeId      : UnitBuffTypeId;
+    buffTypeId      : BuffTypeId;
 }): string {
     const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForVersion    = `ver${getNumText(version)}`;

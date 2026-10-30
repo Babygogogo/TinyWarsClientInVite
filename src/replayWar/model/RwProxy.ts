@@ -1,26 +1,17 @@
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
+import type { S as ReplayGetAllInfoVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
+import type { S as ReplayGetDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
+import type { S as ReplayGetInfoVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
+import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
+import type { S as ReplayGetReplayInfoArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
+import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
+import type { S as ReplaySetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
 import {
     updateOnFailedMsgReplayGetData,
     updateOnMsgReplayGetData,
@@ -57,7 +48,7 @@ export function reqReplayGetData(replayId: number): void {
     });
 }
 async function _onMsgReplayGetData(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS;
+    const data = e.data as ReplayGetDataResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgReplayGetData(data);
     } else {
@@ -74,7 +65,7 @@ export function reqReplayGetReplayInfo(replayId: number): void {
     });
 }
 async function _onMsgReplayGetReplayInfo(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS;
+    const data = e.data as ReplayGetReplayInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgReplayGetReplayInfo(data);
     } else {
@@ -89,7 +80,7 @@ export function reqReplayGetReplayInfoArray(replayIdArray: number[]): void {
     }, }, });
 }
 async function _onMsgReplayGetReplayInfoArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS;
+    const data = e.data as ReplayGetReplayInfoArrayResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgReplayGetReplayInfoArray(data);
         dispatch(TypeId.MsgReplayGetReplayInfoArray, data);
@@ -104,7 +95,7 @@ export function reqReplayGetSelfRating(replayId: number): void {
     });
 }
 function _onMsgReplayGetSelfRating(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS;
+    const data = e.data as ReplayGetSelfRatingResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgReplayGetSelfRating(data);
     } else {
@@ -122,7 +113,7 @@ export function reqReplaySetSelfRating(replayId: number, rating: number): void {
     });
 }
 function _onMsgReplaySetSelfRating(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS;
+    const data = e.data as ReplaySetSelfRatingResponse;
     if (!data.getErrorCode()) {
         updateOnMsgReplaySetSelfRating(data);
         dispatch(TypeId.MsgReplaySetSelfRating, data);
@@ -134,7 +125,7 @@ export function reqReplayGetAllInfoVersions(): void {
     }, }, });
 }
 async function _onMsgReplayGetAllInfoVersions(e: Event): Promise<void> {
-    const data = e.data as S;
+    const data = e.data as ReplayGetAllInfoVersionsResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgReplayGetAllInfoVersions(data);
         dispatch(TypeId.MsgReplayGetAllInfoVersions, data);
@@ -147,7 +138,7 @@ export function reqMsgReplayGetInfoVersion(replayId: number): void {
     } } });
 }
 async function _onMsgReplayGetInfoVersion(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS;
+    const data = e.data as ReplayGetInfoVersionResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgReplayGetInfoVersion(data);
     } else {

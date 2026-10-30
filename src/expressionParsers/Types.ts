@@ -1,4 +1,7 @@
-import type { ContextType, ResultType } from "./Enums.ts";
+import type {
+    ContextType,
+    ResultType,
+} from "./Enums.ts";
 import type { FunctionInfo } from "./FunctionInfo.ts";
 import type { TextType } from "../lang/Constants.ts";
 

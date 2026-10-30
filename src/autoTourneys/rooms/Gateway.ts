@@ -6,23 +6,18 @@ import {
     updateOnMsgAtrSetSelfSettings,
     updateOnMsgAtrDeleteRoomByServer,
 } from "./Provider.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrGetJoinedRoomIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetJoinedRoomIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
+import type { S as AtrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
+import type { S as AtrGetJoinedRoomIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetJoinedRoomIdArray/S.ts";
+import type { S as AtrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
+import type { S as AtrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
+import type { S as AtrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
@@ -41,7 +36,7 @@ export function reqAtrGetRoomPublicInfo(roomId: number): void {
     } }, });
 }
 async function _onMsgAtrGetRoomPublicInfo(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS;
+    const data = e.data as AtrGetRoomPublicInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgAtrGetRoomPublicInfo(data);
     } else {
@@ -55,7 +50,7 @@ export function reqAtrGetJoinedRoomIdArray(): void {
     }, }, });
 }
 function _onMsgAtrGetJoinedRoomIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrGetJoinedRoomIdArrayS;
+    const data = e.data as AtrGetJoinedRoomIdArrayResponse;
     setJoinedRoomIdArray(data.getRoomIdArray());
     dispatch(TypeId.MsgAtrGetJoinedRoomIdArray, data);
 }
@@ -67,7 +62,7 @@ export function reqAtrSetBannedCoIdArray(roomId: number, bannedCoIdArray: number
     } }, });
 }
 async function _onMsgAtrSetBannedCoIdArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS;
+    const data = e.data as AtrSetBannedCoIdArrayResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgAtrSetBannedCoIdArray(data);
         dispatch(TypeId.MsgAtrSetBannedCoIdArray, data);
@@ -82,7 +77,7 @@ export function reqAtrSetSelfSettings(roomId: number, coId: number, unitAndTileS
     }, }, });
 }
 async function _onMsgAtrSetSelfSettings(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS;
+    const data = e.data as AtrSetSelfSettingsResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgAtrSetSelfSettings(data);
         dispatch(TypeId.MsgAtrSetSelfSettings, data);
@@ -90,7 +85,7 @@ async function _onMsgAtrSetSelfSettings(e: Event): Promise<void> {
 }
 
 function _onMsgAtrDeleteRoomByServer(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as AtrDeleteRoomByServerResponse;
     updateOnMsgAtrDeleteRoomByServer(data);
     dispatch(TypeId.MsgAtrDeleteRoomByServer, data);
 }

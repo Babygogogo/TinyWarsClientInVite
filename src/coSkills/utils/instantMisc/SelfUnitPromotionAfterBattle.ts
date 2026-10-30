@@ -1,8 +1,6 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import type {
-    SelfUnitPromotionAfterBattle,
-} from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
+import type { SelfUnitPromotionAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
 
 export function getTotalOffset({
     cfg,

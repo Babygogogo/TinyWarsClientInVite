@@ -1,7 +1,10 @@
-import type { Base } from "../contexts/Base.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { getErrorTextForOperandType } from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -21,11 +24,11 @@ const ValidResultTypes = [
     ResultType.UnitStatisticArray,
 ];
 
-export class Assignment extends ExpressionParsersNodesBase {
+export class Assignment extends Base {
     private _identifierName : string;
-    private _rhs            : ExpressionParsersNodesBase;
+    private _rhs            : Base;
 
-    public constructor(identifierName: string, rhs: ExpressionParsersNodesBase) {
+    public constructor(identifierName: string, rhs: Base) {
         super();
 
         this._identifierName    = identifierName;
@@ -38,7 +41,7 @@ export class Assignment extends ExpressionParsersNodesBase {
         return names;
     }
 
-    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override eval(ctx: ContextsBase, rootCtx: ContextsBase, lambdaArgumentDict: Map<string, ResultsBase> | null, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         const result = this._rhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         if (!checkIsValidResultType(result.getResultType())) {
             throw newError(`Invalid value for assignment.`);

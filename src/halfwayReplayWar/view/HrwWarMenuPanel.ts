@@ -1,11 +1,25 @@
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import type { IHrwWar } from "../interface/IHrwWar.ts";
-import { gotoSinglePlayerWar, gotoMfrCreateSettingsPanel, gotoMultiPlayerWar, gotoLobby } from "../../helpers/GameFlow.ts";
+import {
+    gotoSinglePlayerWar,
+    gotoMfrCreateSettingsPanel,
+    gotoMultiPlayerWar,
+    gotoLobby,
+} from "../../helpers/GameFlow.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getErrorText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getErrorText,
+} from "../../lang/Utils.ts";
 import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";

@@ -1,4 +1,7 @@
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UserOpacitySettings } from "../../proto/schema/CommonProto/User/UserOpacitySettings.ts";
@@ -10,7 +13,10 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getSelfSettingsOpacitySettings, setSelfSettingsOpacitySettings } from "../Model.ts";
+import {
+    getSelfSettingsOpacitySettings,
+    setSelfSettingsOpacitySettings,
+} from "../Model.ts";
 import { reqUserSetSettings } from "../Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 

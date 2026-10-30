@@ -1,4 +1,7 @@
-import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    RepairHpAndCost,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
@@ -13,21 +16,18 @@ import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import type { ITile } from "../tiles/ITile.ts";
-import type { ActionStateId, AiModeId, WeaponTypeId } from "./Constants.ts";
+import type {
+    ActionStateId,
+    AiModeId,
+    WeaponTypeId,
+} from "./Constants.ts";
 import type { IUnitView } from "./IUnitView.ts";
-
-type UnitActionState    = ActionStateId;
-type UnitAiMode         = AiModeId;
-type UnitWeaponType     = WeaponTypeId;
-type CoSkillType        = SkillTypeId;
-type GameConfiguration  = GameConfig;
-type IBwTile            = ITile;
 
 export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    init(unitData: SerialUnit, gameConfig: GameConfiguration): void;
+    init(unitData: SerialUnit, gameConfig: GameConfig): void;
 
     startRunning(war: IBwWar): void;
     startRunningView(): void;
@@ -41,7 +41,7 @@ export interface IUnit {
 
     getWar(): IBwWar;
 
-    getGcData(): GameConfiguration;
+    getGcData(): GameConfig;
 
     getTemplateCfg(): UnitTemplateCfg;
 
@@ -76,8 +76,8 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for state.
     ////////////////////////////////////////////////////////////////////////////////
-    getActionState(): UnitActionState;
-    setActionState(state: UnitActionState): void;
+    getActionState(): ActionStateId;
+    setActionState(state: ActionStateId): void;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for player index and team index.
@@ -148,7 +148,7 @@ export interface IUnit {
     getCfgSecondaryWeaponBaseDamage(armorType: number): number | null;
     getSecondaryWeaponBaseDamage(armorType: number): number | null;
 
-    getCfgBaseDamage(targetArmorType: number, weaponType: UnitWeaponType): number | null;
+    getCfgBaseDamage(targetArmorType: number, weaponType: WeaponTypeId): number | null;
     getBaseDamage(armorType: number): number | null;
 
     getMinAttackRange(): number | null;
@@ -174,7 +174,7 @@ export interface IUnit {
     checkIsCapturingTile(): boolean;
 
     checkIsCapturer(): boolean;
-    checkCanCaptureTile(tile: IBwTile): boolean;
+    checkCanCaptureTile(tile: ITile): boolean;
 
     getFinalCaptureAmount(selfGridIndex: GridIndex): number | null;
 
@@ -284,7 +284,7 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for launch silo.
     ////////////////////////////////////////////////////////////////////////////////
-    checkCanLaunchSiloOnTile(tile: IBwTile): boolean;
+    checkCanLaunchSiloOnTile(tile: ITile): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for build tile.
@@ -292,7 +292,7 @@ export interface IUnit {
     checkIsBuildingTile(): boolean;
 
     checkIsTileBuilder(): boolean;
-    checkCanBuildOnTile(tile: IBwTile): boolean;
+    checkCanBuildOnTile(tile: ITile): boolean;
 
     getBuildTargetTileCfg(baseType: number, objectType: number): BuildableTileCfg | null;
 
@@ -369,7 +369,7 @@ export interface IUnit {
 
     checkCanCoBoardAfterMovePath(movePath: GridIndex[]): boolean;
 
-    checkCanUseCoSkill(skillType: CoSkillType): boolean;
+    checkCanUseCoSkill(skillType: SkillTypeId): boolean;
 
     getCoBoardCost(): number;
 
@@ -399,8 +399,8 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for ai mode.
     ////////////////////////////////////////////////////////////////////////////////
-    setAiMode(aiMode: UnitAiMode): void;
-    getAiMode(): UnitAiMode;
+    setAiMode(aiMode: AiModeId): void;
+    getAiMode(): AiModeId;
 
     /**
      * @returns indicates the ai mode is modified or not

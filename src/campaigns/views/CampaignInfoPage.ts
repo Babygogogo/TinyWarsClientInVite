@@ -2,8 +2,15 @@ import { getCampaignInfo } from "../mains/Provider.ts";
 import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

@@ -1,7 +1,13 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
@@ -17,7 +23,10 @@ import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { getSelfUserId } from "../../../users/Model.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

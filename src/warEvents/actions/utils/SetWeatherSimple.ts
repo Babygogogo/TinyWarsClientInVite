@@ -2,7 +2,11 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getWeatherName, getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    getWeatherName,
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
 
 export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): boolean {

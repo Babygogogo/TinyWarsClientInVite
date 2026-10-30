@@ -1,46 +1,45 @@
-import type { PlayerInfo, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    PlayerInfo,
+    Undefinable,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
+import type { OpenData as CommonWarAdvancedSettingsPageOpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import type { OpenData as CommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
+import type { OpenData as CommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
-import { checkIsAnyPromiseTrue, getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    checkIsAnyPromiseTrue,
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { warn } from "../../Logger.ts";
 import { BootTimer } from "../../multiMatchWars/Constants.ts";
 import { SelfSettings } from "../../multiPlayerRooms/SelfSettings.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import type { MmrRoomInfo } from "../../proto/schema/CommonProto/MultiMatchRoom/MmrRoomInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMmrDeleteRoomByServer/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrGetBannedNormalMapIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBannedNormalMapIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrGetBootTimerDaysRangeS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBootTimerDaysRange/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetRoomPublicInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedCoIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedNormalMapIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedNormalMapIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetBootTimerDaysRangeS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBootTimerDaysRange/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
+import type { S as MmrDeleteRoomByServerResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrDeleteRoomByServer/S.ts";
+import type { S as MmrGetBannedNormalMapIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBannedNormalMapIdArray/S.ts";
+import type { S as MmrGetBootTimerDaysRangeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetBootTimerDaysRange/S.ts";
+import type { S as MmrGetRoomPublicInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetRoomPublicInfo/S.ts";
+import type { S as MmrSetBannedCoIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedCoIdArray/S.ts";
+import type { S as MmrSetBannedNormalMapIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedNormalMapIdArray/S.ts";
+import type { S as MmrSetBootTimerDaysRangeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBootTimerDaysRange/S.ts";
+import type { S as MmrSetSelfSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
 import { DataForPlayerBanCo } from "../../proto/schema/CommonProto/Structure/DataForPlayerBanCo.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import {
+    getPlayerRule,
+    getPlayersCountUnneutral,
+} from "../../warRules/utils/CommonData.ts";
 import { BasicSettingsTypeId } from "../../wars/Constants.ts";
-import { reqMmrGetJoinedRoomIdArray, reqMmrGetRoomPublicInfo } from "./MmrProxy.ts";
+import {
+    reqMmrGetJoinedRoomIdArray,
+    reqMmrGetRoomPublicInfo,
+} from "./MmrProxy.ts";
 
 let _maxConcurrentCountForStd       = 0;
 let _maxConcurrentCountForFog       = 0;
@@ -108,16 +107,16 @@ export async function getSelfSettings(roomId: number): Promise<Undefinable<SelfS
     }
 }
 
-export function updateOnMsgMmrGetBannedNormalMapIdArray(data: ProtoSchemaCommonProtoNetMessageMsgMmrGetBannedNormalMapIdArrayS): void {
+export function updateOnMsgMmrGetBannedNormalMapIdArray(data: MmrGetBannedNormalMapIdArrayResponse): void {
     _bannedNormalMapIdArrayForStd = data.getBannedNormalMapIdArrayForStd();
     _bannedNormalMapIdArrayForFog = data.getBannedNormalMapIdArrayForFog();
 }
-export function updateOnMsgMmrSetBannedNormalMapIdArray(data: ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedNormalMapIdArrayS): void {
+export function updateOnMsgMmrSetBannedNormalMapIdArray(data: MmrSetBannedNormalMapIdArrayResponse): void {
     _bannedNormalMapIdArrayForStd = data.getBannedNormalMapIdArrayForStd();
     _bannedNormalMapIdArrayForFog = data.getBannedNormalMapIdArrayForFog();
 }
 
-export function updateOnMsgMmrGetBootTimerDaysRange(data: ProtoSchemaCommonProtoNetMessageMsgMmrGetBootTimerDaysRangeS): void {
+export function updateOnMsgMmrGetBootTimerDaysRange(data: MmrGetBootTimerDaysRangeResponse): void {
     {
         const range = data.getRangeForStd();
         if (range.length === 2) {
@@ -135,7 +134,7 @@ export function updateOnMsgMmrGetBootTimerDaysRange(data: ProtoSchemaCommonProto
         }
     }
 }
-export function updateOnMsgMmrSetBootTimerDaysRange(data: ProtoSchemaCommonProtoNetMessageMsgMmrSetBootTimerDaysRangeS): void {
+export function updateOnMsgMmrSetBootTimerDaysRange(data: MmrSetBootTimerDaysRangeResponse): void {
     {
         const range = data.getRangeForStd();
         if (range.length === 2) {
@@ -154,7 +153,7 @@ export function updateOnMsgMmrSetBootTimerDaysRange(data: ProtoSchemaCommonProto
     }
 }
 
-export async function updateOnMsgMmrGetRoomPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS): Promise<void> {
+export async function updateOnMsgMmrGetRoomPublicInfo(data: MmrGetRoomPublicInfoResponse): Promise<void> {
     const roomId    = data.getRoomId() ?? 0;
     const roomInfo  = data.getRoomInfo() ?? null;
     setRoomInfo(roomId, roomInfo);
@@ -163,14 +162,14 @@ export async function updateOnMsgMmrGetRoomPublicInfo(data: ProtoSchemaCommonPro
         (await getSelfSettings(roomId))?.resetData(roomInfo);
     }
 }
-export function updateOnFailedMsgMmrGetRoomPublicInfo(data: ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS): void {
+export function updateOnFailedMsgMmrGetRoomPublicInfo(data: MmrGetRoomPublicInfoResponse): void {
     const roomId = data.getRoomId();
     if (roomId != null) {
         _roomInfoAccessor.updateOnRequestFailed(roomId);
     }
 }
 
-export async function updateOnMsgMmrSetBannedCoIdArray(data: ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS): Promise<void> {
+export async function updateOnMsgMmrSetBannedCoIdArray(data: MmrSetBannedCoIdArrayResponse): Promise<void> {
     const roomId    = getExisted(data.getRoomId());
     const roomInfo  = await getRoomInfo(roomId);
     if (!roomInfo) {
@@ -191,7 +190,7 @@ export async function updateOnMsgMmrSetBannedCoIdArray(data: ProtoSchemaCommonPr
         }));
     }
 }
-export async function updateOnMsgMmrSetSelfSettings(data: ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS): Promise<void> {
+export async function updateOnMsgMmrSetSelfSettings(data: MmrSetSelfSettingsResponse): Promise<void> {
     const roomInfo = await getRoomInfo(getExisted(data.getRoomId()));
     if (!roomInfo) {
         return;
@@ -217,7 +216,7 @@ export async function updateOnMsgMmrSetSelfSettings(data: ProtoSchemaCommonProto
         }));
     }
 }
-export function updateOnMsgMmrDeleteRoomByServer(data: S): void {
+export function updateOnMsgMmrDeleteRoomByServer(data: MmrDeleteRoomByServerResponse): void {
     setRoomInfo(getExisted(data.getRoomId()), null);
 }
 
@@ -252,7 +251,7 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
     return false;
 }
 
-export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonWarPlayerInfoPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
@@ -292,7 +291,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<CommonWarBasicSettingsPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return { dataArrayForListSettings : [] };
@@ -306,7 +305,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const warEventFullData  = (await getRawData(normalMapId))?.getWarEventFullData() ?? null;
     const bootTimerParams   = settingsForMmw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
+    const openData          : CommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings : [
             {
                 settingsType     : BasicSettingsTypeId.NormalMapId,
@@ -401,7 +400,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<OpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<CommonWarAdvancedSettingsPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;

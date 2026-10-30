@@ -3,12 +3,10 @@ import type { TileCustomName } from "../../proto/schema/CommonProto/Structure/Ti
 import { CustomName } from "../constants/Common.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type TileCustomNameSchema   = TileCustomName;
-
-export function checkIsValid(data: TileCustomNameSchema): boolean {
+export function checkIsValid(data: TileCustomName): boolean {
     return getErrorCode(data) === ClientErrorCode.NoError;
 }
-export function getErrorCode(data: TileCustomNameSchema): ClientErrorCode {
+export function getErrorCode(data: TileCustomName): ClientErrorCode {
     {
         const nameId = data.getNameId();
         if ((nameId > CustomName.MaxId) ||
@@ -32,7 +30,7 @@ export function getErrorCode(data: TileCustomNameSchema): ClientErrorCode {
     return ClientErrorCode.NoError;
 }
 
-export function getErrorCodeForTileCustomNameArray(names: TileCustomNameSchema[]): ClientErrorCode {
+export function getErrorCodeForTileCustomNameArray(names: TileCustomName[]): ClientErrorCode {
     const idSet = new Set<number>();
     for (const nameData of names) {
         if (!checkIsValid(nameData)) {

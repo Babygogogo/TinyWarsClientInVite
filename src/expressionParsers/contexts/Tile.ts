@@ -1,8 +1,11 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
@@ -10,12 +13,23 @@ import { Player } from "../results/Player.ts";
 import { Position } from "../results/Position.ts";
 import { TileBuff } from "../results/TileBuff.ts";
 import { TileBuffArray } from "../results/TileBuffArray.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { MaxId, MinId } from "../../locations/Constants.ts";
+import {
+    MaxId,
+    MinId,
+} from "../../locations/Constants.ts";
 import { encode } from "../../locations/Utils.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -299,7 +313,7 @@ export class Tile extends Base {
         return ContextType.Tile;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const tile      = this._tile;
         const war       = tile.getWar();
         const gridIndex = tile.getGridIndex();
@@ -318,12 +332,12 @@ export class Tile extends Base {
             case Tile.VnHasUnit        : return new Num(war, war.getUnitMap().getUnitOnMap(gridIndex) ? 1 : 0);
             case Tile.VnUnit           : return new NullableUnit(war, war.getUnitMap().getUnitOnMap(gridIndex));
             case Tile.VnPlayer         : return new Player(tile.getPlayer());
-            case Tile.VnWar            : return new ExpressionParsersResultsWar(war);
+            case Tile.VnWar            : return new ResultsWar(war);
             default                             : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Tile.FnHp                 : return this.callHp(argumentArray[0]);
             case Tile.FnIncome             : return this.callIncome(argumentArray[0], isRestricted);
@@ -337,7 +351,7 @@ export class Tile extends Base {
             default                                 : return (this._contextWar ??= new War(this._tile.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    public callHp(arg: ExpressionParsersResultsBase): Num {
+    public callHp(arg: ResultsBase): Num {
         const war = this.getWar();
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
@@ -379,7 +393,7 @@ export class Tile extends Base {
             return new Num(war, currentValue);
         }
     }
-    public callIncome(arg: ExpressionParsersResultsBase, isRestricted: boolean): Num {
+    public callIncome(arg: ResultsBase, isRestricted: boolean): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -396,7 +410,7 @@ export class Tile extends Base {
             return new Num(war, this._tile.getIncomePerTurn());
         }
     }
-    public callBuildPoint(arg: ExpressionParsersResultsBase): Num {
+    public callBuildPoint(arg: ResultsBase): Num {
         const war = this.getWar();
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
@@ -438,7 +452,7 @@ export class Tile extends Base {
             return new Num(war, currentValue);
         }
     }
-    public callCapturePoint(arg: ExpressionParsersResultsBase): Num {
+    public callCapturePoint(arg: ResultsBase): Num {
         const war = this.getWar();
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
@@ -480,7 +494,7 @@ export class Tile extends Base {
             return new Num(war, currentValue);
         }
     }
-    public callInLocation(arg: ExpressionParsersResultsBase): Num {
+    public callInLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -498,7 +512,7 @@ export class Tile extends Base {
         const groupedLocationIdArray = encode([locationId]);
         return new Num(war, this._tile.checkHasAnyLocationIdByGroupedLocationIdArray(groupedLocationIdArray) ? 1 : 0);
     }
-    public callDistanceToGrid(argX: ExpressionParsersResultsBase, argY: ExpressionParsersResultsBase): Num {
+    public callDistanceToGrid(argX: ResultsBase, argY: ResultsBase): Num {
         if (!(argX instanceof Num)) {
             throw newError(`Unexpected argX.`);
         }
@@ -514,7 +528,7 @@ export class Tile extends Base {
 
         return new Num(this.getWar(), Math.abs(this._tile.getGridX() - x) + Math.abs(this._tile.getGridY() - y));
     }
-    public callDistanceToLocation(arg: ExpressionParsersResultsBase): Num {
+    public callDistanceToLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -542,7 +556,7 @@ export class Tile extends Base {
             tile.getUnfixedBuffList()?.map(v => new TileBuff(v, tile))
         );
     }
-    private callCanHideUnitType(arg: ExpressionParsersResultsBase): Num {
+    private callCanHideUnitType(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }

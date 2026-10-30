@@ -1,14 +1,13 @@
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { TileBuff as ProtoTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 
-type TileBuffProto      = ProtoSchemaCommonProtoStructureTileBuff;
 export class TileBuff extends Base {
-    public readonly buff: TileBuffProto;
+    public readonly buff: ProtoTileBuff;
     public readonly tile: ITile;
 
-    public constructor(buff: TileBuffProto, tile: ITile) {
+    public constructor(buff: ProtoTileBuff, tile: ITile) {
         super(tile.getWar());
 
         this.buff = buff;

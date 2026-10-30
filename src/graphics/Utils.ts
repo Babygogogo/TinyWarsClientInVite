@@ -1,6 +1,9 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
-import { TextureResolutionId, TextureResolutionConfigs } from "./Constants.ts";
+import {
+    TextureResolutionId,
+    TextureResolutionConfigs,
+} from "./Constants.ts";
 import type { TextureResolutionConfig } from "./Types.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { Capabilities } from "../vendor/egret/Egret.ts";

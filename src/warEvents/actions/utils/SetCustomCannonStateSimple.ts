@@ -3,11 +3,21 @@ import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
-import { checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid, getResultValue } from "../../../multiplierAndOffsets/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../../lang/Utils.ts";
+import {
+    checkIsValid as checkIsValidMultiplierAndOffset,
+    getResultValue,
+} from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import {
+    getDescForEmbed as getPlayersDescForEmbed,
+    checkIsValid as checkIsValidPlayerFilter,
+    checkIsMeet as checkIsMeetPlayerFilter,
+} from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetCustomCannonStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateSimple.ts";
 import { TileCustomCannonData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
@@ -15,16 +25,19 @@ import { Cannon } from "../../../tiles/constants/CustomLimits.ts";
 import { TypeId } from "../../../tiles/constants/MapWeapon.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
-    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    getDescForEmbed as getTilesDescForEmbed,
+    checkIsValid as checkIsValidTileFilter,
+    checkIsMeet as checkIsMeetTileFilter,
 } from "../../../tiles/utils/Filter.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import {
+    checkIsValid as checkIsValidUnitFilter,
+    checkIsMeet as checkIsMeetUnitFilter,
+} from "../../../units/utils/Filter.ts";
 import {
     getDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as checkIsValidValueAndComparator,
+    checkIsMeet as checkIsMeetValueAndComparator,
 } from "../../../valueAndComparators/Utils.ts";
 
 export function checkIsValid(data: Undefinable<WeaSetCustomCannonStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
@@ -135,13 +148,13 @@ export function getDetailDesc(data: Undefinable<WeaSetCustomCannonStateSimple>):
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${TilesUtilsFilterGetDescForEmbed(filter)}`);
+            conTextArray.push(`- ${getTilesDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${getText(TextType.B1421)}) ${getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1421)}) ${getPlayersDescForEmbed(filter)}`);
         }
     }
     {
@@ -255,7 +268,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
                 return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
@@ -266,7 +279,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
@@ -274,7 +287,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
@@ -282,7 +295,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!ValueAndComparatorsUtilsCheckIsValid(comparator))
+            (!checkIsValidValueAndComparator(comparator))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
@@ -291,7 +304,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActRangeForUp();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RangeUp));
         }
@@ -299,7 +312,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActRangeForDown();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RangeDown));
         }
@@ -307,7 +320,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActRangeForLeft();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RangeLeft));
         }
@@ -315,7 +328,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActRangeForRight();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.RangeRight));
         }
@@ -323,7 +336,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActPriority();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.Priority));
         }
@@ -343,7 +356,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActMaxTargetCount();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.MaxTargets));
         }
@@ -351,7 +364,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActOffsetHp();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
         }
@@ -359,7 +372,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActOffsetFuelPercentage();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
         }
@@ -367,7 +380,7 @@ export function getErrorTip(data: WeaSetCustomCannonStateSimple, mapSize: MapSiz
     {
         const act = data.getActOffsetPrimaryAmmoPercentage();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
         }
@@ -416,7 +429,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
                 continue;
             }
 
-            if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsMeet(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!checkIsMeetTileFilter(conTileFilter, tile))) {
                 continue;
             }
 
@@ -427,11 +440,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (checkIsMeetUnitFilter(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
+                if (!checkIsMeetValueAndComparator(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -505,7 +518,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateSimpl
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeetPlayerFilter(filter, player));
     }
     return !!resultDict.get(player);
 }

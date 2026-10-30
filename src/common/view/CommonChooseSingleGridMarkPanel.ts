@@ -1,5 +1,8 @@
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { AllGridMarkTypeId } from "../../gridMarks/Constants.ts";
 import { getGridMark } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";

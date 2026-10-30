@@ -3,8 +3,15 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getComparatorName } from "../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getComparatorName,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
@@ -18,8 +25,14 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { getNextComparatorId } from "../../valueAndComparators/Utils.ts";
 import { MaxCounts } from "../../warEvents/actions/constants/Common.ts";
-import { checkIsPersistentAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
-import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    checkIsPersistentAction,
+    getBriefDescForAction,
+} from "../../warEvents/actions/utils/Common.ts";
+import {
+    getErrorTipForCondition,
+    getDetailedDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 import { getAction } from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {

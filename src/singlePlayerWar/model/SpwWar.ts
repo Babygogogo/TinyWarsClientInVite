@@ -1,13 +1,19 @@
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { getBwWarEventManagerClass, getSpwRetractManagerClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getBwWarEventManagerClass,
+    getSpwRetractManagerClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { ISpwRetractManager } from "../interface/ISpwRetractManager.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
-import { getAllTilesVisibleToTeams, getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
+import {
+    getAllTilesVisibleToTeams,
+    getAllUnitsOnMapVisibleToTeams,
+} from "../../visibilities/Utils.ts";
 import { PlayerScore } from "../../singlePlayerWars/Constants.ts";
 
 export abstract class SpwWar extends BwWar implements ISpwWar {

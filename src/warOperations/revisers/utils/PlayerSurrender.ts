@@ -1,6 +1,9 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";

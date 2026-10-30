@@ -1,13 +1,25 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { showLang } from "../../FloatText.ts";
-import { getOriginSkinIdArray, getRevisedOverridingSkinIdArray, getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getMpwWarClass, getHrwWarClass, getRwWarClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getOriginSkinIdArray,
+    getRevisedOverridingSkinIdArray,
+    getAllSkinIdArray,
+} from "../../forceSkins/Utils.ts";
+import {
+    getMpwWarClass,
+    getHrwWarClass,
+    getRwWarClass,
+    getSpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getSkinCircle } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { setMpwOverridingSkinIdArray, setRwOverridingSkinIdArray } from "../../localData/Storage.ts";
+import {
+    setMpwOverridingSkinIdArray,
+    setRwOverridingSkinIdArray,
+} from "../../localData/Storage.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";

@@ -12,8 +12,6 @@ import type {
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type MapEditorDrawerMode    = DrawerMode;
-type SymmetryType           = SymmetryTypeId;
 export interface IMeDrawer {
     init(): IMeDrawer;
 
@@ -24,7 +22,7 @@ export interface IMeDrawer {
     setModeDeleteTileDecoration(): void;
     setModeDeleteTileObject(): void;
     setModePreview(): void;
-    getMode(): MapEditorDrawerMode;
+    getMode(): DrawerMode;
 
     setModeDrawTileObject(data: DataForDrawTileObject): void;
     setModeDrawTileBase(data: DataForDrawTileBase): void;
@@ -49,8 +47,8 @@ export interface IMeDrawer {
     setModePasteTile(): void;
     setModePasteUnit(): void;
 
-    getSymmetricalDrawType(): SymmetryType;
-    setSymmetricalDrawType(type: SymmetryType): void;
+    getSymmetricalDrawType(): SymmetryTypeId;
+    setSymmetricalDrawType(type: SymmetryTypeId): void;
 
     getSymmetricalPlayerIndex(playerIndex: number): number;
     setSymmetricalPlayerIndex(srcPlayerIndex: number, dstPlayerIndex: number): void;

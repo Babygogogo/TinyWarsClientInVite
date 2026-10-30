@@ -1,13 +1,26 @@
 import type { CcrRoomCreator } from "../model/CcrRoomCreator.ts";
-import { CoId, CategoryId } from "../../cos/Constants.ts";
+import {
+    CoId,
+    CategoryId,
+} from "../../cos/Constants.ts";
 import { show } from "../../FloatText.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import {
+    getCoHeadFrame,
+    getCoHead,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerForceName,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalCcwHumanCoIdSet } from "../../playerRules/Utils.ts";

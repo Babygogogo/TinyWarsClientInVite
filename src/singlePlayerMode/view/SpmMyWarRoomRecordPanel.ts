@@ -1,11 +1,17 @@
 import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { getRankData, getRankIndex } from "../model/SpmModel.ts";
+import {
+    getRankData,
+    getRankIndex,
+} from "../model/SpmModel.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -14,7 +20,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfInfo, getSelfUserId } from "../../users/Model.ts";
+import {
+    getSelfInfo,
+    getSelfUserId,
+} from "../../users/Model.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

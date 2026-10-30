@@ -5,17 +5,16 @@ import {
     updateOnFailedMsgLbMrwGetRankIndex,
     updateOnMsgLbMrwGetRankIndex,
 } from "./LeaderboardModel.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
+import type { S as LbMrwGetRankIndexResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
+import type { S as LbSpmOverallGetRankInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
+import type { S as LbSpmOverallGetTopDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import type { WarTypeId } from "../../warTypes/Constants.ts";
 
@@ -33,7 +32,7 @@ export function reqLbSpmOverallGetTopDataArray(configVersion: string): void {
     } } });
 }
 function _onMsgLbSpmOverallGetTopDataArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS;
+    const data = e.data as LbSpmOverallGetTopDataArrayResponse;
     if (!data.getErrorCode()) {
         updateOnMsgLbSpmOverallGetTopDataArray(data);
         dispatch(TypeId.MsgLbSpmOverallGetTopDataArray, data);
@@ -46,7 +45,7 @@ export function reqLbSpmOverallGetRankInfo(userId: number): void {
     } } });
 }
 function _onMsgLbSpmOverallGetRankInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS;
+    const data = e.data as LbSpmOverallGetRankInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgLbSpmOverallGetRankInfo(data);
     } else {
@@ -63,7 +62,7 @@ export function reqLbMrwGetRankIndex(warType: WarTypeId, playersCountUnneutral: 
     } } });
 }
 function _onMsgLbMrwGetRankIndex(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as LbMrwGetRankIndexResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgLbMrwGetRankIndex(data);
     } else {

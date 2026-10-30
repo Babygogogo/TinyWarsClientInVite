@@ -4,8 +4,16 @@ import { getCoStatistics } from "../model/CommonModel.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeName, getGameModeHelpText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getGameModeName,
+    getGameModeHelpText,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { TurnIndex } from "../../turns/Constants.ts";

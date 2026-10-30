@@ -1,10 +1,17 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { AllLocationsCount, MinId, MaxId } from "../../locations/Constants.ts";
+import {
+    AllLocationsCount,
+    MinId,
+    MaxId,
+} from "../../locations/Constants.ts";
 import { decode } from "../../locations/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

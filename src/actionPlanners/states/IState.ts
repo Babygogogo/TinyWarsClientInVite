@@ -2,13 +2,12 @@ import type { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 
-type ApStateId  = StateId;
 export interface IState {
-    getStateId(): ApStateId;
+    getStateId(): StateId;
 
-    getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): ApStateId;
-    getNextStateIdOnDrag(actionPlanner: IActionPlanner): ApStateId;
-    getNextStateIdOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): ApStateId;
+    getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId;
+    getNextStateIdOnDrag(actionPlanner: IActionPlanner): StateId;
+    getNextStateIdOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId;
 
     cancel(actionPlanner: IActionPlanner): void;
 

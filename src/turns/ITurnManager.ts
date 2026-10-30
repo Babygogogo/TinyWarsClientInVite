@@ -7,7 +7,6 @@ import type { SerialTurnManager } from "../proto/schema/CommonProto/WarSerializa
 import type { PhaseCode } from "./Constants.ts";
 import type { TurnAndPlayerIndex } from "./Types.ts";
 
-type TurnPhaseCode      = PhaseCode;
 export interface ITurnManager {
     init(data: Undefinable<SerialTurnManager>, playersCountUnneutral: number): void;
     fastInit(data: SerialTurnManager, playersCountUnneutral: number): void;
@@ -40,8 +39,8 @@ export interface ITurnManager {
     getNextAlivePlayerIndex(playerIndex: number, includeNeutral?: boolean): number;
     getNextTurnAndPlayerIndex(currTurnIndex?: number, currPlayerIndex?: number): TurnAndPlayerIndex;
 
-    getPhaseCode(): TurnPhaseCode;
-    setPhaseCode(phaseCode: TurnPhaseCode): void;
+    getPhaseCode(): PhaseCode;
+    setPhaseCode(phaseCode: PhaseCode): void;
 
     getEnterTurnTime(): number;
     setEnterTurnTime(enterTurnTime: number): void;

@@ -1,13 +1,15 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { type KeyCallback as KeyboardKbTypesKeyCallback, KeyCode, type EventData } from "./KbTypes.ts";
+import {
+    type KeyCallback as KbTypesKeyCallback,
+    KeyCode,
+    type EventData,
+} from "./KbTypes.ts";
 import { addEventListeners } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { Listener as NotificationsTypesListener } from "../notifications/Types.ts";
-
-type KeyCallback    = KeyboardKbTypesKeyCallback;
+import type { Listener as NotificationsListener } from "../notifications/Types.ts";
 
 interface Listener {
-    callback    : KeyCallback;
+    callback    : KbTypesKeyCallback;
     thisObject  : any;
     priority    : number;
     index       : number;
@@ -17,7 +19,7 @@ const _allKeys          = new Set<KeyCode>();
 const _newKeys          = new Set<KeyCode>();
 const _listenerArray    : Listener[] = [];
 
-const _NOTIFY_EVENTS    : NotificationsTypesListener[] = [
+const _NOTIFY_EVENTS    : NotificationsListener[] = [
     { type: TypeId.GameHidden,   callback: _onNotifyGameHidden },
 ];
 
@@ -71,7 +73,7 @@ function _onNotifyGameHidden(): void {
     clearKeys();
 }
 
-export function addListener(callback: KeyCallback, thisObject: unknown, priority = 0): void {
+export function addListener(callback: KbTypesKeyCallback, thisObject: unknown, priority = 0): void {
     deleteListener(callback, thisObject);
 
     _listenerArray.push({
@@ -81,7 +83,7 @@ export function addListener(callback: KeyCallback, thisObject: unknown, priority
         index       : (_listenerArray[_listenerArray.length - 1]?.index ?? 0) + 1,
     });
 }
-export function deleteListener(callback: KeyCallback, thisObject: unknown): void {
+export function deleteListener(callback: KbTypesKeyCallback, thisObject: unknown): void {
     for (let i = 0; i < _listenerArray.length; ++i) {
         const listener = _listenerArray[i];
         if ((listener.callback === callback) && (listener.thisObject == thisObject)) {

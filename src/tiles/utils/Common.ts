@@ -2,7 +2,10 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import { CustomName, AllThemeTypeIdArray } from "../constants/Common.ts";
+import {
+    CustomName,
+    AllThemeTypeIdArray,
+} from "../constants/Common.ts";
 
 export function getMaxCapturePoint(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>): Undefinable<number> {
     return templateCfg.getIsCustomizableBuilding()

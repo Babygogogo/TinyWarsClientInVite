@@ -1,15 +1,23 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getWarTypeName, getText, getTimestampShortText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getWarTypeName,
+    getText,
+    getTimestampShortText,
+} from "../../lang/Utils.ts";
 import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
+import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
+import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
 import type { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import { getReplaySelfRating, getReplayInfo } from "../model/RwModel.ts";
+import {
+    getReplaySelfRating,
+    getReplayInfo,
+} from "../model/RwModel.ts";
 import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
@@ -75,7 +83,7 @@ export class Page extends UiOpenableComponent<OpenData> {
     }
 
     private _onNotifyMsgReplayGetBriefInfo(e: Event): void {
-        const data      = e.data as S;
+        const data      = e.data as ReplayGetReplayInfoResponse;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateComponentsForReplayBriefInfo();
@@ -83,7 +91,7 @@ export class Page extends UiOpenableComponent<OpenData> {
     }
 
     private _onNotifyMsgReplayGetSelfRating(e: Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS;
+        const data      = e.data as ReplayGetSelfRatingResponse;
         const replayId  = this.getOpenData()?.replayId;
         if ((replayId != null) && (replayId === data.getReplayId())) {
             this._updateLabelMyRating();

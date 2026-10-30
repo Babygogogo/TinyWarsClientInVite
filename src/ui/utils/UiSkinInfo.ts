@@ -4,8 +4,6 @@ import type { IUiSkinInfo } from "../interfaces/IUiSkinInfo.ts";
 import type { UiSkin } from "../types/UiSkin.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 
-type IUiSkinLoader  = IUiComponent;
-
 export class UiSkinInfo implements IUiSkinInfo {
     // private _isDestroyed            = false;
     private _isLoaded               = false;
@@ -13,10 +11,10 @@ export class UiSkinInfo implements IUiSkinInfo {
     private _loadedSkinState?       : string;
     private _loadedSkinNestedState? : string;
     private _skin?                  : UiSkin;
-    private _nonNestedSkinChildren? : TreeNode<WeakRef<IUiSkinLoader>>[];
-    private _directSkinChildren?    : WeakRef<IUiSkinLoader>[];
+    private _nonNestedSkinChildren? : TreeNode<WeakRef<IUiComponent>>[];
+    private _directSkinChildren?    : WeakRef<IUiComponent>[];
 
-    public constructor(_ui: IUiSkinLoader) {}
+    public constructor(_ui: IUiComponent) {}
 
     public getIsLoaded(): boolean {
         return this._isLoaded;
@@ -48,16 +46,16 @@ export class UiSkinInfo implements IUiSkinInfo {
     public setSkin(skin: UiSkin): void {
         this._skin = skin;
     }
-    public getNonNestedSkinChildren(): TreeNode<WeakRef<IUiSkinLoader>>[] | undefined {
+    public getNonNestedSkinChildren(): TreeNode<WeakRef<IUiComponent>>[] | undefined {
         return this._nonNestedSkinChildren;
     }
-    public setNonNestedSkinChildren(children: TreeNode<WeakRef<IUiSkinLoader>>[]): void {
+    public setNonNestedSkinChildren(children: TreeNode<WeakRef<IUiComponent>>[]): void {
         this._nonNestedSkinChildren = children;
     }
-    public getDirectSkinChildren(): WeakRef<IUiSkinLoader>[] | undefined {
+    public getDirectSkinChildren(): WeakRef<IUiComponent>[] | undefined {
         return this._directSkinChildren;
     }
-    public setDirectSkinChildren(children: WeakRef<IUiSkinLoader>[]): void {
+    public setDirectSkinChildren(children: WeakRef<IUiComponent>[]): void {
         this._directSkinChildren = children;
     }
 

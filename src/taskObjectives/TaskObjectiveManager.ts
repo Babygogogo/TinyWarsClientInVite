@@ -3,7 +3,10 @@ import type { BwWar } from "../baseWar/model/BwWar.ts";
 import { TaskObjective } from "../expressionParsers/contexts/TaskObjective.ts";
 import { Parser } from "../expressionParsers/Parser.ts";
 import { Num } from "../expressionParsers/results/Num.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { getValueInInt32 } from "../numbers/Utils.ts";
 import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
@@ -12,11 +15,9 @@ import type { ITaskObjectiveManager } from "./ITaskObjectiveManager.ts";
 import { getErrorCodeForState } from "./Utils.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwWar                         = BwWar;
-
 export class TaskObjectiveManager implements ITaskObjectiveManager {
     private _stateArray             : TaskObjectiveState[] = [];
-    private _war?                   : IBwWar;
+    private _war?                   : BwWar;
 
     public init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void {
         if (data == null) {
@@ -56,14 +57,14 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         return this.serialize();
     }
 
-    public startRunning(war: IBwWar): void {
+    public startRunning(war: BwWar): void {
         this._setWar(war);
     }
 
-    private _setWar(war: IBwWar): void {
+    private _setWar(war: BwWar): void {
         this._war = war;
     }
-    public getWar(): IBwWar {
+    public getWar(): BwWar {
         return getExisted(this._war, ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
@@ -173,7 +174,7 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
     }
 }
 
-function evalProgress(war: IBwWar, updater: string, objectiveId: number, defaultValue: number): number {
+function evalProgress(war: BwWar, updater: string, objectiveId: number, defaultValue: number): number {
     try {
         const epResult = Parser.getParseResult(updater).eval(new TaskObjective(war, objectiveId), false);
         if (epResult instanceof Num) {

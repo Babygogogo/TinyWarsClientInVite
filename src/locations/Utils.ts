@@ -1,4 +1,9 @@
-import { MinId, MaxId, GroupCount, GroupSize } from "./Constants.ts";
+import {
+    MinId,
+    MaxId,
+    GroupCount,
+    GroupSize,
+} from "./Constants.ts";
 
 export function checkIsValidLocationId(locationId: number): boolean {
     return (locationId >= MinId) && (locationId <= MaxId);

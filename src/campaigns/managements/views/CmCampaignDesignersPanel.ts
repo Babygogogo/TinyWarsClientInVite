@@ -14,7 +14,10 @@ import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
-import { getIsSelfCampaignManager, getUserNickname } from "../../../users/Model.ts";
+import {
+    getIsSelfCampaignManager,
+    getUserNickname,
+} from "../../../users/Model.ts";
 
 export interface OpenData {
     campaignId  : number;

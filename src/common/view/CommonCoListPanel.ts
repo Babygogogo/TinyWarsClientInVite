@@ -1,6 +1,9 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getSkinButtonBackground, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getSkinButtonBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { AliveStateId } from "../../players/Constants.ts";

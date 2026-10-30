@@ -5,16 +5,25 @@ import { PublicChannelId } from "../chat/Constants.ts";
 import { EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { SmallDialogueSideId } from "../dialogues/Constants.ts";
-import { ContextType, ResultType } from "../expressionParsers/Enums.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../expressionParsers/Enums.ts";
 import { ForcedFogCode } from "../fogMaps/Constants.ts";
 import { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { ModeId } from "../gameModes/Constants.ts";
 import { TypeName } from "../gameVersions/Constants.ts";
 import { newError } from "../helpers/Misc.ts";
-import { format, getNumText } from "../helpers/Text.ts";
+import {
+    format,
+    getNumText,
+} from "../helpers/Text.ts";
 import { getLanguageType } from "../localData/Storage.ts";
 import { DrawerMode } from "../mapEditors/Constants.ts";
-import { ReviewStatus, SortType } from "../maps/Constants.ts";
+import {
+    ReviewStatus,
+    SortType,
+} from "../maps/Constants.ts";
 import { MedalTypeId } from "../medals/Constants.ts";
 import { getMedalCfg } from "../medals/Utils.ts";
 import { MultiPlayerRoomType } from "../multiPlayerRooms/Constants.ts";
@@ -22,13 +31,21 @@ import { RuleTypeId } from "../playerRules/Constants.ts";
 import { AliveStateId } from "../players/Constants.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { getBgmSfxCfg } from "../sounds/Utils.ts";
-import { BuffTypeId } from "../tileBuffs/Constants.ts";
+import { BuffTypeId as TileBuffsBuffTypeId } from "../tileBuffs/Constants.ts";
 import { getTileDecorationCfg } from "../tileDecorations/Utils.ts";
 import { getTileObjectCfg } from "../tileObjects/Utils.ts";
-import { ObjectTypeId, ThemeTypeId, TileTypeId } from "../tiles/constants/Common.ts";
+import {
+    ObjectTypeId,
+    ThemeTypeId,
+    TileTypeId,
+} from "../tiles/constants/Common.ts";
 import { PhaseCode } from "../turns/Constants.ts";
 import { BuffTypeId as UnitBuffTypeId } from "../unitBuffs/Constants.ts";
-import { ActionStateId, ActionTypeId, AiModeId } from "../units/Constants.ts";
+import {
+    ActionStateId,
+    ActionTypeId as UnitsActionTypeId,
+    AiModeId,
+} from "../units/Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { ServerErrorCode } from "../utils/ServerErrorCode.ts";
 import { ComparatorId } from "../valueAndComparators/Constants.ts";
@@ -42,7 +59,11 @@ import { ConditionTypeId } from "../warEvents/conditions/Constants.ts";
 import { BasicSettingsTypeId } from "../wars/Constants.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
 import { CommonText } from "./CommonText.ts";
-import { LanguageType, TextType, UndefinedError } from "./Constants.ts";
+import {
+    LanguageType,
+    TextType,
+    UndefinedError,
+} from "./Constants.ts";
 import { ErrorText } from "./ErrorText.ts";
 
 let _languageType = LanguageType.Chinese;
@@ -219,27 +240,27 @@ export function getTileThemeName(tileTheme: number | null): string | null {
 
 export function getTileBuffName(buffType: number): string | null {
     switch (buffType) {
-        case BuffTypeId.NoProduction    : return getText(TextType.B1240);
-        case BuffTypeId.NoIncome        : return getText(TextType.B1230);
-        case BuffTypeId.Custom          : return getText(TextType.B0321);
+        case TileBuffsBuffTypeId.NoProduction    : return getText(TextType.B1240);
+        case TileBuffsBuffTypeId.NoIncome        : return getText(TextType.B1230);
+        case TileBuffsBuffTypeId.Custom          : return getText(TextType.B0321);
         default                             : return null;
     }
 }
 
 export function getTileBuffDesc(buffType: number): string | null {
     switch (buffType) {
-        case BuffTypeId.NoProduction    : return getText(TextType.A0770);
-        case BuffTypeId.NoIncome        : return getText(TextType.A0740);
-        case BuffTypeId.Custom          : return getText(TextType.A0970);
+        case TileBuffsBuffTypeId.NoProduction    : return getText(TextType.A0770);
+        case TileBuffsBuffTypeId.NoIncome        : return getText(TextType.A0740);
+        case TileBuffsBuffTypeId.Custom          : return getText(TextType.A0970);
         default                             : return null;
     }
 }
 
 export function getTileBuffExtraParamDesc(buffType: number): string | null {
     switch (buffType) {
-        case BuffTypeId.NoProduction    : return getText(TextType.A0745);
-        case BuffTypeId.NoIncome        : return getText(TextType.A0745);
-        case BuffTypeId.Custom          : return getText(TextType.A0745);
+        case TileBuffsBuffTypeId.NoProduction    : return getText(TextType.A0745);
+        case TileBuffsBuffTypeId.NoIncome        : return getText(TextType.A0745);
+        case TileBuffsBuffTypeId.Custom          : return getText(TextType.A0745);
         default                             : return null;
     }
 }
@@ -275,28 +296,28 @@ export function getUnitCategoryName(unitCategory: number, gameConfig: GameConfig
     return textArray == null ? null : textArray[0];
 }
 
-export function getUnitActionName(actionType: ActionTypeId): string | null{
+export function getUnitActionName(actionType: UnitsActionTypeId): string | null{
     switch (actionType) {
-        case ActionTypeId.BeLoaded        : return getText(TextType.B0037);
-        case ActionTypeId.Join            : return getText(TextType.B0038);
-        case ActionTypeId.UseCoPower      : return getText(TextType.B0142);
-        case ActionTypeId.UseCoSuperPower : return getText(TextType.B0144);
-        case ActionTypeId.Attack          : return getText(TextType.B0039);
-        case ActionTypeId.CaptureTile         : return getText(TextType.B0040);
-        case ActionTypeId.CrushUnit       : return getText(TextType.B1350);
-        case ActionTypeId.Dive            : return getText(TextType.B0041);
-        case ActionTypeId.RepairUnit      : return getText(TextType.B1351);
-        case ActionTypeId.Surface         : return getText(TextType.B0042);
-        case ActionTypeId.BuildTile       : return getText(TextType.B0043);
-        case ActionTypeId.SelfDetonate    : return getText(TextType.B1349);
-        case ActionTypeId.Supply          : return getText(TextType.B0044);
-        case ActionTypeId.LaunchUnit      : return getText(TextType.B0045);
-        case ActionTypeId.DropUnit        : return getText(TextType.B0046);
-        case ActionTypeId.LaunchFlare     : return getText(TextType.B0047);
-        case ActionTypeId.LaunchSilo      : return getText(TextType.B0048);
-        case ActionTypeId.CoBoard         : return getText(TextType.B0139);
-        case ActionTypeId.ProduceUnit     : return getText(TextType.B0049);
-        case ActionTypeId.Wait            : return getText(TextType.B0050);
+        case UnitsActionTypeId.BeLoaded        : return getText(TextType.B0037);
+        case UnitsActionTypeId.Join            : return getText(TextType.B0038);
+        case UnitsActionTypeId.UseCoPower      : return getText(TextType.B0142);
+        case UnitsActionTypeId.UseCoSuperPower : return getText(TextType.B0144);
+        case UnitsActionTypeId.Attack          : return getText(TextType.B0039);
+        case UnitsActionTypeId.CaptureTile         : return getText(TextType.B0040);
+        case UnitsActionTypeId.CrushUnit       : return getText(TextType.B1350);
+        case UnitsActionTypeId.Dive            : return getText(TextType.B0041);
+        case UnitsActionTypeId.RepairUnit      : return getText(TextType.B1351);
+        case UnitsActionTypeId.Surface         : return getText(TextType.B0042);
+        case UnitsActionTypeId.BuildTile       : return getText(TextType.B0043);
+        case UnitsActionTypeId.SelfDetonate    : return getText(TextType.B1349);
+        case UnitsActionTypeId.Supply          : return getText(TextType.B0044);
+        case UnitsActionTypeId.LaunchUnit      : return getText(TextType.B0045);
+        case UnitsActionTypeId.DropUnit        : return getText(TextType.B0046);
+        case UnitsActionTypeId.LaunchFlare     : return getText(TextType.B0047);
+        case UnitsActionTypeId.LaunchSilo      : return getText(TextType.B0048);
+        case UnitsActionTypeId.CoBoard         : return getText(TextType.B0139);
+        case UnitsActionTypeId.ProduceUnit     : return getText(TextType.B0049);
+        case UnitsActionTypeId.Wait            : return getText(TextType.B0050);
         default                             : return null;
     }
 }

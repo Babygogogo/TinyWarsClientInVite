@@ -3,10 +3,24 @@ import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getTileMapViewClass, getTileClass } from "../gameHelpers/GhFactory.ts";
-import { createEmptyMap, createRange } from "../helpers/Collection.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
-import { GroupSize, GroupCount, MinId, MaxId } from "../locations/Constants.ts";
+import {
+    getTileMapViewClass,
+    getTileClass,
+} from "../gameHelpers/GhFactory.ts";
+import {
+    createEmptyMap,
+    createRange,
+} from "../helpers/Collection.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
+import {
+    GroupSize,
+    GroupCount,
+    MinId,
+    MaxId,
+} from "../locations/Constants.ts";
 import { encode } from "../locations/Utils.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";

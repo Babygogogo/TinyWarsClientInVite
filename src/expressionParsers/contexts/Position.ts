@@ -1,20 +1,37 @@
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
-import { Position as ExpressionParsersResultsPosition } from "../results/Position.ts";
+import { Position as ResultsPosition } from "../results/Position.ts";
 import { Tile } from "../results/Tile.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+} from "../Utils.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { MaxId, MinId } from "../../locations/Constants.ts";
+import {
+    MaxId,
+    MinId,
+} from "../../locations/Constants.ts";
 import { encode } from "../../locations/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
@@ -212,7 +229,7 @@ export class Position extends Base {
     private readonly _y : number;
     private _contextWar : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsPosition) {
+    public constructor(data: ResultsPosition) {
         super(data.war);
 
         this._x = data.x;
@@ -223,14 +240,14 @@ export class Position extends Base {
         return ContextType.Position;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
             case Position.VnX                      : return new Num(war, this._x);
             case Position.VnY                      : return new Num(war, this._y);
             case Position.VnUnit                   : return this.resolveUnit();
             case Position.VnTile                   : return this.resolveTile();
-            case Position.VnWar                    : return new ExpressionParsersResultsWar(war);
+            case Position.VnWar                    : return new ResultsWar(war);
             case Position.VnPathVisibilityArray    : return this.resolvePathVisibilityArray();
             default                                         : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
@@ -245,12 +262,12 @@ export class Position extends Base {
         return new Tile(this.getWar().getTileMap().getTile(getExisted(this.getGridIndexInMap())));
     }
 
-    private resolvePathVisibilityArray(): ExpressionParsersResultsBase {
+    private resolvePathVisibilityArray(): ResultsBase {
         const war = this.getWar();
         return new NumArray(war, war.getFogMap().getRawVisibilityFromPathsForAllPlayers(getExisted(this.getGridIndexInMap())));
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case Position.FnAdd                : return this.callAdd(argumentArray[0]);
             case Position.FnSub                : return this.callSub(argumentArray[0]);
@@ -261,31 +278,31 @@ export class Position extends Base {
             default                                     : return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
-    private callAdd(arg: ExpressionParsersResultsBase): ExpressionParsersResultsPosition {
-        if (!(arg instanceof ExpressionParsersResultsPosition)) {
+    private callAdd(arg: ResultsBase): ResultsPosition {
+        if (!(arg instanceof ResultsPosition)) {
             throw newError(`Invalid arg.`);
         }
 
-        return new ExpressionParsersResultsPosition(this.getWar(), this._x + arg.x, this._y + arg.y);
+        return new ResultsPosition(this.getWar(), this._x + arg.x, this._y + arg.y);
     }
-    private callSub(arg: ExpressionParsersResultsBase): ExpressionParsersResultsPosition {
-        if (!(arg instanceof ExpressionParsersResultsPosition)) {
+    private callSub(arg: ResultsBase): ResultsPosition {
+        if (!(arg instanceof ResultsPosition)) {
             throw newError(`Invalid arg.`);
         }
 
-        return new ExpressionParsersResultsPosition(this.getWar(), this._x - arg.x, this._y - arg.y);
+        return new ResultsPosition(this.getWar(), this._x - arg.x, this._y - arg.y);
     }
-    private callScale(arg: ExpressionParsersResultsBase): ExpressionParsersResultsPosition {
+    private callScale(arg: ResultsBase): ResultsPosition {
         if (!(arg instanceof Num)) {
             throw newError(`Invalid arg.`);
         }
 
-        return new ExpressionParsersResultsPosition(this.getWar(), this._x * arg.num, this._y * arg.num);
+        return new ResultsPosition(this.getWar(), this._x * arg.num, this._y * arg.num);
     }
-    private callDistanceToGrid(argArray: ExpressionParsersResultsBase[]): Num {
+    private callDistanceToGrid(argArray: ResultsBase[]): Num {
         if (argArray.length === 1) {
             const arg = argArray[0];
-            if (!(arg instanceof ExpressionParsersResultsPosition)) {
+            if (!(arg instanceof ResultsPosition)) {
                 throw newError(`Invalid arg.`);
             }
             return new Num(this.getWar(), Math.abs(this._x - arg.x) + Math.abs(this._y - arg.y));
@@ -304,7 +321,7 @@ export class Position extends Base {
 
         throw newError(`Invalid argArray.`);
     }
-    private callDistanceToLocation(arg: ExpressionParsersResultsBase): Num {
+    private callDistanceToLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Invalid arg.`);
         }
@@ -322,7 +339,7 @@ export class Position extends Base {
             return new Num(war, Math.min(...gridIndexList.map(v => Math.abs(this._x - v.getX()) + Math.abs(this._y - v.getY()))));
         }
     }
-    private callInLocation(arg: ExpressionParsersResultsBase): Num {
+    private callInLocation(arg: ResultsBase): Num {
         if (!(arg instanceof Num)) {
             throw newError(`Invalid arg.`);
         }

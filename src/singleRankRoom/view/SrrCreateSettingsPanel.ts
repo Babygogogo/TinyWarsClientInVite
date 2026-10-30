@@ -1,32 +1,41 @@
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
+import type { S as SpmCreateSrwResponse } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
 import { checkIsEmpty } from "../../singlePlayerMode/model/SpmModel.ts";
 import { reqSpmCreateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
 import {
-    type OpenData as SinglePlayerModeViewSpmRankPageOpenData,
-    Page as SinglePlayerModeViewSpmRankPage,
+    type OpenData as SpmRankPageOpenData,
+    Page as SpmRankPage,
 } from "../../singlePlayerMode/view/SpmRankPage.ts";
 import type { SrrWarCreator } from "../model/SrrWarCreator.ts";
 import {
-    type OpenData as SingleRankRoomViewSrrCreatePlayerInfoPageOpenData,
-    Page as SingleRankRoomViewSrrCreatePlayerInfoPage,
+    type OpenData as SrrCreatePlayerInfoPageOpenData,
+    Page as SrrCreatePlayerInfoPage,
 } from "./SrrCreatePlayerInfoPage.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -41,13 +50,12 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
-
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
-type OpenDataForSrrCreatePlayerInfoPage         = SingleRankRoomViewSrrCreatePlayerInfoPageOpenData;
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
+import {
+    Event,
+    setTimeout,
+    clearTimeout,
+} from "../../vendor/egret/Egret.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 const CONFIRM_INTERVAL_MS = 5000;
 
@@ -62,7 +70,7 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _labelGameSettings!    : IUiLabel;
 
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | SinglePlayerModeViewSpmRankPageOpenData | OpenDataForSrrCreatePlayerInfoPage>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | CommonWarMapInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData | SpmRankPageOpenData | SrrCreatePlayerInfoPageOpenData>;
 
     private readonly _btnBack!              : IUiButton;
     private readonly _btnQuickSettings!     : IUiButton;
@@ -153,7 +161,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgSpmCreateSrw(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as SpmCreateSrwResponse;
         gotoSinglePlayerWar({
             warData         : getExisted(data.getWarData()),
             slotExtraData   : getExisted(data.getExtraData()),
@@ -202,27 +210,27 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0224) },
-                pageClass   : SingleRankRoomViewSrrCreatePlayerInfoPage,
+                pageClass   : SrrCreatePlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : SinglePlayerModeViewSpmRankPage,
+                pageClass   : SpmRankPage,
                 pageData    : null,
             },
         ]);
@@ -263,7 +271,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<OpenDataForCommonWarBasicSettingsPage> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -274,7 +282,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig        = warCreator.getGcData();
         const mapRawData        = warCreator.getMapRawData();
         const warEventFullData  = mapRawData.getWarEventFullData();
-        const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
+        const openDataForPage   : CommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings: [
                 {
                     settingsType    : BasicSettingsTypeId.NormalMapId,
@@ -365,7 +373,7 @@ export class Panel extends UiPanel<OpenData> {
 
         return openDataForPage;
     }
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -381,7 +389,7 @@ export class Panel extends UiPanel<OpenData> {
             gameModeId      : ModeId.WarRoom,
         };
     }
-    private async _createDataForCommonWarMapInfoPage(): Promise<OpenDataForCommonWarMapInfoPage> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -397,11 +405,11 @@ export class Panel extends UiPanel<OpenData> {
             },
         };
     }
-    private _createDataForSrrCreatePlayerInfoPage(): OpenDataForSrrCreatePlayerInfoPage {
+    private _createDataForSrrCreatePlayerInfoPage(): SrrCreatePlayerInfoPageOpenData {
         const openData = this.getOpenData();
         return openData ? { warCreator: openData.warCreator } : null;
     }
-    private _createDataForSpmRankPage(): SinglePlayerModeViewSpmRankPageOpenData {
+    private _createDataForSpmRankPage(): SpmRankPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;

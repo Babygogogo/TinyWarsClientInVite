@@ -1,16 +1,41 @@
-import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
+import {
+    getIsTransparentTouchLayerTouched,
+    setIsTransparentTouchLayerTouched,
+} from "../../common/model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { checkIsWebGl } from "../../graphics/Utils.ts";
 import { isPc } from "../../helpers/Compatibility.ts";
-import { decompress, compress } from "../../helpers/Gzip.ts";
+import {
+    decompress,
+    compress,
+} from "../../helpers/Gzip.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError, LanguageType } from "../../lang/Constants.ts";
-import { getText, getGameVersionName, getCurrentLanguageType, getLanguageTypeName, setCurrentLanguageType } from "../../lang/Utils.ts";
-import { StoreNormalMapRawData, StoreCampaignMapRawData, StoreMeFullData } from "../../localData/DeprecatedStorage.ts";
-import { getShowExportMapCachePopup, setShowExportMapCachePopup, setScreenRotation, setLanguageType } from "../../localData/Storage.ts";
+import {
+    TextType,
+    UndefinedError,
+    LanguageType,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getGameVersionName,
+    getCurrentLanguageType,
+    getLanguageTypeName,
+    setCurrentLanguageType,
+} from "../../lang/Utils.ts";
+import {
+    StoreNormalMapRawData,
+    StoreCampaignMapRawData,
+    StoreMeFullData,
+} from "../../localData/DeprecatedStorage.ts";
+import {
+    getShowExportMapCachePopup,
+    setShowExportMapCachePopup,
+    setScreenRotation,
+    setLanguageType,
+} from "../../localData/Storage.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";

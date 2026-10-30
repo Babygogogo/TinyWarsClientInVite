@@ -1,5 +1,12 @@
-import type { CustomError, Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { Token, ContextType, ResultType } from "./Enums.ts";
+import type {
+    CustomError,
+    Undefinable,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    Token,
+    ContextType,
+    ResultType,
+} from "./Enums.ts";
 import { Assignment } from "./nodes/Assignment.ts";
 import type { Base } from "./nodes/Base.ts";
 import { Collection } from "./nodes/Collection.ts";
@@ -28,9 +35,17 @@ import { Variable } from "./nodes/Variable.ts";
 import { TextReader } from "./TextReader.ts";
 import { Tokenizer } from "./Tokenizer.ts";
 import type { EpExpressionInfo } from "./Types.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
-import { getFormattedText, getText, getErrorText, getExpressionParserResultTypeName } from "../lang/Utils.ts";
+import {
+    getFormattedText,
+    getText,
+    getErrorText,
+    getExpressionParserResultTypeName,
+} from "../lang/Utils.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { Event } from "../warEvents/Constants.ts";
 

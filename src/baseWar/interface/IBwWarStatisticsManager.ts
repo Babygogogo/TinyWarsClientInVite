@@ -5,8 +5,6 @@ import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommo
 import type { SerialWarStatisticsManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
 import type { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-type UnitStatistics             = WsUnitStatistics;
-
 export interface IBwWarStatisticsManager {
     init({ data, playersCountUnneutral, currentTurnIndex, gameConfiguration }: {
         data                    : Undefinable<SerialWarStatisticsManager>;
@@ -21,9 +19,9 @@ export interface IBwWarStatisticsManager {
     serializeForCreateSfw(): SerialWarStatisticsManager;
     serializeForCreateMfr(): SerialWarStatisticsManager;
 
-    getUnitStatisticsArray(): UnitStatistics[];
+    getUnitStatisticsArray(): WsUnitStatistics[];
     getUnitStatisticsInfoArrayForFullReplay(): Info[];
-    addUnitStatistics(data: UnitStatistics): void;
+    addUnitStatistics(data: WsUnitStatistics): void;
 
     tickPlayerManualActionsCount(turnIndex: number, playerIndex: number): void;
     getManualActionsCount(turnIndex: number, playerIndex: number): number;

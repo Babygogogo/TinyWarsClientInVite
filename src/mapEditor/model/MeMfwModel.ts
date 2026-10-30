@@ -9,7 +9,10 @@ import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.t
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import { createDefault, create } from "../../warRules/utils/Instance.ts";
+import {
+    createDefault,
+    create,
+} from "../../warRules/utils/Instance.ts";
 
 let _mapRawData : MapRawData;
 let _warData    : SerialWar;

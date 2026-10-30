@@ -1,7 +1,11 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
 import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
@@ -10,8 +14,14 @@ import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/W
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
 import { cloneCondition } from "../conditions/utils/Common.ts";
-import { Event, ConditionNode } from "../Constants.ts";
-import { getNode, getEvent } from "../fullDatas/Utils.ts";
+import {
+    Event,
+    ConditionNode,
+} from "../Constants.ts";
+import {
+    getNode,
+    getEvent,
+} from "../fullDatas/Utils.ts";
 
 export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict }: {    // DONE
     conditionNode   : WarEventConditionNode;

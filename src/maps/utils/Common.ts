@@ -5,10 +5,10 @@ import { PlayerIndex } from "../../players/Constants.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { AwbwTileMapping } from "../../tiles/constants/Common.ts";
-import { createDefault } from "../../tiles/utils/Serialization.ts";
+import { createDefault as createSerializationDefault } from "../../tiles/utils/Serialization.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { getSelfUserId } from "../../users/Model.ts";
-import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRules/utils/Template.ts";
+import { createDefault as createTemplateDefault } from "../../warRules/utils/Template.ts";
 
 export function convertAwbwMap(text: string, gcData: GameConfig): MapRawData | undefined {
     const awbwIdMap = text.trim().split(`\n`).map(line => line.split(`,`)).map(line => line.map(cell => parseInt(cell)));
@@ -69,7 +69,7 @@ export function convertAwbwMap(text: string, gcData: GameConfig): MapRawData | u
                 return undefined;
             }
 
-            const tile = createDefault({
+            const tile = createSerializationDefault({
                 gridIndex           : { x, y },
                 tileBaseTypeId      : cfg.getToTileBaseTypeId(),
                 tileObjectTypeId    : cfg.getToTileObjectTypeId(),
@@ -91,7 +91,7 @@ export function convertAwbwMap(text: string, gcData: GameConfig): MapRawData | u
         modifiedTime            : getServerTimestamp(),
         tileDataArray           : tileArray.map(v => v.toJson()),
         unitDataArray           : [],
-        templateWarRuleArray    : [WarRulesUtilsTemplateCreateDefault(0, playersCountUnneutral, gcData).toJson()],
+        templateWarRuleArray    : [createTemplateDefault(0, playersCountUnneutral, gcData).toJson()],
         mapTagIdFlags           : null,
         warEventFullData        : null,
         mapSimpleDialogueArray  : [],

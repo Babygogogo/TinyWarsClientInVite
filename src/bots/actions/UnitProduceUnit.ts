@@ -1,16 +1,16 @@
 import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
-import { MinValue, MaxValue } from "../../numbers/Constants.ts";
+import {
+    MinValue,
+    MaxValue,
+} from "../../numbers/Constants.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParams, unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if ((pathNodes.length !== 1) || (unit.getLoaderUnitId() != null)) {

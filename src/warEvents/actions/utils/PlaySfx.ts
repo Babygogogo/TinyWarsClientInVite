@@ -1,7 +1,13 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getText,
+    getBgmSfxName,
+} from "../../../lang/Utils.ts";
 import type { WeaPlaySfx } from "../../../proto/schema/CommonProto/WarEvent/WeaPlaySfx.ts";
 import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
 import { checkIsSfx } from "../../../sounds/Utils.ts";

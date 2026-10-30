@@ -8,26 +8,52 @@ import { getTotalOffsetForDamageCalculatorPanel } from "../../coSkills/utils/per
 import { getTotalOffsetPctForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitOffense.ts";
 import { getDamageMultiplierForDefenseBonus } from "../../damageCalculators/Utils.ts";
 import { show } from "../../FloatText.ts";
-import { getDefaultSkinId, getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
+import {
+    getDefaultSkinId,
+    getRawOverridingSkinId,
+} from "../../forceSkins/Utils.ts";
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
 import { getCoEye } from "../../helpers/ImageSource.ts";
-import { createLazyFunc, createLazyFunc2, getExisted } from "../../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    createLazyFunc2,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getCoSkillTypeName, getText, getWeatherName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getCoSkillTypeName,
+    getText,
+    getWeatherName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { DefenseModifier, Luck } from "../../playerRules/Constants.ts";
+import {
+    DefenseModifier,
+    Luck,
+} from "../../playerRules/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { getDefaultTileBaseType } from "../../tileBases/Utils.ts";
 import { checkIsValidPlayerIndexForTileObject } from "../../tileObjects/Utils.ts";
-import { ObjectTypeId, TileTypeId } from "../../tiles/constants/Common.ts";
-import { checkCanDefendUnit, getDefenseAmount } from "../../tiles/utils/Common.ts";
+import {
+    ObjectTypeId,
+    TileTypeId,
+} from "../../tiles/constants/Common.ts";
+import {
+    checkCanDefendUnit,
+    getDefenseAmount,
+} from "../../tiles/utils/Common.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -36,8 +62,14 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { UiTileViewData } from "../../ui/types/UiTileViewData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiTileViewClass, getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { Hp, WeaponTypeId } from "../../units/Constants.ts";
+import {
+    getUiTileViewClass,
+    getUiUnitViewClass,
+} from "../../ui/utils/UiFactory.ts";
+import {
+    Hp,
+    WeaponTypeId,
+} from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";

@@ -4,24 +4,38 @@ import type { IActionPlannerView } from "./IActionPlannerView.ts";
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { getGridAnimationTickCount } from "../common/model/CommonModel.ts";
-import { getRwWarBaseClass, getUnitViewClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getRwWarBaseClass,
+    getUnitViewClass,
+} from "../gameHelpers/GhFactory.ts";
 import { DirectionId } from "../geometries/Constants.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
-import { getMovePath, getMovableAreaByTick, getAttackableAreaByTick, getVisibleAreaByTick } from "../helpers/ImageSource.ts";
-import { createLazyFunc, getExisted } from "../helpers/Misc.ts";
-import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import {
+    getMovePath,
+    getMovableAreaByTick,
+    getAttackableAreaByTick,
+    getVisibleAreaByTick,
+} from "../helpers/ImageSource.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../helpers/Misc.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+} from "../ui/utils/UiFactory.ts";
 import { AnimationTypeId } from "../units/Constants.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { IUnitView } from "../units/IUnitView.ts";
-
-type IBwUnit                = IUnit;
-type IBwUnitView            = IUnitView;
 
 const getGridWidth                          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight                         = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
@@ -100,7 +114,7 @@ export class ActionPlannerView implements IActionPlannerView {
     });
 
     private _conForUnits            = new (getUiContainerClass())();
-    private _focusUnitViews         = new Map<number, IBwUnitView>();
+    private _focusUnitViews         = new Map<number, IUnitView>();
 
     private _notifyEvents: Listener[] = [
         { type: TypeId.GridAnimationTick,       callback: this._onNotifyGridAnimationTick },
@@ -954,7 +968,7 @@ export class ActionPlannerView implements IActionPlannerView {
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private _addUnitView(unit: IBwUnit, gridIndex: GridIndex, _alpha = 1): void {
+    private _addUnitView(unit: IUnit, gridIndex: GridIndex, _alpha = 1): void {
         const view = new (getUnitViewClass())().init(unit).startRunningView();
         // view.alpha = alpha;
         _resetUnitViewXy(view, gridIndex);
@@ -993,7 +1007,7 @@ function _createImgForMovePathGrid(prev: Undefinable<GridIndex>, curr: GridIndex
     }
 }
 
-function _resetUnitViewXy(view: IBwUnitView, gridIndex: GridIndex): void {
+function _resetUnitViewXy(view: IUnitView, gridIndex: GridIndex): void {
     view.setX(gridIndex.getX() * getGridWidth());
     view.setY(gridIndex.getY() * getGridHeight());
 }

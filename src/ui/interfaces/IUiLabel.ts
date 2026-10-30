@@ -1,4 +1,7 @@
-import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import type {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
 import type { UiVerticalAlign } from "../types/UiVerticalAlign.ts";

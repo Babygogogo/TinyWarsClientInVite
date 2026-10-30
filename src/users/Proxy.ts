@@ -1,79 +1,38 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { b64_sha1 } from "../helpers/Sha1Generator.ts";
-import { addListeners, send } from "../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../networks/Manager.ts";
 import { MessageCodes } from "../networks/MessageCodes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfoArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLoginS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS } from "../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserResetPasswordWithEmail/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetPassword/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS,
-} from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
+import type { S as UserGetBriefInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
+import type { S as UserGetOnlineStateResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
+import type { S as UserGetOnlineUserIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
+import type { S as UserGetPublicInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
+import type { S as UserGetPublicInfoArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfoArray/S.ts";
+import type { S as UserGetUsersByNicknameResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
+import type { S as UserLoginResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
+import type { S as UserLoginAsGuestResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
+import type { S as UserLogoutResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
+import type { S as UserModifyFavoriteReplayIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
+import type { S as UserRegisterResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
+import type { S as UserRequestEmailVerificationCodeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
+import type { S as UserRequestPasswordVerificationCodeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
+import type { S as UserResetPasswordWithEmailResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserResetPasswordWithEmail/S.ts";
+import type { S as UserSetAvatarIdResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
+import type { S as UserSetCoBgmSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
+import type { S as UserSetDiscordInfoResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
+import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
+import type { S as UserSetMapRatingResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
+import type { S as UserSetNicknameResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
+import type { S as UserSetPasswordResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetPassword/S.ts";
+import type { S as UserSetRelationResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
+import type { S as UserSetSceneBgmSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
+import type { S as UserSetSettingsResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
+import type { S as UserSetShowMedalIdArrayResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
+import type { S as UserVerifyEmailResponse } from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
 import type { UserDiscordInfoJson } from "../proto/schema/CommonProto/User/UserDiscordInfo.ts";
 import type { UserSettingsJson } from "../proto/schema/CommonProto/User/UserSettings.ts";
 import type { SceneBgmSettingsJson } from "../proto/schema/CommonProto/User/UserSettings/SceneBgmSettings.ts";
@@ -152,7 +111,7 @@ export function reqRawLogin(account: string, password: string): void {
     });
 }
 function _onMsgUserLogin(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginS;
+    const data = e.data as UserLoginResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserLogin(data);
         dispatch(TypeId.MsgUserLogin, data);
@@ -168,7 +127,7 @@ export function reqUserLoginAsGuest(userId: number | null, isAutoRelogin: boolea
     });
 }
 function _onMsgUserLoginAsGuest(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS;
+    const data = e.data as UserLoginAsGuestResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserLoginAsGuest(data);
         dispatch(TypeId.MsgUserLoginAsGuest, data);
@@ -185,7 +144,7 @@ export function reqUserRegister(account: string, rawPassword: string, nickname: 
     });
 }
 function _onMsgUserRegister(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS;
+    const data = e.data as UserRegisterResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserRegister, data);
     }
@@ -198,7 +157,7 @@ export function reqLogout(): void {
     });
 }
 function _onMsgUserLogout(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS;
+    const data = e.data as UserLogoutResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserLogout, data);
     }
@@ -212,7 +171,7 @@ export function reqUserGetPublicInfo(userId: number): void {
     });
 }
 function _onMsgUserGetPublicInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS;
+    const data = e.data as UserGetPublicInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgUserGetPublicInfo(data);
     } else {
@@ -229,7 +188,7 @@ export function reqUserGetPublicInfoArray(userIdArray: number[]): void {
     });
 }
 function _onMsgUserGetPublicInfoArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS;
+    const data = e.data as UserGetPublicInfoArrayResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserGetPublicInfoArray, data);
     }
@@ -243,7 +202,7 @@ export function reqUserGetBriefInfo(userId: number): void {
     });
 }
 function _onMsgUserGetBriefInfo(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as UserGetBriefInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgUserGetBriefInfo(data);
     } else {
@@ -260,7 +219,7 @@ export function reqUserGetOnlineState(userId: number): void {
     });
 }
 function _onMsgUserGetOnlineState(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS;
+    const data = e.data as UserGetOnlineStateResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgUserGetOnlineState(data);
     } else {
@@ -278,7 +237,7 @@ export function reqUserGetUsersByNickname(nickname: string, isFollowing: boolean
     });
 }
 function _onMsgUserGetUsersByNickname(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS;
+    const data = e.data as UserGetUsersByNicknameResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserGetUsersByNickname, data);
     }
@@ -292,7 +251,7 @@ export function reqSetNickname(nickname: string): void {
     });
 }
 async function _onMsgUserSetNickname(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS;
+    const data = e.data as UserSetNicknameResponse;
     if (data.getErrorCode()) {
         dispatch(TypeId.MsgUserSetNicknameFailed, data);
     } else {
@@ -309,7 +268,7 @@ export function reqSetDiscordInfo(discordInfo: UserDiscordInfoJson): void {
     });
 }
 async function _onMsgUserSetDiscordInfo(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS;
+    const data = e.data as UserSetDiscordInfoResponse;
     if (data.getErrorCode()) {
         dispatch(TypeId.MsgUserSetDiscordInfoFailed, data);
     } else {
@@ -324,7 +283,7 @@ export function reqUserGetOnlineUserIdArray(): void {
     });
 }
 function _onMsgUserGetOnlineUserIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS;
+    const data = e.data as UserGetOnlineUserIdArrayResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserGetOnlineUserIdArray, data);
     }
@@ -337,7 +296,7 @@ export function reqUserSetPassword(oldRawPassword: string, newRawPassword: strin
     } } });
 }
 function _onMsgUserSetPassword(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS;
+    const data = e.data as UserSetPasswordResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserSetPassword, data);
     }
@@ -349,7 +308,7 @@ export function reqUserSetSettings(userSettings: UserSettingsJson): void {
     } } });
 }
 function _onMsgUserSetSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS;
+    const data = e.data as UserSetSettingsResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetSettings(data);
         dispatch(TypeId.MsgUserSetSettings, data);
@@ -363,7 +322,7 @@ export function reqUserSetMapRating(normalMapId: number, rating: number): void {
     } } });
 }
 function _onMsgUserSetMapRating(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS;
+    const data = e.data as UserSetMapRatingResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetMapRating(data);
         dispatch(TypeId.MsgUserSetMapRating, data);
@@ -378,7 +337,7 @@ export function reqUserSetRelation(targetUserId: number, isFollow: boolean, isBl
     }}});
 }
 function _onMsgUserSetRelation(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS;
+    const data = e.data as UserSetRelationResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetRelation(data);
         dispatch(TypeId.MsgUserSetRelation, data);
@@ -392,7 +351,7 @@ export function reqUserModifyFavoriteReplayIdArray(addIdArray: number[], deleteI
     }}});
 }
 function _onMsgUserModifyFavoriteReplayIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS;
+    const data = e.data as UserModifyFavoriteReplayIdArrayResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserModifyFavoriteReplayIdArray(data);
         dispatch(TypeId.MsgUserModifyFavoriteReplayIdArray, data);
@@ -407,7 +366,7 @@ export function reqSetAvatarId(avatarId: number): void {
     });
 }
 async function _onMsgUserSetAvatarId(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS;
+    const data = e.data as UserSetAvatarIdResponse;
     if (data.getErrorCode()) {
         dispatch(TypeId.MsgUserSetAvatarIdFailed, data);
     } else {
@@ -424,7 +383,7 @@ export function reqSetMapEditorAutoSaveTime(time: Undefinable<number>): void {
     });
 }
 function _onMsgUserSetMapEditorAutoSaveTime(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS;
+    const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
     if (data.getErrorCode()) {
         dispatch(TypeId.MsgUserSetMapEditorAutoSaveTimeFailed, data);
     } else {
@@ -442,7 +401,7 @@ export function reqUserSetCoBgmSettings(coCategoryId: number, bgmCodeArray: numb
     });
 }
 function _onMsgUserSetCoBgmSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS;
+    const data = e.data as UserSetCoBgmSettingsResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetCoBgmSettings(data);
         dispatch(TypeId.MsgUserSetCoBgmSettings, data);
@@ -457,7 +416,7 @@ export function reqUserSetSceneBgmSettings(settings: SceneBgmSettingsJson): void
     });
 }
 function _onMsgUserSetSceneBgmSettings(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS;
+    const data = e.data as UserSetSceneBgmSettingsResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetSceneBgmSettings(data);
         dispatch(TypeId.MsgUserSetSceneBgmSettings, data);
@@ -472,7 +431,7 @@ export function reqUserSetShowMedalIdArray(showMedalIdArray: number[]): void {
     });
 }
 function _onMsgUserSetShowMedalIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS;
+    const data = e.data as UserSetShowMedalIdArrayResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserSetShowMedalIdArray(data);
         dispatch(TypeId.MsgUserSetShowMedalIdArray, data);
@@ -487,7 +446,7 @@ export function reqUserRequestEmailVerificationCode(address: string): void {
     });
 }
 function _onMsgUserRequestEmailVerificationCode(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS;
+    const data = e.data as UserRequestEmailVerificationCodeResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserRequestEmailVerificationCode(data);
         dispatch(TypeId.MsgUserRequestEmailVerificationCode, data);
@@ -504,7 +463,7 @@ export function reqUserVerifyEmail(code: string): void {
     });
 }
 function _onMsgUserVerifyEmail(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS;
+    const data = e.data as UserVerifyEmailResponse;
     if (!data.getErrorCode()) {
         updateOnMsgUserVerifyEmail(data);
         dispatch(TypeId.MsgUserVerifyEmail, data);
@@ -519,7 +478,7 @@ export function reqUserRequestPasswordVerificationCode(account: string): void {
     });
 }
 function _onMsgUserRequestPasswordVerificationCode(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS;
+    const data = e.data as UserRequestPasswordVerificationCodeResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserRequestPasswordVerificationCode, data);
     } else {
@@ -537,7 +496,7 @@ export function reqUserResetPasswordWithEmail(code: string, account: string, new
     });
 }
 function _onMsgUserResetPasswordWithEmail(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS;
+    const data = e.data as UserResetPasswordWithEmailResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgUserResetPasswordWithEmail, data);
     }

@@ -8,17 +8,16 @@ import type { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitMapView } from "./IUnitMapView.ts";
 
-type GameConfiguration      = GameConfig;
 export interface IUnitMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GameConfiguration;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void;
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GameConfiguration;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void;

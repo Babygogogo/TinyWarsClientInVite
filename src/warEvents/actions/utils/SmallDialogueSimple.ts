@@ -1,11 +1,22 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { Common, BigDialogueSideId, SmallDialogueSideId } from "../../../dialogues/Constants.ts";
+import {
+    Common,
+    BigDialogueSideId,
+    SmallDialogueSideId,
+} from "../../../dialogues/Constants.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
-import { UndefinedError, TextType } from "../../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../../lang/Constants.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import { checkIsValidPlayerIndex } from "../../../players/utils/Common.ts";
 import type { WeaSmallDialogueSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";

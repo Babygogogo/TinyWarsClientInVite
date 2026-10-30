@@ -1,16 +1,19 @@
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import {
-    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
-    Page as CommonViewCommonWarPlayerInfoPage,
+    type OpenData as CommonWarPlayerInfoPageOpenData,
+    Page as CommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { show } from "../../FloatText.ts";
@@ -18,25 +21,33 @@ import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
+import {
+    getCoEye,
+    getSkinCircle,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getPlayerTeamName, getText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getPlayerTeamName,
+    getText,
+} from "../../lang/Utils.ts";
 import { Common } from "../../multiCustomWars/Constants.ts";
 import { ExitRoomType } from "../../multiPlayerRooms/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalMcwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMcrExitRoom/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/C.ts";
+import type { S as McrExitRoomResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrExitRoom/S.ts";
+import type { S as McrGetRoomPlayerInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
+import type { S as McrGetRoomStaticInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
+import { C as McrSetSelfSettingsRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrSetSelfSettings/C.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
@@ -52,7 +63,10 @@ import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import {
+    getPlayerRule,
+    getPlayersCountUnneutral,
+} from "../../warRules/utils/CommonData.ts";
 import {
     checkCanStartGame,
     createDataForCommonWarAdvancedSettingsPage,
@@ -61,14 +75,20 @@ import {
     getRoomPlayerInfo,
     getRoomStaticInfo,
 } from "../model/McrModel.ts";
-import { reqMcrDeleteRoom, reqMcrInvite, reqMcrSetReady, reqMcrSetSelfSettings, reqMcrStartWar } from "../model/McrProxy.ts";
+import {
+    reqMcrDeleteRoom,
+    reqMcrInvite,
+    reqMcrSetReady,
+    reqMcrSetSelfSettings,
+    reqMcrStartWar,
+} from "../model/McrProxy.ts";
 
 export interface OpenData {
     roomId  : number;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!                 : IUiContainer;
-    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData>;
+    private readonly _tabSettings!              : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarPlayerInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData>;
 
     private readonly _groupNavigator!           : IUiLayout;
     private readonly _labelMultiPlayer!         : IUiLabel;
@@ -197,7 +217,7 @@ export class Panel extends UiPanel<OpenData> {
                     isBan             : false,
                     callbackOnConfirm : newCoId => {
                         if (newCoId !== (selfPlayerData.getCoId())) {
-                            reqMcrSetSelfSettings(C.fromJson({
+                            reqMcrSetSelfSettings(McrSetSelfSettingsRequest.fromJson({
                                 roomId            : roomId,
                                 playerIndex       : playerIndex,
                                 coId              : newCoId,
@@ -264,7 +284,7 @@ export class Panel extends UiPanel<OpenData> {
                         hasFogByDefault   : warRuleCommonData.getHasFogByDefault(),
                         includeRandom     : true,
                     })];
-                    reqMcrSetSelfSettings(C.fromJson({
+                    reqMcrSetSelfSettings(McrSetSelfSettingsRequest.fromJson({
                         roomId            : roomId,
                         playerIndex       : newPlayerIndex,
                         unitAndTileSkinId : selfPlayerData.getUnitAndTileSkinId(),
@@ -305,7 +325,7 @@ export class Panel extends UiPanel<OpenData> {
             availableSkinIdArray : availableSkinIdArray,
             callback             : newSkinId => {
                 if (newSkinId !== selfSkinId) {
-                    reqMcrSetSelfSettings(C.fromJson({
+                    reqMcrSetSelfSettings(McrSetSelfSettingsRequest.fromJson({
                         roomId            : roomId,
                         playerIndex       : selfPlayerData.getPlayerIndex(),
                         unitAndTileSkinId : newSkinId,
@@ -392,7 +412,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMcrGetRoomPlayerInfo(e: Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS;
+        const data = e.data as McrGetRoomPlayerInfoResponse;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -412,7 +432,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMcrGetRoomStaticInfo(e: Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS;
+        const data = e.data as McrGetRoomStaticInfoResponse;
         if (data.getRoomId() !== this.getOpenData()?.roomId) {
             return;
         }
@@ -429,7 +449,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onNotifyMsgMcrExitRoom(e: Event): Promise<void> {
-        const data      = e.data as S;
+        const data      = e.data as McrExitRoomResponse;
         const roomId    = data.getRoomId();
         if (roomId === this.getOpenData()?.roomId) {
             const exitRoomType = data.getExitType();
@@ -524,22 +544,22 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name : getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage,
+                pageClass   : CommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name : getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
         ]);
@@ -702,7 +722,7 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private async _createDataForWarCommonMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+    private async _createDataForWarCommonMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const roomId = this.getOpenData()?.roomId;
         if (roomId == null) {
             return null;
@@ -722,15 +742,15 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private async _createDataForWarCommonPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+    private async _createDataForWarCommonPlayerInfoPage(): Promise<CommonWarPlayerInfoPageOpenData> {
         return await createDataForCommonWarPlayerInfoPage(this.getOpenData()?.roomId);
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         return await createDataForCommonWarBasicSettingsPage(this.getOpenData()?.roomId, true);
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
         return await createDataForCommonWarAdvancedSettingsPage(this.getOpenData()?.roomId);
     }
 }

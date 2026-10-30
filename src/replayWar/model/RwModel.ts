@@ -4,28 +4,19 @@ import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getRwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { StoreMpmFullReplayInfo, StoreMpmFullReplayData } from "../../localData/Storage.ts";
+import {
+    StoreMpmFullReplayInfo,
+    StoreMpmFullReplayData,
+} from "../../localData/Storage.ts";
 import { warn } from "../../Logger.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
+import type { S as ReplayGetAllInfoVersionsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
+import type { S as ReplayGetDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
+import type { S as ReplayGetInfoVersionResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
+import type { S as ReplayGetReplayInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
+import type { S as ReplayGetReplayInfoArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
+import type { S as ReplayGetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
+import type { S as ReplaySetSelfRatingResponse } from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
 import { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
 import { SerialTileMap } from "../../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 import { SerialUnitMap } from "../../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
@@ -111,7 +102,7 @@ function setReplayData(replayId: number, replayData: SerialWar | null): Promise<
     return StoreMpmFullReplayData.setData(replayId, replayData);
 }
 
-export async function updateOnMsgReplayGetAllInfoVersions(data: S): Promise<void> {
+export async function updateOnMsgReplayGetAllInfoVersions(data: ReplayGetAllInfoVersionsResponse): Promise<void> {
     const existingInfoDict  = await StoreMpmFullReplayInfo.getAllDataDict();
     const neededReplayIdSet = new Set<number>();
     const infoArray         = data.getInfoArray();
@@ -133,7 +124,7 @@ export async function updateOnMsgReplayGetAllInfoVersions(data: S): Promise<void
     _replayIdSetAccessor.setData(null, new Set(infoArray.map(v => v.getReplayId() ?? 0)));
 }
 
-export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS): Promise<void> {
+export async function updateOnMsgReplayGetReplayInfoArray(data: ReplayGetReplayInfoArrayResponse): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const encodedData of data.getEncodedReplayInfoArray()) {
         const replayInfo = ReplayInfo.decode(encodedData);
@@ -144,35 +135,35 @@ export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommo
     _replayInfoArrayAccessor.setData(null, true);
 }
 
-export function updateOnMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS): Promise<void> {
+export function updateOnMsgReplayGetInfoVersion(data: ReplayGetInfoVersionResponse): Promise<void> {
     const replayId = data.getReplayId() ?? 0;
     setInfoVersion(replayId, data.getInfoVersion() ?? 0);
 
     return addReplayId(replayId);  // 没有必要区分这个replay是否应当被缓存，直接统一缓存
 }
-export function updateOnFailedMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS): void {
+export function updateOnFailedMsgReplayGetInfoVersion(data: ReplayGetInfoVersionResponse): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _infoVersionAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS): Promise<void> {
+export function updateOnMsgReplayGetReplayInfo(data: ReplayGetReplayInfoResponse): Promise<void> {
     const encodedInfo = data.getEncodedReplayInfo();
     return setReplayInfo(data.getReplayId() ?? 0, encodedInfo == null ? null : ReplayInfo.decode(encodedInfo));
 }
-export function updateOnFailedMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS): void {
+export function updateOnFailedMsgReplayGetReplayInfo(data: ReplayGetReplayInfoResponse): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replayInfoAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS): Promise<void> {
+export function updateOnMsgReplayGetData(data: ReplayGetDataResponse): Promise<void> {
     const encodedWar = data.getEncodedWar();
     return setReplayData(data.getReplayId() ?? 0, encodedWar ? SerialWar.decode(encodedWar) : null);
 }
-export function updateOnFailedMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS): void {
+export function updateOnFailedMsgReplayGetData(data: ReplayGetDataResponse): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replayDataAccessor.updateOnRequestFailed(replayId);
@@ -252,16 +243,16 @@ function setReplaySelfRating(replayId: number, rating: Undefinable<number>): voi
     _replaySelfRatingAccessor.setData(replayId, rating);
 }
 
-export function updateOnMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS): void {
+export function updateOnMsgReplayGetSelfRating(data: ReplayGetSelfRatingResponse): void {
     setReplaySelfRating(data.getReplayId() ?? 0, data.getRating() ?? null);
 }
-export function updateOnFailedMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS): void {
+export function updateOnFailedMsgReplayGetSelfRating(data: ReplayGetSelfRatingResponse): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replaySelfRatingAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplaySetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS): void {
+export function updateOnMsgReplaySetSelfRating(data: ReplaySetSelfRatingResponse): void {
     setReplaySelfRating(data.getReplayId() ?? 0, data.getRating() ?? 0);
 }

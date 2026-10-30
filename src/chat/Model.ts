@@ -1,12 +1,22 @@
-import { ToCategoryId, MainCategoryId } from "./Constants.ts";
+import {
+    ToCategoryId,
+    MainCategoryId,
+} from "./Constants.ts";
 import { show } from "../FloatText.ts";
 import { getDict } from "../gamePanels/Dict.ts";
 import { getRunningPanel } from "../gamePanels/Manager.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { warn } from "../Logger.ts";
 import type { ChatMessage } from "../proto/schema/CommonProto/Chat/ChatMessage.ts";
 import type { ChatReadProgress } from "../proto/schema/CommonProto/Chat/ChatReadProgress.ts";
-import { getSelfUserId, getUserNickname, checkIsFollowingUser } from "../users/Model.ts";
+import {
+    getSelfUserId,
+    getUserNickname,
+    checkIsFollowingUser,
+} from "../users/Model.ts";
 
 type MessageDict                    = Map<number, ChatMessage[]>;
 const _allMessageDict               = new Map<ToCategoryId, MessageDict>();

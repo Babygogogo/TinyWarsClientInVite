@@ -1,12 +1,24 @@
 import { StateId } from "../../actionPlanners/Constants.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { getMpwWarClass, getSpwWarClass, getMeWarClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getMpwWarClass,
+    getSpwWarClass,
+    getMeWarClass,
+    getUnitViewClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
 import { TextureResolutionId } from "../../graphics/Constants.ts";
-import { type PointerUnifiedEventData, PointerEventType, MouseStyleType } from "../../helpers/PointerInput.ts";
-import { getNumText, getSignedNumText } from "../../helpers/Text.ts";
+import {
+    type PointerUnifiedEventData,
+    PointerEventType,
+    MouseStyleType,
+} from "../../helpers/PointerInput.ts";
+import {
+    getNumText,
+    getSignedNumText,
+} from "../../helpers/Text.ts";
 import { UndefinedError } from "../../lang/Constants.ts";
 import { getUnitName } from "../../lang/Utils.ts";
 import type { BwUnitChanged } from "../../notifications/DataTypes.ts";

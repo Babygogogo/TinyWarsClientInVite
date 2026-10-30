@@ -1,11 +1,21 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { Common, BigDialogueSideId } from "../../../dialogues/Constants.ts";
+import {
+    Common,
+    BigDialogueSideId,
+} from "../../../dialogues/Constants.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
-import { UndefinedError, TextType } from "../../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../../lang/Constants.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import { checkIsValidPlayerIndex } from "../../../players/utils/Common.ts";
 import type { WeaBigDialogueSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
@@ -13,7 +23,10 @@ import type { DataForAside } from "../../../proto/schema/CommonProto/WarEvent/We
 import type { DataForCoDialogue } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForCoDialogue.ts";
 import type { DataForDialogue } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForDialogue.ts";
 import type { DataForMisc } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForMisc.ts";
-import { checkIsBgm, checkIsSfx } from "../../../sounds/Utils.ts";
+import {
+    checkIsBgm,
+    checkIsSfx,
+} from "../../../sounds/Utils.ts";
 
 export function checkIsValid(action: Undefinable<WeaBigDialogueSimple>, playersCountUnneutral: number, gameConfig: GameConfig): boolean {
     if (action == null) {

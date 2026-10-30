@@ -3,7 +3,10 @@ import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
@@ -21,7 +24,10 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { ExpressionInfoDict } from "../../warEvents/actions/constants/SetViewpointExpr.ts";
-import { getErrorTipForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
+import {
+    getErrorTipForAction,
+    getBriefDescForAction,
+} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
     war         : IMeWar;

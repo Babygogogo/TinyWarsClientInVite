@@ -1,11 +1,17 @@
 import { showLang } from "../../FloatText.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { checkIsAnyPromiseTrue } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getSecondaryLanguageType, getText } from "../../lang/Utils.ts";
+import {
+    getSecondaryLanguageType,
+    getText,
+} from "../../lang/Utils.ts";
 import {
     openMultiPlayerModePanel,
     checkIsRedForMultiPlayer,
@@ -15,9 +21,12 @@ import {
     checkIsRedForRankedMode,
     checkIsRedForAutoTourneyMode,
 } from "../../lobby/model/LobbyModel.ts";
-import { checkIsRed } from "../model/MmrModel.ts";
-import { checkIsRedForMyMrwWars, checkIsRedForMyMmwWars } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import { checkIsRed as checkMmrModelIsRed } from "../model/MmrModel.ts";
+import {
+    checkIsRedForMyMrwWars,
+    checkIsRedForMyMmwWars,
+} from "../../multiPlayerWar/model/MpwModel.ts";
+import { checkIsRed as checkMrrModelIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -222,7 +231,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnContinueWar();
         this._updateBtnMode();
 
-        this._btnMyRoom.setRedVisible(await checkIsRed());
+        this._btnMyRoom.setRedVisible(await checkMmrModelIsRed());
     }
 
     private async _updateBtnMultiPlayer(): Promise<void> {
@@ -232,7 +241,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _updateBtnRanking(): Promise<void> {
         this._btnRanking.setRedVisible(
             (await checkIsRedForMyMrwWars()) ||
-            (await MultiRankRoomModelMrrModelCheckIsRed())
+            (await checkMrrModelIsRed())
         );
     }
 

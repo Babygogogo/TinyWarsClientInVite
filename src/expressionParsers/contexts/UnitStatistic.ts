@@ -1,12 +1,21 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
-import type { UnitStatistic as ExpressionParsersResultsUnitStatistic } from "../results/UnitStatistic.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import type { UnitStatistic as ResultsUnitStatistic } from "../results/UnitStatistic.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
 
 export class UnitStatistic extends Base {
@@ -43,10 +52,10 @@ export class UnitStatistic extends Base {
         return functions;
     }
 
-    private _unitStatistic  : ExpressionParsersResultsUnitStatistic;
+    private _unitStatistic  : ResultsUnitStatistic;
     private _contextWar     : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsUnitStatistic) {
+    public constructor(data: ResultsUnitStatistic) {
         super(data.war);
 
         this._unitStatistic = data;
@@ -56,7 +65,7 @@ export class UnitStatistic extends Base {
         return ContextType.UnitStatistic;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war   = this.getWar();
         const data  = this._unitStatistic;
         switch (identifierName) {
@@ -69,7 +78,7 @@ export class UnitStatistic extends Base {
             case UnitStatistic.VnHpGain        : return new Num(war, data.normalizedHpGain);
             case UnitStatistic.VnHpLoss        : return new Num(war, data.normalizedHpLoss);
             case UnitStatistic.VnHpRemain      : return new Num(war, data.normalizedHpGain - data.normalizedHpLoss);
-            case UnitStatistic.VnWar           : return new ExpressionParsersResultsWar(war);
+            case UnitStatistic.VnWar           : return new ResultsWar(war);
             default                                     : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
     }
@@ -110,7 +119,7 @@ export class UnitStatistic extends Base {
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             default     : return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }

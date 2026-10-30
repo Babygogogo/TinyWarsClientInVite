@@ -1,5 +1,8 @@
 import { TreeNode } from "../../auxiliaryTypes/TreeNode.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { getSkin } from "../../ResManager.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
@@ -29,8 +32,6 @@ import {
     getUiContainerBaseClass,
 } from "./UiFactory.ts";
 import { loadSizerOptions } from "./UiSizerHelpers.ts";
-
-type IUiSkinLoader      = IUiComponent;
 
 const UiSkinDefaultAttrs: UiSkinAttrs = {
     x                   : 0,
@@ -73,8 +74,8 @@ function getDefaultTouchChildren(uiType: UiComponentType): boolean {
 }
 
 interface ResultForLoadSkin {
-    ui                  : IUiSkinLoader;
-    nonNestedChildren   : TreeNode<IUiSkinLoader>[];
+    ui                  : IUiComponent;
+    nonNestedChildren   : TreeNode<IUiComponent>[];
 }
 
 // const debugLoadedSkinSet = new Set<IUiSkinLoader>();
@@ -87,10 +88,10 @@ interface ResultForLoadSkin {
 // }
 // const debugLoadedSkinAttrSet = new Set<IUiSkinLoader>();
 
-export function loadSkinByPath<T extends IUiSkinLoader>(root: T, skinPath: string): T {
+export function loadSkinByPath<T extends IUiComponent>(root: T, skinPath: string): T {
     return loadSkin(root, getExisted(getSkin(skinPath)));
 }
-export function loadSkin<T extends IUiSkinLoader>(root: T, skin: UiSkin): T {
+export function loadSkin<T extends IUiComponent>(root: T, skin: UiSkin): T {
     doLoadSkin({
         root            : root,
         ui              : root,
@@ -102,8 +103,8 @@ export function loadSkin<T extends IUiSkinLoader>(root: T, skin: UiSkin): T {
     return root;
 }
 function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
-    root            : IUiSkinLoader;
-    ui              : IUiSkinLoader;
+    root            : IUiComponent;
+    ui              : IUiComponent;
     skin            : UiSkin;
     isNestedSkin    : boolean;
     isRootSkin      : boolean;
@@ -123,7 +124,7 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         skinInfo.setSkin(skin);
     }
 
-    const nonNestedChildren : TreeNode<IUiSkinLoader>[] = [];
+    const nonNestedChildren : TreeNode<IUiComponent>[] = [];
     const nestedSkin        = getNestedSkin(skin);
     if (nestedSkin) {
         doLoadSkin({
@@ -134,7 +135,7 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
             isRootSkin      : false,
         });
     } else {
-        const directSkinChildren: WeakRef<IUiSkinLoader>[] = [];
+        const directSkinChildren: WeakRef<IUiComponent>[] = [];
         for (const childSkin of skin.$$ ?? []) {
             const result = doLoadSkin({
                 root            : root,
@@ -215,7 +216,7 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         nonNestedChildren   : nonNestedChildren,
     };
 }
-function createUiByName(name: UiComponentType): IUiSkinLoader {
+function createUiByName(name: UiComponentType): IUiComponent {
     switch (name) {
         case UiComponentType.Image              : return new (getUiImageClass())();                 // 仅属性
         case UiComponentType.Image9             : return new (getUiImageClass())();                 // 仅属性
@@ -255,7 +256,7 @@ export function getRevisedAttrValue<K extends keyof UiSkinAttrs>(
         : { needChange: true,   value: newValue };
 }
 
-export function loadSkinStateRecursively(ui: IUiSkinLoader, state: UiSkinState): void {
+export function loadSkinStateRecursively(ui: IUiComponent, state: UiSkinState): void {
     const skinInfo = getExisted(ui.getSkinInfo());
     for (const childNode of getExisted(skinInfo.getNonNestedSkinChildren())) {
         for (const rawChild of childNode.dfs()) {
@@ -267,7 +268,7 @@ export function loadSkinStateRecursively(ui: IUiSkinLoader, state: UiSkinState):
     }
     loadSkinAttrs(ui, getExisted(skinInfo.getLoadedSkinState()), state);
 }
-function loadSkinAttrs(ui: IUiSkinLoader, state: string, nestedState: string | undefined): void {
+function loadSkinAttrs(ui: IUiComponent, state: string, nestedState: string | undefined): void {
     const skinInfo  = getExisted(ui.getSkinInfo());
     const skinAttrs = generateSkinAttrs(getExisted(skinInfo.getSkin()), state, nestedState);
     ui.loadSkinAttrs(skinInfo.getLoadedSkinAttrs(), skinAttrs);
@@ -281,7 +282,7 @@ function loadSkinAttrs(ui: IUiSkinLoader, state: string, nestedState: string | u
     // debugLoadedSkinAttrSet.add(ui);
 }
 export function commonLoadSkinAttrs(
-    ui              : IUiSkinLoader,
+    ui              : IUiComponent,
     oldSkinAttrs    : UiSkinAttrs | undefined,
     newSkinAttrs    : UiSkinAttrs
 ): void {
@@ -338,7 +339,7 @@ export function commonLoadSkinAttrs(
         ui.setUnscaledManualHeight(rawValue);
     }
 }
-export function commonLoadSkinAttrsForSizer(ui: IUiSkinLoader & IUiComponent, oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
+export function commonLoadSkinAttrsForSizer(ui: IUiComponent & IUiComponent, oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
     // if ((width == null)                                     &&
     //     ((attrs?.left == null) || (attrs?.right == null))
     // ) {

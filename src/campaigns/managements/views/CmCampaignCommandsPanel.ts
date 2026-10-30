@@ -1,12 +1,23 @@
-import {CampaignWar, MaxExtraLinkLength} from "../../Constants.ts";
+import {
+    CampaignWar,
+    MaxExtraLinkLength,
+} from "../../Constants.ts";
 import { getCampaignInfo } from "../../mains/Provider.ts";
-import { reqCmSetCampaignName, reqCmSetCampaignDesc, reqCmSetExtraLink, reqCmSetCampaignEnabled } from "../Gateway.ts";
+import {
+    reqCmSetCampaignName,
+    reqCmSetCampaignDesc,
+    reqCmSetExtraLink,
+    reqCmSetCampaignEnabled,
+} from "../Gateway.ts";
 import { checkIsValidExtraLink } from "../../Utils.ts";
 import { showLang } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getTextForYesOrNo,
+} from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
@@ -14,7 +25,10 @@ import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiScroller } from "../../../ui/interfaces/IUiScroller.ts";
-import { getSelfUserId, getIsSelfCampaignManager } from "../../../users/Model.ts";
+import {
+    getSelfUserId,
+    getIsSelfCampaignManager,
+} from "../../../users/Model.ts";
 
 export type OpenData = {
     campaignId  : number;

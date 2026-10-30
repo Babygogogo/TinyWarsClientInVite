@@ -1,4 +1,7 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -12,8 +15,14 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { Common } from "../Constants.ts";
-import { getSelfUserId, getSelfNickname } from "../Model.ts";
-import { reqUserGetPublicInfo, reqSetNickname } from "../Proxy.ts";
+import {
+    getSelfUserId,
+    getSelfNickname,
+} from "../Model.ts";
+import {
+    reqUserGetPublicInfo,
+    reqSetNickname,
+} from "../Proxy.ts";
 import { checkIsNicknameValid } from "../Utils.ts";
 
 export type OpenData = void;

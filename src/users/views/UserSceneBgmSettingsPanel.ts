@@ -2,7 +2,10 @@ import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -11,7 +14,10 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getSelfSettingsBgmCodeForLobby, getSelfSettingsBgmCodeForMapEditor } from "../Model.ts";
+import {
+    getSelfSettingsBgmCodeForLobby,
+    getSelfSettingsBgmCodeForMapEditor,
+} from "../Model.ts";
 import { reqUserSetSceneBgmSettings } from "../Proxy.ts";
 
 export type OpenData = {

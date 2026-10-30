@@ -6,9 +6,15 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList, createRange } from "../../helpers/Collection.ts";
+import {
+    deleteElementFromList,
+    createRange,
+} from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,
@@ -35,9 +41,23 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { AiModeId, AllTagIdArray, ActionStateId, CustomName, UnitTypeId } from "../../units/Constants.ts";
-import { getTagIdList, getEncodedTagId, checkIsValidActionStateId, checkIsValidEncodedTagId } from "../../units/utils/Common.ts";
-import { fillNonTrivialDefaultValues, createDefault } from "../../units/utils/Serialization.ts";
+import {
+    AiModeId,
+    AllTagIdArray,
+    ActionStateId,
+    CustomName,
+    UnitTypeId,
+} from "../../units/Constants.ts";
+import {
+    getTagIdList,
+    getEncodedTagId,
+    checkIsValidActionStateId,
+    checkIsValidEncodedTagId,
+} from "../../units/utils/Common.ts";
+import {
+    fillNonTrivialDefaultValues,
+    createDefault,
+} from "../../units/utils/Serialization.ts";
 import { Common } from "../../warEvents/actions/constants/AddUnitOnMapSimple.ts";
 
 export interface OpenData {

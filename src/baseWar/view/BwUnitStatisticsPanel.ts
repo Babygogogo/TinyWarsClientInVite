@@ -23,13 +23,11 @@ import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { Hp } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 
-type UnitStatisticsInfo = Info;
-
 let IsShowHp = true;
 
 export interface OpenData {
     war             : IBwWar;
-    infoArray       : UnitStatisticsInfo[];
+    infoArray       : Info[];
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!                  : IUiImage;

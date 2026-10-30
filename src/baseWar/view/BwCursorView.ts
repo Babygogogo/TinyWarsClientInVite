@@ -5,24 +5,56 @@ import type { Point } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwCursor } from "../interface/IBwCursor.ts";
 import type { IBwCursorView } from "../interface/IBwCursorView.ts";
-import { showLang, show } from "../../FloatText.ts";
-import { getMeWarClass, getSpwWarClass, getMpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
+import {
+    getMeWarClass,
+    getSpwWarClass,
+    getMpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getSquaredPointDistance } from "../../geometries/Utils.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { getCursorCorner, getArrayCursorAiming } from "../../helpers/ImageSource.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
-import { addListener, deleteListener, checkHasDirectionKeys } from "../../keyboard/KbManager.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import {
+    getCursorCorner,
+    getArrayCursorAiming,
+} from "../../helpers/ImageSource.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
+import {
+    addListener,
+    deleteListener,
+    checkHasDirectionKeys,
+} from "../../keyboard/KbManager.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
 import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import type { BwCursorDragged, BwFieldZoomedByTouch, BwFieldDragged, BwCursorTapped } from "../../notifications/DataTypes.ts";
-import { addEventListener, removeEventListener, dispatch } from "../../notifications/Dispatcher.ts";
+import type {
+    BwCursorDragged,
+    BwFieldZoomedByTouch,
+    BwFieldDragged,
+    BwCursorTapped,
+} from "../../notifications/DataTypes.ts";
+import {
+    addEventListener,
+    removeEventListener,
+    dispatch,
+} from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -30,7 +62,10 @@ import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiContainer } from "../../ui/components/UiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import { getUiContainerClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+} from "../../ui/utils/UiFactory.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 const _PULSE_IN_DURATION                    = 150;

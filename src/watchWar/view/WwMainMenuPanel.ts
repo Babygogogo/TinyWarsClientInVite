@@ -1,5 +1,8 @@
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getSecondaryLanguageType } from "../../lang/Utils.ts";

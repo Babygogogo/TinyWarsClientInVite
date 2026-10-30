@@ -2,12 +2,21 @@ import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackgroundByCoId,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getBgmSfxName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
+import type { S as UserSetCoBgmSettingsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -87,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyMsgUserSetCoBgmSettings(e: Event): void {
         showLang(TextType.OperationSucceeded);
 
-        const data = e.data as S;
+        const data = e.data as UserSetCoBgmSettingsResponse;
         if (data.getCoCategoryId() === this._coCategoryId) {
             this._updateComponentsForCoAndBgm();
         }

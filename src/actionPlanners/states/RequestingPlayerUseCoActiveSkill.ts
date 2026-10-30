@@ -3,13 +3,18 @@ import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getMpwWarClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getMpwWarClass,
+    getSpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { reqPlayerUseCoActiveSkill } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
 
-type CoSkillTypeId  = SkillTypeId;
 export class RequestingPlayerUseCoActiveSkill implements IState {
     private static readonly _instance = new RequestingPlayerUseCoActiveSkill();
 
@@ -56,7 +61,7 @@ export class RequestingPlayerUseCoActiveSkill implements IState {
         throw newError(`RequestingPlayerUseCoActiveSkillState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: IActionPlanner, coSkillTypeId: CoSkillTypeId, targetGridIndexArray: GridIndex[] | null): void {
+    public doApplyOnChooseAction(actionPlanner: IActionPlanner, coSkillTypeId: SkillTypeId, targetGridIndexArray: GridIndex[] | null): void {
         const war = actionPlanner.getWar();
         if (war instanceof getMpwWarClass()) {
             reqMpwExecuteWarOperation(war, WoContainer.fromJson({

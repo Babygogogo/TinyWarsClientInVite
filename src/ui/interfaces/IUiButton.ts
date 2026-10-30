@@ -1,4 +1,7 @@
-import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import type {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
 import type { ShortSfxCode } from "../../sounds/Constants.ts";
 import type { IUiContainer } from "./IUiContainer.ts";
 

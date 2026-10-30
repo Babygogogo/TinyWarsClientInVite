@@ -4,11 +4,21 @@ import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getUnitName, getFormattedText, getText } from "../../../lang/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    getUnitName,
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import type { WeaAddUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
 import type { DataForAddUnit } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple/DataForAddUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";

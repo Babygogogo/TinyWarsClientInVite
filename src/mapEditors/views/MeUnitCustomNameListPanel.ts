@@ -3,7 +3,12 @@ import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getCurrentLanguageType, getSecondaryLanguageType, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getCurrentLanguageType,
+    getSecondaryLanguageType,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UnitCustomName } from "../../proto/schema/CommonProto/Structure/UnitCustomName.ts";

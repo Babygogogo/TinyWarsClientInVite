@@ -1,7 +1,5 @@
 import type { GridIndex } from "./GridIndex.ts";
-import {
-    DropDestination as ProtoSchemaCommonProtoStructureDropDestination,
-} from "../proto/schema/CommonProto/Structure/DropDestination.ts";
+import { DropDestination as ProtoDropDestination } from "../proto/schema/CommonProto/Structure/DropDestination.ts";
 
 export class DropDestination {
     private _gridIndex  : GridIndex;
@@ -12,8 +10,8 @@ export class DropDestination {
         this._unitId    = unitId;
     }
 
-    public toProto(): ProtoSchemaCommonProtoStructureDropDestination {
-        return ProtoSchemaCommonProtoStructureDropDestination.fromJson({
+    public toProto(): ProtoDropDestination {
+        return ProtoDropDestination.fromJson({
             gridIndex   : this._gridIndex.toProto().toJson(),
             unitId      : this._unitId,
         });

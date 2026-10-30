@@ -8,10 +8,7 @@ import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitCaptureTile(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitCaptureTile(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const tile = commonParams.getWar().getTileMap().getTile(gridIndex);
@@ -33,7 +30,7 @@ export async function getScoreAndActionUnitCaptureTile(commonParams: CommonParam
     }
 }
 
-async function getScoreForActionUnitCaptureTile(commonParams: CommonParams, unit: IBwUnit, destination: GridIndex): Promise<number> {
+async function getScoreForActionUnitCaptureTile(commonParams: CommonParams, unit: IUnit, destination: GridIndex): Promise<number> {
     await checkAndCallLater();
 
     const tile                  = commonParams.getWar().getTileMap().getTile(destination);

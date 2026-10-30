@@ -2,12 +2,18 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { checkIsSameList } from "../../helpers/Collection.ts";
 import { checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
-import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
+import {
+    createDefaultPlayerRuleList,
+    getErrorCodeForPlayerRuleList,
+} from "../../playerRules/Utils.ts";
 import { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Constants } from "../Constants.ts";
 import { checkIsValid } from "./Availability.ts";
-import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode, checkIsSame } from "./CommonData.ts";
+import {
+    getErrorCode as getCommonDataErrorCode,
+    checkIsSame,
+} from "./CommonData.ts";
 
 export function createDefault(ruleId: number, playersCount: number, gcData: GameConfig): TemplateWarRule {
     return TemplateWarRule.fromJson({
@@ -83,7 +89,7 @@ export function getErrorCode({ templateWarRule, allWarEventIdArray, gameConfig, 
         return ClientErrorCode.WarRuleHelpers_GetErrorCodeForTemplateWarRule_03;
     }
 
-    const errorCodeForGlobalParams = WarRulesUtilsCommonDataGetErrorCode(ruleForGlobalParams, gameConfig);
+    const errorCodeForGlobalParams = getCommonDataErrorCode(ruleForGlobalParams, gameConfig);
     if (errorCodeForGlobalParams) {
         return errorCodeForGlobalParams;
     }

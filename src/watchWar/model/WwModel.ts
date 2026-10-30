@@ -1,38 +1,50 @@
-import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    PlayerInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
-import type { OpenData as CommonViewCommonWarMapInfoPageOpenData } from "../../common/view/CommonWarMapInfoPage.ts";
-import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
+import {
+    DefaultParams,
+    TimerTypeId,
+} from "../../bootTimers/Constants.ts";
+import type { OpenData as CommonWarAdvancedSettingsPageOpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import type { OpenData as CommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
+import type { OpenData as CommonWarMapInfoPageOpenData } from "../../common/view/CommonWarMapInfoPage.ts";
+import type { OpenData as CommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getGameModeIdByMpwWarSettings } from "../../gameModes/Utils.ts";
-import { checkIsAnyPromiseTrue, getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    checkIsAnyPromiseTrue,
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { StoreMpwWatchWarData } from "../../localData/Storage.ts";
-import { getWarTimestamp, getWarProgressInfo, getWarSettings } from "../../multiPlayerWar/model/MpwModel.ts";
+import {
+    getWarTimestamp,
+    getWarProgressInfo,
+    getWarSettings,
+} from "../../multiPlayerWar/model/MpwModel.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { MpwWatchIncomingInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWatchIncomingInfo.ts";
 import type { MpwWatchOutgoingInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWatchOutgoingInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchContinueWar/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetIncomingInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetIncomingInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetOutgoingInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOutgoingInfo/S.ts";
+import type { S as MpwWatchContinueWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchContinueWar/S.ts";
+import type { S as MpwWatchGetIncomingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetIncomingInfo/S.ts";
+import type { S as MpwWatchGetOutgoingInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOutgoingInfo/S.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/CommonData.ts";
+import {
+    getPlayersCountUnneutral,
+    getPlayerRule,
+} from "../../warRules/utils/CommonData.ts";
 import { getNormalMapIdForMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
-import { reqWatchContinueWar, reqMpwWatchGetIncomingInfo, reqMpwWatchGetOutgoingInfo } from "./WwProxy.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
-
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = OpenData;
-type OpenDataForCommonWarPlayerInfoPage         = CommonViewCommonWarPlayerInfoPageOpenData;
+import {
+    reqWatchContinueWar,
+    reqMpwWatchGetIncomingInfo,
+    reqMpwWatchGetOutgoingInfo,
+} from "./WwProxy.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 let _requestableWarIdArray  : number[] | null = null;
 let _ongoingWarIdArray      : number[] | null = null;
@@ -70,10 +82,10 @@ async function setWatchWarData(warId: number, data: Undefinable<SerialWar>): Pro
     }
 }
 
-export function updateOnMsgMpwWatchContinueWar(data: S): Promise<void> {
+export function updateOnMsgMpwWatchContinueWar(data: MpwWatchContinueWarResponse): Promise<void> {
     return setWatchWarData(data.getWarId() ?? 0, data.getWar());
 }
-export function updateOnFailedMsgMpwWatchContinueWar(data: S): void {
+export function updateOnFailedMsgMpwWatchContinueWar(data: MpwWatchContinueWarResponse): void {
     const warId = data.getWarId();
     if (warId != null) {
         _watchWarDataAccessor.updateOnRequestFailed(warId);
@@ -132,10 +144,10 @@ function setWatchIncomingInfo(warId: number, data: Undefinable<MpwWatchIncomingI
     _watchIncomingInfoAccessor.setData(warId, data);
 }
 
-export function updateOnMsgMpwWatchGetIncomingInfo(data: ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetIncomingInfoS): void {
+export function updateOnMsgMpwWatchGetIncomingInfo(data: MpwWatchGetIncomingInfoResponse): void {
     setWatchIncomingInfo(data.getWarId() ?? 0, data.getIncomingInfo());
 }
-export function updateOnFailedMpwWatchGetIncomingInfo(data: ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetIncomingInfoS): void {
+export function updateOnFailedMpwWatchGetIncomingInfo(data: MpwWatchGetIncomingInfoResponse): void {
     const warId = data.getWarId();
     if (warId != null) {
         _watchIncomingInfoAccessor.updateOnRequestFailed(warId);
@@ -156,10 +168,10 @@ function setWatchOutgoingInfo(warId: number, data: Undefinable<MpwWatchOutgoingI
     _watchOutgoingInfoAccessor.setData(warId, data);
 }
 
-export function updateOnMsgMpwWatchGetOutgoingInfo(data: ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetOutgoingInfoS): void {
+export function updateOnMsgMpwWatchGetOutgoingInfo(data: MpwWatchGetOutgoingInfoResponse): void {
     setWatchOutgoingInfo(data.getWarId() ?? 0, data.getOutgoingInfo());
 }
-export function updateOnFailedMpwWatchGetOutgoingInfo(data: ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetOutgoingInfoS): void {
+export function updateOnFailedMpwWatchGetOutgoingInfo(data: MpwWatchGetOutgoingInfoResponse): void {
     const warId = data.getWarId();
     if (warId != null) {
         _watchOutgoingInfoAccessor.updateOnRequestFailed(warId);
@@ -167,7 +179,7 @@ export function updateOnFailedMpwWatchGetOutgoingInfo(data: ProtoSchemaCommonPro
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDataForCommonWarMapInfoPage(warId: number | null): Promise<OpenDataForCommonWarMapInfoPage> {
+export async function createDataForCommonWarMapInfoPage(warId: number | null): Promise<CommonWarMapInfoPageOpenData> {
     if (warId == null) {
         return null;
     }
@@ -198,7 +210,7 @@ export async function createDataForCommonWarMapInfoPage(warId: number | null): P
     }
 }
 
-export async function createDataForCommonWarPlayerInfoPage(warId: number | null): Promise<OpenDataForCommonWarPlayerInfoPage> {
+export async function createDataForCommonWarPlayerInfoPage(warId: number | null): Promise<CommonWarPlayerInfoPageOpenData> {
     if (warId == null) {
         return null;
     }
@@ -252,7 +264,7 @@ export async function createDataForCommonWarPlayerInfoPage(warId: number | null)
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(warId: number | null): Promise<OpenDataForCommonWarBasicSettingsPage> {
+export async function createDataForCommonWarBasicSettingsPage(warId: number | null): Promise<CommonWarBasicSettingsPageOpenData> {
     if (warId == null) {
         return null;
     }
@@ -277,7 +289,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
     const timerType         = bootTimerParams[0] as TimerTypeId;
     const normalMapId       = getNormalMapIdForMpwWarSettings(warSettings);
     const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
-    const openData          : OpenDataForCommonWarBasicSettingsPage = {
+    const openData          : CommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings: [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
@@ -388,7 +400,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(warId: number | null): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
+export async function createDataForCommonWarAdvancedSettingsPage(warId: number | null): Promise<CommonWarAdvancedSettingsPageOpenData> {
     const warSettings = warId == null ? null : await getWarSettings(warId);
     if (warSettings == null) {
         return null;

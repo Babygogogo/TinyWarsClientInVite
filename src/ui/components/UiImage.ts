@@ -1,15 +1,25 @@
-import type { Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Rectangle as AuxiliaryTypesRectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
 import { checkIsSameList } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { MouseStyleType, getMouseExpectedStyleType, setMouseExpectedStyleType } from "../../helpers/PointerInput.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    MouseStyleType,
+    getMouseExpectedStyleType,
+    setMouseExpectedStyleType,
+} from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
 import type { IUiImage } from "../interfaces/IUiImage.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiAabbCache } from "../utils/UiAabbCache.ts";
 import { UiEventAgent } from "../utils/UiEventAgent.ts";
-import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import {
+    loadSizerOptions,
+    checkAndAddAutoSizerInfo,
+} from "../utils/UiSizerHelpers.ts";
 import { UiSizerInfo } from "../utils/UiSizerInfo.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
 import { UiSkinInfo } from "../utils/UiSkinInfo.ts";
@@ -19,10 +29,16 @@ import {
     Texture,
     is,
     Event,
-    Rectangle as VendorEgretEgretRectangle,
+    Rectangle as EgretRectangle,
     DisplayObject,
 } from "../../vendor/egret/Egret.ts";
-import { hasRes, getResByUrl, ResourceItemHelper, getRes, getResAsync } from "../../vendor/egret/Res.ts";
+import {
+    hasRes,
+    getResByUrl,
+    ResourceItemHelper,
+    getRes,
+    getResAsync,
+} from "../../vendor/egret/Res.ts";
 
 // const obj = new egret.DisplayObject;
 // obj.x;
@@ -189,7 +205,7 @@ export class UiImage extends Bitmap implements IUiImage {
     public getParent(): DisplayObjectContainer | undefined {
         return this.parent ?? undefined;
     }
-    public getAabbToParent(): Rectangle {
+    public getAabbToParent(): AuxiliaryTypesRectangle {
         // return Utils.UiSizerHelpers.getAabbForSizer({
         //     unscaledWidth       : this.getUnscaledWidth(),
         //     unscaledHeight      : this.getUnscaledHeight(),
@@ -420,7 +436,7 @@ export class UiImage extends Bitmap implements IUiImage {
             if (newValue.length !== 4) {
                 throw newError(`Invalid scale9Grid.`);
             }
-            this.scale9Grid = new VendorEgretEgretRectangle(newValue[0], newValue[1], newValue[2], newValue[3]);
+            this.scale9Grid = new EgretRectangle(newValue[0], newValue[1], newValue[2], newValue[3]);
         }
     }
 
@@ -431,10 +447,10 @@ export class UiImage extends Bitmap implements IUiImage {
         this.smoothing = value;
     }
 
-    public getMask(): DisplayObject | VendorEgretEgretRectangle | null {
+    public getMask(): DisplayObject | EgretRectangle | null {
         return this.mask;
     }
-    public setMask(mask: VendorEgretEgretRectangle | null): void {
+    public setMask(mask: EgretRectangle | null): void {
         (this.mask as any) = mask;
     }
 

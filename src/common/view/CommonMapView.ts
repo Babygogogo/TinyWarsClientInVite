@@ -1,4 +1,7 @@
-import type { Undefinable, WarMapTileViewData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    WarMapTileViewData,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
@@ -14,10 +17,17 @@ import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc, getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -33,9 +43,16 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiUnitView } from "../../ui/interfaces/IUiUnitView.ts";
 import { UiCommonEventType } from "../../ui/types/UiCommonEventType.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
-import { getUiContainerClass, getUiImageClass, getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+    getUiUnitViewClass,
+} from "../../ui/utils/UiFactory.ts";
 import { DisplayLayerId } from "../../units/Constants.ts";
-import { getSelfSettingsIsShowGridBorder, getSelfSettingsTextureVersion } from "../../users/Model.ts";
+import {
+    getSelfSettingsIsShowGridBorder,
+    getSelfSettingsTextureVersion,
+} from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 

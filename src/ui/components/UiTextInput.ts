@@ -1,7 +1,16 @@
 import { isPc } from "../../helpers/Compatibility.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
-import { getStage, getCanvasBoundingClientRect } from "../../stages/StageManager.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
+import {
+    getStage,
+    getCanvasBoundingClientRect,
+} from "../../stages/StageManager.ts";
 import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
@@ -11,10 +20,19 @@ import { UiInputEventType } from "../types/UiInputEventType.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { getUiLabelClass } from "../utils/UiFactory.ts";
-import { getWorldAlpha, getWorldVisible } from "../utils/UiHelpers.ts";
-import { checkAndAddAutoSizerInfo, loadSizerOptions } from "../utils/UiSizerHelpers.ts";
+import {
+    getWorldAlpha,
+    getWorldVisible,
+} from "../utils/UiHelpers.ts";
+import {
+    checkAndAddAutoSizerInfo,
+    loadSizerOptions,
+} from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
-import type { Matrix, TextField } from "../../vendor/egret/Egret.ts";
+import type {
+    Matrix,
+    TextField,
+} from "../../vendor/egret/Egret.ts";
 
 interface CanvasBounds {
     top     : number;

@@ -1,15 +1,18 @@
-import type { Base } from "../contexts/Base.ts";
-import type { ContextType, ResultType } from "../Enums.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import type {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
 import { Assignment } from "./Assignment.ts";
-import type { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import type { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export class Collection {
-    private _nodeArray: ExpressionParsersNodesBase[];
+    private _nodeArray: Base[];
 
-    public constructor(nodeArray: ExpressionParsersNodesBase[]) {
+    public constructor(nodeArray: Base[]) {
         const length = nodeArray.length;
         if (!length) {
             throw newError(``, ClientErrorCode.EpNodeCollection_Constructor_00);
@@ -24,14 +27,14 @@ export class Collection {
         this._nodeArray = nodeArray;
     }
 
-    public eval(ctx: Base, isRestricted: boolean): ExpressionParsersResultsBase {
+    public eval(ctx: ContextsBase, isRestricted: boolean): ResultsBase {
         const nodeArray = this._nodeArray;
         const length    = nodeArray.length;
         if (length === 1) {
             return nodeArray[0].eval(ctx, ctx, null, null, isRestricted);
         }
 
-        const localVariableDict = new Map<string, ExpressionParsersResultsBase>();
+        const localVariableDict = new Map<string, ResultsBase>();
         for (let i = 0; i < length - 1; ++i) {
             const node = nodeArray[i];
             if (!(node instanceof Assignment)) {

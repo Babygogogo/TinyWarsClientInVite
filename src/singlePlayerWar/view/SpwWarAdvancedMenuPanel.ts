@@ -2,19 +2,28 @@ import { StateId } from "../../actionPlanners/Constants.ts";
 import { RequestingPlayerDeleteUnit } from "../../actionPlanners/states/RequestingPlayerDeleteUnit.ts";
 import { RequestingPlayerSurrender } from "../../actionPlanners/states/RequestingPlayerSurrender.ts";
 import { RequestingPlayerVoteForDraw } from "../../actionPlanners/states/RequestingPlayerVoteForDraw.ts";
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { gotoMapEditorWar, gotoMfrCreateSettingsPanel } from "../../helpers/GameFlow.ts";
+import {
+    gotoMapEditorWar,
+    gotoMfrCreateSettingsPanel,
+} from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getErrorText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getErrorText,
+} from "../../lang/Utils.ts";
 import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import { reqSpmDeleteWarSaveSlot } from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
@@ -25,7 +34,11 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { ActionStateId } from "../../units/Constants.ts";
-import { reqTickSelfSettingsUnitOpacity, getMapRating, getSelfSettingsOpacitySettings } from "../../users/Model.ts";
+import {
+    reqTickSelfSettingsUnitOpacity,
+    getMapRating,
+    getSelfSettingsOpacitySettings,
+} from "../../users/Model.ts";
 import { reqUserSetMapRating } from "../../users/Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -105,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
-        const slotIndex = (e.data as S).getSlotIndex() ?? 0;
+        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
         openPanel(getDict().CommonConfirmPanel, {
             getContent     : () => getText(TextType.A0872),
             callback    : async () => {

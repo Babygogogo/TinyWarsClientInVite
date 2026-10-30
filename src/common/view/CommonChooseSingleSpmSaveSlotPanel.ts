@@ -1,11 +1,21 @@
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getTimestampShortText, getWarTypeName } from "../../lang/Utils.ts";
+import {
+    getText,
+    getTimestampShortText,
+    getWarTypeName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { getSlotFullData, getSlotName } from "../../singlePlayerMode/model/SpmModel.ts";
-import { Common as SinglePlayerWarConstants } from "../../singlePlayerWars/Constants.ts";
+import {
+    getSlotFullData,
+    getSlotName,
+} from "../../singlePlayerMode/model/SpmModel.ts";
+import { Common as SinglePlayerWarsCommon } from "../../singlePlayerWars/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -123,7 +133,7 @@ export class Panel extends UiPanel<OpenData> {
         const list      = this._srlSaveSlot;
         await list.bindData(this._createDataForList());
         list.setSelectedItemIndex(slotIndex);
-        list.scrollToItem(slotIndex >= SinglePlayerWarConstants.MaxSaveSlotCount / 2 ? 100 : 0);
+        list.scrollToItem(slotIndex >= SinglePlayerWarsCommon.MaxSaveSlotCount / 2 ? 100 : 0);
 
         await this.showMap(slotIndex);
     }
@@ -181,7 +191,7 @@ export class Panel extends UiPanel<OpenData> {
         const needConfirmOverwrite  = openData.needConfirmOverwrite;
         const needNonEmptyData      = openData.needNonEmptyData ?? false;
         const dataArray             : DataForSlotRenderer[] = [];
-        for (let slotIndex = 0; slotIndex < SinglePlayerWarConstants.MaxSaveSlotCount; ++slotIndex) {
+        for (let slotIndex = 0; slotIndex < SinglePlayerWarsCommon.MaxSaveSlotCount; ++slotIndex) {
             dataArray.push({
                 slotIndex            : slotIndex,
                 needComment          : needComment,
@@ -265,7 +275,7 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
             } else {
                 openPanel(getDict().CommonInputPanel, {
                     title        : getText(TextType.B0088),
-                    maxChars     : SinglePlayerWarConstants.MaxSaveSlotCommentLength,
+                    maxChars     : SinglePlayerWarsCommon.MaxSaveSlotCommentLength,
                     currentValue : ``,
                     tips         : getText(TextType.A0144),
                     canBeEmpty   : true,

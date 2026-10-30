@@ -2,9 +2,12 @@ import { showLang } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
-import { Common as MultiRankedWarConstants } from "../../../multiRankedWars/Constants.ts";
+import { Common as MultiRankedWarsCommon } from "../../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { InitialBracket } from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
 import { ShortSfxCode } from "../../../sounds/Constants.ts";
@@ -19,7 +22,11 @@ import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
-import { checkHasUserPublicInfo, getUserMrwRankScoreInfo, getUserNickname } from "../../../users/Model.ts";
+import {
+    checkHasUserPublicInfo,
+    getUserMrwRankScoreInfo,
+    getUserNickname,
+} from "../../../users/Model.ts";
 import { reqUserGetPublicInfoArray } from "../../../users/Proxy.ts";
 import { WarTypeId } from "../../../warTypes/Constants.ts";
 import { reqAtSetInitialBrackets } from "../Gateway.ts";
@@ -156,17 +163,17 @@ export class Panel extends UiPanel<OpenData> {
                         if (num === 0) {
                             promiseArray.push((async (): Promise<void> => {
                                 const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
-                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore });
+                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore });
                             })());
                         } else if (num === 1) {
                             promiseArray.push((async (): Promise<void> => {
                                 const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
-                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore });
+                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore });
                             })());
                         } else if (num === 2) {
                             promiseArray.push((async (): Promise<void> => {
-                                const score1 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2))?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore;
-                                const score2 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2))?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore;
+                                const score1 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2))?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore;
+                                const score2 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2))?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore;
                                 userIdAndScoreArray.push({ userId, score : score1 + score2 });
                             })());
                         } else {
@@ -357,7 +364,7 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
         } else {
             const info1 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
             const info2 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
-            label.setText(`${info1?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}, ${info2?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
+            label.setText(`${info1?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore}, ${info2?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore}`);
         }
     }
 

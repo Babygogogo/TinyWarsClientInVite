@@ -1,13 +1,19 @@
 import { getCampaignInfo } from "../../mains/Provider.ts";
 import { reqCmCreateCampaign } from "../Gateway.ts";
-import { getAllCampaignIdArray, getDesigningCampaignIdArray } from "../Provider.ts";
+import {
+    getAllCampaignIdArray,
+    getDesigningCampaignIdArray,
+} from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
-import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
+import type { S as CmSetCampaignNameResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
 import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
@@ -146,7 +152,7 @@ class CampaignRenderer extends UiListItemRenderer<DataForCampaignRenderer> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgCmSetCampaignName(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as CmSetCampaignNameResponse;
         if ((data.getCampaignId() ?? 0) === this.getOpenData()?.campaignId) {
             this._updateLabelName();
         }

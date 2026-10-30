@@ -4,7 +4,10 @@ import type { IBwWar } from "../interface/IBwWar.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
@@ -16,8 +19,14 @@ import { checkIsValidTurnsLimit } from "../../turns/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { checkIsValidWarOperationsLimit } from "../../warOperations/Utils.ts";
-import { getDefaultWeatherType, getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import { getErrorCode, create } from "../../warRules/utils/Instance.ts";
+import {
+    getDefaultWeatherType,
+    getPlayerRule,
+} from "../../warRules/utils/CommonData.ts";
+import {
+    getErrorCode,
+    create,
+} from "../../warRules/utils/Instance.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export class BwCommonSettingManager implements IBwCommonSettingManager {

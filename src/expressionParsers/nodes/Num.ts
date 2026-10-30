@@ -1,10 +1,13 @@
-import type { Base } from "../contexts/Base.ts";
-import { ContextType, ResultType } from "../Enums.ts";
-import { Base as ExpressionParsersNodesBase } from "./Base.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Num as ExpressionParsersResultsNum } from "../results/Num.ts";
+import type { Base as ContextsBase } from "../contexts/Base.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Num as ResultsNum } from "../results/Num.ts";
 
-export class Num extends ExpressionParsersNodesBase {
+export class Num extends Base {
     private _number: number;             // The number
 
     public constructor(num: number) {
@@ -14,8 +17,8 @@ export class Num extends ExpressionParsersNodesBase {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public override eval(ctx: Base): ExpressionParsersResultsBase {
-        return new ExpressionParsersResultsNum(ctx.getWar(), this._number);
+    public override eval(ctx: ContextsBase): ResultsBase {
+        return new ResultsNum(ctx.getWar(), this._number);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {

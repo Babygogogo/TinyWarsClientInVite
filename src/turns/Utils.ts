@@ -1,4 +1,7 @@
-import { PhaseCode, TurnIndex } from "./Constants.ts";
+import {
+    PhaseCode,
+    TurnIndex,
+} from "./Constants.ts";
 
 export function checkIsValidTurnPhaseCode(turnPhaseCode: PhaseCode): boolean {
     return (turnPhaseCode === PhaseCode.Main)

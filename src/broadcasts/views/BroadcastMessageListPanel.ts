@@ -1,9 +1,22 @@
-import { reqBroadcastGetAllMessageIdArray, reqBroadcastDeleteMessage } from "../Gateway.ts";
-import { getAllMessageIdArray, getMessageData } from "../Provider.ts";
+import {
+    reqBroadcastGetAllMessageIdArray,
+    reqBroadcastDeleteMessage,
+} from "../Gateway.ts";
+import {
+    getAllMessageIdArray,
+    getMessageData,
+} from "../Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, LanguageType } from "../../lang/Constants.ts";
-import { getText, getTimestampShortText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTimestampShortText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

@@ -5,7 +5,10 @@ import { EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { encodeTeamIndex } from "../helpers/Team.ts";
-import { PlayerIndex, AliveStateId } from "../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../players/Constants.ts";
 import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { ShortSfxCode } from "../sounds/Constants.ts";
 import { playShortSfx } from "../sounds/SoundPlayer.ts";
@@ -13,9 +16,7 @@ import type { IUnit } from "../units/IUnit.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../visibilities/Utils.ts";
 
-type IBwUnit            = IUnit;
-
-export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosionEffect: boolean): IBwUnit[] {
+export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosionEffect: boolean): IUnit[] {
     const unitMap               = war.getUnitMap();
     const unit                  = getExisted(unitMap.getUnitOnMap(gridIndex), ClientErrorCode.DestructionHelpers_DestroyUnitOnMap_00);
     const destroyedUnits        = [unit];
@@ -125,7 +126,7 @@ export function destroyUnitOnMapForWarDamageCalculator({ battleInfo, war, gridIn
         battleInfo.destroyedUnits.set(u.getUnitId(), u);
     }
 }
-export function destroyUnitLoaded(war: IBwWar, unitId: number): IBwUnit[] {
+export function destroyUnitLoaded(war: IBwWar, unitId: number): IUnit[] {
     const unitMap           = war.getUnitMap();
     const targetUnit        = getExisted(unitMap.getUnitLoadedById(unitId));
     const destroyedUnits    = [targetUnit];
@@ -160,7 +161,7 @@ export function destroyUnitLoaded(war: IBwWar, unitId: number): IBwUnit[] {
     return destroyedUnits;
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyed(destroyedUnits: IBwUnit[]): void {
+function updatePlayersOnUnitDestroyed(destroyedUnits: IUnit[]): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player            = destroyedUnits[0].getPlayer();
@@ -181,7 +182,7 @@ function updatePlayersOnUnitDestroyed(destroyedUnits: IBwUnit[]): void {
     }
 }
 /** @param destroyedUnits 必须属于同一个玩家 */
-function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: BattleInfo, isEstimated: boolean, destroyedUnits: IBwUnit[], war: IBwWar): void {
+function updatePlayersOnUnitDestroyedForWarDamageCalculator(battleInfo: BattleInfo, isEstimated: boolean, destroyedUnits: IUnit[], war: IBwWar): void {
     const destroyedCoUnitsCount = destroyedUnits.filter(u => u.getIsCoOnboard()).length;
     if (destroyedCoUnitsCount > 0) {
         const player      = destroyedUnits[0].getPlayer();

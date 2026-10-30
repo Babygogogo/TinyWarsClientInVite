@@ -3,7 +3,10 @@ import { SkinId } from "../../forceSkins/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
+import {
+    getCoEye,
+    getSkinCircle,
+} from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

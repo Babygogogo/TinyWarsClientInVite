@@ -1,8 +1,15 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { checkIsValidForcedFogCode } from "../../../fogMaps/Utils.ts";
-import { UndefinedError, TextType } from "../../../lang/Constants.ts";
-import { getForceFogCodeName, getFormattedText, getText } from "../../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../../lang/Constants.ts";
+import {
+    getForceFogCodeName,
+    getFormattedText,
+    getText,
+} from "../../../lang/Utils.ts";
 import type { WeaSetForceFogCodeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
 
 export function checkIsValid(action: Undefinable<WeaSetForceFogCodeSimple>): boolean {

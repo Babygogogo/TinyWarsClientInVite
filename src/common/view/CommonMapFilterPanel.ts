@@ -3,9 +3,19 @@ import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
-import { getDecodedMapTagIdList, getEncodedMapTagId } from "../../mapTags/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
+import {
+    getDecodedMapTagIdList,
+    getEncodedMapTagId,
+} from "../../mapTags/Utils.ts";
 import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";

@@ -14,7 +14,13 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { getSelfUserId, getIsSelfAdmin, getIsSelfMapCommittee, getIsSelfAutoTourneyCommittee, getIsSelfCampaignManager } from "../Model.ts";
+import {
+    getSelfUserId,
+    getIsSelfAdmin,
+    getIsSelfMapCommittee,
+    getIsSelfAutoTourneyCommittee,
+    getIsSelfCampaignManager,
+} from "../Model.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

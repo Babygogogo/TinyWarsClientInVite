@@ -1,9 +1,16 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { getBwWeatherManagerViewClass } from "../gameHelpers/GhFactory.ts";
-import { getExisted, getDefined } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    getDefined,
+} from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
-import { getWeatherName, getFormattedText, getWeatherFullDesc } from "../lang/Utils.ts";
+import {
+    getWeatherName,
+    getFormattedText,
+    getWeatherFullDesc,
+} from "../lang/Utils.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";

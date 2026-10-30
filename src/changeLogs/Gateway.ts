@@ -1,15 +1,14 @@
 
-import { addListeners, send } from "../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../networks/Manager.ts";
 import { MessageCodes } from "../networks/MessageCodes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { S } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogAddMessage/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgChangeLogGetMessageListS,
-} from "../proto/schema/CommonProto/NetMessage/MsgChangeLogGetMessageList/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgChangeLogModifyMessageS,
-} from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
+import type { S as ChangeLogAddMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogAddMessage/S.ts";
+import type { S as ChangeLogGetMessageListResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogGetMessageList/S.ts";
+import type { S as ChangeLogModifyMessageResponse } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
 import { setAllMessageList } from "./Provider.ts";
@@ -32,7 +31,7 @@ export function reqChangeLogAddMessage(textList: LanguageText[]): void {
     });
 }
 function _onMsgChangeLogAddMessage(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as ChangeLogAddMessageResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgChangeLogAddMessage, data);
     }
@@ -49,7 +48,7 @@ export function reqChangeLogModifyMessage(messageId: number, textList: LanguageT
     });
 }
 function _onMsgChangeLogModifyMessage(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChangeLogModifyMessageS;
+    const data = e.data as ChangeLogModifyMessageResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgChangeLogModifyMessage, data);
     }
@@ -64,7 +63,7 @@ export function reqChangeLogGetMessageList(): void {
     });
 }
 function _onMsgChangeLogGetMessageList(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChangeLogGetMessageListS;
+    const data = e.data as ChangeLogGetMessageListResponse;
     if (!data.getErrorCode()) {
         setAllMessageList(data.getMessageList());
         dispatch(TypeId.MsgChangeLogGetMessageList, data);

@@ -1,6 +1,10 @@
-import type { Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Rectangle as AuxiliaryTypesRectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { newError } from "../../helpers/Misc.ts";
-import { MouseStyleType, getMouseExpectedStyleType, setMouseExpectedStyleType } from "../../helpers/PointerInput.ts";
+import {
+    MouseStyleType,
+    getMouseExpectedStyleType,
+    setMouseExpectedStyleType,
+} from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainerBase } from "../interfaces/IUiContainerBase.ts";
 import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
@@ -11,7 +15,11 @@ import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
 import { UiSizerInfo } from "../utils/UiSizerInfo.ts";
 import { commonLoadSkinAttrsForSizer } from "../utils/UiSkinHelpers.ts";
 import { UiSkinInfo } from "../utils/UiSkinInfo.ts";
-import { DisplayObjectContainer, DisplayObject, Rectangle as VendorEgretEgretRectangle } from "../../vendor/egret/Egret.ts";
+import {
+    DisplayObjectContainer,
+    DisplayObject,
+    Rectangle as EgretRectangle,
+} from "../../vendor/egret/Egret.ts";
 
 // const con = new egret.DisplayObjectContainer();
 // con.touchChildren;
@@ -110,7 +118,7 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
     public getParent(): DisplayObjectContainer | undefined {
         return this.parent ?? undefined;
     }
-    public getAabbToParent(): Rectangle {
+    public getAabbToParent(): AuxiliaryTypesRectangle {
         return (this._aabbCache ??= new UiAabbCache()).getAabb({
             unscaledWidth       : this.width,
             unscaledHeight      : this.height,
@@ -262,14 +270,14 @@ export abstract class UiContainerBase extends DisplayObjectContainer implements 
     }
 
     /** 修改egret内部计算bounds的方式，若不这么做，会出问题 */
-    public override $measureContentBounds(bounds: VendorEgretEgretRectangle): void {
+    public override $measureContentBounds(bounds: EgretRectangle): void {
         const width = this.getUnscaledManualWidth();
         (width != null) && (bounds.width = width);
 
         const height = this.getUnscaledManualHeight();
         (height != null) && (bounds.height = height);
     }
-    public override $measureChildBounds(bounds: VendorEgretEgretRectangle): void {
+    public override $measureChildBounds(bounds: EgretRectangle): void {
         if ((this.getUnscaledManualWidth() == null) || (this.getUnscaledManualHeight() == null)) {
             super.$measureChildBounds(bounds);
         }

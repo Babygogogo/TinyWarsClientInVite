@@ -2,16 +2,33 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileBuffName, getTileBuffDesc, getComparatorName, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileBuffName,
+    getTileBuffDesc,
+    getComparatorName,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { TileBuffFilter } from "../../proto/schema/CommonProto/Structure/TileBuffFilter.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 import { ValueArrayAndPredicate } from "../../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { AllBuffTypeIdArray, EndTimeModification } from "../../tileBuffs/Constants.ts";
-import { checkIsEmpty, tickConIsEverlasting, getErrorTip, getDesc } from "../../tileBuffs/utils/Filter.ts";
+import {
+    AllBuffTypeIdArray,
+    EndTimeModification,
+} from "../../tileBuffs/Constants.ts";
+import {
+    checkIsEmpty,
+    tickConIsEverlasting,
+    getErrorTip,
+    getDesc,
+} from "../../tileBuffs/utils/Filter.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -19,7 +36,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { AllComparatorIdArray, ComparatorId } from "../../valueAndComparators/Constants.ts";
+import {
+    AllComparatorIdArray,
+    ComparatorId,
+} from "../../valueAndComparators/Constants.ts";
 import { tickIsOneOf } from "../../valueArrayAndPredicates/Utils.ts";
 
 export interface OpenData {

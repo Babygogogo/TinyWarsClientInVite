@@ -3,15 +3,22 @@ import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { Common } from "../../maps/Constants.ts";
-import { getLatestGameConfig, getGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getLatestGameConfig,
+    getGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
+import { getNormalMapId as getSerialWarNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import {
-    getNormalMapId as HelpersProtoSchemaWarSerializationSerialWarGetNormalMapId,
-} from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import {
     getRawData,
     getAverageRating,
@@ -340,7 +347,7 @@ function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GameCo
 function getNormalMapId(data: UiMapInfoData | null): number | null {
     const warData = data?.warInfo?.warData;
     return warData
-        ? HelpersProtoSchemaWarSerializationSerialWarGetNormalMapId(warData)
+        ? getSerialWarNormalMapId(warData)
         : (data?.mapInfo?.mapRawData.getNormalMapId() ?? null);
 }
 function getHasFog(data: Undefinable<UiMapInfoData>): boolean | null {

@@ -1,13 +1,26 @@
 import { CoId } from "../../cos/Constants.ts";
 import { showLang } from "../../FloatText.ts";
-import { getLatestConfigVersion, getGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getLatestConfigVersion,
+    getGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import {
+    getCoHeadFrame,
+    getCoHead,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getLanguageText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getLanguageText,
+    getPlayerForceName,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import type { WarCreator_PlayerInfoChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

@@ -3,7 +3,10 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { WeaSetCustomCrystalStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";

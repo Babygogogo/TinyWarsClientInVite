@@ -3,12 +3,10 @@ import type { UnitCustomName } from "../../proto/schema/CommonProto/Structure/Un
 import { CustomName } from "../Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type ProtoUnitCustomName    = UnitCustomName;
-
-export function checkIsValid(data: ProtoUnitCustomName): boolean {
+export function checkIsValid(data: UnitCustomName): boolean {
     return getErrorCode(data) === ClientErrorCode.NoError;
 }
-export function getErrorCode(data: ProtoUnitCustomName): ClientErrorCode {
+export function getErrorCode(data: UnitCustomName): ClientErrorCode {
     {
         const nameId = data.getNameId();
         if ((nameId > CustomName.MaxId) ||
@@ -32,7 +30,7 @@ export function getErrorCode(data: ProtoUnitCustomName): ClientErrorCode {
     return ClientErrorCode.NoError;
 }
 
-export function getErrorCodeForUnitCustomNameArray(names: ProtoUnitCustomName[]): ClientErrorCode {
+export function getErrorCodeForUnitCustomNameArray(names: UnitCustomName[]): ClientErrorCode {
     const idSet = new Set<number>();
     for (const nameData of names) {
         if (!checkIsValid(nameData)) {

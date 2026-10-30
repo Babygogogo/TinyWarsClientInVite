@@ -3,12 +3,19 @@ import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventMana
 import { BwWar } from "../../baseWar/model/BwWar.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getMeDrawerClass, getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getMeDrawerClass,
+    getBwWarEventManagerClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { pickRandomElement } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { IMeDrawer } from "../interface/IMeDrawer.ts";
 import type { IMeWar } from "../interface/IMeWar.ts";
-import { createISerialWar, createRevisedTemplateWarRuleArrayForMeWar, reviseAllUnitIds } from "./MeHelpers.ts";
+import {
+    createISerialWar,
+    createRevisedTemplateWarRuleArrayForMeWar,
+    reviseAllUnitIds,
+} from "./MeHelpers.ts";
 import { getFinalSfwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";

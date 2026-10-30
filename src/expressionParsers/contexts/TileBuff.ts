@@ -1,18 +1,26 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { NumArray } from "../results/NumArray.ts";
 import { Tile } from "../results/Tile.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { TileBuff as ProtoTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 
-type TileBuffProto      = ProtoSchemaCommonProtoStructureTileBuff;
 export class TileBuff extends Base {
     private static readonly VnType                      = "type";
     private static readonly VnExpiringPlayerIndex       = "expiringPlayerIndex";
@@ -39,11 +47,11 @@ export class TileBuff extends Base {
         return functions;
     }
 
-    private readonly _buff  : TileBuffProto;
+    private readonly _buff  : ProtoTileBuff;
     private readonly _tile  : ITile;
     private _contextWar     : War | null = null;
 
-    public constructor(buff: TileBuffProto, tile: ITile) {
+    public constructor(buff: ProtoTileBuff, tile: ITile) {
         super(tile.getWar());
 
         this._buff  = buff;
@@ -54,7 +62,7 @@ export class TileBuff extends Base {
         return ContextType.TileBuff;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war   = this.getWar();
         const buff  = this._buff;
         if (identifierName == TileBuff.VnType) {
@@ -68,13 +76,13 @@ export class TileBuff extends Base {
         } else if (identifierName == TileBuff.VnTile) {
             return new Tile(this._tile);
         } else if (identifierName == TileBuff.VnWar) {
-            return new ExpressionParsersResultsWar(war);
+            return new ResultsWar(war);
         }
 
         return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
     }
 }

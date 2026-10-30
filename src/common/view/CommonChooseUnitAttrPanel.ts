@@ -1,14 +1,25 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
-import { getFinalSkinIdArray, getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
+import {
+    getFinalSkinIdArray,
+    getRawOverridingSkinId,
+} from "../../forceSkins/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { createRange } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getUnitAiModeName, getUnitActionStateText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getText,
+    getUnitAiModeName,
+    getUnitActionStateText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -21,9 +32,22 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
-import { UnitTypeId, AiModeId, AllTagIdArray, ActionStateId } from "../../units/Constants.ts";
-import { getTagIdList, getEncodedTagId, checkIsValidActionStateId, checkIsValidEncodedTagId } from "../../units/utils/Common.ts";
-import { createDefault, fillNonTrivialDefaultValues } from "../../units/utils/Serialization.ts";
+import {
+    UnitTypeId,
+    AiModeId,
+    AllTagIdArray,
+    ActionStateId,
+} from "../../units/Constants.ts";
+import {
+    getTagIdList,
+    getEncodedTagId,
+    checkIsValidActionStateId,
+    checkIsValidEncodedTagId,
+} from "../../units/utils/Common.ts";
+import {
+    createDefault,
+    fillNonTrivialDefaultValues,
+} from "../../units/utils/Serialization.ts";
 
 export interface OpenData {
     war             : IBwWar;

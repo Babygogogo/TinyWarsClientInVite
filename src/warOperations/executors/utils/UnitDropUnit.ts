@@ -2,7 +2,13 @@ import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { UnitVisionInfo } from "../../../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
@@ -17,9 +23,11 @@ import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
-type IBwUnit            = IUnit;
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;
@@ -74,7 +82,7 @@ function fastExeUnitDropUnit(war: IBwWar, action: WoUnitDropUnit): void {
         unitMap.setUnitOnMap(focusUnit);
         focusUnit.setActionState(ActionStateId.Acted);
 
-        const unitsForDrop: IBwUnit[] = [];
+        const unitsForDrop: IUnit[] = [];
         for (const data of action.getDropDestinations()) {
             const unitId        = data.getUnitId() ?? 0;
             const gridIndex     = getExisted(GridIndex.convertGridIndex(data.getGridIndex()));
@@ -154,7 +162,7 @@ async function normalExeUnitDropUnit(war: IBwWar, action: WoUnitDropUnit): Promi
         });
 
         {
-            const affectedLoaderUnits = new Set<IBwUnit | null>();
+            const affectedLoaderUnits = new Set<IUnit | null>();
             for (const data of droppingUnitAndPathArray) {
                 const unitId        = data.getUnit()?.getUnitId() ?? 0;
                 const loadedUnit    = unitMap.getUnitLoadedById(unitId);
@@ -188,7 +196,7 @@ async function normalExeUnitDropUnit(war: IBwWar, action: WoUnitDropUnit): Promi
         focusUnit.setActionState(ActionStateId.Acted);
 
         const fogMap        = war.getFogMap();
-        const unitsForDrop  : IBwUnit[] = [];
+        const unitsForDrop  : IUnit[] = [];
         for (const data of action.getDropDestinations()) {
             const unitId        = data.getUnitId() ?? 0;
             const gridIndex     = getExisted(GridIndex.convertGridIndex(data.getGridIndex()));

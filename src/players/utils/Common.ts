@@ -1,6 +1,10 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
-import { AllAliveStateIdArray, PlayerIndex, Fund } from "../Constants.ts";
+import {
+    AllAliveStateIdArray,
+    PlayerIndex,
+    Fund,
+} from "../Constants.ts";
 import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 
 export function checkIsValidAliveStateId(aliveState: number): boolean {

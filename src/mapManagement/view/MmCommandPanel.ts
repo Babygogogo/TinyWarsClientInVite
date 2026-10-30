@@ -1,16 +1,40 @@
-import { show, showLang } from "../../FloatText.ts";
+import {
+    show,
+    showLang,
+} from "../../FloatText.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { gotoLobby } from "../../helpers/GameFlow.ts";
-import { newError, getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    newError,
+    getExisted,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
-import { getDecodedMapTagIdList, getEncodedMapTagId } from "../../mapTags/Utils.ts";
-import { getRawData, getMapTag, getBriefData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getDecodedMapTagIdList,
+    getEncodedMapTagId,
+} from "../../mapTags/Utils.ts";
+import {
+    getRawData,
+    getMapTag,
+    getBriefData,
+    getMapNameInCurrentLanguage,
+} from "../../normalMap/model/NormalMapModel.ts";
 import {
     reqMmDeleteRedundantWarEvent,
     reqMmSetMapEnabled,
@@ -25,7 +49,10 @@ import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import { checkIsEmptyWarEventFullData, trimWarEventFullData } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    checkIsEmptyWarEventFullData,
+    trimWarEventFullData,
+} from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
     normalMapId   : number;

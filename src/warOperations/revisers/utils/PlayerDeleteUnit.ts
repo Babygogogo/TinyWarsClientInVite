@@ -1,7 +1,10 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { newError, getExisted } from "../../../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerDeleteUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerDeleteUnit.ts";

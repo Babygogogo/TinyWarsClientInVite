@@ -1,19 +1,35 @@
 import { reqCampaignCreateWar } from "../mains/Gateway.ts";
 import { getCampaignMapRawData } from "../mains/Provider.ts";
-import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getLatestConfigVersion,
+    getLatestGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import {
+    getCoHeadFrame,
+    getCoHead,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerForceName,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { PlayerCoInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/PlayerCoInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
+import type { S as CampaignCreateWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { getAvailableSlotIndex } from "../../singlePlayerMode/model/SpmModel.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -94,7 +110,7 @@ export class Panel extends UiPanel<OpenData> {
         this.closePanel();
         closePanel(getDict().CommonBlockPanel);
 
-        const data = e.data as S;
+        const data = e.data as CampaignCreateWarResponse;
         gotoSinglePlayerWar({
             slotIndex       : getExisted(data.getSlotIndex()),
             slotExtraData   : getExisted(data.getSlotExtraData()),

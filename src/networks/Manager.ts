@@ -2,22 +2,27 @@ import { show } from "../FloatText.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import { newError } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
-import { getErrorText, getText } from "../lang/Utils.ts";
+import {
+    getErrorText,
+    getText,
+} from "../lang/Utils.ts";
 import { log } from "../Logger.ts";
 import { MessageCodes } from "./MessageCodes.ts";
 import { WebsocketConnection } from "./WebsocketConnection.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import {
-    type MessageContainerJson as ProtoSchemaCommonProtoNetMessageMessageContainerMessageContainerJson,
+    type MessageContainerJson as ProtoMessageContainerJson,
     MessageContainer,
 } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 import { MsgMpwCommonHandleBoot } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { ServerErrorCode } from "../utils/ServerErrorCode.ts";
-import { Event, EventDispatcher, ByteArray } from "../vendor/egret/Egret.ts";
-
-type MessageContainerJson   = ProtoSchemaCommonProtoNetMessageMessageContainerMessageContainerJson;
+import {
+    Event,
+    EventDispatcher,
+    ByteArray,
+} from "../vendor/egret/Egret.ts";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
@@ -98,7 +103,7 @@ export function removeListeners(listeners: MsgListener[], thisObject?: unknown):
     }
 }
 
-export function send(containerJson: MessageContainerJson): void {
+export function send(containerJson: ProtoMessageContainerJson): void {
     if (USE_SIGNALR) {
         // const connection = _signalRConnection;
         // if ((!connection) || (connection.state !== signalR.HubConnectionState.Connected)) {
@@ -264,9 +269,9 @@ function _onConnectionData(connection: WebsocketConnection, container: MessageCo
 //     }
 // }
 
-function getMessageName(container: MessageContainerJson): keyof MessageContainerJson {
+function getMessageName(container: ProtoMessageContainerJson): keyof ProtoMessageContainerJson {
     for (const k in container) {
-        return k as keyof MessageContainerJson;
+        return k as keyof ProtoMessageContainerJson;
     }
     throw newError(`Invalid container.`, ClientErrorCode.Helpers_GetMessageName_00);
 }

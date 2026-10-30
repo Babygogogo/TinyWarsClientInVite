@@ -2,8 +2,14 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getComparatorName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -17,9 +23,15 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
+import {
+    ComparatorId,
+    AllComparatorIdArray,
+} from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
+import {
+    getErrorTipForAction,
+    getDetailDescForAction,
+} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
     war         : IMeWar;

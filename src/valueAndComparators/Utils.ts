@@ -2,7 +2,10 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { UndefinedError } from "../lang/Constants.ts";
 import { getComparatorName } from "../lang/Utils.ts";
 import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import { AllComparatorIdArray, ComparatorId } from "./Constants.ts";
+import {
+    AllComparatorIdArray,
+    ComparatorId,
+} from "./Constants.ts";
 
 export function getDesc(data: ValueAndComparator, valueName: string): string {
     const value         = data.getValue();

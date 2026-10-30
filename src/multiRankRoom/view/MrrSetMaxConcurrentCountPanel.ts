@@ -1,10 +1,13 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import {
+    PointerEventType,
+    type PointerUnifiedEventData,
+} from "../../helpers/PointerInput.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
+import { Common as MultiRankedWarsCommon } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -15,7 +18,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-import { getAdditionalMaxDifferenceInScore, getMaxConcurrentCount } from "../model/MrrModel.ts";
+import {
+    getAdditionalMaxDifferenceInScore,
+    getMaxConcurrentCount,
+} from "../model/MrrModel.ts";
 import { reqMrrSetMaxConcurrentCount } from "../model/MrrProxy.ts";
 
 export type OpenData = void;
@@ -84,8 +90,8 @@ export class Panel extends UiPanel<OpenData> {
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._labelStdMaxCount.setText(` / ${MultiRankedWarConstants.MaxConcurrentCount}`);
-        this._labelFogMaxCount.setText(` / ${MultiRankedWarConstants.MaxConcurrentCount}`);
+        this._labelStdMaxCount.setText(` / ${MultiRankedWarsCommon.MaxConcurrentCount}`);
+        this._labelFogMaxCount.setText(` / ${MultiRankedWarsCommon.MaxConcurrentCount}`);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -110,11 +116,11 @@ export class Panel extends UiPanel<OpenData> {
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as PointerUnifiedEventData;
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount)) + MultiRankedWarConstants.MinConcurrentCount;
+        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount)) + MultiRankedWarsCommon.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
         this._updateGroupStd();
 
-        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWarConstants.MaxConcurrentCount - countForStd);
+        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWarsCommon.MaxConcurrentCount - countForStd);
         this._updateGroupFog();
     }
     private _onTouchMoveGroupStd(e: Event): void {
@@ -122,11 +128,11 @@ export class Panel extends UiPanel<OpenData> {
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as PointerUnifiedEventData;
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount)) + MultiRankedWarConstants.MinConcurrentCount;
+        const countForStd           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount)) + MultiRankedWarsCommon.MinConcurrentCount;
         this._selectedCountForStd   = countForStd;
         this._updateGroupStd();
 
-        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWarConstants.MaxConcurrentCount - countForStd);
+        this._selectedCountForFog   = Math.min(this._selectedCountForFog ?? 0, MultiRankedWarsCommon.MaxConcurrentCount - countForStd);
         this._updateGroupFog();
     }
     private _onTouchEndGroupStd(): void {
@@ -146,11 +152,11 @@ export class Panel extends UiPanel<OpenData> {
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as PointerUnifiedEventData;
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount)) + MultiRankedWarConstants.MinConcurrentCount;
+        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount)) + MultiRankedWarsCommon.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;
         this._updateGroupFog();
 
-        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWarConstants.MaxConcurrentCount - countForFog);
+        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWarsCommon.MaxConcurrentCount - countForFog);
         this._updateGroupStd();
     }
     private _onTouchMoveGroupFog(e: Event): void {
@@ -158,11 +164,11 @@ export class Panel extends UiPanel<OpenData> {
         const width                 = group.getUnscaledWidth();
         const data                  = e.data as PointerUnifiedEventData;
         const point                 = group.globalToLocal(data.stageX, data.stageY);
-        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount)) + MultiRankedWarConstants.MinConcurrentCount;
+        const countForFog           = Math.round(Math.max(0, Math.min(point.x, width)) / width * (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount)) + MultiRankedWarsCommon.MinConcurrentCount;
         this._selectedCountForFog   = countForFog;
         this._updateGroupFog();
 
-        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWarConstants.MaxConcurrentCount - countForFog);
+        this._selectedCountForStd   = Math.min(this._selectedCountForStd ?? 0, MultiRankedWarsCommon.MaxConcurrentCount - countForFog);
         this._updateGroupStd();
     }
     private _onTouchEndGroupFog(): void {
@@ -181,8 +187,8 @@ export class Panel extends UiPanel<OpenData> {
         reqMrrSetMaxConcurrentCount({
             maxCountForStd                       : getExisted(this._selectedCountForStd),
             maxCountForFog                       : getExisted(this._selectedCountForFog),
-            additionalMaxDifferenceInScoreForStd : this._imgStdIncreaseOffsetScore.getIsVisible() ? MultiRankedWarConstants.MaxAdditionalOffsetScoreForMatching: 0,
-            additionalMaxDifferenceInScoreForFog : this._imgFogIncreaseOffsetScore.getIsVisible() ? MultiRankedWarConstants.MaxAdditionalOffsetScoreForMatching: 0,
+            additionalMaxDifferenceInScoreForStd : this._imgStdIncreaseOffsetScore.getIsVisible() ? MultiRankedWarsCommon.MaxAdditionalOffsetScoreForMatching: 0,
+            additionalMaxDifferenceInScoreForFog : this._imgFogIncreaseOffsetScore.getIsVisible() ? MultiRankedWarsCommon.MaxAdditionalOffsetScoreForMatching: 0,
         });
 
         this.closePanel();
@@ -225,7 +231,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateGroupStd(): void {
         const count = getExisted(this._selectedCountForStd);
-        const pos   = this._groupStd.getUnscaledWidth() * (count - MultiRankedWarConstants.MinConcurrentCount) / (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount);
+        const pos   = this._groupStd.getUnscaledWidth() * (count - MultiRankedWarsCommon.MinConcurrentCount) / (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount);
         this._imgStdPoint.setX(pos);
         this._imgStdBar.setUnscaledManualWidth(pos);
         this._labelStdCount.setText(`${count}`);
@@ -233,7 +239,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _updateGroupFog(): void {
         const count = getExisted(this._selectedCountForFog);
-        const pos   = this._groupFog.getUnscaledWidth() * (count - MultiRankedWarConstants.MinConcurrentCount) / (MultiRankedWarConstants.MaxConcurrentCount - MultiRankedWarConstants.MinConcurrentCount);
+        const pos   = this._groupFog.getUnscaledWidth() * (count - MultiRankedWarsCommon.MinConcurrentCount) / (MultiRankedWarsCommon.MaxConcurrentCount - MultiRankedWarsCommon.MinConcurrentCount);
         this._imgFogPoint.setX(pos);
         this._imgFogBar.setUnscaledManualWidth(pos);
         this._labelFogCount.setText(`${count}`);

@@ -4,7 +4,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getGameVersionName } from "../../lang/Utils.ts";
+import {
+    getText,
+    getGameVersionName,
+} from "../../lang/Utils.ts";
 import { checkIsRed } from "../../mail/model/MailModel.ts";
 import { checkIsRedForMapManagement } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -15,7 +18,13 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { Common } from "../Constants.ts";
-import { getSelfUserId, getIsSelfAdmin, getIsSelfMapCommittee, getIsSelfAutoTourneyCommittee, getIsSelfCampaignManager } from "../Model.ts";
+import {
+    getSelfUserId,
+    getIsSelfAdmin,
+    getIsSelfMapCommittee,
+    getIsSelfAutoTourneyCommittee,
+    getIsSelfCampaignManager,
+} from "../Model.ts";
 import { reqUserGetPublicInfo } from "../Proxy.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 

@@ -1,14 +1,27 @@
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import type {
+    TextType,
+    LanguageType,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
-import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import {
+    loadSizerOptions,
+    checkAndAddAutoSizerInfo,
+} from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
-import { TextField, HorizontalAlign, VerticalAlign } from "../../vendor/egret/Egret.ts";
+import {
+    TextField,
+    HorizontalAlign,
+    VerticalAlign,
+} from "../../vendor/egret/Egret.ts";
 
 // const textField = new egret.TextField();
 // textField.text;

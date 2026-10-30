@@ -1,12 +1,21 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
 import { Player } from "../results/Player.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
 import type { ITurnManager } from "../../turns/ITurnManager.ts";
 
@@ -49,7 +58,7 @@ export class Turn extends Base {
         return ContextType.Turn;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war = this.getWar();
         switch (identifierName) {
             case Turn.VnPlayerIndex    : return new Num(war, this._turnManager.getPlayerIndexInTurn());
@@ -57,12 +66,12 @@ export class Turn extends Base {
             case Turn.VnPlayer         : return new Player(war.getPlayer(this._turnManager.getPlayerIndexInTurn()));
             case Turn.VnIndex          : return new Num(war, this._turnManager.getTurnIndex());
             case Turn.VnPhase          : return new Num(war, this._turnManager.getPhaseCode());
-            case Turn.VnWar            : return new ExpressionParsersResultsWar(this._turnManager.getWar());
+            case Turn.VnWar            : return new ResultsWar(this._turnManager.getWar());
             default                             : return (this._contextWar ??= new War(this._turnManager.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             default : return (this._contextWar ??= new War(this._turnManager.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }

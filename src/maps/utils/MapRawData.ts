@@ -1,10 +1,13 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
+import { getErrorCode as getMapSmallDialogueErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
 import { Common } from "../Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getLanguageText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
+import {
+    getLanguageText,
+    checkIsValidLanguageTextArray,
+} from "../../lang/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { MapExtraText } from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -17,13 +20,15 @@ import { getErrorCodeForTileCustomNameArray } from "../../tiles/utils/CustomName
 import { checkIsUnitIdCompact } from "../../units/utils/Common.ts";
 import { getErrorCodeForUnitCustomNameArray } from "../../units/utils/CustomName.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { getAllWarEventIdArray, getErrorCodeForWarEventFullData } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    getAllWarEventIdArray,
+    getErrorCodeForWarEventFullData,
+} from "../../warEvents/fullDatas/Utils.ts";
 import { getErrorCodeForTemplateWarRuleArray } from "../../warRules/utils/Template.ts";
 
-type MapRawDataSchema   = MapRawData;
 /** 此函数允许 WarRuleAvailability 全空 */
 export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowRedundantMapSimpleDialogues }: {
-    mapRawData                          : MapRawDataSchema;
+    mapRawData                          : MapRawData;
     allowRedundantWarEvents             : boolean;
     allowRedundantMapSimpleDialogues    : boolean;
 }): Promise<ClientErrorCode> {
@@ -127,7 +132,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
         }
 
         for (const mapSimpleDialogue of mapSimpleDialogueArray) {
-            const errorCode = DialoguesUtilsMapSmallDialogueGetErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
+            const errorCode = getMapSmallDialogueErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
             if (errorCode) {
                 return errorCode;
             }
@@ -190,7 +195,7 @@ function getErrorCodeForMapExtraText(mapExtraText: Undefinable<MapExtraText>): C
 
     return ClientErrorCode.NoError;
 }
-function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawDataSchema): ClientErrorCode {
+function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawData): ClientErrorCode {
     const playersCountUnneutral = mapRawData.getPlayersCountUnneutral();
     if ((playersCountUnneutral == null)                                 ||
         (playersCountUnneutral <= PlayerIndex.First)  ||

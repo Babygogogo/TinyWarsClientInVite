@@ -1,8 +1,18 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { Common, SmallDialogueSideId } from "../Constants.ts";
+import {
+    Common,
+    SmallDialogueSideId,
+} from "../Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    checkIsValidLanguageTextArray,
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { checkIsValidPlayerIndex } from "../../players/utils/Common.ts";
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
@@ -11,9 +21,7 @@ import type { DataForCoDialogue } from "../../proto/schema/CommonProto/Map/MapSi
 import type { DataForDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForDialogue.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type MapSimpleDialogueSchema            = MapSimpleDialogue;
-
-export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode {
+export function getErrorCode(data: MapSimpleDialogue, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode {
     if (data == null) {
         return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_00;
     }
@@ -134,7 +142,7 @@ function getErrorCodeForDataForAside(data: DataForAside): ClientErrorCode {
     return ClientErrorCode.NoError;
 }
 
-export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: GameConfig): string | null {
+export function getDesc(data: Undefinable<MapSimpleDialogue>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     } else {
@@ -160,7 +168,7 @@ export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: 
     }
 }
 
-export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
+export function getErrorTip(data: MapSimpleDialogue, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     const dialoguesArray    = data.getDataArray();
     const dialoguesCount    = dialoguesArray.length;
     if ((dialoguesCount <= 0) || (dialoguesCount > Common.MaxCount)) {

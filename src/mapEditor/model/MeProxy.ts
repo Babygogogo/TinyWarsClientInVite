@@ -8,25 +8,20 @@ import {
     updateOnMsgMeGetMapData,
     updateOnMsgMeDeleteSlot,
 } from "./MeModel.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MeDeleteSlotResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
+import type { S as MeGetAllMapDataTimestampsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
+import type { S as MeGetMapDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
+import type { S as MeGetMapDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
+import type { S as MeGetMapDataTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -46,7 +41,7 @@ export function reqMeGetAllMapDataTimestamps(): void {
     } }, });
 }
 async function _onMsgMeGetAllMapDataTimestamps(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS;
+    const data = e.data as MeGetAllMapDataTimestampsResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgMeGetAllMapDataTimestamps(data);
     } else {
@@ -61,7 +56,7 @@ export function reqMeGetMapDataArray(slotIndexArray: number[]): void {
     } } });
 }
 async function _onMsgMeGetMapDataArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS;
+    const data = e.data as MeGetMapDataArrayResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgMeGetMapDataArray(data);
         dispatch(TypeId.MsgMeGetMapDataArray, data);
@@ -74,7 +69,7 @@ export function reqMeGetMapDataTimestamp(slotIndex: number): void {
     } } });
 }
 async function _onMsgMeGetMapDataTimestamp(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS;
+    const data = e.data as MeGetMapDataTimestampResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgMeGetMapDataTimestamp(data);
         dispatch(TypeId.MsgMeGetMapDataTimestamp, data);
@@ -87,7 +82,7 @@ export function reqMeGetMapData(slotIndex: number): void {
     }, } });
 }
 async function _onMsgMeGetMapData(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS;
+    const data = e.data as MeGetMapDataResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgMeGetMapData(data);
     } else {
@@ -114,7 +109,7 @@ export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNor
     });
 }
 function _onMsgMeSubmitNormalMap(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS;
+    const data = e.data as MeSubmitNormalMapResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgMeSubmitNormalMap, data);
     }
@@ -128,7 +123,7 @@ export function reqMeDeleteSlot(slotIndex: number): void {
     });
 }
 async function _onMsgMeDeleteSlot(e: Event): Promise<void> {
-    const data = e.data as S;
+    const data = e.data as MeDeleteSlotResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgMeDeleteSlot(data);
         dispatch(TypeId.MsgMeDeleteSlot, data);

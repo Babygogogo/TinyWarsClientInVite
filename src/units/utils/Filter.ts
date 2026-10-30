@@ -1,9 +1,9 @@
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
-    checkIsMeet as GridIndexArrayAndPredicatesUtilsCheckIsMeet,
-    getDesc as GridIndexArrayAndPredicatesUtilsGetDesc,
-    checkIsValid as GridIndexArrayAndPredicatesUtilsCheckIsValid,
+    checkIsMeet as checkIsMeetGridIndexArrayAndPredicate,
+    getDesc as getGridIndexArrayAndPredicatesDesc,
+    checkIsValid as checkIsValidGridIndexArrayAndPredicate,
 } from "../../gridIndexArrayAndPredicates/Utils.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
@@ -23,21 +23,25 @@ import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFi
 import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
 import { checkIsValidTypeIdSubset } from "../../unitBuffs/utils/Common.ts";
 import type { IUnit } from "../IUnit.ts";
-import { checkIsValidActionStateIdSubset, checkIsValidTagIdSubset, checkIsValidAiModeIdSubset } from "./Common.ts";
 import {
-    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
-    getDesc as ValueAndComparatorsUtilsGetDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+    checkIsValidActionStateIdSubset,
+    checkIsValidTagIdSubset,
+    checkIsValidAiModeIdSubset,
+} from "./Common.ts";
+import {
+    checkIsMeet as checkIsMeetValueAndComparator,
+    getDesc as getValueAndComparatorsDesc,
+    checkIsValid as checkIsValidValueAndComparator,
 } from "../../valueAndComparators/Utils.ts";
 import {
-    checkIsMeet as ValueArrayAndPredicatesUtilsCheckIsMeet,
-    getDesc as ValueArrayAndPredicatesUtilsGetDesc,
-    checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
+    checkIsMeet as checkIsMeetValueArrayAndPredicate,
+    getDesc as getValueArrayAndPredicatesDesc,
+    checkIsValid as checkIsValidValueArrayAndPredicate,
 } from "../../valueArrayAndPredicates/Utils.ts";
 import {
-    checkIsMeet as ValueSetAndRelationsUtilsCheckIsMeet,
-    getDesc as ValueSetAndRelationsUtilsGetDesc,
-    checkIsValid as ValueSetAndRelationsUtilsCheckIsValid,
+    checkIsMeet as checkIsMeetValueSetAndRelation,
+    getDesc as getValueSetAndRelationsDesc,
+    checkIsValid as checkIsValidValueSetAndRelation,
 } from "../../valueSetAndRelations/Utils.ts";
 
 export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): boolean {
@@ -47,28 +51,28 @@ export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, ma
 export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
     {
         const con = data.getConPlayerIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, unit.getPlayerIndex()))) {
+        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, unit.getPlayerIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTeamIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, unit.getTeamIndex()))) {
+        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, unit.getTeamIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConUnitType();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, unit.getUnitType()))) {
+        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, unit.getUnitType()))) {
             return false;
         }
     }
 
     {
         const con = data.getConActionState();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, unit.getActionState()))) {
+        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, unit.getActionState()))) {
             return false;
         }
     }
@@ -82,14 +86,14 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
 
     {
         const con = data.getConHp();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, unit.getCurrentHp()))) {
+        if ((con != null) && (!checkIsMeetValueAndComparator(con, unit.getCurrentHp()))) {
             return false;
         }
     }
 
     {
         const con = data.getConFuel();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, unit.getCurrentFuel()))) {
+        if ((con != null) && (!checkIsMeetValueAndComparator(con, unit.getCurrentFuel()))) {
             return false;
         }
     }
@@ -101,7 +105,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
             if (ammo == null) {
                 return false;
             }
-            if (!ValueAndComparatorsUtilsCheckIsMeet(con, ammo)) {
+            if (!checkIsMeetValueAndComparator(con, ammo)) {
                 return false;
             }
         }
@@ -109,7 +113,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
 
     {
         const con = data.getConPromotion();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, unit.getCurrentPromotion()))) {
+        if ((con != null) && (!checkIsMeetValueAndComparator(con, unit.getCurrentPromotion()))) {
             return false;
         }
     }
@@ -130,14 +134,14 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
 
     {
         const con = data.getConTagId();
-        if ((con != null) && (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getTagIdArray(true)))) {
+        if ((con != null) && (!checkIsMeetValueSetAndRelation(con, unit.getTagIdArray(true)))) {
             return false;
         }
     }
 
     {
         const con = data.getConLoadedUnitsCount();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsMeet(con, unit.getLoadedUnitsCount()))) {
+        if ((con != null) && (!checkIsMeetValueAndComparator(con, unit.getLoadedUnitsCount()))) {
             return false;
         }
     }
@@ -156,7 +160,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
             if (ammo == null) {
                 return false;
             }
-            if (!ValueAndComparatorsUtilsCheckIsMeet(con, ammo)) {
+            if (!checkIsMeetValueAndComparator(con, ammo)) {
                 return false;
             }
         }
@@ -169,7 +173,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
             if (material == null) {
                 return false;
             }
-            if (!ValueAndComparatorsUtilsCheckIsMeet(con, material)) {
+            if (!checkIsMeetValueAndComparator(con, material)) {
                 return false;
             }
         }
@@ -182,7 +186,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
             if (material == null) {
                 return false;
             }
-            if (!ValueAndComparatorsUtilsCheckIsMeet(con, material)) {
+            if (!checkIsMeetValueAndComparator(con, material)) {
                 return false;
             }
         }
@@ -190,21 +194,21 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
 
     {
         const con = data.getConForbiddenLocationId();
-        if ((con != null) && (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getForbiddenLocationIdArray()))) {
+        if ((con != null) && (!checkIsMeetValueSetAndRelation(con, unit.getForbiddenLocationIdArray()))) {
             return false;
         }
     }
 
     {
         const con = data.getConAiMode();
-        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, unit.getAiMode()))) {
+        if ((con != null) && (!checkIsMeetValueArrayAndPredicate(con, unit.getAiMode()))) {
             return false;
         }
     }
 
     {
         const con = data.getConGridIndex();
-        if ((con != null) && (!GridIndexArrayAndPredicatesUtilsCheckIsMeet(con, unit.getGridIndex()))) {
+        if ((con != null) && (!checkIsMeetGridIndexArrayAndPredicate(con, unit.getGridIndex()))) {
             return false;
         }
     }
@@ -212,7 +216,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
     {
         const con = data.getConLocationId();
         if ((con != null)                                                                                                               &&
-            (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getWar().getTileMap().getTile(unit.getGridIndex()).getLocationIdList(true)))
+            (!checkIsMeetValueSetAndRelation(con, unit.getWar().getTileMap().getTile(unit.getGridIndex()).getLocationIdList(true)))
         ) {
             return false;
         }
@@ -221,7 +225,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsMeet(con, unit.getCustomNameId() ?? 0)) {
+            if (!checkIsMeetValueAndComparator(con, unit.getCustomNameId() ?? 0)) {
                 return false;
             }
         }
@@ -230,7 +234,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null)                                                                                       &&
-            (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getBuffList()?.map(v => v.getBuffTypeId())))
+            (!checkIsMeetValueSetAndRelation(con, unit.getBuffList()?.map(v => v.getBuffTypeId())))
         ) {
             return false;
         }
@@ -271,25 +275,25 @@ export function getDesc(data: UnitFilter, gameConfig: GameConfig): string {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.PlayerIndex), v => `P${v}`));
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(con, getText(TextType.PlayerIndex), v => `P${v}`));
         }
     }
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0019), v => getPlayerTeamName(v)));
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(con, getText(TextType.B0019), v => getPlayerTeamName(v)));
         }
     }
     {
         const con = data.getConUnitType();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0525), v => getUnitName(v, gameConfig)));
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(con, getText(TextType.B0525), v => getUnitName(v, gameConfig)));
         }
     }
     {
         const con = data.getConActionState();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.ActionState), v => getUnitActionStateText(v)));
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(con, getText(TextType.ActionState), v => getUnitActionStateText(v)));
         }
     }
     {
@@ -301,25 +305,25 @@ export function getDesc(data: UnitFilter, gameConfig: GameConfig): string {
     {
         const con = data.getConHp();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.B0934)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.B0934)));
         }
     }
     {
         const con = data.getConFuel();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.Fuel)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.Fuel)));
         }
     }
     {
         const con = data.getConPriAmmo();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.PrimaryWeaponAmmo)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.PrimaryWeaponAmmo)));
         }
     }
     {
         const con = data.getConPromotion();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.Promotion)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.Promotion)));
         }
     }
     {
@@ -337,13 +341,13 @@ export function getDesc(data: UnitFilter, gameConfig: GameConfig): string {
     {
         const con = data.getConTagId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.Tags), v => `${v}`));
+            textArrayForSubConditions.push(getValueSetAndRelationsDesc(con, getText(TextType.Tags), v => `${v}`));
         }
     }
     {
         const con = data.getConLoadedUnitsCount();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.B0698)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.B0698)));
         }
     }
     {
@@ -355,55 +359,55 @@ export function getDesc(data: UnitFilter, gameConfig: GameConfig): string {
     {
         const con = data.getConFlareAmmo();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.FlareAmmo)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.FlareAmmo)));
         }
     }
     {
         const con = data.getConBuildMaterial();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.BuildMaterial)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.BuildMaterial)));
         }
     }
     {
         const con = data.getConProduceMaterial();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.ProductionMaterial)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.ProductionMaterial)));
         }
     }
     {
         const con = data.getConForbiddenLocationId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.NoEntryLocations), v => `${v}`));
+            textArrayForSubConditions.push(getValueSetAndRelationsDesc(con, getText(TextType.NoEntryLocations), v => `${v}`));
         }
     }
     {
         const con = data.getConAiMode();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.AiMode), v => getUnitAiModeName(v)));
+            textArrayForSubConditions.push(getValueArrayAndPredicatesDesc(con, getText(TextType.AiMode), v => getUnitAiModeName(v)));
         }
     }
     {
         const con = data.getConGridIndex();
         if (con != null) {
-            textArrayForSubConditions.push(GridIndexArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0531)));
+            textArrayForSubConditions.push(getGridIndexArrayAndPredicatesDesc(con, getText(TextType.B0531)));
         }
     }
     {
         const con = data.getConLocationId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.Location), v => `${v}`));
+            textArrayForSubConditions.push(getValueSetAndRelationsDesc(con, getText(TextType.Location), v => `${v}`));
         }
     }
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.CustomNameId)));
+            textArrayForSubConditions.push(getValueAndComparatorsDesc(con, getText(TextType.CustomNameId)));
         }
     }
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.AbnormalStateTypeId), v => getUnitBuffName(v)));
+            textArrayForSubConditions.push(getValueSetAndRelationsDesc(con, getText(TextType.AbnormalStateTypeId), v => getUnitBuffName(v)));
         }
     }
 
@@ -458,7 +462,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                               ||
+            if ((!checkIsValidValueArrayAndPredicate(con))                                               ||
                 (!checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
@@ -469,7 +473,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                                   ||
+            if ((!checkIsValidValueArrayAndPredicate(con))                                                   ||
                 (!checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0019));
@@ -480,7 +484,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConUnitType();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                   ||
+            if ((!checkIsValidValueArrayAndPredicate(con))                   ||
                 (!gameConfig.checkIsValidUnitTypeSubset(con.getValueArray()))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0525));
@@ -491,7 +495,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConActionState();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                               ||
+            if ((!checkIsValidValueArrayAndPredicate(con))                               ||
                 (!checkIsValidActionStateIdSubset(con.getValueArray()))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.ActionState));
@@ -507,7 +511,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConHp();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueAndComparator(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0934));
             }
         }
@@ -516,7 +520,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConFuel();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueAndComparator(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.Fuel));
             }
         }
@@ -525,7 +529,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConPriAmmo();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueAndComparator(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.PrimaryWeaponAmmo));
             }
         }
@@ -534,7 +538,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConPromotion();
         if (con != null) {
-            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueAndComparator(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.Promotion));
             }
         }
@@ -553,7 +557,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConTagId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueSetAndRelation(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.Tags));
             }
             if (!checkIsValidTagIdSubset(con.getValueArray())) {
@@ -564,7 +568,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
 
     {
         const con = data.getConLoadedUnitsCount();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+        if ((con != null) && (!checkIsValidValueAndComparator(con))) {
             return getFormattedText(TextType.F0091, getText(TextType.B0698));
         }
     }
@@ -576,21 +580,21 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
 
     {
         const con = data.getConFlareAmmo();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+        if ((con != null) && (!checkIsValidValueAndComparator(con))) {
             return getFormattedText(TextType.F0091, getText(TextType.FlareAmmo));
         }
     }
 
     {
         const con = data.getConBuildMaterial();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+        if ((con != null) && (!checkIsValidValueAndComparator(con))) {
             return getFormattedText(TextType.F0091, getText(TextType.BuildMaterial));
         }
     }
 
     {
         const con = data.getConProduceMaterial();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+        if ((con != null) && (!checkIsValidValueAndComparator(con))) {
             return getFormattedText(TextType.F0091, getText(TextType.ProductionMaterial));
         }
     }
@@ -598,7 +602,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConForbiddenLocationId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueSetAndRelation(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.NoEntryLocations));
             }
             if (!checkIsValidLocationIdSubset(con.getValueArray())) {
@@ -610,7 +614,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConAiMode();
         if (con != null) {
-            if (!ValueArrayAndPredicatesUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueArrayAndPredicate(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.AiMode));
             }
             if (!checkIsValidAiModeIdSubset(con.getValueArray())) {
@@ -622,7 +626,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConGridIndex();
         if (con != null) {
-            if (!GridIndexArrayAndPredicatesUtilsCheckIsValid(con, mapSize)) {
+            if (!checkIsValidGridIndexArrayAndPredicate(con, mapSize)) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0531));
             }
         }
@@ -631,7 +635,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConLocationId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueSetAndRelation(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.Location));
             }
             if (!checkIsValidLocationIdSubset(con.getValueArray())) {
@@ -642,7 +646,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
 
     {
         const con = data.getConCustomNameId();
-        if ((con != null) && (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+        if ((con != null) && (!checkIsValidValueAndComparator(con))) {
             return getFormattedText(TextType.F0091, getText(TextType.CustomNameId));
         }
     }
@@ -650,7 +654,7 @@ export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, map
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+            if (!checkIsValidValueSetAndRelation(con)) {
                 return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
             }
             if (!checkIsValidTypeIdSubset(con.getValueArray())) {

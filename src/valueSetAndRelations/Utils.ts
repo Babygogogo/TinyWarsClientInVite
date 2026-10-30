@@ -1,8 +1,14 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { UndefinedError, TextType } from "../lang/Constants.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../lang/Constants.ts";
 import { getFormattedText } from "../lang/Utils.ts";
 import type { ValueSetAndRelation } from "../proto/schema/CommonProto/Structure/ValueSetAndRelation.ts";
-import { AllSetRelationIdArray, SetRelationId } from "./Constants.ts";
+import {
+    AllSetRelationIdArray,
+    SetRelationId,
+} from "./Constants.ts";
 
 export function checkIsValidSetRelation(setRelation: Undefinable<number>): boolean {
     return (setRelation != null) && (AllSetRelationIdArray.includes(setRelation));

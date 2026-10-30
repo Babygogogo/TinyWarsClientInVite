@@ -1,4 +1,7 @@
-import { ContextType, ResultType } from "./Enums.ts";
+import {
+    ContextType,
+    ResultType,
+} from "./Enums.ts";
 import type { Base } from "./nodes/Base.ts";
 import type { TextType } from "../lang/Constants.ts";
 

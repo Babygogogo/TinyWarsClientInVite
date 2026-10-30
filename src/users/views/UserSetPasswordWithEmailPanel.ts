@@ -1,9 +1,15 @@
-import { Common } from "../../emails/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import { Common as EmailsCommon } from "../../emails/Constants.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
+import type { S as UserRequestPasswordVerificationCodeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -13,8 +19,11 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
-import { Common as UsersConstantsCommon } from "../Constants.ts";
-import { reqUserRequestPasswordVerificationCode, reqUserResetPasswordWithEmail } from "../Proxy.ts";
+import { Common as ConstantsCommon } from "../Constants.ts";
+import {
+    reqUserRequestPasswordVerificationCode,
+    reqUserResetPasswordWithEmail,
+} from "../Proxy.ts";
 import { checkIsAccountValid } from "../Utils.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
@@ -69,10 +78,10 @@ export class Panel extends UiPanel<OpenData> {
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._inputAccount.setInputMaxLength(UsersConstantsCommon.AccountMaxLength);
-        this._inputPassword0.setInputMaxLength(UsersConstantsCommon.RawPasswordMaxLength);
-        this._inputPassword1.setInputMaxLength(UsersConstantsCommon.RawPasswordMaxLength);
-        this._inputVerificationCode.setInputMaxLength(Common.VerificationCodeLength);
+        this._inputAccount.setInputMaxLength(ConstantsCommon.AccountMaxLength);
+        this._inputPassword0.setInputMaxLength(ConstantsCommon.RawPasswordMaxLength);
+        this._inputPassword1.setInputMaxLength(ConstantsCommon.RawPasswordMaxLength);
+        this._inputVerificationCode.setInputMaxLength(EmailsCommon.VerificationCodeLength);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -83,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyMsgUserRequestPasswordVerificationCode(e: Event): void {
         showLang(TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as S).getEndTimestamp() ?? 0) - Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = ((e.data as UserRequestPasswordVerificationCodeResponse).getEndTimestamp() ?? 0) - EmailsCommon.VerificationCodeExpiration;
     }
     private _onNotifyMsgUserRequestPasswordVerificationCodeFailed(): void {
         // nothing to do
@@ -108,7 +117,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const cd = Common.VerificationCodeRefreshInterval - (getServerTimestamp() - _lastRequestTimestamp);
+        const cd = EmailsCommon.VerificationCodeRefreshInterval - (getServerTimestamp() - _lastRequestTimestamp);
         if (cd >= 0) {
             show(getFormattedText(TextType.F0204, cd));
         } else {
@@ -131,7 +140,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _onTouchedBtnReset(): void {
         const verificationCode = this._inputVerificationCode.getInputText()?.trim() ?? ``;
-        if (verificationCode.length !== Common.VerificationCodeLength) {
+        if (verificationCode.length !== EmailsCommon.VerificationCodeLength) {
             show(getFormattedText(TextType.F0091, getText(TextType.B1334)));
             return;
         }

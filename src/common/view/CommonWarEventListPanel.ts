@@ -4,8 +4,16 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText, getTextForYesOrNo, getWarEventConditionNodeDesc } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+    getTextForYesOrNo,
+    getWarEventConditionNodeDesc,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
@@ -19,8 +27,14 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getDetailDescForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
-import { getDetailedDescForCondition, getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import {
+    getDetailDescForAction,
+    getBriefDescForAction,
+} from "../../warEvents/actions/utils/Common.ts";
+import {
+    getDetailedDescForCondition,
+    getBriefDescForCondition,
+} from "../../warEvents/conditions/utils/Common.ts";
 import { DescType } from "../../warEvents/Constants.ts";
 
 let _isShowDetail           = false;

@@ -13,23 +13,25 @@ import { ReviewStatus } from "../../maps/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
-import type { S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
+import type { S as MeDeleteSlotResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
+import type { S as MeGetAllMapDataTimestampsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
+import type { S as MeGetMapDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
+import type { S as MeGetMapDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
+import type { S as MeGetMapDataTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { getIsSelfMapCommittee, getSelfNickname, getSelfUserId } from "../../users/Model.ts";
+import {
+    getIsSelfMapCommittee,
+    getSelfNickname,
+    getSelfUserId,
+} from "../../users/Model.ts";
 import type { IMeWar } from "../interface/IMeWar.ts";
 import { createDefaultMapRawData } from "./MeHelpers.ts";
-import { reqMeGetAllMapDataTimestamps, reqMeGetMapData, reqMeGetMapDataArray } from "./MeProxy.ts";
+import {
+    reqMeGetAllMapDataTimestamps,
+    reqMeGetMapData,
+    reqMeGetMapDataArray,
+} from "./MeProxy.ts";
 
 const _allDataTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number | null>>({
     reqData : () => reqMeGetAllMapDataTimestamps(),
@@ -84,7 +86,7 @@ async function setMapEditorData(slotIndex: number, data: DecodedMapEditorData | 
     }
 }
 
-export async function updateOnMsgMeGetAllMapDataTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS): Promise<void> {
+export async function updateOnMsgMeGetAllMapDataTimestamps(data: MeGetAllMapDataTimestampsResponse): Promise<void> {
     const selfUserId            = getSelfUserId();
     const existingDataDict      = selfUserId == null ? null : await StoreMeFullData.getAllDataDictForKey1(selfUserId);
     const infoArray             = data.getInfoArray();
@@ -110,11 +112,11 @@ export async function updateOnMsgMeGetAllMapDataTimestamps(data: ProtoSchemaComm
     setAllDataTimestamps(resultDict);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateOnFailedMsgMeGetAllMapDataTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS): void {
+export function updateOnFailedMsgMeGetAllMapDataTimestamps(data: MeGetAllMapDataTimestampsResponse): void {
     _allDataTimestampsAccessor.updateOnRequestFailed(null);
 }
 
-export async function updateOnMsgMeGetMapDataArray(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS): Promise<void> {
+export async function updateOnMsgMeGetMapDataArray(data: MeGetMapDataArrayResponse): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const d of data.getDataArray()) {
         promiseArray.push(setMapEditorData(d.getSlotIndex(), await convertMapEditorData(d)));
@@ -124,21 +126,21 @@ export async function updateOnMsgMeGetMapDataArray(data: ProtoSchemaCommonProtoN
     _dataArrayAccessor.setData(null, true);
 }
 
-export async function updateOnMsgMeGetMapDataTimestamp(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS): Promise<void> {
+export async function updateOnMsgMeGetMapDataTimestamp(data: MeGetMapDataTimestampResponse): Promise<void> {
     (await getAllDataTimestamps())?.set(data.getSlotIndex() ?? 0, data.getDataTimestamp() ?? null);
 }
 
-export async function updateOnMsgMeGetMapData(msg: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS): Promise<void> {
+export async function updateOnMsgMeGetMapData(msg: MeGetMapDataResponse): Promise<void> {
     await setMapEditorData(msg.getSlotIndex() ?? 0, await convertMapEditorData(msg.getData() ?? null));
 }
-export function updateOnFailedMsgMeGetMapData(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS): void {
+export function updateOnFailedMsgMeGetMapData(data: MeGetMapDataResponse): void {
     const slotIndex = data.getSlotIndex();
     if (slotIndex != null) {
         _mapEditorDataAccessor.updateOnRequestFailed(slotIndex);
     }
 }
 
-export async function updateOnMsgMeDeleteSlot(data: S): Promise<void> {
+export async function updateOnMsgMeDeleteSlot(data: MeDeleteSlotResponse): Promise<void> {
     const slotIndex = data.getSlotIndex() ?? 0;
     (await getAllDataTimestamps())?.delete(slotIndex);
     return setMapEditorData(slotIndex, null);   // 会导致地图删除再创建时，仍会错误显示no data；正确做法是直接删掉缓存的key，但是担心引起各种异步问题，所以暂时不搞

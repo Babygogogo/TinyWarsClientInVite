@@ -3,7 +3,10 @@ import type { IBwGridVisualEffect } from "../interface/IBwGridVisualEffect.ts";
 import type { IBwGridVisualEffectView } from "../interface/IBwGridVisualEffectView.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { getBwGridVisualEffectViewClass } from "../../gameHelpers/GhFactory.ts";
-import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../../notifications/Dispatcher.ts";
 import type { Listener } from "../../notifications/Types.ts";
 
 export class BwGridVisualEffect implements IBwGridVisualEffect {

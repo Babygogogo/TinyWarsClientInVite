@@ -2,7 +2,10 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { show } from "../FloatText.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
 import { getText } from "../lang/Utils.ts";
 import {
@@ -19,16 +22,33 @@ import {
     getSoundEffectVolume,
     setSoundEffectVolume,
 } from "../localData/Storage.ts";
-import { error, log } from "../Logger.ts";
-import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
+import {
+    error,
+    log,
+} from "../Logger.ts";
+import {
+    addEventListeners,
+    dispatch,
+} from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
-import { ShortSfxCode, BgmSfxCode, SoundTypeId } from "./Constants.ts";
+import {
+    ShortSfxCode,
+    BgmSfxCode,
+    SoundTypeId,
+} from "./Constants.ts";
 import type { BgmSfxCfg } from "./Types.ts";
 import { getBgmSfxCfg } from "./Utils.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import { Capabilities, clearTimeout, setTimeout } from "../vendor/egret/Egret.ts";
-import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
+import {
+    Capabilities,
+    clearTimeout,
+    setTimeout,
+} from "../vendor/egret/Egret.ts";
+import {
+    getResByUrl,
+    ResourceItemHelper,
+} from "../vendor/egret/Res.ts";
 
 export const DEFAULT_MUTE   = false;
 export const DEFAULT_VOLUME = 1;

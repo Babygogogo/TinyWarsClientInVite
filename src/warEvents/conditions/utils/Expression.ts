@@ -1,11 +1,21 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { War } from "../../../expressionParsers/contexts/War.ts";
-import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import {
+    ContextType,
+    ResultType,
+} from "../../../expressionParsers/Enums.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getText, getFormattedText, getErrorText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getErrorText,
+} from "../../../lang/Utils.ts";
 import type { WecExpression } from "../../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
 import { Event } from "../../Constants.ts";
 

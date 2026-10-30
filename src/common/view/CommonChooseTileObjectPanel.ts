@@ -2,8 +2,14 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileObjectName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileObjectName,
+} from "../../lang/Utils.ts";
 import type { DataForDrawTileObject } from "../../mapEditor/model/MeTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";

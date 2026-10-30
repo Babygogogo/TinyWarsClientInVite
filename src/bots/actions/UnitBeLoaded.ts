@@ -3,16 +3,16 @@ import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
 import { IsNeedVisibility } from "../Utils.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitBeLoaded(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitBeLoaded(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
@@ -39,7 +39,7 @@ export async function getScoreAndActionUnitBeLoaded(commonParams: CommonParams, 
     };
 }
 
-async function getScoreForActionUnitBeLoaded(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex): Promise<number> {
+async function getScoreForActionUnitBeLoaded(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex): Promise<number> {
     await checkAndCallLater();
 
     const war       = commonParams.getWar();

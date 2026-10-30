@@ -1,12 +1,18 @@
 import { Common } from "../../emails/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
+import type { S as UserRequestEmailVerificationCodeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -17,7 +23,10 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
 import { getSelfInfo } from "../Model.ts";
-import { reqUserRequestEmailVerificationCode, reqUserVerifyEmail } from "../Proxy.ts";
+import {
+    reqUserRequestEmailVerificationCode,
+    reqUserVerifyEmail,
+} from "../Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 let _lastRequestTimestamp = 0;
@@ -79,7 +88,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyMsgUserRequestEmailVerificationCode(e: Event): void {
         showLang(TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as S).getEndTimestamp() ?? 0) - Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = ((e.data as UserRequestEmailVerificationCodeResponse).getEndTimestamp() ?? 0) - Common.VerificationCodeExpiration;
         this._updateLabelEmailState();
     }
     private _onNotifyMsgUserRequestEmailVerificationCodeFailed(): void {

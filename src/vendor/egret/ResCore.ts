@@ -12,7 +12,11 @@ import {
     type IEventDispatcher,
     Texture,
 } from "./EgretCore";
-import { basename, normalize, dirname } from "./Path";
+import {
+    basename,
+    normalize,
+    dirname,
+} from "./Path";
 import { tr } from "./SysCore";
 
 export type ResourceCallback<T = unknown> = (this: unknown, data: T | null, key: string) => void;

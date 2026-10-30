@@ -5,8 +5,14 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,
@@ -35,11 +41,23 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { AllBuffTypeIdArray } from "../../unitBuffs/Constants.ts";
-import { AllActionStateIdArray, AllTagIdArray, CustomName, AllAiModeIdArray } from "../../units/Constants.ts";
-import { checkIsEmpty, getErrorTip, getDesc } from "../../units/utils/Filter.ts";
+import {
+    AllActionStateIdArray,
+    AllTagIdArray,
+    CustomName,
+    AllAiModeIdArray,
+} from "../../units/Constants.ts";
+import {
+    checkIsEmpty,
+    getErrorTip,
+    getDesc,
+} from "../../units/utils/Filter.ts";
 import { AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { SetRelationId, AllSetRelationIdArray } from "../../valueSetAndRelations/Constants.ts";
+import {
+    SetRelationId,
+    AllSetRelationIdArray,
+} from "../../valueSetAndRelations/Constants.ts";
 
 export interface OpenData {
     gameConfig              : GameConfig;

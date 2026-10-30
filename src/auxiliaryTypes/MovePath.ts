@@ -1,6 +1,6 @@
 import { GridIndex } from "./GridIndex.ts";
 import { getExisted } from "../helpers/Misc.ts";
-import { MovePath as ProtoSchemaCommonProtoStructureMovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
+import { MovePath as ProtoMovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 
 export class MovePath {
     public nodes            : GridIndex[];
@@ -13,7 +13,7 @@ export class MovePath {
         this.isBlocked          = isBlocked;
     }
 
-    public static create(movePath: ProtoSchemaCommonProtoStructureMovePath): MovePath {
+    public static create(movePath: ProtoMovePath): MovePath {
         const nodes: GridIndex[] = [];
         for (const node of movePath.getNodes()) {
             nodes.push(getExisted(GridIndex.convertGridIndex(node)));
@@ -22,8 +22,8 @@ export class MovePath {
         return new MovePath(nodes, movePath.getFuelConsumption(), !!movePath.getIsBlocked());
     }
 
-    public toProto(): ProtoSchemaCommonProtoStructureMovePath {
-        return ProtoSchemaCommonProtoStructureMovePath.fromJson({
+    public toProto(): ProtoMovePath {
+        return ProtoMovePath.fromJson({
             nodes           : this.nodes.map(v => v.toProto().toJson()),
             isBlocked       : this.isBlocked,
             fuelConsumption : this.fuelConsumption,

@@ -4,22 +4,46 @@ import { checkHasUnreadMessage } from "../../chat/Model.ts";
 import { getCachedUnitImageSource } from "../../common/model/CommonModel.ts";
 import { EnergyTypeId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getFinalSkinId } from "../../forceSkins/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName } from "../../lang/Utils.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    getCoEyeBackground,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerTeamName,
+} from "../../lang/Utils.ts";
 import { getReplayPauseTime } from "../../localData/Storage.ts";
 import type { BwCursorTapped } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../players/Constants.ts";
 import type { IRwWar } from "../interface/IRwWar.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
-import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
+import {
+    playCoBgmWithWar,
+    playShortSfx,
+} from "../../sounds/SoundPlayer.ts";
 import { getStage } from "../../stages/StageManager.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -31,8 +55,15 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { UnitTypeId, AnimationTypeId } from "../../units/Constants.ts";
-import { getSelfSettingsCoBgmCodeArray, getSelfSettingsTextureVersion, getUserNickname } from "../../users/Model.ts";
+import {
+    UnitTypeId,
+    AnimationTypeId,
+} from "../../units/Constants.ts";
+import {
+    getSelfSettingsCoBgmCodeArray,
+    getSelfSettingsTextureVersion,
+    getUserNickname,
+} from "../../users/Model.ts";
 
 export interface OpenData {
     war : IRwWar;

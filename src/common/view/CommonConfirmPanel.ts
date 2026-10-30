@@ -1,4 +1,7 @@
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";

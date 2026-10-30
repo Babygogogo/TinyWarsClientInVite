@@ -1,14 +1,29 @@
-import type { UiListener, Point } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    UiListener,
+    Point,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import type { IBwWarView } from "../interface/IBwWarView.ts";
-import { getRwWarBaseClass, getMeWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getRwWarBaseClass,
+    getMeWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { UndefinedError } from "../../lang/Constants.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
-import type { BwFieldZoomedByTouch, BwFieldDragged } from "../../notifications/DataTypes.ts";
-import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import type {
+    BwFieldZoomedByTouch,
+    BwFieldDragged,
+} from "../../notifications/DataTypes.ts";
+import {
+    addEventListeners,
+    removeEventListeners,
+} from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
@@ -18,9 +33,17 @@ import type { IUiComponent } from "../../ui/interfaces/IUiComponent.ts";
 import type { IUiZoomableComponent } from "../../ui/interfaces/IUiZoomableComponent.ts";
 import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
-import { getUiZoomableComponentClass, getUiContainerClass, getUiLabelClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiZoomableComponentClass,
+    getUiContainerClass,
+    getUiLabelClass,
+} from "../../ui/utils/UiFactory.ts";
 import { getSelfSettingsIsScreenVibrationEnabled } from "../../users/Model.ts";
-import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
+import {
+    Event,
+    setTimeout,
+    clearTimeout,
+} from "../../vendor/egret/Egret.ts";
 
 const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

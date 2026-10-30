@@ -1,4 +1,7 @@
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";

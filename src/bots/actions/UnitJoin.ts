@@ -9,10 +9,7 @@ import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
@@ -39,7 +36,7 @@ export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit
     };
 }
 
-async function getScoreForActionUnitJoin(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex): Promise<number> {
+async function getScoreForActionUnitJoin(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex): Promise<number> {
     await checkAndCallLater();
 
     const war           = commonParams.getWar();

@@ -2,11 +2,18 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getComparatorName,
+    getText,
+} from "../../../lang/Utils.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecEventCalledCount } from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
+import {
+    checkIsValidValueComparatorId,
+    checkIsMeet1,
+} from "../../../valueAndComparators/Utils.ts";
 
 export function getBriefDesc(data: Undefinable<WecEventCalledCount>): string | null {
     if (data == null) {

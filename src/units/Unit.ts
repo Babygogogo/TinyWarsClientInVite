@@ -1,41 +1,56 @@
 import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    RepairHpAndCost,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
 import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
 import { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { CoId, EnergyTypeId } from "../cos/Constants.ts";
+import {
+    CoId,
+    EnergyTypeId,
+} from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
-import { checkCanCoBoard } from "../coSkills/utils/persistent/SelfCanCoBoard.ts";
+import { checkCanCoBoard as checkCanCoBoardWithSkill } from "../coSkills/utils/persistent/SelfCanCoBoard.ts";
 import { getTotalUpperOffset } from "../coSkills/utils/persistent/SelfUnitAttackRange.ts";
-import { getTotalOffsetPct } from "../coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
+import { getTotalOffsetPct as getCoSkillCaptureOffsetPct } from "../coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
+import { getTotalDefensePercentOffset as getCoSkillDefensePercentOffset } from "../coSkills/utils/persistent/SelfUnitDefense.ts";
+import { getTotalOffset as getCoSkillFuelConsumptionOffset } from "../coSkills/utils/persistent/SelfUnitFuelConsumption.ts";
+import { getTotalOffset as getCoSkillLuckRangeOffset } from "../coSkills/utils/persistent/SelfUnitLuckRange.ts";
+import { getTotalOffset as getCoSkillMoveRangeOffset } from "../coSkills/utils/persistent/SelfUnitMoveRange.ts";
+import { getTotalOffsetPct as getCoSkillOffenseOffsetPct } from "../coSkills/utils/persistent/SelfUnitOffense.ts";
 import {
-    getTotalDefensePercentOffset as CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct,
-} from "../coSkills/utils/persistent/SelfUnitDefense.ts";
-import { getTotalOffset } from "../coSkills/utils/persistent/SelfUnitFuelConsumption.ts";
-import {
-    getTotalOffset as CoSkillsUtilsPersistentSelfUnitLuckRangeGetTotalOffset,
-} from "../coSkills/utils/persistent/SelfUnitLuckRange.ts";
-import {
-    getTotalOffset as CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset,
-} from "../coSkills/utils/persistent/SelfUnitMoveRange.ts";
-import {
-    getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct,
-} from "../coSkills/utils/persistent/SelfUnitOffense.ts";
-import { getTotalRangeOffset, checkCanSeeThrough } from "../coSkills/utils/persistent/SelfUnitVision.ts";
+    getTotalRangeOffset,
+    checkCanSeeThrough,
+} from "../coSkills/utils/persistent/SelfUnitVision.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
-import { getUnitViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
+import {
+    getUnitViewClass,
+    getUnitClass,
+} from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";
-import { newError, getExisted, createLazyFunc, createLazyFunc2 } from "../helpers/Misc.ts";
-import { getCurrentLanguageType, getLanguageText } from "../lang/Utils.ts";
+import {
+    newError,
+    getExisted,
+    createLazyFunc,
+    createLazyFunc2,
+} from "../helpers/Misc.ts";
+import {
+    getCurrentLanguageType,
+    getLanguageText,
+} from "../lang/Utils.ts";
 import { decode } from "../locations/Utils.ts";
 import type { BwUnitBuffChanged } from "../notifications/DataTypes.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { MaxInt32 } from "../numbers/Constants.ts";
-import { getValueInRange, getValueInInt32 } from "../numbers/Utils.ts";
+import {
+    getValueInRange,
+    getValueInInt32,
+} from "../numbers/Utils.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { DamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
@@ -45,10 +60,19 @@ import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import type { ITile } from "../tiles/ITile.ts";
-import { checkCanCoBoard as TilesUtilsCommonCheckCanCoBoard } from "../tiles/utils/Common.ts";
+import { checkCanCoBoard as checkCanCoBoardOnTile } from "../tiles/utils/Common.ts";
 import { BuffTypeId } from "../unitBuffs/Constants.ts";
-import { checkIsValid, checkIsExpired } from "../unitBuffs/utils/Common.ts";
-import { ActionStateId, WeaponTypeId, Hp, TagId, AiModeId } from "./Constants.ts";
+import {
+    checkIsValid,
+    checkIsExpired,
+} from "../unitBuffs/utils/Common.ts";
+import {
+    ActionStateId,
+    WeaponTypeId,
+    Hp,
+    TagId,
+    AiModeId,
+} from "./Constants.ts";
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitView } from "./IUnitView.ts";
 import {
@@ -62,11 +86,12 @@ import {
     checkIsValidAiModeId,
 } from "./utils/Common.ts";
 import { checkIsValidCustomNameId } from "./utils/CustomName.ts";
-import { getErrorCodeForUnitDataIgnoringUnitId, create } from "./utils/Serialization.ts";
+import {
+    getErrorCodeForUnitDataIgnoringUnitId,
+    create,
+} from "./utils/Serialization.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { toGridIndexAndWeight } from "../weightedGridIndexes/Utils.ts";
-
-type IBwTile                = ITile;
 
 export class Unit implements IUnit {
     private _gameConfig?                        : GameConfig;
@@ -465,7 +490,7 @@ export class Unit implements IUnit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct({
+            modifier += getCoSkillOffenseOffsetPct({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : unitTypeId,
@@ -629,7 +654,7 @@ export class Unit implements IUnit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct({
+            modifier += getCoSkillDefensePercentOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId1              : attackerUnitTypeId,
@@ -730,7 +755,7 @@ export class Unit implements IUnit {
         let lowerModifier               = 0;
         let upperModifier               = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            const offset = CoSkillsUtilsPersistentSelfUnitLuckRangeGetTotalOffset({
+            const offset = getCoSkillLuckRangeOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitType,
@@ -980,7 +1005,7 @@ export class Unit implements IUnit {
     public checkIsCapturer(): boolean {
         return !!this.getTemplateCfg()?.getCanCaptureTile();
     }
-    public checkCanCaptureTile(tile: IBwTile): boolean {
+    public checkCanCaptureTile(tile: ITile): boolean {
         return (this.checkIsCapturer())
             && (this.getTeamIndex() !== tile.getTeamIndex())
             && (tile.getMaxCapturePoint() != null);
@@ -1004,7 +1029,7 @@ export class Unit implements IUnit {
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += getTotalOffsetPct({
+            modifier += getCoSkillCaptureOffsetPct({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCaptureAmount(),
                 unitTypeId               : selfUnitTypeId,
                 gridIndex                : selfGridIndex,
@@ -1123,7 +1148,7 @@ export class Unit implements IUnit {
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += getTotalOffset({
+            modifier += getCoSkillFuelConsumptionOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitFuelConsumption(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
@@ -1357,7 +1382,7 @@ export class Unit implements IUnit {
         const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset({
+            modifier += getCoSkillMoveRangeOffset({
                 cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
@@ -1470,7 +1495,7 @@ export class Unit implements IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for launch silo.
     ////////////////////////////////////////////////////////////////////////////////
-    public checkCanLaunchSiloOnTile(tile: IBwTile): boolean {
+    public checkCanLaunchSiloOnTile(tile: ITile): boolean {
         const launchSiloParams = tile.getTemplateCfg().getLaunchSiloParams();
         return (!!launchSiloParams?.length)
             && (this.getGcData().checkIsUnitTypeInCategory(this.getUnitType(), launchSiloParams[0]));
@@ -1492,7 +1517,7 @@ export class Unit implements IUnit {
     public checkIsTileBuilder(): boolean {
         return this._getBuildableTileCfg() != null;
     }
-    public checkCanBuildOnTile(tile: IBwTile): boolean {
+    public checkCanBuildOnTile(tile: ITile): boolean {
         const tileObjectType = tile.getObjectType();
         if (tileObjectType == null) {
             throw newError(`IUnit.checkCanBuildOnTile() tileObjectType is empty.`);
@@ -1954,7 +1979,7 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCanCoBoard();
                 if (cfg != null) {
-                    const canCoBoard = checkCanCoBoard({
+                    const canCoBoard = checkCanCoBoardWithSkill({
                         cfg        : cfg,
                         gameConfig : gameConfig,
                         unitTypeId : unitTypeId,
@@ -1972,7 +1997,7 @@ export class Unit implements IUnit {
             return false;
         }
 
-        return TilesUtilsCommonCheckCanCoBoard({
+        return checkCanCoBoardOnTile({
             gameConfig         : gameConfig,
             templateCfg        : tile.getTemplateCfg(),
             customBuildingData : tile.getCustomBuildingData(),

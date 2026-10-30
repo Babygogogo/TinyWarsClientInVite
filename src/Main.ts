@@ -1,7 +1,11 @@
 
-import loadingIcon from './assets/resource/assets/texture/index/loadingIcon.png'
-import { DisplayObjectContainer, Event, runEgret } from './vendor/egret/Egret.ts';
-import { startGame } from './helpers/GameFlow.ts'
+import loadingIcon from './assets/resource/assets/texture/index/loadingIcon.png';
+import {
+    DisplayObjectContainer,
+    Event,
+    runEgret,
+} from './vendor/egret/Egret.ts';
+import { startGame } from './helpers/GameFlow.ts';
 
 class Main extends DisplayObjectContainer {
     public constructor() {
@@ -44,5 +48,5 @@ runEgret({
             context.backingStorePixelRatio || 1;
 
         return (window.devicePixelRatio || 1) / backingStore;
-    }
+    },
 });

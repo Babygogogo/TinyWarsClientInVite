@@ -1,10 +1,13 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import { Lambda } from "../nodes/Lambda.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import { Lambda as NodesLambda } from "../nodes/Lambda.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Lambda as ResultsLambda } from "../results/Lambda.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { NullableUnitArray } from "../results/NullableUnitArray.ts";
 import { Num } from "../results/Num.ts";
@@ -18,8 +21,11 @@ import { TileArray } from "../results/TileArray.ts";
 import { TileBuff } from "../results/TileBuff.ts";
 import { TileBuffArray } from "../results/TileBuffArray.ts";
 import { UnitStatistic } from "../results/UnitStatistic.ts";
-import { UnitStatisticArray as ExpressionParsersResultsUnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import { UnitStatisticArray as ResultsUnitStatisticArray } from "../results/UnitStatisticArray.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
 import {
     extendVariableInfoDict,
     extendFunctionInfoDict,
@@ -79,7 +85,7 @@ export class UnitStatisticArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(UnitStatisticArray.FnWhere, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_02
@@ -117,7 +123,7 @@ export class UnitStatisticArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(UnitStatisticArray.FnSelect, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_05
@@ -173,7 +179,7 @@ export class UnitStatisticArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(UnitStatisticArray.FnAll, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_08
@@ -211,7 +217,7 @@ export class UnitStatisticArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(UnitStatisticArray.FnAny, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextUnitStatisticArray_GenerateFunctions_11
@@ -243,7 +249,7 @@ export class UnitStatisticArray extends Base {
     private _dataArray  : UnitStatistic[];
     private _contextWar : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsUnitStatisticArray) {
+    public constructor(data: ResultsUnitStatisticArray) {
         super(data.war);
 
         this._dataArray = data.dataArray;
@@ -253,13 +259,13 @@ export class UnitStatisticArray extends Base {
         return ContextType.UnitStatisticArray;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         switch (identifierName) {
             default     : return (this._contextWar ??= new War(this.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case UnitStatisticArray.FnMerge    : return this.callMerge();
             case UnitStatisticArray.FnWhere    : return this.callWhere(argumentArray[0], rootCtx, localVariableDict, isRestricted);
@@ -301,13 +307,13 @@ export class UnitStatisticArray extends Base {
         });
     }
 
-    public callWhere(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsUnitStatisticArray {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callWhere(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsUnitStatisticArray {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -324,16 +330,16 @@ export class UnitStatisticArray extends Base {
             }
         }
 
-        return new ExpressionParsersResultsUnitStatisticArray(war, resultArray);
+        return new ResultsUnitStatisticArray(war, resultArray);
     }
 
-    public callSelect(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callSelect(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -435,20 +441,20 @@ export class UnitStatisticArray extends Base {
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsUnitStatisticArray(war, resultArray);
+            return new ResultsUnitStatisticArray(war, resultArray);
 
         } else {
             throw newError(`Unexpected resultType: ${resultType}`);
         }
     }
 
-    public callAll(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAll(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -467,13 +473,13 @@ export class UnitStatisticArray extends Base {
         return new Num(war, 1);
     }
 
-    public callAny(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAny(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 

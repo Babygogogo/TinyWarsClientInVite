@@ -6,8 +6,14 @@ import { getLatestGameConfig } from "../../../gameConfigs/Provider.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../../lang/Utils.ts";
 import {
     getRawData,
     getEnabledNormalMapIdSet,

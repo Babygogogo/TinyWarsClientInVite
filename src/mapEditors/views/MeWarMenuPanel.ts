@@ -2,12 +2,15 @@ import { show } from "../../FloatText.ts";
 import { AutoSaveConstants } from "../Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { gotoLobby, gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
+import {
+    gotoLobby,
+    gotoMyWarListPanel,
+} from "../../helpers/GameFlow.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
+import type { S as UserSetMapEditorAutoSaveTimeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -96,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserSetMapEditorAutoSaveTime(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as UserSetMapEditorAutoSaveTimeResponse;
         show(getText(data.getTime() == null ? TextType.A0248 : TextType.A0247));
     }
 

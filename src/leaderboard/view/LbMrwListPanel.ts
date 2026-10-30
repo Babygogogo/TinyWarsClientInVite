@@ -4,12 +4,18 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getMedal, getUserAvatar } from "../../helpers/ImageSource.ts";
+import {
+    getMedal,
+    getUserAvatar,
+} from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
+import { Common as MultiRankedWarsCommon } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -23,7 +29,11 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfInfo, getSelfUserId, getUserPublicInfo } from "../../users/Model.ts";
+import {
+    getSelfInfo,
+    getSelfUserId,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import { getMrwRankIndex } from "../model/LeaderboardModel.ts";
 
@@ -193,7 +203,7 @@ export class Panel extends UiPanel<OpenData> {
         this._imgMyAvatar.loadSource(getUserAvatar(userComplexInfo?.getAvatarId() ?? 1));
         this._labelMyNickname.setText(userInfo.getNickname() ?? UndefinedError);
         this._imgMyMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
+        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore}`);
         this._labelMyWin.setText(`${winCount}`);
         this._labelMyLose.setText(`${loseCount}`);
         this._labelMyDraw.setText(`${drawCount}`);
@@ -288,7 +298,7 @@ class MrwUserRenderer
         imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
         labelNickname.setText(userInfo.getNickname() ?? UndefinedError);
         imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        labelScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
+        labelScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarsCommon.InitialScore}`);
         labelWin.setText(`${winCount}`);
         labelLose.setText(`${loseCount}`);
         labelDraw.setText(`${drawCount}`);

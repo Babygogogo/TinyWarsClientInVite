@@ -4,7 +4,10 @@ import type { IUiEventAgent } from "./IUiEventAgent.ts";
 import type { IUiSizerInfo } from "./IUiSizerInfo.ts";
 import type { IUiSkinInfo } from "./IUiSkinInfo.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-import type { DisplayObjectContainer, Point } from "../../vendor/egret/Egret.ts";
+import type {
+    DisplayObjectContainer,
+    Point,
+} from "../../vendor/egret/Egret.ts";
 
 export interface IUiComponent {
     ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,19 +1,32 @@
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { checkHasUnreadMessage } from "../../chat/Model.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel, getRunningPanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+    getRunningPanel,
+} from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { getIsGameHidden } from "../../helpers/Compatibility.ts";
 import { gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getSecondaryLanguageType, getGameVersionName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getSecondaryLanguageType,
+    getGameVersionName,
+} from "../../lang/Utils.ts";
 import { checkIsRedForStartButton } from "../model/LobbyModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getServerTimestamp, wait } from "../../timer/TimerModel.ts";
+import {
+    getServerTimestamp,
+    wait,
+} from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";

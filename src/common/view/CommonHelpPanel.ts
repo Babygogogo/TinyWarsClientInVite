@@ -1,4 +1,7 @@
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { Dimension } from "../../stages/Constants.ts";

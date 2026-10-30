@@ -2,7 +2,11 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { checkIsSameList } from "../../helpers/Collection.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import { EndTimeModification, AllBuffTypeIdArray, BuffTypeId } from "../Constants.ts";
+import {
+    EndTimeModification,
+    AllBuffTypeIdArray,
+    BuffTypeId,
+} from "../Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export function checkIsValidModificationEndPlayerIndex(playerIndex: number): boolean {

@@ -1,10 +1,19 @@
 import { CategoryId } from "../../cos/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
+import {
+    getCoEyeBackgroundByCoId,
+    getCoEye,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    MouseStyleType,
+    PointerEventType,
+} from "../../helpers/PointerInput.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -19,7 +28,11 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { getUiLabelClass, getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiLabelClass,
+    getUiLayoutClass,
+    getUiImageClass,
+} from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {

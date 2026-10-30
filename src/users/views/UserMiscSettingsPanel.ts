@@ -1,7 +1,16 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, LanguageType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getCurrentLanguageType, getLanguageTypeName, setCurrentLanguageType } from "../../lang/Utils.ts";
+import {
+    TextType,
+    LanguageType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getCurrentLanguageType,
+    getLanguageTypeName,
+    setCurrentLanguageType,
+} from "../../lang/Utils.ts";
 import { setLanguageType } from "../../localData/Storage.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

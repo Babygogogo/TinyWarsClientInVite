@@ -4,10 +4,7 @@ import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoConta
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitDive(unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if (!unit.checkCanDive()) {
@@ -28,7 +25,7 @@ export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: MovePa
     }
 }
 
-async function getScoreForActionUnitDive(unit: IBwUnit): Promise<number> {
+async function getScoreForActionUnitDive(unit: IUnit): Promise<number> {
     await checkAndCallLater();
 
     return unit.checkIsFuelInShort() ? -10 : 10;

@@ -31,20 +31,27 @@ import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getDamageMultiplierForDefenseBonus } from "../damageCalculators/Utils.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
 import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { TeamIndex } from "../teams/Constants.ts";
 import { checkAndCallLater } from "../timer/TimerModel.ts";
-import { ActionStateId, WeaponTypeId, Hp, AiModeId, LoadedStateId } from "../units/Constants.ts";
+import {
+    ActionStateId,
+    WeaponTypeId,
+    Hp,
+    AiModeId,
+    LoadedStateId,
+} from "../units/Constants.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import { getNormalizedHp } from "../units/utils/Common.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getDiscoveredUnitsByPath } from "../visibilities/Utils.ts";
 
-type IBwUnit                = IUnit;
-type GrScoreAndAction       = ScoreAndAction;
 interface AttackInfo {
     baseDamage          : number | null | undefined;
     normalizedHp        : number;
@@ -63,7 +70,7 @@ export const IsNeedVisibility = true;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function checkCanUnitWaitOnGrid(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex): Promise<boolean> {
+async function checkCanUnitWaitOnGrid(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex): Promise<boolean> {
     await checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
@@ -72,7 +79,7 @@ async function checkCanUnitWaitOnGrid(commonParams: CommonParams, unit: IBwUnit,
         : (!commonParams.getWar().getUnitMap().getUnitOnMap(gridIndex));
 }
 
-export function getBetterScoreAndAction(data1: GrScoreAndAction | null | undefined, data2: GrScoreAndAction, commonParams: CommonParams): GrScoreAndAction {
+export function getBetterScoreAndAction(data1: ScoreAndAction | null | undefined, data2: ScoreAndAction, commonParams: CommonParams): ScoreAndAction {
     if (data1 == null) {
         return data2;
     } else {
@@ -86,8 +93,8 @@ export function getBetterScoreAndAction(data1: GrScoreAndAction | null | undefin
         }
     }
 }
-export function getBestScoreAndAction(dataArray: (GrScoreAndAction | null)[], commonParams: CommonParams): GrScoreAndAction | null {
-    let bestData: GrScoreAndAction | null = null;
+export function getBestScoreAndAction(dataArray: (ScoreAndAction | null)[], commonParams: CommonParams): ScoreAndAction | null {
+    let bestData: ScoreAndAction | null = null;
     for (const newData of dataArray) {
         if (newData != null) {
             bestData = getBetterScoreAndAction(bestData, newData, commonParams);
@@ -98,7 +105,7 @@ export function getBestScoreAndAction(dataArray: (GrScoreAndAction | null)[], co
 
 async function getReachableArea({ commonParams, unit, passableGridIndex, blockedGridIndex }: {
     commonParams        : CommonParams;
-    unit                : IBwUnit;
+    unit                : IUnit;
     passableGridIndex   : GridIndex | null;
     blockedGridIndex    : GridIndex | null;
 }): Promise<MovableArea> {
@@ -211,7 +218,7 @@ export function getCoPowerSkillTargetGridIndexArray(commonParams: CommonParams, 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Damage map generators.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getAttackInfo(commonParams: CommonParams, attacker: IBwUnit, targetUnit: IBwUnit): Promise<AttackInfo> {
+async function getAttackInfo(commonParams: CommonParams, attacker: IUnit, targetUnit: IUnit): Promise<AttackInfo> {
     await checkAndCallLater();
 
     const attackerGridIndex             = attacker.getGridIndex();
@@ -303,7 +310,7 @@ async function getAttackInfo(commonParams: CommonParams, attacker: IBwUnit, targ
     }
 }
 
-async function createDamageMap(commonParams: CommonParams, targetUnit: IBwUnit, isDiving: boolean, targetUnitMovableArea: MovableArea): Promise<DamageMapData[][]> {
+async function createDamageMap(commonParams: CommonParams, targetUnit: IUnit, isDiving: boolean, targetUnitMovableArea: MovableArea): Promise<DamageMapData[][]> {
     await checkAndCallLater();
 
     const targetPlayerIndex                                 = targetUnit.getPlayerIndex();
@@ -436,7 +443,7 @@ async function createDamageMap(commonParams: CommonParams, targetUnit: IBwUnit, 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Score calculators.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getScoreForBeThreatened(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, damageMap: DamageMapData[][] | null | undefined): Promise<number> {
+async function getScoreForBeThreatened(commonParams: CommonParams, unit: IUnit, gridIndex: GridIndex, damageMap: DamageMapData[][] | null | undefined): Promise<number> {
     // const hp            = unit.getCurrentHp();
     // const data          = damageMap[gridIndex.x][gridIndex.y];
     // const maxDamage     = Math.min(data ? data.max : 0, hp);
@@ -469,7 +476,7 @@ async function getScoreForBeThreatened(commonParams: CommonParams, unit: IBwUnit
     return score;
 }
 
-async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit: IBwUnit, gridIndex: GridIndex, scoreDictForThreatEnemy: Map<IBwUnit, number>): Promise<number> {
+async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit: IUnit, gridIndex: GridIndex, scoreDictForThreatEnemy: Map<IUnit, number>): Promise<number> {
     await checkAndCallLater();
 
     const war           = commonParams.getWar();
@@ -591,7 +598,7 @@ async function getScoreForThreatEnemies(commonParams: CommonParams, attackerUnit
     return totalScore;
 }
 
-async function getScoreForDistanceToCapturableBuildings(commonParams: CommonParams, unit: IBwUnit, movableArea: MovableArea): Promise<number> {
+async function getScoreForDistanceToCapturableBuildings(commonParams: CommonParams, unit: IUnit, movableArea: MovableArea): Promise<number> {
     await checkAndCallLater();
 
     const war                                       = commonParams.getWar();
@@ -707,7 +714,7 @@ async function getScoreForDistanceToCapturableBuildings(commonParams: CommonPara
     // return maxScore > Number.MIN_VALUE ? maxScore : 0;
 }
 
-async function getScoreForAiWeightedDestination(unit: IBwUnit, movableArea: MovableArea): Promise<number> {
+async function getScoreForAiWeightedDestination(unit: IUnit, movableArea: MovableArea): Promise<number> {
     await checkAndCallLater();
 
     const aiWeightedDestination = unit.getAiWeightedDestination();
@@ -730,10 +737,10 @@ async function getScoreForAiWeightedDestination(unit: IBwUnit, movableArea: Mova
 
 async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, scoreDictForThreatEnemy }: {
     commonParams            : CommonParams;
-    unit                    : IBwUnit;
+    unit                    : IUnit;
     gridIndex               : GridIndex;
     damageMap               : DamageMapData[][] | null | undefined;
-    scoreDictForThreatEnemy : Map<IBwUnit, number>;
+    scoreDictForThreatEnemy : Map<IUnit, number>;
 }): Promise<number> {
     await checkAndCallLater();
 
@@ -799,7 +806,7 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
     return totalScore;
 }
 
-async function getScoreForMovePath(commonParams: CommonParams, movingUnit: IBwUnit, movePath: MovePathNode[]): Promise<number> {
+async function getScoreForMovePath(commonParams: CommonParams, movingUnit: IUnit, movePath: MovePathNode[]): Promise<number> {
     await checkAndCallLater();
 
     if (!IsNeedVisibility) {
@@ -825,7 +832,7 @@ async function getScoreForMovePath(commonParams: CommonParams, movingUnit: IBwUn
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // The available action generators for units.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-async function getBestScoreAndActionForUnitAndPath(commonParams: CommonParams, unit: IBwUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+async function getBestScoreAndActionForUnitAndPath(commonParams: CommonParams, unit: IUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const scoreAndActionForUnitBeLoaded = await getScoreAndActionUnitBeLoaded(commonParams, unit, destination, pathNodes);
@@ -860,7 +867,7 @@ async function getBestScoreAndActionForUnitAndPath(commonParams: CommonParams, u
     ]), commonParams);
 }
 
-export async function getBestScoreAndActionForCandidateUnit(commonParams: CommonParams, candidateUnit: IBwUnit): Promise<GrScoreAndAction | null> {
+export async function getBestScoreAndActionForCandidateUnit(commonParams: CommonParams, candidateUnit: IUnit): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     if (!candidateUnit.checkCanAiDoAction()) {
@@ -879,11 +886,11 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
     const damageMapForSurface       = await createDamageMap(commonParams, candidateUnit, false, reachableArea);
     const damageMapForDive          = candidateUnit.checkIsDiver() ? await createDamageMap(commonParams, candidateUnit, true, reachableArea) : null;
     const originGridIndex           = candidateUnit.getGridIndex();
-    const scoreDictForThreatEnemy   = new Map<IBwUnit, number>();
+    const scoreDictForThreatEnemy   = new Map<IUnit, number>();
     const canLaunchUnit             = (candidateUnit.checkCanLaunchLoadedUnit()) && (candidateUnit.getLoadedUnits().some(v => ((v.getActionState() === ActionStateId.Idle) && (v.checkCanAiDoAction()) && (v.getFinalMoveRange() > 0))));
     // const scoreMapForDistance       = await _createScoreMapForDistance(candidateUnit);
     const { width: mapWidth, height: mapHeight }    = commonParams.getMapSize().getWH();
-    const promiseArray                              : Promise<GrScoreAndAction | null>[] = [];
+    const promiseArray                              : Promise<ScoreAndAction | null>[] = [];
     for (let x = 0; x < mapWidth; ++x) {
         const column = reachableArea.getColumn(x);
         if (!column) {
@@ -896,7 +903,7 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
             }
 
             const destination = new GridIndex(x, y);
-            promiseArray.push((async (): Promise<GrScoreAndAction | null> => {
+            promiseArray.push((async (): Promise<ScoreAndAction | null> => {
                 if (destination.checkIsEqual(originGridIndex)) {
                     if (candidateUnit.getLoaderUnitId() != null) {
                         return null;
@@ -942,7 +949,7 @@ export async function getBestScoreAndActionForCandidateUnit(commonParams: Common
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Phases.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function candidateUnitSorter(v1: IBwUnit, v2: IBwUnit): number {
+export function candidateUnitSorter(v1: IUnit, v2: IUnit): number {
     {
         const isLoaded1 = v1.checkIsMeetLoadedState(LoadedStateId.IsLoaded);
         if (isLoaded1 != v2.checkIsMeetLoadedState(LoadedStateId.IsLoaded)) {

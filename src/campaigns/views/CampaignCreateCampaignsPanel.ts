@@ -1,10 +1,25 @@
-import { getEnabledCampaignIdArray, getCampaignInfo } from "../mains/Provider.ts";
-import { type OpenData as CampaignsViewsCampaignInfoPageOpenData, Page } from "./CampaignInfoPage.ts";
-import { type OpenData as CampaignsViewsCampaignRankPageOpenData, Page as CampaignsViewsCampaignRankPage } from "./CampaignRankPage.ts";
+import {
+    getEnabledCampaignIdArray,
+    getCampaignInfo,
+} from "../mains/Provider.ts";
+import {
+    type OpenData as CampaignInfoPageOpenData,
+    Page as CampaignInfoPage,
+} from "./CampaignInfoPage.ts";
+import {
+    type OpenData as CampaignRankPageOpenData,
+    Page as CampaignRankPage,
+} from "./CampaignRankPage.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -27,7 +42,7 @@ import { getSelfCawHighScoreInfo } from "../../users/Model.ts";
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CampaignsViewsCampaignInfoPageOpenData | CampaignsViewsCampaignRankPageOpenData>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CampaignInfoPageOpenData | CampaignRankPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _labelSinglePlayer!    : IUiLabel;
@@ -161,12 +176,12 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0423) },
-                pageClass   : Page,
+                pageClass   : CampaignInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : CampaignsViewsCampaignRankPage,
+                pageClass   : CampaignRankPage,
                 pageData    : null,
             },
         ]);
@@ -217,7 +232,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCampaignInfoPage(): Promise<CampaignsViewsCampaignInfoPageOpenData> {
+    private async _createDataForCampaignInfoPage(): Promise<CampaignInfoPageOpenData> {
         const campaignId = this._listCampaign.getFirstSelectedData()?.campaignId;
         return campaignId == null
             ? null
@@ -226,7 +241,7 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private _createDataForCampaignRankPage(): CampaignsViewsCampaignRankPageOpenData {
+    private _createDataForCampaignRankPage(): CampaignRankPageOpenData {
         const campaignId = this._listCampaign.getFirstSelectedData()?.campaignId;
         return campaignId == null
             ? null

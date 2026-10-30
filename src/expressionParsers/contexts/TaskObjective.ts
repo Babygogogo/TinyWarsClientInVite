@@ -1,20 +1,26 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
 import { Num } from "../results/Num.ts";
-import { War as ExpressionParsersResultsWar } from "../results/War.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
-import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
+import { War as ResultsWar } from "../results/War.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+} from "../Utils.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import type {
-    TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import type { TaskObjective as ProtoTaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 
-type TaskObjectiveProto = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
 export class TaskObjective extends Base {
     private static readonly VnId                        = "id";
     private static readonly VnMain                      = "main";
@@ -47,7 +53,7 @@ export class TaskObjective extends Base {
         return functions;
     }
 
-    private readonly _taskObjective : TaskObjectiveProto | null;
+    private readonly _taskObjective : ProtoTaskObjective | null;
     private readonly _state         : TaskObjectiveState | null;
     private _contextWar             : War | null = null;
 
@@ -62,7 +68,7 @@ export class TaskObjective extends Base {
         return ContextType.TaskObjective;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         const war           = this.getWar();
         const taskObjective = this._taskObjective;
         if (identifierName == TaskObjective.VnId) {
@@ -116,13 +122,13 @@ export class TaskObjective extends Base {
                     : (this._state?.getIsProgressUpdaterDisabled() ? 1 : 0)
             );
         } else if (identifierName == TaskObjective.VnWar) {
-            return new ExpressionParsersResultsWar(war);
+            return new ResultsWar(war);
         }
 
         return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
     }
 }

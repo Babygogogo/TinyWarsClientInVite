@@ -1,10 +1,19 @@
 import { closePanel } from "../../gamePanels/Manager.ts";
 import type { PanelConfig } from "../../gamePanels/Types.ts";
 import { Tween } from "../../graphics/Constants.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { PointerEventType } from "../../helpers/PointerInput.ts";
-import { addListener, deleteListener } from "../../keyboard/KbManager.ts";
-import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import {
+    addListener,
+    deleteListener,
+} from "../../keyboard/KbManager.ts";
+import {
+    type EventData,
+    KeyCode,
+} from "../../keyboard/KbTypes.ts";
 import { log } from "../../Logger.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -15,7 +24,10 @@ import { UiOpenableComponent } from "./UiOpenableComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import type { IUiImage } from "../interfaces/IUiImage.ts";
 import type { IUiPanel } from "../interfaces/IUiPanel.ts";
-import { getUiButtonClass, getUiContainerClass } from "../utils/UiFactory.ts";
+import {
+    getUiButtonClass,
+    getUiContainerClass,
+} from "../utils/UiFactory.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
 const NAMES_FOR_GROUP = [

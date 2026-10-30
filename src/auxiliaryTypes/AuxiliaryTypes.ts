@@ -7,7 +7,10 @@ import type { TemplateWarRule } from "../proto/schema/CommonProto/WarRule/Templa
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-import type { DisplayObject, Event } from "../vendor/egret/Egret.ts";
+import type {
+    DisplayObject,
+    Event,
+} from "../vendor/egret/Egret.ts";
 
 export interface UiListener {
     ui          : DisplayObject,

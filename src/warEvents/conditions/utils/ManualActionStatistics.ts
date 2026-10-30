@@ -1,11 +1,21 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getFormattedText,
+    getComparatorName,
+    getText,
+} from "../../../lang/Utils.ts";
 import { checkIsValidPlayerIndexSubset } from "../../../players/utils/Common.ts";
 import type { WecManualActionStatistics } from "../../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
-import { checkIsValid as ValueAndComparatorsUtilsCheckIsValid, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
+import {
+    checkIsValid as checkIsValidValueAndComparator,
+    checkIsMeet1,
+} from "../../../valueAndComparators/Utils.ts";
 
 export function getBriefDesc(data: Undefinable<WecManualActionStatistics>): string | null {
     if (data == null) {
@@ -76,7 +86,7 @@ export function getErrorTip(data: WecManualActionStatistics, war: IBwWar): strin
 
     {
         const totalActions = data.getTotalActions();
-        if ((totalActions == null) || (!ValueAndComparatorsUtilsCheckIsValid(totalActions))) {
+        if ((totalActions == null) || (!checkIsValidValueAndComparator(totalActions))) {
             return getFormattedText(TextType.F0091, getText(TextType.B0902));
         }
     }
@@ -98,7 +108,7 @@ export function checkIsValid(condition: Undefinable<WecManualActionStatistics>, 
 
     {
         const totalActions = condition.getTotalActions();
-        if ((totalActions == null) || (!ValueAndComparatorsUtilsCheckIsValid(totalActions))) {
+        if ((totalActions == null) || (!checkIsValidValueAndComparator(totalActions))) {
             return false;
         }
     }

@@ -9,7 +9,7 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalScwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
+import { C as SpmCreateScwRequest } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/C.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
@@ -27,11 +27,11 @@ export class ScrWarCreator extends WarCreatorBase {
         this.resetDataByTemplateWarRuleId(mapRawData.getTemplateWarRuleArray()[0].getRuleId());
     }
 
-    public generateData(): C {
+    public generateData(): SpmCreateScwRequest {
         const slotExtraData = new SpmWarSaveSlotExtraData();
         slotExtraData.setSlotComment(this.getSlotComment());
 
-        return C.fromJson({
+        return SpmCreateScwRequest.fromJson({
             settingsForCommon   : this.getSettingsForCommon().toJson(),
             settingsForScw      : this.getSettingsForScw().toJson(),
 

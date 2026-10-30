@@ -4,16 +4,23 @@ import type {
     Undefinable,
 } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
-    setValue as HelpersCookiesSetValue,
-    getInt as HelpersCookiesGetInt,
-    getFloat as HelpersCookiesGetFloat,
-    getString as HelpersCookiesGetString,
+    setValue as setCookiesValue,
+    getInt as getCookiesInt,
+    getFloat as getCookiesFloat,
+    getString as getCookiesString,
 } from "../helpers/Cookies.ts";
-import { compress, decompress } from "../helpers/Gzip.ts";
+import {
+    compress,
+    decompress,
+} from "../helpers/Gzip.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { LanguageType } from "../lang/Constants.ts";
 import { checkIsValidLanguageType } from "../lang/Utils.ts";
-import { KeyPrefix, NewDatabaseName, NewDatabaseVersion } from "./Constants.ts";
+import {
+    KeyPrefix,
+    NewDatabaseName,
+    NewDatabaseVersion,
+} from "./Constants.ts";
 import { warn } from "../Logger.ts";
 import { CcrRoomStaticInfo } from "../proto/schema/CommonProto/CoopCustomRoom/CcrRoomStaticInfo.ts";
 import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";
@@ -23,13 +30,16 @@ import { McrRoomStaticInfo } from "../proto/schema/CommonProto/MultiCustomRoom/M
 import { MfrRoomStaticInfo } from "../proto/schema/CommonProto/MultiFreeRoom/MfrRoomStaticInfo.ts";
 import { MpwWarProgressInfo } from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
 import { MpwWarSettings } from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
-import { S } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
+import { S as MpwCommonGetUnitStatisticsResponse } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
 import { ReplayInfo } from "../proto/schema/CommonProto/Replay/ReplayInfo.ts";
 import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { SpmWarSaveSlotFullData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotFullData.ts";
 import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { Scale } from "../stages/Constants.ts";
-import { setItem, getItem } from "../vendor/egret/LocalStorage.ts";
+import {
+    setItem,
+    getItem,
+} from "../vendor/egret/LocalStorage.ts";
 
 const KEY_PREFIX                                = KeyPrefix;
 const KEY_ACCOUNT                               = KEY_PREFIX + "Account";
@@ -778,17 +788,17 @@ export const StoreMpwOngoingWarData = new IndexedDb.Store2<SerialWar, Uint8Array
     encode              : warData       => compress(warData.encode()),
     decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
 });
-export const StoreMpwUnitStatistics = new IndexedDb.Store2<S, Uint8Array>({   // userId, warId
+export const StoreMpwUnitStatistics = new IndexedDb.Store2<MpwCommonGetUnitStatisticsResponse, Uint8Array>({   // userId, warId
     storeName           : "MpwUnitStatistics",
     encode              : warData       => compress(warData.encode()),
-    decode              : encodedData   => S.decode(decompress(encodedData)),
+    decode              : encodedData   => MpwCommonGetUnitStatisticsResponse.decode(decompress(encodedData)),
 });
 
 function setValue(key: string, value: string): void {
     try {
         setItem(key, value);
     } catch {
-        HelpersCookiesSetValue(key, value);
+        setCookiesValue(key, value);
     }
 }
 function getInt(key: string): number | null {
@@ -797,7 +807,7 @@ function getInt(key: string): number | null {
         const i = value == null ? NaN : parseInt(value);
         return isNaN(i) ? null : i;
     } catch {
-        return HelpersCookiesGetInt(key);
+        return getCookiesInt(key);
     }
 }
 function getFloat(key: string): number | null {
@@ -806,13 +816,13 @@ function getFloat(key: string): number | null {
         const f = value == null ? NaN : parseFloat(value);
         return isNaN(f) ? null : f;
     } catch {
-        return HelpersCookiesGetFloat(key);
+        return getCookiesFloat(key);
     }
 }
 function getString(key: string): string | null {
     try {
         return getItem(key);
     } catch {
-        return HelpersCookiesGetString(key);
+        return getCookiesString(key);
     }
 }

@@ -5,7 +5,6 @@ import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
 import type { AnimationTypeId } from "./Constants.ts";
 import type { IUnit } from "./IUnit.ts";
 
-type UnitAnimationType  = AnimationTypeId;
 export interface IUnitView extends IUiContainer {
     init(unit: IUnit): IUnitView;
 
@@ -16,7 +15,7 @@ export interface IUnitView extends IUiContainer {
 
     resetAllViews(): void;
 
-    showUnitAnimation(type: UnitAnimationType): void;
+    showUnitAnimation(type: AnimationTypeId): void;
 
     updateImageHp(): void;
 

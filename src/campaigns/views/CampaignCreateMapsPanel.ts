@@ -1,14 +1,26 @@
-import { getCampaignInfo, getCampaignMapRawData } from "../mains/Provider.ts";
-import { type OpenData as CampaignsViewsCampaignMapInfoPageOpenData, Page } from "./CampaignMapInfoPage.ts";
 import {
-    type OpenData as CampaignsViewsCampaignMapRankPageOpenData,
-    Page as CampaignsViewsCampaignMapRankPage,
+    getCampaignInfo,
+    getCampaignMapRawData,
+} from "../mains/Provider.ts";
+import {
+    type OpenData as CampaignMapInfoPageOpenData,
+    Page as CampaignMapInfoPage,
+} from "./CampaignMapInfoPage.ts";
+import {
+    type OpenData as CampaignMapRankPageOpenData,
+    Page as CampaignMapRankPage,
 } from "./CampaignMapRankPage.ts";
 import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -24,14 +36,17 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getSelfCawHighScoreInfo } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getSelfCawHighScoreInfo,
+} from "../../users/Model.ts";
 
 export interface OpenData {
     campaignId      : number;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CampaignsViewsCampaignMapInfoPageOpenData | CampaignsViewsCampaignMapRankPageOpenData>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CampaignMapInfoPageOpenData | CampaignMapRankPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _labelSinglePlayer!    : IUiLabel;
@@ -170,12 +185,12 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0423) },
-                pageClass   : Page,
+                pageClass   : CampaignMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0436) },
-                pageClass   : CampaignsViewsCampaignMapRankPage,
+                pageClass   : CampaignMapRankPage,
                 pageData    : null,
             },
         ]);
@@ -225,7 +240,7 @@ export class Panel extends UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCampaignMapInfoPage(): Promise<CampaignsViewsCampaignMapInfoPageOpenData> {
+    private async _createDataForCampaignMapInfoPage(): Promise<CampaignMapInfoPageOpenData> {
         const campaignMapId = this._listCampaign.getFirstSelectedData()?.campaignMapId;
         const campaignId    = this.getOpenData()?.campaignId;
         return ((campaignMapId == null) || (campaignId == null))
@@ -236,7 +251,7 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private _createDataForCampaignMapRankPage(): CampaignsViewsCampaignMapRankPageOpenData {
+    private _createDataForCampaignMapRankPage(): CampaignMapRankPageOpenData {
         const selectedData = this._listCampaign.getFirstSelectedData();
         return selectedData == null
             ? null

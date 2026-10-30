@@ -1,7 +1,11 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import { EndTimeModification, AllBuffTypeIdArray, BuffTypeId } from "../Constants.ts";
+import {
+    EndTimeModification,
+    AllBuffTypeIdArray,
+    BuffTypeId,
+} from "../Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export function checkIsValidModificationEndPlayerIndex(playerIndex: number): boolean {

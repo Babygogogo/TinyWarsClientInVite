@@ -1,13 +1,19 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
-import type { C as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomC } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/C.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../players/Constants.ts";
+import { C as MfrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
+import type { C as MfrJoinRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/C.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
-export type DataForJoinRoom = ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomC;
+export type DataForJoinRoom = MfrJoinRoomRequest;
 
 export class MfrRoomCreator extends RoomCreatorBase {
     private readonly _settingsForMfw = new SettingsForMfw();
@@ -31,14 +37,14 @@ export class MfrRoomCreator extends RoomCreatorBase {
         this.setSelfUnitAndTileSkinId(playerData.getUnitAndTileSkinId());
     }
 
-    public generateData(): C {
+    public generateData(): MfrCreateRoomRequest {
         const settingsForMfw = this.getSettingsForMfw().clone();
         settingsForMfw.setWarName(this.getWarName());
         settingsForMfw.setWarPassword(this.getWarPassword());
         settingsForMfw.setWarComment(this.getWarComment());
         settingsForMfw.setBootTimerParams(this.getBootTimerParams());
 
-        return C.fromJson({
+        return MfrCreateRoomRequest.fromJson({
             settingsForMfw         : settingsForMfw.toJson(),
 
             selfPlayerIndex        : this.getSelfPlayerIndex(),

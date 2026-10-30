@@ -1,4 +1,7 @@
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList2 } from "../../helpers/Collection.ts";
@@ -20,7 +23,10 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { createAndReplaceRootNodeInEvent } from "../../warEvents/conditionNodes/Utils.ts";
-import { getNode, getEvent } from "../../warEvents/fullDatas/Utils.ts";
+import {
+    getNode,
+    getEvent,
+} from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
     eventId         : number;

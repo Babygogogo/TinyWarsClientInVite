@@ -1,5 +1,8 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
+import {
+    createRange,
+    getNonNullElements,
+} from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

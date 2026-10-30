@@ -2,7 +2,13 @@ import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { runBattleForAttackUnit } from "../../../damageCalculators/Utils.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
@@ -17,7 +23,11 @@ import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { getAllUnitsOnMapVisibleToTeams } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData, handlePostOperationPlunder, handleViewForBattle } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+    handleViewForBattle,
+} from "./Common.ts";
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

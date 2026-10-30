@@ -1,17 +1,27 @@
 import { checkIsRedForRegistration } from "../../autoTourneys/mains/Provider.ts";
-import { checkIsRed } from "../../autoTourneys/rooms/Provider.ts";
+import { checkIsRed as checkAutoTourneysIsRed } from "../../autoTourneys/rooms/Provider.ts";
 import { checkHasUnreadMessage } from "../../chat/Model.ts";
-import { checkIsRed as CoopCustomRoomModelCcrModelCheckIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
+import { checkIsRed as checkCcrModelIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { checkIsAnyPromiseTrue } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeName, getGameModeHelpText } from "../../lang/Utils.ts";
-import { checkIsRed as MailModelMailModelCheckIsRed } from "../../mail/model/MailModel.ts";
-import { checkIsRed as MultiCustomRoomModelMcrModelCheckIsRed } from "../../multiCustomRoom/model/McrModel.ts";
-import { checkIsRed as MultiFreeRoomModelMfrModelCheckIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
-import { checkIsRed as MultiMatchRoomModelMmrModelCheckIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getGameModeName,
+    getGameModeHelpText,
+} from "../../lang/Utils.ts";
+import { checkIsRed as checkMailModelIsRed } from "../../mail/model/MailModel.ts";
+import { checkIsRed as checkMcrModelIsRed } from "../../multiCustomRoom/model/McrModel.ts";
+import { checkIsRed as checkMfrModelIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
+import { checkIsRed as checkMmrModelIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
 import {
     checkIsRedForMyMrwWars,
     checkIsRedForMyMcwWars,
@@ -20,9 +30,9 @@ import {
     checkIsRedForMyMmwWars,
     checkIsRedForMyAtwWars,
 } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import { checkIsRed as checkMrrModelIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { checkIsRedForMapManagement } from "../../normalMap/model/NormalMapModel.ts";
-import { checkIsRed as WatchWarModelWwModelCheckIsRed } from "../../watchWar/model/WwModel.ts";
+import { checkIsRed as checkWwModelIsRed } from "../../watchWar/model/WwModel.ts";
 
 export async function checkIsRedForStartButton(): Promise<boolean> {
     if (checkHasUnreadMessage()) {
@@ -36,7 +46,7 @@ export async function checkIsRedForStartButton(): Promise<boolean> {
 }
 
 export async function checkIsRedForGameSettings(): Promise<boolean> {
-    if (MailModelMailModelCheckIsRed()) {
+    if (checkMailModelIsRed()) {
         return true;
     }
 
@@ -62,43 +72,43 @@ export async function checkIsRedForMultiPlayer(includeRanked = false): Promise<b
 export async function checkIsRedForRankedMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyMrwWars(),
-        MultiRankRoomModelMrrModelCheckIsRed(),
+        checkMrrModelIsRed(),
     ]);
 }
 
 export async function checkIsRedForMultiCustomMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyMcwWars(),
-        MultiCustomRoomModelMcrModelCheckIsRed(),
-        WatchWarModelWwModelCheckIsRed(),
+        checkMcrModelIsRed(),
+        checkWwModelIsRed(),
     ]);
 }
 
 export async function checkIsRedForMultiFreeMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyMfwWars(),
-        MultiFreeRoomModelMfrModelCheckIsRed(),
+        checkMfrModelIsRed(),
     ]);
 }
 
 export async function checkIsRedForMultiCoopMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyCcwWars(),
-        CoopCustomRoomModelCcrModelCheckIsRed(),
+        checkCcrModelIsRed(),
     ]);
 }
 
 export async function checkIsRedForMultiMatchMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyMmwWars(),
-        MultiMatchRoomModelMmrModelCheckIsRed(),
+        checkMmrModelIsRed(),
     ]);
 }
 
 export function checkIsRedForAutoTourneyMode(): Promise<boolean> {
     return checkIsAnyPromiseTrue([
         checkIsRedForMyAtwWars(),
-        checkIsRed(),
+        checkAutoTourneysIsRed(),
         checkIsRedForRegistration(),
     ]);
 }

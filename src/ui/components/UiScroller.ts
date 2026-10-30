@@ -4,7 +4,10 @@ import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import type { IUiLayout } from "../interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../interfaces/IUiScroller.ts";
-import { getUiLayoutClass, getUiContainerClass } from "../utils/UiFactory.ts";
+import {
+    getUiLayoutClass,
+    getUiContainerClass,
+} from "../utils/UiFactory.ts";
 import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
 export class UiScroller<T extends IUiContainer | IUiLayout>

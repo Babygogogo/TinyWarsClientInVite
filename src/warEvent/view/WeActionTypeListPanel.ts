@@ -1,6 +1,12 @@
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getWarEventActionCategoryName, getWarEventActionTypeName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getWarEventActionCategoryName,
+    getWarEventActionTypeName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -16,8 +22,16 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { ActionTypeId, CategoryId, TypeDict } from "../../warEvents/actions/constants/Common.ts";
-import { getActionTypeId, resetAction, openActionModifyPanel } from "../../warEvents/actions/utils/Common.ts";
+import {
+    ActionTypeId,
+    CategoryId,
+    TypeDict,
+} from "../../warEvents/actions/constants/Common.ts";
+import {
+    getActionTypeId,
+    resetAction,
+    openActionModifyPanel,
+} from "../../warEvents/actions/utils/Common.ts";
 
 export interface OpenData {
     war         : IMeWar;

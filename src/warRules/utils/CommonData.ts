@@ -1,16 +1,14 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { NeutralPlayerRule } from "../../playerRules/Constants.ts";
-import { checkIsSame as PlayerRulesUtilsCheckIsSame } from "../../playerRules/Utils.ts";
+import { checkIsSame as checkPlayerRulesIsSame } from "../../playerRules/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
 import { checkIsValidThemeId } from "../../tiles/utils/Common.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type PlayerRuleSchema           = PlayerRule;
-type WarRuleCommonDataSchema    = WarRuleCommonData;
-export function getPlayerRule(data: WarRuleCommonDataSchema, playerIndex: number): PlayerRuleSchema {
+export function getPlayerRule(data: WarRuleCommonData, playerIndex: number): PlayerRule {
     if (playerIndex === PlayerIndex.Neutral) {
         return NeutralPlayerRule;
     }
@@ -18,20 +16,20 @@ export function getPlayerRule(data: WarRuleCommonDataSchema, playerIndex: number
     return getExisted(data.getPlayerRuleList().find(v => v.getPlayerIndex() === playerIndex));
 }
 
-export function getPlayersCountUnneutral(data: WarRuleCommonDataSchema): number {
+export function getPlayersCountUnneutral(data: WarRuleCommonData): number {
     return data.getPlayerRuleList().length;
 }
 
-export function getDefaultWeatherType(data: WarRuleCommonDataSchema, gameConfig: GameConfig): number {
+export function getDefaultWeatherType(data: WarRuleCommonData, gameConfig: GameConfig): number {
     return data.getDefaultWeatherType() ?? gameConfig.getDefaultWeatherType();
 }
-export function tickDefaultWeatherType(data: WarRuleCommonDataSchema, gcData: GameConfig): void {
+export function tickDefaultWeatherType(data: WarRuleCommonData, gcData: GameConfig): void {
     const typeArray = gcData.getAllWeatherTypeArray();
     data.setDefaultWeatherType(typeArray[(typeArray.indexOf(getDefaultWeatherType(data, gcData)) + 1) % typeArray.length]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getErrorCode(data: WarRuleCommonDataSchema, gcData: GameConfig): ClientErrorCode {
+export function getErrorCode(data: WarRuleCommonData, gcData: GameConfig): ClientErrorCode {
     {
         const defaultWeatherType = getDefaultWeatherType(data, gcData);
         if ((defaultWeatherType != null)                            &&
@@ -53,7 +51,7 @@ export function getErrorCode(data: WarRuleCommonDataSchema, gcData: GameConfig):
     return ClientErrorCode.NoError;
 }
 
-export function checkIsSame(data1: WarRuleCommonDataSchema, data2: WarRuleCommonDataSchema): boolean {
+export function checkIsSame(data1: WarRuleCommonData, data2: WarRuleCommonData): boolean {
     if (data1.getDefaultWeatherType() != data2.getDefaultWeatherType()) {
         return false;
     }
@@ -73,7 +71,7 @@ export function checkIsSame(data1: WarRuleCommonDataSchema, data2: WarRuleCommon
         }
 
         for (let i = 0; i < length; ++i) {
-            if (!PlayerRulesUtilsCheckIsSame(arr1[i], arr2[i])) {
+            if (!checkPlayerRulesIsSame(arr1[i], arr2[i])) {
                 return false;
             }
         }

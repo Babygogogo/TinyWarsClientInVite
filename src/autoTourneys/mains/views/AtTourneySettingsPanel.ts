@@ -1,14 +1,41 @@
-import { RegistrationConstants, PhaseId, AdjustmentConstants, Common } from "../../Constants.ts";
-import { reqAtSetRegistrationDuration, reqAtSetAdjustmentDuration, reqAtSetName, reqAtSetBootTimer, reqAtDeleteUser } from "../Gateway.ts";
-import { getAtTourneyInfo, getTourneyInfoPhase, getAtUserArray } from "../Provider.ts";
-import { TimerTypeId, DefaultParams } from "../../../bootTimers/Constants.ts";
+import {
+    RegistrationConstants,
+    PhaseId,
+    AdjustmentConstants,
+    Common,
+} from "../../Constants.ts";
+import {
+    reqAtSetRegistrationDuration,
+    reqAtSetAdjustmentDuration,
+    reqAtSetName,
+    reqAtSetBootTimer,
+    reqAtDeleteUser,
+} from "../Gateway.ts";
+import {
+    getAtTourneyInfo,
+    getTourneyInfoPhase,
+    getAtUserArray,
+} from "../Provider.ts";
+import {
+    TimerTypeId,
+    DefaultParams,
+} from "../../../bootTimers/Constants.ts";
 import { showLang } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { checkIsSameList } from "../../../helpers/Collection.ts";
 import { newError } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
-import { getText, getTimeDurationText2, getFormattedText, getBootTimerTypeName, getLanguageText } from "../../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
+import {
+    getText,
+    getTimeDurationText2,
+    getFormattedText,
+    getBootTimerTypeName,
+    getLanguageText,
+} from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { getServerTimestamp } from "../../../timer/TimerModel.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";

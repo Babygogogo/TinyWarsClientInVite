@@ -1,12 +1,18 @@
-import { checkIsRed } from "../../autoTourneys/rooms/Provider.ts";
-import { checkIsRed as CoopCustomRoomModelCcrModelCheckIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
+import { checkIsRed as checkAutoTourneysIsRed } from "../../autoTourneys/rooms/Provider.ts";
+import { checkIsRed as checkCcrModelIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { checkIsAnyPromiseTrue } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getSecondaryLanguageType, getText } from "../../lang/Utils.ts";
+import {
+    getSecondaryLanguageType,
+    getText,
+} from "../../lang/Utils.ts";
 import {
     openMultiPlayerModePanel,
     checkIsRedForMultiPlayer,
@@ -15,12 +21,15 @@ import {
     checkIsRedForMultiMatchMode,
     checkIsRedForAutoTourneyMode,
 } from "../../lobby/model/LobbyModel.ts";
-import { checkIsRed as MultiCustomRoomModelMcrModelCheckIsRed } from "../model/McrModel.ts";
-import { checkIsRed as MultiFreeRoomModelMfrModelCheckIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
-import { checkIsRed as MultiMatchRoomModelMmrModelCheckIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
+import { checkIsRed as checkMcrModelIsRed } from "../model/McrModel.ts";
+import { checkIsRed as checkMfrModelIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
+import { checkIsRed as checkMmrModelIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
 import { MultiPlayerRoomType } from "../../multiPlayerRooms/Constants.ts";
-import { checkIsRedForMyMrwWars, checkIsRedForAllMyWars } from "../../multiPlayerWar/model/MpwModel.ts";
-import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import {
+    checkIsRedForMyMrwWars,
+    checkIsRedForAllMyWars,
+} from "../../multiPlayerWar/model/MpwModel.ts";
+import { checkIsRed as checkMrrModelIsRed } from "../../multiRankRoom/model/MrrModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -29,7 +38,7 @@ import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { checkIsRed as WatchWarModelWwModelCheckIsRed } from "../../watchWar/model/WwModel.ts";
+import { checkIsRed as checkWwModelIsRed } from "../../watchWar/model/WwModel.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
@@ -366,18 +375,18 @@ export class Panel extends UiPanel<OpenData> {
     private async _updateBtnRanking(): Promise<void> {
         this._btnRanking.setRedVisible(
             (await checkIsRedForMyMrwWars()) ||
-            (await MultiRankRoomModelMrrModelCheckIsRed())
+            (await checkMrrModelIsRed())
         );
     }
 
     private async _updateBtnMyRoom(): Promise<void> {
         this._btnMyRoom.setRedVisible(await checkIsAnyPromiseTrue([
-            MultiCustomRoomModelMcrModelCheckIsRed(),
-            CoopCustomRoomModelCcrModelCheckIsRed(),
-            MultiFreeRoomModelMfrModelCheckIsRed(),
-            MultiRankRoomModelMrrModelCheckIsRed(),
-            MultiMatchRoomModelMmrModelCheckIsRed(),
-            checkIsRed()
+            checkMcrModelIsRed(),
+            checkCcrModelIsRed(),
+            checkMfrModelIsRed(),
+            checkMrrModelIsRed(),
+            checkMmrModelIsRed(),
+            checkAutoTourneysIsRed()
         ]));
     }
 
@@ -396,6 +405,6 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _updateBtnWatchWar(): Promise<void> {
-        this._btnWatchWar.setRedVisible(await WatchWarModelWwModelCheckIsRed());
+        this._btnWatchWar.setRedVisible(await checkWwModelIsRed());
     }
 }

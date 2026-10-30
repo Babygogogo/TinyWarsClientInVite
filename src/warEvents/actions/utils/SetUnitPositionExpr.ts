@@ -8,8 +8,11 @@ import { Parser } from "../../../expressionParsers/Parser.ts";
 import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { Position } from "../../../expressionParsers/results/Position.ts";
-import { Tile as ExpressionParsersResultsTile } from "../../../expressionParsers/results/Tile.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { Tile as ResultsTile } from "../../../expressionParsers/results/Tile.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import type { WeaSetUnitPositionExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionExpr.ts";
@@ -131,7 +134,7 @@ function evalActDestination(action: WeaSetUnitPositionExpr, unit: IUnit): GridIn
     try {
         const war       = unit.getWar();
         const epResult  = Parser.getParseResult(act).eval(new Unit(new NullableUnit(war, unit)), false);
-        if (epResult instanceof ExpressionParsersResultsTile) {
+        if (epResult instanceof ResultsTile) {
             return epResult.tile.getGridIndex();
 
         } else if (epResult instanceof Position) {

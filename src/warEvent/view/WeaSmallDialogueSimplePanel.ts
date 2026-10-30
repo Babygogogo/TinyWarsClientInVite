@@ -1,13 +1,25 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { Common, SmallDialogueSideId } from "../../dialogues/Constants.ts";
+import {
+    Common,
+    SmallDialogueSideId,
+} from "../../dialogues/Constants.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { deleteElementFromList, createRange } from "../../helpers/Collection.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    deleteElementFromList,
+    createRange,
+} from "../../helpers/Collection.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getFormattedText,
@@ -36,7 +48,10 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getDefaultSimpleCoDialogueData, getErrorTipForAction } from "../../warEvents/actions/utils/Common.ts";
+import {
+    getDefaultSimpleCoDialogueData,
+    getErrorTipForAction,
+} from "../../warEvents/actions/utils/Common.ts";
 import { getErrorTipForWeaSimpleDialogueData } from "../../warEvents/actions/utils/SmallDialogueSimple.ts";
 
 export interface OpenData {

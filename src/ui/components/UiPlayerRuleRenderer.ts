@@ -9,8 +9,16 @@ import { ColorValue } from "../../graphics/Constants.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { getTextColor } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerRuleName, getPlayerTeamName, getUnitAndTileSkinName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerRuleName,
+    getPlayerTeamName,
+    getUnitAndTileSkinName,
+} from "../../lang/Utils.ts";
 import type { RuleEditor_PlayerRuleChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

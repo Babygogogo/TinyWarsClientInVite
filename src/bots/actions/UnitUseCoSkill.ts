@@ -1,7 +1,10 @@
 import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
-import { getUnitTypeSetForCoSkillSetUnitIdle, getCoPowerSkillTargetGridIndexArray } from "../Utils.ts";
+import {
+    getUnitTypeSetForCoSkillSetUnitIdle,
+    getCoPowerSkillTargetGridIndexArray,
+} from "../Utils.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -10,10 +13,7 @@ import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-type GrScoreAndAction   = ScoreAndAction;
-
-export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+export async function getScoreAndActionUnitUseCoSkill(commonParams: CommonParams, unit: IUnit, pathNodes: MovePathNode[]): Promise<ScoreAndAction | null> {
     await checkAndCallLater();
 
     const war               = commonParams.getWar();

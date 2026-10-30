@@ -2,10 +2,20 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getComparatorName,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { checkIsDefault, getBriefDesc } from "../../multiplierAndOffsets/Utils.ts";
+import {
+    checkIsDefault,
+    getBriefDesc as getMultiplierAndOffsetsBriefDesc,
+} from "../../multiplierAndOffsets/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MultiplierAndOffset } from "../../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
@@ -20,9 +30,15 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
-import { getBriefDesc as ValueAndComparatorsUtilsGetBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
+import {
+    ComparatorId,
+    AllComparatorIdArray,
+} from "../../valueAndComparators/Constants.ts";
+import { getBriefDesc as getValueAndComparatorsBriefDesc } from "../../valueAndComparators/Utils.ts";
+import {
+    getErrorTipForAction,
+    getDetailDescForAction,
+} from "../../warEvents/actions/utils/Common.ts";
 import { Event } from "../../warEvents/Constants.ts";
 
 export interface OpenData {
@@ -645,7 +661,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateLabelConUnitComparator(): void {
         const comparator = this._getAction()?.getConUnitComparator();
-        this._labelConUnitComparator.setText(comparator == null ? `` : ValueAndComparatorsUtilsGetBriefDesc(comparator));
+        this._labelConUnitComparator.setText(comparator == null ? `` : getValueAndComparatorsBriefDesc(comparator));
     }
 
     private _updateLabelConTileFilter(): void {
@@ -656,7 +672,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActRadius();
         this._labelActRadius.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 
@@ -664,7 +680,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActPriority();
         this._labelActPriority.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 
@@ -696,7 +712,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetFund();
         this._labelActOffsetFund.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 
@@ -704,7 +720,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetEnergyPercentage();
         this._labelActOffsetEnergyPercentage.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 
@@ -712,7 +728,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetHp();
         this._labelActOffsetHp.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 
@@ -728,7 +744,7 @@ export class Panel extends UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetPrimaryAmmoPercentage();
         this._labelActOffsetPrimaryAmmoPercentage.setText(act == null
             ? ``
-            : getBriefDesc(act)
+            : getMultiplierAndOffsetsBriefDesc(act)
         );
     }
 

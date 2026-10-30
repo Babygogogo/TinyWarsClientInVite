@@ -1,11 +1,18 @@
 import { PhaseId } from "../../Constants.ts";
 import { reqAtRegister } from "../Gateway.ts";
-import { getSinglePhaseInfoArrayForPhase, getAtRegistrationInfo, getAtTourneyInfo } from "../Provider.ts";
+import {
+    getSinglePhaseInfoArrayForPhase,
+    getAtRegistrationInfo,
+    getAtTourneyInfo,
+} from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getLanguageText, getTimeDurationText2 } from "../../../lang/Utils.ts";
+import {
+    getLanguageText,
+    getTimeDurationText2,
+} from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
-import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
+import type { S as AtGetRegistrationInfoResponse } from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
 import { getServerTimestamp } from "../../../timer/TimerModel.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
@@ -119,7 +126,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtGetRegistrationInfo(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as AtGetRegistrationInfoResponse;
         if (data.getTourneyId() === this._tourneyId) {
             this._updateView();
         }

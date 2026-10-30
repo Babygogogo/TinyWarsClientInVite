@@ -1,8 +1,14 @@
 import { reqCommonGetServerStatus } from "../model/CommonProxy.ts";
-import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getTimeDurationText, getText } from "../../lang/Utils.ts";
+import {
+    UndefinedError,
+    TextType,
+} from "../../lang/Constants.ts";
+import {
+    getTimeDurationText,
+    getText,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
+import type { S as CommonGetServerStatusResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -47,7 +53,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onMsgCommonGetServerStatus(e: Event): void {
-        const data = e.data as S;
+        const data = e.data as CommonGetServerStatusResponse;
 
         this._labelAccounts.setText("" + data.getTotalAccounts());
 

@@ -1,5 +1,9 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { DefaultParams, TimerTypeId, Incremental } from "../bootTimers/Constants.ts";
+import {
+    DefaultParams,
+    TimerTypeId,
+    Incremental,
+} from "../bootTimers/Constants.ts";
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";

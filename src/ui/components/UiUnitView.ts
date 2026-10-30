@@ -1,16 +1,32 @@
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getUnitAnimationTickCount, getCachedUnitImageSource, getStateIndicatorTickCount } from "../../common/model/CommonModel.ts";
+import {
+    getUnitAnimationTickCount,
+    getCachedUnitImageSource,
+    getStateIndicatorTickCount,
+} from "../../common/model/CommonModel.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { getFinalSkinId2 } from "../../forceSkins/Utils.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { getUnitHp, getUnitCornerStateIcon, getUnitPromotion, getUnitBuff } from "../../helpers/ImageSource.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import {
+    getUnitHp,
+    getUnitCornerStateIcon,
+    getUnitPromotion,
+    getUnitBuff,
+} from "../../helpers/ImageSource.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
 import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiUnitView } from "../interfaces/IUiUnitView.ts";
 import type { UiUnitViewData } from "../types/UiUnitViewData.ts";
 import { getUiImageClass } from "../utils/UiFactory.ts";
-import { ActionStateId, AnimationTypeId, CornerStateIconTypeId } from "../../units/Constants.ts";
+import {
+    ActionStateId,
+    AnimationTypeId,
+    CornerStateIconTypeId,
+} from "../../units/Constants.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";

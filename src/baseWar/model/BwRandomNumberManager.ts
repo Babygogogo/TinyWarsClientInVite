@@ -1,7 +1,14 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwRandomNumberManager } from "../interface/IBwRandomNumberManager.ts";
-import { newError, getExisted, getDefined } from "../../helpers/Misc.ts";
-import { type IGenerator, Generator } from "../../helpers/SeedRandom.ts";
+import {
+    newError,
+    getExisted,
+    getDefined,
+} from "../../helpers/Misc.ts";
+import {
+    type IGenerator,
+    Generator,
+} from "../../helpers/SeedRandom.ts";
 import type {
     SeedRandomStateJson,
     SeedRandomState,

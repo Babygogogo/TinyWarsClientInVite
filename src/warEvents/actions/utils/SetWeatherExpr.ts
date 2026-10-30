@@ -4,7 +4,10 @@ import { Weather } from "../../../expressionParsers/contexts/Weather.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { newError } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";

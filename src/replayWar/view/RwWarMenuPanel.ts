@@ -11,11 +11,15 @@ import {
     gotoSrrCreateMapListPanel,
 } from "../../helpers/GameFlow.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getErrorText, getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import {
+    getErrorText,
+    getText,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
 import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { S as MeSubmitNormalMapResponse } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
 import { Common } from "../../replayWars/Constants.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -99,7 +103,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateBtnFavorite();
     }
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
-        const slotIndex = (e.data as S).getSlotIndex() ?? 0;
+        const slotIndex = (e.data as MeSubmitNormalMapResponse).getSlotIndex() ?? 0;
         openPanel(getDict().CommonConfirmPanel, {
             getContent : () => getText(TextType.A0872),
             callback   : async () => {

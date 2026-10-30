@@ -1,21 +1,37 @@
 import { StateId } from "../../actionPlanners/Constants.ts";
 import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { getCachedTileObjectImageSource, getTileAnimationTickCount } from "../../common/model/CommonModel.ts";
+import {
+    getCachedTileObjectImageSource,
+    getTileAnimationTickCount,
+} from "../../common/model/CommonModel.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getEstimatedBattleInfo, getAttackAndCounterDamage } from "../../damageCalculators/Utils.ts";
-import { getSpwWarClass, getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getEstimatedBattleInfo,
+    getAttackAndCounterDamage,
+} from "../../damageCalculators/Utils.ts";
+import {
+    getSpwWarClass,
+    getRwWarBaseClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
-import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import {
+    createLazyFunc,
+    getExisted,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { getStage } from "../../stages/StageManager.ts";
-import { TileTypeId, ThemeTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import {
+    TileTypeId,
+    ThemeTypeId,
+    ObjectTypeId,
+} from "../../tiles/constants/Common.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";

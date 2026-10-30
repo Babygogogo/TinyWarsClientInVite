@@ -1,10 +1,16 @@
 import { reqCmSetCampaignMapRawData } from "../../campaigns/managements/Gateway.ts";
-import { showLang, show } from "../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getErrorText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getErrorText,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
 import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";

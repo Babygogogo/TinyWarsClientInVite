@@ -1,6 +1,12 @@
 import { getDict } from "../../gamePanels/Dict.ts";
-import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
-import { getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
+import {
+    closePanel,
+    openPanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    getUserAvatar,
+    getMedal,
+} from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { UndefinedError } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -13,7 +19,12 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
-import { getSelfUserId, getSelfNickname, getSelfAvatarId, getSelfShowMedalIdArray } from "../../users/Model.ts";
+import {
+    getSelfUserId,
+    getSelfNickname,
+    getSelfAvatarId,
+    getSelfShowMedalIdArray,
+} from "../../users/Model.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {

@@ -1,7 +1,13 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";

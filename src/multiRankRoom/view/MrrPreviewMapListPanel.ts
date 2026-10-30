@@ -1,22 +1,41 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
-import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
-    Page as CommonViewCommonWarBasicSettingsPage,
+    DefaultParams,
+    TimerTypeId,
+} from "../../bootTimers/Constants.ts";
+import {
+    type OpenData as CommonWarAdvancedSettingsPageOpenData,
+    Page as CommonWarAdvancedSettingsPage,
+} from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonWarBasicSettingsPageOpenData,
+    Page as CommonWarBasicSettingsPage,
 } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import {
-    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
-    Page as CommonViewCommonWarMapInfoPage,
+    type OpenData as CommonWarMapInfoPageOpenData,
+    Page as CommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
-import { getEnabledNormalMapIdSet, getBriefData, getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
+import {
+    getEnabledNormalMapIdSet,
+    getBriefData,
+    getRawData,
+} from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -39,14 +58,14 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { create } from "../../warRules/utils/Instance.ts";
-import {BasicSettingsTypeId} from "../../wars/Constants.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
 
 export interface OpenData {
     hasFog: boolean;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _groupTab!             : IUiContainer;
-    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData>;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonWarMapInfoPageOpenData | CommonWarBasicSettingsPageOpenData | CommonWarAdvancedSettingsPageOpenData>;
 
     private readonly _groupNavigator!       : IUiLayout;
     private readonly _layoutNavName!        : IUiLayout;
@@ -147,17 +166,17 @@ export class Panel extends UiPanel<OpenData> {
         await this._tabSettings.bindData([
             {
                 tabItemData : { name: getText(TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageClass   : CommonWarMapInfoPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageClass   : CommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
                 tabItemData : { name: getText(TextType.B0003) },
-                pageClass   : Page,
+                pageClass   : CommonWarAdvancedSettingsPage,
                 pageData    : null,
             },
         ]);
@@ -263,7 +282,7 @@ export class Panel extends UiPanel<OpenData> {
         return dataArray.sort((a, b) => a.mapName.localeCompare(b.mapName, "zh"));
     }
 
-    private async _createDataForCommonMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+    private async _createDataForCommonMapInfoPage(): Promise<CommonWarMapInfoPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         return normalMapId == null
             ? null
@@ -277,7 +296,7 @@ export class Panel extends UiPanel<OpenData> {
             };
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonWarBasicSettingsPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;
@@ -306,7 +325,7 @@ export class Panel extends UiPanel<OpenData> {
         const timerType         = bootTimerParams[0] as TimerTypeId;
         const gameConfig        = await getLatestGameConfig();
         const warEventFullData  = mapRawData.getWarEventFullData() ?? null;
-        const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
+        const openData          : CommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings    : [
                 {
                     settingsType    : BasicSettingsTypeId.NormalMapId,
@@ -401,7 +420,7 @@ export class Panel extends UiPanel<OpenData> {
         return openData;
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonWarAdvancedSettingsPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;

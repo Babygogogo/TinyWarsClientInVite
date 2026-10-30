@@ -1,14 +1,13 @@
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgGmAddUserMedal/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgGmDeleteSpmAllScoreAndReplayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgGmDeleteSpmAllScoreAndReplay/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgGmSetUserPrivilegeS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgGmSetUserPrivilege/S.ts";
+import type { S as GmAddUserMedalResponse } from "../../proto/schema/CommonProto/NetMessage/MsgGmAddUserMedal/S.ts";
+import type { S as GmDeleteSpmAllScoreAndReplayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgGmDeleteSpmAllScoreAndReplay/S.ts";
+import type { S as GmSetUserPrivilegeResponse } from "../../proto/schema/CommonProto/NetMessage/MsgGmSetUserPrivilege/S.ts";
 import type { UserPrivilege } from "../../proto/schema/CommonProto/User/UserPrivilege.ts";
 import { updateOnMsgGmSetUserPrivilege } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
@@ -54,7 +53,7 @@ export function reqGmSetUserPrivilege(userId: number, userPrivilege: UserPrivile
     } } });
 }
 async function _onMsgGmSetUserPrivilege(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgGmSetUserPrivilegeS;
+    const data = e.data as GmSetUserPrivilegeResponse;
     if (!data.getErrorCode()) {
         updateOnMsgGmSetUserPrivilege(data);
         dispatch(TypeId.MsgGmSetUserPrivilege, data);
@@ -68,7 +67,7 @@ export function reqGmDeleteSpmAllScoreAndReplay(): void {
     });
 }
 function _onMsgGmDeleteSpmAllScoreAndReplay(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgGmDeleteSpmAllScoreAndReplayS;
+    const data = e.data as GmDeleteSpmAllScoreAndReplayResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgGmDeleteSpmAllScoreAndReplay, data);
     }
@@ -84,7 +83,7 @@ export function reqGmAddUserMedal(userId: number, medalId: number, expireTimesta
     });
 }
 function _onMsgGmAddUserMedal(e: Event): void {
-    const data = e.data as S;
+    const data = e.data as GmAddUserMedalResponse;
     if (!data.getErrorCode()) {
         dispatch(TypeId.MsgGmAddUserMedal, data);
     }

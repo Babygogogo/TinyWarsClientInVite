@@ -1,17 +1,32 @@
-import type { CustomError, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    CustomError,
+    Undefinable,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfigs/Provider.ts";
+import {
+    getLatestConfigVersion,
+    getLatestGameConfig,
+} from "../../gameConfigs/Provider.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import { DirectionId, SymmetryTypeId } from "../../geometries/Constants.ts";
+import {
+    DirectionId,
+    SymmetryTypeId,
+} from "../../geometries/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { Common } from "../../maps/Constants.ts";
-import { createDefaultPlayerRule, createDefaultPlayerRuleList } from "../../playerRules/Utils.ts";
-import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
+import { Common as MapsCommon } from "../../maps/Constants.ts";
+import {
+    createDefaultPlayerRule,
+    createDefaultPlayerRuleList,
+} from "../../playerRules/Utils.ts";
+import {
+    AliveStateId,
+    PlayerIndex,
+} from "../../players/Constants.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { GridIndex as ProtoGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
@@ -22,22 +37,38 @@ import { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerializa
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { checkIsTileBaseSymmetrical, getDefaultTileBaseType } from "../../tileBases/Utils.ts";
+import {
+    checkIsTileBaseSymmetrical,
+    getDefaultTileBaseType,
+} from "../../tileBases/Utils.ts";
 import { checkIsTileDecorationSymmetrical } from "../../tileDecorations/Utils.ts";
-import { checkIsTileObjectSymmetrical, getSymmetricalTileObjectType } from "../../tileObjects/Utils.ts";
-import { BaseTypeId, DecorationTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import {
+    checkIsTileObjectSymmetrical,
+    getSymmetricalTileObjectType,
+} from "../../tileObjects/Utils.ts";
+import {
+    BaseTypeId,
+    DecorationTypeId,
+    ObjectTypeId,
+} from "../../tiles/constants/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import type { ITileMap } from "../../tiles/ITileMap.ts";
-import { createDefault } from "../../tiles/utils/Serialization.ts";
+import { createDefault as createSerializationDefault } from "../../tiles/utils/Serialization.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { PhaseCode, TurnIndex } from "../../turns/Constants.ts";
+import {
+    PhaseCode,
+    TurnIndex,
+} from "../../turns/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import type { IUnitMap } from "../../units/IUnitMap.ts";
-import { getSelfNickname, getSelfUserId } from "../../users/Model.ts";
+import {
+    getSelfNickname,
+    getSelfUserId,
+} from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Common as WarOperationConstants } from "../../warOperations/Constants.ts";
+import { Common as WarOperationsCommon } from "../../warOperations/Constants.ts";
 import { create } from "../../warRules/utils/Instance.ts";
-import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRules/utils/Template.ts";
+import { createDefault as createTemplateDefault } from "../../warRules/utils/Template.ts";
 import type { IMeWar } from "../interface/IMeWar.ts";
 import type { AsymmetricalCounters } from "./MeTypes.ts";
 
@@ -193,7 +224,7 @@ export function createDefaultTileDataArray(mapWidth: number, mapHeight: number, 
     const dataList: SerialTile[] = [];
     for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
-            dataList.push(createDefault({
+            dataList.push(createSerializationDefault({
                 tileBaseTypeId   : tileBaseType,
                 tileObjectTypeId : ObjectTypeId.Empty,
                 gridIndex        : { x, y },
@@ -222,7 +253,7 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
             configVersion      : await getLatestConfigVersion(),
             instanceWarRule    : instanceWarRule.toJson(),
             turnsLimit         : TurnIndex.DefaultLimit,
-            warOperationsLimit : WarOperationConstants.DefaultLimit,
+            warOperationsLimit : WarOperationsCommon.DefaultLimit,
         },
         isEnded         : false,
         drawVoteManager : {
@@ -302,7 +333,7 @@ export function createRevisedTemplateWarRuleArrayForMeWar(srcTemplateWarRuleArra
 }
 function createRevisedTemplateWarRuleForMeWar(templateWarRule: Undefinable<TemplateWarRule>, gcData: GameConfig): TemplateWarRule {
     if (templateWarRule == null) {
-        return WarRulesUtilsTemplateCreateDefault(0, PlayerIndex.Max, gcData);
+        return createTemplateDefault(0, PlayerIndex.Max, gcData);
     } else {
         const revisedTemplateWarRule = templateWarRule.clone();
         revisedTemplateWarRule.getWarRuleCommonData()?.setPlayerRuleList(createRevisedRuleForPlayersForMeWar(revisedTemplateWarRule, gcData));
@@ -398,7 +429,7 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
     for (let x = 0; x < newWidth; ++x) {
         for (let y = 0; y < newHeight; ++y) {
             if ((x >= oldWidth) || (y >= oldHeight)) {
-                tileList.push(createDefault({
+                tileList.push(createSerializationDefault({
                     tileBaseTypeId   : tileBaseType,
                     tileObjectTypeId : ObjectTypeId.Empty,
                     gridIndex        : { x, y },
@@ -497,7 +528,7 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
                 ((offsetY > 0) && (y < offsetY))            ||
                 ((offsetY < 0) && (y >= height + offsetY))
             ) {
-                tileDataList.push(createDefault({
+                tileDataList.push(createSerializationDefault({
                     tileBaseTypeId   : tileBaseType,
                     tileObjectTypeId : ObjectTypeId.Empty,
                     gridIndex        : { x, y },
@@ -985,7 +1016,7 @@ function checkIsSeaOrBeachOrEmpty(tileMap: ITileMap, gridIndex: GridIndex): bool
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData): Promise<ClientErrorCode> {
-    if (mapRawData.encode().byteLength > Common.MaxFileSize) {
+    if (mapRawData.encode().byteLength > MapsCommon.MaxFileSize) {
         return ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_00;
     }
 

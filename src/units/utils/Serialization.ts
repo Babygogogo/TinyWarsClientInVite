@@ -6,17 +6,20 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
-    type SerialUnitJson as ProtoSchemaCommonProtoWarSerializationSerialUnitSerialUnitJson,
+    type SerialUnitJson as ProtoSerialUnitJson,
     SerialUnit,
 } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { checkIsValid } from "../../unitBuffs/utils/Common.ts";
 import { ActionStateId } from "../Constants.ts";
 import type { IUnit } from "../IUnit.ts";
-import { checkIsValidProduceMaterial, checkIsValidPrimaryAmmo, checkIsValidEncodedTagId } from "./Common.ts";
+import {
+    checkIsValidProduceMaterial,
+    checkIsValidPrimaryAmmo,
+    checkIsValidEncodedTagId,
+} from "./Common.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { toGridIndexAndWeight } from "../../weightedGridIndexes/Utils.ts";
 
-type SerialUnitJson     = ProtoSchemaCommonProtoWarSerializationSerialUnitSerialUnitJson;
 export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: number): SerialUnit {
     const unitTemplateCfg       = getExisted(unit.getGcData().getUnitTemplateCfg(newUnitTypeId));
     const maxBuildMaterial      = unitTemplateCfg.getMaxBuildMaterial() ?? 0;
@@ -183,7 +186,7 @@ export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GameCo
     unitData.setCurrentFuel(cfg.getMaxFuel());
 }
 
-export function create(json: Required<SerialUnitJson>): SerialUnit {
+export function create(json: Required<ProtoSerialUnitJson>): SerialUnit {
     return SerialUnit.fromJson(json);
 }
 

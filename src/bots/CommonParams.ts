@@ -12,9 +12,6 @@ import type { IUnit } from "../units/IUnit.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
-type IBwUnit            = IUnit;
-type IBwTile            = ITile;
-type GrScoreAndAction   = ScoreAndAction;
 interface UnitsInfo {
     value           : number;
     allCountOnMap   : number;
@@ -26,15 +23,15 @@ export class CommonParams {
     private readonly _mapSize                   : MapSize;
     private readonly _unitsInfoDict             : Map<number, UnitsInfo>;
     private readonly _unitValueRatio            : number;
-    private readonly _visibleUnits              : Set<IBwUnit>;
+    private readonly _visibleUnits              : Set<IUnit>;
     private readonly _globalOffenseBonuses      : Map<number, number>;
     private readonly _globalDefenseBonuses      : Map<number, number>;
     private readonly _settingsLuckValueDict     : Map<number, number>;
 
-    private readonly _bestScoreAndActionDict    = new Map<IBwUnit, GrScoreAndAction>();
-    private readonly _unitMoveCostDict          = new Map<IBwUnit, Map<IBwTile, Undefinable<number>>>();
-    private readonly _canAttackAfterMovingDict  = new Map<IBwUnit, boolean>();
-    private readonly _unitVisionInfoDict        = new Map<IBwUnit, UnitVisionInfo>();
+    private readonly _bestScoreAndActionDict    = new Map<IUnit, ScoreAndAction>();
+    private readonly _unitMoveCostDict          = new Map<IUnit, Map<ITile, Undefinable<number>>>();
+    private readonly _canAttackAfterMovingDict  = new Map<IUnit, boolean>();
+    private readonly _unitVisionInfoDict        = new Map<IUnit, UnitVisionInfo>();
 
     public static async create(war: IBwWar): Promise<CommonParams> {
         const playerIndexInTurn     = war.getPlayerIndexInTurn();
@@ -173,7 +170,7 @@ export class CommonParams {
         war                     : IBwWar;
         unitsInfoDict           : Map<number, UnitsInfo>;
         unitValueRatio          : number;
-        visibleUnits            : Set<IBwUnit>;
+        visibleUnits            : Set<IUnit>;
         globalOffenseBonuses    : Map<number, number>;
         globalDefenseBonuses    : Map<number, number>;
         settingsLuckValueDict   : Map<number, number>;
@@ -204,7 +201,7 @@ export class CommonParams {
     public getUnitValueRatio(): number {
         return this._unitValueRatio;
     }
-    public getVisibleUnits(): Set<IBwUnit> {
+    public getVisibleUnits(): Set<IUnit> {
         return this._visibleUnits;
     }
     public getGlobalOffenseBonuses(): Map<number, number> {
@@ -216,11 +213,11 @@ export class CommonParams {
     public getSettingsLuckValueDict(): Map<number, number> {
         return this._settingsLuckValueDict;
     }
-    public getBestScoreAndActionDict(): Map<IBwUnit, GrScoreAndAction> {
+    public getBestScoreAndActionDict(): Map<IUnit, ScoreAndAction> {
         return this._bestScoreAndActionDict;
     }
 
-    public getCanAttackAfterMoving(unit: IBwUnit): boolean {
+    public getCanAttackAfterMoving(unit: IUnit): boolean {
         const dict = this._canAttackAfterMovingDict;
         if (!dict.has(unit)) {
             dict.set(unit, unit.getFinalCanAttackAfterMoving());
@@ -229,7 +226,7 @@ export class CommonParams {
         return dict.get(unit) ?? false;
     }
 
-    public getUnitVisionInfo(unit: IBwUnit): UnitVisionInfo {
+    public getUnitVisionInfo(unit: IUnit): UnitVisionInfo {
         const dict = this._unitVisionInfoDict;
         if (!dict.has(unit)) {
             dict.set(unit, unit.getVisionInfo());
@@ -238,7 +235,7 @@ export class CommonParams {
         return getExisted(dict.get(unit));
     }
 
-    public getMoveCost(unit: IBwUnit, tile: IBwTile): number | null {
+    public getMoveCost(unit: IUnit, tile: ITile): number | null {
         const moveCostDict = this._unitMoveCostDict;
         if (!moveCostDict.has(unit)) {
             moveCostDict.set(unit, new Map());

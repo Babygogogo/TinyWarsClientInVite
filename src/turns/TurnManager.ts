@@ -1,17 +1,26 @@
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { newError, getExisted } from "../helpers/Misc.ts";
+import {
+    newError,
+    getExisted,
+} from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import { PlayerIndex, AliveStateId } from "../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../players/Constants.ts";
 import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
 import { SerialTurnManager } from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
 import { PhaseCode } from "./Constants.ts";
 import type { ITurnManager } from "./ITurnManager.ts";
-import { endPhaseStandby, endPhaseMain } from "./phaseHandlers/WithExtraData.ts";
 import {
-    endPhaseStandby as TurnsPhaseHandlersWithoutExtraDataEndPhaseStandby,
-    endPhaseMain as TurnsPhaseHandlersWithoutExtraDataEndPhaseMain,
+    endPhaseStandby as withExtraDataEndPhaseStandby,
+    endPhaseMain as withExtraDataEndPhaseMain,
+} from "./phaseHandlers/WithExtraData.ts";
+import {
+    endPhaseStandby as withoutExtraDataEndPhaseStandby,
+    endPhaseMain as withoutExtraDataEndPhaseMain,
 } from "./phaseHandlers/WithoutExtraData.ts";
 import type { TurnAndPlayerIndex } from "./Types.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
@@ -80,14 +89,14 @@ export class TurnManager implements ITurnManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public endPhaseStandby(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
         return this.getWar().getIsExecuteActionsWithExtraData()
-            ? endPhaseStandby(this, action, isFastExecute)
-            : TurnsPhaseHandlersWithoutExtraDataEndPhaseStandby(this, isFastExecute);
+            ? withExtraDataEndPhaseStandby(this, action, isFastExecute)
+            : withoutExtraDataEndPhaseStandby(this, isFastExecute);
     }
 
     public endPhaseMain(action: WoPlayerEndTurn, isFastExecute: boolean): void {
         this.getWar().getIsExecuteActionsWithExtraData()
-            ? endPhaseMain(this, action, isFastExecute)
-            : TurnsPhaseHandlersWithoutExtraDataEndPhaseMain(this, isFastExecute);
+            ? withExtraDataEndPhaseMain(this, action, isFastExecute)
+            : withoutExtraDataEndPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

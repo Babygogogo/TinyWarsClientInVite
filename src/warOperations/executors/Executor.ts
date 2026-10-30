@@ -1,44 +1,47 @@
 import { ExecutingAction } from "../../actionPlanners/states/ExecutingAction.ts";
 import { Idle } from "../../actionPlanners/states/Idle.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { getSpwWarClass, getRwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getSpwWarClass,
+    getRwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { execute } from "./utils/PlayerDeleteUnit.ts";
-import { execute as WarOperationsExecutorsUtilsPlayerEndTurnExecute } from "./utils/PlayerEndTurn.ts";
-import { execute as WarOperationsExecutorsUtilsPlayerProduceUnitExecute } from "./utils/PlayerProduceUnit.ts";
-import { execute as WarOperationsExecutorsUtilsPlayerSurrenderExecute } from "./utils/PlayerSurrender.ts";
-import { execute as WarOperationsExecutorsUtilsPlayerUseCoSkillExecute } from "./utils/PlayerUseCoSkill.ts";
-import { execute as WarOperationsExecutorsUtilsPlayerVoteForDrawExecute } from "./utils/PlayerVoteForDraw.ts";
-import { execute as WarOperationsExecutorsUtilsSystemBeginTurnExecute } from "./utils/SystemBeginTurn.ts";
-import { execute as WarOperationsExecutorsUtilsSystemCallWarEventExecute } from "./utils/SystemCallWarEvent.ts";
-import { execute as WarOperationsExecutorsUtilsSystemDestroyPlayerForceExecute } from "./utils/SystemDestroyPlayerForce.ts";
-import { execute as WarOperationsExecutorsUtilsSystemEndTurnExecute } from "./utils/SystemEndTurn.ts";
-import { execute as WarOperationsExecutorsUtilsSystemEndWarExecute } from "./utils/SystemEndWar.ts";
-import { execute as WarOperationsExecutorsUtilsSystemHandleBootPlayerExecute } from "./utils/SystemHandleBootPlayer.ts";
-import { execute as WarOperationsExecutorsUtilsSystemVoteForDrawExecute } from "./utils/SystemVoteForDraw.ts";
-import { execute as WarOperationsExecutorsUtilsUnitAttackTileExecute } from "./utils/UnitAttackTile.ts";
-import { execute as WarOperationsExecutorsUtilsUnitAttackUnitExecute } from "./utils/UnitAttackUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitBeLoadedExecute } from "./utils/UnitBeLoaded.ts";
-import { execute as WarOperationsExecutorsUtilsUnitBoardedByCoExecute } from "./utils/UnitBoardedByCo.ts";
-import { execute as WarOperationsExecutorsUtilsUnitBuildTileExecute } from "./utils/UnitBuildTile.ts";
-import { execute as WarOperationsExecutorsUtilsUnitCaptureTileExecute } from "./utils/UnitCaptureTile.ts";
-import { execute as WarOperationsExecutorsUtilsUnitCrushUnitExecute } from "./utils/UnitCrushUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitDiveExecute } from "./utils/UnitDive.ts";
-import { execute as WarOperationsExecutorsUtilsUnitDropUnitExecute } from "./utils/UnitDropUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitJoinUnitExecute } from "./utils/UnitJoinUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitLaunchFlareExecute } from "./utils/UnitLaunchFlare.ts";
-import { execute as WarOperationsExecutorsUtilsUnitLaunchSiloExecute } from "./utils/UnitLaunchSilo.ts";
-import { execute as WarOperationsExecutorsUtilsUnitProduceUnitExecute } from "./utils/UnitProduceUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitRepairUnitExecute } from "./utils/UnitRepairUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitSelfDetonateExecute } from "./utils/UnitSelfDetonate.ts";
-import { execute as WarOperationsExecutorsUtilsUnitSupplyUnitExecute } from "./utils/UnitSupplyUnit.ts";
-import { execute as WarOperationsExecutorsUtilsUnitSurfaceExecute } from "./utils/UnitSurface.ts";
-import { execute as WarOperationsExecutorsUtilsUnitUseCoSkillExecute } from "./utils/UnitUseCoSkill.ts";
-import { execute as WarOperationsExecutorsUtilsUnitWaitExecute } from "./utils/UnitWait.ts";
+import { execute as playerDeleteUnitExecute } from "./utils/PlayerDeleteUnit.ts";
+import { execute as playerEndTurnExecute } from "./utils/PlayerEndTurn.ts";
+import { execute as playerProduceUnitExecute } from "./utils/PlayerProduceUnit.ts";
+import { execute as playerSurrenderExecute } from "./utils/PlayerSurrender.ts";
+import { execute as playerUseCoSkillExecute } from "./utils/PlayerUseCoSkill.ts";
+import { execute as playerVoteForDrawExecute } from "./utils/PlayerVoteForDraw.ts";
+import { execute as systemBeginTurnExecute } from "./utils/SystemBeginTurn.ts";
+import { execute as systemCallWarEventExecute } from "./utils/SystemCallWarEvent.ts";
+import { execute as systemDestroyPlayerForceExecute } from "./utils/SystemDestroyPlayerForce.ts";
+import { execute as systemEndTurnExecute } from "./utils/SystemEndTurn.ts";
+import { execute as systemEndWarExecute } from "./utils/SystemEndWar.ts";
+import { execute as systemHandleBootPlayerExecute } from "./utils/SystemHandleBootPlayer.ts";
+import { execute as systemVoteForDrawExecute } from "./utils/SystemVoteForDraw.ts";
+import { execute as unitAttackTileExecute } from "./utils/UnitAttackTile.ts";
+import { execute as unitAttackUnitExecute } from "./utils/UnitAttackUnit.ts";
+import { execute as unitBeLoadedExecute } from "./utils/UnitBeLoaded.ts";
+import { execute as unitBoardedByCoExecute } from "./utils/UnitBoardedByCo.ts";
+import { execute as unitBuildTileExecute } from "./utils/UnitBuildTile.ts";
+import { execute as unitCaptureTileExecute } from "./utils/UnitCaptureTile.ts";
+import { execute as unitCrushUnitExecute } from "./utils/UnitCrushUnit.ts";
+import { execute as unitDiveExecute } from "./utils/UnitDive.ts";
+import { execute as unitDropUnitExecute } from "./utils/UnitDropUnit.ts";
+import { execute as unitJoinUnitExecute } from "./utils/UnitJoinUnit.ts";
+import { execute as unitLaunchFlareExecute } from "./utils/UnitLaunchFlare.ts";
+import { execute as unitLaunchSiloExecute } from "./utils/UnitLaunchSilo.ts";
+import { execute as unitProduceUnitExecute } from "./utils/UnitProduceUnit.ts";
+import { execute as unitRepairUnitExecute } from "./utils/UnitRepairUnit.ts";
+import { execute as unitSelfDetonateExecute } from "./utils/UnitSelfDetonate.ts";
+import { execute as unitSupplyUnitExecute } from "./utils/UnitSupplyUnit.ts";
+import { execute as unitSurfaceExecute } from "./utils/UnitSurface.ts";
+import { execute as unitUseCoSkillExecute } from "./utils/UnitUseCoSkill.ts";
+import { execute as unitWaitExecute } from "./utils/UnitWait.ts";
 import { fastExeUnknownAction } from "./utils/Unknown.ts";
 
 export async function checkAndExecute(war: IBwWar, action: WoContainer, isFast: boolean): Promise<void> {
@@ -89,162 +92,162 @@ export async function checkAndExecute(war: IBwWar, action: WoContainer, isFast: 
 async function executeAction(war: IBwWar, action: WoContainer, isFast: boolean): Promise<void> {
     const woPlayerDeleteUnit = action.getWoPlayerDeleteUnit();
     if (woPlayerDeleteUnit) {
-        return await execute(war, woPlayerDeleteUnit, isFast);
+        return await playerDeleteUnitExecute(war, woPlayerDeleteUnit, isFast);
     }
 
     const woPlayerEndTurn = action.getWoPlayerEndTurn();
     if (woPlayerEndTurn) {
-        return await WarOperationsExecutorsUtilsPlayerEndTurnExecute(war, woPlayerEndTurn, isFast);
+        return await playerEndTurnExecute(war, woPlayerEndTurn, isFast);
     }
 
     const woPlayerProduceUnit = action.getWoPlayerProduceUnit();
     if (woPlayerProduceUnit) {
-        return await WarOperationsExecutorsUtilsPlayerProduceUnitExecute(war, woPlayerProduceUnit, isFast);
+        return await playerProduceUnitExecute(war, woPlayerProduceUnit, isFast);
     }
 
     const woPlayerSurrender = action.getWoPlayerSurrender();
     if (woPlayerSurrender) {
-        return await WarOperationsExecutorsUtilsPlayerSurrenderExecute(war, woPlayerSurrender, isFast);
+        return await playerSurrenderExecute(war, woPlayerSurrender, isFast);
     }
 
     const woPlayerUseCoSkill = action.getWoPlayerUseCoSkill();
     if (woPlayerUseCoSkill) {
-        return await WarOperationsExecutorsUtilsPlayerUseCoSkillExecute(war, woPlayerUseCoSkill, isFast);
+        return await playerUseCoSkillExecute(war, woPlayerUseCoSkill, isFast);
     }
 
     const woPlayerVoteForDraw = action.getWoPlayerVoteForDraw();
     if (woPlayerVoteForDraw) {
-        return await WarOperationsExecutorsUtilsPlayerVoteForDrawExecute(war, woPlayerVoteForDraw, isFast);
+        return await playerVoteForDrawExecute(war, woPlayerVoteForDraw, isFast);
     }
 
     const woSystemBeginTurn = action.getWoSystemBeginTurn();
     if (woSystemBeginTurn) {
-        return await WarOperationsExecutorsUtilsSystemBeginTurnExecute(war, woSystemBeginTurn, isFast);
+        return await systemBeginTurnExecute(war, woSystemBeginTurn, isFast);
     }
 
     const woSystemCallWarEvent = action.getWoSystemCallWarEvent();
     if (woSystemCallWarEvent) {
-        return await WarOperationsExecutorsUtilsSystemCallWarEventExecute(war, woSystemCallWarEvent, isFast);
+        return await systemCallWarEventExecute(war, woSystemCallWarEvent, isFast);
     }
 
     const woSystemDestroyPlayerForce = action.getWoSystemDestroyPlayerForce();
     if (woSystemDestroyPlayerForce) {
-        return await WarOperationsExecutorsUtilsSystemDestroyPlayerForceExecute(war, woSystemDestroyPlayerForce, isFast);
+        return await systemDestroyPlayerForceExecute(war, woSystemDestroyPlayerForce, isFast);
     }
 
     const woSystemEndTurn = action.getWoSystemEndTurn();
     if (woSystemEndTurn) {
-        return await WarOperationsExecutorsUtilsSystemEndTurnExecute(war, woSystemEndTurn, isFast);
+        return await systemEndTurnExecute(war, woSystemEndTurn, isFast);
     }
 
     const woSystemEndWar = action.getWoSystemEndWar();
     if (woSystemEndWar) {
-        return await WarOperationsExecutorsUtilsSystemEndWarExecute(war, woSystemEndWar, isFast);
+        return await systemEndWarExecute(war, woSystemEndWar, isFast);
     }
 
     const woSystemHandleBootPlayer = action.getWoSystemHandleBootPlayer();
     if (woSystemHandleBootPlayer) {
-        return await WarOperationsExecutorsUtilsSystemHandleBootPlayerExecute(war, woSystemHandleBootPlayer, isFast);
+        return await systemHandleBootPlayerExecute(war, woSystemHandleBootPlayer, isFast);
     }
 
     const woSystemVoteForDraw = action.getWoSystemVoteForDraw();
     if (woSystemVoteForDraw) {
-        return await WarOperationsExecutorsUtilsSystemVoteForDrawExecute(war, woSystemVoteForDraw, isFast);
+        return await systemVoteForDrawExecute(war, woSystemVoteForDraw, isFast);
     }
 
     const woUnitAttackTile = action.getWoUnitAttackTile();
     if (woUnitAttackTile) {
-        return await WarOperationsExecutorsUtilsUnitAttackTileExecute(war, woUnitAttackTile, isFast);
+        return await unitAttackTileExecute(war, woUnitAttackTile, isFast);
     }
 
     const woUnitAttackUnit = action.getWoUnitAttackUnit();
     if (woUnitAttackUnit) {
-        return await WarOperationsExecutorsUtilsUnitAttackUnitExecute(war, woUnitAttackUnit, isFast);
+        return await unitAttackUnitExecute(war, woUnitAttackUnit, isFast);
     }
 
     const woUnitBeLoaded = action.getWoUnitBeLoaded();
     if (woUnitBeLoaded) {
-        return await WarOperationsExecutorsUtilsUnitBeLoadedExecute(war, woUnitBeLoaded, isFast);
+        return await unitBeLoadedExecute(war, woUnitBeLoaded, isFast);
     }
 
     const woUnitBoardedByCo = action.getWoUnitBoardedByCo();
     if (woUnitBoardedByCo) {
-        return await WarOperationsExecutorsUtilsUnitBoardedByCoExecute(war, woUnitBoardedByCo, isFast);
+        return await unitBoardedByCoExecute(war, woUnitBoardedByCo, isFast);
     }
 
     const woUnitBuildTile = action.getWoUnitBuildTile();
     if (woUnitBuildTile) {
-        return await WarOperationsExecutorsUtilsUnitBuildTileExecute(war, woUnitBuildTile, isFast);
+        return await unitBuildTileExecute(war, woUnitBuildTile, isFast);
     }
 
     const woUnitCaptureTile = action.getWoUnitCaptureTile();
     if (woUnitCaptureTile) {
-        return await WarOperationsExecutorsUtilsUnitCaptureTileExecute(war, woUnitCaptureTile, isFast);
+        return await unitCaptureTileExecute(war, woUnitCaptureTile, isFast);
     }
 
     const woUnitCrushUnit = action.getWoUnitCrushUnit();
     if (woUnitCrushUnit) {
-        return await WarOperationsExecutorsUtilsUnitCrushUnitExecute(war, woUnitCrushUnit, isFast);
+        return await unitCrushUnitExecute(war, woUnitCrushUnit, isFast);
     }
 
     const woUnitDive = action.getWoUnitDive();
     if (woUnitDive) {
-        return await WarOperationsExecutorsUtilsUnitDiveExecute(war, woUnitDive, isFast);
+        return await unitDiveExecute(war, woUnitDive, isFast);
     }
 
     const woUnitDropUnit = action.getWoUnitDropUnit();
     if (woUnitDropUnit) {
-        return await WarOperationsExecutorsUtilsUnitDropUnitExecute(war, woUnitDropUnit, isFast);
+        return await unitDropUnitExecute(war, woUnitDropUnit, isFast);
     }
 
     const woUnitJoinUnit = action.getWoUnitJoinUnit();
     if (woUnitJoinUnit) {
-        return await WarOperationsExecutorsUtilsUnitJoinUnitExecute(war, woUnitJoinUnit, isFast);
+        return await unitJoinUnitExecute(war, woUnitJoinUnit, isFast);
     }
 
     const woUnitLaunchFlare = action.getWoUnitLaunchFlare();
     if (woUnitLaunchFlare) {
-        return await WarOperationsExecutorsUtilsUnitLaunchFlareExecute(war, woUnitLaunchFlare, isFast);
+        return await unitLaunchFlareExecute(war, woUnitLaunchFlare, isFast);
     }
 
     const woUnitLaunchSilo = action.getWoUnitLaunchSilo();
     if (woUnitLaunchSilo) {
-        return await WarOperationsExecutorsUtilsUnitLaunchSiloExecute(war, woUnitLaunchSilo, isFast);
+        return await unitLaunchSiloExecute(war, woUnitLaunchSilo, isFast);
     }
 
     const woUnitProduceUnit = action.getWoUnitProduceUnit();
     if (woUnitProduceUnit) {
-        return await WarOperationsExecutorsUtilsUnitProduceUnitExecute(war, woUnitProduceUnit, isFast);
+        return await unitProduceUnitExecute(war, woUnitProduceUnit, isFast);
     }
 
     const woUnitRepairUnit = action.getWoUnitRepairUnit();
     if (woUnitRepairUnit) {
-        return await WarOperationsExecutorsUtilsUnitRepairUnitExecute(war, woUnitRepairUnit, isFast);
+        return await unitRepairUnitExecute(war, woUnitRepairUnit, isFast);
     }
 
     const woUnitSelfDetonate = action.getWoUnitSelfDetonate();
     if (woUnitSelfDetonate) {
-        return await WarOperationsExecutorsUtilsUnitSelfDetonateExecute(war, woUnitSelfDetonate, isFast);
+        return await unitSelfDetonateExecute(war, woUnitSelfDetonate, isFast);
     }
 
     const woUnitSupplyUnit = action.getWoUnitSupplyUnit();
     if (woUnitSupplyUnit) {
-        return await WarOperationsExecutorsUtilsUnitSupplyUnitExecute(war, woUnitSupplyUnit, isFast);
+        return await unitSupplyUnitExecute(war, woUnitSupplyUnit, isFast);
     }
 
     const woUnitSurface = action.getWoUnitSurface();
     if (woUnitSurface) {
-        return await WarOperationsExecutorsUtilsUnitSurfaceExecute(war, woUnitSurface, isFast);
+        return await unitSurfaceExecute(war, woUnitSurface, isFast);
     }
 
     const woUnitUseCoSkill = action.getWoUnitUseCoSkill();
     if (woUnitUseCoSkill) {
-        return await WarOperationsExecutorsUtilsUnitUseCoSkillExecute(war, woUnitUseCoSkill, isFast);
+        return await unitUseCoSkillExecute(war, woUnitUseCoSkill, isFast);
     }
 
     const woUnitWait = action.getWoUnitWait();
     if (woUnitWait) {
-        return await WarOperationsExecutorsUtilsUnitWaitExecute(war, woUnitWait, isFast);
+        return await unitWaitExecute(war, woUnitWait, isFast);
     }
 
     return await fastExeUnknownAction();

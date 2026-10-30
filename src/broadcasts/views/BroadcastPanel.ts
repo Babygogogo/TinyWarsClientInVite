@@ -1,4 +1,7 @@
-import { getOngoingMessageIdArray, getMessageData } from "../Provider.ts";
+import {
+    getOngoingMessageIdArray,
+    getMessageData,
+} from "../Provider.ts";
 import { UndefinedError } from "../../lang/Constants.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

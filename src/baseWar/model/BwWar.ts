@@ -32,9 +32,16 @@ import {
     getSfwWarClass,
     getUnitClass,
 } from "../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getTileName, getText } from "../../lang/Utils.ts";
+import {
+    getFormattedText,
+    getTileName,
+    getText,
+} from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { AliveStateId } from "../../players/Constants.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
@@ -50,7 +57,10 @@ import type { ITileMap } from "../../tiles/ITileMap.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import type { PhaseCode } from "../../turns/Constants.ts";
 import type { ITurnManager } from "../../turns/ITurnManager.ts";
-import { ActionStateId, Hp } from "../../units/Constants.ts";
+import {
+    ActionStateId,
+    Hp,
+} from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import type { IUnitMap } from "../../units/IUnitMap.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";

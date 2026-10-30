@@ -14,8 +14,6 @@ import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = IUnit;
-
 export async function getActionForPhase01(commonParams: CommonParams): Promise<WoContainer | null> {
     const war               = commonParams.getWar();
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
@@ -96,12 +94,12 @@ export async function getActionForPhase01(commonParams: CommonParams): Promise<W
     return null;
 }
 
-async function getCandidateUnitsForPhase1(commonParams: CommonParams): Promise<IBwUnit[]> {
+async function getCandidateUnitsForPhase1(commonParams: CommonParams): Promise<IUnit[]> {
     await checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
     const unitMap           = commonParams.getWar().getUnitMap();
-    const units             : IBwUnit[] = [];
+    const units             : IUnit[] = [];
     for (const unit of unitMap.getAllUnitsOnMap()) {
         if ((unit.getPlayerIndex() === playerIndexInTurn)                                                       &&
             (unit.getActionState() === ActionStateId.Idle)                                                    &&

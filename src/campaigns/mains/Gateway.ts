@@ -16,49 +16,36 @@ import {
 } from "./Provider.ts";
 import type { IWar } from "../wars/IWar.ts";
 import { compress } from "../../helpers/Gzip.ts";
-import { addListeners, send } from "../../networks/Manager.ts";
+import {
+    addListeners,
+    send,
+} from "../../networks/Manager.ts";
 import { MessageCodes } from "../../networks/MessageCodes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { PlayerCoInfo } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/PlayerCoInfo.ts";
-import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetAllMapTimestampArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetAllMapTimestampArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignInfoS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignInfo/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignLeaderboardS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignLeaderboard/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignMapLeaderboardS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignMapLeaderboard/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetEnabledCampaignIdArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetEnabledCampaignIdArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapRawDataS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapRawData/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapRawDataArrayS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapRawDataArray/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapTimestampS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapTimestamp/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignGetScoreS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetScore/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignSaveWar/S.ts";
-import type {
-    S as ProtoSchemaCommonProtoNetMessageMsgCampaignValidateWarS,
-} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignValidateWar/S.ts";
+import type { S as CampaignCreateWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
+import type { S as CampaignGetAllMapTimestampArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetAllMapTimestampArray/S.ts";
+import type { S as CampaignGetCampaignInfoResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignInfo/S.ts";
+import type { S as CampaignGetCampaignLeaderboardResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignLeaderboard/S.ts";
+import type { S as CampaignGetCampaignMapLeaderboardResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetCampaignMapLeaderboard/S.ts";
+import type { S as CampaignGetEnabledCampaignIdArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetEnabledCampaignIdArray/S.ts";
+import type { S as CampaignGetMapRawDataResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapRawData/S.ts";
+import type { S as CampaignGetMapRawDataArrayResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapRawDataArray/S.ts";
+import type { S as CampaignGetMapTimestampResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetMapTimestamp/S.ts";
+import type { S as CampaignGetScoreResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignGetScore/S.ts";
+import type { S as CampaignSaveWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignSaveWar/S.ts";
+import type { S as CampaignValidateWarResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignValidateWar/S.ts";
 import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import { updateOnMsgCampaignCreateWar, updateOnMsgCampaignSaveWar } from "../../singlePlayerMode/model/SpmModel.ts";
+import {
+    updateOnMsgCampaignCreateWar,
+    updateOnMsgCampaignSaveWar,
+} from "../../singlePlayerMode/model/SpmModel.ts";
 import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
-import { updateOnMsgCampaignValidateWar, updateOnMsgCampaignGetScore } from "../../users/Model.ts";
+import {
+    updateOnMsgCampaignValidateWar,
+    updateOnMsgCampaignGetScore,
+} from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
@@ -94,7 +81,7 @@ export function reqCampaignCreateWar({ slotIndex, slotExtraData, campaignId, cam
     } } });
 }
 async function _onMsgCampaignCreateWar(e: Event): Promise<void> {
-    const data = e.data as S;
+    const data = e.data as CampaignCreateWarResponse;
     if (data.getErrorCode()) {
         dispatch(TypeId.MsgCampaignCreateWarFailed, data);
     } else {
@@ -111,7 +98,7 @@ export function reqCampaignSaveWar(war: ISpwWar): void {
     }, }, });
 }
 async function _onMsgCampaignSaveWar(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS;
+    const data = e.data as CampaignSaveWarResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgCampaignSaveWar(data);
         dispatch(TypeId.MsgCampaignSaveWar, data);
@@ -124,7 +111,7 @@ export function reqCampaignValidateWar(war: IWar): void {
     } }, });
 }
 function _onMsgCampaignValidateWar(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignValidateWarS;
+    const data = e.data as CampaignValidateWarResponse;
     if (!data.getErrorCode()) {
         updateOnMsgCampaignValidateWar(data);
         dispatch(TypeId.MsgCampaignValidateWar, data);
@@ -137,7 +124,7 @@ export function reqCampaignGetCampaignInfo(campaignId: number): void {
     } }, });
 }
 function _onMsgCampaignGetCampaignInfo(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignInfoS;
+    const data = e.data as CampaignGetCampaignInfoResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetCampaignInfo(data);
     } else {
@@ -152,7 +139,7 @@ export function reqCampaignGetEnabledCampaignIdArray(): void {
     });
 }
 function _onMsgCampaignGetEnabledCampaignIdArray(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetEnabledCampaignIdArrayS;
+    const data = e.data as CampaignGetEnabledCampaignIdArrayResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetEnabledCampaignIdArray(data);
     } else {
@@ -170,7 +157,7 @@ export function reqCampaignGetMapRawData(campaignId: number, campaignMapId: numb
     });
 }
 async function _onMsgCampaignGetMapRawData(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapRawDataS;
+    const data = e.data as CampaignGetMapRawDataResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetMapRawData(data);
     } else {
@@ -186,7 +173,7 @@ export function reqCampaignGetMapRawDataArray(campaignId: number, campaignMapIdA
     } }, });
 }
 async function _onMsgCampaignGetMapRawDataArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapRawDataArrayS;
+    const data = e.data as CampaignGetMapRawDataArrayResponse;
     if (data.getErrorCode()) {
         // CampaignModel.updateOnFailedMsgCampaignGetMapRawDataArray(data);
     } else {
@@ -202,7 +189,7 @@ export function reqCampaignGetMapTimestamp(campaignId: number, campaignMapId: nu
     } }, });
 }
 async function _onMsgCampaignGetMapTimestamp(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetMapTimestampS;
+    const data = e.data as CampaignGetMapTimestampResponse;
     if (!data.getErrorCode()) {
         await updateOnMsgCampaignGetMapTimestamp(data);
         dispatch(TypeId.MsgCampaignGetMapTimestamp, data);
@@ -215,7 +202,7 @@ export function reqCampaignGetAllMapTimestampArray(campaignId: number): void {
     } }, });
 }
 async function _onMsgCampaignGetAllMapTimestampArray(e: Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetAllMapTimestampArrayS;
+    const data = e.data as CampaignGetAllMapTimestampArrayResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetAllMapTimestampArray(data);
     } else {
@@ -230,7 +217,7 @@ export function reqCampaignGetCampaignLeaderboard(campaignId: number): void {
     } } });
 }
 function _onMsgCampaignGetCampaignLeaderboard(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignLeaderboardS;
+    const data = e.data as CampaignGetCampaignLeaderboardResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetCampaignLeaderboard(data);
     } else {
@@ -246,7 +233,7 @@ export function reqCampaignGetCampaignMapLeaderboard(campaignId: number, campaig
     } } });
 }
 function _onMsgCampaignGetCampaignMapLeaderboard(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetCampaignMapLeaderboardS;
+    const data = e.data as CampaignGetCampaignMapLeaderboardResponse;
     if (data.getErrorCode()) {
         updateOnFailedMsgCampaignGetCampaignMapLeaderboard(data);
     } else {
@@ -256,7 +243,7 @@ function _onMsgCampaignGetCampaignMapLeaderboard(e: Event): void {
 }
 
 function _onMsgCampaignGetScore(e: Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCampaignGetScoreS;
+    const data = e.data as CampaignGetScoreResponse;
     if (!data.getErrorCode()) {
         updateOnMsgCampaignGetScore(data);
         dispatch(TypeId.MsgCampaignGetScore, data);

@@ -1,32 +1,61 @@
 import type { PositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
-import { checkIsMeet } from "../../deprecatedPositionFilter/Utils.ts";
-import { showLang, show } from "../../FloatText.ts";
-import { getMpwWarClass, getMeWarClass, getRwWarBaseClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getIsTransparentTouchLayerTouched,
+    setIsTransparentTouchLayerTouched,
+} from "../../common/model/CommonModel.ts";
+import { checkIsMeet as checkDeprecatedPositionFilterIsMeet } from "../../deprecatedPositionFilter/Utils.ts";
+import {
+    showLang,
+    show,
+} from "../../FloatText.ts";
+import {
+    getMpwWarClass,
+    getMeWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { TypeId, AllGridMarkTypeId } from "../../gridMarks/Constants.ts";
+import {
+    openPanel,
+    closePanel,
+} from "../../gamePanels/Manager.ts";
+import {
+    TypeId as GridMarksTypeId,
+    AllGridMarkTypeId,
+} from "../../gridMarks/Constants.ts";
 import { updateGridMarkList } from "../../gridMarks/Utils.ts";
-import { getNonNullElements, checkIsSameSet } from "../../helpers/Collection.ts";
+import {
+    getNonNullElements,
+    checkIsSameSet,
+} from "../../helpers/Collection.ts";
 import { getGridMark } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../lang/Utils.ts";
 import {
     reqMpwCommonSetGridMarkList,
     reqMpwCommonSetHiddenGridMarkTypeIdList,
     reqMpwCommonMarkGrid,
 } from "../../multiPlayerWar/model/MpwProxy.ts";
-import type { GridMarkListChanged, HiddenGridMarkTypeIdListChanged } from "../../notifications/DataTypes.ts";
+import type {
+    GridMarkListChanged,
+    HiddenGridMarkTypeIdListChanged,
+} from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
-import { TypeId as NotificationsTypeId } from "../../notifications/TypeId.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
 import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { checkIsMeet as TilesUtilsFilterCheckIsMeet, checkIsMeetAsOutOfVision } from "../../tiles/utils/Filter.ts";
+import {
+    checkIsMeet as checkIsMeetTileFilter,
+    checkIsMeetAsOutOfVision,
+} from "../../tiles/utils/Filter.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -37,10 +66,13 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../units/utils/Filter.ts";
-import { getAllTilesVisibleToTeam, getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
+import { checkIsMeet as checkIsMeetUnitFilter } from "../../units/utils/Filter.ts";
+import {
+    getAllTilesVisibleToTeam,
+    getAllUnitsOnMapVisibleToTeams,
+} from "../../visibilities/Utils.ts";
 
-let _selectedMarkTypeId     = TypeId.MinMarkTypeId;
+let _selectedMarkTypeId     = GridMarksTypeId.MinMarkTypeId;
 
 export interface OpenData {
     war     : IBwWar;
@@ -79,9 +111,9 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback: this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
-            { type: NotificationsTypeId.MsgMpwCommonMarkTile,                            callback: this._onNotifyMsgMpwCommonMarkTile },
+            { type: TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback: this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
+            { type: TypeId.MsgMpwCommonMarkTile,                            callback: this._onNotifyMsgMpwCommonMarkTile },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -155,7 +187,7 @@ export class Panel extends UiPanel<OpenData> {
             } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
                 war.getGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                dispatch(NotificationsTypeId.GridMarkListChanged, {
+                dispatch(TypeId.GridMarkListChanged, {
                     war : war,
                 } as GridMarkListChanged);
                 showLang(TextType.OperationSucceeded);
@@ -163,7 +195,7 @@ export class Panel extends UiPanel<OpenData> {
             } else if (war instanceof getSpwWarClass()) {
                 war.getSaveSlotExtraData().createIfNotExistsGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                dispatch(NotificationsTypeId.GridMarkListChanged, {
+                dispatch(TypeId.GridMarkListChanged, {
                     war : war,
                 } as GridMarkListChanged);
                 showLang(TextType.OperationSucceeded);
@@ -266,7 +298,7 @@ export class Panel extends UiPanel<OpenData> {
             if (!checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                dispatch(NotificationsTypeId.HiddenGridMarkTypeIdListChanged, {
+                dispatch(TypeId.HiddenGridMarkTypeIdListChanged, {
                     war : war,
                 } as HiddenGridMarkTypeIdListChanged);
             }
@@ -277,7 +309,7 @@ export class Panel extends UiPanel<OpenData> {
             if (!checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                dispatch(NotificationsTypeId.HiddenGridMarkTypeIdListChanged, {
+                dispatch(TypeId.HiddenGridMarkTypeIdListChanged, {
                     war : war,
                 } as HiddenGridMarkTypeIdListChanged);
             }
@@ -384,7 +416,7 @@ export class Panel extends UiPanel<OpenData> {
                     } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
                         updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        dispatch(NotificationsTypeId.GridMarkListChanged, {
+                        dispatch(TypeId.GridMarkListChanged, {
                             war : war,
                         } as GridMarkListChanged);
                         showLang(TextType.OperationSucceeded);
@@ -392,7 +424,7 @@ export class Panel extends UiPanel<OpenData> {
                     } else if (war instanceof getSpwWarClass()) {
                         updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        dispatch(NotificationsTypeId.GridMarkListChanged, {
+                        dispatch(TypeId.GridMarkListChanged, {
                             war : war,
                         } as GridMarkListChanged);
                         showLang(TextType.OperationSucceeded);
@@ -431,7 +463,7 @@ export class Panel extends UiPanel<OpenData> {
                     } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
                         updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        dispatch(NotificationsTypeId.GridMarkListChanged, {
+                        dispatch(TypeId.GridMarkListChanged, {
                             war : war,
                         } as GridMarkListChanged);
                         showLang(TextType.OperationSucceeded);
@@ -439,7 +471,7 @@ export class Panel extends UiPanel<OpenData> {
                     } else if (war instanceof getSpwWarClass()) {
                         updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        dispatch(NotificationsTypeId.GridMarkListChanged, {
+                        dispatch(TypeId.GridMarkListChanged, {
                             war : war,
                         } as GridMarkListChanged);
                         showLang(TextType.OperationSucceeded);
@@ -591,12 +623,12 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            if ((positionFilter) && (!checkIsMeet(positionFilter, tile))) {
+            if ((positionFilter) && (!checkDeprecatedPositionFilterIsMeet(positionFilter, tile))) {
                 continue;
             }
 
             if (tileFilter) {
-                if (((isTileInVision) && (!TilesUtilsFilterCheckIsMeet(tileFilter, tile)))              ||
+                if (((isTileInVision) && (!checkIsMeetTileFilter(tileFilter, tile)))              ||
                     ((!isTileInVision) && (!checkIsMeetAsOutOfVision(tileFilter, tile)))
                 ) {
                     continue;
@@ -606,7 +638,7 @@ export class Panel extends UiPanel<OpenData> {
             const gridIndex = tile.getGridIndex();
             if (unitFilter) {
                 const unit = unitMap.getUnitOnMap(gridIndex);
-                if ((unit == null) || (!unitsInVision.has(unit)) || (!UnitsUtilsFilterCheckIsMeet(unitFilter, unit))) {
+                if ((unit == null) || (!unitsInVision.has(unit)) || (!checkIsMeetUnitFilter(unitFilter, unit))) {
                     continue;
                 }
             }

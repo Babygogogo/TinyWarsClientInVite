@@ -3,7 +3,10 @@ import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { FixedAreaDamageTargetTypeId } from "../Constants.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../helpers/Team.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -11,23 +14,24 @@ import type { IPlayer } from "../../players/IPlayer.ts";
 import { getValidFund } from "../../players/utils/Common.ts";
 import type { CoSkillCfg } from "../../proto/schema/CommonProto/Config/CoSkillCfg.ts";
 import type { DataForUseCoSkill } from "../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
-import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
+import type { GridIndex as ProtoGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
-import { create } from "../../unitBuffs/utils/Common.ts";
-import { Hp, ActionStateId } from "../../units/Constants.ts";
-import { create as UnitsUtilsSerializationCreate } from "../../units/utils/Serialization.ts";
+import { create as createUnitBuffs } from "../../unitBuffs/utils/Common.ts";
+import {
+    Hp,
+    ActionStateId,
+} from "../../units/Constants.ts";
+import { create as createSerialization } from "../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
-import {VisibilityTypeId} from "../../visibilities/Constants.ts";
-
-type IBwPlayer                      = IPlayer;
+import { VisibilityTypeId } from "../../visibilities/Constants.ts";
 
 export function executeInstantSkill({ player, skillId, skillData, targetGridIndexes, hasExtraData, isFastExecute }: {
-    player              : IBwPlayer;
+    player              : IPlayer;
     skillId             : number;
     skillData           : DataForUseCoSkill;
-    targetGridIndexes   : Undefinable<ProtoSchemaCommonProtoStructureGridIndex[]>;
+    targetGridIndexes   : Undefinable<ProtoGridIndex[]>;
     hasExtraData        : boolean;
     isFastExecute       : boolean;
 }): void {
@@ -87,7 +91,7 @@ function exeSelfFundWithExtraData({ isFastExecute }: {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     isFastExecute   : boolean;
 }): void {
     const cfg = skillCfg.getInstantManual()?.getSelfFund();
@@ -113,7 +117,7 @@ function exeEnemyEnergyWithExtraData({ isFastExecute }: {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     isFastExecute   : boolean;
 }): void {
     const cfg = skillCfg.getInstantManual()?.getEnemyEnergy();
@@ -143,7 +147,7 @@ function exeSelfAddUnitWithExtraData({ isFastExecute }: {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -188,7 +192,7 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         const unitTypeId        = cfg.getUnitTypeId();
         const unitTemplateCfg   = getExisted(gameConfig.getUnitTemplateCfg(unitTypeId));
         const unit              = new (getUnitClass())();
-        unit.init(UnitsUtilsSerializationCreate({
+        unit.init(createSerialization({
             unitType                        : unitTypeId,
             unitId                          : unitId,
             playerIndex                     : selfPlayerIndex,
@@ -246,7 +250,7 @@ function exeSelfHpGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -333,7 +337,7 @@ function exeEnemyHpGainWithExtraData({ isFastExecute }: {
 }
 function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -411,7 +415,7 @@ function exeSelfFuelGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -461,7 +465,7 @@ function exeEnemyFuelGainWithExtraData({ isFastExecute }: {
 }
 function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -515,7 +519,7 @@ function exeSelfMaterialGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -582,7 +586,7 @@ function exeEnemyMaterialGainWithExtraData({ isFastExecute }: {
 }
 function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -649,7 +653,7 @@ function exeSelfPrimaryAmmoGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -697,7 +701,7 @@ function exeEnemyPrimaryAmmoGainWithExtraData({ isFastExecute }: {
 }
 function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -745,7 +749,7 @@ function exeSelfUnitBuffGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -775,14 +779,14 @@ function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList
             }))
         ) {
             if (turns > 0) {
-                unit.addBuff(create({
+                unit.addBuff(createUnitBuffs({
                     buffTypeId          : unitBuffTypeId,
                     expiringTurnIndex   : turnIndex + turns,
                     expiringPlayerIndex : playerIndex,
                     extraParams         : null,
                 }), false, true);
             } else {
-                unit.addBuff(create({
+                unit.addBuff(createUnitBuffs({
                     buffTypeId          : unitBuffTypeId,
                     expiringTurnIndex   : null,
                     expiringPlayerIndex : null,
@@ -803,7 +807,7 @@ function exeEnemyUnitBuffGainWithExtraData({ isFastExecute }: {
 }
 function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -834,14 +838,14 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
             }))
         ) {
             if (turns > 0) {
-                unit.addBuff(create({
+                unit.addBuff(createUnitBuffs({
                     buffTypeId          : unitBuffTypeId,
                     expiringTurnIndex   : turnIndex + turns,
                     expiringPlayerIndex : playerIndexInTurn,
                     extraParams         : null,
                 }), false, true);
             } else {
-                unit.addBuff(create({
+                unit.addBuff(createUnitBuffs({
                     buffTypeId          : unitBuffTypeId,
                     expiringTurnIndex   : null,
                     expiringPlayerIndex : null,
@@ -856,9 +860,9 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
 
 function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
     skillCfg            : CoSkillCfg;
-    player              : IBwPlayer;
+    player              : IPlayer;
     skillData           : DataForUseCoSkill;
-    targetGridIndexes   : Undefinable<ProtoSchemaCommonProtoStructureGridIndex[]>;
+    targetGridIndexes   : Undefinable<ProtoGridIndex[]>;
     isFastExecute       : boolean;
 }): void {
     const cfg = skillCfg.getInstantManual()?.getFixedAreaDamage();
@@ -892,9 +896,9 @@ function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGr
 }
 function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targetGridIndexes, isFastExecute }: {
     skillCfg            : CoSkillCfg;
-    player              : IBwPlayer;
+    player              : IPlayer;
     skillData           : DataForUseCoSkill;
-    targetGridIndexes   : Undefinable<ProtoSchemaCommonProtoStructureGridIndex[]>;
+    targetGridIndexes   : Undefinable<ProtoGridIndex[]>;
     isFastExecute       : boolean;
 }): void {
     const cfg = skillCfg.getInstantManual()?.getFixedAreaDamage();
@@ -978,7 +982,7 @@ function exeSelfPromotionGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -1026,7 +1030,7 @@ function exeSelfUnitActionStateWithExtraData({ isFastExecute }: {
 }
 function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -1070,7 +1074,7 @@ function exeSelfFlareAmmoGainWithExtraData({ isFastExecute }: {
 }
 function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {
@@ -1119,7 +1123,7 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     skillData       : DataForUseCoSkill;
     isFastExecute   : boolean;
 }): void {
@@ -1149,7 +1153,7 @@ function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExec
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     skillData       : DataForUseCoSkill;
     isFastExecute   : boolean;
 }): void {
@@ -1185,7 +1189,7 @@ function exeSelfCoOnboardWithExtraData({ isFastExecute }: {
 }
 function exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, isFastExecute }: {
     skillCfg        : CoSkillCfg;
-    player          : IBwPlayer;
+    player          : IPlayer;
     coGridIndexList : GridIndex[];
     isFastExecute   : boolean;
 }): void {

@@ -1,10 +1,13 @@
 import { Base } from "./Base.ts";
 import { War } from "./War.ts";
-import { ResultType, ContextType } from "../Enums.ts";
+import {
+    ResultType,
+    ContextType,
+} from "../Enums.ts";
 import { FunctionInfo } from "../FunctionInfo.ts";
-import { Lambda } from "../nodes/Lambda.ts";
-import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
-import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import { Lambda as NodesLambda } from "../nodes/Lambda.ts";
+import type { Base as ResultsBase } from "../results/Base.ts";
+import { Lambda as ResultsLambda } from "../results/Lambda.ts";
 import { NullableUnit } from "../results/NullableUnit.ts";
 import { NullableUnitArray } from "../results/NullableUnitArray.ts";
 import { Num } from "../results/Num.ts";
@@ -16,10 +19,13 @@ import { PositionArray } from "../results/PositionArray.ts";
 import { Tile } from "../results/Tile.ts";
 import { TileArray } from "../results/TileArray.ts";
 import { TileBuff } from "../results/TileBuff.ts";
-import { TileBuffArray as ExpressionParsersResultsTileBuffArray } from "../results/TileBuffArray.ts";
+import { TileBuffArray as ResultsTileBuffArray } from "../results/TileBuffArray.ts";
 import { UnitStatistic } from "../results/UnitStatistic.ts";
 import { UnitStatisticArray } from "../results/UnitStatisticArray.ts";
-import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import type {
+    EpVariableInfoDict,
+    EpFunctionInfoDict,
+} from "../Types.ts";
 import {
     extendVariableInfoDict,
     extendFunctionInfoDict,
@@ -90,7 +96,7 @@ export class TileBuffArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(TileBuffArray.FnWhere, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextTileBuffArray_GenerateFunctions_03
@@ -128,7 +134,7 @@ export class TileBuffArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(TileBuffArray.FnSelect, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextTileBuffArray_GenerateFunctions_06
@@ -184,7 +190,7 @@ export class TileBuffArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(TileBuffArray.FnAll, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextTileBuffArray_GenerateFunctions_09
@@ -222,7 +228,7 @@ export class TileBuffArray extends Base {
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof Lambda)) {
+                    if (!(lambda instanceof NodesLambda)) {
                         throw newError(
                             getErrorTextForParameterType(TileBuffArray.FnAny, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
                             ClientErrorCode.EpContextTileBuffArray_GenerateFunctions_12
@@ -251,10 +257,10 @@ export class TileBuffArray extends Base {
         return functions;
     }
 
-    private _buffArray  : ExpressionParsersResultsTileBuffArray;
+    private _buffArray  : ResultsTileBuffArray;
     private _contextWar : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsTileBuffArray) {
+    public constructor(data: ResultsTileBuffArray) {
         super(data.war);
 
         this._buffArray = data;
@@ -264,14 +270,14 @@ export class TileBuffArray extends Base {
         return ContextType.TileBuffArray;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
+    public override resolveVariable(identifierName: string): ResultsBase {
         switch (identifierName) {
             case TileBuffArray.VnLength    : return new Num(this.getWar(), this._buffArray.buffArray.length);
             default                                 : return (this._contextWar ??= new War(this.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+    public override callFunction(identifierName: string, argumentArray: ResultsBase[], rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
         switch (identifierName) {
             case TileBuffArray.FnGet       : return this.callGet(argumentArray[0]);
             case TileBuffArray.FnWhere     : return this.callWhere(argumentArray[0], rootCtx, localVariableDict, isRestricted);
@@ -282,7 +288,7 @@ export class TileBuffArray extends Base {
         }
     }
 
-    public callGet(arg: ExpressionParsersResultsBase): TileBuff {
+    public callGet(arg: ResultsBase): TileBuff {
         if (!(arg instanceof Num)) {
             throw newError(`Unexpected arg.`);
         }
@@ -303,13 +309,13 @@ export class TileBuffArray extends Base {
         return result;
     }
 
-    public callWhere(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsTileBuffArray {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callWhere(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsTileBuffArray {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -326,16 +332,16 @@ export class TileBuffArray extends Base {
             }
         }
 
-        return new ExpressionParsersResultsTileBuffArray(war, resultArray);
+        return new ResultsTileBuffArray(war, resultArray);
     }
 
-    public callSelect(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callSelect(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): ResultsBase {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -385,7 +391,7 @@ export class TileBuffArray extends Base {
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsTileBuffArray(war, resultArray);
+            return new ResultsTileBuffArray(war, resultArray);
 
         } else if (resultType === ResultType.Player) {
             const resultArray: IPlayer[] = [];
@@ -444,13 +450,13 @@ export class TileBuffArray extends Base {
         }
     }
 
-    public callAll(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAll(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 
@@ -469,13 +475,13 @@ export class TileBuffArray extends Base {
         return new Num(war, 1);
     }
 
-    public callAny(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+    public callAny(arg: ResultsBase, rootCtx: Base, localVariableDict: Map<string, ResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ResultsLambda)) {
             throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof Lambda)) {
+        if (!(node instanceof NodesLambda)) {
             throw newError(`Unexpected node.`);
         }
 

@@ -1,8 +1,14 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getUnitName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

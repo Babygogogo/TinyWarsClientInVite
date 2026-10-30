@@ -1,10 +1,19 @@
 import { ContextType } from "../../expressionParsers/Enums.ts";
-import { getVariableInfoDict, getFunctionInfoDict } from "../../expressionParsers/Utils.ts";
+import {
+    getVariableInfoDict,
+    getFunctionInfoDict,
+} from "../../expressionParsers/Utils.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getExpressionParserContextName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getExpressionParserContextName,
+} from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";

@@ -2,7 +2,10 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { ModeId } from "../gameModes/Constants.ts";
-import { getExisted, newError } from "../helpers/Misc.ts";
+import {
+    getExisted,
+    newError,
+} from "../helpers/Misc.ts";
 import { LanguageType } from "../lang/Constants.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
@@ -24,11 +27,17 @@ import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTem
 import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
 import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import { CategoryId } from "../tiles/constants/Common.ts";
-import { CategoryId as UnitsConstantsCategoryId, WeaponTypeId } from "../units/Constants.ts";
+import { CategoryId as ConstantsCategoryId } from "../tiles/constants/Common.ts";
+import {
+    CategoryId as UnitsCategoryId,
+    WeaponTypeId,
+} from "../units/Constants.ts";
 import type { WarTypeId } from "../warTypes/Constants.ts";
-import { checkIsAtw, checkIsMrw } from "../warTypes/Utils.ts";
-import { CategoryId as WeathersConstantsCategoryId } from "../weathers/Constants.ts";
+import {
+    checkIsAtw,
+    checkIsMrw,
+} from "../warTypes/Utils.ts";
+import { CategoryId as WeathersCategoryId } from "../weathers/Constants.ts";
 
 export class GameConfig {
     private readonly _version                       : string;
@@ -183,9 +192,9 @@ export class GameConfig {
         return cfg ? cfg.getTileTypeIds() : null;
     }
     public checkIsTileTypeInCategory(tileType: number, tileCategory: number): boolean {
-        if (tileCategory === CategoryId.All) {
+        if (tileCategory === ConstantsCategoryId.All) {
             return true;
-        } else if (tileCategory === CategoryId.None) {
+        } else if (tileCategory === ConstantsCategoryId.None) {
             return false;
         } else {
             const typeArray = this._getTileTypeIdsByCategory(tileCategory);
@@ -217,9 +226,9 @@ export class GameConfig {
         return cfg ? cfg.getUnitTypeIds() : null;
     }
     public checkIsUnitTypeInCategory(unitType: number, unitCategory: number): boolean {
-        if (unitCategory === UnitsConstantsCategoryId.All) {
+        if (unitCategory === UnitsCategoryId.All) {
             return true;
-        } else if (unitCategory === UnitsConstantsCategoryId.None) {
+        } else if (unitCategory === UnitsCategoryId.None) {
             return false;
         } else {
             const typeArray = this.getUnitTypesByCategory(unitCategory);
@@ -287,9 +296,9 @@ export class GameConfig {
         return cfg ? cfg.getWeatherTypeIds() : null;
     }
     public checkIsWeatherTypeInCategory(weatherType: number, category: number): boolean {
-        if (category === WeathersConstantsCategoryId.All) {
+        if (category === WeathersCategoryId.All) {
             return true;
-        } else if (category === WeathersConstantsCategoryId.None) {
+        } else if (category === WeathersCategoryId.None) {
             return false;
         } else {
             const typeArray = this.getWeatherTypeIdsByCategory(category);
@@ -493,7 +502,7 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
     }
 
     {
-        const categoryId = CategoryId.None;
+        const categoryId = ConstantsCategoryId.None;
         if (dst.has(categoryId)) {
             (getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
         } else {
@@ -505,7 +514,7 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
     }
 
     {
-        const categoryId        = CategoryId.All;
+        const categoryId        = ConstantsCategoryId.All;
         const allTileTypeIds    = tileTemplateCfgs.map(v => v.getTileTypeId());
         if (dst.has(categoryId)) {
             getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
@@ -526,7 +535,7 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
     }
 
     {
-        const categoryId = UnitsConstantsCategoryId.None;
+        const categoryId = UnitsCategoryId.None;
         if (dst.has(categoryId)) {
             (getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
         } else {
@@ -538,7 +547,7 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
     }
 
     {
-        const categoryType      = UnitsConstantsCategoryId.All;
+        const categoryType      = UnitsCategoryId.All;
         const allUnitTypeArray  = unitTemplateCfgs.map(v => v.getUnitTypeId());
         if (dst.has(categoryType)) {
             getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
@@ -669,7 +678,7 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
     }
 
     {
-        const categoryId = WeathersConstantsCategoryId.None;
+        const categoryId = WeathersCategoryId.None;
         if (dst.has(categoryId)) {
             getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
         } else {
@@ -681,7 +690,7 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
     }
 
     {
-        const categoryId        = WeathersConstantsCategoryId.All;
+        const categoryId        = WeathersCategoryId.All;
         const allWeatherTypeIds = weatherCfgs.map(v => v.getWeatherTypeId());
         if (dst.has(categoryId)) {
             getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);

@@ -2,7 +2,10 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { SymmetryTypeId } from "../geometries/Constants.ts";
 import { newError } from "../helpers/Misc.ts";
-import { BaseCfgDict, BaseSymmetryCfgDict } from "../tiles/constants/Common.ts";
+import {
+    BaseCfgDict,
+    BaseSymmetryCfgDict,
+} from "../tiles/constants/Common.ts";
 import type { TileBaseCfg } from "../tiles/Types.ts";
 
 export function getTileBaseCfg(tileBaseType: number): TileBaseCfg | null {

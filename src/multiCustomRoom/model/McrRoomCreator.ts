@@ -5,13 +5,16 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
 import { getFinalMcwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import { C } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
+import { C as McrCreateRoomRequest } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 import { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
-import { createDefault, create } from "../../warRules/utils/Instance.ts";
+import {
+    createDefault,
+    create,
+} from "../../warRules/utils/Instance.ts";
 
 export class McrRoomCreator extends RoomCreatorBase {
     private readonly _mapRawData        : MapRawData;
@@ -35,14 +38,14 @@ export class McrRoomCreator extends RoomCreatorBase {
         ));
     }
 
-    public generateData(): C {
+    public generateData(): McrCreateRoomRequest {
         const settingsForMcw = this.getSettingsForMcw().clone();
         settingsForMcw.setWarName(this.getWarName());
         settingsForMcw.setWarPassword(this.getWarPassword());
         settingsForMcw.setWarComment(this.getWarComment());
         settingsForMcw.setBootTimerParams(this.getBootTimerParams());
 
-        return C.fromJson({
+        return McrCreateRoomRequest.fromJson({
             settingsForCommon       : this.getSettingsForCommon().toJson(),
             settingsForMcw          : settingsForMcw.toJson(),
 

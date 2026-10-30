@@ -1,8 +1,17 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
-import { getExisted, newError } from "../../../helpers/Misc.ts";
+import {
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarBaseClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
+import {
+    getExisted,
+    newError,
+} from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
@@ -13,7 +22,10 @@ import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

@@ -19,7 +19,10 @@ import { createLazyFunc } from "../../helpers/Misc.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiContainer } from "../../ui/components/UiContainer.ts";
 import type { IUiComponent } from "../../ui/interfaces/IUiComponent.ts";
-import { getUiContainerClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import {
+    getUiContainerClass,
+    getUiImageClass,
+} from "../../ui/utils/UiFactory.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
 const getGridWidth                      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);

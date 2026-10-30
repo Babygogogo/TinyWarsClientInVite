@@ -5,13 +5,19 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoMapEditorWar } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getLanguageText,
+} from "../../lang/Utils.ts";
 import { getMmReviewingMaps } from "../../normalMap/model/NormalMapModel.ts";
 import { reqMmAddIgnoredReviewingMap } from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
-import { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import { MapRawData as ProtoMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -26,8 +32,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-
-type MapRawData         = ProtoSchemaCommonProtoMapMapRawData;
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
@@ -180,7 +184,7 @@ export class Panel extends UiPanel<OpenData> {
                 index           : index,
                 panel           : this,
                 mapEditorData   : data,
-                mapRawData      : ProtoSchemaCommonProtoMapMapRawData.decode(getExisted(data.getEncodedMapRawData())),
+                mapRawData      : ProtoMapRawData.decode(getExisted(data.getEncodedMapRawData())),
             });
             ++index;
         }
@@ -209,7 +213,7 @@ interface DataForMapRenderer extends UiListItemData {
     index           : number;
     mapEditorData   : MapEditorData;
     panel           : Panel;
-    mapRawData      : MapRawData;
+    mapRawData      : ProtoMapRawData;
 }
 class MapRenderer extends UiListItemRenderer<DataForMapRenderer> {
     private readonly _imgSelected!      : IUiImage;

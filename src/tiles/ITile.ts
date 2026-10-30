@@ -1,12 +1,13 @@
-import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    Undefinable,
+    RepairHpAndCost,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { LanguageType } from "../lang/Constants.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
-import type {
-    SelfTileEnabledForUnitProduction,
-} from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { SelfTileEnabledForUnitProduction } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
@@ -18,16 +19,15 @@ import type { ITileView } from "./ITileView.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type GameConfiguration      = GameConfig;
 export interface ITile {
-    init(data: SerialTile, gameConfig: GameConfiguration): void;
-    fastInit(data: SerialTile, gameConfig: GameConfiguration): void;
+    init(data: SerialTile, gameConfig: GameConfig): void;
+    fastInit(data: SerialTile, gameConfig: GameConfig): void;
 
     startRunning(war: IBwWar): void;
     startRunningView(): void;
 
-    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfiguration): ClientErrorCode;
-    deserialize(data: SerialTile, gameConfig: GameConfiguration): void;
+    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode;
+    deserialize(data: SerialTile, gameConfig: GameConfig): void;
     serialize(): SerialTile;
     serializeForCreateSfw(): SerialTile;
     serializeForCreateMfr(): SerialTile;
@@ -35,7 +35,7 @@ export interface ITile {
 
     getWar(): IBwWar;
 
-    getGameConfig(): GameConfiguration;
+    getGameConfig(): GameConfig;
 
     getTemplateCfg(): TileTemplateCfg;
 

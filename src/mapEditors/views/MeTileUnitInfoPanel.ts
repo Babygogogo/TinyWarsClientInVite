@@ -1,5 +1,8 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
-import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import {
+    getUnitViewClass,
+    getUnitClass,
+} from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";

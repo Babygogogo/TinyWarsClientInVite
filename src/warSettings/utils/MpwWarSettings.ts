@@ -1,9 +1,7 @@
 import type { MpwWarSettings } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type MpwWarSettingsSchema = MpwWarSettings;
-
-export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettingsSchema): number | null {
+export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettings): number | null {
     const settings = warSettings.getSettingsForAtw()
         ?? warSettings.getSettingsForCcw()
         ?? warSettings.getSettingsForMcw()
@@ -12,7 +10,7 @@ export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettingsSchem
     return settings ? settings.getNormalMapId() : null;
 }
 
-export function getWarTypeByMpwWarSettings(warInfo: MpwWarSettingsSchema): WarTypeId {
+export function getWarTypeByMpwWarSettings(warInfo: MpwWarSettings): WarTypeId {
     const instanceWarRule   = warInfo.getSettingsForCommon()?.getInstanceWarRule();
     const hasFog            = instanceWarRule?.getWarRuleCommonData()?.getHasFogByDefault();
     if (hasFog == null) {

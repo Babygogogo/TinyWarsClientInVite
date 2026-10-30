@@ -7,17 +7,36 @@ import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { createLazyFunc } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
-import { checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid, getResultValue } from "../../../multiplierAndOffsets/Utils.ts";
+import {
+    getText,
+    getFormattedText,
+} from "../../../lang/Utils.ts";
+import {
+    checkIsValid as checkIsValidMultiplierAndOffset,
+    getResultValue,
+} from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import { Fund } from "../../../players/Constants.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import {
+    getDescForEmbed,
+    checkIsValid as checkIsValidPlayerFilter,
+    checkIsMeet as checkIsMeetPlayerFilter,
+} from "../../../players/utils/Filter.ts";
 import type { WeaSetPlayerStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateSimple.ts";
-import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsMeet as TilesUtilsFilterCheckIsMeet } from "../../../tiles/utils/Filter.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
-import { getDesc, checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet } from "../../../valueAndComparators/Utils.ts";
+import {
+    checkIsValid as checkIsValidTileFilter,
+    checkIsMeet as checkIsMeetTileFilter,
+} from "../../../tiles/utils/Filter.ts";
+import {
+    checkIsValid as checkIsValidUnitFilter,
+    checkIsMeet as checkIsMeetUnitFilter,
+} from "../../../units/utils/Filter.ts";
+import {
+    getDesc,
+    checkIsMeet as checkIsMeetValueAndComparator,
+} from "../../../valueAndComparators/Utils.ts";
 
 export function checkIsValid(data: Undefinable<WeaSetPlayerStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
@@ -164,7 +183,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, pla
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
+            (!checkIsValidPlayerFilter(filter, playersCountUnneutral, gameConfig))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
@@ -172,7 +191,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, pla
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            if (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+            if (!checkIsValidTileFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
                 return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
             }
             if (data.getConTileComparator() == null) {
@@ -183,7 +202,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, pla
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+            if (!checkIsValidUnitFilter(filter, playersCountUnneutral, mapSize, gameConfig)) {
                 return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
@@ -195,7 +214,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, pla
     {
         const act = data.getActFund();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.Fund));
         }
@@ -211,7 +230,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, pla
     {
         const act = data.getActCoEnergy();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
+            (!checkIsValidMultiplierAndOffset(act))
         ) {
             return getFormattedText(TextType.F0091, getText(TextType.CoEnergy));
         }
@@ -275,7 +294,7 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
         const conUnitFilter     = action.getConUnitFilter();
         const conUnitComparator = action.getConUnitComparator();
         for (const player of war.getPlayerManager().getAllPlayers()) {
-            if ((conPlayerFilter != null) && (!checkIsMeet(conPlayerFilter, player))) {
+            if ((conPlayerFilter != null) && (!checkIsMeetPlayerFilter(conPlayerFilter, player))) {
                 continue;
             }
 
@@ -285,12 +304,12 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
                 for (const tile of getAllTiles()) {
                     if (
                         (tile.getPlayerIndex() === playerIndex)                                                 &&
-                        ((conTileFilter == null) || (TilesUtilsFilterCheckIsMeet(conTileFilter, tile)))
+                        ((conTileFilter == null) || (checkIsMeetTileFilter(conTileFilter, tile)))
                     ) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtilsCheckIsMeet(conTileComparator, count)) {
+                if (!checkIsMeetValueAndComparator(conTileComparator, count)) {
                     continue;
                 }
             }
@@ -301,12 +320,12 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
                 for (const unit of getAllUnits()) {
                     if (
                         (unit.getPlayerIndex() === playerIndex)                                                 &&
-                        ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit)))
+                        ((conUnitFilter == null) || (checkIsMeetUnitFilter(conUnitFilter, unit)))
                     ) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
+                if (!checkIsMeetValueAndComparator(conUnitComparator, count)) {
                     continue;
                 }
             }

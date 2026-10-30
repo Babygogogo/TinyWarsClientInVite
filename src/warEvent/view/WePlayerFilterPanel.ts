@@ -5,7 +5,10 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { createRange } from "../../helpers/Collection.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
 import {
     getText,
     getPlayerTeamName,
@@ -15,8 +18,16 @@ import {
     getTextForYesOrNo,
 } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { PlayerIndex, Fund, AllAliveStateIdArray } from "../../players/Constants.ts";
-import { checkIsEmpty, getErrorTip, getDesc } from "../../players/utils/Filter.ts";
+import {
+    PlayerIndex,
+    Fund,
+    AllAliveStateIdArray,
+} from "../../players/Constants.ts";
+import {
+    checkIsEmpty,
+    getErrorTip,
+    getDesc,
+} from "../../players/utils/Filter.ts";
 import { PlayerFilter } from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";

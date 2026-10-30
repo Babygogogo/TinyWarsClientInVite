@@ -1,11 +1,23 @@
 import { Common } from "../../Constants.ts";
-import { reqAtCreateTourney, reqAtDeleteLastTourney, reqAtSetGlobalSettings } from "../Gateway.ts";
+import {
+    reqAtCreateTourney,
+    reqAtDeleteLastTourney,
+    reqAtSetGlobalSettings,
+} from "../Gateway.ts";
 import { getGlobalSettings } from "../Provider.ts";
-import { showLang, show } from "../../../FloatText.ts";
+import {
+    showLang,
+    show,
+} from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getTimeDurationText2, getFormattedText, getTimeDurationText } from "../../../lang/Utils.ts";
+import {
+    getText,
+    getTimeDurationText2,
+    getFormattedText,
+    getTimeDurationText,
+} from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { getServerTimestamp } from "../../../timer/TimerModel.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";

@@ -6,8 +6,14 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
-import { resizeMap, addOffset } from "../../mapEditor/model/MeHelpers.ts";
+import {
+    getFormattedText,
+    getText,
+} from "../../lang/Utils.ts";
+import {
+    resizeMap,
+    addOffset,
+} from "../../mapEditor/model/MeHelpers.ts";
 import { getWar } from "../../mapEditor/model/MeModel.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

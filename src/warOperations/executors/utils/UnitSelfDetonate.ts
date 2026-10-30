@@ -5,13 +5,18 @@ import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import type { WoUnitSelfDetonate } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import { ActionStateId, Hp } from "../../../units/Constants.ts";
+import {
+    ActionStateId,
+    Hp,
+} from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
+import {
+    handleCommonExtraData,
+    handlePostOperationPlunder,
+} from "./Common.ts";
 
-type IBwUnit                = IUnit;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
     if (isFast) {
@@ -130,7 +135,7 @@ async function normalExeUnitSelfDetonate(war: IBwWar, action: WoUnitSelfDetonate
             const warStatisticsManager  = war.getWarStatisticsManager();
             const selfDetonateCfg       = getExisted(focusUnit.getTemplateCfg().getSelfDetonateCfg());
             const destination           = pathNodes[pathNodes.length - 1];
-            const targetUnits           : IBwUnit[] = [];
+            const targetUnits           : IUnit[] = [];
             for (const targetGridIndex of destination.getGridsWithinDistance({
                 minDistance : 1,
                 maxDistance : selfDetonateCfg.getRadius(),

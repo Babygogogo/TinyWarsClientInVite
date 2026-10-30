@@ -2,10 +2,19 @@ import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTileBaseName } from "../../lang/Utils.ts";
+import {
+    TextType,
+    UndefinedError,
+} from "../../lang/Constants.ts";
+import {
+    getText,
+    getTileBaseName,
+} from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import { getAutoTileBaseShapeId, getAutoTileDecorationTypeAndShapeId } from "../../mapEditor/model/MeHelpers.ts";
+import {
+    getAutoTileBaseShapeId,
+    getAutoTileDecorationTypeAndShapeId,
+} from "../../mapEditor/model/MeHelpers.ts";
 import { getWar } from "../../mapEditor/model/MeModel.ts";
 import type { DataForDrawTileBase } from "../../mapEditor/model/MeTypes.ts";
 import type { BwTileChanged } from "../../notifications/DataTypes.ts";
@@ -14,7 +23,10 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { getAllEnabledTileBaseCfgArray, getTileBaseCfg } from "../../tileBases/Utils.ts";
+import {
+    getAllEnabledTileBaseCfgArray,
+    getTileBaseCfg,
+} from "../../tileBases/Utils.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";

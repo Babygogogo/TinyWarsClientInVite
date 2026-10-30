@@ -4,7 +4,10 @@ import { generate } from "../../../coSkills/utils/DataGeneratorForUseCoSkill.ts"
 import { executeInstantSkill } from "../../../coSkills/utils/Executor.ts";
 import { createRange } from "../../../helpers/Collection.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import {
+    PlayerIndex,
+    AliveStateId,
+} from "../../../players/Constants.ts";
 import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
