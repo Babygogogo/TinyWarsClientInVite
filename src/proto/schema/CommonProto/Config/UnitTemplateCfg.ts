@@ -44,7 +44,6 @@ export interface UnitTemplateCfgJson extends $ProtoSchemaJsonBase {
     moveSfx?: number | null | undefined;
     layer?: number | null | undefined;
     aiProductionScore?: $Json$CommonProto$Config$UnitAiProductionScoreCfg | null | undefined;
-    animParams: number[];
 }
 
 export class UnitTemplateCfg extends $ProtoSchemaBase {
@@ -87,7 +86,6 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
     private _moveSfx?: number | null | undefined;
     private _layer?: number | null | undefined;
     private _aiProductionScore?: $Message$CommonProto$Config$UnitAiProductionScoreCfg | null | undefined;
-    private _animParams: number[] = [];
 
     public static fromJson(obj: UnitTemplateCfgJson): UnitTemplateCfg {
         return new UnitTemplateCfg().loadJson(obj);
@@ -132,7 +130,6 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
         this.setMoveSfx(obj.moveSfx);
         this.setLayer(obj.layer);
         this.setAiProductionScore(obj.aiProductionScore != null ? $Message$CommonProto$Config$UnitAiProductionScoreCfg.fromJson(obj.aiProductionScore) : null);
-        this.setAnimParams(obj.animParams?.concat() ?? []);
         return this;
     }
     public override toJson(obj?: UnitTemplateCfgJson): UnitTemplateCfgJson {
@@ -331,10 +328,6 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
         {
             const value = this.getAiProductionScore();
             (value != null) && (obj.aiProductionScore = value.toJson());
-        }
-
-        {
-            obj.animParams = this.getAnimParams().concat();
         }
         return obj;
     }
@@ -613,18 +606,6 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
             }
         }
 
-        {
-            const value = this.getAnimParams();
-            const length = value.length;
-            if (length) {
-                writer.uint32(322).fork();
-                for (let i = 0; i < length; ++i) {
-                    writer.int32(value[i]!);
-                }
-                writer.ldelim();
-            }
-        }
-
         return writer;
     }
 
@@ -792,20 +773,6 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
 
                 case 39:
                     msg.setAiProductionScore($Message$CommonProto$Config$UnitAiProductionScoreCfg.decode(reader, reader.uint32()));
-                    break;
-
-                case 40:
-                    {
-                        const arr = msg._animParams;
-                        if ((tag & 7) === 2) {
-                            const end2 = reader.uint32() + reader.pos;
-                            while (reader.pos < end2) {
-                                arr.push(reader.int32());
-                            }
-                        } else {
-                            arr.push(reader.int32());
-                        }
-                    }
                     break;
 
                 default:
@@ -1314,12 +1281,5 @@ export class UnitTemplateCfg extends $ProtoSchemaBase {
     }
     public createIfNotExistsAiProductionScore(): $Message$CommonProto$Config$UnitAiProductionScoreCfg {
         return this._aiProductionScore ??= new $Message$CommonProto$Config$UnitAiProductionScoreCfg();
-    }
-
-    public getAnimParams(): number[] {
-        return this._animParams;
-    }
-    public setAnimParams(value: number[]): void {
-        this._animParams = value;
     }
 }

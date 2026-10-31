@@ -61,7 +61,7 @@ class NetMessageDispatcher extends Egret_Egret.EventDispatcher {
         if (msgData instanceof MsgMpwCommonHandleBoot) {
             // Don't show the error text.
         } else {
-            const errorCode = (sData?.toJson() as any)?.errorCode;
+            const errorCode = (sData?.toJson() as { errorCode?: number })?.errorCode;
             if (errorCode) {
                 if (errorCode === Utils_ServerErrorCode.ServerErrorCode.Common_RequestTooFrequent_0001) {
                     // Logger.warn(`Request too frequent: ${errorCode}`);

@@ -1,16 +1,15 @@
 import {
     AuxiliaryTypes_CachedDataAccessor,
+    Common_Model_CommonProxy,
     Egret_Egret,
-    Notifications_Dispatcher,
+    Helpers_ImageSource,
     Helpers_Misc,
     Helpers_Text,
     LocalData_Storage,
-    Helpers_ImageSource,
-    Common_Model_CommonProxy,
-    type Units_Constants,
-    type GameConfigs_GameConfig,
-    type Graphics_Constants,
+    Notifications_Dispatcher,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type Graphics_Constants,
+    type Units_Constants,
 } from "../../internal.ts";
 import type { S as CommonGetCoStatisticsResponse } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
 import type { DataForMrwPlayerRank } from "../../proto/schema/CommonProto/Structure/DataForMrwPlayerRank.ts";
@@ -176,8 +175,7 @@ export function tickUnitImageSources(): void {
     _unitImageSourceDict.clear();
 }
 
-export function getCachedUnitImageSource({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GameConfigs_GameConfig.GameConfig;
+export function getCachedUnitImageSource({ version, skinId, unitType, isDark, animationType, tickCount }: {
     version         : Graphics_Constants.TextureVersionId;
     skinId          : number;
     unitType        : number;
@@ -213,7 +211,12 @@ export function getCachedUnitImageSource({ gcData, version, skinId, unitType, is
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
         cfg.source  = Helpers_ImageSource.getUnit({
-            gcData, version, skinId, unitType, isDark, animationType, tickCount, 
+            version       : version,
+            skinId        : skinId,
+            unitTypeId    : unitType,
+            isDark        : isDark,
+            animationType : animationType,
+            tickCount     : tickCount,
         });
     }
 
@@ -288,7 +291,7 @@ export function getCachedTileBaseImageSource({ version, themeType, skinId, baseT
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
         cfg.source  = Helpers_ImageSource.getTileBase({
-            version, themeType, skinId, baseType, isDark, shapeId, tickCount, 
+            version, themeType, skinId, baseType, isDark, shapeId, tickCount,
         });
     }
 
@@ -346,7 +349,7 @@ export function getCachedTileDecorationImageSource({ version, themeType, skinId,
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
         cfg.source  = Helpers_ImageSource.getTileDecoration({
-            version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount, 
+            version, themeType, skinId, tileDecorationType, isDark, shapeId, tickCount,
         });
     }
 
@@ -400,7 +403,7 @@ export function getCachedTileObjectImageSource({ version, themeType, skinId, obj
     if (cfg.tick !== tickCount) {
         cfg.tick    = tickCount;
         cfg.source  = Helpers_ImageSource.getTileObject({
-            version, themeType, skinId, objectType, isDark, shapeId, tickCount, 
+            version, themeType, skinId, objectType, isDark, shapeId, tickCount,
         });
     }
 

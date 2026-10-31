@@ -26,11 +26,11 @@ import {
 
 import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
 
-const getResolutionConfig           = Helpers_Misc.createLazyFunc(() =>  Graphics_Utils.getCurrentTextureResolutionConfig());
-const getGridWidth                  = Helpers_Misc.createLazyFunc(() =>  getResolutionConfig().gridWidth);
-const getGridHeight                 = Helpers_Misc.createLazyFunc(() =>  getResolutionConfig().gridHeight);
-const getImgUnitStateWidth          = Helpers_Misc.createLazyFunc(() =>  getResolutionConfig().imgUnitStateWidth);
-const getImgUnitStateHeight         = Helpers_Misc.createLazyFunc(() =>  getResolutionConfig().imgUnitStateHeight);
+const getResolutionConfig           = Helpers_Misc.createLazyFunc(() => Graphics_Utils.getCurrentTextureResolutionConfig());
+const getGridWidth                  = Helpers_Misc.createLazyFunc(() => getResolutionConfig().gridWidth);
+const getGridHeight                 = Helpers_Misc.createLazyFunc(() => getResolutionConfig().gridHeight);
+const getImgUnitStateWidth          = Helpers_Misc.createLazyFunc(() => getResolutionConfig().imgUnitStateWidth);
+const getImgUnitStateHeight         = Helpers_Misc.createLazyFunc(() => getResolutionConfig().imgUnitStateHeight);
 
 const getImgUnitStandAnchorOffsetX  = Helpers_Misc.createLazyFunc(() => getGridWidth() * 3 / 4);
 const getImgUnitStandAnchorOffsetY  = Helpers_Misc.createLazyFunc(() => getGridHeight() / 2);
@@ -195,7 +195,6 @@ export class UnitView extends Ui_Components_UiContainer.UiContainer {
     private _tickUnitAnimationFrame(): void {
         const unit = Helpers_Misc.getExisted(this.getUnit());
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData        : unit.getGcData(),
             version       : Users_Model.getSelfSettingsTextureVersion(),
             isDark        : this._isDark,
             animationType : this._animationType,

@@ -709,6 +709,7 @@ export * as Tiles_TileMapView from "./tiles/TileMapView.ts";
 export * as Tiles_TileView from "./tiles/TileView.ts";
 export * as Tiles_Types from "./tiles/Types.ts";
 export * as Tiles_Constants_Common from "./tiles/constants/Common.ts";
+export * as Units_Types from "./units/Types.ts";
 export * as Units_Constants from "./units/Constants.ts";
 export * as Tiles_Constants_CustomLimits from "./tiles/constants/CustomLimits.ts";
 export * as Tiles_Constants_DefaultCustomTileData from "./tiles/constants/DefaultCustomTileData.ts";

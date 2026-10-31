@@ -5321,7 +5321,8 @@ export class MessageContainer extends $ProtoSchemaBase {
         $Message$CommonProto$NetMessage$MsgCampaignValidateWar |
         $Message$CommonProto$NetMessage$MsgCampaignGetCampaignLeaderboard |
         $Message$CommonProto$NetMessage$MsgCampaignGetCampaignMapLeaderboard |
-        $Message$CommonProto$NetMessage$MsgCampaignGetScore {
+        $Message$CommonProto$NetMessage$MsgCampaignGetScore
+    {
         return this._MsgCommonHeartbeat
             ?? this._MsgCommonError
             ?? this._MsgCommonServerDisconnect

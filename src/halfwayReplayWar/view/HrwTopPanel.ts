@@ -748,7 +748,6 @@ class PlayerRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer
         this._imgSkin.loadSource(Helpers_ImageSource.getCoEyeBackground(ForceSkins_Utils.getFinalSkinId(war, playerIndex)));
         this._imgCo.loadSource(Helpers_ImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== Players_Constants.AliveStateId.Dead) ?? Lang_Constants.UndefinedError);
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData        : war.getGcData(),
             version       : Users_Model.getSelfSettingsTextureVersion(),
             skinId        : player.getUnitAndTileSkinId(),
             unitType      : Units_Constants.UnitTypeId.First,

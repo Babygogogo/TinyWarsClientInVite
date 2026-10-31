@@ -128,8 +128,9 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
                     if (value != null) {
                         allDataDict.set(key, value);
                     }
-                    return allDataDict;
                 }
+                resolve(allDataDict);
+                return;
             }
 
             const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
@@ -288,7 +289,8 @@ export class Store2<ValueType, EncodedValueType> {
                         }
                     }
                 }
-                return allDataDict;
+                resolve(allDataDict);
+                return;
             }
 
             const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();
@@ -324,7 +326,8 @@ export class Store2<ValueType, EncodedValueType> {
                         }
                     }
                 }
-                return allDataDict;
+                resolve(allDataDict);
+                return;
             }
 
             const request = this._database?.transaction(this._storeName, "readonly").objectStore(this._storeName).getAll();

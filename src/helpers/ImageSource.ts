@@ -1,15 +1,15 @@
 import {
-    Tiles_Constants_Common,
-    Helpers_Misc,
     GameVersions_Utils,
-    Helpers_Text,
-    Timer_TimerModel,
-    Players_Constants,
     Graphics_Constants,
-    type Units_Constants,
-    type UnitBuffs_Constants,
-    type GameConfigs_GameConfig,
+    Helpers_Misc,
+    Helpers_Text,
+    Players_Constants,
+    Tiles_Constants_Common,
+    Timer_TimerModel,
+    Units_Constants,
     type AuxiliaryTypes_AuxiliaryTypes,
+    type GameConfigs_GameConfig,
+    type UnitBuffs_Constants,
 } from "../internal.ts";
 
 export function getCoBust(gcData: GameConfigs_GameConfig.GameConfig, coId: number): string | null {
@@ -200,25 +200,24 @@ export function getTileBuff({ version, buffType, isDark }: {
     return `tileBuff_${textForResolution}_${textForVersion}_${textForType}_${textForDark}`;
 }
 
-export function getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GameConfigs_GameConfig.GameConfig;
+export function getUnit({ version, skinId, unitTypeId, isDark, animationType, tickCount }: {
     version         : Graphics_Constants.TextureVersionId;
     skinId          : number;
-    unitType        : number;
+    unitTypeId      : number;
     isDark          : boolean;
     animationType   : Units_Constants.AnimationTypeId;
     tickCount       : number;
 }): string {
-    const cfg               = Helpers_Misc.getExisted(gcData.getUnitTemplateCfg(unitType)?.getAnimParams());
-    const index             = version * 4 + (animationType ? 2 : 0);
-    const ticksPerFrame     = cfg[index + 1];
+    const cfg               = Helpers_Misc.getExisted(Units_Constants.AnimationCfgDict.get(unitTypeId));
+    const ticksPerFrame     = animationType === Units_Constants.AnimationTypeId.Stand ? cfg.idleFrameDuration : cfg.moveFrameDuration;
+    const framesCount       = animationType === Units_Constants.AnimationTypeId.Stand ? cfg.idleFramesCount : cfg.moveFramesCount;
     const textForResolution = `res${Helpers_Text.getNumText(GameVersions_Utils.getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
     const textForMoving     = `act${Helpers_Text.getNumText(animationType)}`;
     const textForVersion    = `ver${Helpers_Text.getNumText(version)}`;
     const textForSkin       = `skin${Helpers_Text.getNumText(skinId)}`;
-    const textForType       = `type${Helpers_Text.getNumText(unitType)}`;
-    const textForFrame      = `frame${Helpers_Text.getNumText(Math.floor((tickCount % (cfg[index] * ticksPerFrame)) / ticksPerFrame))}`;
+    const textForType       = `type${Helpers_Text.getNumText(unitTypeId)}`;
+    const textForFrame      = `frame${Helpers_Text.getNumText(Math.floor((tickCount % (framesCount * ticksPerFrame)) / ticksPerFrame))}`;
     return `unit_${textForResolution}_${textForVersion}_${textForType}_${textForDark}_${textForMoving}_${textForSkin}_${textForFrame}`;
 }
 export function getUnitFlash({ version, skinId, unitType }: {

@@ -63,7 +63,9 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
             this.addChild(imgState as unknown as Egret_Egret.DisplayObject);
         }
 
-        (data) && (this.update(data, tickCount));
+        if (data) {
+            this.update(data, tickCount);
+        }
     }
 
     public update(viewData: Ui_Types_UiUnitViewData.UiUnitViewData, tickCount?: number): void {
@@ -95,7 +97,6 @@ export class UiUnitView extends Ui_Components_UiContainerBase.UiContainerBase im
         }
 
         this._imgUnit.loadSource(Common_Model_CommonModel.getCachedUnitImageSource({
-            gcData        : data.gameConfig,
             version       : Users_Model.getSelfSettingsTextureVersion(),
             skinId        : ForceSkins_Utils.getFinalSkinId2(data.skinId, data.overridingSkinId),
             unitType      : data.unitData.getUnitType(),

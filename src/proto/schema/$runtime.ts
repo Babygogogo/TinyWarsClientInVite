@@ -1,5 +1,5 @@
 import type protobuf from "protobufjs/minimal.js";
- 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProtoSchemaJsonBase {
 }
 
