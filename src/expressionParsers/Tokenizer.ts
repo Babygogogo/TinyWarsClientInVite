@@ -4,7 +4,7 @@ import {
 } from "../internal.ts";
 
 export class Tokenizer {
-    private _reader         : ExpressionParsers_TextReader.TextReader;
+    private readonly _reader         : ExpressionParsers_TextReader.TextReader;
     private _currentChar    = '\0';
     private _currentToken   = ExpressionParsers_Enums.Token.Unknown;
     private _number         = 0;

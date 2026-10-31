@@ -32,7 +32,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnConfirm!       : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _btnCancel!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _symmetricalPlayerIndexArray   : number[] = [];
+    private readonly _symmetricalPlayerIndexArray   : number[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

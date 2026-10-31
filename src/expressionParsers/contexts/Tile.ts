@@ -304,7 +304,7 @@ export class Tile extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _tile       : Tiles_Tile.Tile;
+    private readonly _tile       : Tiles_Tile.Tile;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(tile: Tiles_Tile.Tile) {

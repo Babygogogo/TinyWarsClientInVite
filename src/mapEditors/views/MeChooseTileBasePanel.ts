@@ -59,7 +59,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnRandomize!                 : Ui_Interfaces_IUiButton.IUiButton;
 
     private _needFill           = false;
-    private _dataListForRecent  : DataForTileBaseRenderer[] = [];
+    private readonly _dataListForRecent  : DataForTileBaseRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
@@ -345,7 +345,7 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _labelShapeId! : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

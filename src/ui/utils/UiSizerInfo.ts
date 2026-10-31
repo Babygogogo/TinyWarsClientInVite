@@ -7,7 +7,7 @@ import {
 } from "../../internal.ts";
 
 export class UiSizerInfo implements Ui_Interfaces_IUiSizerInfo.IUiSizerInfo {
-    private _target             : Ui_Interfaces_IUiComponent.IUiComponent;
+    private readonly _target             : Ui_Interfaces_IUiComponent.IUiComponent;
     private _isEnabled          = true;
     private _sizerOptions?      : Ui_Types_UiSizerOptions.UiSizerOptions;
     private _hasEverApplied     = false;

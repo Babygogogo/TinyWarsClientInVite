@@ -10,7 +10,7 @@ import {
 } from "../../internal.ts";
 
 export class OperatorNegate extends ExpressionParsers_Nodes_Base.Base {
-    private _rhs: ExpressionParsers_Nodes_Base.Base;              // Left hand side of the operation
+    private readonly _rhs: ExpressionParsers_Nodes_Base.Base;              // Left hand side of the operation
 
     public constructor(rhs: ExpressionParsers_Nodes_Base.Base) {
         super();

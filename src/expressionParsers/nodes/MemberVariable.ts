@@ -51,8 +51,8 @@ import {
 } from "../../internal.ts";
 
 export class MemberVariable extends ExpressionParsers_Nodes_Base.Base {
-    private _lhs            : ExpressionParsers_Nodes_Base.Base;
-    private _identifierName : string;
+    private readonly _lhs            : ExpressionParsers_Nodes_Base.Base;
+    private readonly _identifierName : string;
 
     public constructor(lhs: ExpressionParsers_Nodes_Base.Base, identifierName: string) {
         super();

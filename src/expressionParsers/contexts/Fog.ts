@@ -60,7 +60,7 @@ export class Fog extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _fogMap     : FogMaps_IFogMap.IFogMap;
+    private readonly _fogMap     : FogMaps_IFogMap.IFogMap;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(fogMap: FogMaps_IFogMap.IFogMap) {

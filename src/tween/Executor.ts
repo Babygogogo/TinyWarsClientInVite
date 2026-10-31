@@ -33,9 +33,9 @@ export class Executor<T extends TweenTarget> extends Egret_Egret.EventDispatcher
     private static _lastTime            = 0;
 
     private readonly _target            : T;
-    private _useTicks                   = false;
-    private ignoreGlobalPause           = false;
-    private loop                        = false;
+    private readonly _useTicks          : boolean = false;
+    private readonly ignoreGlobalPause  : boolean = false;
+    private readonly loop               : boolean = false;
     private readonly _steps             : any[] = [];
     private paused                      = false;
     private duration                    = 0;

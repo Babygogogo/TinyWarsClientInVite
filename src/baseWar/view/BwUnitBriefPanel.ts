@@ -42,9 +42,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _btnExpand!    : Ui_Interfaces_IUiButton.IUiButton;
     private readonly _btnNarrow!    : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _cellList           : BwUnitBriefCell[] = [];
+    private readonly _cellList           : BwUnitBriefCell[] = [];
 
-    private _unitList   : Units_Unit.Unit[] = [];
+    private readonly _unitList   : Units_Unit.Unit[] = [];
     private _isExpanded = true;
 
     public updateOnLoadedSkin(): void {

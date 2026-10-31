@@ -143,7 +143,7 @@ const pool: number[] = [];
 mixKey(Math.random(), pool);
 
 export class Generator implements IGenerator {
-    private _arc4: Arc4;
+    private readonly _arc4: Arc4;
 
     public constructor(seed?: string, options: SeedRandomOptions = {}) {
         const key: number[] = [];

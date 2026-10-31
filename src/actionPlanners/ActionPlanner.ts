@@ -96,7 +96,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _focusUnitOnMap                     : Units_Unit.Unit | null = null;
     private _focusUnitLoaded                    : Units_Unit.Unit | null = null;
     private _choosingUnitForDrop                : Units_Unit.Unit | null = null;
-    private _chosenUnitsForDrop                 : ActionPlanners_Types.ChosenUnitForDrop[] = [];
+    private readonly _chosenUnitsForDrop                 : ActionPlanners_Types.ChosenUnitForDrop[] = [];
     private _availableDropDestinations          : AuxiliaryTypes_GridIndex.GridIndex[] | null = null;
     private _movableArea                        : AuxiliaryTypes_MovableArea.MovableArea | null = null;
     private _attackableArea                     : AuxiliaryTypes_AttackableArea.AttackableArea | null = null;
@@ -107,9 +107,9 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _unitCrushTargetGridIndex           : AuxiliaryTypes_GridIndex.GridIndex | null = null;
     private _unitRepairTargetGridIndex          : AuxiliaryTypes_GridIndex.GridIndex | null = null;
 
-    private _unitsForPreviewAttack              = new Map<number, Units_Unit.Unit>();
-    private _tilesForPreviewAttack              = new Set<Tiles_Tile.Tile>();
-    private _areaForPreviewAttack               = new AuxiliaryTypes_AttackableArea.AttackableArea([]);
+    private readonly _unitsForPreviewAttack              = new Map<number, Units_Unit.Unit>();
+    private readonly _tilesForPreviewAttack              = new Set<Tiles_Tile.Tile>();
+    private readonly _areaForPreviewAttack               = new AuxiliaryTypes_AttackableArea.AttackableArea([]);
     private _unitForPreviewMove                 : Units_Unit.Unit | null = null;
     private _areaForPreviewMove                 : AuxiliaryTypes_MovableArea.MovableArea | null = null;
     private _unitForPreviewVisible              : Units_Unit.Unit | null = null;
@@ -119,7 +119,7 @@ export class ActionPlanner implements ActionPlanners_IActionPlanner.IActionPlann
     private _isIgnoreEnemyForPreviewAttack      = true;
     private _isIgnoreEnemyForPreviewMove        = true;
 
-    private _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "BwCursorTapped",      callback : this._onNotifyBwCursorTapped },
         { type : "BwCursorDragged",     callback : this._onNotifyBwCursorDragged },
         { type : "BwCursorDragEnded",   callback : this._onNotifyBwCursorDragEnded },

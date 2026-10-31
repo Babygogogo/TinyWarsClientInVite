@@ -40,9 +40,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _groupCoNames!     : Ui_Interfaces_IUiLayout.IUiLayout;
     private readonly _uiCoInfo!         : Ui_Interfaces_IUiCoInfo.IUiCoInfo;
 
-    private _renderersForCoNames    : RendererForCoName[] = [];
+    private readonly _renderersForCoNames    : RendererForCoName[] = [];
 
-    private _chosenCoIdSet  = new Set<number>();
+    private readonly _chosenCoIdSet  = new Set<number>();
     private _previewCoId    : number | null = null;
 
     public updateOnLoadedSkin(): void {
@@ -218,7 +218,7 @@ class RendererForCoName extends Ui_Components_UiContainer.UiContainer {
     private readonly _labelCoId!        : Ui_Interfaces_IUiLabel.IUiLabel;
 
     private _isSelected     = false;
-    private _canSelect      = false;
+    private readonly _canSelect      = false;
     private _showCoId       = false;
 
     private _gameConfig     : GameConfigs_GameConfig.GameConfig | null = null;

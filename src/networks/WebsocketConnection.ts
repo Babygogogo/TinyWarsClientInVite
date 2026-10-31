@@ -5,10 +5,10 @@ import {
 import { MessageContainer } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
 
 export class WebsocketConnection extends Egret_Egret.WebSocket {
-    private _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;
-    private _callbackOnConnectionClosed     : (connection: WebsocketConnection) => void;
-    private _callbackOnConnectionErrored    : (connection: WebsocketConnection) => void;
-    private _callbackOnConnectionData       : (connection: WebsocketConnection, container: MessageContainer) => void;
+    private readonly _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;
+    private readonly _callbackOnConnectionClosed     : (connection: WebsocketConnection) => void;
+    private readonly _callbackOnConnectionErrored    : (connection: WebsocketConnection) => void;
+    private readonly _callbackOnConnectionData       : (connection: WebsocketConnection, container: MessageContainer) => void;
 
     public constructor({ callbackOnConnectionOpened, callbackOnConnectionClosed, callbackOnConnectionErrored, callbackOnConnectionData }: {
         callbackOnConnectionOpened  : (connection: WebsocketConnection) => void;

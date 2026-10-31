@@ -85,12 +85,12 @@ const ALPHA_FOR_VISIBLE_GRIDS_NORMAL    = 0.6;
 export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IActionPlannerView {
     private _actionPlanner?                 : ActionPlanners_IActionPlanner.IActionPlanner;
 
-    private _conForGrids                    = new Ui_Components_UiContainer.UiContainer();
-    private _conForMovableGrids             = new Ui_Components_UiContainer.UiContainer();
-    private _conForMoveDestination          = new Ui_Components_UiContainer.UiContainer();
-    private _conForAttackableGrids          = new Ui_Components_UiContainer.UiContainer();
-    private _conForVisibleGrids             = new Ui_Components_UiContainer.UiContainer();
-    private _conForMovePath                 = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForGrids                    = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMovableGrids             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMoveDestination          = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForAttackableGrids          = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForVisibleGrids             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _conForMovePath                 = new Ui_Components_UiContainer.UiContainer();
     private _imgsForMovableGrids?           : Ui_Interfaces_IUiImage.IUiImage[][];
     private _imgsForAttackableGrids?        : Ui_Interfaces_IUiImage.IUiImage[][];
     private _imgsForVisibleGrids?           : Ui_Interfaces_IUiImage.IUiImage[][];
@@ -98,10 +98,10 @@ export class ActionPlannerView implements ActionPlanners_IActionPlannerView.IAct
         textureSourceName : Helpers_ImageSource.getMovableAreaByTick(0),
     });
 
-    private _conForUnits            = new Ui_Components_UiContainer.UiContainer();
-    private _focusUnitViews         = new Map<number, Units_UnitView.UnitView>();
+    private readonly _conForUnits            = new Ui_Components_UiContainer.UiContainer();
+    private readonly _focusUnitViews         = new Map<number, Units_UnitView.UnitView>();
 
-    private _notifyEvents: Notifications_Types.Listener[] = [
+    private readonly _notifyEvents: Notifications_Types.Listener[] = [
         { type : "GridAnimationTick",       callback : this._onNotifyGridAnimationTick },
     ];
 

@@ -17,8 +17,8 @@ interface TrackPadOptions {
 
 /** Easing controller for the {@link ScrollBox}. */
 export class UiTrackPad {
-    private _xAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
-    private _yAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
+    private readonly _xAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
+    private readonly _yAxis              : Ui_Utils_UiSlidingNumber.UiSlidingNumber;
 
     private _isDown             = false;
     private _globalPosition     = new Egret_Egret.Point();

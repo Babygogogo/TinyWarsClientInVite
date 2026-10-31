@@ -63,7 +63,7 @@ export class Weather extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _weatherManager : Weathers_IManager.IManager;
+    private readonly _weatherManager : Weathers_IManager.IManager;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(weatherManager: Weathers_IManager.IManager) {

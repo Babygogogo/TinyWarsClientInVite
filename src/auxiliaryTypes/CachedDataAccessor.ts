@@ -6,15 +6,15 @@ import {
 } from "../internal.ts";
 
 export class CachedDataAccessor<KeyType, DataType> {
-    private _dataDict                   = new Map<KeyType, AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>();
-    private _dataTimestampDict          = new Map<KeyType, number>();
-    private _requestDict                = new Map<KeyType, (() => void)[]>();
-    private _requestTimestampDict       = new Map<KeyType, number>();
-    private _requestRetryCountDict      = new Map<KeyType, number>();
-    private _requestRetryTimeoutDict    = new Map<KeyType, number>();
+    private readonly _dataDict                   = new Map<KeyType, AuxiliaryTypes_AuxiliaryTypes.Undefinable<DataType>>();
+    private readonly _dataTimestampDict          = new Map<KeyType, number>();
+    private readonly _requestDict                = new Map<KeyType, (() => void)[]>();
+    private readonly _requestTimestampDict       = new Map<KeyType, number>();
+    private readonly _requestRetryCountDict      = new Map<KeyType, number>();
+    private readonly _requestRetryTimeoutDict    = new Map<KeyType, number>();
 
-    private _dataExpireTime : number;
-    private _reqData        : (key: KeyType) => void;
+    private readonly _dataExpireTime : number;
+    private readonly _reqData        : (key: KeyType) => void;
 
     public constructor({ dataExpireTime = 999999, reqData }: {
         dataExpireTime?     : number;

@@ -43,7 +43,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelRangeForRight!                       : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _inputRangeForRight!                       : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
-    private _customData = new TileCustomLaserTurretData();
+    private readonly _customData = new TileCustomLaserTurretData();
 
     // public updateOnLoadedSkin(): void {
     //     this._setNotifyListenerArray([

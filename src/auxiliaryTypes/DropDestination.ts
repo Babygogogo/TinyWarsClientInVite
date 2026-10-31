@@ -4,8 +4,8 @@ import {
 import { DropDestination as ProtoDropDestination } from "../proto/schema/CommonProto/Structure/DropDestination.ts";
 
 export class DropDestination {
-    private _gridIndex  : AuxiliaryTypes_GridIndex.GridIndex;
-    private _unitId     : number;
+    private readonly _gridIndex  : AuxiliaryTypes_GridIndex.GridIndex;
+    private readonly _unitId     : number;
 
     public constructor(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, unitId: number) {
         this._gridIndex = gridIndex;

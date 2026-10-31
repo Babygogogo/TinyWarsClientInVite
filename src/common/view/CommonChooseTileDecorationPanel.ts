@@ -199,7 +199,7 @@ class TileDecorationRenderer extends Ui_Components_UiListItemRenderer.UiListItem
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

@@ -1,5 +1,5 @@
 export class TextReader {
-    private _str    : string;
+    private readonly _str    : string;
     private _index  = 0;
 
     public constructor(str: string) {

@@ -5,10 +5,10 @@ import { MailContainer } from "../../proto/schema/CommonProto/Mail/MailContainer
 import type { MailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
 
 export class MailData {
-    private _mailId             : number;
-    private _createTimestamp    : number;
+    private readonly _mailId             : number;
+    private readonly _createTimestamp    : number;
     private _isNew              : boolean;
-    private _mailContainer      : MailContainer;
+    private readonly _mailContainer      : MailContainer;
 
     public constructor(mailFullData: MailFullData) {
         this._mailId            = mailFullData.getMailId() ?? 0;

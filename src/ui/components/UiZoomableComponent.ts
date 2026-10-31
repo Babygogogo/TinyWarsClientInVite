@@ -21,8 +21,8 @@ export class UiZoomableComponent extends Ui_Components_UiContainerBase.UiContain
     private _spacingForBottom           = 0;
     private _spacingForLeft             = 0;
     private _spacingForRight            = 0;
-    private _currGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
-    private _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
+    private readonly _currGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
+    private readonly _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
 
     public constructor() {
         super();

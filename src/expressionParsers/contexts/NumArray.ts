@@ -463,7 +463,7 @@ export class NumArray extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _numberArray    : number[];
+    private readonly _numberArray    : number[];
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_NumArray.NumArray) {

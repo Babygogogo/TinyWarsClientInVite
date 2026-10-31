@@ -61,9 +61,9 @@ export abstract class RwWarBase extends BaseWar_Model_BwWar.BwWar implements Rep
     private _isAutoReplay                           = false;
     private _firstOperationId                       = 0;
     private _nextOperationId                        = 0;
-    private _checkpointIdsForNextOperationId        = new Map<number, number>();
-    private _checkpointDataListForCheckpointId      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData>();
-    private _turnAndPlayerIndexesForCheckpointId    = new Map<number, TurnIndexAndPlayerIndex>();
+    private readonly _checkpointIdsForNextOperationId        = new Map<number, number>();
+    private readonly _checkpointDataListForCheckpointId      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData>();
+    private readonly _turnAndPlayerIndexesForCheckpointId    = new Map<number, TurnIndexAndPlayerIndex>();
     private readonly _gridMarkData                  = new GridMarkData();
 
     public abstract serializeForCheckpoint(): AuxiliaryTypes_AuxiliaryTypes.ReplayCheckpointData;

@@ -38,7 +38,7 @@ export class CustomCounter extends ExpressionParsers_Contexts_Base.Base {
         return ExpressionParsers_Utils.extendFunctionInfoDict(ExpressionParsers_Contexts_War.War.Functions);
     }
 
-    private _customCounterId    : number;
+    private readonly _customCounterId    : number;
     private _contextWar         : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(customCounterId: number, war: BaseWar_Interface_IBwWar.IBwWar) {

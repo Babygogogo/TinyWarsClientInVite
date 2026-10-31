@@ -41,7 +41,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelDeltaPrimaryAmmoPercentage!          : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _inputDeltaPrimaryAmmoPercentage!          : Ui_Interfaces_IUiPromptedInput.IUiPromptedInput;
 
-    private _customData = new TileCustomCrystalData();
+    private readonly _customData = new TileCustomCrystalData();
 
     // public updateOnLoadedSkin(): void {
     //     this._setNotifyListenerArray([

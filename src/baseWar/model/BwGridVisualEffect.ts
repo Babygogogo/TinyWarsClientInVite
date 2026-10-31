@@ -11,7 +11,7 @@ import {
 export class BwGridVisualEffect implements BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect {
     private readonly _view = new BaseWar_View_BwGridVisualEffectView.BwGridVisualEffectView();
 
-    private _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
         // { type: NotifyType.BwUnitBeAttacked,   callback: this._onNotifyBwUnitBeAttacked },
         // { type: NotifyType.BwUnitBeDestroyed,  callback: this._onNotifyBwUnitBeDestroyed },
         // { type: NotifyType.BwUnitBeRepaired,   callback: this._onNotifyBwUnitBeRepaired },

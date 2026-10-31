@@ -68,8 +68,8 @@ export class BwCursorView extends Ui_Components_UiContainer.UiContainer implemen
     private _cursor?                : BaseWar_Interface_IBwCursor.IBwCursor;
     private _frameIndexForImgTarget = 0;
 
-    private _currGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
-    private _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
+    private readonly _currGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
+    private readonly _prevGlobalTouchPoints      = new Map<number, AuxiliaryTypes_AuxiliaryTypes.Point>();
     private _touchIdForTouchingCursor   : number | null = null;
     private _initialGlobalTouchPoint?   : AuxiliaryTypes_AuxiliaryTypes.Point;
     private _isTouchMovedOrMultiple?    : boolean;

@@ -7,7 +7,7 @@ import {
 } from "../../internal.ts";
 
 export class Num extends ExpressionParsers_Nodes_Base.Base {
-    private _number: number;             // The number
+    private readonly _number: number;             // The number
 
     public constructor(num: number) {
         super();

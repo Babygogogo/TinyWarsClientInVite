@@ -38,17 +38,17 @@ const getImgUnitStandX              = Helpers_Misc.createLazyFunc(() => getGridW
 const AIMING_TIME_MS                = 500;
 
 export class UnitView extends Ui_Components_UiContainer.UiContainer {
-    private _imgHp      = new Ui_Components_UiImage.UiImage();
-    private _imgState   = new Ui_Components_UiImage.UiImage();
-    private _imgUnit    = new Ui_Components_UiImage.UiImage();
-    private _imgFlash   = new Ui_Components_UiImage.UiImage();
+    private readonly _imgHp      = new Ui_Components_UiImage.UiImage();
+    private readonly _imgState   = new Ui_Components_UiImage.UiImage();
+    private readonly _imgUnit    = new Ui_Components_UiImage.UiImage();
+    private readonly _imgFlash   = new Ui_Components_UiImage.UiImage();
 
     private _unit                       : Units_Unit.Unit | null = null;
     private _animationType              = Units_Constants.AnimationTypeId.Stand;
     private _isDark                     = false;
-    private _framesForStateAnimation    : string[]  = [];
+    private readonly _framesForStateAnimation    : string[]  = [];
 
-    private _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "UnitAnimationTick",            callback : this._onNotifyUnitAnimationTick },
         { type : "StateIndicatorTick",           callback : this._onNotifyUnitStateIndicatorTick },
         { type : "UnitFlashTick",                callback : this._onNotifyUnitFlashTick },

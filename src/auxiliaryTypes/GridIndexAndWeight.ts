@@ -4,8 +4,8 @@ import {
 import { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 
 export class GridIndexAndWeight {
-    public  gridIndex: AuxiliaryTypes_GridIndex.GridIndex;
-    public  weight: number;
+    public readonly  gridIndex: AuxiliaryTypes_GridIndex.GridIndex;
+    public readonly  weight: number;
 
     public constructor(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, weight: number) {
         this.gridIndex  = gridIndex;

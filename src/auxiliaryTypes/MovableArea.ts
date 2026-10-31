@@ -17,7 +17,7 @@ type AvailableMovableGrid = {
 };
 
 export class MovableArea {
-    private _area: Data[][];
+    private readonly _area: Data[][];
 
     public constructor(area: Data[][]) {
         this._area = area;

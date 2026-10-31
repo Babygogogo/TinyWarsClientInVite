@@ -3,8 +3,8 @@ import {
 } from "../internal.ts";
 
 export class MovePathNode {
-    private _gridIndex      : AuxiliaryTypes_GridIndex.GridIndex;
-    private _totalMoveCost  : number;
+    private readonly _gridIndex      : AuxiliaryTypes_GridIndex.GridIndex;
+    private readonly _totalMoveCost  : number;
 
     public constructor(gridIndex: AuxiliaryTypes_GridIndex.GridIndex, totalMoveCost: number) {
         this._gridIndex     = gridIndex;

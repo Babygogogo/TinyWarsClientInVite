@@ -17,12 +17,12 @@ export interface ConstrainEase {
 
 export class UiSlidingNumber {
     private _position       = 0;
-    private _constrain      = true;
+    private readonly _constrain      : boolean = true;
     private _min            = 0; // the window width of the drag
     private _max            = 0; // the window width of the drag
-    private _maxSpeed       = 400;
+    private readonly _maxSpeed       : number = 400;
 
-    private _ease           : ConstrainEase;
+    private readonly _ease           : ConstrainEase;
 
     private _offset         = 0;
     private _prev           = 0;

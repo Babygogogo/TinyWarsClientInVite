@@ -38,7 +38,7 @@ export class Turn extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _turnManager    : Turns_ITurnManager.ITurnManager;
+    private readonly _turnManager    : Turns_ITurnManager.ITurnManager;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(turnManager: Turns_ITurnManager.ITurnManager) {

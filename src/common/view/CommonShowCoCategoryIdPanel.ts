@@ -39,9 +39,9 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private readonly _uiCoInfo!             : Ui_Interfaces_IUiCoInfo.IUiCoInfo;
 
-    private _renderersForCoNames    : RendererForCoCategory[] = [];
+    private readonly _renderersForCoNames    : RendererForCoCategory[] = [];
 
-    private _chosenCoCategoryIdSet  = new Set<number>();
+    private readonly _chosenCoCategoryIdSet  = new Set<number>();
     private _previewCoCategoryId    : number | null = null;
 
     public updateOnLoadedSkin(): void {

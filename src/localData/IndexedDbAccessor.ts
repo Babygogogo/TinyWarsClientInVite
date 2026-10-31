@@ -66,11 +66,11 @@ export function initDatabase(): Promise<void> {
 }
 
 export class Store1<KeyType extends string | number, ValueType, EncodedValueType> {
-    private _storeName              : string;
-    private _encode                 : (data: ValueType) => EncodedValueType;
-    private _decode                 : (data: EncodedValueType) => ValueType;
+    private readonly _storeName              : string;
+    private readonly _encode                 : (data: ValueType) => EncodedValueType;
+    private readonly _decode                 : (data: EncodedValueType) => ValueType;
     private _database               : IDBDatabase | null = null;
-    private _cache                  = new Map<KeyType, ValueType | null>();
+    private readonly _cache                  = new Map<KeyType, ValueType | null>();
     private _hasCalledGetAllData    = false;
 
     public constructor({ storeName, encode, decode }: {
@@ -220,11 +220,11 @@ export class Store1<KeyType extends string | number, ValueType, EncodedValueType
 }
 
 export class Store2<ValueType, EncodedValueType> {
-    private _storeName              : string;
-    private _encode                 : (data: ValueType) => EncodedValueType;
-    private _decode                 : (data: EncodedValueType) => ValueType;
+    private readonly _storeName              : string;
+    private readonly _encode                 : (data: ValueType) => EncodedValueType;
+    private readonly _decode                 : (data: EncodedValueType) => ValueType;
     private _database               : IDBDatabase | null = null;
-    private _cache                  = new Map<number, Map<number, ValueType | null>>();
+    private readonly _cache                  = new Map<number, Map<number, ValueType | null>>();
     private _hasCalledGetAllData    = false;
 
     public constructor({ storeName, encode, decode }: {

@@ -42,7 +42,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private readonly _uiCoInfo!             : Ui_Interfaces_IUiCoInfo.IUiCoInfo;
 
-    private _renderersForCoNames            : RendererForCoCategory[] = [];
+    private readonly _renderersForCoNames            : RendererForCoCategory[] = [];
 
     private _previewCoCategoryId            : number | null = null;
 

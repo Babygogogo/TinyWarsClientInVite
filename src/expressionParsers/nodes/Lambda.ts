@@ -11,8 +11,8 @@ import {
 } from "../../internal.ts";
 
 export class Lambda extends ExpressionParsers_Nodes_Base.Base {
-    private _argumentNameArray  : string[];
-    private _expression         : ExpressionParsers_Nodes_Base.Base;
+    private readonly _argumentNameArray  : string[];
+    private readonly _expression         : ExpressionParsers_Nodes_Base.Base;
 
     public constructor(argumentNameArray: string[], expression: ExpressionParsers_Nodes_Base.Base) {
         super();

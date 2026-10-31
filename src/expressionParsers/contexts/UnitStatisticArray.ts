@@ -244,7 +244,7 @@ export class UnitStatisticArray extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _dataArray  : ExpressionParsers_Results_UnitStatistic.UnitStatistic[];
+    private readonly _dataArray  : ExpressionParsers_Results_UnitStatistic.UnitStatistic[];
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_UnitStatisticArray.UnitStatisticArray) {

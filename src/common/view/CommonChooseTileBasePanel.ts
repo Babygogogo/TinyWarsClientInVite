@@ -198,7 +198,7 @@ class TileBaseRenderer extends Ui_Components_UiListItemRenderer.UiListItemRender
     private readonly _group!        : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

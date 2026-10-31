@@ -12,7 +12,7 @@ import {
 } from "../../internal.ts";
 
 export class Variable extends ExpressionParsers_Nodes_Base.Base {
-    private _identifierName: string;
+    private readonly _identifierName: string;
 
     public constructor(identifierName: string) {
         super();

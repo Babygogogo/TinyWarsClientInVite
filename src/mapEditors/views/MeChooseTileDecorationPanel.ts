@@ -48,7 +48,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _labelRealTimeAdjust!          : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _btnHelpRealTimeAdjust!        : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _dataListForRecent  : DataForTileDecorationRenderer[] = [];
+    private readonly _dataListForRecent  : DataForTileDecorationRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
@@ -278,7 +278,7 @@ class TileDecorationRenderer extends Ui_Components_UiListItemRenderer.UiListItem
     private readonly _conTileView!  : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private _tileView   = new Ui_Components_UiTileView.UiTileView();
+    private readonly _tileView   = new Ui_Components_UiTileView.UiTileView();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

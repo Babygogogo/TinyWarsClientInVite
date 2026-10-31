@@ -243,7 +243,7 @@ class UnitRenderer extends Ui_Components_UiListItemRenderer.UiListItemRenderer<D
     private readonly _labelName!    : Ui_Interfaces_IUiLabel.IUiLabel;
     private readonly _conUnitView!  : Ui_Interfaces_IUiContainer.IUiContainer;
 
-    private _unitView   = new Units_UnitView.UnitView();
+    private readonly _unitView   = new Units_UnitView.UnitView();
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();

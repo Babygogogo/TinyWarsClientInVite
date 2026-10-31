@@ -86,7 +86,7 @@ export class Player extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _player     : Players_IPlayer.IPlayer;
+    private readonly _player     : Players_IPlayer.IPlayer;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(player: Players_IPlayer.IPlayer) {

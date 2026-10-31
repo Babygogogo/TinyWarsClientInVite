@@ -15,7 +15,7 @@ import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/T
 import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
 
 export class TaskObjectiveManager implements TaskObjectives_ITaskObjectiveManager.ITaskObjectiveManager {
-    private _stateArray             : TaskObjectiveState[] = [];
+    private readonly _stateArray             : TaskObjectiveState[] = [];
     private _war?                   : BaseWar_Model_BwWar.BwWar;
 
     public init(data: AuxiliaryTypes_AuxiliaryTypes.Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypes_AuxiliaryTypes.Undefinable<TaskObjectiveFullData>): void {

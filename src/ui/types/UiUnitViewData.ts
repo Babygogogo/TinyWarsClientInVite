@@ -6,14 +6,14 @@ import {
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export class UiUnitViewData {
-    public unitData             : SerialUnit;
+    public readonly unitData             : SerialUnit;
     public skinId               : number;
-    public overridingSkinId     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
+    public readonly overridingSkinId     : AuxiliaryTypes_AuxiliaryTypes.Undefinable<number>;
     public hasLoadedUnit?       : boolean;
     public coUsingSkillType?    : CoSkills_Constants.SkillTypeId;
-    public isCapturingTile?     : boolean;
-    public isBuildingTile?      : boolean;
-    public gameConfig           : GameConfigs_GameConfig.GameConfig;
+    public readonly isCapturingTile?     : boolean;
+    public readonly isBuildingTile?      : boolean;
+    public readonly gameConfig           : GameConfigs_GameConfig.GameConfig;
 
     public constructor({ unitData, skinId, overridingSkinId, hasLoadedUnit, coUsingSkillType, isCapturingTile, isBuildingTile, gameConfig }: {
         unitData            : SerialUnit;

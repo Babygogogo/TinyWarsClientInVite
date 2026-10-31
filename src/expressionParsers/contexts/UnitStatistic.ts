@@ -45,7 +45,7 @@ export class UnitStatistic extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _unitStatistic  : ExpressionParsers_Results_UnitStatistic.UnitStatistic;
+    private readonly _unitStatistic  : ExpressionParsers_Results_UnitStatistic.UnitStatistic;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_UnitStatistic.UnitStatistic) {

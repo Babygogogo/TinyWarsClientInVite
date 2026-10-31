@@ -16,7 +16,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _groupLamp!    : Ui_Interfaces_IUiContainer.IUiContainer;
     private readonly _labelLamp!    : Ui_Interfaces_IUiLabel.IUiLabel;
 
-    private _ongoingMessageIdSet    = new Set<number>();
+    private readonly _ongoingMessageIdSet    = new Set<number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

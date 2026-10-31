@@ -51,7 +51,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
 
     private readonly _listPlayer!           : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForPlayerRenderer>;
 
-    private _playerCoDict   = new Map<number, number>();
+    private readonly _playerCoDict   = new Map<number, number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

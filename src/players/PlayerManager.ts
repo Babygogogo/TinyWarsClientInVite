@@ -23,7 +23,7 @@ import { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerializatio
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export class PlayerManager implements Players_IPlayerManager.IPlayerManager {
-    private _players                    = new Map<number, Players_IPlayer.IPlayer>();
+    private readonly _players                    = new Map<number, Players_IPlayer.IPlayer>();
     private _war?                       : BaseWar_Interface_IBwWar.IBwWar;
     private _watcherTeamIndexesForHrw?  : Set<number>;
 

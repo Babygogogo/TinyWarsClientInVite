@@ -513,7 +513,7 @@ export class Unit extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _unit       : Units_Unit.Unit | null;
+    private readonly _unit       : Units_Unit.Unit | null;
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_NullableUnit.NullableUnit) {

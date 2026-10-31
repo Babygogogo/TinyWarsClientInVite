@@ -257,7 +257,7 @@ export class TileArray extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _tileArray  : Tiles_Tile.Tile[];
+    private readonly _tileArray  : Tiles_Tile.Tile[];
     private _contextWar : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_TileArray.TileArray) {

@@ -88,7 +88,7 @@ export class WarOperation extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _woContainer    : WoContainer | null;
+    private readonly _woContainer    : WoContainer | null;
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(result: ExpressionParsers_Results_WarOperation.WarOperation) {

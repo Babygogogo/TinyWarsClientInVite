@@ -10,8 +10,8 @@ import {
 } from "../../internal.ts";
 
 export class OperatorMod extends ExpressionParsers_Nodes_Base.Base {
-    private _lhs: ExpressionParsers_Nodes_Base.Base;              // Left hand side of the operation
-    private _rhs: ExpressionParsers_Nodes_Base.Base;              // Right hand side of the operation
+    private readonly _lhs: ExpressionParsers_Nodes_Base.Base;              // Left hand side of the operation
+    private readonly _rhs: ExpressionParsers_Nodes_Base.Base;              // Right hand side of the operation
 
     public constructor(lhs: ExpressionParsers_Nodes_Base.Base, rhs: ExpressionParsers_Nodes_Base.Base) {
         super();

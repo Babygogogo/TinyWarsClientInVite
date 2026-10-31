@@ -54,9 +54,9 @@ const PADDINGS = new Map<PaddingType, Padding>([
 ]);
 
 export class BwWarView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwWarView.IBwWarView {
-    private _fieldContainer         = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
-    private _weatherContainer       = new Ui_Components_UiContainer.UiContainer();
-    private _labelPersistentText    = new Ui_Components_UiLabel.UiLabel();
+    private readonly _fieldContainer         = new Ui_Components_UiZoomableComponent.UiZoomableComponent();
+    private readonly _weatherContainer       = new Ui_Components_UiContainer.UiContainer();
+    private readonly _labelPersistentText    = new Ui_Components_UiLabel.UiLabel();
 
     private _isShowingVibration = false;
     private _vibrationMaxOffset = 4;
@@ -64,12 +64,12 @@ export class BwWarView extends Ui_Components_UiContainer.UiContainer implements 
 
     private _war? : BaseWar_Interface_IBwWar.IBwWar;
 
-    private _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "LanguageChanged",         callback : this._onNotifyLanguageChanged },
         { type : "BwFieldZoomedByTouch",    callback : this._onNotifyBwFieldZoomedByTouch },
         { type : "BwFieldDragged",          callback : this._onNotifyBwFieldDragged },
     ];
-    private _uiListeners: AuxiliaryTypes_AuxiliaryTypes.UiListener[] = [
+    private readonly _uiListeners: AuxiliaryTypes_AuxiliaryTypes.UiListener[] = [
         { ui : this,     callback : this._onEnterFrame,   eventType : Egret_Egret.Event.ENTER_FRAME },
     ];
 

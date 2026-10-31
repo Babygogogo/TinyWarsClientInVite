@@ -7,7 +7,7 @@ const videoData = {
 
 class NoSleepClass {
     private noSleepTimer    : number | null = null;
-    private noSleepVideo    : HTMLVideoElement | null = null;
+    private readonly noSleepVideo    : HTMLVideoElement | null = null;
 
     public constructor() {
         if (oldIOS) {

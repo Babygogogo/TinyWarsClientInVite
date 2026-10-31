@@ -91,7 +91,7 @@ export abstract class BwWar implements BaseWar_Interface_IBwWar.IBwWar {
     private _isViewingWarInfo       = false;
     private _overridingBgmCode      : number | null = null;
 
-    private _damagePreviewSettings  : DamagePreviewSettings = {
+    private readonly _damagePreviewSettings  : DamagePreviewSettings = {
         isEnabled : false,
         settings  : [],
     };

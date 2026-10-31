@@ -5,9 +5,9 @@ import {
 import { MovePath as ProtoMovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 
 export class MovePath {
-    public nodes            : AuxiliaryTypes_GridIndex.GridIndex[];
-    public fuelConsumption  : number;
-    public isBlocked        : boolean;
+    public readonly nodes            : AuxiliaryTypes_GridIndex.GridIndex[];
+    public readonly fuelConsumption  : number;
+    public readonly isBlocked        : boolean;
 
     public constructor(nodes: AuxiliaryTypes_GridIndex.GridIndex[], fuelConsumption: number, isBlocked: boolean) {
         this.nodes              = nodes;

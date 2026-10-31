@@ -35,17 +35,17 @@ const getAimingFrameDuration            = Helpers_Misc.createLazyFunc(() => 100)
 export class BwGridVisualEffectView extends Ui_Components_UiContainer.UiContainer implements BaseWar_Interface_IBwGridVisualEffectView.IBwGridVisualEffectView {
     private _gridVisualEffect!          : BaseWar_Interface_IBwGridVisualEffect.IBwGridVisualEffect;
 
-    private _layerForBlock              = new Ui_Components_UiContainer.UiContainer();
-    private _layerForDive               = new Ui_Components_UiContainer.UiContainer();
-    private _layerForSurface            = new Ui_Components_UiContainer.UiContainer();
-    private _layerForExplosion          = new Ui_Components_UiContainer.UiContainer();
-    private _layerForDamage             = new Ui_Components_UiContainer.UiContainer();
-    private _layerForFlare              = new Ui_Components_UiContainer.UiContainer();
-    private _layerForSupply             = new Ui_Components_UiContainer.UiContainer();
-    private _layerForRepair             = new Ui_Components_UiContainer.UiContainer();
-    private _layerForSkillActivation    = new Ui_Components_UiContainer.UiContainer();
-    private _layerForCharge             = new Ui_Components_UiContainer.UiContainer();
-    private _layerForAiming             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForBlock              = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForDive               = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForSurface            = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForExplosion          = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForDamage             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForFlare              = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForSupply             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForRepair             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForSkillActivation    = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForCharge             = new Ui_Components_UiContainer.UiContainer();
+    private readonly _layerForAiming             = new Ui_Components_UiContainer.UiContainer();
 
     public constructor() {
         super();

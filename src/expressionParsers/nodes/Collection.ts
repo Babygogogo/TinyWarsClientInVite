@@ -9,7 +9,7 @@ import {
 } from "../../internal.ts";
 
 export class Collection {
-    private _nodeArray: ExpressionParsers_Nodes_Base.Base[];
+    private readonly _nodeArray: ExpressionParsers_Nodes_Base.Base[];
 
     public constructor(nodeArray: ExpressionParsers_Nodes_Base.Base[]) {
         const length = nodeArray.length;

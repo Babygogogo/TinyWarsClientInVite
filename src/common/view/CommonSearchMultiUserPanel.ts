@@ -47,7 +47,7 @@ export class Panel extends Ui_Components_UiPanel.UiPanel<OpenData> {
     private readonly _listUser!                 : Ui_Interfaces_IUiScrollList.IUiScrollList<DataForUnitTypeRenderer>;
     private readonly _btnConfirm!               : Ui_Interfaces_IUiButton.IUiButton;
 
-    private _selectedUserIdSet                  = new Set<number>();
+    private readonly _selectedUserIdSet                  = new Set<number>();
     private _candidateUserIdArray               : number[] = [];
 
     public updateOnLoadedSkin(): void {

@@ -98,7 +98,7 @@ export class UiTextInput extends Ui_Components_UiContainerBase.UiContainerBase i
     };
 
     private _domInput?                  : HTMLTextAreaElement | HTMLInputElement;
-    private _labelInput                 = new Ui_Components_UiLabel.UiLabel();
+    private readonly _labelInput                 = new Ui_Components_UiLabel.UiLabel();
 
     private _previousAttrs              : PreviousAttrs = {};
     private _restrictRegex?             : RegExp;

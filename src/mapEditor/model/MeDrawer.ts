@@ -47,7 +47,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
     private _symmetricalDrawType                = Geometries_Constants.SymmetryTypeId.None;
     private _isRealTimeAdjust                   = true;
     private _isSymmetricalPlayerIndexEnabled    = true;
-    private _roadConnectTileTypeArray           : number[] = [
+    private readonly _roadConnectTileTypeArray           : number[] = [
         Tiles_Constants_Common.TileTypeId.Road,
         Tiles_Constants_Common.TileTypeId.BridgeOnBeach,
         Tiles_Constants_Common.TileTypeId.BridgeOnPlain,
@@ -63,7 +63,7 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         Tiles_Constants_Common.TileTypeId.TempAirport,
         Tiles_Constants_Common.TileTypeId.TempSeaport,
     ];
-    private _bridgeConnectTileTypeArray         : number[] = [
+    private readonly _bridgeConnectTileTypeArray         : number[] = [
         Tiles_Constants_Common.TileTypeId.Road,
         Tiles_Constants_Common.TileTypeId.BridgeOnBeach,
         Tiles_Constants_Common.TileTypeId.BridgeOnPlain,
@@ -80,10 +80,10 @@ export class MeDrawer implements MapEditor_Interface_IMeDrawer.IMeDrawer {
         Tiles_Constants_Common.TileTypeId.TempSeaport,
     ];
 
-    private _checkpointArray                    : SerialField[] = [];
+    private readonly _checkpointArray                    : SerialField[] = [];
     private _currentCheckpointIndex             = 0;
 
-    private _notifyListeners: Notifications_Types.Listener[] = [
+    private readonly _notifyListeners: Notifications_Types.Listener[] = [
         { type : "BwCursorTapped",     callback : this._onNotifyBwCursorTapped },
         { type : "BwCursorDragged",    callback : this._onNotifyBwCursorDragged },
     ];

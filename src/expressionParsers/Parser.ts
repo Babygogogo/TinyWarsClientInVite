@@ -40,7 +40,7 @@ const CachedNodeDict            = new Map<string, ExpressionParsers_Nodes_Base.B
 const CachedNodeCollectionDict  = new Map<string, ExpressionParsers_Nodes_Collection.Collection>();
 
 export class Parser {
-    private _tokenizer: ExpressionParsers_Tokenizer.Tokenizer;
+    private readonly _tokenizer: ExpressionParsers_Tokenizer.Tokenizer;
 
     // Constructor - just store the tokenizer
     public constructor(tokenizer: ExpressionParsers_Tokenizer.Tokenizer) {

@@ -257,7 +257,7 @@ export class PlayerArray extends ExpressionParsers_Contexts_Base.Base {
         return functions;
     }
 
-    private _playerArray    : Players_IPlayer.IPlayer[];
+    private readonly _playerArray    : Players_IPlayer.IPlayer[];
     private _contextWar     : ExpressionParsers_Contexts_War.War | null = null;
 
     public constructor(data: ExpressionParsers_Results_PlayerArray.PlayerArray) {

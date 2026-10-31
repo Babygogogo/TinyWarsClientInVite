@@ -5,7 +5,7 @@ import {
 
 export class SpwRetractManager implements SinglePlayerWar_Interface_ISpwRetractManager.ISpwRetractManager {
     private _canRetract         = false;
-    private _retractStateArray  : Uint8Array[] = [];
+    private readonly _retractStateArray  : Uint8Array[] = [];
     private _nextRetractId      = 0;
 
     public setCanRetract(canRetract: boolean): void {

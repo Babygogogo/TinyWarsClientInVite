@@ -38,8 +38,8 @@ export class Player implements Players_IPlayer.IPlayer {
     private _coPowerActivatedCount?     : number;
     private _watchOngoingSrcUserIds?    : Set<number>;
     private _watchRequestSrcUserIds?    : Set<number>;
-    private _markedGridList             = new Array<GridIdAndMarkTypeId>();
-    private _hiddenGridMarkTypeIdList   = new Array<number>();
+    private readonly _markedGridList             = new Array<GridIdAndMarkTypeId>();
+    private readonly _hiddenGridMarkTypeIdList   = new Array<number>();
     private _isSkipTurn                 = false;
 
     private _war?                       : BaseWar_Interface_IBwWar.IBwWar;

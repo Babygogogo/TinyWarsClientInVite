@@ -11,8 +11,8 @@ import {
 } from "../../internal.ts";
 
 export class FunctionCall extends ExpressionParsers_Nodes_Base.Base {
-    private _identifierName : string;
-    private _argumentArray  : ExpressionParsers_Nodes_Base.Base[];
+    private readonly _identifierName : string;
+    private readonly _argumentArray  : ExpressionParsers_Nodes_Base.Base[];
 
     public constructor(identifierName: string, argumentArray: ExpressionParsers_Nodes_Base.Base[]) {
         super();

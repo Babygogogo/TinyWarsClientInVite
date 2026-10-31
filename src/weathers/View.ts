@@ -35,11 +35,11 @@ export class View extends Ui_Components_UiContainer.UiContainer implements Weath
 
     private _weatherManager?                : Weathers_IManager.IManager;
     private readonly _containerForRain      = new Ui_Components_UiContainer.UiContainer();
-    private _imgArrayForRain                : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForRain                : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private readonly _containerForSnow      = new Ui_Components_UiContainer.UiContainer();
-    private _imgArrayForSnow                : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForSnow                : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private readonly _containerForSandstorm = new Ui_Components_UiContainer.UiContainer();
-    private _imgArrayForSandstorm           : Ui_Interfaces_IUiImage.IUiImage[] = [];
+    private readonly _imgArrayForSandstorm           : Ui_Interfaces_IUiImage.IUiImage[] = [];
     private _showingWeatherType             : number | null = null;
 
     public constructor() {

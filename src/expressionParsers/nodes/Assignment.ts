@@ -24,8 +24,8 @@ const ValidResultTypes = [
 ];
 
 export class Assignment extends ExpressionParsers_Nodes_Base.Base {
-    private _identifierName : string;
-    private _rhs            : ExpressionParsers_Nodes_Base.Base;
+    private readonly _identifierName : string;
+    private readonly _rhs            : ExpressionParsers_Nodes_Base.Base;
 
     public constructor(identifierName: string, rhs: ExpressionParsers_Nodes_Base.Base) {
         super();

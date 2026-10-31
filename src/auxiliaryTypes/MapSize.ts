@@ -10,8 +10,8 @@ import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/Se
 import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
 export class MapSize {
-    private _width  : number;
-    private _height : number;
+    private readonly _width  : number;
+    private readonly _height : number;
 
     public static createWithTileArray(tileDataArray: SerialTile[]): MapSize {
         let width   = 0;
